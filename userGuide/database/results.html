@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Generating Query Results : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Query Results
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+
+<h1>Generating Query Results</h1>
+
+
+<p>There are several ways to generate query results:</p>
+
+	<h2>rigDBresult()</h2>
+	
+	<p>This function returns the query result data as an array.
+	
+	Typically you'll use this in a loop, like this:</p>
+	
+<pre><code>get rigDbQuery("YOUR QUERY")
+	
+put rigDBresult() into tResult
+	
+repeat for each key tKey in tResult
+	put tResult[tKey] into tRow
+	put tRow[2] & comma after tResultData
+	put tRow[4] & comma after tResultData
+	put tRow[7] & return after tResultData
+end repeat
+</code></pre>
+	
+	<p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep 
+the order of the result values, you need to add an incrementer:</p>
+
+<pre><code>get rigDbQuery("YOUR QUERY")
+	
+put rigDBresult() into tResult
+	
+put 0 into tIncr
+repeat for each key tKey in tResult
+	add 1 to tIncr
+	
+	put tResult[tIncr] into tRow
+	put tRow[2] & comma after tResultData
+	put tRow[4] & comma after tResultData
+	put tRow[7] & return after tResultData
+end repeat
+</code></pre>
+	
+	
+	<p>You may fetch the values for each row by column name like in the following example:</p>
+	
+<pre><code>get rigDbQuery("YOUR QUERY")
+	
+put rigDBresult() into tResult
+	
+put 0 into tIncr
+repeat for each key tKey in tResult
+	add 1 to tIncr
+	
+	put rigDbRow(tIncr) into tRow
+	
+	put tRow["title"] & comma after tResultData
+	put tRow["name"] & comma after tResultData
+	put tRow["body"] & return after tResultData
+end repeat
+</code></pre>
+	
+
+	<p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
+	
+<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+	
+# CHECK IF THE QUERY RESULT HAS DATA
+if tQuery["numrows"] > 0 then
+	put rigDBresult() into tResult
+	
+	put 0 into tIncr
+	repeat for each key tKey in tResult
+		add 1 to tIncr
+	
+		put rigDbRow(tIncr) into tRow
+	
+		put tRow["title"] & comma after tResultData
+		put tRow["name"] & comma after tResultData
+		put tRow["body"] & return after tResultData
+	end repeat
+end if
+</code></pre>
+	
+	<h2>yourQuery["resultarray"]</h2>
+	
+	<p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
+<pre><code>
+put rigDbQuery("YOUR QUERY") into tQuery
+	
+repeat for each key tKey in tQuery["resultarray"]
+	
+	put tQuery["resultarray"][tKey] into tRow
+	put tRow[2] & comma after tResultData
+	put tRow[4] & comma after tResultData
+	put tRow[7] & return after tResultData
+end repeat
+</code></pre>
+	
+	
+	<h2>yourQuery["fieldnames"]</h2>
+	
+	<p>This query result index contains the table field names in a numbered array.</p>
+
+
+	<h2>rigDbRow()</h2>
+	
+	<p>This function returns a single result row as an array.  If your query has more than one row, it returns only the first row.
+	The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
+<pre><code>
+put rigDbQuery("YOUR QUERY") into tQuery
+	
+if tQuery["numrows"] > 0 then
+	
+	put rigDbRow() into tRow
+	
+	put tRow["title"] & comma after tResultData
+	put tRow["name"] & comma after tResultData
+	put tRow["body"] & return after tResultData
+end if
+</code></pre>
+	
+	<p>If you want a specific row returned you can submit the row number as a digit in the first parameter:</p>
+	
+<pre><code>put rigDbRow(5) into tRow</code></pre>
+
+
+	
+ 	<p>In addition, you can walk forward/backwards/first/last through your results using these variations:</p>
+
+<p>
+	<strong>put rigDbFirstRow() into tRow</strong><br />
+	<strong>put rigDbLastRow() into tRow</strong><br />
+	<strong>put rigDbNextRow() into tRow</strong><br />
+	<strong>put rigDbPreviousRow() into tRow</strong><br />
+	<strong>put rigDbCurrentRow() into tRow</strong>
+</p>
+
+<p>They all return an array.</p>
+
+
+<h1>Result Helper Functions</h1>
+
+
+<h2>rigNumRows()</h2>
+<p>The number of rows returned by the query.</p>
+
+<pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
+	
+get rigNumRows()
+</code></pre>
+
+<p>Note: You can always use tQuery["numrows"].</p>
+
+<h2>rigNumFields()</h2>
+<p>The number of FIELDS (columns) returned by the query.</p>
+
+<pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
+	
+get rigNumFields()
+</code></pre>
+
+
+	
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="queries.html">Queries</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Handlers</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

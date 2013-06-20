@@ -1,0 +1,419 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>HTML Helper : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+HTML Helper
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>HTML Helper</h1>
+
+<p>The HTML Helper file contains handlers that assist in working with HTML.</p>
+
+<ul>
+	<li><a href="#br">rigHtmlBr()</a></li>
+	<li><a href="#heading">rigHtmlHeading()</a></li>
+	<li><a href="#img">rigHtmlImg()</a></li>
+	<li><a href="#link_tag">rigHtmlLinkTag()</a></li>
+	<li><a href="#nbs">rigHtmlNbs()</a></li>
+	<li><a href="#ol_and_ul">rigHtmlOL() and rigHtmlUL()</a></li>
+	<li><a href="#meta">rigHtmlMeta()</a></li>
+	<li><a href="#doctype">rigHtmlDocType()</a></li>
+</ul>
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code>rigLoadHelper "html"</code></pre>
+
+<p>The following handlers are available:</p>
+
+<h2><a name="br"></a>rigHtmlBr()</h2>
+
+<p>Generates line break tags (&lt;br />) based on the number you submit. Example:</p>
+
+<pre><code>put rigHtmlBr(3) into gData["threeBreaks"]</code></pre>
+
+<p>The above would produce: &lt;br />&lt;br />&lt;br /></p>
+
+<h2><a name="heading"></a>rigHtmlHeading()</h2>
+
+<p>Lets you create HTML &lt;h1> tags.  The first parameter will contain the data, the
+second the size of the heading.  Example:</p>
+
+<pre><code>put rigHtmlHeading("Welcome!", 3) into gData["welcomeH"]</code></pre>
+
+<p>The above would produce:  &lt;h3>Welcome!&lt;/h3></p>
+
+<h2><a name="img"></a>rigHtmlImg()</h2>
+
+<p>Lets you create HTML &lt;img /&gt; tags.  The first parameter  contains the image source. Example:</p>
+
+<pre><code>put rigHtmlImg("images/picture.jpg") into gData["myPic"]
+-- gives &lt;img src=&quot;http://site.com/images/picture.jpg&quot; /&gt;</code></pre>
+
+<p>There is an optional second parameter that is a TRUE/FALSE value that specifics if the src should have the page specified by gConfig["indexPage"] added to the address it creates. Presumably, this would be if you were using a media controller.</p>
+
+<pre><code>put rigHtmlImg("images/picture.jpg", TRUE) into gData["myPic"]
+-- gives &lt;img src=&quot;http://site.com/index.lc/images/picture.jpg&quot; /&gt;</code></pre>
+
+<p>Additionally, an associative array can be passed to the rigHtmlImg() function for complete control over all attributes and values.</p>
+
+<pre><code>put "images/picture.jpg" into tImgProperties["src"]
+put "Me, demonstrating how to eat 4 slices of pizza at one time" into tImgProperties["alt"]
+put "post_images" into tImgProperties["class"]
+put "200" into tImgProperties["width"]
+put "200" into tImgProperties["height"]
+put "That was quite a night" into tImgProperties["title"]
+put "lightbox" into tImgProperties["rel"]
+
+
+put rigHtmlImg(tImgProperties) into gData["myPic"]
+-- &lt;img src=&quot;http://site.com/index.lc/images/picture.jpg&quot; alt=&quot;Me, demonstrating how to eat 4 slices of pizza at one time&quot; class=&quot;post_images&quot; width=&quot;200&quot; height=&quot;200&quot; title=&quot;That was quite a night&quot; rel=&quot;lightbox&quot; /&gt;</code></pre>
+
+<h2><a name="link_tag"></a>rigHtmlLinkTag()</h2>
+
+<p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media and indexPage. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates.</p>
+
+<pre><code>put rigHtmlLinkTag("css/mystyles.css") into gData["myStyleLink"]
+-- gives &lt;link href=&quot;http://site.com/css/mystyles.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code></pre>
+
+<p>Further examples:</p>
+
+<pre><code>put rigHtmlLinkTag("favicon.ico", "shortcut icon", "image/ico") into gData["myIconLink"]
+-- &lt;link href=&quot;http://site.com/favicon.ico&quot; rel=&quot;shortcut icon&quot; type=&quot;image/ico&quot; /&gt; 
+	
+	
+put rigHtmlLinkTag("feed", "alternate", "application/rss+xml", "My RSS Feed") into gData["myFeedLink"]
+-- &lt;link href=&quot;http://site.com/feed&quot; rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;My RSS Feed&quot; /&gt; </code></pre>
+	
+<p>Additionally, an associative array can be passed to the rigHtmlLinkTag() function for complete control over all attributes and values.</p>
+
+<pre><code>put "css/printer.css" into tLink["href"]
+put "stylesheet" into tLink["rel"]
+put "text/css" into tLink["type"]
+put "print" into tLink["media"]
+
+
+put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
+-- &lt;link href=&quot;http://site.com/css/printer.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;</code></pre>
+	
+<h2><a name="nbs"></a>rigHtmlNbs()</h2>
+
+<p>Generates non-breaking spaces (&amp;nbsp;) based on the number you submit. Example:</p>
+
+<pre><code>put rigHtmlNbs(3) into gData["threeNbs"]</code></pre>
+
+<p>The above would produce: &amp;nbsp;&amp;nbsp;&amp;nbsp;</p>
+
+<h2><a name="ol_and_ul"></a>rigHtmlOL()&nbsp; and&nbsp; rigHtmlUL()</h2>
+
+<p>Permits you to generate ordered or unordered HTML lists from simple or multi-dimensional arrays. Example:</p>
+
+<pre><code>rigLoadHelper "html"
+
+put "red,blue,green,yellow" into tList
+split tList using comma
+
+
+put "boldlist" into tAttributes["class"]
+put "mylist" into tAttributes["id"]
+
+
+put rigHtmlUL(tList, tAttributes) into gData["myUL"]
+</code></pre>
+
+<p>Note: You can use a comma separated list for the tList parameter. There is no need to use an array as in the example.</p>
+<p>The above code will produce this:</p>
+
+<pre><code>&lt;ul&nbsp;class="boldlist"&nbsp;id="mylist">
+	&lt;li>red&lt;/li>
+	&lt;li>blue&lt;/li>
+	&lt;li>green&lt;/li>
+	&lt;li>yellow&lt;/li>
+&lt;/ul>
+</code></pre>
+
+<p>Here is a more complex example, using a multi-dimensional array:</p>
+
+<pre><code>rigLoadHelper "html"
+
+put "boldlist" into tAttributes["class"]
+put "mylist" into tAttributes["id"]
+
+
+put "red" into tList[1]["colors"][1]
+put "blue" into tList[1]["colors"][2]
+put "green" into tList[1]["colors"][3]
+
+put "round" into tList[2]["shapes"][1]
+put "square" into tList[2]["shapes"][2]
+put "ellipse" into tList[2]["shapes"][3]["circles"][1]
+put "oval" into tList[2]["shapes"][3]["circles"][2]
+put "sphere" into tList[2]["shapes"][3]["circles"][3]
+
+put "happy" into tList[3]["moods"][1]
+put "dejected" into tList[3]["moods"][2]["upset"][1]["defeated"][1]
+put "disheartened" into tList[3]["moods"][2]["upset"][1]["defeated"][2]
+put "depressed" into tList[3]["moods"][2]["upset"][1]["defeated"][3]
+put "annoyed" into tList[3]["moods"][2]["upset"][2]
+put "cross" into tList[3]["moods"][2]["upset"][3]
+put "angry" into tList[3]["moods"][2]["upset"][4]
+
+
+put rigHtmlUL(tList, tAttributes) into gData["myUL"]</code></pre>
+
+<p>The above code will produce this:</p>
+
+<pre><code>&lt;ul&nbsp;class="boldlist"&nbsp;id="mylist"&gt;
+	&lt;li&gt;colors
+		&lt;ul&gt;
+			&lt;li&gt;red&lt;/li&gt;
+			&lt;li&gt;blue&lt;/li&gt;
+			&lt;li&gt;green&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;shapes
+		&lt;ul&gt;
+			&lt;li&gt;round&lt;/li&gt;
+			&lt;li&gt;square&lt;/li&gt;
+			&lt;li&gt;circles
+				&lt;ul&gt;
+					&lt;li&gt;elipse&lt;/li&gt;
+					&lt;li&gt;oval&lt;/li&gt;
+					&lt;li&gt;sphere&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/li&gt;
+	&lt;li&gt;moods
+		&lt;ul&gt;
+			&lt;li&gt;happy&lt;/li&gt;
+			&lt;li&gt;upset
+				&lt;ul&gt;
+					&lt;li&gt;defeated
+						&lt;ul&gt;
+							&lt;li&gt;dejected&lt;/li&gt;
+							&lt;li&gt;disheartened&lt;/li&gt;
+							&lt;li&gt;depressed&lt;/li&gt;
+						&lt;/ul&gt;
+					&lt;/li&gt;
+					&lt;li&gt;annoyed&lt;/li&gt;
+					&lt;li&gt;cross&lt;/li&gt;
+					&lt;li&gt;angry&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+
+
+
+<h2><a name="meta"></a>rigHtmlMeta()</h2>
+
+<p>Helps you generate meta tags.  You can pass strings to the function, or simple arrays, or multidimensional ones. Examples:</p>
+
+<pre><code>put rigHtmlMeta("description", "My Great site") into gData["desc"]
+-- Generates:  &lt;meta name="description" content="My Great Site" />
+
+
+put rigHtmlMeta("Content-type", "text/html; charset=utf-8", "equiv") into gData["contType"] -- Note the third parameter.  Can be "equiv" or "name"
+-- Generates:  &lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+
+
+put "robots" into tArray["name"]
+put "no-cache" into tArray["content"]
+put rigHtmlMeta(tArray) into gData["robMeta"]
+-- Generates:  &lt;meta name="robots" content="no-cache" />
+
+
+
+put "robots" into tMeta[1]["name"]
+put "no-cache" into tMeta[1]["content"]
+put "description" into tMeta[2]["name"]
+put "My Great Site" into tMeta[2]["content"]
+put "keywords" into tMeta[3]["name"]
+put "love, passion, intrigue, deception" into tMeta[3]["content"]
+put "robots" into tMeta[4]["name"]
+put "no-cache" into tMeta[4]["content"]
+put "Content-type" into tMeta[5]["name"]
+put "text/html; charset=utf-8" into tMeta[5]["content"]
+put "equiv" into tMeta[5]["type"]
+
+
+put rigHtmlMeta(tMeta) into gData["myMeta"]
+
+-- Generates:  
+-- &lt;meta name="robots" content="no-cache" />
+-- &lt;meta name="description" content="My Great Site" />
+-- &lt;meta name="keywords" content="love, passion, intrigue, deception" />
+-- &lt;meta name="robots" content="no-cache" />
+-- &lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+</code></pre>
+
+
+<h2><a name="doctype"></a>rigHtmlDocType()</h2>
+
+<p>Helps you generate document type declarations, or DTD's. XHTML 1.0 Strict is used by default, but many doctypes are available.</p>
+
+<pre><code>put rigHtmlDocType() into gData["docType"]
+-- &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
+
+put rigHtmlDocType("html4-trans") into gData["docType"]
+// &lt;!DOCTYPE HTML PUBLIC -//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
+</code></pre>
+
+<p>The following is a list of doctype choices.  These are configurable, and pulled from <samp>application/config/doctypes.lc</samp></p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+	<tr>
+	<th>Doctype</th>
+	<th>Option</th>
+	<th>Result</th>
+	</tr>
+	<tr>
+	<td class="td">XHTML 1.1</td>
+	<td class="td">"xhtml11"</td>
+	<td class="td">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">XHTML 1.0 Strict</td>
+	<td class="td">"xhtml1-strict"</td>
+	<td class="td">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">XHTML 1.0 Transitional</td>
+	<td class="td">"xhtml1-trans"</td>
+	<td class="td">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">XHTML 1.0 Frameset</td>
+	<td class="td">"xhtml1-frame"</td>
+	<td class="td">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">HTML 5</td>
+	<td class="td">"html5"</td>
+	<td class="td">&lt;!DOCTYPE html&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">HTML 4 Strict</td>
+	<td class="td">"html4-strict"</td>
+	<td class="td">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">HTML 4 Transitional</td>
+	<td class="td">"html4-trans"</td>
+	<td class="td">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</td>
+	</tr>
+	<tr>
+	<td class="td">HTML 4 Frameset</td>
+	<td class="td">"html4-frame"</td>
+	<td class="td">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd"&gt;</td>
+	</tr>
+</table>
+</div>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="formmail_helper.html">Form-Mail Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="language_helper.html"> Language Helper</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

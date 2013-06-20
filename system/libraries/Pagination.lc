@@ -1,0 +1,405 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Pagination Library
+#
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Pagination
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/libraries/pagination.html
+##
+
+## ------------------------------------------------------------------------
+
+
+# LOGGING
+rigLogMessage "debug", "Pagination Library Loaded"
+
+# DECLARE VARIABLES
+local sPagBaseUrl							-- The page we are linking to
+local sPagTotalRows						-- Total number of items (database results)
+local sPagPerPage, sPagNumLinks, sPagCurPage, sPagFirstLink, sPagNextLink, sPagPrevLink, sPagLastLink, sPagUriSegment, sPagFullTagOpen, sPagFullTagClose
+local sPagFirstTagOpen, sPagFirstTagClose, sPagLastTagOpen, sPagLastTagClose, sPagCurTagOpen, sPagCurTagClose, sPagNextTagOpen, sPagNextTagClose
+local sPagPrevTagOpen, sPagPrevTagClose, sPagNumTagOpen, sPagNumTagClose, sPagPageQueryString, sPagQueryStringSegment
+
+put 10 into sPagPerPage					-- Max number of items you want shown per page
+put 2 into sPagNumLinks					-- Number of "digit" links to show before/after the currently viewed page
+put 0 into sPagCurPage					-- The current page being viewed
+put "&lsaquo; First" into sPagFirstLink
+put "&gt;" into sPagNextLink
+put "&lt;" into sPagPrevLink
+put "Last &rsaquo;" into sPagLastLink
+put 3 into sPagUriSegment
+put "&nbsp;" into sPagFirstTagClose
+put "&nbsp;" into sPagLastTagOpen
+put "&nbsp;<strong>" into sPagCurTagOpen
+put "</strong>" into sPagCurTagClose
+put "&nbsp;" into sPagNextTagOpen
+put "&nbsp;" into sPagNextTagClose
+put "&nbsp;" into sPagPrevTagOpen
+put "&nbsp;" into sPagNumTagOpen
+put FALSE into sPagPageQueryString
+put "per_page" into sPagQueryStringSegment
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigRunInitialPaginationConfig
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 22-09-09
+--| Last Mod: 27-10-09
+--| Requires: rigInitializePagination
+--|
+--| Summary: Run initial configuration procedures.
+--| 
+--| Format:  rigRunInitialPaginationConfig param1
+--|
+--| Parameters: array <pConfig>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigRunInitialPaginationConfig pConfig
+	put pConfig into tConfig
+
+	if tConfig is not an array then
+		if tConfig is not empty then
+			split tConfig using numtochar(1) and numtochar(2)
+		end if
+	end if
+
+	if tConfig is an array then
+		rigInitializePagination tConfig
+	end if
+
+end rigRunInitialPaginationConfig
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigInitializePagination
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-09-09
+--| Last Mod: 22-09-09
+--| Requires: rigSetInitialPaginationValue
+--|
+--| Summary: Initialize preferences.
+--| 
+--| Format:  rigInitializePagination param1
+--|
+--| Parameters: array <pConfig>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigInitializePagination pConfig
+	if pConfig is an array then
+		repeat for each key tKey in pConfig
+			put pConfig[tKey] into tVal
+
+			rigSetInitialPaginationValue tKey, tVal
+
+		end repeat
+	end if
+
+end rigInitializePagination
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetInitialPaginationValue
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-09-09
+--| Last Mod: 22-09-09
+--| Requires: --
+--|
+--| Summary: Set initial values.
+--| 
+--| Format:  rigSetInitialPaginationValue param1, param2
+--|
+--| Parameters: string <pVarName>, mixed <pValue>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetInitialPaginationValue pVarName pValue
+	put "sPag" & pVarName into tVarName
+
+	switch tVarName
+		case "sPagBaseUrl"
+        		put pValue into sPagBaseUrl
+		break
+		case "sPagTotalRows"
+        		put pValue into sPagTotalRows
+		break
+		case "sPagPerPage"
+        		put pValue into sPagPerPage
+		break
+		case "sPagNumLinks"
+        		put pValue into sPagNumLinks
+		break
+		case "sPagCurPage"
+        		put pValue into sPagCurPage
+		break
+		case "sPagFirstLink"
+        		put pValue into sPagFirstLink
+		break
+		case "sPagNextLink"
+        		put pValue into sPagNextLink
+		break
+		case "sPagPrevLink"
+        		put pValue into sPagPrevLink
+		break
+		case "sPagLastLink"
+        		put pValue into sPagLastLink
+		break
+		case "sPagUriSegment"
+        		put pValue into sPagUriSegment
+		break
+		case "sPagFullTagOpen"
+        		put pValue into sPagFullTagOpen
+		break
+		case "sPagFullTagClose"
+        		put pValue into sPagFullTagClose
+		break
+		case "sPagFirstTagOpen"
+        		put pValue into sPagFirstTagOpen
+		break
+		case "sPagFirstTagClose"
+        		put pValue into sPagFirstTagClose
+		break
+		case "sPagLastTagOpen"
+        		put pValue into sPagLastTagOpen
+		break
+		case "sPagLastTagClose"
+        		put pValue into sPagLastTagClose
+		break
+		case "sPagCurTagOpen"
+        		put pValue into sPagCurTagOpen
+		break
+		case "sPagCurTagClose"
+        		put pValue into sPagCurTagClose
+		break
+		case "sPagNextTagOpen"
+        		put pValue into sPagNextTagOpen
+		break
+		case "sPagNextTagClose"
+        		put pValue into sPagNextTagClose
+		break
+		case "sPagPrevTagOpen"
+        		put pValue into sPagPrevTagOpen
+		break
+		case "sPagPrevTagClose"
+        		put pValue into sPagPrevTagClose
+		break
+		case "sPagNumTagOpen"
+        		put pValue into sPagNumTagOpen
+		break
+		case "sPagNumTagClose"
+        		put pValue into sPagNumTagClose
+		break
+		case "sPagPageQueryString"
+        		put pValue into sPagPageQueryString
+		break
+		case "sPagQueryStringSegment"
+        		put pValue into sPagQueryStringSegment
+		break
+    end switch
+end rigSetInitialPaginationValue
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigCreatePaginationLinks
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-09-09
+--| Last Mod: 22-09-09
+--| Requires: rigCeil, rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
+--|
+--| Summary: Generate the pagination links.
+--| 
+--| Format:  rigCreatePaginationLinks()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigCreatePaginationLinks
+	# IF OUR ITEM COUNT OR PER-PAGE TOTAL IS ZERO THERE IS NO NEED TO CONTINUE
+	if (sPagTotalRows = 0) or (sPagPerPage = 0) then
+		return ""
+	end if
+
+	# CALCULATE THE TOTAL NUMBER OF PAGES
+	put rigCeil(sPagTotalRows / sPagPerPage) into tNumPages
+
+	# IS THERE ONLY ONE PAGE? HM... NOTHING MORE TO DO HERE THEN.
+	if tNumPages = 1 then
+		return ""
+	end if
+
+	# DETERMINE THE CURRENT PAGE NUMBER.
+	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPagPageQueryString is TRUE) then
+		put rigVarGet(sPagQueryStringSegment) into tQuerySeg
+		if tQuerySeg is not 0 then
+			put tQuerySeg into sPagCurPage
+		end if
+	else
+		put rigFetchSegment(sPagUriSegment) into tUriSeg
+		if tUriSeg is not 0 then
+			put tUriSeg into sPagCurPage
+		end if
+	end if
+
+	if sPagNumLinks < 1 then
+		rigShowError "Your number of links must be a positive number."
+	end if
+
+	if sPagCurPage is not a number then
+		put 0 into sPagCurPage
+	end if
+
+	# IS THE PAGE NUMBER BEYOND THE RESULT RANGE?
+	# IF SO WE SHOW THE LAST PAGE
+	if sPagCurPage > sPagTotalRows then
+		put (tNumPages - 1) * sPagPerPage into sPagCurPage
+	end if
+
+	put sPagCurPage into tUriPageNumber
+	put trunc((sPagCurPage / sPagPerPage) + 1) into sPagCurPage
+
+	# CALCULATE THE START AND END NUMBERS. THESE DETERMINE
+	# WHICH NUMBER TO START AND END THE DIGIT LINKS WITH
+	if (sPagCurPage - sPagNumLinks) > 0 then
+		put sPagCurPage - (sPagNumLinks - 1) into tStart
+	else
+		put 1 into tStart
+	end if
+
+	if ((sPagCurPage + sPagNumLinks) < tNumPages) then
+		put sPagCurPage + sPagNumLinks into tEnd
+	else
+		put tNumPages into tEnd
+	end if
+
+	# IS PAGINATION BEING USED OVER GET OR POST?  IF GET, ADD A PER_PAGE QUERY
+	# STRING. IF POST, ADD A TRAILING SLASH TO THE BASE URL IF NEEDED
+	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPagPageQueryString is TRUE) then
+		put rigRTrim(sPagBaseUrl) & "&amp;" & sPagQueryStringSegment & "=" into sPagBaseUrl
+	else
+		put rigRTrim(sPagBaseUrl, "/") & "/" into sPagBaseUrl
+	end if
+
+	# AND HERE WE GO...
+	# RENDER THE "FIRST" LINK
+	if  sPagCurPage > (sPagNumLinks + 1) then
+		put $sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+	end if
+
+	# RENDER THE "PREVIOUS" LINK
+	if sPagCurPage <> 1 then
+		put tUriPageNumber - sPagPerPage into tCounter
+		if tCounter = 0 then
+			put empty into tCounter
+		end if
+		put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+	end if
+
+	# WRITE THE DIGIT LINKS
+	repeat with tLoopCounter = (tStart - 1) to tEnd
+		put (tLoopCounter * sPagPerPage) - sPagPerPage into tI
+
+		if tI >= 0 then
+			if sPagCurPage = tLoopCounter then
+				put sPagCurTagOpen & tLoopCounter & sPagCurTagClose after tOutput -- current page
+			else
+				if tI = 0 then
+					put empty into tN
+				else
+					put tI into tN
+				end if
+
+				put sPagNumTagOpen & "<a href=" & quote & sPagBaseUrl & tN & quote & ">" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+			end if
+		end if
+	end repeat
+
+	# RENDER THE "NEXT" LINK
+	if sPagCurPage < tNumPages then
+		put sPagCurPage * sPagPerPage into tJ
+		put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+	end if
+
+	# RENDER THE "LAST" LINK
+	if (sPagCurPage + sPagNumLinks) < tNumPages then
+		put (tNumPages * sPagPerPage) - sPagPerPage into tI
+		put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+	end if
+
+	# KILL DOUBLE SLASHES.  NOTE: SOMETIMES WE CAN END UP WITH A DOUBLE SLASH
+	# IN THE PENULTIMATE LINK SO WE'LL KILL ALL DOUBLE SLASHES.
+	 put "([^:]//+)" into tRegEx   
+    	put "//" into tStrToReplaceInFoundStr
+    	put "/" into tReplacement
+
+    	put rigPregReplace(tOutput, tRegEx, tStrToReplaceInFoundStr, tReplacement) into tOutput
+
+	# ADD THE WRAPPER HTML IF EXISTS
+	put sPagFullTagOpen & tOutput & sPagFullTagClose into tOutput
+
+	return tOutput
+end rigCreatePaginationLinks
+
+
+
+
+
+
+--| END OF Pagination.lc
+--| Location:  ./system/libraries/Pagination.lc
+----------------------------------------------------------------------

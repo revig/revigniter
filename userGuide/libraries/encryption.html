@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Encryption Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Encryption Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Encryption Library</h1>
+
+<p>
+The Encryption Library encodes a message string using bitwise XOR encoding. The key is combined with a random hash, and then it
+too gets converted using XOR. The whole thing is then encrypted using a randomly generated salt for the key.
+The end result is a message string that is randomized with each call to the rigEncode function, even if the supplied message and key are the same. You'll effectively end up with a double-encrypted message string, which should provide a very high degree of security.</p>
+
+
+<h2>Setting your Key</h2>
+
+<p>A <em>key</em> is a piece of information that controls the cryptographic process and permits an encrypted string to be decoded.
+In fact, the key you chose will provide the <strong>only</strong> means to decode data that was encrypted with that key,
+so not only must you choose the key carefully, you must never change it if you intend to use it for persistent data.</p>
+
+<p>It goes without saying that you should guard your key carefully.
+Should someone gain access to your key, the data will be easily decoded.  If your server is not totally under your control
+it's impossible to ensure key security so you may want to think carefully before using it for anything
+that requires high security, like storing credit card numbers.</p>
+
+<p>To take maximum advantage of the encryption algorithm, your key should be 32 characters in length (128 bits).
+The key should be as random a string as you can concoct, with numbers and uppercase and lowercase letters.
+Your key should <strong>not</strong> be a simple text string. In order to be cryptographically secure it
+needs to be as random as possible.</p>
+
+<p>Your key can be either stored in your <dfn>application/config/config.lc</dfn>, or you can design your own
+storage mechanism and pass the key dynamically when encoding/decoding.</p>
+
+<p>To save your key to your <dfn>application/config/config.lc</dfn>, open the file and set:</p>
+<pre><code>put "YOUR KEY" into gConfig["encryption_key"]</code></pre>
+
+
+<h2>Message Length</h2>
+
+<p>It's important for you to know that the encoded messages the encryption function generates will be approximately 2.6 times longer than the original
+message.  For example, if you encrypt the string "my super secret data", which is 21 characters in length, you'll end up
+with an encoded string that is roughly 55 characters (we say "roughly" because the encoded string length increments in
+64 bit clusters, so it's not exactly linear).  Keep this information in mind when selecting your data storage mechanism.  Cookies,
+for example, can only hold 4K of information.</p>
+
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Encryption library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Encrypt"</code></pre>
+
+<h2>rigEncode()</h2>
+
+<p>Performs the data encryption and returns it as a string. Example:</p>
+<pre><code>put "My secret message" into tMsg
+
+put rigEncode(tMsg) into tEncryptedString</code></pre>
+
+<p>You can optionally pass your encryption key via the second parameter if you don't want to use the one in your config file:</p>
+
+<pre><code>put "My secret message" into tMsg
+put "superSecretKey" into tKey
+
+put rigEncode(tMsg, tKey) into tEncryptedString</code></pre>
+
+
+<h2>rigDecode()</h2>
+
+<p>Decrypts an encoded string.  Example:</p>
+
+<pre><code>put "APANtByIGI1BpVXZTJgcsAG8GZl8pdwwa84" into tEncryptedString
+
+put rigDecode(tEncryptedString) into tPlaintextString</code></pre>
+
+
+<p>You can optionally pass your encryption key via the second parameter if you don't want to use the one in your config file:</p>
+
+<pre><code>put "APANtByIGI1BpVXZTJgcsAG8GZl8pdwwa84" into tEncryptedString
+put "superSecretKey" into tKey
+
+put rigDecode(tEncryptedString, tKey) into tPlaintextString</code></pre>
+
+
+
+<h2>rigSetCipher</h2>
+
+<p>Set the cipher and the key length. The first parameter sets the cipher name and the second the key length. Example:</p>
+
+<pre><code>rigSetCipher "bf", 128
+</code></pre>
+
+<p>Please see LiveCode's cipherNames() function which returns a list of ciphers and their associated default key lengths in bits.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="email.html">Email Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

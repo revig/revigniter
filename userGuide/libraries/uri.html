@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>URI Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+URI Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>URI Library</h1>
+
+<p>The URI Library provides handlers that help you retrieve information from your URI strings. If you use URI routing, you can
+also retrieve information about the re-routed segments.</p>
+
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+
+<h2>rigFetchSegment(<var>n</var>)</h2>
+
+<p>Permits you to retrieve a specific segment. Where <var>n</var> is the segment number you wish to retrieve.
+Segments are numbered from left to right. For example, if your full URL is this:</p>
+
+<pre><code>http://example.com/index.lc/news/local/metro/crime_is_up</code></pre>
+
+<p>The segment numbers would be this:</p>
+
+<ol>
+<li>news</li>
+<li>local</li>
+<li>metro</li>
+<li>crime_is_up</li>
+</ol>
+
+<p>By default the function returns FALSE (boolean) if the segment does not exist. There is an optional second parameter that
+permits you to set your own default value if the segment is missing.
+For example, this would tell the function to return the number zero in the event of failure:</p>
+
+<pre><code>put rigFetchSegment(3, 0) into tProductID</code></pre>
+
+<p>It helps avoid having to write code like this:</p>
+
+<pre><code>if rigFetchSegment(3) is FALSE then
+	put 0 into tProductID
+else
+	put rigFetchSegment(3) into tProductID
+end if
+</code></pre>
+
+<h2>rigFetchRsegment(<var>n</var>)</h2>
+
+<p>This function is identical to the previous one, except that it lets you retrieve a specific segment from your
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+<h2>rigSlashSegment(<var>n</var>)</h2>
+
+<p>This function is almost identical to <dfn>rigFetchSegment()</dfn>, except it adds a trailing and/or leading slash based on the second
+parameter.  If the parameter is not used, a trailing slash added.  Examples:</p>
+
+<pre><code>get rigSlashSegment(<var>3</var>)
+get rigSlashSegment(<var>3</var>, "leading")
+get rigSlashSegment(<var>3</var>, "both")</code></pre>
+
+<p>Returns:</p>
+
+<ol>
+<li>segment/</li>
+<li>/segment</li>
+<li>/segment/</li>
+</ol>
+
+
+<h2>rigSlashRsegment(<var>n</var>)</h2>
+
+<p>This function is identical to the previous one, except that it lets you add slashes to a specific segment from your
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+
+<h2>rigUriToAssoc(<var>n</var>)</h2>
+
+<p>This function lets you turn URI segments into an associative array of key/value pairs.  Consider this URI:</p>
+
+<pre><code>index.lc/user/search/name/joe/location/UK/gender/male</code></pre>
+
+<p>Using this function you can turn the URI into an associative array with this prototype:</p>
+
+<pre><code>tArray["name"] -- "joe"
+tArray["location"] -- "UK"
+tArray["gender"] -- "male"
+</code></pre>
+
+<p>The first parameter of the function lets you set an offset.  By default it is set to <kbd>3</kbd> since your
+URI will normally contain a controller/handler in the first and second segments. Example:</p>
+
+<pre><code>put rigUriToAssoc(3) into tArray
+
+put tArray["name"] into gData["name"]
+</code></pre>
+
+
+<p>The second parameter lets you set default key names, so that the array returned by the function will always contain expected indexes, even if missing from the URI. Example:</p>
+
+<pre><code>put "name,gender,location,type,sort" into tDefault
+split tDefault using comma
+
+put rigUriToAssoc(3, tDefault) into tArray</code></pre>
+
+<p>If the URI does not contain a value in your default, an array index will be set to that name, with a value of FALSE.</p>
+
+<p>Lastly, if a corresponding value is not found for a given key (if there is an odd number of URI segments) the value will be set to FALSE (boolean).</p>
+
+
+<h2>rigRuriToAssoc(<var>n</var>)</h2>
+
+<p>This function is identical to the previous one, except that it creates an associative array using the
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+<h2>rigAssocToURI()</h2>
+
+<p>Takes an associative array as input and generates an URI string from it.  The array keys will be included in the string.  Example:</p>
+
+<pre><code>put "product=shoes,size=large,color=red" into tArray
+split tArray using comma and "="
+
+put rigAssocToURI(tArray) into tStr
+
+-- Produces:  product/shoes/size/large/color/red
+</code></pre>
+
+
+<h2>rigUriString()</h2>
+
+<p>Returns a string with the complete URI.  For example, if this is your full URL:</p>
+
+<pre><code>http://example.com/index.lc/news/local/345</code></pre>
+
+<p>The function would return this:</p>
+
+<pre><code>/news/local/345</code></pre>
+
+
+<h2>rigRuriString()</h2>
+
+<p>This function is identical to the previous one, except that it returns the
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+
+<h2>rigTotalSegments()</h2>
+
+<p>Returns the total number of segments.</p>
+
+
+<h2>rigTotalRsegments()</h2>
+
+<p>This function is identical to the previous one, except that it returns the total number of segments in your
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+
+<h2>rigSegmentArray()</h2>
+
+<p>Returns an array containing the URI segments.  For example:</p>
+
+<pre><code>put rigSegmentArray() into tSegs
+
+repeat for each key tKey in tSegs
+	put tSegs[tKey] into tSegment
+	put tSegment &amp; "&lt;br />" after tSegments
+end repeat</code></pre>
+
+<h2>rigRSegmentArray()</h2>
+
+<p>This function is identical to the previous one, except that it returns the array of segments in your
+re-routed URI in the event you are using revIgniter's <a href="../general/routing.html">URI Routing</a> feature.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="user_agent.html">User Agent Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

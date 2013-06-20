@@ -1,0 +1,25 @@
+<?rev
+
+put "Eine Quelldatei muss in den Voreinstellungen festgelegt werden." into gLang["imglib_source_image_required"]
+put "ImageMagick ist f&uuml;r diese Funktion erforderlich." into gLang["imglib_im_required"]
+put "Der Server muss ImageMagick unterst&uuml;tzen, um die Bildeigenschaften auszulesen." into gLang["imglib_im_required_for_props"]
+put "Der Server muss ImageMagick unterst&uuml;tzen, um diese Bildbearbeitungsfunktion zu nutzen." into gLang["imglib_unsupported_imagecreate"]
+put "GIF-Dateien werden h&auml;ufig wegen Lizenzbeschr&auml;nkungen nicht unterst&uuml;tzt. Mouml;glicherweise m&uuml;ssen Sie stattdessen JPEG- oder PNG-Dateien verwenden." into gLang["imglib_gif_not_supported"]
+put "JPEG-Dateien werden nicht unterst&uuml;tzt." into gLang["imglib_jpg_not_supported"]
+put "PNG-Dateien werden nicht unterst&uuml;tzt." into gLang["imglib_png_not_supported"]
+put "Nur JPEG- und PNG-Dateien kouml;nnen mit der festgelegten Methode verkleinert und vergrouml;ssert werden." into gLang["imglib_jpg_or_png_required"]
+put "Die Datei konnte nicht &uuml;berschrieben werden. Mouml;glicherweise ist das Verzeichnis schreibgesch&uuml;tzt." into gLang["imglib_copy_error"]
+put "Der Server unterst&uuml;tzt das Drehen von Bildern nicht" into gLang["imglib_rotate_unsupported"]
+put "Die Bildbearbeitungs-Bibliothek konnte nicht gefunden werden. Bitte pr&uuml;fen Sie, ob der Pfad in den Einstellungen korrekt ist." into gLang["imglib_libpath_invalid"]
+put "Die Bildbearbeitung ist fehlgeschlagen. Bitte stellen Sie sicher, dass der Server das angegebene Protokoll unterst&uuml;tzt." into gLang["imglib_image_process_failed"]
+put "Der gew&uuml;nschte Grad f&uuml;r die Drehung des Bildes muss angegeben werden." into gLang["imglib_rotation_angle_required"]
+put "Die GIF-Datei konnte nicht erzeugt werden." into gLang["imglib_writing_failed_gif"]
+put "Der Pfad zur Bilddatei ist ung&uuml;ltig." into gLang["imglib_invalid_path"]
+put "Das Kopieren der Bilddatei ist fehlgeschlagen." into gLang["imglib_copy_failed"]
+put "Es konnte keine Schriftartendatei gefunden werden." into gLang["imglib_missing_font"]
+put "Das Speichern der Bilddatei ist fehlgeschlagen.  Bitte stellen Sie sicher, dass das Bild und das Datei-Verzeichnis nicht schreibgeschützt sind." into gLang["imglib_save_failed"]
+
+
+--| END OF imagelibLang.lc
+--| Location:  ./system/language/german/imagelibLang.lc
+----------------------------------------------------------------------

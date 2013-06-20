@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Using revIgniter Libraries : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Using revIgniter Libraries
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Using revIgniter Libraries</h1>
+
+
+<p>All of the available libraries are located in your <dfn>system/libraries</dfn> folder.
+In most cases, to use one of these libraries involves loading it within a <a href="controllers.html">controller</a> using the following handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "<var>Libraryname</var>"</code></pre>
+
+<p>Where <var>library name</var> is the name of the library you want to invoke.  For example, to load the Formvalidation library you would do this:</p>
+
+<pre><code>rigLoaderLoadLibrary "<var>Formvalidation</var>"</code></pre>
+
+<p>Once loaded you can use it as indicated in the user guide page corresponding to that library.</p>
+
+<h2>Creating Your Own Libraries</h2>
+
+<p>Please read the section of the user guide that discusses how to <a href="creating_libraries.html">create your own libraries</a>.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="plugins.html">Plugins</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="creating_libraries.html">Creating Libraries</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

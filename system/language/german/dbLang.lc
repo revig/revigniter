@@ -1,0 +1,30 @@
+<?rev
+
+put "Die Datenbankkonfiguration konnte nicht f&uuml;r die angegebene Verbindung ermittelt werden." into gLang["db_invalid_connection_str"]
+put "Mit den angegebenen Verbindungsdaten konnte keine Verbindung zur Datenbank hergestellt werden." into gLang["db_unable_to_connect"]
+put "Die Verbindung zur Datenbank %s ist fehlgeschlagen." into gLang["db_unable_to_select"]
+put "Die Datenbank %s konnte nicht erstellt werden." into gLang["db_unable_to_create"]
+put "Die angegebene Abfrage ist nicht g&uuml;ltig." into gLang["db_invalid_query"]
+put "Es muss eine Datenbanktabelle f&uuml;r die Abfrage angegeben werden." into gLang["db_must_set_table"]
+put "Es muss eine Datenbank in der Konfigurations Datei angegeben werden." into gLang["db_must_set_database"]
+put "Die Funktion" && quote & "rigDbValuesSet()" & quote && "muss in der Aktualisierungs-Abfrage enthalten sein." into gLang["db_must_use_set"]
+put "Aktualisierungen von Datens&auml;tzen erfordern eine" && quote & "WHERE" & quote & "-Klausel." into gLang["db_must_use_where"]
+put "Das Laouml;schen von Datens&auml;tzen erfordert eine" && quote & "WHERE" & quote & "-Klausel." into gLang["db_del_must_use_where"]
+put "Der Name der Tabelle, aus der Daten abgefragt werden sollen, muss angegeben werden." into gLang["db_field_param_missing"]
+put "Dieser Befehl wird von der verwendeten Datenbank nicht unterst&uuml;tzt." into gLang["db_unsupported_function"]
+put "Die Transaktion ist fehlgeschlagen: Der vorherige Zustand wurde wiederhergestellt." into gLang["db_transaction_failure"]
+put "Die Datenbank konnte nicht gelouml;scht werden." into gLang["db_unable_to_drop"]
+put "Dieser Befehl wird von der verwendeten Datenbank nicht unterst&uuml;tzt." into gLang["db_unsuported_feature"]
+put "Das verwendete Kompressions-Dateiformat wird von der Datenbank nicht unterst&uuml;tzt." into gLang["db_unsuported_compression"]
+put "Die Ausgabe von Daten in den angegebenen Dateipfad ist fehlgeschlagen." into gLang["db_filepath_error"]
+put "Der Zwischenspeicher-Pfad (Cache) ist ung&uuml;ltig oder schreibgesch&uuml;tzt." into gLang["db_invalid_cache_path"]
+put "F&uuml;r diese Verarbeitung wird ein Tabellenname ben&ouml;tigt." into gLang["db_table_name_required"]
+put "F&uuml;r diese Verarbeitung wird ein Spaltenname ben&ouml;tigt." into gLang["db_column_name_required"]
+put "F&uuml;r diese Verarbeitung wird eine Spaltenbeschreibung ben&ouml;tigt." into gLang["db_column_definition_required"]
+put "Unm&ouml;glich den Zeichensatz f&uuml;r die Client Verbindung zu setzen: %s" into gLang["db_unable_to_set_charset"]
+put "Ein Datenbankfehler ist aufgetreten" into gLang["db_error_heading"]
+
+
+--| END OF dbLang.lc
+--| Location:  ./system/language/german/dbLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,18 @@
+<?rev
+
+put "Datens&auml;tze anzeigen" into gLang["scaff_view_records"]
+put "Neuen Datensatz erzeugen" into gLang["scaff_create_record"]
+put "Daten hinzuf&uuml;gen" into gLang["scaff_add"]
+put "Daten anzeigen" into gLang["scaff_view"]
+put "Bearbeiten" into gLang["scaff_edit"]
+put "L&ouml;schen" into gLang["scaff_delete"]
+put "Alle anzeigen" into gLang["scaff_view_all"]
+put "Ja" into gLang["scaff_yes"]
+put "Nein" into gLang["scaff_no"]
+put "In dieser Tabelle sind keine Daten gespeichert." into gLang["scaff_no_data"]
+put "Bitte best&auml;tigen Sie, dass die folgende Zeile tats&auml;chlich gel&ouml;scht werden soll:" into gLang["scaff_del_confirm"]
+
+
+--| END OF scaffoldingLang.lc
+--| Location:  ./system/language/german/scaffoldingLang.lc
+----------------------------------------------------------------------

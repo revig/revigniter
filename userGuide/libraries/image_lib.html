@@ -1,0 +1,754 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Image Manipulation Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Image Manipulation Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Image Manipulation Library</h1>
+
+<p>revIgniter's Image Manipulation library lets you perform the following actions:</p>
+
+<ul>
+<li>Image Resizing</li>
+<li>Thumbnail Creation</li>
+<li>Image Cropping</li>
+<li>Image Rotating</li>
+<li>Image Watermarking</li>
+</ul>
+
+<p>Supported image library: ImageMagick</p>
+
+
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the image library is initialized in your controller
+using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+<pre><code>rigLoaderLoadLibrary "Image"</code></pre>
+
+<p>Once the library is loaded it will be ready for use.</p>
+
+
+<h2>Processing an Image</h2>
+
+<p>Regardless of the type of processing you would like to perform (resizing, cropping, rotation, or watermarking), the general process is
+identical. You will set some preferences corresponding to the action you intend to perform, then
+call one of four available processing functions.  For example, to create an image thumbnail you'll do this:</p>
+
+<pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
+put TRUE into tConfig["createThumb"]
+put TRUE into tConfig["maintainRatio"]
+put "75" into tConfig["width"]
+put "50" into tConfig["height"]
+
+rigLoaderLoadLibrary "Image", tConfig
+
+
+put rigImageResize() into gData["imageOutput"]</code></pre>
+
+<p>The above code tells the <dfn>imageResize</dfn> function to look for an image called <em>mypic.jpg</em>
+located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels using. The path to the source image is 
+relative to your index.lc file. Since the <dfn>maintainRatio</dfn> option is enabled, the thumb will be as close to the target <dfn>width</dfn> and
+<dfn>height</dfn> as possible while preserving the original aspect ratio.  The thumbnail will be called <em>mypic_thumb.jpg</em>
+</p>
+
+<p class="important"><strong>Note:</strong> In order for the image library to be allowed to do any processing, the
+folder containing the image files must have write permissions.</p>
+
+
+
+<h2>Dynamic Output of Processed Image</h2>
+
+<p>If you set the <dfn>dynamicOutput</dfn> option to TRUE, the resulting image data will not be written to disk. Instead an irev file
+is saved, which is used as the source for an image tag in your view file.
+For example, to watermark an image without storing the image you'll do this:</p>
+
+<pre><code>put "overlay" into tConfig["WMtype"]
+put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
+put "path/to/watermarkImage/wmarkImg.png" into tConfig["WMoverlaypath"]
+put TRUE into tConfig["dynamicOutput"]
+put "temp/dynOverlay" into tConfig["dynamicOutputURI"]
+put "north" into tConfig["WMalignment"]
+put "20" into  tConfig["WMvrtOffset"]
+put "70" into tConfig["WMopacity"]
+
+rigLoaderLoadLibrary "Image", tConfig
+
+
+put rigImageWatermark() into gData["imageOutput"]</code></pre>
+
+<p>The above code tells the <dfn>imageWatermark</dfn> function to use an image overlay as watermark, to look for an image called <em>mypic.jpg</em>
+located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark 
+at the top of the source image with an vertical offset of 20 pixels and an opacity of 70% and save the source for your image tag in the controllers folder.
+Assuming segment-based URLs are used, the returned value looks like this: &lt;img src="http://yourdomain.com/temp/dynOverlay" width="480" height="312" />.</p>
+
+
+
+<p class="important"><strong>Note:</strong> The file defined in the <dfn>dynamicOutputURI</dfn> option, used as source in the image tag has to be in the scope 
+of the controllers directory. In the example above the file dynOverlay is located in a subdirectory (called temp) of the controllers directory.</p>
+
+
+<p>Use the returned value in your view file like in the following example:</p>
+
+<pre><code>&lt;html>
+	&lt;head>
+	&lt;/head>
+	&lt;body>
+		&lt;p>My watermarked image:&lt;/p>
+		[[gData["imageOutput"] ]]
+	&lt;/body>
+&lt;/html></code></pre>
+
+
+<h2>Processing Functions</h2>
+
+<p>There are four available processing functions:</p>
+
+<ul>
+<li>rigImageResize()</li>
+<li>rigImageCrop()</li>
+<li>rigImageRotate()</li>
+<li>rigImageWatermark()</li>
+</ul>
+
+<p>These functions return TRUE or img tags upon success and FALSE for failure.  If they fail you can retrieve the
+error message using this function:</p>
+
+<pre><code>put rigDisplayImgErrors() into gData["errorsToDisplay"]</code></pre>
+
+<p>A good practice is to use the processing function conditionally, showing an error upon failure, like this:</p>
+
+<pre><code>put rigImageResize() into tImageOutput
+if tImageOutput is FALSE then
+	put rigDisplayImgErrors() into gData["imageOutput"]
+else
+	put tImageOutput into gData["imageOutput"]
+end if</code></pre>
+
+<p>Note:  You can optionally specify the HTML formatting to be applied to the errors, by submitting the opening/closing
+tags in the function, like this:</p>
+
+<pre><code>get rigDisplayImgErrors("<var>&lt;p></var>", "<var>&lt;/p></var>")</code></pre>
+
+
+<h2>Preferences</h2>
+
+<p>The  preferences described below allow you to tailor the image processing to suit your needs.</p>
+
+<p>Note that not all preferences are available for every
+function.  For example, the x/y axis preferences are only available for image cropping. Likewise, the width and height
+preferences have no effect on cropping.  The "availability" column indicates which functions support a given preference.</p>
+
+<p>Availability Legend:</p>
+
+<ul>
+<li><var>R</var> - Image Resizing</li>
+<li><var>C</var> - Image Cropping</li>
+<li><var>X</var> - Image Rotation</li>
+<li><var>W</var> - Image Watermarking</li>
+
+</ul>
+
+
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+<th>Availability</th>
+</tr>
+
+<tr>
+<td class="td"><strong>sourceImage</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the source image name/path.  The path must be a relative or absolute server path, not a URL.</td>
+<td class="td">R, C, S, W</td>
+</tr>
+
+<tr>
+<td class="td"><strong>dynamicOutput</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Determines whether the new image file should be written to disk or generated dynamically.</td>
+<td class="td">R, C, X, W</td>
+</tr>
+
+<tr>
+<td class="td"><strong>dynamicOutputURI</strong></td>
+<td class="td">imageSrc</td>
+<td class="td">None</td>
+<td class="td">Dynamic output image source file path, must be in the scope of the controllers directory.</td>
+<td class="td">R, C, X, W</td>
+</tr>
+
+<tr>
+<td class="td"><strong>quality</strong></td>
+<td class="td">90</td>
+<td class="td">1 - 100</td>
+<td class="td">Sets the quality of the image. The higher the quality the larger the file size.</td>
+<td class="td">R, C, X, W</td>
+</tr>
+
+
+<tr>
+<td class="td"><strong>newImage</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the destination image name/path.  You'll use this preference when creating an image copy. The path must be a relative or absolute server path, not a URL.</td>
+<td class="td">R, C, X, W</td>
+</tr>
+
+<tr>
+<td class="td"><strong>width</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the width you would like the image set to.</td>
+<td class="td">R</td>
+</tr>
+
+<tr>
+<td class="td"><strong>height</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the height you would like the image set to.</td>
+<td class="td">R</td>
+</tr>
+
+<tr>
+<td class="td"><strong>createThumb</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Tells the image processing function to create a thumb.</td>
+<td class="td">R</td>
+</tr>
+
+<tr>
+<td class="td"><strong>thumbMarker</strong></td>
+<td class="td">_thumb</td>
+<td class="td">None</td>
+<td class="td">Specifies the thumbnail indicator.  It will be inserted just before the file extension, so mypic.jpg would become mypic_thumb.jpg</td>
+<td class="td">R</td>
+</tr>
+
+<tr>
+<td class="td"><strong>maintainRatio</strong></td>
+<td class="td">TRUE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Specifies whether to maintain the original aspect ratio when resizing or use hard values.</td>
+<td class="td">R, C</td>
+</tr>
+
+
+<tr>
+<td class="td"><strong>cropToFit</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Specifies whether the new image should be cropped if the target width/height is not in correct proportion with the source.</td>
+<td class="td">R</td>
+</tr>
+
+<tr>
+<td class="td"><strong>masterDim</strong></td>
+<td class="td">auto</td>
+<td class="td">auto, width, height</td>
+<td class="td">Specifies what to use as the master axis when resizing or creating thumbs. For example, let's say you want to resize an image to 100 X 75 pixels. If the source image size does not allow perfect resizing to those dimensions, this setting determines which axis should be used as the hard value. "auto" sets the axis automatically based on whether the image is taller than wider, or vice versa.</td>
+<td class="td">R</td>
+</tr>
+
+
+
+
+<tr>
+<td class="td"><strong>rotationAngle</strong></td>
+<td class="td">None</td>
+<td class="td">90, 180, 270, vrt, hor</td>
+<td class="td">Specifies the angle of rotation when rotating images.  Note that PHP rotates counter-clockwise, so a 90 degree rotation to the right must be specified as 270.</td>
+<td class="td">X</td>
+</tr>
+
+<tr>
+<td class="td"><strong>cropAlignment</strong></td>
+<td class="td">Center</td>
+<td class="td">Center, North, East, South, West, NorthEast, SouthEast, SouthWest, NorthWest</td>
+<td class="td">Sets the alignment for image cropping when percentage values are used.</td>
+<td class="td">C</td>
+</tr>
+
+<tr>
+<td class="td"><strong>Xaxis</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the X coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the left. 
+You can use percentages, then the cropAlignment preference applies.</td>
+<td class="td">C</td>
+</tr>
+
+<tr>
+<td class="td"><strong>Yaxis</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the Y coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the top. 
+You can use percentages, then the cropAlignment preference applies.</td>
+<td class="td">C</td>
+</tr>
+
+</table>
+</div>
+
+
+<h2>Setting Preferences in a Config File</h2>
+
+<p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
+Simply create a new file called <var>image.lc</var>,  add the <var>tConfig</var>
+array in that file. Then save the file in: <var>config/image.lc</var> and it will be used automatically. 
+Add <var>rigRunInitialImageConfig tConfig</var> as last line in the file.</p>
+
+
+<h2>rigImageResize()</h2>
+
+<p>The image resizing function lets you resize the original image, create a copy (with or without resizing),
+or create a thumbnail image.</p>
+
+<p> The difference between creating a copy and creating a thumbnail is that thumbnail creation is optimized for shrinking very large images to small thumbnails
+and that a thumb will have the thumbnail marker as part of the name (ie, mypic_thumb.jpg).</p>
+
+<p>All preferences listed in the table above are available for this function except these four:  rotationAngle, cropAlignment, Xaxis, and Yaxis.</p>
+
+<h3>Creating a Thumbnail</h3>
+
+<p>The resizing function will create a thumbnail file (and preserve the original) if you set this preference to TRUE:</p>
+
+<pre><code>put TRUE into tConfig["createThumb"]</code></pre>
+
+<p>This single preference determines whether a thumbnail is created or not. Setting it to TRUE is the recommended way to resize large images for thumbnail creation.</p>
+
+<h3>Creating a Copy</h3>
+
+<p>The resizing function will create a copy of the image file (and preserve the original) if you set
+a path and/or a new filename using this preference:</p>
+
+<pre><code>put "/path/to/new_image.jpg" into tConfig["newImage"]</code></pre>
+
+<p>Notes regarding this preference:</p>
+<ul>
+<li>If only the new image name is specified it will be placed in the same folder as the original</li>
+<li>If only the path is specified, the new image will be placed in the destination with the same name as the original.</li>
+<li>If both the path and image name are specified it will placed in its own destination and given the new name.</li>
+</ul>
+
+
+<h3>Resizing the Original Image</h3>
+
+<p>If neither of the two preferences listed above (createThumb, and newImage) are used, the resizing function will instead
+target the original image for processing.</p>
+
+
+<h2>rigImageCrop()</h2>
+
+<p>The cropping function works nearly identically to the resizing function except it requires that you set
+preferences for the X and Y axis (in pixels or as percentages) specifying where to crop, like this:</p>
+
+<pre><code>put "100" into tConfig["Xaxis"]
+put "40" into tConfig["Yaxis"]</code></pre>
+
+<p>All preferences listed in the table above are available for this function except these:  masterDim, rotationAngle, width, height, createThumb, thumbMarker.</p>
+
+<p>Here's an example showing how you might crop an image using percentages:</p>
+
+<pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
+put "North" into tConfig["cropAlignment"]
+put "50%" into tConfig["Xaxis"]
+put "80%" into tConfig["Yaxis"]
+
+rigLoaderLoadLibrary "Image", tConfig
+
+
+put rigImageCrop() into tImageOutput
+if tImageOutput is FALSE then
+	put rigDisplayImgErrors() into gData["imageOutput"]
+else
+	put tImageOutput into gData["imageOutput"]
+end if</code></pre>
+
+
+<p>Note: Without a visual interface it is difficult to crop images, so this function is not very useful
+unless you intend to build such an interface.</p>
+
+<h2>rigImageRotate()</h2>
+
+<p>The image rotation function requires that the angle of rotation be set via its preference:</p>
+
+<pre><code>put "90" into tConfig["rotationAngle"]</code></pre>
+
+<p>There are 5 rotation options:</p>
+
+<ol>
+<li>90 - rotates counter-clockwise by 90 degrees.</li>
+<li>180 - rotates counter-clockwise by 180 degrees.</li>
+<li>270 - rotates counter-clockwise by 270 degrees.</li>
+<li>hor - flips the image horizontally.</li>
+<li>vrt - flips the image vertically.</li>
+</ol>
+
+<p>Here's an example showing how you might rotate an image:</p>
+
+<pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
+put "hor" into tConfig["rotationAngle"]
+
+rigLoaderLoadLibrary "Image", tConfig
+
+
+put rigImageRotate() into tImageOutput
+if tImageOutput is FALSE then
+	put rigDisplayImgErrors() into gData["imageOutput"]
+else
+	put tImageOutput into gData["imageOutput"]
+end if</code></pre>
+
+
+
+<h2>rigImgClear</h2>
+<p>The rigImgClear handler resets all of the values used when processing an image. You will want to call this if you are processing images in a loop.</p>
+
+<pre><code>rigImgClear</code></pre>
+
+<p>&nbsp;</p>
+
+
+<h2>rigImageNewSettings</h2>
+<p>Use this handler when calling image manipulation handlers repeatedly.</p>
+
+<pre><code>rigImageNewSettings tConfig</code></pre>
+
+<p>&nbsp;</p>
+
+
+<h2>rigIMknownFonts()</h2>
+<p>Use this function to check which fonts are available for text watermarking.</p>
+
+<pre><code>put rigIMknownFonts() into tAllFonts</code></pre>
+
+<p>&nbsp;</p>
+
+
+<h2>rigIMversion()</h2>
+<p>Use this function to get the ImageMagick version.</p>
+
+<pre><code>put rigIMversion() into tVersion</code></pre>
+
+<p>&nbsp;</p>
+
+
+<h1>Image Watermarking</h1>
+
+
+
+<h2>Two Types of Watermarking</h2>
+
+<p>There are two types of watermarking that you can use:</p>
+
+<ul>
+<li><strong>Text</strong>: The watermark message will be generating using text with a font that you specify.</li>
+
+<li><strong>Overlay</strong>: The watermark message will be generated by overlaying an image (usually a transparent PNG)
+containing your watermark over the source image.</li>
+
+</ul>
+
+
+<h2>Watermarking an Image</h2>
+
+<p>Just as with the other functions (resizing, cropping, and rotating) the general process for watermarking
+involves setting the preferences corresponding to the action you intend to perform, then
+calling the watermark function.  Here is an example:</p>
+
+<pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
+put "text" into tConfig["WMtype"]
+put "Copyright 2010 - John Doe" into tConfig["WMtext"]
+put "18" into tConfig["WMfontsize"]
+put "Times" into tConfig["sImgWMfont"]
+put "F6F6F6" into tConfig["WMfontcolor"]
+put "656565" into tConfig["WMshadowcolor"]
+put "North" into tConfig["WMalignment"]
+put "20" into  tConfig["WMvrtOffset"]
+
+rigLoaderLoadLibrary "Image", tConfig
+
+
+put rigImageWatermark() into tImageOutput</code></pre>
+
+
+<p>The above example will use a 18 pixel font to create the text "Copyright 2010 - John Doe".  The watermark
+will be positioned at the top/center of the image, 20 pixels from the top of the image.</p>
+
+<p class="important"><strong>Note:</strong> In order for the image library to be allowed to do any processing, the image file must have &quot;write&quot; file permissions.</p>
+
+
+<h2>Watermarking Preferences</h2>
+
+<p>This table shows the preferences that are available for both types of watermarking (text or overlay)</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>WMtype</strong></td>
+<td class="td">text</td>
+<td class="td">text, overlay</td>
+<td class="td">Sets the type of watermarking that should be used.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>sourceImage</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">Sets the source image name/path.  The path must be a relative or absolute server path, not a URL.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>dynamicOutput</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Determines whether the new image file should be written to disk or generated dynamically.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>dynamicOutputURI</strong></td>
+<td class="td">imageSrc</td>
+<td class="td">None</td>
+<td class="td">Dynamic output image source file path, must be in the scope of the controllers directory.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>quality</strong></td>
+<td class="td">90</td>
+<td class="td">1 - 100</td>
+<td class="td">Sets the quality of the image. The higher the quality the larger the file size.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMalignment</strong></td>
+<td class="td">South</td>
+<td class="td">Center, North, East, South, West, NorthEast, SouthEast, SouthWest, NorthWest</td>
+<td class="td">Sets the alignment for the watermark image.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMhorOffset</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">You may specify a horizontal offset (in pixels) to apply to the watermark position.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMvrtOffset</strong></td>
+<td class="td">10</td>
+<td class="td">None</td>
+<td class="td">You may specify a vertical offset (in pixels) to apply to the watermark position.</td>
+</tr>
+
+</table>
+</div>
+
+
+
+<h2>Text Preferences</h2>
+<p>This table shows the preferences that are available for the text type of watermarking.</p>
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>WMtext</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">The text you would like shown as the watermark.  Typically this will be a copyright notice.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMfont</strong></td>
+<td class="td">Helvetica</td>
+<td class="td">None</td>
+<td class="td">The font.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMfontsize</strong></td>
+<td class="td">16</td>
+<td class="td">None</td>
+<td class="td">The size of the text.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMfontcolor</strong></td>
+<td class="td">f6f6f6</td>
+<td class="td">None</td>
+<td class="td">The font color, specified in hex.  Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff).</td>
+</tr>
+
+
+<tr>
+<td class="td"><strong>WMshadowcolor</strong></td>
+<td class="td">656565</td>
+<td class="td">None</td>
+<td class="td">The color of the drop shadow, specified in hex. If you leave this blank a drop shadow will not be used. Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff).</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMshadowdistance</strong></td>
+<td class="td">1</td>
+<td class="td">None</td>
+<td class="td">The distance (in pixels) from the font that the drop shadow should appear.</td>
+</tr>
+
+</table>
+</div>
+
+
+<h2>Overlay Preferences</h2>
+<p>This table shows the preferences that are available for the overlay type of watermarking.</p>
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>WMoverlaypath</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">The server path to the image you wish to use as your watermark. Required only if you are using the overlay method.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMopacity</strong></td>
+<td class="td">15</td>
+<td class="td">1 - 100</td>
+<td class="td">Image opacity. You may specify the opacity (i.e. transparency) of your watermark image. This allows the watermark to be faint and not completely obscure the details from the original image behind it.</td>
+</tr>
+</table>
+</div>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;<a href="table.html">&nbsp;HTML Table Library</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

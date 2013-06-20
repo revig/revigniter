@@ -1,0 +1,194 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Exceptions Library
+#
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Exceptions
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/general/controllers.html
+##
+
+
+# DECLARE VARIABLES
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLogException
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 28-06-09
+--| Last Mod: 28-06-09
+--| Requires: rigFetchControllerHandler(), rigLogMessage
+--|
+--| Summary:  This command logs Rev error messages.
+--| 
+--| Format:  rigLogException param1, param2, param3, param4
+--|
+--| Parameters: string <pErrorData>, bool <pDisplayError>, string <pFile>, string <pMethod>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLogException pErrorData pDisplayError pFile pMethod
+	if pFile is empty then
+		put gController into tFile
+	else
+		put pFile into tFile
+	end if
+	if pMethod is empty then
+		put rigFetchControllerHandler() into tMethod
+	else
+		put pMethod into tMethod
+	end if
+
+	put "RevError - Current File:" && tFile & ", Current Method:" && tMethod & CR & pErrorData into tErrorData
+	rigLogMessage "error", tErrorData, pDisplayError
+end rigLogException
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigShow404Page
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 29-06-09
+--| Last Mod: 13-09-09
+--| Requires: rigLogMessage, rigShowErrorPage
+--|
+--| Summary:  404 Page Not Found Handler.
+--| 
+--| Format:  rigShow404Page param1
+--|
+--| Parameters: mixed <pPage>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigShow404Page pPage
+	if pPage is an array then
+		put pPage["page"] into tPage
+	else
+		put pPage into tPage
+	end if
+
+	put  "404 Page Not Found" into tHeading
+	put "The page you requested was not found." into tMessage
+
+	rigLogMessage "error", "404 Page Not Found --> " & tPage
+	put rigShowErrorPage(tHeading, tMessage, "error404", 404)
+	exit to top
+end rigShow404Page
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigShowErrorPage
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 29-06-09
+--| Last Mod: 13-09-09
+--| Requires: error files
+--|
+--| Summary: General Error Page
+--|                    This function takes an error message as input
+--|                    (either as a string or an array) and displays
+--|                    it using the specified template.
+--| 
+--| Format:  rigShowErrorPage(param1, param2, param3)
+--|
+--| Parameters: string <pHeading>, string <pMessage>, string <pTemplate>, integer <pStatusCode>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigShowErrorPage pHeading pMessage pTemplate pStatusCode
+	put pHeading into gErrorData["heading"]
+	put pMessage into tMessage
+
+	if pTemplate is empty then
+		put "errorGeneral" into tTemplate
+	else
+		put pTemplate into tTemplate
+	end if
+
+	if pStatusCode is empty then
+		put 500 into tStatusCode
+	else
+		put pStatusCode into tStatusCode
+	end if
+
+	rigSetStatusHeader tStatusCode
+
+	if tMessage is an array then
+		put "<p>" into tErrorMsg
+		repeat for each key tKey in tMessage
+			put tMessage[tKey] & "</p><p>" after tErrorMsg
+		end repeat
+		delete char -3 to -1 of tErrorMsg
+	else 
+		put "<p>" & tMessage & "</p>" into tErrorMsg
+	end if
+
+	put tErrorMsg into gErrorData["message"]
+
+	put gAPPPATH & "errors/" & tTemplate & gEXT into tErrorFilePath
+	put URL format("binfile:%s", tErrorFilePath) into tBuffer
+
+	put merge(tBuffer) into tOutput
+	return tOutput
+end rigShowErrorPage
+
+
+
+
+
+
+
+
+
+
+
+--| END OF Exception.lc
+--| Location:  ./system/libraries/Exception.lc
+----------------------------------------------------------------------

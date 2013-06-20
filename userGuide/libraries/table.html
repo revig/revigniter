@@ -1,0 +1,349 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>HTML Table Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+HTML Table Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>HTML Table Library</h1>
+
+<p>The Table Library provides handlers that enable you to auto-generate HTML tables from arrays or database result sets.</p>
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Table library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"</code></pre>
+
+<h2>Examples:</h2>
+
+<p>Here is an example showing how you can create a table from a multi-dimensional array.
+Note that the first array index will become the table heading (or you can set your own headings using the
+<dfn>rigSetTableHeading</dfn> handler described in the handler reference below).</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"
+
+put "Name" into tData[1][1]
+put "Color" into tData[1][2]
+put "Size" into tData[1][3]
+
+put "Fred" into tData[2][1]
+put "Blue" into tData[2][2]
+put "Small" into tData[2][3]
+
+put "Mary" into tData[3][1]
+put "Red" into tData[3][2]
+put "Large" into tData[3][3]
+
+put "John" into tData[4][1]
+put "Green" into tData[4][2]
+put "Medium" into tData[4][3]
+
+put rigGenerateTable(tData) into gData["testTable"]		
+</code></pre>
+
+<p>Here is an example of a table created from a database query result. The Table library will automatically generate the
+headings based on the table names (or you can set your own headings using the <dfn>rigSetTableHeading</dfn> handler described
+in the handler reference below).</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"
+
+put rigDbQuery("SELECT * FROM mytable") into tQuery
+put tQuery["resultarray"] into tResult
+
+put rigGenerateTable(tResult) into gData["testTable"]		
+</code></pre>
+
+
+<p>Here is an example showing how you might create a table using discrete parameters:</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"
+
+rigSetTableHeading "Name,Color,Size"
+
+rigAddTableRow "Fred,Blue,Small"
+rigAddTableRow "Mary,Red,Large"
+rigAddTableRow "John,Green,Medium"
+
+put rigGenerateTable() into gData["testTable"]		
+</code></pre>
+
+<p>Here is the same example, except instead of individual parameters, arrays are used:</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"
+
+put "Name" into tHeading[1]
+put "Color" into tHeading[2]
+put "Size" into tHeading[3]
+rigSetTableHeading tHeading
+
+put "Fred" into tRow[1]
+put "Blue" into tRow[2]
+put "Small" into tRow[3]
+rigAddTableRow tRow
+
+put "Mary" into tRow[1]
+put "Red" into tRow[2]
+put "Large" into tRow[3]
+rigAddTableRow tRow
+
+put "John" into tRow[1]
+put "Green" into tRow[2]
+put "Medium" into tRow[3]
+rigAddTableRow tRow
+
+put rigGenerateTable() into gData["testTable"]		
+</code></pre>
+
+
+<h2>Changing the Look of Your Table</h2>
+
+<p>The Table Library permits you to set a table template with which you can specify the design of your layout.  Here is the template
+prototype:</p>
+
+<pre><code>put "&lt;table border=" &amp; quote &amp; "0" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "4" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "0" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+put "&lt;tr>" into tTmpl["headingRowStart"]
+put "&lt;/tr>" into tTmpl["headingRowEnd"]
+put "&lt;th>" into tTmpl["headingCellStart"]
+put "&lt;/th>" into tTmpl["headingCellEnd"]
+
+put "&lt;tr>" into tTmpl["rowStart"]
+put "&lt;/tr>" into tTmpl["rowEnd"]
+put "&lt;td>" into tTmpl["cellStart"]
+put "&lt;/td>" into tTmpl["cellEnd"]
+
+put "&lt;tr>" into tTmpl["rowAltStart"]
+put "&lt;/tr>" into tTmpl["rowAltEnd"]
+put "&lt;td>" into tTmpl["cellAltStart"]
+put "&lt;/td>" into tTmpl["cellAltEnd"]
+
+put "&lt;/table>" into tTmpl["tableClose"]
+
+rigSetTableTemplate tTmpl
+</code></pre>
+
+<p class="important"><strong>Note:</strong>&nbsp; You'll notice there are two sets of "row" blocks in the template.  These permit you to create alternating row colors or design elements that alternate with each
+iteration of the row data.</p>
+
+<p>You are NOT required to submit a complete template.  If you only need to change parts of the layout you can simply submit those elements.
+In this example, only the table opening tag is being changed:</p>
+
+<pre><code>put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+
+rigSetTableTemplate tTmpl
+</code></pre>
+
+<br />
+<h1>Handler Reference</h1>
+
+<h2>rigGenerateTable()</h2>
+<p>Returns a string containing the generated table.  Accepts an optional parameter which can be an array like a database query result array.</p>
+
+<h2>rigSetTableCaption</h2>
+
+<p>Permits you to add a caption to the table.</p>
+
+<pre><code>rigSetTableCaption "Colors"</code></pre>
+
+<h2>rigSetTableHeading</h2>
+
+<p>Permits you to set the table heading.  You can submit an array or discrete params:</p>
+
+<pre><code>rigSetTableHeading "Name,Color,Size"</code></pre>
+
+<pre><code>put "Name" into tHeading[1]
+put "Color" into tHeading[2]
+put "Size" into tHeading[3]
+
+rigSetTableHeading tHeading</code></pre>
+
+<p>The second optional parameter is a boolean used to uppercase the first character of the table heading words. This is useful if you retrieve lowercase field names from a database table as table heading.</p>
+
+<pre><code>rigSetTableHeading tQuery["fieldnames"], TRUE
+</code></pre>
+
+<h2>rigAddTableRow</h2>
+
+<p>Permits you to add a row to your table.  You can submit an array or discrete params:</p>
+
+<pre><code>rigAddTableRow "Blue,Red,Green"</code></pre>
+
+<pre><code>put "Blue" into tRow[1]
+put "Red" into tRow[2]
+put "Green" into tRow[3]
+
+rigAddTableRow tRow</code></pre>
+
+
+<h2>rigMakeTableColumns()</h2>
+
+<p>This function takes a one-dimensional array as input and creates
+a multi-dimensional array with a depth equal to the number of
+columns desired.  This allows a single array with many elements to  be
+displayed in a table that has a fixed column count.  Consider this example:</p>
+
+<pre><code>put "one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve" into tList
+split tList using comma
+
+put rigMakeTableColumns(tList, 3) into tNewList
+
+put rigGenerateTable(tNewList) into gData["testTable"]
+
+// Generates a table with this prototype
+
+&lt;table border="0" cellpadding="4" cellspacing="0"&gt;
+&lt;tr&gt;
+&lt;td&gt;one&lt;/td&gt;&lt;td&gt;two&lt;/td&gt;&lt;td&gt;three&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;
+&lt;td&gt;four&lt;/td&gt;&lt;td&gt;five&lt;/td&gt;&lt;td&gt;six&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;
+&lt;td&gt;seven&lt;/td&gt;&lt;td&gt;eight&lt;/td&gt;&lt;td&gt;nine&lt;/td&gt;
+&lt;/tr&gt;&lt;tr&gt;
+&lt;td&gt;ten&lt;/td&gt;&lt;td&gt;eleven&lt;/td&gt;&lt;td&gt;twelve&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;</code></pre>
+
+
+
+<h2>rigSetTableTemplate</h2>
+
+<p>Permits you to set your template. You can submit a full or partial template.</p>
+
+<pre><code>put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+
+
+rigSetTableTemplate tTmpl
+</code></pre>
+
+
+<h2>rigSetEmptyCellVal</h2>
+
+<p>Let's you set a default value for use in any table cells that are empty.  You might, for example, set a non-breaking space:</p>
+
+<pre><code>rigSetEmptyCellVal "&amp;nbsp;"
+</code></pre>
+
+<h2>rigClearTableVars</h2>
+
+<p>Lets you clear the table heading and row data.  If you need to show multiple tables with different data you should
+call this function after each table has been generated to empty the previous table information. Example:</p>
+
+<pre><code>rigLoaderLoadLibrary "Table"
+
+rigSetTableHeading "Name,Color,Size"
+
+rigAddTableRow "Fred,Blue,Small"
+rigAddTableRow "Mary,Red,Large"
+rigAddTableRow "John,Green,Medium"
+
+put rigGenerateTable() into gData["testTable"]
+
+<kbd>rigClearTableVars</kbd>
+
+rigSetTableHeading "Name,Day,Delivery"
+
+rigAddTableRow "Fred,Wednesday,Express"
+rigAddTableRow "Mary,Monday,Air"
+rigAddTableRow "John,Saturday,Overnight"
+
+put rigGenerateTable() into gData["newTestTable"]
+</code></pre>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;<a href="form_validation.html">&nbsp;Form Validation Library</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="image_lib.html">Image Manipulation Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

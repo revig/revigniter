@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Pagination Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Pagination Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Pagination Library</h1>
+
+<p>revIgniter's Pagination library is very easy to use, and it is 100% customizable, either dynamically or via stored preferences.</p>
+
+<p>If you are not familiar with the term "pagination", it refers to links that allows you to navigate from page to page, like this:</p>
+
+<pre><code><a href="#">&laquo; First</a>&nbsp;&nbsp;<a href="#">&lt;</a>&nbsp;<a href="#">1</a>&nbsp;<a href="#">2</a>&nbsp;<b>3</b>&nbsp;<a href="#">4</a>&nbsp;<a href="#">5</a>&nbsp;<a href="#">&gt;</a>&nbsp;&nbsp;<a href="#">Last &raquo;</a></code></pre>
+
+<h2>Example</h2>
+
+<p>Here is a simple example showing how to create pagination in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
+
+<pre><code>rigLoaderLoadLibrary "Pagination"	
+put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+put 200 into tConfig["totalRows"]
+put 20 into tConfig["perPage"]
+
+rigInitializePagination tConfig
+
+
+put rigCreatePaginationLinks() into gData["pagination"]</code></pre>
+
+<h3>Notes:</h3>
+
+<p>The <var>tConfig</var> array contains your configuration variables.  It is passed to the <dfn>rigInitializePagination</dfn> handler as shown above.  Although there are some twenty items you can configure, at
+minimum you need the three shown.  Here is a description of what those items represent:</p>
+
+<ul>
+	<li><strong>baseUrl</strong> This is the full URL to the controller/handler containing your pagination.  In the example
+	above, it is pointing to a controller called "test" and a handler called "page".  Keep in mind that you can
+	<a href="../general/routing.html">re-route your URI</a> if you need a different structure.</li>
+	<li><strong>totalRows</strong> This number represents the total rows in the result set you are creating pagination for.
+	Typically this number will be the total rows that your database query returned.
+	</li>
+	<li><strong>perPage</strong> The number of items you intend to show per page.  In the above example, you would be showing 20 items per page.</li>
+</ul>
+
+<p>The <var>rigCreatePaginationLinks()</var> function returns an empty string when there is no pagination to show.</p>
+
+
+<h3>Setting preferences in a config file</h3>
+
+<p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
+Simply create a new file called <var>pagination.lc</var>,  add an
+array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
+array as parameter. Then save the file in: <var>config/pagination.lc</var> and it will be used automatically. You
+will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
+
+<p>Example:</p>
+
+<pre><code>local sConfig
+
+put "http://example.com/index.lc/test/page/" into sConfig["baseUrl"]
+put 200 into sConfig["totalRows"]
+put 20 into sConfig["perPage"]
+put "&laquo; First" into sConfig["firstLink"]
+put "Last &raquo;" into sConfig["lastLink"]
+put "&lt;div class=" & quote & "fullTag" & quote & ">" into sConfig["fullTagOpen"]
+put "&lt;/div>" into sConfig["fullTagClose"]
+
+
+# START PAGINATION CONFIGURATION
+# THIS LINE IS MANDATORY
+rigRunInitialPaginationConfig sConfig
+</code></pre>
+
+
+<h2>Customizing the Pagination</h2>
+
+<p>The following is a list of all the preferences you can pass to the initialization handler to tailor the display.</p>
+
+
+<h4>put 3 into tConfig["uriSegment"]</h4>
+
+<p>The pagination function automatically determines which segment of your URI contains the page number. If you need
+something different you can specify it.</p>
+
+<h4>put 2 into tConfig["numLinks"]</h4>
+
+<p>The number of &quot;digit&quot; links you would like before and after the selected page number. For example, the number 2
+	will place two digits on either side, as in the example links at the very top of this page.</p>
+	
+<h4>put TRUE into tConfig["pageQueryString"]</h4>
+
+<p>By default, the pagination library assumes you are using <a href="../general/urls.html">URI Segments</a>, and constructs your links something like</p>
+
+<pre><code>http://example.com/index.lc/test/page/20</code></pre>
+
+<p>If you have gConfig["enableQueryStrings"]  set to TRUE your links will automatically be re-written using Query Strings. This option can also be explictly set. Using tConfig["pageQueryString"] set to TRUE, the pagination link will become.</p>
+
+<pre><code>http://example.com/index.lc?c=test&amp;m=page&amp;perPage=20</code></pre>
+
+<p>Note that &quot;perPage&quot; is the default query string  passed, however can be configured using put "your_string" into tConfig["queryStringSegment"]</p>
+
+<h2>Adding Enclosing Markup</h2>
+
+<p>If you would like to surround the entire pagination with some markup you can do it with these two prefs:</p>
+
+<h4>put "&lt;p>" into tConfig["fullTagOpen"]</h4>
+<p>The opening tag placed on the left side of the entire result.</p>
+
+<h4>put "&lt;/p>" into tConfig["fullTagClose"]</h4>
+<p>The closing tag placed on the right side of the entire result.</p>
+
+
+<h2>Customizing the First Link</h2>
+
+<h4>put "First" into tConfig["firstLink"]</h4>
+<p>The text you would like shown in the "first" link on the left.</p>
+
+<h4>put "&lt;div>" into tConfig["firstTagOpen"]</h4>
+<p>The opening tag for the "first" link.</p>
+
+<h4>put "&lt;/div>" into tConfig["firstTagClose"]</h4>
+<p>The closing tag for the "first" link.</p>
+
+<h2>Customizing the Last Link</h2>
+
+<h4>put "Last" into tConfig["lastLink"]</h4>
+<p>The text you would like to be shown in the "last" link on the right.</p>
+
+<h4>put "&lt;div>" into tConfig["lastTagOpen"]</h4>
+<p>The opening tag for the "last" link.</p>
+
+<h4>put "&lt;/div>" into tConfig["lastTagClose"]</h4>
+<p>The closing tag for the "last" link.</p>
+
+<h2>Customizing the "Next" Link</h2>
+
+<h4>put "&amp;gt;" into tConfig["nextLink"]</h4>
+<p>The text you would like to be shown in the "next" page link.</p>
+
+<h4>put "&lt;div>" into tConfig["nextTagOpen"]</h4>
+<p>The opening tag for the "next" link.</p>
+
+<h4>put "&lt;/div>" into tConfig["nextTagClose"]</h4>
+<p>The closing tag for the "next" link.</p>
+
+<h2>Customizing the "Previous" Link</h2>
+
+<h4>put "&amp;lt;" into tConfig["prevLink"]</h4>
+<p>The text you would like to be shown in the "previous" page link.</p>
+
+<h4>put "&lt;div>" into tConfig["prevTagOpen"]</h4>
+<p>The opening tag for the "previous" link.</p>
+
+<h4>put "&lt;/div>" into tConfig["prevTagClose"]</h4>
+<p>The closing tag for the "previous" link.</p>
+
+<h2>Customizing the "Current Page" Link</h2>
+
+<h4>put "&lt;b>" into tConfig["curTagOpen"]</h4>
+<p>The opening tag for the "current" link.</p>
+
+<h4>put "&lt;/b>" into tConfig["curTagClose"]</h4>
+<p>The closing tag for the "current" link.</p>
+
+
+<h2>Customizing the "Digit" Link</h2>
+
+<h4>put "&lt;div>" into tConfig["numTagOpen"]</h4>
+<p>The opening tag for the "digit" link.</p>
+
+<h4>put "&lt;/div>" into tConfig["numTagClose"]</h4>
+<p>The closing tag for the "digit" link.</p>
+		
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

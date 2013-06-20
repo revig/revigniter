@@ -1,0 +1,25 @@
+<?rev
+
+put "El método de validación de correo debe ser pasado como un array." into gLang["email_must_be_array"]
+put "Dirección de correo no válida: %s" into gLang["email_invalid_address"]
+put "No se ha podido localizar el siguiente fichero adjunto: %s" into gLang["email_attachment_missing"]
+put "No se ha podido abrir el siguiente fichero adjunto: %s" into gLang["email_attachment_unreadable"]
+put "Debe incluir receptores: Para, CC, o BCC" into gLang["email_no_recipients"]
+put "No se puede enviar el correo usando el shell command" && quote & "mail." & quote && "Su servidor puede no estar configurado para usar este método de envio." into gLang["email_send_failure_mail"]
+put "No se puede enviar el correo usando el shell command" && quote & "sendmail." & quote && "Su servidor puede no estar configurado para usar este método de envio." into gLang["email_send_failure_sendmail"]
+put "No se puede enviar el correo usando SMTP. Su servidor puede no estar configurado para usar este método de envio." into gLang["email_send_failure_smtp"]
+put "Su mensaje ha sido enviado satisfactoriamente usando el siguiente protocolo: %s" into gLang["email_sent"]
+put "No se puede abrir un socket. Por favor revise la configuración." into gLang["email_no_socket"]
+put "No ha especificado un servidor SMTP." into gLang["email_no_hostname"]
+put "Los siguientes errores SMTP han sido encontrados: %s" into gLang["email_smtp_error"]
+put "Error: Debe asignar un usuario y contraseña para el servidor SMTP." into gLang["email_no_smtp_unpw"]
+put "Fallo enviando el comando AUTH LOGIN. Error: %s" into gLang["email_failed_smtp_login"]
+put "Fallo autentificando el usuario. Error: %s" into gLang["email_smtp_auth_un"]
+put "Fallo usando la contraseña. Error: %s" into gLang["email_smtp_auth_pw"]
+put "No se han podido enviar los datos: %s" into gLang["email_smtp_data_failure"]
+put "Código de estado de salida: %s" into gLang["email_exit_status"]
+
+
+--| END OF emailLang.lc
+--| Location:  ./system/language/spanish/emailLang.lc
+----------------------------------------------------------------------

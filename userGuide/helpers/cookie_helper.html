@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Cookie Helper : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Cookie Helper
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Cookie Helper</h1>
+
+<p>The Cookie Helper file contains handlers that assist in working with cookies.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code>rigLoadHelper "cookie"</code></pre>
+
+<p>The following handlers are available:</p>
+
+<h2>rigSetCookie</h2>
+
+<p>Sets a cookie containing the values you specify.  There are two ways to pass information to this function so that a cookie can be set:
+Array Method, and Discrete Parameters:</p>
+
+<h4>Array Method</h4>
+
+<p>Using this method, an associative array is passed to the first parameter:</p>
+
+<pre><code>put "The Cookie Name" into tCookie["name"]
+put "The Value" into tCookie["value"]
+put 86500 into tCookie["expire"]
+put ".some-domain.com" into tCookie["domain"]
+put "/" into tCookie["path"]
+put "myprefix" into tCookie["prefix"]
+put FALSE into tCookie["replace"] -- set to TRUE, if you want to overwrite the most recent cookie header
+put TRUE into tCookie["secure"]
+
+rigSetCookie tCookie
+</code></pre>
+
+<p><strong>Notes:</strong></p>
+
+<p>Only the <strong>name</strong> and <strong>value</strong> are required. To delete a cookie set it with the expiration blank.</p>
+
+<p>The <strong>expiration</strong> is set in <strong>seconds</strong>, which will be added to the current time.  Do not include the time, but rather only the
+number of seconds from <em>now</em> that you wish the cookie to be valid.  If the expiration is set to
+zero the cookie will only last as long as the browser is open.</p>
+<p>For site-wide cookies regardless of how your site is requested, add your URL to the <strong>domain</strong> starting with a period, like this:  .your-domain.com</p>
+<p>The <strong>path</strong> is usually not needed since the handler sets a root path.</p>
+<p>The <strong>prefix</strong> is only needed if you need to avoid name collisions with other identically named cookies for your server.</p>
+<p>Set the <strong>replace</strong> boolean to TRUE, if you want to overwrite the most recent cookie header</p>
+<p>The <strong>secure</strong> boolean is only needed if you want to make it a secure cookie by setting it to TRUE (Cookies will only be set if a secure HTTPS connection exists).</p>
+
+<h4>Discrete Parameters</h4>
+
+<p>If you prefer, you can set the cookie by passing data using individual parameters:</p>
+
+<pre><code>rigSetCookie tName, tValue, tExp, tDomain, tPath, tPrefix, tReplace, pSecure</code></pre>
+
+<p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
+
+<h2>rigGetCookie()</h2>
+
+<p>Lets you fetch a cookie.  The first parameter will contain the name of the cookie you are looking for (including any prefixes):</p>
+
+<pre><code>put rigGetCookie("someCookie") into tCookieData</code></pre>
+
+<p>The function returns FALSE (boolean) if the item you are attempting to retrieve does not exist.</p>
+
+<p>The second optional parameter lets you run the data through the XSS filter.  It's enabled by setting the second parameter to boolean TRUE;</p>
+
+<pre><code>put rigGetCookie("someCookie", TRUE) into tCookieData</code></pre>
+
+<h2>rigDeleteCookie</h2>
+
+<p>Lets you delete a cookie.  Unless you've set a custom path or other values, only the name of the cookie is needed:</p>
+
+<pre><code>rigDeleteCookie "name"</code></pre>
+
+<p>This handler is otherwise identical to <dfn>rigSetCookie</dfn>, except that it does not have the value and expiration parameters.  You can submit an array
+of values in the first parameter or you can set discrete parameters.</p>
+
+<pre><code>rigDeleteCookie tName, tDomain, tPath, tPrefix</code></pre>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="asset_helper.html">Asset Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="date_helper.html">Date Helper</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigMinifyOutput
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 13-05-2011
+--| Last Mod: 29-06-2011
+--| Requires: rigGetOutput(), rigPregReplace(), rigSetOutput, _rigDisplay
+--|
+--| Summary: Minifies HTML output.
+--| 
+--| Format:  rigMinifyOutput	
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigMinifyOutput
+	put rigGetOutput() into tRawHTML
+	
+	# REMOVE COMMENTS
+	put "(?s)(\<!--\s*[^\s\[\>\<].*?--\>)" into tRegEx
+	put " " into tReplacement
+	put rigPregReplace(tRawHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	# REMOVE WHITESPACE
+	put "(?s)(\>\s+\<)" into tRegEx
+	put "><" into tReplacement
+	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	put "(?s)((\s)+)" into tRegEx
+	put " " into tReplacement
+	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	# DISPLAY HTML
+	rigSetOutput tMinifiedHTML	
+	_rigDisplay
+end rigMinifyOutput
+
+
+
+
+--| END OF overrideOutput.lc
+--| Location:  ./system/application/hooks/overrideOutput.lc
+----------------------------------------------------------------------

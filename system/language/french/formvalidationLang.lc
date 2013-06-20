@@ -1,0 +1,32 @@
+<?rev
+
+put "Le champ %s est n&eacute;cessaire." into gLang["requiredR"]
+put "Le champ %s doit avoir une valeur." into gLang["isset"]
+put "Le champ %s doit contenir une adresse email valide." into gLang["validEmailR"]
+put "Le champ %s ne doit contenir que des adresses emails valides." into gLang["validEmailsR"]
+put "Le champ %s doit contenir un URL valide." into gLang["validUrlR"]
+put "Le champ %s doit contenir une adresse IP valide." into gLang["validIpR"]
+put "Le champ %s doit avoir au moins %s caract&egrave;res." into gLang["minLengthR"]
+put "Le champ %s ne peut pas avoir plus de %s caract&egrave;res." into gLang["maxLengthR"]
+put "Le champ %s doit contenir exactement %s caract&egrave;res." into gLang["exactLengthR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alphabétiques." into gLang["alphaR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alpha-num&eacute;riques." into gLang["alphaNumericR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alpha-num&eacute;riques, des tirets bas ou des tirets." into gLang["alphaDashR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alphabétiques ou des caract&egrave;re accentu&eacute;." into gLang["alphaAccentR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alpha-num&eacute;riques ou des caract&egrave;re accentu&eacute;." into gLang["alphaNumericAccentR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res alpha-num&eacute;riques, des caract&egrave;re accentu&eacute;, des tirets bas ou des tirets." into gLang["alphaDashAccentR"]
+put "Le champ %s ne doit contenir que des nombres." into gLang["numericR"]
+put "Le champ %s ne peut contenir que des caract&egrave;res num&eacute;riques." into gLang["isNumericR"]
+put "Le champ %s doit contenir un entier." into gLang["integerR"]
+put "Le champ %s ne correspond pas au champ %s." into gLang["matchesR"]
+put "Le champ %s doit contenir un nombre positif." into gLang["isNaturalR"]
+put "Le champ %s doit contenir un nombre plus grand que z&eacute;ro." into gLang["isNaturalNoZeroR"]
+put "Le champ %s doit contenir des caract&egrave;res Base64 valide." into gLang["validBase64R"]
+put "Le champ %s doit contenir un nombre d&eacute;cimal." into gLang["decimalR"]
+put "Le champ %s doit contenir un nombre sup&eacute;rieur &agrave; %s." into gLang["greaterThanR"]
+put "Le champ %s doit contenir un nombre inf&eacute;rieur &agrave; %s." into gLang["lessThanR"]
+
+
+--| END OF formvalidationLang.lc
+--| Location:  ./system/language/french/formvalidationLang.lc
+----------------------------------------------------------------------

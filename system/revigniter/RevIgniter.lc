@@ -1,0 +1,382 @@
+<?rev
+# THE variablenames FUNCTION OUTSIDE HANDLERS YIELDS A SERVER ERROR
+-- if "gBASEPATH" is not among the items of line 4 of the variablenames then
+
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# System Front Controller
+#
+# Loads the base libraries and executes the request.
+#
+# @package		revIgniter
+# @subpackage	revigniter
+# @category	  Front-controller
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/
+##
+
+## ------------------------------------------------------------------------
+
+
+# RI VERSION
+	constant RIVERSION = "1.6.3"
+	constant RISTATE = "final"
+	
+	
+##
+#------------------------------------------------------
+#  DECLARE ADDITIONAL GLOBAL VARIABLES
+	 global gController, gHandler
+#------------------------------------------------------
+##
+
+
+##
+#------------------------------------------------------
+#  Load the global handlers
+#------------------------------------------------------
+##
+
+	require gBASEPATH & "revigniter/Common" & gEXT
+
+
+##
+#------------------------------------------------------
+# Load the framework constants
+#------------------------------------------------------
+##
+
+	require gAPPPATH & "config/constants" & gEXT
+
+
+##
+#------------------------------------------------------
+# Start the timer... tick tock tick tock...
+#------------------------------------------------------
+##
+
+	rigLoadLibrary "Benchmark"
+	rigTimeMark "totalExecutionTime_start"
+	rigTimeMark "loadingTimeBaseLibs_start"
+
+
+##
+#------------------------------------------------------
+#  Load the Hooks library, loads the Config library too.
+#------------------------------------------------------
+##
+
+	rigLoadLibrary "Hooks"
+
+
+##
+#------------------------------------------------------
+#  Is there a "preSystem" hook?
+#------------------------------------------------------
+##
+
+	get _rigCallHook("preSystem")
+
+
+##
+#------------------------------------------------------
+#  Load the base libraries
+#------------------------------------------------------
+##
+
+	rigLoadLibrary "Config"
+	rigLoadLibrary "URI"
+	rigLoadLibrary "Router"
+	rigLoadLibrary "Output"
+
+
+##
+#------------------------------------------------------
+#	Is there a valid cache file?  If so, we're done...
+# ------------------------------------------------------
+##
+
+	get _rigCallHook("cacheOverride")
+	if it is FALSE then
+		if  _rigOutDisplayCache() is TRUE then
+			exit to top
+		end if
+	end if
+
+##
+#------------------------------------------------------
+#  Load the remaining base libraries
+#------------------------------------------------------
+##
+
+	rigLoadLibrary "Input"
+	rigLoadLibrary "Language"
+	rigLoadLibrary "Loader"
+
+
+##
+#------------------------------------------------------
+#  Load the base controller library
+#------------------------------------------------------
+##
+
+	rigLoadLibrary "Controller"
+
+
+##
+#------------------------------------------------------
+#  Load the local application controller
+#------------------------------------------------------
+#
+# Note: The Router library automatically validates the controller path.  If this include fails it 
+# means that the default controller in the routes.lc file is not resolving to something valid.
+#
+##
+
+	if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT) then
+		include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+	else
+		rigShowError "Unable to load your default controller. Please make sure the controller specified in your Routes" & gEXT & " file is valid."
+	end if
+
+
+##
+#------------------------------------------------------
+#  Set a mark point for benchmarking
+#------------------------------------------------------
+##
+
+	rigTimeMark "loadingTimeBaseLibs_end"
+
+
+
+##
+#------------------------------------------------------
+#  Security check
+#------------------------------------------------------
+#
+#  None of the handlers in the app controller or the
+#  loader library can be called via the URI, nor can
+#  controller handlers that begin with an underscore
+##
+
+	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerMethods())) then
+
+		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
+		if gRoute[1]["404Override"] <> empty then
+
+			put gRoute[1]["404Override"] into t404ErrorSegments
+
+			split t404ErrorSegments by "/"
+			put t404ErrorSegments[1] into gController
+			put t404ErrorSegments[2] into gHandler
+
+			include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+
+		else
+
+			put gController & "/" & gHandler into gErrorData["page"]
+			rigShow404 gErrorData
+
+		end if
+	end if
+
+
+##
+#------------------------------------------------------
+# Is there a "preController" hook?
+#------------------------------------------------------
+##
+
+	get _rigCallHook("preController")
+
+
+
+##
+#------------------------------------------------------
+#  Call the controller and the requested handler
+#------------------------------------------------------
+##
+
+	#MARK A START POINT SO WE CAN BENCHMARK THE CONTROLLER
+	rigTimeMark "controllerExecutionTime_" & gController &  "/" & gHandler & "_start"
+	
+	##
+	
+	# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
+	put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
+	
+	# RUN THE CONTROLLER HANDLER IF HANDLER NAME IS IN GLOBAL gControllerHandlers
+	if gController is among the items of gControllerHandlers then
+		do gController
+		# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
+		# THAT ITS NAME IS IN GLOBAL gControllerHandlers
+	else if gHandler is not among the items of gControllerHandlers then
+		
+		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
+		if gRoute[1]["404Override"] <> empty then
+			
+			put gRoute[1]["404Override"] into t404ErrorSegments
+
+			split t404ErrorSegments by "/"
+			put t404ErrorSegments[1] into gController
+			put t404ErrorSegments[2] into gHandler
+
+			include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+				
+			# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
+			put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
+				
+		else
+				
+			put gController & "/" & gHandler into gErrorData["page"]
+			rigShow404 gErrorData
+		end if
+	end if
+	##
+
+	# IS THIS A SCAFFOLDING REQUEST
+	get rigScaffoldingRequest()
+	if it is TRUE then
+		get _rigCallHook("scaffoldingOverride")
+		if it is FALSE then
+			_rigScaffolding
+		end if
+	else
+	
+
+		##
+		#------------------------------------------------------
+		#  Is there a "postControllerConstructor" hook?
+		#------------------------------------------------------
+		##
+		get _rigCallHook("postControllerConstructor")
+
+		# IS THERE A "REMAP" HANDLER?
+		if "_remap" is among the items of gControllerHandlers then
+			_remap gHandler
+		else
+
+			# CHECK IF gHandler IS IN CONTROLLER
+			if (gHandler <> empty) and ((gHandler is not among the items of gControllerHandlers) or (gHandler is gController)) then
+				
+				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
+				if gRoute[1]["404Override"] <> empty then
+
+					put gRoute[1]["404Override"] into t404ErrorSegments
+
+					split t404ErrorSegments by "/"
+					put t404ErrorSegments[1] into gController
+					put t404ErrorSegments[2] into gHandler
+
+					include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+
+					# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
+					put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
+
+					if gController is among the items of gControllerHandlers then
+						do gController
+					else if gHandler is not among the items of gControllerHandlers then
+						put gController & "/" & gHandler into gErrorData["page"]
+						rigShow404 gErrorData
+					end if
+
+				else
+				
+					put gController & "/" & gHandler into gErrorData["page"]
+					rigShow404 gErrorData
+				end if
+			end if
+		
+			# CALL THE REQUESTED HANDLER.
+			# ANY URI SEGMENTS PRESENT (BESIDES THE CONTROLLER/METHOD) WILL BE PASSED TO THE HANDLER FOR CONVENIENCE
+			if (the number of lines in the keys of gRSegments) > 2 then
+				put 1 into sIncr
+				repeat for each line sRSegKey in the keys of gRSegments
+					if sIncr > 2 then
+						put quote & gRSegments[sRSegKey] & quote & comma after sHandlerParams
+					end if
+					add 1 to sIncr
+				end repeat
+				delete last char of sHandlerParams
+				put gHandler into sHandler
+				put sHandler && sHandlerParams into sHandler
+				do sHandler
+			else
+				do gHandler
+			end if -- if (the number of lines in the keys of gRSegments) > 2 then
+		end if -- if "_remap" is among the items of gControllerHandlers then
+	
+	end if -- if it is TRUE then
+
+
+	# MARK A BENCHMARK END POINT
+	rigTimeMark "controllerExecutionTime_" & gController &  "/" & gHandler & "_end"
+
+
+
+##
+#------------------------------------------------------
+# Is there a "postController" hook?
+#------------------------------------------------------
+##
+
+	get _rigCallHook("postController")
+
+
+
+##
+#------------------------------------------------------
+#  Send the final rendered output to the browser
+#------------------------------------------------------
+##
+
+	if _rigCallHook("displayOverride") is not TRUE then
+		_rigDisplay
+	end if
+
+
+##
+#------------------------------------------------------
+#  Is there a "postSystem" hook?
+#------------------------------------------------------
+##
+
+	get _rigCallHook("postSystem")
+
+
+##
+#------------------------------------------------------
+#  Close the DB connection if one exists
+#------------------------------------------------------
+##
+
+if gDatabaseID is an integer then
+	get _rigCloseDB()
+end if
+
+
+--| END OF RevIgniter.lc
+--| Location: ./system/revigniter/RevIgniter.lc
+----------------------------------------------------------------------

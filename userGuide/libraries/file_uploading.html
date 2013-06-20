@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>File Uploading Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<style type="text/css"> 
+.b { color: black; background-color: #808080; }
+.w { color: white; background-color: #FFFFFF; }
+</style>
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+File Uploading Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>File Uploading Library</h1>
+
+<p>revIgniter's File Uploading Library permits files to be uploaded.  You can set various
+preferences, restricting the type and size of the files.</p>
+
+
+<p class="important"><strong>Note:</strong> In order to use the File Uploading Library the image library ImageMagick must be installed.</p>
+
+
+<h2>The Process</h2>
+
+<p>Uploading a file involves the following general process:</p>
+
+
+<ul>
+<li>An upload form is displayed, allowing a user to select a file and upload it.</li>
+<li>When the form is submitted, the file is uploaded to the destination you specify.</li>
+<li>Along the way, the file is validated to make sure it is allowed to be uploaded based on the preferences you set.</li>
+<li>Once uploaded, the user will be shown a success message.</li>
+</ul>
+
+<p>To demonstrate this process here is brief tutorial. Afterward you'll find reference information.</p>
+
+<h2>Creating the Upload Form</h2>
+
+
+
+<p>Using a text editor, create a form called <dfn>uploadFormView.lc</dfn>.  In it, place this code and save it to your <samp>applications/views/</samp>
+folder:</p>
+
+
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
+	&lt;head>
+		&lt;meta charset="utf-8">
+
+		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+
+	&lt;/head>
+	&lt;body>
+
+	[[gData["uploadError"] ]]
+
+	[[gData["formOpen"] ]]
+
+	[[gData["input"] ]]
+
+	&lt;br />&lt;br />
+
+	[[gData["submit"] ]]
+
+	&lt;/form>
+
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p>You'll notice we have a gData["formOpen"] variable which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
+creates the proper syntax for you.  You'll also notice we have a gData["uploadError"] variable.  This is so we can show error messages in the event
+the user does something wrong.</p>
+
+
+<h2>The Success Page</h2>
+
+<p>Using a text editor, create a form called <dfn>uploadSuccessView.lc</dfn>.
+In it, place this code and save it to your <samp>applications/views/</samp> folder:</p>
+
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
+	&lt;head>
+		&lt;meta charset="utf-8">
+
+		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+	
+	&lt;/head>
+	&lt;body>
+
+		&lt;h3>Your file was successfully uploaded!&lt;/h3>
+
+		&lt;? put "&lt;ul>" into tUploadData
+		repeat for each key tKey in gData["uploadData"]
+			put gData["uploadData"][tKey] into tVal
+			put "&lt;li>" &amp; tKey &amp; ":" &amp;&amp; tVal &amp; "&lt;/li>" after tUploadData
+		end repeat
+		put "&lt;/ul>" after tUploadData
+		return tUploadData ?>
+
+		&lt;p>[[gData["uploadLink"] ]]&lt;/p>
+
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+
+<h2>The Controller</h2>
+
+<p>Using a text editor, create a controller called <dfn>upload.lc</dfn>.  In it, place this code and save it to your <samp>applications/controllers/</samp>
+folder:</p>
+
+
+<pre><code>&lt;?rev
+
+global gControllerHandlers, gData
+
+put "doUpload,buildForm,upload,index" into gControllerHandlers
+
+command upload
+	put "form,url" into tHelpers
+	rigLoadHelper tHelpers
+
+	# SET PAGE TITLE
+	put "Upload Form" into gData["pageTitle"]
+end upload
+
+
+command index
+	buildForm
+
+	# LOAD THE VIEW FILE
+	get rigLoadView("uploadFormView")
+end index
+
+
+command buildForm
+	put rigFormOpenMultiPart("upload/doUpload") into gData["formOpen"]
+
+	put "userfile" into tData["name"]
+	put "20" into tData["size"]
+	put rigFormUpload(tData) into gData["input"]
+
+	put rigSubmitButton("uploadBtn", "upload") into gData["submit"]
+end buildForm
+
+
+command doUpload
+	put "./uploads/" into tConfig["UploadPath"]
+	put "gif|jpg|png" into tConfig["AllowedTypes"]
+	put 100 into tConfig["MaxSize"]
+	put 1024 into tConfig["MaxWidht"]
+	put 768 into tConfig["MaxHeight"]
+
+	rigLoaderLoadLibrary "Upload", tConfig
+
+	rigDoUpload
+
+	if the result is FALSE then
+		put rigDisplayUploadErrors() into gData["uploadError"]
+
+		buildForm
+
+		# LOAD THE VIEW FILE
+		get rigLoadView("uploadFormView")
+	else
+		put rigUploadData() into gData["uploadData"]
+		put rigAnchor("upload", "Upload Another File!") into gData["uploadLink"]
+
+		# LOAD THE VIEW FILE
+		get rigLoadView("uploadSuccessView")
+	end if
+end doUpload
+
+--| END OF upload.lc
+--| Location: ./system/application/controllers/upload.lc
+----------------------------------------------------------------------
+</code></pre>
+
+
+<h2>The Upload Folder</h2>
+
+<p>You'll need a destination folder for your uploaded images.  Create a folder at the root of your revIgniter installation called
+<dfn>uploads</dfn> and set its file permissions to 777.</p>
+
+
+<h2>Try it!</h2>
+
+<p>To try your form, visit your site using a URL similar to this one:</p>
+
+<pre><code>example.com/index.lc/<var>upload</var>/</code></pre>
+
+<p>You should see an upload form. Try uploading an image file (either a jpg, gif, or png). If the path in your
+controller is correct it should work.</p>
+
+
+<p>&nbsp;</p>
+
+<h1>Reference Guide</h1>
+
+
+<h2>Loading the Upload Library</h2>
+
+<p>Like most other libraries in revIgniter, the Upload library is loaded in your controller using the <dfn>rigLoaderLoadLibrary</dfn> command:</p>
+
+<pre><code>rigLoaderLoadLibrary "Upload"</code></pre>
+
+
+<h2>Setting Preferences</h2>
+
+<p>Similar to other libraries, you'll control what is allowed to be uploaded based on your preferences.  In the controller you
+built above you set the following preferences:</p>
+
+<pre><code>put "./uploads/" into tConfig["UploadPath"]
+put "gif|jpg|png" into tConfig["AllowedTypes"]
+put 100 into tConfig["MaxSize"]
+put 1024 into tConfig["MaxWidht"]
+put 768 into tConfig["MaxHeight"]
+
+rigLoaderLoadLibrary "Upload", tConfig
+
+# Alternately you can set preferences by calling the rigInitializeUpload command. Useful if you auto-load the library:
+rigInitializeUpload tConfig;
+</code></pre>
+
+<p>The above preferences should be fairly self-explanatory.  Below is a table describing all available preferences.</p>
+
+
+<h2>Preferences</h2>
+
+<p>The following preferences are available.  The default value indicates what will be used if you do not specify that preference.</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>UploadPath</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">The path to the folder where the upload should be placed.  The folder must be writable and the path must be relative to the root of your revIgniter installation.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>AllowedTypes</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">The mime types corresponding to the types of files you allow to be uploaded.  Usually the file extension can be used as the mime type.  Separate multiple types with a pipe. Use a wildcard "*" to allow all types.</td>
+</tr>
+
+
+<tr>
+<td class="td"><strong>FileName</strong></td>
+<td class="td">None</td>
+<td class="td">Desired file name</td>
+<td class="td">
+	<p>If set revIgniter will rename the uploaded file to this name.  The extension provided in the file name must also be an allowed file type.</p>
+</td>
+</tr>
+
+<tr>
+<td class="td"><strong>Overwrite</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">If set to true, if a file with the same name as the one you are uploading exists, it will be overwritten. If set to false, a number will be appended to the filename if another with the same name exists.</td>
+</tr>
+
+
+<tr>
+<td class="td"><strong>MaxSize</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">The maximum size (in kilobytes) that the file can be. Set to zero for no limit.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>MaxWidth</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">The maximum width (in pixels) that the file can be. Set to zero for no limit.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>MaxHeight</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">The maximum height (in pixels) that the file can be. Set to zero for no limit.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>MaxFilename</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">The maximum length that a file name can be. Set to zero for no limit.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>EncryptName</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">If set to TRUE the file name will be converted to a random encrypted string. This can be useful if you would like the file saved with a name that can not be discerned by the person uploading it.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>RemoveSpaces</strong></td>
+<td class="td">TRUE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">If set to TRUE, any spaces in the file name will be converted to underscores. This is recommended.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>IMbinPath</strong></td>
+<td class="td">None</td>
+<td class="td">None</td>
+<td class="td">If for some reason the imageMagick commands are not found set this preference to the absolute path to the bin directory of imageMagick.</td>
+</tr>
+</table>
+</div>
+
+<h2>Setting preferences in a config file</h2>
+
+<p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
+Simply create a new file called <var>upload.lc</var>,  add the <var>Config</var>
+array in that file. At the end of the file write: <dfn>rigRunInitialUploadConfig yourArrayVariableName</dfn>. Then save the file at <var>config/upload.lc</var> and it will be used automatically. You
+will NOT need to use the <dfn>rigInitializeUpload</dfn> command if you save your preferences in a config file. Example:</p>
+
+<pre><code>local sUploadConf
+
+put "./uploads/" into sUploadConf["UploadPath"]
+put "gif|jpg|png" into sUploadConf["AllowedTypes"]
+put 100 into sUploadConf["MaxSize"]
+put 1024 into sUploadConf["MaxWidht"]
+put 768 into sUploadConf["MaxHeight"]
+
+rigRunInitialUploadConfig sUploadConf</code></pre>
+
+
+<h2>Handler Reference</h2>
+
+<p>The following handlers are available</p>
+
+
+<h2>rigDoUpload</h2>
+
+<p>Performs the upload based on the preferences you've set.  Note: By default the upload routine expects the file to come from a form field
+called <dfn>userfile</dfn>, and the form must be a "multipart type:</p>
+
+<pre><code>&lt;form method="post" action="some_action" enctype="multipart/form-data" /></code></pre>
+
+<p>If you would like to set your own field name simply pass its value to the <dfn>rigDoUpload</dfn> command:</p>
+
+<pre><code>put "someFieldName" into tFieldname
+rigDoUpload tFieldname</code></pre>
+
+
+<h2>rigDisplayUploadErrors()</h2>
+
+<p>Retrieves any error messages if the <dfn>rigDoUpload</dfn> command returned false.  The function does not write to the page automatically, it
+returns the data so you can assign it however you need.</p>
+
+<h3>Formatting Errors</h3>
+<p>By default the above function wraps any errors within &lt;p> tags.  You can set your own delimiters like this:</p>
+
+<pre><code>rigDisplayUploadErrors("<var>&lt;p></var>", "<var>&lt;/p></var>")</code></pre>
+
+<h2>rigUploadData()</h2>
+
+<p>This is a helper function that returns an array containing all of the data related to the file you uploaded.
+Here is a prototype of the array returned:</p>
+
+<pre><code>tData["FileName"] # => mypic.jpg
+tData["FileType"] # => image/jpeg
+tData["FilePath"] # => /path/to/your/upload/
+tData["FullPath"] # => /path/to/your/upload/jpg.jpg
+tData["RawName"] # => mypic
+tData["OrigName"] # => mypic.jpg
+tData["ClientName"] # => mypic.jpg
+tData["FileExt"] # => .jpg
+tData["FileSize"] # => 22.2
+tData["IsImage"] # => TRUE
+tData["ImageWidth"] # => 800
+tData["ImageHeight"] # => 600
+tData["ImageType"] # => jpeg
+tData["ImageSizeStr"] # => height="600" width="800"
+</code></pre>
+
+<h3>Explanation</h3>
+
+<p>Here is an explanation of the above array items.</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr><th>Item</th><th>Description</th></tr>
+
+<tr><td class="td"><strong>FileName</strong></td>
+<td class="td">The name of the file that was uploaded including the file extension.</td></tr>
+
+<tr><td class="td"><strong>FileType</strong></td>
+<td class="td">The file's Mime type.</td></tr>
+
+<tr><td class="td"><strong>FilePath</strong></td>
+<td class="td">The absolute server path to the file.</td></tr>
+
+<tr><td class="td"><strong>FullPath</strong></td>
+<td class="td">The absolute server path including the file name.</td></tr>
+
+<tr><td class="td"><strong>RawName</strong></td>
+<td class="td">The file name without the extension.</td></tr>
+
+<tr><td class="td"><strong>OrigName</strong></td>
+<td class="td">The original file name.  This is only useful if you use the encrypted name option.</td></tr>
+
+<tr><td class="td"><strong>ClientName</strong></td>
+<td class="td">The file name as supplied by the client user agent, prior to any file name preparation or incrementing.</td></tr>
+
+<tr><td class="td"><strong>FileExt</strong></td>
+<td class="td">The file extension with period.</td></tr>
+
+<tr><td class="td"><strong>FileSize</strong></td>
+<td class="td">The file size in kilobytes.</td></tr>
+
+<tr><td class="td"><strong>IsImage</strong></td>
+<td class="td">Whether the file is an image or not.  TRUE = image. FALSE = not.</td></tr>
+
+<tr><td class="td"><strong>ImageWidth</strong></td>
+<td class="td">Image width.</td></tr>
+
+<tr><td class="td"><strong>ImageHeight</strong></td>
+<td class="td">Image height.</td></tr>
+
+<tr><td class="td"><strong>ImageType</strong></td>
+<td class="td">Image type.  Typically the file extension without the period.</td></tr>
+
+<tr><td class="td"><strong>ImageSizeStr</strong></td>
+<td class="td">A string containing the height and width.  Useful to put into an image tag.</td></tr>
+
+
+</table>
+</div>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="encryption.html">Encryption Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="form_validation.html">Form Validation Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

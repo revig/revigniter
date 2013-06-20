@@ -1,0 +1,11 @@
+<?rev
+
+put "Tb" into gLang["terabyte_abbr"]
+put "Gb" into gLang["gigabyte_abbr"]
+put "Mb" into gLang["megabyte_abbr"]
+put "Kb" into gLang["kilobyte_abbr"]
+put "Bytes" into gLang["bytes"]
+
+--| END OF numberLang.lc
+--| Location:  ./system/language/german/numberLang.lc
+----------------------------------------------------------------------

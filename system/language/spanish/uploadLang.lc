@@ -1,0 +1,25 @@
+<?rev
+
+put "No se ha podido encontrar una variable de tipo POST llamada userfile." into gLang["upload_userfile_not_set"]
+put "El archivo subido excede el tamaño máximo permitido en la configuración." into gLang["upload_file_exceeds_limit"]
+put "El archivo subido excede el tamaño máximo permitido para el envio mediante formularios." into gLang["upload_file_exceeds_form_limit"]
+put "El archivo fue subido sólo parcialmente." into gLang["upload_file_partial"]
+put "No se ha encontrado la carpeta temporal." into gLang["upload_no_temp_directory"]
+put "No se ha podido escribir el archivo a disco." into gLang["upload_unable_to_write_file"]
+put "Se ha detenido la subida del archivo debido a su extensión." into gLang["upload_stopped_by_extension"]
+put "No ha seleccionado ningún archivo para subir." into gLang["upload_no_file_selected"]
+put "El tipo de archivo que esta tratando de subir no está permitido." into gLang["upload_invalid_filetype"]
+put "El archivo que está tratando de subir excede el tamaño permitido." into gLang["upload_invalid_filesize"]
+put "La imagen que está tratando de subir excede los tamaños máximos para el alto y/o ancho." into gLang["upload_invalid_dimensions"]
+put "Se encontraron problemas mientras se trataba de mover el archivo subido al directorio de destino final." into gLang["upload_destination_error"]
+put "La dirección para subir el archivo parece no ser válida." into gLang["upload_no_filepath"]
+put "Todavía no ha especificado ningún tipo de archivo permitido." into gLang["upload_no_file_types"]
+put "El archivo enviado ya existe en el servidor." into gLang["upload_bad_filename"]
+put "Parece que no se puede escribir en el directorio de destino." into gLang["upload_not_writable"]
+put "La subida ha fallado." into gLang["upload_failed"]
+put "La dirección de la imagen (temp) no es correcta." into gLang["upload_invalid_path"]
+
+
+--| END OF uploadLang.lc
+--| Location:  ./system/language/spanish/uploadLang.lc
+----------------------------------------------------------------------

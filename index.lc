@@ -1,0 +1,128 @@
+<?rev
+
+	global gEXT, gFCPATH, gSELF, gBASEPATH, gAPPPATH, gErrorData, gDatabaseID, gDocTypes
+
+##
+#---------------------------------------------------------------
+# SYSTEM FOLDER NAME
+#---------------------------------------------------------------
+#
+# This variable must contain the name of your "system" folder.
+# Include the path if the folder is not in the same  directory
+# as this file.
+#
+# NO TRAILING SLASH!
+#
+##
+	global gSystemFolder
+	put "system" into gSystemFolder
+	
+
+
+##
+#---------------------------------------------------------------
+# APPLICATION FOLDER NAME
+#---------------------------------------------------------------
+#
+# If you want this front controller to use a different "application"
+# folder then the default one you can set its name here. The folder 
+# can also be renamed or relocated anywhere on your server.
+# For more info please see the user guide:
+# http://www.revigniter.com/userGuide/general/managing_apps.html
+#
+#
+# NO TRAILING SLASH!
+#
+##
+	global gApplicationFolder
+	put "application" into gApplicationFolder
+
+
+##
+#===============================================================
+# END OF USER CONFIGURABLE SETTINGS
+#===============================================================
+##
+
+##
+#---------------------------------------------------------------
+# SET THE SERVER PATH
+#---------------------------------------------------------------
+#
+# Let's attempt to determine the full-server path to the "system"
+# folder in order to reduce the possibility of path problems.
+# Note: We only attempt this if the user hasn't specified a 
+# full server path.
+#
+##
+
+	if "/" is not in gSystemFolder then
+		put $_Server["PATH_TRANSLATED"] into sTempPath
+    set the itemdel to "/"
+    put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
+	else
+		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
+		replace "\\" with "/" in gSystemFolder
+	end if
+
+
+##
+#---------------------------------------------------------------
+# DEFINE APPLICATION (CONSTANTS) GLOBALS
+#---------------------------------------------------------------
+#
+# SHOULD BE CONSTANTS, BUT AS VALUES MUST BE LITERAL STRINGS
+# AND THE VALUES ARE VARIABLES WE DECLARE GLOBALS
+# TO USE MERGE IS NO SOLUTION AS THIS DOES NOT WORK WITH iRev
+# EXT		- The file extension.  Typically ".lc"
+# FCPATH	- The full server path to THIS file
+# SELF		- The name of THIS file (typically "index.lc")
+# BASEPATH	- The full server path to the "system" folder
+# APPPATH	- The full server path to the "application" folder
+#
+##
+
+	put $_Server["PATH_TRANSLATED"] into sTempPath
+	put item -1 of sTempPath into sTempFileName
+	set the itemdel to "."
+	-- constant EXT = "." & item -1 of sTempFileName
+	--constant FCPATH = sTempPath
+	--constant SELF = sTempFileName
+	--constant BASEPATH = gSystemFolder & "/"
+
+	--constant EXT = "[[" & quote & "." & quote && "item -1 of sTempFileName]]"
+	--constant FCPATH = "[[sTempPath]]"
+	--constant SELF = "[[sTempFileName]]"
+	--constant BASEPATH = "[[gSystemFolder" && quote & "/" & quote & "]]"
+
+	put "." & item -1 of sTempFileName into gEXT
+	set the itemdel to comma
+	put sTempPath into gFCPATH
+	put sTempFileName into gSELF
+	put gSystemFolder & "/" into gBASEPATH
+
+	if there is a folder gApplicationFolder then
+		-- constant APPPATH = gApplicationFolder & "/"
+		put gApplicationFolder & "/" into gAPPPATH
+	else
+		if gApplicationFolder is "" then put "application" into gApplicationFolder
+		-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
+		put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+	end if
+
+
+##
+#---------------------------------------------------------------
+# LOAD THE FRONT CONTROLLER
+#---------------------------------------------------------------
+#
+# And away we go...
+#
+##
+
+	include gBASEPATH & "revigniter/RevIgniter" & gEXT
+
+
+--| END OF index.lc
+--| Location: ./index.lc
+----------------------------------------------------------------------

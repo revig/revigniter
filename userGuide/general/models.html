@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Models : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Models
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Models</h1>
+
+<p>Models are <strong>optionally</strong> available for those who want to use a more traditional MVC approach.</p>
+
+
+
+<ul>
+<li><a href="#what">What is a Model?</a></li>
+<li><a href="#anatomy">Anatomy of a Model</a></li>
+<li><a href="#loading">Loading a Model</a></li>
+<li><a href="#auto_load_model">Auto-Loading a Model</a> </li>
+<li><a href="#conn">Connecting to your Database</a></li>
+</ul>
+
+
+
+<h2><a name="what"></a>What is a Model?</h2>
+
+<p>Models are irev scripts that are designed to work with information in your database.  For example, let's say
+you use revIgniter to manage a blog.  You might have a model script that contains handlers to insert, update, and
+retrieve your blog data. Here is an example of what such a model script might look like:</p>
+
+
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+function getLastTenEntries
+	put rigDbGet("entries", 10) into tQueryResult
+	if tQueryResult["numrows"] > 0 then
+		return tQueryResult
+	end if
+	return FALSE
+end getLastTenEntries
+
+
+command insertEntry
+	put $_POST["title"] into tDataToInsert["title"] -- please read the note below
+	put $_POST["content"] into tDataToInsert["content"]
+	put the seconds into tDataToInsert["date"]
+	
+	get rigDbInsert("entries", tDataToInsert)
+	return it
+end insertEntry
+
+
+command updateEntry
+	put $_POST["title"] into tDataToUpdate["title"]
+	put $_POST["content"] into tDataToUpdate["content"]
+	put the seconds into tDataToUpdate["date"]
+	put $_POST["id"] into tWhere["id"]
+
+	get rigDbUpdate("entries", tDataToUpdate, tWhere)
+	return it
+end updateEntry
+</code></pre>
+
+
+
+<p>Note: The handlers in the above example use the <a href="../database/active_record.html">Active Record</a> database handlers.</p>
+<p class="important"><strong>Note:</strong> For the sake of simplicity in this example we're using $_POST directly.  This is generally bad practice, and a more common approach would be to use the <a href="../libraries/input.html">Input Library</a> rigVarPost("title").</p>
+<h2><a name="anatomy"></a>Anatomy of a Model</h2>
+
+<p>Model scripts are stored in your <dfn>application/models/</dfn> folder.  They can be nested within sub-folders if you
+want this type of organization.</p>
+
+<p>The basic prototype for a model script is this:</p>
+
+
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+</code></pre>
+
+<p>
+<strong>Note:</strong> This is not mandatory! This is just for security reasons.
+</p>
+
+
+<h2><a name="loading"></a>Loading a Model</h2>
+
+<p>Your models will typically be loaded and called from within your <a href="controllers.html">controller</a> handlers.
+To load a model you will use the following handler:</p>
+
+<pre><code>rigLoadModel "<var>modelName</var>"</code></pre>
+
+<p>If your model is located in a sub-folder, include the relative path from your models folder.  For example, if
+you have a model located at <dfn>application/models/blog/queries.lc</dfn> you'll load it using:</p>
+
+<pre><code>rigLoadModel "<var>blog/queries</var>"</code></pre>
+
+
+<p>Here is an example of a controller, that loads a model, then serves a view:</p>
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "blog" into gControllerHandlers
+
+command blog
+	rigLoadModel "Blog"
+
+	put getLastTenEntries() into gData["query"]
+	get rigLoadView("blog")
+end blog
+</code></pre>
+
+
+<h2><a name="auto_load_model" id="auto_load_model"></a>Auto-loading Models</h2>
+<p>If you find that you need a particular model globally throughout your  application, you can tell revIgniter to auto-load it during system  initialization.  This is done by opening the application/config/autoload.lc file and adding the model to the autoload array.</p>
+
+
+<h2><a name="conn"></a>Connecting to your Database</h2>
+
+<p>When a model is loaded it does <strong>NOT</strong> connect automatically to your database.  The following options for connecting are available to you:</p>
+
+<ul>
+<li>You can connect using the standard database handlers <a href="../database/connecting.html">described here</a>, either from within your Controller script or your Model script.</li>
+<li>You can tell the model loading handler to auto-connect by passing <kbd>TRUE</kbd> (boolean) via the second parameter,
+and connectivity settings, as defined in your database config file will be used:
+
+<pre><code>rigLoadModel "<var>Model_name</var>", <kbd>TRUE</kbd></code></pre>	
+	</li>
+
+
+<li>You can manually pass database connectivity settings via the second parameter:
+
+
+<pre><code>put "localhost" into tConfig["hostname"]
+put "myusername" into tConfig["username"]
+put "mypassword" into tConfig["password"]
+put "mydatabase" into tConfig["database"]
+put "mysql" into tConfig["dbdriver"]
+put "" into tConfig["dbprefix"]
+put FALSE into tConfig["pconnect"]
+put TRUE into tConfig["db_debug"]
+
+rigLoadModel "<var>Model_name</var>", <kbd>tConfig</kbd></code></pre></li>
+</ul>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="views.html">Views</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="helpers.html">Helpers</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

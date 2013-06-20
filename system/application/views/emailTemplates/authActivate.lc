@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+</head>
+<body>
+<h1>Activate account for [[gData["identity"] ]]</h1>
+<p>Please click this link to [[gData["activationCode"] ]].</p>
+</body>
+</html>

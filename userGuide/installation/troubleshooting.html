@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Troubleshooting : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Trouble Shooting
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Troubleshooting</h1>
+
+<p>Make sure to put all your handler names in your controller as a comma separated list into the global 
+variable <samp>gControllerHandlers</samp>, otherwise you get a "Page Not Found" error.<br />
+See the comments in the sample files in the "controllers" folder.</p>
+
+<p>If you find that no matter what you put in your URL only your default page is loading, it might be that your server
+does not support the PATH_INFO variable needed to serve search-engine friendly URLs. This does not apply to the 
+On-Rev hosting service.<br />
+
+As a first step, open your <dfn>application/config/config.lc</dfn> file and look for the <kbd>URI Protocol</kbd>
+information. It will recommend that you try a couple alternate settings.  If it still doesn't work you may try to use 
+query string based URLs by setting <samp>gConfig["enableQueryStrings"]</samp> in the <dfn>config.lc</dfn> file to TRUE.</p>
+
+<p>
+Dont't forget to add a space between the right array bracket and the merge brackets of your gData variables in your view files.
+</p>
+
+<p>
+Keep in mind, that using return statements enclosed in "&lt;?" and "?>" is the only way to include LiveCode in your view files.
+</p>
+
+
+<p>There is a bug (9869) in LiveCode Server confirmed by RunRev. LiveCode Server versions 4.6.3 up to 5.0.2 have two incorrect path environment variables on Lion and Mountain Lion. These variables are:
+<ul>
+	<li>$_SERVER["PATH_TRANSLATED"]</li>
+	<li>$_SERVER["PATH_INFO"]</li>
+</ul>
+As revIgniter is heavily dependent on path variables this means that there is no way to run revIgniter using the said OS / server versions.<br />Note: This issue is fixed in LiveCode Server release: 6.0.0-rc-1.	
+</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../overview/at_a_glance.html">revIgniter at a Glance</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

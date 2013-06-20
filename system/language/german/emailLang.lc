@@ -1,0 +1,25 @@
+<?rev
+
+put "Die E-Mail-Validierungsmethode muss als Array &uuml;bermittelt werden." into gLang["email_must_be_array"]
+put "Ung&uuml;ltige E-Mail-Adresse: %s" into gLang["email_invalid_address"]
+put "Der Dateianhang %s wurde nicht gefunden." into gLang["email_attachment_missing"]
+put "Der Dateianhang %s konnte nicht ge&ouml;ffnet werden." into gLang["email_attachment_unreadable"]
+put "Die Empf&auml;nger To, Cc oder Bcc m&uuml;ssen angegeben werden." into gLang["email_no_recipients"]
+put "Die Nachricht konnte nicht &uuml;ber per Shell-Befehl" && quote & "mail" & quote && "versandt werden. Der Server muss m&ouml;glicherweise so konfiguriert werden, dass er Mails mit diesem Shell-Befehl versenden kann." into gLang["email_send_failure_mail"]
+put "Die Nachricht konnte nicht &uuml;ber per Shell-Befehl" && quote & "sendmail" & quote && "versandt werden. Der Server muss m&ouml;glicherweise so konfiguriert werden, dass er Mails mit diesem Shell-Befehl versenden kann." into gLang["email_send_failure_sendmail"]
+put "Die Nachricht konnte nicht &uuml;ber die SMTP versandt werden. Der Server muss m&ouml;glicherweise so konfiguriert werden, dass er Mails mit dieser Methode versenden kann." into gLang["email_send_failure_smtp"]
+put "Die Nachricht wurde erfolgreich mittels %s versandt." into gLang["email_sent"]
+put "Es konnte kein Socket ge&ouml;ffnet werden." into gLang["email_no_socket"]
+put "Es wurde kein SMTP-Hostname angegeben." into gLang["email_no_hostname"]
+put "Der SMTP-Fehler %s ist aufgetreten." into gLang["email_smtp_error"]
+put "SMTP-Benutzername und -Passwort m&uuml;ssen angegeben werden." into gLang["email_no_smtp_unpw"]
+put "Der AUTH LOGIN konnte nicht gesendet werden. Fehler: %s" into gLang["email_failed_smtp_login"]
+put "Der Benutzername konnte nicht best&auml;tigt werden. Fehler: %s" into gLang["email_smtp_auth_un"]
+put "Das Passwort konnte nicht best&auml;tigt werden. Fehler: %s" into gLang["email_smtp_auth_pw"]
+put "Die Daten konnten nicht versandt werden: %s" into gLang["email_smtp_data_failure"]
+put "Exit Status Code: %s" into gLang["email_exit_status"]
+
+
+--| END OF emailLang.lc
+--| Location:  ./system/language/german/emailLang.lc
+----------------------------------------------------------------------

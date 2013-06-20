@@ -1,0 +1,185 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Email Helpers
+#
+# @package		revIgniter
+# @subpackage	Helpers
+# @category	  Helpers
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/helpers/emailHelper.html
+##
+
+## ------------------------------------------------------------------------
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigValidEmail
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-09-09
+--| Last Mod: 18-09-09
+--| Requires: --
+--|
+--| Summary: Email validation.
+--| 
+--| Format:  rigValidEmail(param1)
+--|
+--| Parameters: string <pAddress>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigValidEmail pAddress
+	if rigLibIsLoaded("Email") is not TRUE then
+		put "(?ix)^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$" into tRegEx
+
+		return matchtext(pAddress,tRegEx)
+	end if
+
+	return rigMailValidEmail(pAddress)
+end rigValidEmail
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSendEmail
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 18-09-09
+--| Last Mod: 22-09-09
+--| Requires: rigCleanMailAddress(), rigShellEscape(), _rigTempMailPath(), rigLogMessage
+--|
+--| Summary: Send an email.
+--| 
+--| Format:  rigSendEmail(param1)
+--|
+--| Parameters: string <pRecipient>, string <pSubject>, string <pMessage>, string <pSender>, string <pCC>, string <pBCC>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
+	put rigCleanMailAddress(pSender) into tFrom
+	put rigCleanMailAddress(pRecipient) into tRecipient
+
+	# PREPARE HEADER DATA FOR SHELL COMMAND
+	put rigShellEscape(pMessage) into tBody
+	put rigShellEscape(pSubject) into tSubject
+	put rigShellEscape(tRecipient) into tRecipient
+	put rigShellEscape(pCC) into tCC
+	put rigShellEscape(pBCC) into tBCC
+	put rigShellEscape(tFrom) into tFrom
+
+	# TEMPORARILY SAVE BODY TO DISK
+	#
+	#GET PATH TO TEMP DIRECTORY
+	put _rigTempMailPath() into tTempMailPath
+	put tBody into url ("binfile:" & tTempMailPath)
+    
+    	if there is not a file tTempMailPath then
+        	rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
+    	end if
+
+	# BUILD SHELL COMMAND
+	 put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
+        
+        if tCC is not empty then
+            	put " -c" && rigQ(tCC) after tCmd
+        end if
+        if tBCC is not empty then
+            	put " -b" && rigQ(tBCC) after tCmd
+        end if
+        
+        put space & rigQ(tRecipient) && "-- -f" && rigQ(tFrom) after tCmd
+
+	# SEND SHELL COMMAND
+	put shell(tCmd) into tResult
+
+	# REMOVE TEMP MAIL FILE
+	delete file tTempMailPath
+    	if the result is not empty then
+		rigLogMessage "error", "Temporary eMail data could not be deleted:" && tTempMailPath
+	end if
+    
+	# CHECK MAIL RESULT
+    	if tResult is empty then
+        	return TRUE
+    	else
+		rigLogMessage "error", "Error on sending eMail:" && tResult
+        	return FALSE
+    	end if
+end rigSendEmail
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigCleanMailAddress
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-09-09
+--| Last Mod: 18-09-09
+--| Requires: --
+--|
+--| Summary: Clean extended email address: Joe Smith <joe@smith.com>.
+--| 
+--| Format:  rigCleanMailAddress(param1)
+--|
+--| Parameters: string <pEmail>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigCleanMailAddress pEmail
+	put "\<(.*)\>" into tRegEx
+	get matchtext(pEmail,tRegEx,tFoundTextVar)
+
+    	if it is TRUE then
+		return tFoundTextVar
+	else
+		return pEmail
+	end if
+
+end rigCleanMailAddress
+
+
+
+
+
+
+--| END OF emailHelper.lc
+--| Location:  ./system/helpers/emailHelper.lc
+----------------------------------------------------------------------

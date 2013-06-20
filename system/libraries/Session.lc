@@ -1,0 +1,1094 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Session Library
+#
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category		Sessions
+# @author			rabit@revigniter.com
+# @link				http://revigniter.com/userGuide/libraries/uri.html
+##
+
+
+# LOGGING
+rigLogMessage "debug", "Session Library Loaded"
+
+
+# DECLARE VARIABLES
+local sSession, sNow
+
+put FALSE into sSession["sess_encrypt_cookie"]
+put FALSE into sSession["sess_use_database"]
+put "" into sSession["sess_table_name"]
+put 28800 into sSession["sess_expiration"]
+put FALSE into sSession["sess_expire_on_close"]
+put FALSE into sSession["sess_match_ip"]
+put TRUE into sSession["sess_match_useragent"]
+put "ri_session" into sSession["sess_cookie_name"]
+put "" into sSession["cookie_prefix"]
+put "" into sSession["cookie_path"]
+put "" into sSession["cookie_domain"]
+put FALSE into sSession["cookie_secure"]
+put 300 into sSession["sess_time_to_update"]
+put "" into sSession["encryption_key"]
+put "flash" into sSession["flashdata_key"]
+put 5 into sSession["gc_probability"]
+put "" into sSession["userdata"]
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigRunInitialSessionConfig
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 12-10-09
+--| Last Mod: 15-07-12
+--| Requires: rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigLoadDatabase(), _rigGetTime(),
+--|                  _rigFlashdataSweep, _rigFlashdataMark, _rigSessGC, rigLogMessage
+--|
+--| Summary: The session routines are run automatically
+--|                    whenever the library is loaded.
+--| 
+--| Format:  rigRunInitialSessionConfig param1
+--|
+--| Parameters: array <pParams>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigRunInitialSessionConfig pParams
+	if pParams is not an array then
+		if pParams is not empty then
+			split pParams using numtochar(1) and numtochar(2)
+		end if
+	end if
+
+	# SET ALL THE SESSION PREFERENCES, WHICH CAN EITHER BE SET
+	# MANUALLY VIA THE pParams ARRAY ABOVE OR VIA THE CONFIG FILE
+	put "sess_encrypt_cookie,sess_use_database,sess_table_name,sess_expiration,sess_expire_on_close,sess_match_ip,sess_match_useragent,sess_cookie_name,cookie_path,cookie_domain,cookie_secure,sess_time_to_update,cookie_prefix,encryption_key" into tSettingNames
+	
+	repeat for each item thisItem in tSettingNames
+		if pParams is an array then
+			if (pParams[thisItem] is not an array) and (pParams[thisItem] is empty) then
+				# pParams[thisItem] IS EMPTY
+				put rigFetchConfigItem(thisItem) into sSession[thisItem]
+    			else
+				put pParams[thisItem] into sSession[thisItem]
+    			end if
+		else
+			put rigFetchConfigItem(thisItem) into sSession[thisItem]
+		end if
+	end repeat
+
+	# LOAD THE COOKIE HELPER
+	# SINCE VERSION 1.5.12 NOT NEEDED ANYMORE
+	-- rigLoadHelper "cookie"
+
+	# LOAD THE STRING HELPER SO WE CAN USE THE rigStrip_slashes() FUNCTION
+	rigLoadHelper "string"
+
+	# DO WE NEED ENCRYPTION? IF SO, LOAD THE ENCRYPTION LIBRARY
+	if sSession["sess_encrypt_cookie"] is TRUE then
+		rigLoaderLoadLibrary "Encrypt"
+	end if
+
+	# ARE WE USING A DATABASE?  IF SO, LOAD IT
+	if (sSession["sess_use_database"] is TRUE) and (sSession["sess_table_name"] is not empty) then
+		get rigLoadDatabase()
+	end if
+
+	# SET THE "NOW" TIME.  CAN EITHER BE GMT OR SERVER TIME, BASED ON THE
+	# CONFIG PREFS.  WE USE THIS TO SET THE "LAST ACTIVITY" TIME
+	put _rigGetTime() into sNow
+
+	# SET THE SESSION LENGTH. IF THE SESSION EXPIRATION IS
+	# SET TO ZERO WE'LL SET THE EXPIRATION TWO YEARS FROM NOW
+	if sSession["sess_expiration"] = 0 then
+		put (60*60*24*365*2) into sSession["sess_expiration"]
+	end if
+
+	# SET THE COOKIE NAME
+	put sSession["cookie_prefix"] & sSession["sess_cookie_name"] into sSession["sess_cookie_name"]
+
+	# RUN THE SESSION ROUTINE. IF A SESSION DOESN'T EXIST WE'LL
+	# CREATE A NEW ONE.  IF IT DOES, WE'LL UPDATE IT
+	if rigSessRead() is FALSE then
+		rigSessCreate
+	else
+		rigSessUpdate
+	end if
+
+	# DELETE 'OLD' FLASHDATA (FROM LAST REQUEST)
+	_rigFlashdataSweep
+
+	# MARK ALL NEW FLASHDATA AS OLD (DATA WILL BE DELETED BEFORE NEXT REQUEST)
+	_rigFlashdataMark
+	
+	# DELETE EXPIRED SESSIONS IF NECESSARY
+	_rigSessGC
+
+	rigLogMessage "debug", "Session routines successfully run."
+end rigRunInitialSessionConfig
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSessRead
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 12-10-09
+--| Last Mod: 12-02-13
+--| Requires: rigVarCookie(), rigLogMessage, rigDecode(), rigSessDestroy, _rigUnserializeSess(),
+--|                   rigIpAddress(), rigTrim(), rigDbWhere, rigDbGet(), rigDbRow()
+--|
+--| Summary: Fetch the current session data if it exists.
+--| 
+--| Format:  rigSessRead()
+--|
+--| Parameters: --
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigSessRead
+	# FETCH THE COOKIE
+	put rigVarCookie(sSession["sess_cookie_name"]) into tSession
+
+	# NO COOKIE?  GOODBYE CRUEL WORLD!...
+	if tSession is FALSE then
+		rigLogMessage "debug", "A session cookie was not found."
+		return FALSE
+	end if
+
+	# DECRYPT THE COOKIE DATA
+	if sSession["sess_encrypt_cookie"] is TRUE then
+		put urlDecode(tSession) into tSession
+		put rigDecode(tSession) into tSession
+	else
+		# ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE Md5 HASH
+		put char -32 to -1 of tSession into tHash -- get last 32 chars
+		put char 1 to -33 of tSession into tSession
+
+		put urlDecode(tSession) into tSession
+
+		# DOES THE Md5 HASH MATCH? THIS IS TO PREVENT MANIPULATION OF SESSION DATA IN USERSPACE
+		put tSession & sSession["encryption_key"] into tTempStr
+		if tHash <> rigHexDigest(tTempStr) then
+			rigLogMessage "error", "The session cookie data did not match what was expected. This could be a possible hacking attempt."
+			rigSessDestroy
+			return FALSE
+		end if
+	end if
+
+	# UNSERIALIZE THE SESSION ARRAY
+	put _rigUnserializeSess(tSession) into tSession
+
+	# IS THE SESSION DATA WE UNSERIALIZED AN ARRAY WITH THE CORRECT FORMAT?
+	if (tSession is not an array) or (tSession["session_id"] is empty) or (tSession["ip_address"] is empty) or (tSession["user_agent"] is empty) \
+	or (tSession["last_activity"] is empty) then
+		rigSessDestroy
+		return FALSE
+	end if
+
+	# IS THE SESSION CURRENT?
+	if (tSession["last_activity"] + sSession["sess_expiration"]) < sNow then
+		rigSessDestroy
+		return FALSE
+	end if
+
+	# DOES THE IP MATCH?
+	put rigIpAddress() into tIPaddress 
+	put tSession["ip_address"] into tSessIP
+  replace "___" with "." in tSessIP -- we replaced the dots with three underscores because otherwise, depending on the combination of numbers, arrayDecode of an urlDecoded ip address does not work (seems to be a LiveCode bug)
+	if (sSession["sess_match_ip"] is TRUE) and (tSessIP <> tIPaddress) then
+		rigSessDestroy
+		return FALSE
+	end if
+
+	# DOES THE USER AGENT MATCH?
+	put rigUserAgent() into tUserAgent
+	put char 1 to 50 of tUserAgent into tUserAgent
+	put rigTrim(tUserAgent) into tUserAgent
+	put rigTrim(tSession["user_agent"]) into tSession["user_agent"]
+	if (sSession["sess_match_useragent"] is TRUE) and (tSession["user_agent"] <> tUserAgent) then
+		rigSessDestroy
+		return FALSE
+	end if
+
+	# IS THERE A CORRESPONDING SESSION IN THE DB?
+	if sSession["sess_use_database"] is TRUE then
+		rigDbWhere "session_id", tSession["session_id"]
+
+		if sSession["sess_match_ip"] is TRUE then
+			rigDbWhere "ip_address", tSessIP
+		end if
+
+		if sSession["sess_match_useragent"] is TRUE then
+			rigDbWhere "user_agent", tSession["user_agent"]
+		end if
+		
+		put rigDbGet(sSession["sess_table_name"]) into tQuery
+		# NO RESULT?  KILL IT!
+		if tQuery["numrows"] = 0 then
+			rigSessDestroy
+			return FALSE
+		end if
+
+		# IS THERE CUSTOM DATA?  IF SO, ADD IT TO THE MAIN SESSION ARRAY
+		put rigDbRow() into tRow
+		if tRow["user_data"] is not empty then
+			put urlDecode(tRow["user_data"]) into tCustomData
+			put _rigUnserializeSess(tCustomData) into tCustomData
+			if tCustomData is an array then
+				repeat for each key tKey in tCustomData
+					put tCustomData[tKey] into tVal
+
+					put tVal into tSession[tKey]
+				end repeat
+			end if
+		end if
+	end if
+
+	# SESSION IS VALID!
+	put tSession into sSession["userdata"]
+	delete variable tSession
+
+	return TRUE
+end rigSessRead
+
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigSessWrite
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 12-10-09
+--| Last Mod: 12-10-09
+--| Requires: _rigSetCookie, _rigSerializeSess(), rigDbWhere, rigDbUpdate()
+--|
+--| Summary: Write the session data.
+--| 
+--| Format:  rigSessWrite
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigSessWrite
+	# ARE WE SAVING CUSTOM DATA TO THE DB?  IF NOT, ALL WE DO IS UPDATE THE COOKIE
+	if sSession["sess_use_database"] is FALSE then
+		_rigSetCookie
+		exit rigSessWrite
+	end if
+
+	# SET THE CUSTOM USERDATA, THE SESSION DATA WE WILL SET IN A SECOND
+	put sSession["userdata"] into tCustomUserdata
+	put "" into tCookieUserdata
+
+	# BEFORE CONTINUING, WE NEED TO DETERMINE IF THERE IS ANY CUSTOM DATA TO DEAL WITH.
+	# LET'S DETERMINE THIS BY REMOVING THE DEFAULT INDEXES TO SEE IF THERE'S ANYTHING LEFT IN THE ARRAY
+	# AND SET THE SESSION DATA WHILE WE'RE AT IT
+	put "session_id,ip_address,user_agent,last_activity" into tKeys
+	repeat for each item thisItem in tKeys
+		delete variable tCustomUserdata[thisItem]
+		put sSession["userdata"][thisItem] into tCookieUserdata[thisItem]
+	end repeat
+
+	# DID WE FIND ANY CUSTOM DATA?  IF NOT, WE TURN THE EMPTY ARRAY INTO A STRING
+	# SINCE THERE'S NO REASON TO SERIALIZE AND STORE AN EMPTY ARRAY IN THE DB
+	if the number of lines in the keys of tCustomUserdata = 0 then
+	else
+		# SERIALIZE THE CUSTOM DATA ARRAY SO WE CAN STORE IT
+		put _rigSerializeSess(tCustomUserdata) into tCustomUserdata
+		put urlEncode(tCustomUserdata) into tCustomUserdata
+	end if
+
+	# RUN THE UPDATE QUERY
+	rigDbWhere "session_id", sSession["userdata"]["session_id"]
+	put sSession["userdata"]["last_activity"] into tArray["last_activity"]
+	put tCustomUserdata into tArray["user_data"]
+
+	get rigDbUpdate(sSession["sess_table_name"], tArray)
+
+	# WRITE THE COOKIE.  NOTICE THAT WE MANUALLY PASS THE COOKIE DATA ARRAY TO THE
+	# _rigSetCookie COMMAND. NORMALLY THAT COMMAND WILL STORE sSession["userdata"], BUT
+	# IN THIS CASE THAT ARRAY CONTAINS CUSTOM DATA, WHICH WE DO NOT WANT IN THE COOKIE
+	_rigSetCookie tCookieUserdata
+end rigSessWrite
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSessCreate
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 14-10-09
+--| Last Mod: 12-02-13
+--| Requires: rigRandomNum(), rigIpAddress(), rigHexDigest(), rigUserAgent(), rigDbInsertString(), rigDbQuery(), _rigSetCookie
+--|
+--| Summary: Create a new session.
+--| 
+--| Format:  rigSessCreate
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSessCreate
+	put rigRandomNum() into tSessID
+
+	# TO MAKE THE SESSION ID EVEN MORE SECURE WE'LL COMBINE IT WITH THE USER'S IP
+	put rigIpAddress() into tIPaddress
+	replace "." with "___" in tIPaddress -- we replace the dots with three underscores because otherwise, depending on the combination of numbers, arrayDecode of an urlDecoded ip address does not work (seems to be a LiveCode bug)
+	put tSessID & tIPaddress into tSessID
+
+	# Turn it into a HASH
+	put shell("uuidgen") into tUUID
+	put tSessID & tUUID into tSessID
+	put rigHexDigest(tSessID) into tSessID
+
+	put tSessID into sSession["userdata"]["session_id"]
+	put tIPaddress into sSession["userdata"]["ip_address"]
+	
+	put rigUserAgent() into tUserAgent
+	put char 1 to 50 of tUserAgent into tUserAgent
+
+	put tUserAgent into sSession["userdata"]["user_agent"]
+	put sNow into sSession["userdata"]["last_activity"]
+
+	# SAVE THE DATA TO THE DB IF NEEDED
+	if sSession["sess_use_database"] is TRUE then
+		put rigDbInsertString(sSession["sess_table_name"], sSession["userdata"]) into tSQL
+		get rigDbQuery(tSQL)
+	end if
+
+	# WRITE THE COOKIE
+	_rigSetCookie
+end rigSessCreate
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSessUpdate
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 14-10-09
+--| Last Mod: 12-02-13
+--| Requires: rigRandomNum(), rigIpAddress(), rigHexDigest(), rigDbUpdateString(), rigDbQuery(), _rigSetCookie
+--|
+--| Summary: Update an existing session.
+--| 
+--| Format:  rigSessUpdate
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSessUpdate
+	# WE ONLY UPDATE THE SESSION EVERY FIVE MINUTES BY DEFAULT
+	if (sSession["userdata"]["last_activity"] + sSession["sess_time_to_update"]) >= sNow then
+		exit rigSessUpdate
+	end if
+
+	# SAVE THE OLD SESSION ID SO WE KNOW WHICH RECORD TO
+	# UPDATE IN THE DATABASE IF WE NEED IT
+	put sSession["userdata"]["session_id"] into tOldSessID
+
+	put rigRandomNum() into tNewSessID
+	
+	# TO MAKE THE SESSION ID EVEN MORE SECURE WE'LL COMBINE IT WITH THE USER'S IP
+	put rigIpAddress() into tIPaddress
+	replace "." with "___" in tIPaddress -- we replace the dots with three underscores because otherwise, depending on the combination of numbers, arrayDecode of an urlDecoded ip address does not work (seems to be a LiveCode bug)
+	put tNewSessID & tIPaddress into tNewSessID
+
+	# Turn it into a HASH
+	put shell("uuidgen") into tUUID
+	put tNewSessID & tUUID into tNewSessID
+	put rigHexDigest(tNewSessID) into tNewSessID
+
+	# UPDATE THE SESSION DATA IN THE SESSION DATA ARRAY
+	put tNewSessID into sSession["userdata"]["session_id"]
+	put sNow into sSession["userdata"]["last_activity"]
+
+	# _rigSetCookie WILL HANDLE THIS FOR US IF WE AREN'T USING DATABASE SESSIONS
+	# BY PUSHING ALL USERDATA TO THE COOKIE.
+	put empty into tCookieData
+
+	# UPDATE THE SESSION ID AND LAST_ACTIVITY FIELD IN THE DB IF NEEDED
+	if sSession["sess_use_database"] is TRUE then
+		# SET COOKIE EXPLICITLY TO ONLY HAVE OUR SESSION DATA
+		put "session_id,ip_address,user_agent,last_activity" into tKeys
+		repeat for each item tKey in tKeys
+			put sSession["userdata"][tKey] into tCookieData[tKey]
+		end repeat
+
+		put sNow into tUpdateArray["last_activity"]
+		put tNewSessID into tUpdateArray["session_id"]
+
+		put tOldSessID into tWhereArray["session_id"]
+
+		put rigDbUpdateString(sSession["sess_table_name"], tUpdateArray, tWhereArray) into tSQL
+		if tSQL is not FALSE then
+			get rigDbQuery(tSQL)
+		end if
+	end if
+
+	# WRITE THE COOKIE
+	_rigSetCookie tCookieData
+end rigSessUpdate
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigSessDestroy
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 14-10-09
+--| Last Mod: 07-05-13
+--| Requires: rigDbWhere, rigDbDelete(), _rigInputSetCookie
+--|
+--| Summary: Destroy the current session.
+--| 
+--| Format:  rigSessDestroy
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigSessDestroy
+	# KILL THE SESSION DB ROW
+	if (sSession["sess_use_database"] is TRUE) and (sSession["userdata"]["session_id"] is not empty) then
+		rigDbWhere "session_id", sSession["userdata"]["session_id"]
+		get rigDbDelete(sSession["sess_table_name"])
+	end if
+	
+	# CLEAR userdata
+		put empty into sSession["userdata"]
+
+	# KILL THE COOKIE
+	--put sNow - 31500000 into tExp
+	put - 31500000 into tExp
+	put "" into tArrayData[1]
+	put arrayEncode(tArrayData) into tArrayData
+	_rigInputSetCookie sSession["sess_cookie_name"], tArrayData, tExp, sSession["cookie_domain"], sSession["cookie_path"], "", TRUE, sSession["cookie_secure"]
+end rigSessDestroy
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSessUserdata
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 14-10-09
+--| Last Mod: 05-11-09
+--| Requires: --
+--|
+--| Summary: Fetch a specific item from the session array.
+--| 
+--| Format:  rigSessUserdata(param1)
+--|
+--| Parameters: string <pItem>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigSessUserdata pItem
+	--if sSession["userdata"][pItem] is not empty then
+	if pItem is among the keys of sSession["userdata"] then
+		return sSession["userdata"][pItem]
+	end if
+
+	return FALSE
+end rigSessUserdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSessAllUserdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: --
+--|
+--| Summary: Fetch all session data.
+--| 
+--| Format:  rigSessAllUserdata()
+--|
+--| Parameters: --
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigSessAllUserdata
+	if sSession["userdata"] is an array then
+		return sSession["userdata"]
+	end if
+
+	return FALSE
+end rigSessAllUserdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetSessUserdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSessWrite
+--|
+--| Summary: Add or change data in the "userdata" array.
+--| 
+--| Format:  rigSetSessUserdata param1, param2
+--|
+--| Parameters: mixed <pNewData>, string <pNewVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetSessUserdata pNewData pNewVal
+	if pNewData is not an array then
+		put pNewVal into tArray[pNewData]
+		put tArray into tNewData
+	else
+		put pNewData into tNewData
+	end if
+
+	repeat for each key tKey in tNewData
+		put tNewData[tKey] into tVal
+
+		put tVal into sSession["userdata"][tKey]
+	end repeat
+
+	rigSessWrite
+end rigSetSessUserdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigUnsetSessUserdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSessWrite
+--|
+--| Summary: Delete a session variable from the "userdata" array.
+--| 
+--| Format:  rigUnsetSessUserdata param1
+--|
+--| Parameters: mixed <pNewData>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigUnsetSessUserdata pNewData
+	if pNewData is not an array then
+		put "" into tArray[pNewData]
+		put tArray into tNewData
+	else
+		put pNewData into tNewData
+	end if
+
+	repeat for each key tKey in tNewData
+		put tNewData[tKey] into tVal
+
+		delete variable sSession["userdata"][tKey]
+	end repeat
+
+	rigSessWrite
+end rigUnsetSessUserdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetSessFlashdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSetSessUserdata
+--|
+--| Summary: Add or change flashdata, only available until the next request.
+--| 
+--| Format:  rigSetSessFlashdata param1, param2
+--|
+--| Parameters: mixed <pNewData>, string <pNewVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetSessFlashdata pNewData pNewVal
+	if pNewData is not an array then
+		put pNewVal into tArray[pNewData]
+		put tArray into tNewData
+	else
+		put pNewData into tNewData
+	end if
+
+	repeat for each key tKey in tNewData
+		put tNewData[tKey] into tVal
+
+		put sSession["flashdata_key"] & ":new:" & tKey into tFlashdataKey
+		rigSetSessUserdata tFlashdataKey, tVal
+	end repeat
+end rigSetSessFlashdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigKeepSessFlashdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSessUserdata(), rigSetSessUserdata
+--|
+--| Summary: Keeps existing flashdata available to next request.
+--| 
+--| Format:  rigKeepSessFlashdata param1
+--|
+--| Parameters: string <pKey>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigKeepSessFlashdata pKey
+	# 'OLD' FLASHDATA GETS REMOVED.  HERE WE MARK ALL
+	# FLASHDATA AS 'NEW' TO PRESERVE IT FROM _rigFlashdataSweep
+	# NOTE THE FUNCTION WILL RETURN FALSE IF THE $KEY
+	# PROVIDED CANNOT BE FOUND
+	put sSession["flashdata_key"] & ":old:" & pKey into tOldFlashDataKey
+	put rigSessUserdata(tOldFlashDataKey) into tValue
+
+	put sSession["flashdata_key"] & ":new:" & pKey into tNewFlashDataKey
+	rigSetSessUserdata tNewFlashDataKey, tValue
+end rigKeepSessFlashdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSessFlashdata
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSessUserdata()
+--|
+--| Summary: Fetch a specific flashdata item from the session array.
+--| 
+--| Format:  rigSessFlashdata(param1)
+--|
+--| Parameters: string <pKey>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigSessFlashdata pKey
+	put sSession["flashdata_key"] & ":old:" & pKey into tFlashdatakey
+	return rigSessUserdata(tFlashdatakey)
+end rigSessFlashdata
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigFlashdataMark
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigSetSessUserdata, rigUnsetSessUserdata
+--|
+--| Summary: Identifies flashdata as 'old' for removal when _rigFlashdataSweep runs.
+--| 
+--| Format:  _rigFlashdataMark
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigFlashdataMark
+	put rigSessAllUserdata() into tUserData
+	
+	repeat for each key tKey in tUserData
+		put tUserData[tKey] into tVal
+
+		put tKey into tParts
+		split tParts using ":"
+		if (tParts is an array) and (the number of lines in the keys of tParts = 3) then
+			put sSession["flashdata_key"] & ":old:" & tParts[3] into tNewName
+			rigSetSessUserdata tNewName, tVal
+			rigUnsetSessUserdata tKey
+		end if
+	end repeat
+end _rigFlashdataMark
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigFlashdataSweep
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: rigUnsetSessUserdata
+--|
+--| Summary: Removes all flashdata marked as 'old'.
+--| 
+--| Format:  _rigFlashdataSweep
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigFlashdataSweep
+	put rigSessAllUserdata() into tUserData
+	
+	repeat for each key tKey in tUserData
+		put tUserData[tKey] into tVal
+		
+		if ":old:" is in tKey then
+			rigUnsetSessUserdata tKey
+		end if
+	end repeat
+end _rigFlashdataSweep
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigGetTime
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 12-10-09
+--| Last Mod: 15-07-12
+--| Requires: rigMasterNow()
+--|
+--| Summary: Get the "now" time.
+--| 
+--| Format:  _rigGetTime()
+--|
+--| Parameters: --
+--|
+--| Return: integer
+----------------------------------------------------------------------
+
+function _rigGetTime
+	return rigMasterNow()
+end _rigGetTime
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetCookie
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 14-10-09
+--| Last Mod: 02-01-13
+--| Requires: _rigSerializeSess(), rigEncode(), rigHexDigest(), _rigInputSetCookie
+--|
+--| Summary: Write the session cookie.
+--| 
+--| Format:  _rigSetCookie
+--|
+--| Parameters: array <pCookieData>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigSetCookie pCookieData
+	if pCookieData is not an array then
+		put sSession["userdata"] into tCookieData
+	else
+		put pCookieData into tCookieData
+	end if
+
+	# SERIALIZE THE USERDATA FOR THE COOKIE
+	put _rigSerializeSess(tCookieData) into tCookieData
+
+	if sSession["sess_encrypt_cookie"] is TRUE then
+		put rigEncode(tCookieData) into tCookieData
+	else
+		# IF ENCRYPTION IS NOT USED, WE PROVIDE AN Md5 HASH TO PREVENT USERSIDE TAMPERING
+		put tCookieData & sSession["encryption_key"] into tHash
+		put rigHexDigest(tHash) into tHash
+		put tCookieData & tHash into tCookieData
+	end if
+
+	# SET THE COOKIE
+	if sSession["sess_expire_on_close"] is TRUE then
+		put "" into tExp
+	else
+		put sSession["sess_expiration"] into tExp
+	end if
+	_rigInputSetCookie sSession["sess_cookie_name"], tCookieData, tExp, sSession["cookie_domain"], sSession["cookie_path"], "", TRUE, sSession["cookie_secure"]
+end _rigSetCookie
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigSerializeSess
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 12-10-09
+--| Last Mod: 12-10-09
+--| Requires: --
+--|
+--| Summary: This function first converts any slashes found in the array to a temporary
+--|                    marker, so when it gets unserialized the slashes will be preserved.
+--| 
+--| Format:  _rigSerializeSess(param1)
+--|
+--| Parameters: array <pData>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function _rigSerializeSess pData
+	put pData into tData
+
+	if tData is an array then
+		repeat for each key tKey in tData
+			put tData[tKey] into tVal
+
+			replace "\" with "{{slash}}" in tVal
+			put tVal into tData[tKey]
+		end repeat
+	else
+		replace "\" with "{{slash}}" in tData
+	end if
+
+	return arrayEncode(tData)
+end _rigSerializeSess
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigUnserializeSess
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 12-10-09
+--| Last Mod: 12-10-09
+--| Requires: rigStripSlashes()
+--|
+--| Summary: This function unserializes a data string, then converts any
+--|                    temporary slash markers back to actual slashes.
+--| 
+--| Format:  _rigUnserializeSess(param1)
+--|
+--| Parameters: array <pData>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function _rigUnserializeSess pData
+	put rigStripSlashes(pData) into tData
+
+	# CHECK IF TDATA IS ARRAYENCODED
+	if bytetonum(byte 1 of tData) = 5 then
+		# OK, THEN DECODE TDATA
+		put arrayDecode(tData) into tData
+	end if
+
+	if tData is an array then
+		repeat for each key tKey in tData
+			put tData[tKey] into tVal
+
+			replace "{{slash}}" with "\" in tVal
+			put tVal into tData[tKey]
+		end repeat
+
+		return tData
+	end if
+
+	replace "{{slash}}" with "\" in tData
+
+	return tData
+end _rigUnserializeSess
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigSessGC
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 14-10-09
+--| Last Mod: 14-10-09
+--| Requires: --
+--|
+--| Summary: This deletes expired session rows from database
+--|                    if the probability percentage is met.
+--| 
+--| Format:  _rigSessGC
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigSessGC
+	if sSession["sess_use_database"] is not TRUE then
+		exit _rigSessGC
+	end if
+
+	put empty into tRand
+	repeat while (the length of tRand) < 8
+        	put 2147483647 into tUpperLimit
+        	put random(tUpperLimit) after tRand
+    	end repeat
+
+	put (tRand mod 100) into tRand
+	
+	if tRand < sSession["gc_probability"] then
+		put sNow - sSession["sess_expiration"] into tExpire
+		put "last_activity < " & tExpire into tWhere
+		rigDbWhere tWhere
+		get rigDbDelete(sSession["sess_table_name"])
+
+		rigLogMessage "debug", "Session garbage collection performed."
+	end if
+end _rigSessGC
+
+
+
+
+
+
+
+
+# CALL INITIAL HANDLERS
+--initSession
+
+
+
+--| END OF Session.lc
+--| Location:  ./system/libraries/Session.lc
+----------------------------------------------------------------------

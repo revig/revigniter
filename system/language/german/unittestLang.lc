@@ -1,0 +1,25 @@
+<?rev
+
+put "Testname" into gLang["ut_test_name"]
+put "Test-Datentyp" into gLang["ut_test_datatype"]
+put "Erwarteter Datentyp" into gLang["ut_res_datatype"]
+put "Ergebnis" into gLang["ut_result"]
+put "Undefinierter Testname" into gLang["ut_undefined"]
+put "Dateiname" into gLang["ut_file"]
+put "Zeilennummer" into gLang["ut_line"]
+put "Erfolgreich" into gLang["ut_passed"]
+put "Fehlgeschlagen" into gLang["ut_failed"]
+put "Boolescher Wert" into gLang["ut_boolean"]
+put "Integer" into gLang["ut_integer"]
+put "Fliesskommazahl" into gLang["ut_float"]
+put "Fliesskommazahl (Double)" into gLang["ut_double"] -- can be the same as float
+put "String" into gLang["ut_string"]
+put "Array" into gLang["ut_array"]
+put "Objekt" into gLang["ut_object"]
+put "Ressource" into gLang["ut_resource"]
+put "Null" into gLang["ut_null"]
+
+
+--| END OF unittestLang.lc
+--| Location:  ./system/language/english/unittestLang.lc
+----------------------------------------------------------------------

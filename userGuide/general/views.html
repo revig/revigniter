@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Views : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Views
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Views</h1>
+
+<p>A <dfn>view</dfn> is simply a web page, or a page fragment, like a header, footer, sidebar, etc.
+In fact, views can flexibly be embedded within other views (within other views, etc., etc.) if you need this type
+of hierarchy.</p>
+
+<p>Views are never called directly, they must be loaded by a <a href="controllers.html">controller</a>.  Remember that in an MVC framework, the Controller acts as the
+traffic cop, so it is responsible for fetching a particular view. If you have not read the <a href="controllers.html">Controllers</a> page
+you should do so before continuing.</p>
+
+<p>Using the example controller you created in the <a href="controllers.html">controller</a> page, let's add a view to it.</p>
+
+<h2>Creating a View</h2>
+
+<p>Using your text editor, create a file called <dfn>blogview.lc</dfn>, and put this in it:</p>
+
+<pre><code>&lt;html>
+	&lt;head>
+		&lt;title>My Blog&lt;/title>
+	&lt;/head>
+	&lt;body>
+		&lt;h1>Welcome to my Blog!&lt;/h1>
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p>Then save the file in your <dfn>application/views/</dfn> folder.</p>
+
+<h2>Loading a View</h2>
+
+<p>To load a particular view file you will use the following function:</p>
+
+<pre><code>get rigLoadView("<var>name</var>")</code></pre>
+
+<p>Where <var>name</var> is the name of your view file.  Note: The .lc file extension does not need to be specified unless you use something other than <kbd>.lc</kbd>.</p>
+
+
+<p>Now, open the controller file you made earlier called <dfn>blog.lc</dfn>, and replace the put statement with the view loading function:</p>
+
+
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index" into gControllerHandlers
+
+command index
+	get rigLoadView("blogview")
+end index
+</code></pre>
+
+
+
+<p>If you visit the your site using the URL you did earlier you should see your new view.  The URL was similar to this:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/</code></pre>
+
+<h2>Loading multiple views</h2>
+<p>revIgniter will intelligently handle  multiple calls to rigLoadView() from within a controller.  If more than one call happens they will be appended together. For example, you may wish to have a header view, a menu view, a content view, and a footer view. That might look something like this:</p>
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index" into gControllerHandlers
+
+command index
+	put "Your title" into gData["pageTitle"]
+	get rigLoadView("header")
+	get rigLoadView("menu")
+	get rigLoadView("content")
+	get rigLoadView("footer")
+end index
+</code></pre>
+	
+	
+<p>In the example above, we are using &quot;dynamically added data&quot;, which you will see below.</p>
+<h2>Storing Views within Sub-folders</h2>
+<p>Your view files can also be stored within sub-folders if you prefer that type of organization.  When doing so you will need
+to include the folder name loading the view.  Example:</p>
+
+<pre><code>get rigLoadView("<kbd>folderName</kbd>/<var>fileName</var>")</code></pre>
+
+
+<h2>Adding Dynamic Data to the View</h2>
+
+<p>Data in the global array variable <var>gData</var> is merged with the view. Here is an example using the <var>gData</var> array:</p>
+
+<pre><code>put "My Title" into gData["title"]
+put "My Heading" into gData["heading"]
+put "My Message" into gData["message"]
+get rigLoadView("blogview")
+</code></pre>
+
+
+<p>Let's try it with your controller file.  Open it and add this code:</p>
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index" into gControllerHandlers
+
+command index
+	put "My Real Title" into gData["title"]
+	put "My Real Heading" into gData["heading"]
+	get rigLoadView("blogview")
+end index
+</code></pre>
+
+
+<p>Now open your view file and change the text to variables that correspond to the array keys in your data enclosed in double square brackets:</p>
+
+
+<pre><code>&lt;html>
+	&lt;head>
+		&lt;title>[[gData["title"] ]]&lt;/title>
+	&lt;/head>
+	&lt;body>
+		&lt;h1>[[gData["heading"] ]]&lt;/h1>
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p><strong>Note:</strong> Like in the example above, add a space between the right array bracket and the merge brackets. Load the page at the URL you've been using and you should see the variables replaced.</p>
+
+<h2>Creating Loops / Using LiveCode in View Files</h2>
+
+<p>The data array in gData is not limited to simple variables.  You can
+use multiple items or multi dimensional arrays, which can be looped to generate multiple rows.  For example, if you
+pull data from your database it will typically be in the form of a multi-dimensional array, which you can combine to a list if you like.</p>
+
+<p>Here's a simple example. Add this to your controller:</p>
+
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index" into gControllerHandlers
+
+command index
+	put "Clean House,Call Mom,Run Errands" into gData["toDoList"]
+
+	put "My Real Title" into gData["title"]
+	put "My Real Heading" into gData["heading"]
+	get rigLoadView("blogview")
+end index
+</code></pre>
+
+
+<p>Now open your view file and create a loop:</p>
+
+
+<pre><code>&lt;html>
+	&lt;head>
+		&lt;title>[[gData["title"] ]]&lt;/title>
+	&lt;/head>
+	&lt;body>
+		&lt;h1>[[gData["heading"] ]]&lt;/h1>
+		&lt;p>
+			&lt;? put "&lt;ul>" into tToDo
+			repeat for each item thisItem in gData["toDoList"]
+				put "&lt;li>" & thisItem & "&lt;/li>" after tToDo
+			end repeat
+			put "&lt;/ul>" after tToDo
+			return tToDo ?>
+		&lt;/p>
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
+Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement and the number of statements may not exceed 10 as LiveCodes scriptLimits appliy to the merge function (needed to build the web page) too.</p>
+
+<p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
+
+<pre><code>&lt;html>
+	&lt;head>
+		&lt;title>[[gData["title"] ]]&lt;/title>
+	&lt;/head>
+	&lt;body>
+		&lt;h1>&lt;? return rigLangLangLine("myInternationalHeading") ?>&lt;/h1>
+		
+		&lt;p>&lt;? return rigLangLangLine("myInternationalBodyText") ?>&lt;/p>
+
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<h2>Returning Views as Data</h2>
+
+<p>There is a second <strong>optional</strong> parameter which lets you change the behavior of the function so that it returns data as a string
+rather than sending it to your browser.  This can be useful if you want to process the data in some way.  If you
+set the parameter to <kbd>true</kbd> (boolean) it will return data.  The default behavior is <kbd>false</kbd>, which sends it
+to your browser.  Remember to assign it to a variable if you want the data returned:</p>
+
+<pre><code>get rigLoadView("<var>myfile</var>", <kbd>TRUE</kbd>)</code></pre>
+
+<h2>Nested Views Tutorial</h2>
+
+<p>Multiple views can be loaded sequentially by the controller or, as stated above, nested like in the following sample:</p>
+
+<p>To keep it really simple, just to demonstrate how to embed views within other views, let's use the revIgniter welcome view and split it into three parts. We name them nestedviewsHeader.lc, nestedviewsContent.lc and nestedviewsFooter.lc.</p>
+
+<p>nestedviewsHeader.lc, the header view:</p>
+
+<pre><code>&lt;!DOCTYPE html>
+	&lt;html>
+		&lt;head>
+			&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+		&lt;/head>
+		&lt;body>
+</code></pre>
+
+<p>nestedviewsContent.lc, the content view:</p>
+
+<pre><code>&lt;h1>Welcome to revIgniter!&lt;/h1>
+	
+&lt;p>The page you are looking at is being generated dynamically by revIgniter.&lt;/p>
+	
+&lt;p>If you would like to edit this page you'll find it located at:&lt;/p>
+&lt;code>system/application/views/welcomeMessage.lc&lt;/code>
+	
+&lt;p>The corresponding controller for this page is found at:&lt;/p>
+&lt;code>system/application/controllers/welcome.lc&lt;/code>
+	
+&lt;p>If you are exploring revIgniter for the very first time, you should start by reading the &lt;a href="userGuide/">User Guide&lt;/a>.&lt;/p>
+</code></pre>
+
+<p>nestedviewsFooter.lc, the footer view:</p>
+
+<pre><code>	&lt;p>&lt;br />Page rendered in {{g_ElapsedTime_}} seconds&lt;/p>
+	&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p>Now we need one view which acts as the main view, the view all the other views are nested in. We name it nestedviewsMain.lc:</p>
+
+<pre><code>&lt;? put rigLoadView("nestedviewsHeader", TRUE) into tHeader
+put rigLoadView("nestedviewsContent", TRUE) into tContent
+put rigLoadView("nestedviewsFooter", TRUE) into tFooter
+return tHeader && tContent && tFooter ?>
+</code></pre>
+
+<p>Then, in the controller, we solely load the main view file to send a complete web page to the browser like in the following example:</p>
+
+<pre><code>&lt;?rev
+
+global gControllerHandlers, gData
+
+put "welcome,index" into gControllerHandlers
+
+
+command welcome
+	# code...
+end welcome
+
+
+command index
+	# SET PAGE TITLE
+	put "YourPageTitle" into gData["pageTitle"]
+
+	# LOAD THE MAIN VIEW FILE
+	get rigLoadView("nestedviewsMain")
+end index
+
+
+
+
+--| END OF welcome.lc
+--| Location: ./system/application/controllers/welcome.lc
+----------------------------------------------------------------------
+</code></pre>
+
+<p>Of course, this way, nested views can be embedded within other views within other views etc., if you like.</p>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="models.html">Models</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

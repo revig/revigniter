@@ -1,0 +1,559 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Date Helper : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Date Helper
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Date Helper</h1>
+
+<p>The Date Helper file contains handlers that help you work with dates.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code>rigLoadHelper "date"</code></pre>
+
+
+<p>The following handlers are available:</p>
+
+<h2>rigNow()</h2>
+
+<p>Returns the current time as a timestamp (seconds), referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.  If you do not intend to set your master time reference to GMT (which you'll typically do if you run a site that lets each user set their own timezone settings) there is no benefit to using this function over LiveCode's seconds() function.
+</p>
+
+
+
+
+<h2>rigMdate(<var>dateString</var>, <var>time</var>)</h2>
+
+<p>This function lets you use MySQL style date codes, where each code letter is preceded with a percent sign:  %Y %m %d etc. Example:</p>
+
+<pre><code>put "Year: %Y Month: %m Day: %d - %h:%i %p" into tDateString
+put the seconds into tTime
+put rigMdate(tDateString, tTime) into gData["mdate"]
+</code></pre>
+
+<p>If a timestamp (seconds) is not included in the second parameter the current time will be used.</p>
+
+<p>Supported specifiers:</p>
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+	<tr>
+		<th>Specifier</th>
+		<th>Description</th>
+	</tr>
+	<tr>	
+		<td class="td">%a</td>
+		<td class="td">Abbreviated weekday name (Sun..Sat)</td>
+	</tr>
+	<tr>	
+		<td class="td">%b</td>
+		<td class="td">Abbreviated month name (Jan..Dec)</td>
+	</tr>
+	<tr>	
+		<td class="td">%c</td>
+		<td class="td">Month, numeric (0..12)</td>
+	</tr>
+	<tr>	
+		<td class="td">%D</td>
+		<td class="td">Day of the month with English suffix (0th, 1st, 2nd, 3rd, ...)</td>
+	</tr>
+	<tr>	
+		<td class="td">%d</td>
+		<td class="td">Day of the month, numeric (00..31)</td>
+	</tr>
+	<tr>	
+		<td class="td">%e</td>
+		<td class="td">Day of the month, numeric (0..31)</td>
+	</tr>
+	<tr>	
+		<td class="td">%H</td>
+		<td class="td">Hour (00..23)</td>
+	</tr>
+	<tr>	
+		<td class="td">%h</td>
+		<td class="td">Hour (01..12)</td>
+	</tr>
+	<tr>	
+		<td class="td">%I</td>
+		<td class="td">Hour (01..12)</td>
+	</tr>
+	<tr>	
+		<td class="td">%i</td>
+		<td class="td">Minutes, numeric (00..59)</td>
+	</tr>
+	<tr>	
+		<td class="td">%j</td>
+		<td class="td">Day of year (001..366)</td>
+	</tr>
+	<tr>	
+		<td class="td">%k</td>
+		<td class="td">Hour (0..23)</td>
+	</tr>
+	<tr>	
+		<td class="td">%l</td>
+		<td class="td">Hour (1..12)</td>
+	</tr>
+	<tr>	
+		<td class="td">%M</td>
+		<td class="td">Month name (January..December)</td>
+	</tr>
+	<tr>	
+		<td class="td">%m</td>
+		<td class="td">Month, numeric (00..12)</td>
+	</tr>
+	<tr>	
+		<td class="td">%O</td>
+		<td class="td">Difference to Greenwich time (GMT) in hours</td>
+	</tr>
+	<tr>	
+		<td class="td">%p</td>
+		<td class="td">AM or PM</td>
+	</tr>
+	<tr>	
+		<td class="td">%r</td>
+		<td class="td">Time, 12-hour (hh:mm:ss followed by AM or PM)</td>
+	</tr>
+	<tr>	
+		<td class="td">%S</td>
+		<td class="td">Seconds (00..59)</td>
+	</tr>
+	<tr>	
+		<td class="td">%s</td>
+		<td class="td">Seconds (00..59)</td>
+	</tr>
+	<tr>	
+		<td class="td">%T</td>
+		<td class="td">Time, 24-hour (hh:mm:ss)</td>
+	</tr>
+	<tr>	
+		<td class="td">%U</td>
+		<td class="td">Week (00..53), where Sunday is the first day of the week</td>
+	</tr>
+	<tr>	
+		<td class="td">%u</td>
+		<td class="td">Week (00..53), where Monday is the first day of the week</td>
+	</tr>
+	<tr>	
+		<td class="td">%W</td>
+		<td class="td">Weekday name (Sunday..Saturday)</td>
+	</tr>
+	<tr>	
+		<td class="td">%w</td>
+		<td class="td">Day of the week (0=Sunday..6=Saturday)</td>
+	</tr>
+	<tr>	
+		<td class="td">%Y</td>
+		<td class="td">Year, numeric, four digits</td>
+	</tr>
+	<tr>	
+		<td class="td">%y</td>
+		<td class="td">Year, numeric (two digits)</td>
+	</tr>
+	<tr>	
+		<td class="td">%%</td>
+		<td class="td">A literal “%” character</td>
+	</tr>
+</table>
+</div>
+
+<p class="important"><strong>Note:</strong> The text generated by this function is found in the following language file: language/&lt;yourLang&gt;/dateLang.lc</p>
+
+<h2>rigStandardDate(<var>format</var>, <var>time</var>)</h2>
+
+<p>Lets you generate a date string in one of several standardized formats. Example:</p>
+
+<pre><code>put the seconds into tTime
+put "DATE_ISO8601" into tFormat
+put rigStandardDate(tFormat, tTime) into gData["standardDate"]
+</code></pre>
+
+<p>The first parameter must contain the format, the second parameter must contain the date as a timestamp (seconds).</p>
+
+<p>Supported formats:</p>
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+	<tr>
+		<th>Constant</th>
+		<th>Description</th>
+		<th>Example</th>
+	</tr>
+	<tr>	
+		<td class="td">DATE_ATOM</td>
+		<td class="td">Atom</td>
+		<td class="td">2005-08-15T16:13:03+0000</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_COOKIE</td>
+		<td class="td">HTTP Cookies</td>
+		<td class="td">Sun, 14 Aug 2005 16:13:03 UTC</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_ISO8601</td>
+		<td class="td">ISO-8601</td>
+		<td class="td">2005-08-14T16:13:03+0000</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_RFC822</td>
+		<td class="td">RFC 822</td>
+		<td class="td">Sun, 14 Aug 2005 16:13:03 UTC</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_RFC850</td>
+		<td class="td">RFC 850</td>
+		<td class="td">Sunday, 14-Aug-05 16:13:03 UTC</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_RFC1036</td>
+		<td class="td">RFC 1036</td>
+		<td class="td">Sunday, 14-Aug-05 16:13:03 UTC</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_RFC1123</td>
+		<td class="td">RFC 1123</td>
+		<td class="td">Sun, 14 Aug 2005 16:13:03 UTC</td>	 
+	</tr>
+	<tr>
+		<td class="td">DATE_RFC2822</td>
+		<td class="td">RFC 2822</td>
+		<td class="td">Sun, 14 Aug 2005 16:13:03 +0000</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_RSS</td>
+		<td class="td">RSS</td>
+		<td class="td">Sun, 14 Aug 2005 16:13:03 UTC</td>
+	</tr>
+	<tr>
+		<td class="td">DATE_W3C</td>
+		<td class="td">World Wide Web Consortium</td>
+		<td class="td">2005-08-14T16:13:03+0000</td>
+	</tr>
+</table>
+</div>
+
+<h2>rigLocalToGMT(<var>time</var>)</h2>
+
+<p>Takes a timestamp (seconds) as input and returns it as GMT. If no parameter is provided, a timestamp of the current time is used. Example:</p>
+
+<pre><code>put rigLocalToGMT() into gData["localToGMT"]
+</code></pre>
+
+
+<h2>rigGmtToLocal(<var>time</var>, <var>timeZone</var>, <var>DST</var>)</h2>
+
+<p>Takes a timestamp (seconds) (referenced to GMT) as input, and converts it to a localized timestamp based on the
+timezone and Daylight Saving time submitted.  Example:</p>
+
+<pre><code>put "1273254973" into tTimestamp
+put rigGmtToLocal(tTimestamp, "UM4", TRUE) into gData["gmtToLocal"]
+</code></pre>
+
+<p><strong>Note:</strong> For a list of timezones see the reference at the bottom of this page.</p>
+
+<h2>rigMysqlTimeToSeconds(<var>mysqlTime</var>)</h2>
+
+<p>Takes a MySQL Timestamp as input and returns it as seconds. Example:</p>
+
+<pre><code>put "20061124092345" into tMysql
+put rigMysqlTimeToSeconds(tMysql) into gData["mysqlToSeconds"]
+</code></pre>
+
+
+<h2>rigTimestampToHuman(<var>time</var>, <var>showSecs</var>, <var>format</var>)</h2>
+
+<p>Takes a timestamp (seconds) as input and returns it in a human readable format with this prototype:</p>
+
+<pre><code>YYYY-MM-DD HH:MM:SS AM/PM</code></pre>
+
+<p>This can be useful if you need to display a date in a form field for submission.</p>
+
+<p>The time can be formatted with or without seconds, and it can be set to European ("eu") or US format ("us").  If only
+the timestamp is submitted it will return the time without seconds formatted for the U.S. Examples:</p>
+
+<pre><code>put "1273254973" into tTimestamp
+
+put rigTimestampToHuman(tTimestamp) into gData["timestampToHuman"] -- U.S. time, no seconds
+
+put rigTimestampToHuman(tTimestamp, TRUE, "eu") into gData["timestampToHuman"] -- Euro time with seconds
+
+put rigTimestampToHuman(tTimestamp, TRUE, "us") into gData["timestampToHuman"] -- U.S. time with seconds
+</code></pre>
+
+
+<h2>rigHumanToTimestamp(<var>datestring</var>)</h2>
+
+<p>The opposite of the above function.  Takes a "human" time as input and returns it as timestamp.  This function is
+useful if you accept "human" formatted dates submitted via a form.  Returns FALSE if the date string passed to it is not formatted as indicated above.  Example:</p>
+
+<pre><code>put "2010-05-07 09:18:22 AM" into tDatestring
+put rigHumanToTimestamp(tDatestring) into gData["humanToTimestamp"]
+</code></pre>
+
+
+
+<h2>rigTimespan(<var>seconds</var>, <var>time</var>)</h2>
+
+<p>Formats a timestamp (seconds) so that is appears similar to this:</p>
+
+<pre><code>1 Year, 10 Months, 2 Weeks, 5 Days, 10 Hours, 16 Minutes</code></pre>
+
+<p>The first parameter must contain a timestamp.  The second parameter must contain a timestamp that is greater than the first timestamp.  If the second parameter is empty, the current time will be used.  The most common purpose
+for this function is to show how much time has elapsed from some point in time in the past to now.  Example:</p>
+
+<pre><code>put rigTimespan("1083241902", "1273234277") into gData["timespan"]
+</code></pre>
+
+<p class="important"><strong>Note:</strong> The text generated by this function is found in the following language file: language/&lt;yourLang&gt;/dateLang.lc</p>
+
+
+<h2>rigDaysInMonth(<var>month</var>, <var>year</var>)</h2>
+
+<p>Returns the number of days in a given month/year. Takes leap years into account.  Example:</p>
+<pre><code>put rigDaysInMonth("2", "2010") into gData["daysInMonth"]
+</code></pre>
+
+<p>If the second parameter is empty, the current year will be used.</p>
+
+<h2>rigTimezones(<var>timeZone</var>)</h2>
+
+<p> Takes a timezone reference (for a list of valid timezones, see the &quot;Timezone Reference&quot; below) and returns the number of hours offset from UTC.</p>
+
+<pre><code>put rigTimezones("UM5") into gData["timezone"]
+</code></pre>
+
+<p>This function is useful when used with rigTimezoneMenu(). </p>
+
+<h2>rigTimezoneMenu(<var>default</var>, <var>class</var>, <var>name</var>)</h2>
+
+<p>Generates a pull-down menu of timezones, like this one:</p>
+
+<form action="#">
+<select name="timezones">
+<option value='UM12'>(UTC - 12:00) Enitwetok, Kwajalien</option>
+<option value='UM11'>(UTC - 11:00) Nome, Midway Island, Samoa</option>
+<option value='UM10'>(UTC - 10:00) Hawaii</option>
+<option value='UM9'>(UTC - 9:00) Alaska</option>
+<option value='UM8'>(UTC - 8:00) Pacific Time</option>
+<option value='UM7'>(UTC - 7:00) Mountain Time</option>
+<option value='UM6'>(UTC - 6:00) Central Time, Mexico City</option>
+<option value='UM5'>(UTC - 5:00) Eastern Time, Bogota, Lima, Quito</option>
+<option value='UM4'>(UTC - 4:00) Atlantic Time, Caracas, La Paz</option>
+<option value='UM25'>(UTC - 3:30) Newfoundland</option>
+<option value='UM3' selected='selected'>(UTC - 3:00) Brazil, Buenos Aires, Georgetown, Falkland Is.</option>
+<option value='UM2'>(UTC - 2:00) Mid-Atlantic, Ascention Is., St Helena</option>
+<option value='UM1'>(UTC - 1:00) Azores, Cape Verde Islands</option>
+<option value='UTC'>(UTC) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</option>
+<option value='UP1'>(UTC + 1:00) Berlin, Brussels, Copenhagen, Madrid, Paris, Rome</option>
+<option value='UP2'>(UTC + 2:00) Kaliningrad, South Africa, Warsaw</option>
+<option value='UP3'>(UTC + 3:00) Baghdad, Riyadh, Moscow, Nairobi</option>
+<option value='UP25'>(UTC + 3:30) Tehran</option>
+<option value='UP4'>(UTC + 4:00) Adu Dhabi, Baku, Muscat, Tbilisi</option>
+<option value='UP35'>(UTC + 4:30) Kabul</option>
+<option value='UP5'>(UTC + 5:00) Islamabad, Karachi, Tashkent</option>
+<option value='UP45'>(UTC + 5:30) Bombay, Calcutta, Madras, New Delhi</option>
+<option value='UP6'>(UTC + 6:00) Almaty, Colomba, Dhaka</option>
+<option value='UP7'>(UTC + 7:00) Bangkok, Hanoi, Jakarta</option>
+<option value='UP8'>(UTC + 8:00) Beijing, Hong Kong, Perth, Singapore, Taipei</option>
+<option value='UP9'>(UTC + 9:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</option>
+<option value='UP85'>(UTC + 9:30) Adelaide, Darwin</option>
+<option value='UP10'>(UTC + 10:00) Melbourne, Papua New Guinea, Sydney, Vladivostok</option>
+<option value='UP11'>(UTC + 11:00) Magadan, New Caledonia, Solomon Islands</option>
+<option value='UP12'>(UTC + 12:00) Auckland, Wellington, Fiji, Marshall Island</option>
+</select>
+</form>
+
+<p>This menu is useful if you run a membership site in which your users are allowed to set their local timezone value.</p>
+
+<p>The first parameter lets you set the "selected" state of the menu.  For example, to set Brazil time as the default you will do this:</p>
+
+<pre><code>put rigTimezoneMenu("UM9", "tzClass", "tzName") into gData["timezoneMenu"]
+</code></pre>
+
+<p>Please see the timezone reference below to see the values of this menu.</p>
+
+<p>The second parameter lets you set a CSS class name, the third a name for the menu.</p>
+
+<p class="important"><strong>Note:</strong> The text contained in the menu is found in the following language file: language/&lt;yourLang&gt;/dateLang.lc</p>
+
+
+
+<h2>Timezone Reference</h2>
+
+<p>The following table indicates each timezone and its location.</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Time Zone</th>
+<th>Location</th>
+</tr><tr>
+
+<td class="td">UM12</td><td class="td">(UTC - 12:00) Enitwetok, Kwajalien</td>
+</tr><tr>
+<td class="td">UM11</td><td class="td">(UTC - 11:00) Nome, Midway Island, Samoa</td>
+</tr><tr>
+<td class="td">UM10</td><td class="td">(UTC - 10:00) Hawaii</td>
+</tr><tr>
+<td class="td">UM9</td><td class="td">(UTC - 9:00) Alaska</td>
+</tr><tr>
+<td class="td">UM8</td><td class="td">(UTC - 8:00) Pacific Time</td>
+</tr><tr>
+<td class="td">UM7</td><td class="td">(UTC - 7:00) Mountain Time</td>
+</tr><tr>
+<td class="td">UM6</td><td class="td">(UTC - 6:00) Central Time, Mexico City</td>
+</tr><tr>
+<td class="td">UM5</td><td class="td">(UTC - 5:00) Eastern Time, Bogota, Lima, Quito</td>
+</tr><tr>
+<td class="td">UM4</td><td class="td">(UTC - 4:00) Atlantic Time, Caracas, La Paz</td>
+</tr><tr>
+<td class="td">UM25</td><td class="td">(UTC - 3:30) Newfoundland</td>
+</tr><tr>
+<td class="td">UM3</td><td class="td">(UTC - 3:00) Brazil, Buenos Aires, Georgetown, Falkland Is.</td>
+</tr><tr>
+<td class="td">UM2</td><td class="td">(UTC - 2:00) Mid-Atlantic, Ascention Is., St Helena</td>
+</tr><tr>
+<td class="td">UM1</td><td class="td">(UTC - 1:00) Azores, Cape Verde Islands</td>
+</tr><tr>
+<td class="td">UTC</td><td class="td">(UTC) Casablanca, Dublin, Edinburgh, London, Lisbon, Monrovia</td>
+</tr><tr>
+<td class="td">UP1</td><td class="td">(UTC + 1:00) Berlin, Brussels, Copenhagen, Madrid, Paris, Rome</td>
+</tr><tr>
+<td class="td">UP2</td><td class="td">(UTC + 2:00) Kaliningrad, South Africa, Warsaw</td>
+</tr><tr>
+<td class="td">UP3</td><td class="td">(UTC + 3:00) Baghdad, Riyadh, Moscow, Nairobi</td>
+</tr><tr>
+<td class="td">UP25</td><td class="td">(UTC + 3:30) Tehran</td>
+</tr><tr>
+<td class="td">UP4</td><td class="td">(UTC + 4:00) Adu Dhabi, Baku, Muscat, Tbilisi</td>
+</tr><tr>
+<td class="td">UP35</td><td class="td">(UTC + 4:30) Kabul</td>
+</tr><tr>
+<td class="td">UP5</td><td class="td">(UTC + 5:00) Islamabad, Karachi, Tashkent</td>
+</tr><tr>
+<td class="td">UP45</td><td class="td">(UTC + 5:30) Bombay, Calcutta, Madras, New Delhi</td>
+</tr><tr>
+<td class="td">UP6</td><td class="td">(UTC + 6:00) Almaty, Colomba, Dhaka</td>
+</tr><tr>
+<td class="td">UP7</td><td class="td">(UTC + 7:00) Bangkok, Hanoi, Jakarta</td>
+</tr><tr>
+<td class="td">UP8</td><td class="td">(UTC + 8:00) Beijing, Hong Kong, Perth, Singapore, Taipei</td>
+</tr><tr>
+<td class="td">UP9</td><td class="td">(UTC + 9:00) Osaka, Sapporo, Seoul, Tokyo, Yakutsk</td>
+</tr><tr>
+<td class="td">UP85</td><td class="td">(UTC + 9:30) Adelaide, Darwin</td>
+</tr><tr>
+<td class="td">UP10</td><td class="td">(UTC + 10:00) Melbourne, Papua New Guinea, Sydney, Vladivostok</td>
+</tr><tr>
+<td class="td">UP11</td><td class="td">(UTC + 11:00) Magadan, New Caledonia, Solomon Islands</td>
+</tr><tr>
+<td class="td">UP12</td><td class="td">(UTC + 12:00) Auckland, Wellington, Fiji, Marshall Island</td>
+</tr>
+</table>
+</div>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="cookie_helper.html">Cookie Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="download_helper.html">Download Helper</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

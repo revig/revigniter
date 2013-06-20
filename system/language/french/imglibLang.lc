@@ -1,0 +1,25 @@
+<?rev
+
+put "Vous devez sp&eacute;cifier une image source dans vos pr&eacute;f&eacute;rences." into gLang["imglib_source_image_required"]
+put "ImageMagick est requise pour cette fonctionnalit&eacute;." into gLang["imglib_im_required"]
+put "Votre serveur doit supporter ImageMagick pour d&eacute;terminer les propri&eacute;t&eacute;s de l'image." into gLang["imglib_im_required_for_props"]
+put "Votre serveur ne dispose pas ImageMagick n&eacute;cessaire pour traiter ce type d'image." into gLang["imglib_unsupported_imagecreate"]
+put "Le format GIF est souvent inutilisable du fait de restrictions de licence. Vous pourriez devoir utiliser le format JPG ou PNG &agrave; la place." into gLang["imglib_gif_not_supported"]
+put "Le format JPG n'est pas support&eacute;." into gLang["imglib_jpg_not_supported"]
+put "Le format PNG n'est pas support&eacute;." into gLang["imglib_png_not_supported"]
+put "Le protocole de redimensionnement sp&eacute;cifi&eacute; dans vos pr&eacute;f&eacute;rences ne fonctionne qu'avec les formats d'image JPG ou PNG." into gLang["imglib_jpg_or_png_required"]
+put "Une erreur est survenue lors du remplacement du fichier. Veuillez v&eacute;rifier les permissions d'&eacute;criture de votre r&eacute;pertoire." into gLang["imglib_copy_error"]
+put "Votre serveur ne supporte apparemment pas la rotation d'images." into gLang["imglib_rotate_unsupported"]
+put "Le chemin d'acc&egrave;s &agrave; votre librairie de traitement d'image n'est pas correct. Veuillez indiquer le chemin correct dans vos pr&eacute;f&eacute;rences." into gLang["imglib_libpath_invalid"]
+put "Le traitement de l'image a &eacute;chou&eacute;. Veuillez v&eacute;rifier que votre serveur supporte le protocole choisi et que le chemin d'acc&egrave;s &agrave; votre librairie de traitement d'image est correct." into gLang["imglib_image_process_failed"]
+put "Un angle de rotation doit &ecirc;tre indiqu&eacute; pour tourner l'image." into gLang["imglib_rotation_angle_required"]
+put "Image GIF." into gLang["imglib_writing_failed_gif"]
+put "Le chemin d'acc&egrave;s &agrave; l'image est incorrect." into gLang["imglib_invalid_path"]
+put "Le processus de copie d'image a &eacute;chou&eacute;." into gLang["imglib_copy_failed"]
+put "Impossible de trouver une police d'&eacute;criture utilisable." into gLang["imglib_missing_font"]
+put "Impossible de sauver l'image. Assurez-vous que l'image et le dossier ont les droits d'&eacute;criture." into gLang["imglib_save_failed"]
+
+
+--| END OF imagelibLang.lc
+--| Location:  ./system/language/french/imagelibLang.lc
+----------------------------------------------------------------------

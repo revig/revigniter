@@ -1,0 +1,30 @@
+<?rev
+
+put "No se ha podido determinar la configuración de la base de datos basándose en la cadena proporcionada." into gLang["db_invalid_connection_str"]
+put "No se ha podido conectar al servidor de base de datos usando la configuración suministrada." into gLang["db_unable_to_connect"]
+put "No se ha podido seleccionar la base de datos especificada: %s" into gLang["db_unable_to_select"]
+put "No se ha podido crear la base de datos especificada: %s" into gLang["db_unable_to_create"]
+put "La consulta enviada no es válida." into gLang["db_invalid_query"]
+put "Debe especificar la tabla que será usada en su consulta." into gLang["db_must_set_table"]
+put "Debe especificar el nombre de la base de datos en su archivo de configuración database." into gLang["db_must_set_database"]
+put "Debe usar el método" && quote & "rigDbValuesSet()" & quote && "para actualizar una entrada." into gLang["db_must_use_set"]
+put "Las actualizaciones no están permitidas a menos que contengan una cláusula" && quote & "WHERE" & quote && "." into gLang["db_must_use_where"]
+put "Las eliminaciones no están permitidas a menos que contengan una cláusula" && quote & "WHERE" & quote && "o" && quote & "LIKE" & quote && "." into gLang["db_del_must_use_where"]
+put "Para retornar campos se requiere el nombre de la tabla como parámetro." into gLang["db_field_param_missing"]
+put "Está característica no está disponible para la base de datos que está usando." into gLang["db_unsupported_function"]
+put "Fallo en la transacción: Rollback ejecutado." into gLang["db_transaction_failure"]
+put "No se ha podido eliminar la base de datos especificada." into gLang["db_unable_to_drop"]
+put "Característica no soportada por la plataforma de base de datos que está usando." into gLang["db_unsuported_feature"]
+put "El formato de compresión de ficheros que ha seleccionado no está soportado por su servidor." into gLang["db_unsuported_compression"]
+put "No se pueden escribir los datos en la ruta de fichero que ha proporcionado." into gLang["db_filepath_error"]
+put "La ruta de la caché que ha proporcionado no es válida o no se puede escribir en la misma." into gLang["db_invalid_cache_path"]
+put "Es necesario el nombre de una tabla para esa operación." into gLang["db_table_name_required"]
+put "Es necesario el nombre de una columna para esa operación." into gLang["db_column_name_required"]
+put "Es necesaria una definición de columna para esa operación." into gLang["db_column_definition_required"]
+put "Imposible establecer el juego de caracteres de conexión del cliente: %s" into gLang["db_unable_to_set_charset"]
+put "Ocurrió un Error con la Base de Datos" into gLang["db_error_heading"]
+
+
+--| END OF dbLang.lc
+--| Location:  ./system/language/spanish/dbLang.lc
+----------------------------------------------------------------------

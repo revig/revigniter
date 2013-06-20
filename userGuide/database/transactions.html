@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Transactions : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Transactions
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Transactions</h1>
+
+<p>revIgniter's database abstraction allows you to use <dfn>transactions</dfn> with databases that support transaction-safe table types.  In MySQL, you'll need
+to be running InnoDB or BDB table types rather than the more common MyISAM.  Most other database platforms support transactions natively.</p>
+
+<p>If you are not familiar with
+transactions it is recommended, that you find a good online resource to learn about them for your particular database.  The information below assumes you
+have a basic understanding of transactions.
+</p>
+
+<h2>revIgniter's Approach to Transactions</h2>
+
+<p>revIgniter utilizes an approach to transactions that is very similar to the process used by the popular database class ADODB.  This approach 
+greatly simplifies the process of running transactions.  In most cases all that is required are two lines of code.</p>
+
+<p>Traditionally, transactions have required a fair amount of work to implement since they demand, that you keep track of your queries
+and determine whether to <dfn>commit</dfn> or <dfn>rollback</dfn> based on the success or failure of your queries. This is particularly cumbersome with
+nested queries. In contrast,
+revIgniter uses a smart transaction system that does all this for you automatically (you can also manage your transactions manually if you choose to,
+but there's really no benefit).</p>
+
+<h2>Running Transactions</h2>
+
+<p>To run your queries using transactions you will use the <dfn>rigDbTransStart</dfn> and <dfn>rigTransComplete()</dfn> handlers as follows:</p>
+
+<pre><code><kbd>rigDbTransStart</kbd>
+get rigDbQuery("AN SQL QUERY…")
+get rigDbQuery("ANOTHER QUERY…")
+get rigDbQuery("AND YET ANOTHER QUERY…")
+<kbd>get rigTransComplete()</kbd>
+</code></pre>
+
+<p>You can run as many queries as you want between the start/complete handlers and they will all be committed or rolled back based on success or failure
+of any given query.</p>
+
+
+<h2>Strict Mode</h2>
+
+<p>By default revIgniter runs all transactions in <dfn>Strict Mode</dfn>.  When strict mode is enabled, if you are running multiple groups of
+transactions, if one group fails all groups will be rolled back. If strict mode is disabled, each group is treated independently, meaning
+a failure of one group will not affect any others.</p>
+
+<p>Strict Mode can be disabled as follows:</p>
+
+<pre><code>rigDbTransStrict FALSE</code></pre>
+
+
+<h2>Managing Errors</h2>
+
+<p>If you have error reporting enabled in your <dfn>config/database.lc</dfn> file you'll see a standard error message if the commit was unsuccessful. If debugging is turned off, you can
+manage your own errors like this:</p>
+
+<pre><code>rigDbTransStart
+get rigDbQuery("AN SQL QUERY…")
+get rigDbQuery("ANOTHER QUERY…")
+get rigTransComplete()
+
+if <kbd>rigDbTransStatus()</kbd> is FALSE then
+	// generate an error... or use the rigLogMessage handler to log your error
+end if
+</code></pre>
+
+
+<h2>Enabling Transactions</h2>
+
+<p>Transactions are enabled automatically the moment you use <dfn>rigDbTransStart</dfn>.  If you would like to disable transactions you
+can do so using <dfn>rigDbTransOff</dfn>:</p>
+
+<pre><code><kbd>rigDbTransOff</kbd>
+
+rigDbTransStart
+get rigDbQuery("AN SQL QUERY…")
+get rigTransComplete()
+</code></pre>
+
+<p class="important">When transactions are disabled, your queries will be auto-commited, just as they are when running queries without transactions.</p>
+
+
+<h2>Test Mode</h2>
+
+<p>You can optionally put the transaction system into "test mode", which will cause your queries to be rolled back -- even if the queries produce a valid result.
+To use test mode simply set the first parameter in the <dfn>rigDbTransStart</dfn> handler to <samp>TRUE</samp>:</p>
+
+<pre><code>rigDbTransStart <samp>TRUE</samp> -- Query will be rolled back
+get rigDbQuery("AN SQL QUERY…")
+get rigTransComplete()
+</code></pre>
+
+
+<h2>Running Transactions Manually</h2>
+
+<p>If you would like to run transactions manually you can do so as follows:</p>
+
+<pre><code>get rigTransBegin()
+
+get rigDbQuery("AN SQL QUERY…")
+get rigDbQuery("ANOTHER QUERY…")
+get rigDbQuery("AND YET ANOTHER QUERY…")
+
+
+if rigDbTransStatus() is FALSE then
+	rigTransRollback
+else
+	rigTransCommit
+end if
+</code></pre>
+
+<p class="important"><strong>Note:</strong> Make sure to use <kbd>rigTransBegin()</kbd> when running manual transactions, <strong>NOT</strong>
+<dfn>rigDbTransStart</dfn>.</p>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp; <a href="active_record.html">Active Record</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="table_data.html">Table Metadata</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

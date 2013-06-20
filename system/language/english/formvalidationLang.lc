@@ -1,0 +1,33 @@
+<?rev
+
+put "The %s field is required." into gLang["requiredR"]
+put "The %s field must have a value." into gLang["isset"]
+put "The %s field must contain a valid email address." into gLang["validEmailR"]
+put "The %s field must contain all valid email addresses." into gLang["validEmailsR"]
+put "The %s field must contain a valid URL." into gLang["validUrlR"]
+put "The %s field must contain a valid IP." into gLang["validIpR"]
+put "The %s field must be at least %s characters in length." into gLang["minLengthR"]
+put "The %s field can not exceed %s characters in length." into gLang["maxLengthR"]
+put "The %s field must be exactly %s characters in length." into gLang["exactLengthR"]
+put "The %s field may only contain alphabetical characters." into gLang["alphaR"]
+put "The %s field may only contain alpha-numeric characters." into gLang["alphaNumericR"]
+put "The %s field may only contain alpha-numeric characters, underscores, and dashes." into gLang["alphaDashR"]
+put "The %s field may only contain alphabetical and accented characters." into gLang["alphaAccentR"]
+put "The %s field may only contain alpha-numeric and accented characters." into gLang["alphaNumericAccentR"]
+put "The %s field may only contain alpha-numeric characters, underscores, dashes and accented characters." into gLang["alphaDashAccentR"]
+put "The %s field must contain only numbers." into gLang["numericR"]
+put "The %s field must contain only numeric characters." into gLang["isNumericR"]
+put "The %s field must contain an integer." into gLang["integerR"]
+put "The %s field does not match the %s field." into gLang["matchesR"]
+put "The %s field must contain only positive numbers." into gLang["isNaturalR"]
+put "The %s field must contain a number greater than zero." into gLang["isNaturalNoZeroR"]
+put "The %s field must contain valid Base64 characters." into gLang["validBase64R"]
+put "The %s field must contain a decimal number." into gLang["decimalR"]
+put "The %s field must contain a number greater than %s." into gLang["greaterThanR"]
+put "The %s field must contain a number less than %s." into gLang["lessThanR"]
+
+
+
+--| END OF formvalidationLang.lc
+--| Location:  ./system/language/english/formvalidationLang.lc
+----------------------------------------------------------------------

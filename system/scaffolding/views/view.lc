@@ -1,0 +1,23 @@
+
+<table border="0" cellpadding="0" cellspacing="1" style="width:100%">
+ <tr>
+	<th>Edit</th>
+	<th>Delete</th>
+
+	<?
+		repeat with tKey = 1 to the number of lines in the keys of gData["fields"]
+			put gData["fields"][tKey] into tField
+			put "<th>" & tField & "</th>" & return after tTableHeader
+		end repeat
+
+		return tTableHeader
+	?>
+	
+</tr>
+
+
+[[gData["tableContent"] ]]
+
+</table>
+
+	[[gData["paginate"] ]]

@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>User Agent Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+User Agent Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>User Agent Library</h1>
+
+<p>The User Agent Library provides handlers that help identify information about the browser, mobile device, or robot visiting your site.
+In addition you can get referrer information as well as language and supported character-set information.</p>
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the User Agent Library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Useragent"</code></pre>
+
+<h2>User Agent Definitions</h2>
+
+<p>The user agent name definitions are located in a config file located at: <dfn>application/config/useragents.lc</dfn>.  You may add items to the
+various user agent arrays if needed.</p>
+
+<h2>Example</h2>
+
+<p>When the User Agent Library is initialized it will attempt to determine whether the user agent browsing your site is
+a web browser, a mobile device, or a robot.  It will also gather the platform information if it is available.</p>
+
+
+<pre><code>rigLoaderLoadLibrary "Useragent"
+
+if rigIsMobile() is TRUE then
+	put rigMobile() into tAgent
+else if rigIsBrowser() is TRUE then
+	put rigBrowser() &amp;&amp; rigBrowserVersion() into tAgent
+else if rigIsRobot() is TRUE then
+	put rigRobot() into tAgent
+else
+	put "Unidentified User Agent" into tAgent
+end if
+
+put tAgent &amp; "&lt;br />" &amp; rigAgentPlatform() into gData["agentInfo"] -- Platform info (Windows, Linux, Mac, etc.)
+</code></pre>
+
+
+<h1>Handler Reference</h1>
+
+
+<h2>rigIsBrowser()</h2>
+<p>Returns TRUE/FALSE (boolean) if the user agent is a known web browser.</p>
+
+<h2>rigIsMobile()</h2>
+<p>Returns TRUE/FALSE (boolean) if the user agent is a known mobile device.</p>
+
+<h2>rigIsRobot()</h2>
+<p>Returns TRUE/FALSE (boolean) if the user agent is a known robot.</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; The user agent library only contains the most common robot
+definitions.  It is not a complete list of bots. There are hundreds of them so searching for each one would not be
+very efficient. If you find that some bots that commonly visit your site are missing from the list you can add them to your
+<dfn>application/config/useragents.lc</dfn> file.</p>
+
+<h2>rigIsReferral()</h2>
+<p>Returns TRUE/FALSE (boolean) if the user agent was referred from another site.</p>
+
+
+<h2>rigBrowser()</h2>
+<p>Returns a string containing the name of the web browser viewing your site.</p>
+
+<h2>rigBrowserVersion()</h2>
+<p>Returns a string containing the version number of the web browser viewing your site.</p>
+
+<h2>rigMobile()</h2>
+<p>Returns a string containing the name of the mobile device viewing your site.</p>
+
+<h2>rigRobot()</h2>
+<p>Returns a string containing the name of the robot viewing your site.</p>
+
+<h2>rigAgentPlatform()</h2>
+<p>Returns a string containing the platform viewing your site (Linux, Windows, OS X, etc.).</p>
+
+<h2>rigReferrer()</h2>
+<p>The referrer, if the user agent was referred from another site. Typically you'll test for this as follows:</p>
+
+<pre><code>if rigIsReferral() is TRUE then
+	put rigReferrer() into gData["referrer"]
+end if</code></pre>
+
+
+<h2>rigAgentString()</h2>
+<p>Returns a string containing the full user agent string.  Typically it will be something like this:</p>
+
+<pre><code>Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.0.4) Gecko/20060613 Camino/1.0.2</code></pre>
+
+
+<h2>rigAcceptLang()</h2>
+<p>Lets you determine if the user agent accepts a particular language. Example:</p>
+
+<pre><code>if rigAcceptLang("en") is TRUE then
+	put "You accept English!" into gData["acceptedLang"]
+end if</code></pre>
+
+<p class="important"><strong>Note:</strong> This function is not typically very reliable
+since some browsers do not provide language info, and even among those that do, it is not always accurate.</p>
+
+
+
+<h2>rigAcceptCharset()</h2>
+<p>Lets you determine if the user agent accepts a particular character set. Example:</p>
+
+<pre><code>if rigAcceptCharset("utf-8") is TRUE then
+	put "Your browser supports UTF-8!" into gData["acceptedCharset"]
+end if</code></pre>
+
+<p class="important"><strong>Note:</strong> This function is not typically very reliable
+since some browsers do not provide character-set info, and even among those that do, it is not always accurate. The On-Rev server is currently not supporting the $_Server variable HTTP_ACCEPT_CHARSET, so this function returns FALSE on this server.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="uri.html">URI Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../helpers/array_helper.html">Array Helper</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

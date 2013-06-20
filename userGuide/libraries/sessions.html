@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Session Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Session Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Session Library</h1>
+
+<p>The Session Library permits you maintain a user's "state" and track their activity while they browse your site.
+The Session Library stores session information for each user as serialized (and optionally encrypted) data in a cookie.
+It can also store the session data in a database table for added security, as this permits the session ID in the
+user's cookie to be matched against the stored session ID. By default only the cookie is saved.  If you choose to
+use the database option you'll need to create the session table as indicated below.
+</p>
+
+
+<h2>Initializing a Session</h2>
+
+<p>Sessions will typically run globally with each page load, so the Session Library must either be
+<a href="../general/libraries.html">initialized</a> in your
+<a href="../general/controllers.html">controller</a>, or it can be
+<a href="../general/autoloader.html">auto-loaded</a> by the system.
+For the most part the Session Library will run unattended in the background, so simply initializing the library
+will cause it to read, create, and update sessions.</p>
+
+
+<p>To initialize the Session Library manually in your controller, use the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Session"</code></pre>
+
+
+<p class="important"><strong>Note:</strong> Keep in mind, if sess_use_database is set to TRUE in your config file, that initializing 
+the Session Library connects to your database using the default connection group specified in your database config file. If you need 
+to choose another connection group connect to your database before initializing the Session Library.</p>
+
+
+<h2>How do Sessions work?</h2>
+
+<p>When a page is loaded, the Session Library will check to see if valid session data exists in the user's session cookie.
+If sessions data does <strong>not</strong> exist (or if it has expired) a new session will be created and saved in the cookie.
+If a session does exist, its information will be updated and the cookie will be updated. With each update, the session_id will be regenerated.</p>
+
+<p>It's important for you to understand that once initialized, the Session Library runs automatically.  There is nothing
+you need to do to cause the above behavior to happen.  You can, as you'll see below, work with session data or
+even add your own data to a user's session, but the process of reading, writing, and updating a session is automatic.</p>
+
+
+<h2>What is Session Data?</h2>
+
+<p>A <em>session</em>, as far as revIgniter is concerned, is simply an array containing the following information:</p>
+
+<ul>
+<li>The user's unique Session ID (this is a statistically random string with very strong entropy, hashed with md5 for portability, and regenerated (by default) every five minutes)</li>
+<li>The user's IP Address</li>
+<li>The user's User Agent data (the first 50 characters of the browser data string)</li>
+<li>The "last activity"  time stamp.</li>
+</ul>
+
+<p>The above data is stored in a cookie as a serialized array with this prototype:</p>
+
+<pre><code>tArray["session_id"] -- random hash
+tArray["ip_address"] -- "string - user IP address"
+tArray["user_agent"] -- "string - user agent data"
+tArray["last_activity"] -- timestamp
+</code></pre>
+
+<p>If you have the encryption option enabled, the serialized array will be encrypted before being stored in the cookie,
+making the data highly secure and impervious to being read or altered by someone. More info regarding encryption
+can be <a href="encryption.html">found here</a>, although the Session Library will take care of initializing
+and encrypting the data automatically.</p>
+
+<p>Note: Session cookies are only updated every five minutes by default to reduce processor load.  If you repeatedly reload a page
+you'll notice that the "last activity" time only updates if five minutes or more has passed since the last time
+the cookie was written. This time is configurable by changing the gConfig["sess_time_to_update"] line in your system/config/config.lc file.</p>
+
+<h2>Retrieving Session Data</h2>
+
+<p>Any piece of information from the session array is available using the following function:</p>
+
+<pre><code>rigSessUserdata("<samp>item</samp>")</code></pre>
+
+<p>Where <samp>item</samp> is the array index corresponding to the item you wish to fetch.  For example, to fetch the session ID you
+will do this:</p>
+
+<pre><code>put rigSessUserdata("<samp>session_id</samp>") into tSessionID</code></pre>
+
+<p><strong>Note:</strong> The function returns FALSE (boolean) if the item you are trying to access does not exist.</p>
+
+
+<h2>Adding Custom Session Data</h2>
+
+<p>A useful aspect of the session array is that you can add your own data to it and it will be stored in the user's cookie.
+Why would you want to do this?  Here's one example:</p>
+
+<p>Let's say a particular user logs into your site. Once authenticated,
+you could add their username and email address to the session cookie, making that data globally available to you without
+having to run a database query when you need it.</p>
+
+<p>To add your data to the session array involves passing an array containing your new data to this function:</p>
+
+<pre><code>rigSetSessUserdata <samp>tArray</samp></code></pre>
+
+<p>Where <samp>tArray</samp> is an associative array containing your new data.  Here's an example:</p>
+
+
+<pre><code>put "johndoe" into tNewData["username"]
+put "johndoe@some-site.com" into tNewData["email"]
+put TRUE into tNewData["logged_in"]
+
+rigSetSessUserdata <samp>tNewData</samp></code></pre>
+
+<p>If you want to add userdata one value at a time, rigSetSessUserdata also supports this syntax. </p>
+
+<pre><code>rigSetSessUserdata "someName", "someValue"</code></pre>
+
+<p class="important"><strong>Note:</strong> Cookies can only hold 4KB of data, so be careful not to exceed the capacity.  The
+encryption process in particular produces a longer data string than the original so keep careful track of how much data you are storing.</p>
+
+<h2>Removing Session Data</h2>
+
+<p>Just as rigSetSessUserdata can be used to add information into a session, rigUnsetSessUserdata can be used to remove it, by passing the session key. For example, if you wanted to remove "someName" from your session information: </p>
+
+<pre><code>rigUnsetSessUserdata "someName"</code></pre>
+
+<p>This handler can also be passed an associative array of items to unset.</p>
+
+<pre><code>put "" into tArrayItem["username"]
+put "" into tArrayItem["email"]
+
+rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
+
+<h2>Flashdata</h2>
+
+<p>revIgniter supports &quot;flashdata&quot;, or session data that will only be available for the next server request, and are then automatically cleared. These can be very useful, and are typically used for informational or status messages (for example: &quot;record 2 deleted&quot;).</p>
+<p>Note: Flash variables are prefaced with &quot;flash&quot; so avoid this prefix in your own session names.</p>
+<p>To add flashdata:</p>
+
+<pre><code>rigSetSessFlashdata "item", "value"</code></pre>
+
+<p>You can also pass an array to rigSetSessFlashdata, in the same manner as setSessUserdata. </p>
+<p>To read a flashdata variable:</p>
+
+<pre><code>get rigSessFlashdata("item")</code></pre>
+
+<p>If you find that you need to preserve a flashdata variable through an additional request, you can do so using the rigKeepSessFlashdata handler.</p>
+
+<pre><code>rigKeepSessFlashdata "item"</code></pre>
+
+<h2>Saving Session Data to a Database</h2>
+
+<p>While the session data array stored in the user's cookie contains a Session ID,
+unless you store session data in a database there is no way to validate it.  For some applications that require little or no
+security, session ID validation may not be needed, but if your application requires security, validation is mandatory.</p>
+
+<p>When session data is available in a database, every time a valid session is found in the user's cookie, a database
+query is performed to match it.  If the session ID does not match, the session is destroyed.  Session IDs can never
+be updated, they can only be generated when a new session is created.</p>
+
+<p>In order to store sessions, you must first create a database table for this purpose.  Here is the basic
+prototype required by the Session Library.<br />MySQL version:</p>
+
+<pre><code>CREATE TABLE IF NOT EXISTS  `ri_sessions` (
+session_id varchar(40) DEFAULT '0' NOT NULL,
+ip_address varchar(45) DEFAULT '0' NOT NULL,
+user_agent varchar(120) NOT NULL,
+last_activity int(10) unsigned DEFAULT 0 NOT NULL,
+user_data text NOT NULL,
+PRIMARY KEY (session_id)
+)
+</code></pre>
+
+<p>PostgreSQL version:</p>
+
+<pre><code>CREATE TABLE "ri_sessions" (
+"session_id" varchar(40) DEFAULT 0 NOT NULL,
+"ip_address" varchar(45) DEFAULT 0 NOT NULL,
+"user_agent" varchar(120) NOT NULL,
+"last_activity" integer DEFAULT 0 NOT NULL,
+"user_data" text DEFAULT '' NOT NULL,
+PRIMARY KEY("session_id"),
+CONSTRAINT "check_last_activity" CHECK(last_activity >= 0)
+);
+</code></pre>
+
+<p><strong>Note:</strong> By default the table is called <dfn>ri_sessions</dfn>, but you can name it anything you want
+as long as you update the <kbd>application/config/config.lc</kbd> file so that it contains the name you have chosen.
+Once you have created your database table you can enable the database option in your config.lc file as follows:</p>
+
+<pre><code>put TRUE into gConfig["sess_use_database"]</code></pre>
+
+<p>Once enabled, the Session Library will store session data in the DB.</p>
+
+<p>Make sure you've specified the table name in your config file as well:</p>
+
+<pre><code>put "ri_sessions" into gConfig["sess_table_name"]</code></pre>
+
+<p class="important"><strong>Note:</strong> The Session Library has built-in garbage collection which clears out expired sessions so you
+do not need to write your own routine to do it.</p>
+
+
+<h2>Destroying a Session </h2>
+
+<p>To clear the current session: </p>
+
+<pre><code>rigSessDestroy</code></pre>
+
+<p class="important"><strong>Note:</strong> This handler should be the last one called, and even flash variables will no longer be available.  If you only want some items destroyed and not all, use <dfn>rigUnsetSessUserdata</dfn>.</p>
+
+
+<h2>Create a new Session</h2>
+
+<p>To start over with a new session: </p>
+
+<pre><code>rigSessCreate</code></pre>
+
+
+<h2>Session Preferences</h2>
+<p>You'll find the following Session related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+	<th>Preference</th>
+	<th>Default</th>
+	<th>Options</th>
+	<th>Description</th>
+</tr>
+<tr>
+	<td class="td"><strong>sess_cookie_name</strong></td>
+	<td class="td">ri_session</td>
+	<td class="td">None</td>
+	<td class="td">The name you want the session cookie saved as.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_expiration</strong></td>
+	<td class="td">129600</td>
+	<td class="td">None</td>
+	<td class="td">The number of seconds you would like the session to last. The default value is 36 hours (129600 seconds). If you would like a non-expiring session set the value to zero: 0. Keep in mind that the value is related to server time.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_expire_on_close</strong></td>
+	<td class="td">FALSE</td>
+	<td class="td">TRUE/FALSE (boolean)</td>
+	<td class="td">Whether to cause the session to expire automatically when the browser window is closed.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_encrypt_cookie</strong></td>
+	<td class="td">FALSE</td>
+	<td class="td">TRUE/FALSE (boolean)</td>
+	<td class="td">Whether to encrypt the session data.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_use_database</strong></td>
+	<td class="td">FALSE</td>
+	<td class="td">TRUE/FALSE (boolean)</td>
+	<td class="td">Whether to save the session data to a database.  You must create the table before enabling this option.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_table_name</strong></td>
+	<td class="td">ri_sessions</td>
+	<td class="td">Any valid SQL table name</td>
+	<td class="td">The name of the session database table.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_time_to_update</strong></td>
+	<td class="td">300</td>
+	<td class="td">Time in seconds</td>
+	<td class="td">This options controls how often the session library will regenerate itself and create a new session id.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_match_ip</strong></td>
+	<td class="td">FALSE</td>
+	<td class="td">TRUE/FALSE (boolean)</td>
+	<td class="td">Whether to match the user's IP address when reading the session data.  Note that some ISPs dynamically
+	changes the IP, so if you want a non-expiring session you will likely set this to FALSE.</td>
+</tr>
+<tr>
+	<td class="td"><strong>sess_match_useragent</strong></td>
+	<td class="td">TRUE</td>
+	<td class="td">TRUE/FALSE (boolean)</td>
+	<td class="td">Whether to match the User Agent when reading the session data.</td>
+</tr>
+</table>
+</div>
+
+<p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the session expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="uri.html">URI Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

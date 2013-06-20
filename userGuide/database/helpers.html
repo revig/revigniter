@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Query Helper Handlers : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Query Helpers
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Query Helper Functions</h1>
+
+
+
+<h2>rigDbAffectedRows()</h2>
+<p>Displays the number of affected rows, when doing "write" type queries (insert, update, etc.).</p>
+<p>Note:  In MySQL "DELETE FROM TABLE" returns 0 affected rows. The database library has a small hack that allows it to return the
+correct number of affected rows.  By default this hack is enabled but it can be turned off in the database driver file.</p>
+
+
+<h2>rigDbCountAll()</h2>
+<p>Permits you to determine the number of rows in a particular table.  Submit the table name in the first parameter. Example:</p>
+<pre><code>get rigDbCountAll("<var>myTable</var>")
+
+// Produces an integer, like 25
+</code></pre>
+
+
+<h2>rigDbPlatform()</h2>
+<p>Outputs the database platform you are running (MySQL, Postgres, etc...):</p>
+<pre><code>get rigDbPlatform()</code></pre>
+
+
+<h2>rigDbVersion()</h2>
+<p>Outputs the database version you are running:</p>
+<pre><code>get rigDbVersion()</code></pre>
+
+
+<h2>rigDbLastQuery()</h2>
+<p>Returns the last query that was run (the query string, not the result).  Example:</p>
+
+<pre><code>put rigDbLastQuery() into tStr
+
+// Produces:  SELECT * FROM sometable....
+</code></pre>
+
+
+<p>The following two functions help simplify the process of writing database INSERTs and UPDATEs.</p>
+
+
+<h2>rigDbInsertString()</h2>
+<p>This function simplifies the process of writing database inserts. It returns a correctly formatted SQL insert string. Example:</p>
+
+<pre><code>put tName into tArray["name"]
+put tEmail into tArray["email"]
+put tURL into tArray["url"]
+
+put rigDbInsertString("tablename", tArray) into tStr
+</code></pre>
+
+<p>The first parameter is the table name, the second is an associative array with the data to be inserted.  The above example produces:</p>
+<pre><code>INSERT INTO tablename (name, email, url) VALUES ('Rick', 'rick@example.com', 'example.com')</code></pre>
+
+<p class="important">Note: Values are automatically escaped, producing safer queries.</p>
+
+
+
+<h2>rigDbUpdateString()</h2>
+<p>This function simplifies the process of writing database updates. It returns a correctly formatted SQL update string. Example:</p>
+
+<pre><code>put tName into tData["name"]
+put tEmail into tData["email"]
+put tURL into tData["url"]
+
+put "authorID = 1 AND status = 'active'" into tWhere
+
+put rigDbUpdateString("tablename", tData, tWhere) into tStr
+</code></pre>
+
+<p>The first parameter is the table name, the second is an associative array with the data to be updated, and the third parameter is the "where" clause which can be a string or an associative array. The above example produces:</p>
+<pre><code> UPDATE tablename SET name = 'Rick', email = 'rick@example.com', url = 'example.com' WHERE authorID = 1 AND status = 'active'</code></pre>
+
+<p class="important">Note: Values are automatically escaped, producing safer queries.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="results.html">Query Results</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="active_record.html">Active Record Pattern</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

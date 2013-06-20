@@ -1,0 +1,204 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# -------------------------------------------------------------------
+# MIME TYPES
+# -------------------------------------------------------------------
+# This file contains an array of mime types.  It is used by the
+# Upload library to help identify allowed file types.
+#
+##
+
+
+
+# DECLARE VARIABLES
+local sMime
+
+put "application/mac-binhex40" into sMime["hqx"]
+put "application/mac-compactpro" into sMime["cpt"]
+put "text/x-comma-separated-values" into sMime["csv"][1]
+put "text/comma-separated-values" into sMime["csv"][2]
+put "application/octet-stream" into sMime["csv"][3]
+put "application/vnd.ms-excel" into sMime["csv"][4]
+put "application/x-csv" into sMime["csv"][5]
+put "text/csv" into sMime["csv"][6]
+put "application/csv" into sMime["csv"][7]
+put "application/excel" into sMime["csv"][8]
+put "application/vnd.msexcel" into sMime["csv"][9]
+put "application/macbinary" into sMime["bin"]
+put "application/octet-stream" into sMime["dms"]
+put "application/octet-stream" into sMime["lha"]
+put "application/octet-stream" into sMime["lzh"]
+put "application/octet-stream" into sMime["exe"][1]
+put "application/x-msdownload" into sMime["exe"][2]
+put "application/octet-stream" into sMime["class"]
+put "application/x-photoshop" into sMime["psd"]
+put "application/octet-stream" into sMime["so"]
+put "application/octet-stream" into sMime["sea"]
+put "application/octet-stream" into sMime["dll"]
+put "application/oda" into sMime["oda"]
+put "application/pdf" into sMime["pdf"][1]
+put "application/x-download" into sMime["pdf"][2]
+put "application/postscript" into sMime["ai"]
+put "application/postscript" into sMime["eps"]
+put "application/postscript" into sMime["ps"]
+put "application/smil" into sMime["smi"]
+put "application/smil" into sMime["smil"]
+put "application/vnd.mif" into sMime["mif"]
+put "application/excel" into sMime["xls"][1]
+put "application/vnd.ms-excel" into sMime["xls"][2]
+put "application/msexcel" into sMime["xls"][3]
+put "application/powerpoint" into sMime["ppt"][1]
+put "application/vnd.ms-powerpoint" into sMime["ppt"][2]
+put "application/wbxml" into sMime["wbxml"]
+put "application/wmlc" into sMime["wmlc"]
+put "application/x-director" into sMime["dcr"]
+put "application/x-director" into sMime["dir"]
+put "application/x-director" into sMime["dxr"]
+put "application/x-dvi" into sMime["dvi"]
+put "application/x-gtar" into sMime["gtar"]
+put "application/x-gzip" into sMime["gz"]
+put "application/x-httpd-php" into sMime["php"]
+put "application/x-httpd-php" into sMime["php4"]
+put "application/x-httpd-php" into sMime["php3"]
+put "application/x-httpd-php" into sMime["phtml"]
+put "application/x-httpd-php-source" into sMime["phps"]
+put "application/x-javascript" into sMime["js"]
+put "application/x-shockwave-flash" into sMime["swf"]
+put "application/x-stuffit" into sMime["sit"]
+put "application/x-tar" into sMime["tar"]
+put "application/x-tar" into sMime["tgz"][1]
+put "application/x-gzip-compressed" into sMime["tgz"][2]
+put "application/xhtml+xml" into sMime["xhtml"]
+put "application/xhtml+xml" into sMime["xht"]
+put "application/x-zip" into sMime["zip"][1]
+put "application/zip" into sMime["zip"][2]
+put "application/x-zip-compressed" into sMime["zip"][3]
+put "audio/midi" into sMime["mid"]
+put "audio/midi" into sMime["midi"]
+put "audio/mpeg" into sMime["mpga"]
+put "audio/mpeg" into sMime["mp2"]
+put "audio/mpeg" into sMime["mp3"][1]
+put "audio/mpg" into sMime["mp3"][2]
+put "audio/mpeg3" into sMime["mp3"][3]
+put "audio/x-aiff" into sMime["aif"]
+put "audio/x-aiff" into sMime["aiff"]
+put "audio/x-aiff" into sMime["aifc"]
+put "audio/x-pn-realaudio" into sMime["ram"]
+put "audio/x-pn-realaudio" into sMime["rm"]
+put "audio/x-pn-realaudio-plugin" into sMime["rpm"]
+put "audio/x-realaudio" into sMime["ra"]
+put "video/vnd.rn-realvideo" into sMime["rv"]
+put "audio/x-wav" into sMime["wav"]
+put "image/bmp" into sMime["bmp"]
+put "image/gif" into sMime["gif"]
+put "image/jpeg" into sMime["jpeg"][1]
+put "image/pjpeg" into sMime["jpeg"][2]
+put "image/jpeg" into sMime["jpg"][1]
+put "image/pjpeg" into sMime["jpg"][2]
+put "image/jpeg" into sMime["jpe"][1]
+put "image/pjpeg" into sMime["jpe"][2]
+put "image/png" into sMime["png"][1]
+put "image/x-png" into sMime["png"][2]
+put "image/tiff" into sMime["tiff"]
+put "image/tiff" into sMime["tif"]
+put "text/css" into sMime["css"]
+put "text/html" into sMime["html"]
+put "text/html" into sMime["htm"]
+put "text/html" into sMime["shtml"]
+put "text/plain" into sMime["txt"]
+put "text/plain" into sMime["text"]
+put "text/plain" into sMime["log"][1]
+put "text/x-log" into sMime["log"][2]
+put "text/richtext" into sMime["rtx"]
+put "text/rtf" into sMime["rtf"]
+put "text/xml" into sMime["xml"]
+put "text/xml" into sMime["xsl"]
+put "video/mpeg" into sMime["mpeg"]
+put "video/mpeg" into sMime["mpg"]
+put "video/mpeg" into sMime["mpe"]
+put "video/quicktime" into sMime["qt"]
+put "video/quicktime" into sMime["mov"]
+put "video/x-msvideo" into sMime["avi"]
+put "video/x-sgi-movie" into sMime["movie"]
+put "application/msword" into sMime["doc"]
+put "application/vnd.openxmlformats-officedocument.wordprocessingml.document" into sMime["docx"][1]
+put "application/zip" into sMime["docx"][2]
+put "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" into sMime["xlsx"][1]
+put "application/zip" into sMime["xlsx"][2]
+put "application/msword" into sMime["word"][1]
+put "application/octet-stream" into sMime["word"][2]
+put "application/excel" into sMime["xl"]
+put "message/rfc822" into sMime["eml"]
+put "application/runrev" into sMime["rev"]
+put "application/octet-stream" into sMime["ipa"]
+put "text/xml" into sMime["plist"]
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchMimeType
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 10-07-09
+--| Last Mod: 05-11-09
+--| Requires: --
+--|
+--| Summary: Fetch mime type by providing an extension.
+--| 
+--| Format:  rigFetchMimeType(param1)
+--|
+--| Parameters: string<pExtension>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigFetchMimeType pExtension
+	if pExtension is among the keys of sMime then
+		return sMime[pExtension]
+	end if
+
+	return FALSE	
+end rigFetchMimeType
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchAllMimeTypes
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 10-07-09
+--| Last Mod: 10-07-09
+--| Requires: --
+--|
+--| Summary: Fetch mime types.
+--| 
+--| Format:  rigFetchAllMimeTypes()
+--|
+--| Parameters: --
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigFetchAllMimeTypes
+	return sMime
+end rigFetchAllMimeTypes
+
+
+
+
+
+--| END OF mimes.lc
+--| Location: ./system/application/config/mimes.lc
+----------------------------------------------------------------------

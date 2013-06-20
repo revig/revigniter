@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Queries : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Queries
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Queries</h1>
+
+<h2>rigDbQuery()</h2>
+
+<p>To submit a query, use the following function:</p>
+
+<pre><code>get rigDbQuery("YOUR QUERY HERE")</code></pre>
+
+<p>The <dfn>rigDbQuery()</dfn> function returns a database result <strong>array</strong> when "read" type queries are run. 
+When "write" type queries are run it simply returns TRUE or FALSE
+depending on success or failure.  When retrieving data you will typically assign the query to your own variable, like this:</p>
+
+<pre><code>put rigDbQuery("YOUR QUERY HERE") into <var>tQuery</var></code></pre>
+
+<h2>rigDbSimpleQuery()</h2>
+
+<p>This is a simplified version of the <dfn>rigDbQuery()</dfn> function.  It ONLY returns TRUE/FALSE on success or failure.
+It DOES NOT return a database result set, nor does it set the query timer, or compile bind data, or store your query for debugging.
+It simply lets you submit a query. Most users will rarely use this function.</p>
+
+
+<h1>Adding Database prefixes manually</h1>
+<p>If you have configured a database prefix and would like to add it in manually for, you can use the following.</p>
+<pre><code>get rigDbPrefix("tablename")
+-- outputs prefixtablename</code></pre>
+
+
+<h1>Protecting identifiers</h1>
+<p>In many databases it is advisable to protect table and field names - for example with backticks in MySQL. <strong>Active Record queries are automatically protected</strong>, however if you need to manually protect an identifier you can use:</p>
+<pre><code>get rigProtectIdentifiers("tabelName")</code></pre>
+
+<p>This function will also add a table prefix to your table, assuming you have a prefix specified in your database config file. To enable the prefixing set <kbd>TRUE</kbd> (boolen) via the second parameter:</p>
+<pre><code>get rigProtectIdentifiers("tabelName", <kbd>TRUE</kbd>)</code></pre>
+
+
+<h1>Escaping Queries</h1>
+<p>It's a very good security practice to escape your data before submitting it into your database.
+revIgniter has three functions that help you do this:</p>
+
+<ol>
+<li><strong>rigDbEscape()</strong> This function determines the data type so that it
+can escape only string data.  It also automatically adds single quotes around the data so you don't have to:
+
+<pre><code>put "INSERT INTO table (title) VALUES(" & rigDbEscape(tTitle) & ")" into tSQL</code></pre></li>
+
+
+<p class="important"><strong>Note:</strong> This function converts "true" and "false" to 1 and 0 respectively. If for what ever reason you need to store booleans as strings in your database you should use the rigEscapeStr() function instead.</p>
+
+
+
+<li><strong>rigEscapeStr()</strong>  This function escapes the data passed to it, regardless of type.
+Most of the time you'll use the above function rather than this one. Use the function like this:
+
+<pre><code>put "INSERT INTO table (title) VALUES('" & rigEscapeStr(tTitle) & "')" into tSQL</code></pre></li>
+
+<li><strong>rigEscapeLikeStr()</strong>  This function should be used when strings are to be used in LIKE
+conditions so that LIKE wildcards ('%', '_') in the string are also properly escaped.
+
+<pre><code>put "20% raise" into tSearch
+put "SELECT id FROM table WHERE column LIKE '%"  & rigEscapeLikeStr(tSearch) & "%'" into tSQL</code></pre>
+
+</ol>
+
+
+<h1>Query Bindings</h1>
+
+
+<p>Bindings enable you to simplify your query syntax by letting the system put the queries together for you. Consider the following example:</p>
+
+<pre><code>put "SELECT * FROM some_table WHERE id = <var>:1</var> AND status = <var>:2</var> AND author = <var>:3</var>" into tSQL
+
+put 3 into tArray[1]
+put "live" into tArray[2]
+put "Rick" into tArray[3]
+
+get rigDbQuery(tSQL, tArray)
+</code></pre>
+
+<p>The sequential numbers prepended by a colon in the query are automatically replaced with the values in the array in the second parameter of the rigDbQuery function. You can use a comma separated list too, instead of an array.</p>
+<p class="important">The secondary benefit of using binds is that the values are automatically escaped, producing safer queries.  You don't have to remember to manually escape data; revIgniter does it automatically for you.</p>
+
+	
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="connecting.html">Connecting to your Database</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="results.html">Query Results</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

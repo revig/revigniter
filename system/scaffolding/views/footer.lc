@@ -1,0 +1,10 @@
+
+</div>
+
+<div id="footer">
+<p><a href="http://revIgniter.com/">revIgniter</a> -  Version [[gData["riVersion"] ]] [[gData["state"] ]]</p>
+<p>Page rendered in {{g_ElapsedTime_}} seconds</p>
+</div>
+
+</body>
+</html>

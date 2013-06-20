@@ -1,0 +1,42 @@
+<?rev
+
+	put "La cuenta ha sido creada." into gLang["accountCreationSuccess"]
+	put "No se puede crear la cuenta." into gLang["accountCreationUnsuccessful"]
+	put "Email en uso o inválido." into gLang["accountCreationDuplicateInvalidemail"]
+	put "Nombre de usuario en uso o inválido." into gLang["accountCreationDuplicateInvalidusername"]
+	
+	put "La contraseña ha sido cambiada correctamente." into gLang["passwordChangeSuccessful"]
+	put "No se puede cambiar la constraseña." into gLang["passwordChangeUnsuccessful"]
+	put "Enviado correo electrónico para restablecer contraseña." into gLang["forgotPasswordSuccessful"]
+	put "No se puede restablecer la contraseña." into gLang["forgotPasswordUnsuccessful"]
+	
+	put "Cuenta activada." into gLang["activateSuccessful"]
+	put "No se puede activar la cuenta." into gLang["activateUnsuccessful"]
+	put "Cuenta desactivada." into gLang["deactivateSuccessful"]
+	put "No se puede desactivar la cuenta." into gLang["deactivateUnsuccessful"]
+	put "Recibirás un correo electrónico de activación de la cuenta." into gLang["activationEmailSuccessful"]
+	put "No se puede enviar el correo electrónico de activación." into gLang["activationEmailUnsuccessful"]
+	
+	put "Sesión iniciada." into gLang["loginSuccessful"]
+	put "Inicio de sesión incorrecto." into gLang["loginUnsuccessful"]
+	put "La cuenta está inactiva." into gLang["loginUnsuccessfulNotActive"]
+	put "Se ha cerrado la sesión." into gLang["logoutSuccessful"]
+	
+	put "Activación de la cuenta" into gLang["emailActivationSubject"]
+	put "Verificación de la contraseña." into gLang["emailForgottenPasswordSubject"]
+	
+	put "La información de la cuenta se ha actualizado correctamente." into gLang["updateSuccessful"]
+	put "No se puede actualizar la información de la cuenta." into gLang["updateUnsuccessful"]
+	put "El usuario ha sido borrado." into gLang["deleteSuccessful"]
+	put "No se puede borrar el usuario." into gLang["deleteUnsuccessful"]
+	
+	put "Restableca la Contraseña" into gLang["resetPasswordLinkText"]
+	put "Active la Cuenta" into gLang["activationLinkText"]
+
+	
+
+
+
+--| END OF authenticationLang.lc
+--| Location:  ./system/language/english/authenticationLang.lc
+----------------------------------------------------------------------

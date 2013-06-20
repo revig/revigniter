@@ -1,0 +1,2096 @@
+<?rev
+# THE variablenames FUNCTION YIELDS A SERVER ERROR OUTSIDE HANDLERS
+-- if "gBASEPATH" is not among the items of line 4 of the variablenames then
+
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled onCodeIgniter.
+#
+# @package		revIgniter
+# @author		rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# Common Functions / Handlers
+#
+# Loads the base scripts and executes the request.
+#
+# @package		revIgniter
+# @subpackage		revigniter
+# @category	Common Functions
+# @author		rabit@revigniter.com
+# @link		http://revigniter.com/userGuide
+##
+
+## ------------------------------------------------------------------------
+
+
+# DECLARE CONFIGURATION  ARRAY VARIABLE
+	global gConfig
+
+# DECLARE ROUTES ARRAY VARIABLE
+	global gRoute
+
+# DECLARE INCLUDED LIBRARIES ARRAY VARIABLE
+# DECLARE MAIN CONFIGURATION  ARRAY VARIABLE
+# DECLARE ERRORS LIST VARIABLE
+	local sLoadedLibs, sMainConf, sErrorNames
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadLibrary
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-05-09
+--| Last Mod: 30-05-09
+--| Requires: --
+--|
+--| Summary: Library registry. 
+--| 				Loads the requested library or sublibrary, if it was not included previously.
+--| 
+--| Format:  rigLoadLibrary param1
+--|
+--| Parameters: string <pName> the library beeing requested
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadLibrary pLibName
+	put sLoadedLibs into tLoadedLibs
+	combine tLoadedLibs using comma
+	set the wholematches to TRUE
+	if itemOffset(pLibName, tLoadedLibs) > 0 then
+		# LIBRARY IS ALREADY LOADED
+		exit rigLoadLibrary
+	else
+		if there is a file (gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT) then
+			include gBASEPATH & "libraries/" & pLibName & gEXT
+			include gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
+		else
+			if there is a file (gAPPPATH & "libraries/" & pLibName & gEXT) then
+				include gAPPPATH & "libraries/" & pLibName & gEXT
+				
+			else
+				include gBASEPATH & "libraries/" & pLibName & gEXT
+			end if
+		end if
+		rigAddToLibArray pLibName
+
+	end if
+end rigLoadLibrary
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigGetConfig
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-05-09
+--| Last Mod: 30-05-09
+--| Requires: --
+--|
+--| Summary: Includes the main config file.
+--| 
+--| Format:  rigGetConfig()
+--|
+--| Parameters: --
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigGetConfig
+	if sMainConf[1] is not an array then
+	# FIRST CALL TO rigGetConfig
+		if there is a file (gAPPPATH & "config/config" & gEXT) then
+			include gAPPPATH & "config/config" & gEXT
+			if line 1 of the keys of gConfig is empty then
+				put "Your config file does not appear to be formatted correctly."
+				exit to top
+			else
+				put gConfig into sMainConf[1]
+				return gConfig
+			end if
+		else
+			put "The configuration file config" & gEXT && "does not exist."
+			exit to top
+		end if
+	else
+		return gConfig
+	end if
+end rigGetConfig
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigIsMainConfigLoaded
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 05-07-09
+--| Last Mod: 05-07-09
+--| Requires: --
+--|
+--| Summary: Returns true, if main config file is loaded.
+--| 
+--| Format:  rigIsMainConfigLoaded()
+--|
+--| Parameters: --
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigIsMainConfigLoaded
+	return sMainConf[1] is an array
+end rigIsMainConfigLoaded
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigConfigItem
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-05-09
+--| Last Mod: 30-05-09
+--| Requires: rigGetConfig()
+--|
+--| Summary: Gets a config item.
+--| 
+--| Format:  rigConfigItem(param1)
+--|
+--| Parameters: string <pItem>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigConfigItem pItem
+	if pItem is not among the keys of gConfig then
+		put rigGetConfig() into tTempConfig
+		if pItem is not among the keys of tTempConfig then
+			return FALSE
+		else
+			return tTempConfig[pItem]
+		end if
+	else
+		return gConfig[pItem]
+	end if
+end rigConfigItem
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigShowError
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 29-06-09
+--| Last Mod: 13-09-09
+--| Requires: rigShowErrorPage
+--|
+--| Summary: Error Handler. This function lets us invoke the exception library and
+--|                   display errors using the standard error template located
+--|                   in application/errors/errors.lc
+--|                   This function will send the error page directly to the
+--|                   browser and exit.
+--| 
+--| Format:  rigShowError param1
+--|
+--| Parameters: string <pMessage>, integer <pStatusCode>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigShowError pMessage pStatusCode
+	rigLoadLibrary "Exceptions"
+
+	if pStatusCode is empty then
+		put 500 into tStatusCode
+	else
+		put pStatusCode into tStatusCode
+	end if
+
+	put "An Error Was Encountered" into tHeading
+	
+	# SEND ERROR PAGE TO THE BROWSER!
+	put rigShowErrorPage(tHeading, pMessage, "errorGeneral", tStatusCode)
+	exit to top
+end rigShowError
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigShow404
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 29-06-09
+--| Last Mod: 29-06-09
+--| Requires: rigShow404Page
+--|
+--| Summary: This function is similar to the rigShowError command above
+--|                    However, instead of the standard error template it displays
+--|                    404 errors.
+--| 
+--| Format:  rigShow404 param1
+--|
+--| Parameters: mixed <pPage>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigShow404 pPage
+	rigLoadLibrary "Exceptions"
+
+	rigShow404Page pPage
+end rigShow404
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLogMessage
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-05-09
+--| Last Mod: 30-05-09
+--| Requires: rigWriteLog in Log.lc
+--|
+--| Summary: Error Logging Interface, we use this as a simple mechanism to send messages to be logged.
+--| 
+--| Format:  rigLogMessage param1, param2, param3
+--|
+--| Parameters: string <pLevel>, string <pMessage>, bool <pDisplayError>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLogMessage pLevel, pMessage, pDisplayError
+	put rigGetConfig() into tConfig
+	if tConfig["logThreshold"] is 0 then
+		exit rigLogMessage
+	end if
+	rigLoadLibrary "Log"
+	rigWriteLog pLevel, pMessage, pDisplayError
+end rigLogMessage
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigAddToLibArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 17-06-09
+--| Last Mod: 17-06-09
+--| Requires: --
+--|
+--| Summary: Add name of loaded library to the library array.
+--| 	    
+--| 
+--| Format:  rigAddToLibArray param1
+--|
+--| Parameters: string<pLibName>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+command rigAddToLibArray pLibName
+	put the number of lines in the keys of sLoadedLibs into tLibCount
+	add 1 to tLibCount
+	put pLibName into sLoadedLibs[tLibCount]
+end rigAddToLibArray
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetStatusHeader
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 23-07-09
+--| Last Mod: 13-09-09
+--| Requires: --
+--|
+--| Summary:  Set HTTP status header.
+--| 
+--| Format:  rigSetStatusHeader param1, param2
+--|
+--| Parameters: int <pCode> the status code, string <pText>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetStatusHeader pCode, pText
+	if pCode is empty then
+		put "200" into tCode
+	else
+		put pCode into tCode
+	end if
+
+	put pText into tText
+
+	put "OK" into tStati["200"]
+	put "Created" into tStati["201"]
+	put "Accepted" into tStati["202"]
+	put "Non-Authoritative Information" into tStati["203"]
+	put "No Content" into tStati["204"]
+	put "Reset Content" into tStati["205"]
+	put "Partial Content" into tStati["206"]
+	
+	put "Multiple Choices" into tStati["300"]
+	put "Moved Permanently" into tStati["301"]
+	put "Found" into tStati["302"]
+	put "Not Modified" into tStati["304"]
+	put "Use Proxy" into tStati["305"]
+	put "Temporary Redirect" into tStati["307"]
+	
+	put "Bad Request" into tStati["400"]
+	put "Unauthorized" into tStati["401"]
+	put "Forbidden" into tStati["403"]
+	put "Not Found" into tStati["404"]
+	put "Method Not Allowed" into tStati["405"]
+	put "Not Acceptable" into tStati["406"]
+	put "Proxy Authentication Required" into tStati["407"]
+	put "Request Timeout" into tStati["408"]
+	put "Conflict" into tStati["409"]
+	put "Gone" into tStati["410"]
+	put "Length Required" into tStati["411"]
+	put "Precondition Failed" into tStati["412"]
+	put "Request Entity Too Large" into tStati["413"]
+	put "Request-URI Too Long" into tStati["414"]
+	put "Unsupported Media Type" into tStati["415"]
+	put "Requested Range Not Satisfiable" into tStati["416"]
+	put "Expectation Failed" into tStati["417"]
+	
+	put "Internal Server Error" into tStati["500"]
+	put "Not Implemented" into tStati["501"]
+	put "Bad Gateway" into tStati["502"]
+	put "Service Unavailable" into tStati["503"]
+	put "Gateway Timeout" into tStati["504"]
+	put "HTTP Version Not Supported" into tStati["505"]
+
+	if tCode is not an integer then
+		rigShowError "Status codes must be numeric.", 500
+	end if
+
+	if tCode is among the keys of tStati and tText is empty then
+		put tStati[tCode] into tText
+	end if
+
+	if tText is empty then
+		rigShowError "No status text available.  Please check your status code number or supply your own message text.", 500
+	end if
+
+	-- put $_SERVER["SERVER_PROTOCOL"] into tServerProtocol
+	
+	put header "Status:" && tCode && tText
+end rigSetStatusHeader
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigExceptionHandler
+--|
+--| Author: Andre Garcia, modifications rabit
+--| Version:  1.1
+--| Created: 29-06-09
+--| Last Mod: 18-07-11
+--| Requires: errorsList.txt
+--|
+--| Summary: This function is used to log Rev errors, called by catch statements, in our log file.
+--|                    It also intercepts 404 errors. 
+--| 
+--| Format:  _rigExceptionHandler(param1)
+--|
+--| Parameters: string <pContexts>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function _rigExceptionHandler pContexts
+	rigLoadLibrary "Exceptions"
+
+	put the number of lines in pContexts into tNumLines
+
+	if tNumLines > 100 then
+		delete line 100 to tNumLines of pContexts
+	end if
+
+	if sErrorNames is empty then
+		put gBASEPATH & "revigniter/errorsList.txt" into tErrorsNameFilePath
+		put URL format("binfile:%s", tErrorsNameFilePath) into sErrorNames
+	end if
+
+	put the number of lines in sErrorNames into tTotalErrorListLines
+	
+	repeat with i = tNumLines down to 1
+		put item 1 of line i of pContexts into tLineNumToGet
+		
+		if tLineNumToGet > tTotalErrorListLines then
+			next repeat
+		end if
+		
+		put line tLineNumToGet of sErrorNames into tErrMsg
+
+		if tErrMsg is "Object Name:" then
+			put item 4 of line i of pContexts into tObject
+			put tObject into tObjectName
+		else
+			if item 2 of line i of pContexts is not 0 then
+				put item 2 of line i of pContexts into tLinenr
+				put item 3 of line i of pContexts into tColumn
+			end if
+
+			put item 4 of line i of pContexts into tProcToken
+			
+			# CHECK IF IT IS A 404 ERROR 
+			# BUILD ERROR STRING
+			if tErrMsg is empty and "/" is in tProcToken then
+				put CR & tab & "error404" && "Processing Token:" & tProcToken & CR before tErrorString
+			else
+				put CR & tab & "Error description:" && tErrMsg & CR & tab & \
+				"Object:" && tObjectName & CR & tab & \
+				"Line:" && tLinenr && "Column:" && tColumn && \
+				"Processing Token: " & tProcToken & CR  before tErrorString
+			end if
+		end if
+	end repeat
+	if first char of tErrorString = CR then
+		delete first char of tErrorString
+	end if
+	if last char of tErrorString = CR then
+		delete last char of tErrorString
+	end if
+	return tErrorString
+end _rigExceptionHandler
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigCanWriteFileTo
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created:  12-10-07
+--| Last Mod: 12-10-07
+--| Requires: --
+--|
+--| Summary: Tests for file writability.
+--| 
+--| Format:  rigCanWriteFileTo(param1)
+--|
+--| Parameters: string <pLocation>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigCanWriteFileTo pLocation
+    put pLocation & "/temp" & random(9999) into randomFileName
+	# TRY CREATING A FILE
+    open file randomFileName for write 
+    if the result is empty then -- success!
+        close file randomFileName
+	# GET RID OF THE TEST FILE
+        delete file randomFileName 
+        return TRUE
+    end if
+     
+    # FAILED - COULDN'T CREATE A FILE THERE
+    return FALSE
+end rigCanWriteFileTo
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigHexDigest
+--|
+--| Author: Dave Cragg
+--| Version:  1.0
+--| Created:  --
+--| Last Mod: 21-07-09
+--| Requires: --
+--|
+--| Summary: This will convert the 128-bit value that Rev returns to a hex format
+--|                similiar to that returned by PHP and other languages.
+--| 
+--| Format:  rigHexDigest(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigHexDigest pStr
+    local tBinDecodeMD5str
+    
+    put md5digest(pStr) into tMD5str
+    get binarydecode("H*",tMD5str,tBinDecodeMD5str) 
+    return tBinDecodeMD5str 
+end rigHexDigest
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigPregReplace
+--|
+--| Author: rabit
+--| Version:  1.4
+--| Created: 28-07-09
+--| Last Mod: 19-05-10
+--| Requires: --
+--|
+--| Summary: Find and replace multiple occurrences of a substring.
+--| 
+--| Format:  rigPregReplace(param1, param2, param3, param4)
+--|
+--| Parameters: string <pStr>, string <pRegEx>, string <pStrToReplaceInFoundStr>, string <pReplacement> replacement string or name of callback handler
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigPregReplace pStr pRegEx pStrToReplaceInFoundStr pReplacement
+	put pStr into tStrToCheck
+	put pStrToReplaceInFoundStr into tStrToReplaceInFoundStr
+
+	# GET NAME OF CALLBACK HANDLER
+	if pReplacement is not empty then
+		if char 1 to 10 of pReplacement is "_callback_" then
+			put char 11 to -1 of pReplacement into tCallback
+			put empty into tReplacement
+		else
+			put empty into tCallback
+			put pReplacement into tReplacement
+		end if
+
+	else
+		put empty into tCallback
+		put empty into tReplacement
+	end if
+
+	put TRUE into tMatchFound
+
+	put "" into tStrToReturn
+
+	repeat until tMatchFound is FALSE
+		get matchChunk(tStrToCheck,pRegEx,tStrOffset,tSearchStartNum)
+
+		if it is TRUE then
+			put byte tStrOffset to tSearchStartNum of tStrToCheck into tFoundStr
+			put (tSearchStartNum + 1) - tStrOffset into tFoundStrLength
+			put the length of tStrToCheck into tStrLength
+
+			# THE PART OF THE STRING WITH THE FIRST MATCH
+			put byte tStrOffset to (tStrOffset + (tFoundStrLength - 1)) of tStrToCheck into tStrFragment
+
+			# REPLACE STRING
+			if pStrToReplaceInFoundStr is empty then
+				put tFoundStr into tStrToReplaceInFoundStr
+			end if
+
+			if tCallback is empty then
+				replace tStrToReplaceInFoundStr with tReplacement in tStrFragment
+			else
+				do tCallback && quote & tStrToReplaceInFoundStr & quote
+				replace tStrToReplaceInFoundStr with the result in tStrFragment
+			end if
+
+			# BUILD THE STRING TO RETURN
+			put (byte 1 to (tStrOffset -1) of tStrToCheck) & tStrFragment after tStrToReturn
+
+			put byte (tSearchStartNum + 1) to tStrLength of tStrToCheck into tStrToCheck
+
+		else
+			# NO MATCH FOUND
+			if tStrToReturn is "" then
+				put pStr into tStrToReturn
+			else
+				# ADD THE REMAINING PART TO THE STRING TO RETURN
+				put tStrToCheck after tStrToReturn
+			end if
+
+			put FALSE into tMatchFound
+		end if
+	end repeat
+
+	return tStrToReturn
+end rigPregReplace
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigPregQuote
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 07-10-09
+--| Last Mod: 11-10-09
+--| Requires: --
+--|
+--| Summary: Quote regular expression characters.
+--| 
+--| Format:  rigPregQuote(param1)
+--|
+--| Parameters: string <pStr>, string <pDelimiter>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigPregQuote pStr pDelimiter
+    put "\+*?[^]$(){}=!<>|:" into tRegExChars
+	if pDelimiter is not empty then
+         put pDelimiter after tRegExChars
+    end if
+    
+    repeat for each char thisChar in pStr
+        if thisChar is in tRegExChars then
+            put "\" & thisChar after tQuotedStr
+        else
+            put thisChar after tQuotedStr
+        end if
+    end repeat
+    
+    return tQuotedStr
+end rigPregQuote
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigHtmlSpecialChars
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 28-07-09
+--| Last Mod: 28-07-09
+--| Requires: --
+--|
+--| Summary: Convert special characters to HTML entities.
+--| 
+--| Format:  rigHtmlSpecialChars(param1, param2)
+--|
+--| Parameters: string <pStr>, string <pQuoteStyle> is either empty to convert double quotes only or "ENT_QUOTES" to convert single and double, or "ENT_NOQUOTES"
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigHtmlSpecialChars pStr pQuoteStyle
+	put pStr into tStr
+    
+	replace "&" with "&amp;" in tStr
+    
+	if pQuoteStyle is not "ENT_NOQUOTES" then
+		if pQuoteStyle is "" then
+			replace quote with "&quot;" in tStr
+		else if pQuoteStyle is "ENT_QUOTES" then
+			replace quote with "&quot;" in tStr
+		replace "'" with "&#039;" in tStr
+		end if
+	end if
+    
+	replace "<" with "&lt;" in tStr
+	replace ">" with "&gt;" in tStr
+    
+	return tStr
+end rigHtmlSpecialChars
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigTrim
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 30-07-09
+--| Last Mod: 02-09-11
+--| Requires: --
+--|
+--| Summary: Trim whitespace at the start and at the end of a string.
+--| 
+--| Format:  rigTrim(param1, param2)
+--|
+--| Parameters: string <pStr>, string <pCharsList>  an optional comma delimited list of chars to remove
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigTrim pStr pCharsList
+   put pStr into tStrToReturn
+   
+   if pCharsList is empty then
+      put FALSE into tCharsToDeleteFound
+   else if pCharsList is comma then
+      replace comma with numToByte(2) in pCharsList
+   else if ",," is in pCharsList then
+      replace ",," with (numToByte(2) & comma) in pCharsList
+   end if
+   
+   put "(^\s+)|(\s+$)" into tRegExWS
+   
+   put "^,.,\,*,+,?,|,$" into tSpecialChars
+   
+   put False into tStringIsClean
+   
+   put 0 into tCounter
+   
+   repeat until tStringIsClean is TRUE
+      add 1 to tCounter
+      put replacetext(tStrToReturn,tRegExWS,empty) into tStrToReturn
+      
+      if pCharsList is not empty then
+         repeat for each item tChar in pCharsList
+            
+            if byteToNum(tChar) is 2 then
+               put "," into tChar
+            end if
+            
+            if tChar is among the items of tSpecialChars then
+               put "\" & tChar into tChar
+            end if
+            
+            put "(^" & tChar & "+)|(" & tChar & "+$)" into tRegEx
+            put replacetext(tStrToReturn,tRegEx,empty) into tStrToReturn
+         end repeat
+         
+         # CHECK IF STRING IS CLEAN NOW
+         repeat for each item tChar in pCharsList
+            
+            if byteToNum(tChar) is 2 then
+               put "," into tChar
+            end if
+            
+            if tChar is among the items of tSpecialChars then
+               put "\" & tChar into tChar
+            end if
+            
+            put "(^" & tChar & "+)|(" & tChar & "+$)" into tRegEx
+            put matchtext(tStrToReturn,tRegExWS) into tCharsToDeleteFound
+            if tCharsToDeleteFound is TRUE then
+               exit repeat
+            end if
+         end repeat
+      end if
+      
+      # CHECK IF STRING IS CLEAN NOW
+      put matchtext(tStrToReturn,tRegExWS) into tWhiteSpaceFound
+      
+      if (tWhiteSpaceFound is FALSE) and (tCharsToDeleteFound is FALSE) then
+         put TRUE into tStringIsClean
+      end if
+      
+      # STOP HERE IN CASE SOMETHING WENT WRONG AND THE LOOP IS RUNNING FOR EVER
+      if tCounter > 999 then
+         put TRUE into tStringIsClean
+      end if
+   end repeat
+   
+   return tStrToReturn
+end rigTrim
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigRTrim
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 16-08-09
+--| Last Mod: 22-09-09
+--| Requires: --
+--|
+--| Summary: Trim whitespace at the end of a string.
+--| 
+--| Format:  rigRTrim(param1, param2)
+--|
+--| Parameters: string <pStr>, string <pTrimChar>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigRTrim pStr pTrimChar
+    put pStr into tStrToReturn
+    
+     	if pTrimChar is empty then
+        	put "(\s+$)" into tRegExWS
+    	else
+        	if pTrimChar is not in "\/+-.<>" then
+            		put "(" & pTrimChar & "+$)" into tRegExWS
+        	else
+             		put "(\" & pTrimChar & "+$)" into tRegExWS
+        	end if
+    	end if
+    
+    put False into tStringIsClean
+    
+    put 0 into tCounter
+    
+    repeat until tStringIsClean is TRUE
+        add 1 to tCounter
+        put replacetext(tStrToReturn,tRegExWS,empty) into tStrToReturn
+
+        # CHECK IF STRING IS CLEAN NOW
+        put matchtext(tStrToReturn,tRegExWS) into tWhiteSpaceFound
+        
+        if tWhiteSpaceFound is FALSE then
+            put TRUE into tStringIsClean
+        end if
+        
+        # STOP HERE IN CASE SOMETHING WENT WRONG AND THE LOOP IS RUNNING FOR EVER
+        if tCounter > 999 then
+            put TRUE into tStringIsClean
+        end if
+    end repeat
+    
+    return tStrToReturn
+end rigRTrim
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigStripSlashes
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 02-08-09
+--| Last Mod: 02-08-09
+--| Requires: --
+--|
+--| Summary: Un-quotes a quoted string.
+--| 
+--| Format:  rigStripSlashes(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigStripSlashes pStr
+	put pStr into tStr
+
+	replace "\\" with "+++|r---b|+++" in tStr
+	replace "\" with "" in tStr
+	replace "+++|r---b|+++" with "\" in tStr
+
+	return tStr
+end rigStripSlashes
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigAddCslashes
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 15-08-09
+--| Last Mod: 20-09-09
+--| Requires: --
+--|
+--| Summary: Quote string with slashes in a C style. Keep in mind, that octal escape values are used
+--|                    in parameters of this function.
+--| 
+--| Format:  rigAddCslashes(param1, param2, param3)
+--|
+--| Parameters: string <pStr>, string <pCharList> like "\0..\37,\177,'," & quote & ",\", string <pItemDel>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigAddCslashes pStr pCharList pItemDel
+    if pItemDel is not empty then
+        set the itemdelimiter to pItemDel
+    else
+        set the itemdelimiter to comma
+    end if
+    
+    repeat for each item thisItem in pCharList
+         
+        if ".." is in thisItem then
+            put thisItem into tRangeValues
+            replace ".." with "," in tRangeValues
+            put item 1 of tRangeValues into tFromVal
+            put item 2 of tRangeValues into tToVal
+            
+            # CHECK IF WE ARE DEALING WITH ASCII NUMBERS
+            # LIKE: \0..\37
+            if (char 1 of tFromVal is "\") and (char 2 of tFromVal is an integer) then
+                delete char 1 of tFromVal
+		# CONVERT TO DECIMAL VALUES
+		put baseconvert(tFromVal,8,10) into tFromVal
+                delete char 1 of tToVal
+		# CONVERT TO DECIMAL VALUES
+		put baseconvert(tToVal,8,10) into tToVal
+                 
+            else
+                # CHARACTER RANGE LIKE: A..z
+                put chartonum(tFromVal) into tFromVal
+                put chartonum(tToVal) into tToVal
+            end if
+            
+            if tToVal > tFromVal then
+                repeat with tCurrentNum = tFromVal to tToVal
+                    put numtochar(tCurrentNum) after tCharRange
+                end repeat
+            end if
+        end if
+        
+        # ASCII NUMBER LIKE: \177
+        if (".." is not in thisItem) and (char 1 of thisItem is "\") and (char 2 of thisItem is an integer) then
+            put char 2 to -1 of thisItem into tCharNum
+	# CONVERT TO DECIMAL VALUES
+	put baseconvert(tCharNum,8,10) into tCharNum
+            put numtochar(tCharNum) after tCharRange
+        end if
+        
+        # SINGEL CHARACTER
+        if the number of chars of thisItem is 1 then
+            put thisItem after tCharRange
+        end if
+    end repeat
+    
+    # CHECK EACH CHARACTER IN STRING
+    # ADD SLASH IF NEEDED
+    repeat for each char thisChar in pStr
+        if thisChar is in tCharRange then
+            put "\" & thisChar after tStrWithSlashes
+        else
+            put thisChar after tStrWithSlashes
+        end if
+    end repeat
+     
+    return tStrWithSlashes
+end rigAddCslashes
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigInArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 16-08-09
+--| Last Mod: 16-08-09
+--| Requires: --
+--|
+--| Summary: Checks if a value exists in an array.
+--| 
+--| Format:  rigInArray(param1, param2)
+--|
+--| Parameters: array <pArray>, string <pVal>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigInArray pArray pVal
+    repeat for each element thisElement in pArray
+        if thisElement is pVal then
+             return TRUE
+        end if
+    end repeat
+    
+    return FALSE
+end rigInArray
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigStripHTML
+--|
+--| Author: sts, modification by rabit
+--| Version:  1.1
+--| Created:  17-08-09
+--| Last Mod: 25-05-11
+--| Requires:  --
+--|
+--| Summary: Strips html tags.
+--| 
+--| Format:  rigStripHTML(param1)
+--|
+--| Parameters: string <pHTML>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigStripHTML pHTML
+    put pHTML into tStrippedText
+    put replacetext(tStrippedText,"(?si)<script.*?/script>","") into tStrippedText
+    put replacetext(tStrippedText,"(?si)<style.*?/style>","") into tStrippedText
+    put replacetext(tStrippedText,tab,"") into tStrippedText
+    put replacetext(tStrippedText,"(?sm)<.*?>",tab) into tStrippedText
+    put replacetext(tStrippedText,CR & "{3,}","") into tStrippedText
+
+    return tStrippedText
+end rigStripHTML
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigWordWrap
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created:  19-08-09
+--| Last Mod: 21-09-09
+--| Requires:  --
+--|
+--| Summary: Wraps a string to a given number of characters.
+--| 
+--| Format:  rigWordWrap(param1, param2, param3, param4)
+--|
+--| Parameters: string <pStr>, integer <pLength> the column width (defaults to 75), string <pBreak> defaults to LF, bool <pCut> if TRUE breaks words apart
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigWordWrap pStr pLength pBreak pCut
+	if pLength is empty then
+		put 75 into pLength
+	end if
+
+	if pBreak is empty then
+		put LF into pBreak
+	end if
+
+	if pCut is empty then
+		put FALSE into pCut
+	end if
+
+    put pStr into tStr
+
+    replace pBreak with return in tStr
+    
+    put "" into tOverrun
+    
+    repeat for each line thisLine in tStr
+        if (char 1 of thisLine is " ") or (char 1 of thisLine is tab) then
+            delete char 1 of thisLine
+        end if
+        
+        if tOverrun is not empty then
+            if pCut is TRUE then
+                if (char -1 of tOverrun <> " ") or (char 1 of thisLine <> " ") then
+                    put tOverrun && thisLine into thisLine
+                else
+                    put tOverrun & thisLine into thisLine
+                end if
+            else
+                put tOverrun & thisLine into thisLine
+            end if
+            put "" into tOverrun
+        end if
+        
+        put the length of thisLine into tLineLength
+        if tLineLength > pLength then
+            if pCut is TRUE then
+                 
+                put TRUE into tOverrunExeedsPlength
+                 
+                repeat until tOverrunExeedsPlength is FALSE
+                     
+                    if (char 1 of thisLine is " ") or (char 1 of thisLine is tab) then
+                        delete char 1 of thisLine
+                    end if
+                     
+                    put the length of thisLine into tLineLength
+                    put char (pLength + 1) to tLineLength of thisLine into tOverrun
+                    
+                    if (the length of tOverrun) <= pLength then
+                         
+                         
+                        if (char -1 of tOverrun is " ") or (char -1 of tOverrun is tab) then
+                            delete char -1 of tOverrun
+                        end if
+                        put (char 1 to pLength of thisLine) & return after tWrapedStr
+                         
+                         
+                        put FALSE into tOverrunExeedsPlength
+                    else
+                        put (char 1 to pLength of thisLine) & return after tWrapedStr
+                        if (char -1 of tOverrun is " ") or (char -1 of tOverrun is tab) then
+                            delete char -1 of tOverrun
+                        end if
+                        put (char 1 to pLength of tOverrun) & return after tWrapedStr
+                        
+                        put char ((pLength * 2)+ 1) to (the length of thisLine) of thisLine into thisLine
+                    end if
+                     
+                end repeat
+                
+            else -- if pCut is TRUE then
+                 
+                 
+                put TRUE into tOverrunExeedsPlength
+                
+                repeat until tOverrunExeedsPlength is FALSE
+                     
+                    if (char 1 of thisLine is " ") or (char 1 of thisLine is tab) then
+                        delete char 1 of thisLine
+                    end if
+                     
+                    put the length of thisLine into tLineLength
+                    put char (pLength + 1) to tLineLength of thisLine into tOverrun
+                    
+                    if (the length of tOverrun) <= pLength then
+                         
+                        put (char 1 to pLength of thisLine) into tLineToAdd
+                        put char (pLength + 1) to tLineLength of thisLine into tOverrun
+                         
+                        if char 1 of tOverrun is not " " then
+                            put word 1 of tOverrun after tLineToAdd
+                            
+                            put the length of (word 1 of tOverrun) into tWord1Length
+                            put char (tWord1Length + 2) to (the length of tOverrun) of tOverrun into tOverrun
+                        else
+                            delete char 1 of tOverrun
+                        end if
+
+                        put tLineToAdd & return after tWrapedStr
+                         
+                        put FALSE into tOverrunExeedsPlength
+                        
+                    else -- if (the length of tOverrun) <= pLength then
+                         
+                        put (char 1 to pLength of thisLine) into tLineToAdd
+                        put char (pLength + 1) to tLineLength of thisLine into tOverrun
+                         
+                        if char 1 of tOverrun is not " " then
+                            put word 1 of tOverrun after tLineToAdd
+                            
+                            put the length of (word 1 of tOverrun) into tWord1Length
+                            put char (tWord1Length + 2) to (the length of tOverrun) of tOverrun into tOverrun
+                        else
+                            delete char 1 of tOverrun
+                        end if
+                         
+                        put tLineToAdd & return after tWrapedStr
+                         
+                        if (the length of tOverrun) > pLength then
+                            put (char 1 to pLength of tOverrun) into tNextLineToAdd
+                            put char ((the length of tNextLineToAdd) + 1) to (the length of tOverrun) of tOverrun into tOverrun
+                             
+                            if char 1 of tOverrun is not " " then
+                                put word 1 of tOverrun after tNextLineToAdd
+                                
+                                put the length of (word 1 of tOverrun) into tWord1Length
+                                put char (tWord1Length + 2) to (the length of tOverrun) of tOverrun into tOverrun
+                            else
+                                delete char 1 of tOverrun
+                            end if
+
+                            put tNextLineToAdd & return after tWrapedStr
+                            put tOverrun into thisLine
+                        else
+                            
+                            put tOverrun into thisLine
+                        end if --  if (the length of tOverrun) > pLength then
+                         
+                    end if -- if (the length of tOverrun) <= pLength then
+                     
+                end repeat
+                
+            end if  -- if pCut is TRUE then
+            
+        else
+            put thisLine & return after tWrapedStr
+        end if
+    end repeat
+    
+    delete char -1 of tWrapedStr
+    
+    if tOverrun is not empty then
+        if (char 1 of tOverrun is " ") or (char 1 of tOverrun is tab) then
+            delete char 1 of tOverrun
+        end if
+         
+        put return & tOverrun after tWrapedStr
+    end if
+    
+    replace return with pBreak in tWrapedStr
+    
+    return tWrapedStr
+end rigWordWrap
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigShellEscape
+--|
+--| Author: splash21
+--| Version:  1.0
+--| Created:  11-09-09
+--| Last Mod: 11-09-09
+--| Requires:  --
+--|
+--| Summary: Escape shell characters.
+--| 
+--| Format:  rigShellEscape(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigShellEscape pStr
+    repeat for each char tChar in "\`!$" & quote
+        replace tChar with "\" & tChar in pStr
+    end repeat
+    return pStr
+end rigShellEscape
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigTempMailPath
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 17-09-09
+--| Last Mod: 17-09-09
+--| Requires: rigFetchConfigItem()
+--|
+--| Summary: Build path to temporary mail data to be piped into shell commands mail or sendmail.
+--| 
+--| Format:  _rigTempMailPath()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function _rigTempMailPath
+	put rigFetchConfigItem("temp_path") into tPath
+
+	if tPath is empty then
+		put gBASEPATH & "temp/" into tTempFolderPath
+	else
+		put tPath into tTempFolderPath
+	end if
+
+	 put the milliseconds into tMessageId
+    
+    	repeat 10
+        	put any char of "abcdefghijklmnopqrstuvwxyz" after tMessageId
+    	end repeat
+    
+    
+    	put (tTempFolderPath & "tempMail" & tMessageId & ".txt") into tTempMailPath
+
+	return tTempMailPath
+end _rigTempMailPath
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigCeil
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-09-09
+--| Last Mod: 22-09-09
+--| Requires: --
+--|
+--| Summary: Returns the next highest integer value by rounding up if necessary.
+--| 
+--| Format:  rigCeil(param1)
+--|
+--| Parameters: number <pNum>
+--|
+--| Return: integer
+----------------------------------------------------------------------
+
+function rigCeil pNum
+    if trunc(pNum) <> pNum then
+        return trunc(pNum) + 1
+    end if 
+    
+    return pNum
+end rigCeil
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigNumber_format
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-09-09
+--| Last Mod: 30-09-09
+--| Requires: --
+--|
+--| Summary: Format a number with grouped thousands.
+--| 
+--| Format:  rigNumber_format(param1, param2, param3)
+--|
+--| Parameters: number <pNum>, integer <pDecimals>, string <pSeparator>
+--|
+--| Return: float
+----------------------------------------------------------------------
+
+function rigNumber_format pNum pDecimals, pSeparator
+	if (pDecimals is empty) or (pDecimals is not a integer) then
+		put 2 into tDecimals
+	else
+		put pDecimals into tDecimals
+	end if
+
+	if pSeparator is empty then
+		put "," into tSeparator
+	else
+		put pSeparator into tSeparator
+	end if
+
+	 if char 1 of pNum = "-" then
+    		put "-" into tPrefix
+    		put char 2 to -1 of pNum into tNum
+	else
+		put "" into tPrefix
+		put pNum into tNum
+  	end if
+
+	put format("%1." & tDecimals & "f",pNum) into tNum
+    
+    	set the itemdel to "."
+    	put "." & item 2 of tNum into tDecNum
+    	put item 1 of tNum into tNum
+
+    	repeat with i = length(tNum)-3 to 3 step -3
+        	put tSeparator before char i+1 of tNum
+    	end repeat
+    
+    	return tPrefix & tNum & tDecNum
+end rigNumber_format
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigArrayReverse
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 05-10-09
+--| Last Mod: 05-10-09
+--| Requires: --
+--|
+--| Summary: Return an array with elements in reverse order.
+--|               Works with numbered arrays only!!!!!!
+--| 
+--| Format: rigArrayReverse(param1)
+--|
+--| Parameters: array <pArray>, char <pItemDelimiter>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigArrayReverse pArray pItemDelimiter
+     if pItemDelimiter is empty then
+         set the itemdel to "="
+    else
+         set the itemdel to pItemDelimiter
+    end if
+    
+    put pArray into tArray
+    
+    # CONVERT ARRAY TO LIST
+    combine tArray using return and the itemdel
+    
+    # SORT LINES
+    sort lines of tArray descending numeric by item 1 of each
+    
+    repeat with i = 1 to (the number of lines in tArray)
+        put item 2 of line i of tArray into tReversedArray[i]
+    end repeat
+    
+    return tReversedArray
+end rigArrayReverse
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFile_get_contents
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 08-10-09
+--| Last Mod: 08-10-09
+--| Requires: --
+--|
+--| Summary: Reads entire file into a string.
+--| 
+--| Format:  rigFile_get_contents(param1)
+--|
+--| Parameters: string <pFilePath>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigFile_get_contents pFilePath
+	if there is a file pFilePath then
+		return URL format("binfile:%s", pFilePath)
+	end if
+
+	return FALSE
+end rigFile_get_contents
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigCheckType
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 12-10-09
+--| Last Mod: 12-10-09
+--| Requires: --
+--|
+--| Summary: Get the data type.
+--| 
+--| Format:  rigCheckType(param1)
+--|
+--| Parameters: string, integer, float, bool <pData>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigCheckType pData
+    if pData is not an array then
+        if pData is a number then
+            if pData is not an integer then
+                return "f"
+            end if
+            return "i"
+        end if
+         
+        if pData is a boolean then
+            return "b"
+        end if
+         
+        return "s"
+    else
+         return "a"
+    end if
+end rigCheckType
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigRandomNum
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 14-10-09
+--| Last Mod: 29-06-10
+--| Requires: --
+--|
+--| Summary: Get the random number used for encryption and to build a session id.
+--| 
+--| Format:  rigRandomNum()
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+function rigRandomNum
+   put "" into tSessID
+   
+   put 1 into tCounter
+   
+   repeat while (the length of tSessID) < 32
+      put (byte -8 to -1 of the millisecs) + tCounter into tSeed
+      set the randomSeed to tSeed
+
+      put 2147483647 into tUpperLimit
+      put 0 into tLowerLimit
+       
+      put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after tSessID
+      
+      add 1 to tCounter
+   end repeat
+
+   return tSessID
+end rigRandomNum
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSubstr
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 16-10-09
+--| Last Mod: 16-10-09
+--| Requires: --
+--|
+--| Summary: Return part of a string.
+--| 
+--| Format:  rigSubstr(param1, param2, param3)
+--|
+--| Parameters: string <pString>, integer <pStart>, integer <pLength>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+function rigSubstr pString pStart pLength
+	put pStart + (pLength - 1) into tLastByte
+    	return byte pStart to tLastByte of pString
+end rigSubstr
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigSubstrToNum
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 16-10-09
+--| Last Mod: 16-10-09
+--| Requires: --
+--|
+--| Summary: Return part of a string as ascii values. 
+--| 
+--| Format:  rigSubstrToNum(param1, param2, param3)
+--|
+--| Parameters: string <pString>, integer <pStart>, integer <pLength>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigSubstrToNum pString pStart pLength
+    put pStart + (pLength - 1) into tLastByte
+    put byte pStart to tLastByte of pString into tStr
+     
+    repeat for each byte thisByte in tStr
+        put bytetonum(thisByte) after tSubstr
+    end repeat
+    
+    return tSubstr
+end rigSubstrToNum
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigDoException
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 17-10-09
+--| Last Mod: 18-07-11
+--| Requires: --
+--|
+--| Summary: Display or log exceptions of try catch statements.
+--| 
+--| Format:  rigDoException param1, param2, param3
+--|
+--| Parameters: string <pContexts> a list of error numbers, string <pCurrentFile>, string <pCurrentMethod>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigDoException pContexts pCurrentFile pCurrentMethod
+	if rigConfigItem("logThreshold") > 0 then
+		put TRUE into tDisplayError
+	else
+		put FALSE into tDisplayError
+	end if
+
+	put _rigExceptionHandler(pContexts) into tErrorData
+
+	rigLogException tErrorData, tDisplayError, pCurrentFile, pCurrentMethod
+end rigDoException
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigIsNumberedArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 16-12-09
+--| Last Mod: 16-12-09
+--| Requires: --
+--|
+--| Summary: Check if array is numbered. 
+--| 
+--| Format:  rigIsNumberedArray(param1, param2)
+--|
+--| Parameters: array <pArray>, bool <pConsecutive> flag for checking if numbers are consecutive
+--|
+--| Return: list (bool,integer)
+----------------------------------------------------------------------
+
+function rigIsNumberedArray pArray pConsecutive
+	if pConsecutive is "" then
+		put FALSE into tConsecutive
+	else
+		put pConsecutive into tConsecutive
+	end if
+
+	# CHECK IF ARRAY IS NUMBERED
+	# SET DEFAULT RETURN VALUE
+	put TRUE into tNumbered
+	put the keys of pArray into tArrayKeys
+
+	if tConsecutive is true then
+		sort lines of tArrayKeys numeric
+
+		put 2 into tControlValue
+
+		repeat for each line thisLine in tArrayKeys
+			if (thisLine is not an integer) or (thisLine + 1 <> tControlValue) then
+				put FALSE into tNumbered
+				exit repeat
+			end if
+			add 1 to tControlValue
+		end repeat
+	else
+		repeat for each line thisLine in tArrayKeys
+			if thisLine is not an integer then
+				put FALSE into tNumbered
+				exit repeat
+			end if
+		end repeat
+	end if
+
+	put line 1 of tArrayKeys into tStartValue
+
+	return tNumbered & "," & tStartValue
+end rigIsNumberedArray
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigUcwords
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 21-01-10
+--| Last Mod: 21-01-10
+--| Requires: --
+--|
+--| Summary: Uppercase the first character of each word in a string.
+--| 
+--| Format:  rigUcwords(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigUcwords pStr
+	-- put toLower(pStr) into tUCstr
+	put pStr into tUCstr
+   
+   	repeat for each word thisWord in tUCstr
+      		if ((byteToNum(byte 1 of thisWord) >= 97) and (byteToNum(byte 1 of thisWord) <= 122)) or \
+            		((byteToNum(byte 1 of thisWord) >= 135) and (byteToNum(byte 1 of thisWord) <= 159)) then
+          
+         		put toUpper(byte 1 of thisWord) into byte 1 of thisWord
+      		end if
+   	end repeat
+   
+   	return tUCstr
+end rigUcwords
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigNl2br
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 03-03-10
+--| Last Mod: 03-03-10
+--| Requires: --
+--|
+--| Summary: Inserts HTML line breaks before all newlines in a string.
+--| 
+--| Format:  rigNl2br(param1, param2)
+--|
+--| Parameters: string <pStr>, bool <pIsXHTML>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigNl2br pStr pIsXHTML
+   if pIsXHTML is empty then
+      put TRUe into tIsXHTML
+   else
+      put pIsXHTML into tIsXHTML
+   end if
+    
+   if tIsXHTML is TRUe then
+      replace return with "<br />" & return in pStr
+   else
+      replace return with "<br>" & return in pStr
+   end if
+    
+   return pStr
+end rigNl2br
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigRawURLdecode
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 29-06-10
+--| Last Mod: 29-06-10
+--| Requires: --
+--|
+--| Summary: Returns the decoded URL as string.
+--|          Does not decode plus symbols ('+') into spaces.
+--| 
+--| Format:  rigRawURLdecode(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigRawURLdecode pStr
+   replace "+" with "-r" & numToByte(1) & "b-" in pStr
+   put URLDecode(pStr) into tStrDecoded
+   replace "-r" & numToByte(1) & "b-" with "+" in tStrDecoded
+   
+   return tStrDecoded
+end rigRawURLdecode
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigUniqid
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 04-09-2011
+--| Last Mod: 04-09-2011
+--| Requires: --
+--|
+--| Summary: Build a unique identifier.
+--| 
+--| Format:  rigUniqid(param1)
+--|
+--| Parameters: integer <pLength>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigUniqid pLength
+	repeat pLength
+  	put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
+  end repeat
+
+	return tUniqueid
+end rigUniqid
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigMasterNow
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 15-07-2012
+--| Last Mod: --
+--| Requires: rigFetchConfigItem()
+--|
+--| Summary: Returns the current time as timestamp (seconds) referenced, either
+--|          to your server's local time or GMT, based on the "timeReference"
+--|          setting in your config file.
+--| 
+--| Format:  rigMasterNow()
+--|
+--| Parameters: --
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function rigMasterNow
+	if toLower(rigFetchConfigItem("timeReference")) is "gmt" then
+		# GET THE DATETIME IN SECONDS
+		convert the internet date to seconds
+		put it into tNow
+
+		# GET GMT OFFSET
+		put the last word of the internet date into tGMToffset
+
+		if char 1 of tGMToffset is "-" then
+			put "-" into tPrefix
+		else
+			put "" into tPrefix
+		end if
+
+		# MINUTES
+		put char -2 to -1 of tGMToffset into tMinutesOffset
+		# HOURS
+		put char 2 to 3 of tGMToffset into tHoursOffset
+		# CONVERT OFFSET TO SECONDS
+		put tPrefix & ((tHoursOffset * 3600) + (tMinutesOffset * 60)) into tGMToffsetSecs
+
+		# GET GMT IN SECONDS
+		put tNow - tGMToffsetSecs into tTime
+	else
+		convert the internet date to seconds
+		put it into tTime
+	end if
+
+	return tTime
+end rigMasterNow
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigStrToArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 16-08-09
+--| Last Mod: 16-08-09
+--| Requires: rigTrim()
+--|
+--| Summary: Convert a string ( for example a comma delimited list
+--|          like "item1, item2, item3") to an array.
+--| 
+--| Format:  _rigStrToArray(param1)
+--|
+--| Parameters: mixed <pString>, char <pDelimiter> (optional)
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function _rigStrToArray pString pDelimiter
+   put pString into tStrToArray
+   
+   # SET DELIMITER
+   if pDelimiter is empty then
+      put "," into tDelimiter
+   else
+      put byte 1 of pDelimiter into tDelimiter
+   end if
+   
+   # MAKE SURE WE ARE DEALING WITH A STRING
+   # OTHERWISE JUST RETURN THE FIRST PARAMETER
+   if tStrToArray is not an array then
+      # CHECK IF THE LIST CONSISTS OF MORE THAN ONE ITEM
+      if tDelimiter is in tStrToArray then
+         
+         # REMOVE WHITESPACE
+         if tDelimiter <> space then
+            put replacetext( tStrToArray,"[ ]+","") into tStrToArray
+         end if
+         
+         # BUILD ARRAY
+         split tStrToArray using tDelimiter
+         
+         repeat for each key tKey in tStrToArray
+            if tStrToArray[tKey] is empty then
+               delete variable tStrToArray[tKey]
+            end if
+         end repeat
+      else
+         # ONLY ONE ITEM FOUND, REMOVE WHITESPACE
+         put rigTrim(tStrToArray) into tStrToArray
+         put tStrToArray into tStrToArray[1]
+      end if
+   end if
+   
+   return tStrToArray
+end _rigStrToArray
+
+
+
+
+
+function rigQ pText
+    return quote & pText & quote
+end rigQ
+
+
+
+
+
+--| END OF common.lc
+--| Location:  ./system/revigniter/Common.lc
+----------------------------------------------------------------------

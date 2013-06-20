@@ -1,0 +1,21 @@
+<?rev
+
+put "DATENBANK" into gLang["profiler_database"]
+put "CONTROLLER/HANDLER" into gLang["profiler_controller_info"]
+put "BENCHMARKS" into gLang["profiler_benchmarks"]
+put "SQL-ABFRAGEN" into gLang["profiler_queries"]
+put "GET-DATEN" into gLang["profiler_get_data"]
+put "POST-DATEN" into gLang["profiler_post_data"]
+put "URI Zeichenkette" into gLang["profiler_uri_string"]
+put "Speicher Nutzung" into gLang["profiler_memory_usage"]
+put "Der Datenbanktreiber ist nicht geladen" into gLang["profiler_no_db"]
+put "Keine Abfragen durchgef&uuml;hrt" into gLang["profiler_no_queries"]
+put "Keine POST-Daten vorhanden" into gLang["profiler_no_post"]
+put "Keine GET-Daten vorhanden" into gLang["profiler_no_get"]
+put "Keine URI vorhanden" into gLang["profiler_no_uri"]
+put "Speichernutzung unbekannt" into gLang["profiler_no_memory"]
+put "Gesamtzeit" into gLang["profiler_db_elapsed"]
+
+--| END OF profilerLang.lc
+--| Location:  ./system/language/german/profilerLang.lc
+----------------------------------------------------------------------

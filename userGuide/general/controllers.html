@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Controllers : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Controllers
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Controllers</h1>
+
+<p>Controllers are the heart of your application, as they determine how HTTP requests should be handled.</p>
+
+
+<ul>
+<li><a href="#what">What is a Controller?</a></li>
+<li><a href="#hello">Hello World</a></li>
+<li><a href="#handlers">Handlers</a></li>
+<li><a href="#passinguri">Passing URI Segments to Your Handlers</a></li>
+<li><a href="#default">Defining a Default Controller</a></li>
+<li><a href="#remapping">Remapping Handler Calls</a></li>
+<li><a href="#output">Controlling Output Data</a></li>
+<li><a href="#private">Private Handlers</a></li>
+<li><a href="#subfolders">Organizing Controllers into Sub-folders</a></li>
+<li><a href="#reserved">Reserved Handler Names</a></li>
+<li><a href="#good">Good Practice</a></li>
+</ul>
+
+
+<a name="what"></a>
+<h2>What is a Controller?</h2>
+
+<p><dfn>A Controller is simply a library file that is named in a way that can be associated with a URI.</dfn></p>
+
+<p>Consider this URI:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/</code></pre>
+
+<p>In the above example, revIgniter would attempt to find a controller named <dfn>blog.lc</dfn> and load it.</p>
+
+<p><strong>When a controller's name matches the first segment of a URI, it will be loaded.</strong></p>
+
+<a name="hello"></a>
+<h2>Let's try it:&nbsp; Hello World!</h2>
+
+<p>Let's create a simple controller so you can see it in action.  Using your text editor, create a file called <dfn>blog.lc</dfn>, and put the following code in it:</p>
+
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index" into gControllerHandlers
+
+command index
+	put "Hello World!"
+end index
+</code></pre>
+
+
+<p>Then save the file to your <dfn>application/controllers/</dfn> folder.</p>
+
+<p>Now visit the your site using a URL similar to this:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/</code></pre>
+
+<p>If you did it right, you should see <samp>Hello World!</samp>.</p>
+
+
+<a name="handlers"></a>
+<h2>Handlers</h2>
+
+<p>In the above example the handler name is <dfn>index()</dfn>.  The "index" handler is always loaded by default if the
+<strong>second segment</strong> of the URI is empty.  Another way to show your "Hello World!" message would be this:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/<samp>index</samp>/</code></pre>
+
+<p><strong>The second segment of the URI determines which handler in the controller gets called.</strong></p>
+
+<p>Let's try it.  Add a new handler to your controller:</p>
+
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index,comments" into gControllerHandlers
+
+command index
+	put "Hello World!"
+end index
+
+command comments
+	put "Look at this!"
+end comments
+</code></pre>
+
+
+<p class="important"><strong>Important:</strong>&nbsp; Don't forget to add the name of your new handler to the comma separated list of the variable gControllerHandlers.</p>
+
+<p>Now load the following URL to see the <dfn>comments</dfn> handler:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/<samp>comments</samp>/</code></pre>
+
+<p>You should see your new message.</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; There is currently a limitation with LiveCode Server which does not allow hyphens in handler names. So, don't use hyphens in your handler names as these yield an error.</p>
+
+<a name="passinguri"></a>
+<h2>Passing URI Segments to your Handlers</h2>
+
+<p>If your URI contains more then two segments you can retrieve them using the rigFetchSegment() function.</p>
+
+<p>For example, lets say you have a URI like this:</p>
+
+<pre><code>example.com/index.lc/<var>products</var>/<samp>shoes</samp>/<kbd>sandals</kbd>/<dfn>123</dfn></code></pre>
+
+<p>The function rigFetchSegment(3) will return "sandals" and rigFetchSegment(4) will return "123" (URI segments 3 and 4):</p>
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index,shoes" into gControllerHandlers
+
+command shoes
+	put rigFetchSegment(3) && rigFetchSegment(4)
+end shoes
+</code></pre>
+
+<p class="important"><strong>Important:</strong>&nbsp; If you are using the <a href="routing.html">URI Routing</a> feature, the re-routed segments
+must be retrieved using the rigFetchRsegment() function.</p>
+
+
+<a name="default"></a>
+<h2>Defining a Default Controller</h2>
+
+<p>revIgniter can be told to load a default controller when a URI is not present,
+as will be the case when only your site root URL is requested.  To specify a default controller, open
+your <dfn>application/config/routes.lc</dfn> file and set this variable:</p>
+
+<pre><code>put "<var>Blog</var>" into gRoute["defaultController"]</code></pre>
+
+
+<p>Where <var>Blog</var> is the name of the controller library you want used. If you now load your main index.lc file without
+specifying any URI segments you'll see your Hello World message by default.</p>
+
+
+
+<a name="remapping"></a>
+<h2>Remapping Handler Calls</h2>
+
+<p>As noted above, the second segment of the URI typically determines which handler in the controller gets called.
+revIgniter permits you to override this behavior through the use of the <kbd>_remap</kbd> handler:</p>
+
+<pre><code>command _remap
+	-- Some code here...
+end _remap
+</code></pre>
+
+<p class="important"><strong>Important:</strong>&nbsp; If your controller contains a handler named <kbd>_remap</kbd>, it will <strong>always</strong>
+get called regardless of what your URI contains.  It overrides the normal behavior in which the URI determines which handler is called,
+allowing you to define your own handler routing rules.</p>
+
+<p>The overridden handler call (typically the second segment of the URI) will be passed as a parameter to the _remap handler:</p>
+
+<pre><code>command _remap pHandler
+	if pHandler is "someHandler" then
+		do handler
+	else
+		do defaultHandler
+	end if
+end _remap
+</code></pre>
+
+
+
+
+
+<a name="output"></a>
+<h2>Processing Output</h2>
+
+<p>revIgniter has an output library that takes care of sending your final rendered data to the web browser automatically.  More information on this can be found in the
+<a href="views.html">Views</a> and <a href="../libraries/output.html">Output library</a> pages.  In some cases, however, you might want to
+post-process the finalized data in some way and send it to the browser yourself.  revIgniter permits you to
+add a handler named <dfn>_output</dfn> to your controller that will receive the finalized output data.</p>
+
+<p><strong>Important:</strong>&nbsp; If your controller contains a handler named <kbd>_output</kbd>, it will <strong>always</strong>
+be called by the output library instead of puting the finalized data directly. The first parameter of the handler will contain the finalized output.</p>
+
+<p>Here is an example:</p>
+
+<pre><code>command _output pOutput
+	put pOutput
+end _output
+</code></pre>
+
+<p class="important">Please note that your <dfn>_output</dfn> handler will receive the data in its finalized state.  Benchmark data will be rendered,
+cache files written (if you have caching enabled), and headers will be sent (if you use that <a href="../libraries/output.html">feature</a>)
+before it is handed off to the _output handler.  If you are using this feature the page execution timer might not be perfectly accurate
+since it will not take into acccount any further processing you do.  For an alternate way to control output <em>before</em> any of the final processing is done, please see the available handlers in the <a href="../libraries/output.html">Output Library</a>.</p>
+
+<a name="private"></a>
+<h2>Private Handlers</h2>
+
+
+<p>In some cases you may want certain handlers hidden from public access.  To make a handler private, simply add an
+underscore as the name prefix and it will not be served via a URL request. For example, if you were to have a handler like this:</p>
+
+<pre><code>command _utility
+	-- some code
+end _utility
+</code></pre>
+
+<p>Trying to access it via the URL, like this, will not work:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/<samp>_utility</samp>/</code></pre>
+
+
+
+<a name="subfolders"></a>
+<h2>Organizing Your Controllers into Sub-folders</h2>
+
+<p>If you are building a large application you might find it convenient to organize your controllers into sub-folders.  revIgniter permits you to do this.</p>
+
+<p>Simply create folders within your <dfn>application/controllers</dfn> directory and place your controller libraries within them.</p>
+
+<p><strong>Note:</strong>&nbsp; When using this feature the first segment of your URI must specify the folder.  For example, lets say you have a controller
+located here:</p>
+
+<pre><code>application/controllers/<kbd>products</kbd>/shoes.lc</code></pre>
+
+<p>To call the above controller your URI will look something like this:</p>
+
+<pre><code>example.com/index.lc/products/shoes/show/123</code></pre>
+
+<p>Each of your sub-folders may contain a default controller which will be
+called if the URL contains only the sub-folder.  Simply name your default controller as specified in your
+<dfn>application/config/routes.lc</dfn> file</p>
+
+
+<p>revIgniter also permits you to remap your URIs using its <a href="routing.html">URI Routing</a> feature.</p>
+
+
+<a name="reserved"></a>
+<h2>Reserved Handler Names</h2>
+
+<p>Since your controller script will extend the main application controller you
+must be careful not to name your handlers identically to the ones used by that library. 
+See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
+
+
+<a name="good"></a>
+<h2>Good Practice</h2>
+
+<p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called automatically by the front controller. 
+Let's say your controller is called "blog.lc", then your code would look like this:</p>
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "index,blog" into gControllerHandlers
+
+
+command blog
+	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS, PLUGINS
+end blog
+
+command index
+	# REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
+	-- do something here
+end index
+
+
+
+--| END OF blog.lc
+--| Location: ./system/application/controllers/blog.lc
+----------------------------------------------------------------------
+</code></pre>
+
+
+<h2>That's it!</h2>
+
+<p>That, in a nutshell, is all there is to know about controllers.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="urls.html">revIgniter URLs</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

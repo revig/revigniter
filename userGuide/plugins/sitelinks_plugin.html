@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>SiteLinks Plugin : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+SiteLinks Plugin
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>SiteLinks Plugin</h1>
+
+<p>The SiteLinks Plugin file contains a function that assists in writing links like footer navigation links or breadcrumbs navigation links.</p>
+
+
+<h2>Loading this Plugin</h2>
+
+<p>This plugin is loaded using the following code:</p>
+<pre><code>rigLoadPlugin "sitelinks"</code></pre>
+
+<p>The function:</p>
+
+<h2>rigSiteLinks(<var>pLinks</var>, <var>pCurrentPage</var>, <var>pSeparator</var>, <var>pSelector</var>)</h2>
+
+<p>The first parameter is a numbered array of site links preferable stored in a custom config file in your <dfn>application/config/</dfn> folder. The second parameter indicates the current page. The third parameter defines the link separator. The fourth parameter is used to define the div and paragraph id/class selector.</p>
+
+
+
+<pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
+put "copyright" into tFooterlinks[1]["copyright 2009 yourname.com"]
+put "home" into tFooterlinks[2]["Home"]
+put "contact" into tFooterlinks[3]["Contact"]
+put "imprint" into tFooterlinks[4]["Imprint"]
+
+
+# THE STATEMENT IN YOUR CONTROLLER
+put rigSiteLinks(tFooterlinks, "Contact", " :: ", "footer") into gData["footerLinks"]
+</code></pre>
+
+
+<p><strong>Note:</strong> The elements (values) of the links array are URI segments and the keys are the names displayed.</p>
+
+<p>The output looks like this:</p>
+
+<pre><code>&lt;div id="footer">
+	&lt;p class="footer">
+		&lt;a href="http://yourSite.com/copyright">copyright 2011 yourname.com&lt;/a>&lt;span class="separator"> :: &lt;/span>
+		&lt;a href="http://yourSite.com/home">Home</a>&lt;span class="separator"> :: &lt;/span>
+		&lt;span class="currentpage">Contact&lt;/span>&lt;span class="separator"> :: &lt;/span>
+		&lt;a href="http://yourSite.com/imprint">Imprint&lt;/a>
+	&lt;/p>
+&lt;/div>
+</code></pre>
+
+
+<p>Alternatively you can add css id selectors to the links in order to make them distinguishable in your style sheet. This way 
+you can use images instead of text for your navigation links. To accomplish this you need to append a comma and an id selector
+to each URI and you need to use different numbers of nonbreaking spaces as names so that you are able to define the current page link. </p>
+
+<p>Here is an example:</p>
+
+<pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
+put "copyright,IDselectorCopyright" into tFooterlinks[1]["&amp;nbsp;"]
+put "home,IDselectorHome" into tFooterlinks[2]["&amp;nbsp;&amp;nbsp;"]
+put "contact,IDselectorContact" into tFooterlinks[3]["&amp;nbsp;&amp;nbsp;&amp;nbsp;"]
+put "imprint,IDselectorImprint" into tFooterlinks[4]["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"]
+
+
+# THE STATEMENT IN YOUR CONTROLLER
+put rigSiteLinks(tFooterlinks, "&amp;nbsp;&amp;nbsp;&amp;nbsp;", " :: ", "footer") into gData["footerLinks"]
+</code></pre>
+
+<p>The output looks like this:</p>
+
+<pre><code>&lt;div id="footer">
+	&lt;p class="footer">
+		&lt;a href="http://yourSite.com/copyright" id="IDselectorCopyright">copyright 2011 yourname.com&lt;/a>&lt;span class="separator"> :: &lt;/span>
+		&lt;a href="http://yourSite.com/home" id="IDselectorHome">Home</a>&lt;span class="separator"> :: &lt;/span>
+		&lt;span class="currentpage" id="IDselectorContact">Contact&lt;/span>&lt;span class="separator"> :: &lt;/span>
+		&lt;a href="http://yourSite.com/imprint" id="IDselectorImprint">Imprint&lt;/a>
+	&lt;/p>
+&lt;/div>
+</code></pre>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="../plugins/queryvalues_plugin.html">QueryValues Plugin</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

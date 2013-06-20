@@ -1,0 +1,25 @@
+<?rev
+
+put "The email validation method must be passed an array." into gLang["email_must_be_array"]
+put "Invalid email address: %s" into gLang["email_invalid_address"]
+put "Unable to locate the following email attachment: %s" into gLang["email_attachment_missing"]
+put "Unable to open this attachment: %s" into gLang["email_attachment_unreadable"]
+put "You must include recipients: To, Cc, or Bcc" into gLang["email_no_recipients"]
+put "Unable to send email using the shell command" && quote & "mail." & quote && "Your server might not be configured to send mail using this method." into gLang["email_send_failure_mail"]
+put "Unable to send email using the shell command" && quote & "sendmail." & quote && "Your server might not be configured to send mail using this method." into gLang["email_send_failure_sendmail"]
+put "Unable to send email using SMTP.  Your server might not be configured to send mail using this method." into gLang["email_send_failure_smtp"]
+put "Your message has been successfully sent using the following protocol: %s" into gLang["email_sent"]
+put "Unable to open a socket. Please check settings." into gLang["email_no_socket"]
+put "You did not specify a SMTP hostname." into gLang["email_no_hostname"]
+put "The following SMTP error was encountered: %s" into gLang["email_smtp_error"]
+put "Error: You must assign a SMTP username and password." into gLang["email_no_smtp_unpw"]
+put "Failed to send AUTH LOGIN command. Error: %s" into gLang["email_failed_smtp_login"]
+put "Failed to authenticate username. Error: %s" into gLang["email_smtp_auth_un"]
+put "Failed to authenticate password. Error: %s" into gLang["email_smtp_auth_pw"]
+put "Unable to send data: %s" into gLang["email_smtp_data_failure"]
+put "Exit status code: %s" into gLang["email_exit_status"]
+
+
+--| END OF emailLang.lc
+--| Location:  ./system/language/english/emailLang.lc
+----------------------------------------------------------------------

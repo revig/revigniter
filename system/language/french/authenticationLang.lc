@@ -1,0 +1,42 @@
+<?rev
+
+	put "Compte créé avec succès." into gLang["accountCreationSuccess"]
+	put "Impossible de créer le compte." into gLang["accountCreationUnsuccessful"]
+	put "Email déjà utilisé ou invalide." into gLang["accountCreationDuplicateInvalidemail"]
+	put "Nom d'utilisateur déjà utilisé ou invalide." into gLang["accountCreationDuplicateInvalidusername"]
+	
+	put "Le mot de passe a été changé avec succès." into gLang["passwordChangeSuccessful"]
+	put "Impossible de changer le mot de passe" into gLang["passwordChangeUnsuccessful"]
+	put "Mail de réinitialisation du mot de passe envoyé." into gLang["forgotPasswordSuccessful"]
+	put "Impossible de réinitialiser le mot de passe." into gLang["forgotPasswordUnsuccessful"]
+	
+	put "Compte activé." into gLang["activateSuccessful"]
+	put "Impossible d'activer le compte." into gLang["activateUnsuccessful"]
+	put "Compte désactivé." into gLang["deactivateSuccessful"]
+	put "Impossible de désactiver le compte." into gLang["deactivateUnsuccessful"]
+	put "Email d'activation envoyé avec succès." into gLang["activationEmailSuccessful"]
+	put "Impossible d'envoyer le mail d'activation" into gLang["activationEmailUnsuccessful"]
+	
+	put "Connecté avec succès." into gLang["loginSuccessful"]
+	put "Erreur lors de la connexion." into gLang["loginUnsuccessful"]
+	put "Ce compte est inactif." into gLang["loginUnsuccessfulNotActive"]
+	put "Déconnexion effectuée avec succès." into gLang["logoutSuccessful"]
+	
+	put "Account Activation" into gLang["emailActivationSubject"]
+	put "Forgotten password verification." into gLang["emailForgottenPasswordSubject"]
+	
+	put "Compte utilisateur mis à jour avec succès." into gLang["updateSuccessful"]
+	put "Impossible de mettre à jour le compte utilisateur." into gLang["updateUnsuccessful"]
+	put "Utilisateur supprimé." into gLang["deleteSuccessful"]
+	put "Impossible de supprimer l'utilisateur." into gLang["deleteUnsuccessful"]
+	
+	put "Réinitialisez Votre Mot de Passe" into gLang["resetPasswordLinkText"]
+	put "Activez Votre Compte" into gLang["activationLinkText"]
+
+	
+
+
+
+--| END OF authenticationLang.lc
+--| Location:  ./system/language/english/authenticationLang.lc
+----------------------------------------------------------------------

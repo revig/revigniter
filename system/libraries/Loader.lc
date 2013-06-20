@@ -1,0 +1,1645 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Loader Library
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Loader
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/libraries/loader.html
+##
+
+## ------------------------------------------------------------------------
+
+
+#LOGGING
+rigLogMessage "debug", "Loader Library Loaded"
+
+# DECLARE VARIABLES
+global gAutoload
+
+local sRiViewPath, sRiPageBuffer, sRiHelpers, sRiPlugins, sRiModels, sRiLibs, sRiStacks, sRiLoadedFiles, sRiLoadedStackFiles, sRiDBlibLoaded --, sRiCachedVars
+
+
+put gAPPPATH & "views/" into sRiViewPath
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoaderLoadLibrary
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 30-06-09
+--| Last Mod: 30-07-11
+--| Requires: _rigLoadLibrary
+--|
+--| Summary: This handler lets users load libraries.
+--|          It is designed to be called from a user's app controllers.
+--| 
+--| Format:  rigLoaderLoadLibrary param1, param2
+--|
+--| Parameters: mixed <pLibrary> the names of the libraries to load as array or comma separated list
+--|             array <pParams> the optional parameters
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+command rigLoaderLoadLibrary pLibrary pParams
+	if (pLibrary is not an array) and (pLibrary is "") then
+		return FALSE
+	end if
+
+	if pParams is not an array then
+		put empty into tParams
+	else
+		put pParams into tParams
+	end if
+
+	if pLibrary is an array then
+		repeat for each key tKey in pLibrary
+			_rigLoadLibrary pLibrary[tKey], tParams
+		end repeat
+
+	else if comma is in pLibrary then
+		repeat for each item thisItem in pLibrary
+			_rigLoadLibrary thisItem, tParams
+		end repeat
+
+	else
+		_rigLoadLibrary pLibrary, tParams
+	end if
+end rigLoaderLoadLibrary
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadModel
+--|
+--| Author: rabit
+--| Version:  1.6
+--| Created: 04-07-09
+--| Last Mod: 16-07-11
+--| Requires: rigShowError, rigLoadDatabase()
+--|
+--| Summary: This handler lets users load models.
+--| 
+--| Format:  rigLoadModel param1, param2
+--|
+--| Parameters: string <pModel> the names of the models to load as array or comma separated list,
+--|                       bool <pDBconn> database connection
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadModel pModel pDBconn
+	if sRiModels is an array then
+		put the number of lines in the keys of sRiModels into tModelsKeyNum
+	else
+		put 0 into tModelsKeyNum
+	end if
+
+	if pDBconn is empty then
+		put FALSE into tDBconn
+	else
+		put pDBconn into tDBconn
+	end if
+
+	put pModel into tModel
+	if tModel is an array then
+		repeat for each key tKey in tModel
+			rigLoadModel tModel[tKey]
+		end repeat
+		exit rigLoadModel
+
+	else if comma is in pModel then
+		repeat for each item thisItem in pModel
+			rigLoadModel thisItem
+		end repeat
+		exit rigLoadModel
+
+	end if
+
+	if tModel is "" then
+		exit rigLoadModel
+	end if
+
+	# IS THE MODEL IN A SUB-FOLDER? IF SO, PARSE OUT THE FILENAME AND PATH.
+	if "/" is in tModel then
+		put tModel into tPath
+		set the itemDelimiter to "/"
+
+		put item -1 of tPath into tModel
+
+		# GET PATH SANS FILENAME
+		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tPath
+	else
+		put "" into tPath
+	end if
+
+	# SAFETY:  WAS THE MODEL ALREADY LOADED BY A PREVIOUS CALL?
+	if sRiModels is an array then
+
+		put FALSE into tModelIsInArray
+		repeat for each element thisElement in sRiModels
+			if thisElement is tModel then
+				put TRUE into tModelIsInArray
+				exit repeat
+			end if
+		end repeat
+
+		if tModelIsInArray is TRUE then
+			rigShowError "The model you are loading is a resource that is already being used:" && tModel
+			exit rigLoadModel
+		end if
+	end if
+
+	put gAPPPATH & "models/" & tPath & tModel & gEXT into tModelToLoad
+
+	if there is a file tModelToLoad then
+	else
+		rigShowError "Unable to locate the model you have specified:" && tModel
+	end if
+
+	if tDBconn is not FALSE and sRiDBlibLoaded is not TRUE then
+		if tDBconn is TRUE then
+			put "" into tDBconn
+		end if
+
+		get rigLoadDatabase(tDBconn, FALSE, TRUE)
+	end if
+
+	require tModelToLoad
+
+	put tolower(tModel) into tNameLower
+	put toupper(char 1 of tNameLower) into tFirstCharUpper
+	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tModel
+
+	add 1 to tModelsKeyNum
+	put tModel into sRiModels[tModelsKeyNum]
+end rigLoadModel
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLoadDatabase
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 04-07-09
+--| Last Mod: 16-07-11
+--| Requires: rigDB()
+--|
+--| Summary: Database Loader
+--| 
+--| Format:  rigLoadDatabase(param1, param2, param3)
+--|
+--| Parameters: string <pParams> the DB credentials, bool <pReturn>,  bool <pActiveRecord> whether to enable
+--|                       active record (this allows us to override the config setting).
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigLoadDatabase pParams pReturn pActiveRecord
+	if pActiveRecord is empty then
+		put FALSE into tActiveRecord
+	else
+		put pActiveRecord into tActiveRecord
+	end if
+
+	# DO WE EVEN NEED TO LOAD THE DATABASE LIBRARY?
+	if sRiDBlibLoaded is  not True then
+		require gBASEPATH & "database/DB" & gEXT
+	else
+		return FALSE
+	end if
+
+	put TRUE into sRiDBlibLoaded
+
+	put rigDB(pParams, tActiveRecord) into tDBresult
+
+	if pReturn is TRUE then
+		return tDBresult
+	end if
+end rigLoadDatabase
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigLoadView
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 19-06-09
+--| Last Mod: 26-10-09
+--| Requires: _rigLoad()
+--|
+--| Summary: This function is used to load views and files.
+--| 
+--| Format:  rigLoadView(param1, param2)
+--|
+--| Parameters: string <pView>, bool <pReturn>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+function rigLoadView pView pReturn
+	if pReturn is empty then
+		put FALSE into tReturn
+	else
+		put pReturn into tReturn
+	end if
+
+	put pView into tDataArray["riView"]
+	put tReturn into tDataArray["riReturn"]
+	get _rigLoad(tDataArray)
+end rigLoadView
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLoadFile
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 10-10-09
+--| Last Mod: 10-10-09
+--| Requires: _rigLoad()
+--|
+--| Summary: This is a generic file loader.
+--| 
+--| Format:  rigLoadFile(param1, param2)
+--|
+--| Parameters: string <pPath>, bool <pReturn>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigLoadFile pPath pReturn
+	if pReturn is empty then
+		put FALSE into tReturn
+	else
+		put pReturn into tReturn
+	end if
+
+	put pPath into tArray["riPath"]
+	put tReturn into tArray["riReturn"]
+
+	put _rigLoad(tArray) into tOutput
+
+	return tOutput
+end rigLoadFile
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadHelper
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 19-06-09
+--| Last Mod: 16-07-11
+--| Requires: rigShowError, rigLogMessage
+--|
+--| Summary: This function loads the specified helper file.
+--| 
+--| Format:  rigLoadHelper param1
+--|
+--| Parameters: mixed <pHelpers> helper names as array or a comma separated list
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadHelper pHelpers
+	put pHelpers into tHelpers
+	if tHelpers is not an array then
+		if comma is in tHelpers then
+			split tHelpers using comma
+		else
+			# SINGLE NAME
+			put tHelpers into tHelpers[1]
+		end if
+	end if
+
+	repeat for each element tHelper in tHelpers
+		put toLower(tHelper) into tHelper
+		replace "helper" with "" in tHelper
+		replace gEXT with "" in tHelper
+		put tHelper & "Helper" into tHelper
+
+		if sRiHelpers is an array then
+			put sRiHelpers into tTempHelpers
+			combine tTempHelpers using comma
+			# IS HELPER ALREADY LOADED?
+			if itemOffset(tHelper, tTempHelpers) > 0 then
+				exit rigLoadHelper
+			end if
+		end if
+
+		put gAPPPATH & "helpers/" & rigConfigItem("sublibraryPrefix") & tHelper & gEXT into tExtHelper
+
+		# IS THIS A HELPER EXTENSION REQUEST?
+		if there is a file tExtHelper then
+			put gBASEPATH & "helpers/" & tHelper & gEXT into tBaseHelper
+			if there is a file tBaseHelper then
+				require tBaseHelper
+			else
+				rigShowError "Unable to load the requested file: helpers/" & tHelper & gEXT
+			end if
+			require tExtHelper
+
+		else if there is a file (gAPPPATH & "helpers/" & tHelper & gEXT) then
+			require gAPPPATH & "helpers/" & tHelper & gEXT
+		else
+			if there is a file (gBASEPATH & "helpers/" & tHelper & gEXT) then
+				require gBASEPATH & "helpers/" & tHelper & gEXT
+			else
+				rigShowError "Unable to load the requested file: helpers/" & tHelper & gEXT
+			end if
+		end if
+
+		put the number of lines in the keys of sRiHelpers into tNumHelpers
+		put tNumHelpers + 1 into tNewHelperKey
+		put tHelper into sRiHelpers[tNewHelperKey]
+
+		rigLogMessage "debug", "Helper loaded: " & tHelper	
+    end repeat
+end rigLoadHelper
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadHelpers
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: rigLoadHelper
+--|
+--| Summary: This is simply an alias to the above handler in case the
+--|                    user has written the plural form of this handler.
+--| 
+--| Format:  rigLoadHelpers param1
+--|
+--| Parameters: mixed <pHelpers>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadHelpers pHelpers
+	rigLoadHelper pHelpers
+end rigLoadHelpers
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadPlugin
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 02-07-09
+--| Last Mod: 06-10-09
+--| Requires: rigShowError, rigLogMessage
+--|
+--| Summary: This function loads the specified plugin.
+--| 
+--| Format:  rigLoadPlugin param1
+--|
+--| Parameters: mixed <pPlugins> plugin names as array or a comma separated list
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigLoadPlugin pPlugins
+	put pPlugins into tPlugins
+	if tPlugins is not an array then
+		if comma is in tPlugins then
+			split tPlugins using comma
+		else
+			# SINGLE NAME
+			put tPlugins into tPlugins[1]
+		end if
+	end if
+
+	repeat for each element tPlugin in tPlugins
+		put toLower(tPlugin) into tPlugin
+		replace "pi" with "" in tPlugin
+		replace gEXT with "" in tPlugin
+		put tPlugin & "Pi" into tPlugin
+
+		if sRiPlugins is an array then
+			put sRiPlugins into tTempPlugins
+			combine tTempPlugins using comma
+			# IS PLUGIN ALREADY LOADED?
+			if itemOffset(tPlugin, tTempPlugins) > 0 then
+				exit rigLoadPlugin
+			end if
+		end if
+
+		put gAPPPATH & "plugins/" & tPlugin & gEXT into tExtPlugin
+		put gBASEPATH & "plugins/" & tPlugin & gEXT into tSysPlugin
+		
+		# CHECK IF THIS FILE IS IN THE APP-FOLDER
+		if there is a file tExtPlugin then
+			require tExtPlugin
+		else if there is a file tSysPlugin then
+			require tSysPlugin
+		else
+			rigShowError "Unable to load the requested file: plugins/" & tPlugin & gEXT
+		end if
+
+		put the number of lines in the keys of sRiPlugins into tNumPlugins
+		put tNumPlugins + 1 into tNewPluginKey
+		put tPlugin into sRiPlugins[tNewPluginKey]
+
+		rigLogMessage "debug", "Plugin loaded: " & tPlugin
+	end repeat
+end rigLoadPlugin
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadPlugins
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 02-07-09
+--| Last Mod: 02-07-09
+--| Requires: rigLoadPlugin
+--|
+--| Summary: This is simply an alias to the above handler in case the
+--|                    user has written the plural form of this handler.
+--| 
+--| Format:  rigLoadPlugins param1
+--|
+--| Parameters: mixed <pPlugins>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadPlugins pPlugins
+	rigLoadPlugin pPlugins
+end rigLoadPlugins
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadLanguage
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 02-07-09
+--| Last Mod: 26-01-10
+--| Requires: rigLangLoadLang()
+--|
+--| Summary: Loads a language file.
+--| 
+--| Format:  rigLoadLanguage param1, param2
+--|
+--| Parameters: mixed <pFiles>, string <pLang>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadLanguage pFiles pLang
+	put pFiles into tFiles
+	if tFiles is not an array then
+		if comma is in tFiles then
+			split tFiles using comma
+		else
+			# SINGLE NAME
+			put tFiles into tFiles[1]
+		end if
+	end if
+
+	repeat for each key tKey in tFiles
+		get rigLangLoadLang(tFiles[tKey], pLang)
+	end repeat
+end rigLoadLanguage
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLoadScaffoldingLanguage
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 10-10-09
+--| Last Mod: 26-01-10
+--| Requires: rigLangLoadLang()
+--|
+--| Summary: Loads language files for scaffolding.
+--| 
+--| Format:  rigLoadScaffoldingLanguage(param1, param2, param3)
+--|
+--| Parameters: string <pFile>, string <pLang>, bool <pReturn>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigLoadScaffoldingLanguage pFile pLang pReturn
+	if pReturn is empty then
+		put FALSE into tReturn
+	else
+		put pReturn into tReturn
+	end if
+	
+	get rigLangLoadLang(pFile, pLang, tReturn)
+end rigLoadScaffoldingLanguage
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadConfig
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 10-10-09
+--| Last Mod: 10-10-09
+--| Requires: --
+--|
+--| Summary: Loads a config file.
+--| 
+--| Format:  rigLoadConfig param1, param2, param3
+--|
+--| Parameters: string <pFile>, bool <pUseSections>, bool <pFailGracefully>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadConfig pFile pUseSections pFailGracefully
+	if pUseSections is empty then
+		put FALSE into tUseSections
+	else
+		put pUseSections into tUseSections
+	end if
+
+	if pFailGracefully is empty then
+		put FALSE into tFailGracefully
+	else 
+		put pFailGracefully into tFailGracefully
+	end if
+
+	get rigLoadConfigFile(pFile, pUseSections, pFailGracefully)
+end rigLoadConfig
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigLoadScaffolding
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-07-09
+--| Last Mod: 07-07-09
+--| Requires: --
+--|
+--| Summary: This initializing handler works a bit different than the
+--|                    others. It doesn't load the library.  Instead, it simply
+--|                    sets a flag indicating that scaffolding is allowed to be
+--|                    used.  The actual scaffolding function below is
+--|                    called by the front controller based on whether the
+--|                    second segment of the URL matches the "secret" scaffolding
+--|                    word stored in the application/config/routes.lc.
+--| 
+--| Format:  rigLoadScaffolding param1
+--|
+--| Parameters: string <pTable>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigLoadScaffolding pTable
+	if pTable is FALSE then
+		rigShowError "You must include the name of the table you would like to access when you initialize scaffolding"
+	end if
+	
+	_rigSetScaffolding TRUE
+
+	if pTable is "" then
+		_rigSetScaffoldingTable FALSE
+	else
+		_rigSetScaffoldingTable pTable
+	end if
+end rigLoadScaffolding
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadstack
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-07-2011
+--| Last Mod: 30-07-2011
+--| Requires: _rigLoadStack
+--|
+--| Summary: Load stack files.
+--| 
+--| Format:  rigLoadstack param1, param2, param3
+--|
+--| Parameters: mixed <pStack> the names of the stacks to load as array or comma separated list
+--|							string <pPosition> either "front" or "behind", defines whether the loaded stack
+--|							should sit behind or in front of the home stack,
+--|							array <pParams> the optional parameters
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+command rigLoadstack pStack pParams pPosition
+	if (pStack is not an array) and (pStack is "") then
+		return FALSE
+	end if
+	
+	if pParams is not an array then
+		put empty into tParams
+	else
+		put pParams into tParams
+	end if
+
+	if pPosition is empty then
+		put "behind" into tPosition
+	else if (pPosition is "front") or (pPosition is "behind") then
+		put pPosition into tPosition
+	else
+		put "behind" into tPosition
+	end if
+	
+	if pStack is an array then
+		repeat for each key tKey in pStack
+			_rigLoadStack pStack[tKey], tParams, tPosition
+		end repeat
+
+	else if comma is in pStack then
+		repeat for each item thisItem in pStack
+			_rigLoadStack thisItem, tParams, tPosition
+		end repeat
+
+	else
+		_rigLoadStack pStack, tParams, tPosition
+	end if
+end rigLoadstack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadstacks
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: rigLoadHelper
+--|
+--| Summary: This is simply an alias to the above handler in case the
+--|          user has written the plural form of this handler.
+--| 
+--| Format:  rigLoadstacks param1, param2
+--|
+--| Parameters: mixed <pStack> the names of the stacks to load as array or comma separated list
+--|							string <pPosition> either "front" or "behind", defines whether the loaded stack
+--|							should sit behind or in front of the home stack
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+command rigLoadstacks  pStack pPosition
+	rigLoadstack pStack, pPosition
+end rigLoadstacks
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigLoad
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 19-06-09
+--| Last Mod: 16-02-11
+--| Requires: --
+--|
+--| Summary: This function is used to load views and files.
+--| 
+--| Format:  _rigLoad(param1)
+--|
+--| Parameters: array <pDataArray>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function _rigLoad pDataArray
+	# SET THE DEFAULT DATA VARIABLES
+	repeat for each line tKey in the keys of pDataArray
+		if tKey is "riView" then
+			put pDataArray["riView"] into tRiView
+		end if
+
+		if tKey is "riPath" then
+			put pDataArray["riPath"] into tRiPath
+		end if
+		if tKey is "riReturn" then
+			put pDataArray["riReturn"] into tRiReturn
+		end if
+	end repeat
+
+	# SET THE PATH TO THE REQUESTED FILE
+	if tRiPath is "" then
+		put matchtext(tRiView,".+(\.[^\.\/].+)$",tExtension) into tExtFound
+		if tExtFound is TRUE then
+			put tRiView into tRiFile
+		else
+			put tRiView & gEXT into tRiFile
+		end if
+
+		put sRiViewPath & tRiFile into tRiPath
+	else
+		set the itemDelimiter to "/"
+		put item -1 of tRiPath into tRiFile
+	end if
+
+	if there is a file tRiPath then
+	else
+		rigShowError "Unable to load the requested file: " & tRiFile
+	end if
+
+
+	##
+	# BUFFER THE OUTPUT
+	#
+	# WE BUFFER THE OUTPUT FOR TWO REASONS:
+	# 1. SPEED. YOU GET A SIGNIFICANT SPEED BOOST.
+	# 2. SO THAT THE FINAL RENDERED TEMPLATE CAN BE
+	# POST-PROCESSED BY THE OUTPUT LIBRARY.  WHY DO WE
+	# NEED POST PROCESSING?  FOR ONE THING, IN ORDER TO
+	# SHOW THE ELAPSED PAGE LOAD TIME.  UNLESS WE
+	# CAN INTERCEPT THE CONTENT RIGHT BEFORE IT'S SENT TO
+	# THE BROWSER AND THEN STOP THE TIMER IT WON'T BE ACCURATE.
+	##
+	put URL format("binfile:%s", tRiPath) into sRiPageBuffer
+		
+	rigLogMessage "debug", "File loaded: " & tRiPath
+
+	# RETURN THE FILE DATA IF REQUESTED
+	if tRiReturn is TRUE then
+		put sRiPageBuffer into tBuffer
+		put empty into sRiPageBuffer
+		return tBuffer
+	end if
+
+	# CALL HANDLER IN OUTPUT.LC TO APPEND OUTPUT DATA
+	rigAppendOutput sRiPageBuffer
+
+end _rigLoad
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigLoadLibrary
+--|
+--| Author: rabit
+--| Version:  1.5
+--| Created: 07-07-09
+--| Last Mod: 16-08-11
+--| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitLibrary
+--|
+--| Summary: This handler loads the requested library.
+--| 
+--| Format:  _rigLoadLibrary param1, param2
+--|
+--| Parameters: string <pLibrary> the item that is being loaded, array <pParams> any additional parameters
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigLoadLibrary pLibrary pParams
+	if sRiLoadedFiles is an array then
+		put the number of lines in the keys of sRiLoadedFiles into tLoadedFilesKeyNum
+	else
+		put 0 into tLoadedFilesKeyNum
+	end if
+
+	put pLibrary into tLibrary
+	# GET THE LIBRARY NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.  
+	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE LIBRARY NAME, 
+	# BUT WE DON'T WANT A LEADING SLASH
+	if char 1 of tLibrary is "/" then
+		put char 2 to -1 of tLibrary into tLibrary
+	end if
+	replace gEXT with "" in tLibrary
+
+	# WAS THE PATH INCLUDED WITH THE LIBRARY NAME?
+	# WE LOOK FOR A SLASH TO DETERMINE THIS
+	put "" into tSubdir
+	if "/" is in tLibrary then
+		put tLibrary into tPath
+		set the itemDelimiter to "/"
+
+		# RESET THE tLibrary VARIABLE
+		put item -1 of tPath into tLibrary
+
+		# GET PATH SANS FILENAME
+		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
+	end if
+
+	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+	put toLower(tLibrary) into tNameLower
+	put toupper(char 1 of tNameLower) into tFirstCharUpper
+	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
+
+	put tNameLower into tNameVariants[1]
+	put tNameUCfirst into tNameVariants[2]
+
+	repeat for each key tKey in tNameVariants
+		put tNameVariants[tKey] into tLib
+		
+		put rigFetchConfigItem("sublibraryPrefix") into tPrefix
+		put gAPPPATH & "libraries/" & tSubdir & tPrefix & tLib & gEXT into tSubLib
+
+		# IS THIS A LIBRARY EXTENSION REQUEST?
+		if there is a file tSubLib then
+			put gBASEPATH & "libraries/" & tNameUCfirst & gEXT into tBaseLib
+
+			if there is a file tBaseLib then
+			else
+				rigLogMessage "error", "Unable to load the requested library:" && tLib
+				rigShowError "Unable to load the requested library:" && tLib
+			end if
+
+			# SAFETY:  WAS THE LIBRARY ALREADY LOADED BY A PREVIOUS CALL?
+			if sRiLoadedFiles is an array then
+
+				put FALSE into tLibInArray
+				repeat for each element thisElement in sRiLoadedFiles
+					if thisElement is tLib then
+						put TRUE into tLibInArray
+						exit repeat
+					end if
+				end repeat
+
+				if tLibInArray is TRUE then
+					put TRUE into tIsDuplicate
+					rigLogMessage "debug", tLib && "library already loaded. Second attempt ignored."
+					exit _rigLoadLibrary
+				end if
+			end if
+
+			require tBaseLib
+			require tSubLib
+			add 1 to tLoadedFilesKeyNum
+			put tSubLib into sRiLoadedFiles[tLoadedFilesKeyNum]
+		
+			_rigRiInitLibrary tLib, tPrefix, pParams
+			exit _rigLoadLibrary
+
+		end if -- if there is a file tSubLib then
+	
+
+		# LETS SEARCH FOR THE REQUESTED LIBRARY FILE AND LOAD IT.
+		put FALSE into tIsDuplicate
+		put gAPPPATH into tPathVariants[1]
+		put gBASEPATH into tPathVariants[2]
+
+		repeat for each key tKey in tPathVariants
+			put tPathVariants[tKey] into tPathVar
+			put tPathVar & "libraries/" & tSubdir & tLib & gEXT into tFilePath
+
+			if there is a file tFilePath then
+			else
+				next repeat
+			end if
+
+			# SAFETY:  WAS THE LIBRARY ALREADY LOADED BY A PREVIOUS CALL?
+			if sRiLoadedFiles is an array then
+
+				put FALSE into tFileIsInArray
+				repeat for each element thisElement in sRiLoadedFiles
+					if thisElement is tFilePath then
+						put TRUE into tFileIsInArray
+						exit repeat
+					end if
+				end repeat
+
+				if tFileIsInArray is TRUE then
+					put TRUE into tIsDuplicate
+					rigLogMessage "debug", tLib && "library already loaded. Second attempt ignored."
+					exit _rigLoadLibrary
+				end if
+			end if
+
+			require tFilePath
+			add 1 to tLoadedFilesKeyNum
+			put tFilePath into sRiLoadedFiles[tLoadedFilesKeyNum]
+			_rigRiInitLibrary tLib, "", pParams
+			exit _rigLoadLibrary
+
+		end repeat
+	end repeat -- for each key tKey in tNameVariants
+
+	# ONE LAST ATTEMPT.  MAYBE THE LIBRARY IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?	
+	if tSubdir is "" then
+		put toLower(tLibrary) & "/" & tLib into tPathNotSpecified
+		_rigLoadLibrary tPathNotSpecified, pParams
+		exit _rigLoadLibrary
+	end if
+
+	# IF WE GOT THIS FAR WE WERE UNABLE TO FIND THE REQUESTED LIBRARY.
+	# WE DO NOT ISSUE ERRORS IF THE LOAD CALL FAILED DUE TO A DUPLICATE REQUEST
+	if tIsDuplicate is FALSE then
+		rigLogMessage "error", "Unable to load the requested library:" & tLib
+		rigShowError "Unable to load the requested library:" & tLib
+	end if
+end _rigLoadLibrary
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigAutoloader
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 30-06-09
+--| Last Mod: 31-07-11
+--| Requires: rigLoadHelper, rigLoadPlugin, rigLoadLanguage, rigLoadDatabase(),
+--|           rigLoadScaffolding(), rigLoaderLoadLibrary, rigLoadModel
+--|
+--| Summary: The config/autoload.lc file contains an array that permits sub-systems,
+--|          libraries, plugins, and helpers to be loaded automatically.
+--| 
+--| Format:  _rigAutoloader
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigAutoloader
+	require gAPPPATH & "config/autoload" & gEXT
+
+	if gAutoload is not an array then
+		return FALSE
+	end if
+
+	# LOAD ANY CUSTOM CONFIG FILE
+	if the number of lines in the keys of gAutoload["config"] > 0 and gAutoload["config"][1] is not "" then
+		repeat for each key tKey in gAutoload["config"]
+			put gAutoload["config"][tKey] into tConfigToLoad
+			get rigLoadConfigFile(tConfigToLoad)
+		end repeat
+	end if
+
+	# AUTOLOAD PLUGINS, HELPERS AND LANGUAGES
+	if gAutoload["helper"] is an array and gAutoload["helper"][1] is not "" then
+		rigLoadHelper gAutoload["helper"]
+	end if
+	
+	if gAutoload["plugin"] is an array and gAutoload["plugin"][1] is not "" then
+		rigLoadPlugin gAutoload["plugin"]
+	end if
+
+	if gAutoload["language"] is an array and gAutoload["language"][1] is not "" then
+		rigLoadLanguage gAutoload["language"]
+	end if
+
+	# LOAD LIBRARIES
+	if gAutoload["libraries"] is an array and gAutoload["libraries"][1] is not "" then
+
+		# LOAD THE DATABASE DRIVER.
+		put gAutoload["libraries"] into tLibrariesList
+		combine tLibrariesList using comma
+		put 1 into tItemNum
+		repeat for each item thisItem in tLibrariesList
+			if thisItem is "database" then
+				get rigLoadDatabase()
+				delete item tItemNum of tLibrariesList
+				exit repeat
+			end if
+			add 1 to tItemNum
+		end repeat
+
+		# LOAD SCAFFOLDING
+		put 1 into tItemNum
+		repeat for each item thisItem in tLibrariesList
+			if thisItem is "scaffolding" then
+				rigLoadScaffolding
+				delete item tItemNum of tLibrariesList
+				exit repeat
+			end if
+			add 1 to tItemNum
+		end repeat
+
+		# LOAD ALL OTHER LIBRARIES
+		repeat for each item thisItem in tLibrariesList
+			rigLoaderLoadLibrary thisItem
+		end repeat
+
+	end if
+	
+	# LOAD STACKS
+	if gAutoload["stacks"] is an array and gAutoload["stacks"][1] is not "" then
+		put gAutoload["stacks"] into tStacksList
+		combine tStacksList using comma
+		repeat for each item thisItem in tStacksList
+			rigLoadStack thisItem
+		end repeat
+	end if
+
+	# AUTOLOAD MODELS
+	if gAutoload["model"] is an array and gAutoload["model"][1] is not "" then
+		rigLoadModel gAutoload["model"]
+	end if
+
+end _rigAutoloader
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigLoadStack
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-07-2011
+--| Last Mod: 30-07-2011
+--| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
+--|
+--| Summary: This handler loads the requested stack.
+--| 
+--| Format:  _rigLoadStack param1, param2, param3
+--|
+--| Parameters: string <pStack> the stack that is being loaded
+--|							string <pPosition> either "front" or "behind", defines whether the loaded stack
+--|							should sit behind or in front of the home stack
+--|							array <pParams> the optional parameters
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigLoadStack pStack pParams pPosition
+	if sRiLoadedStackFiles is an array then
+		put the number of lines in the keys of sRiLoadedStackFiles into tNumLoadedStacks
+	else
+		put 0 into tNumLoadedStacks
+	end if
+	
+	put pStack into tStack
+	# GET THE STACK NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.  
+	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE STACK NAME, 
+	# BUT WE DON'T WANT A LEADING SLASH
+	if char 1 of tStack is "/" then
+		put char 2 to -1 of tStack into tStack
+	end if
+
+	# WAS THE PATH INCLUDED WITH THE STACK NAME?
+	# WE LOOK FOR A SLASH TO DETERMINE THIS
+	put "" into tSubdir
+	if "/" is in tStack then
+		put tStack into tPath
+		set the itemDelimiter to "/"
+
+		# RESET THE tStack VARIABLE
+		put item -1 of tPath into tStack
+
+		# GET PATH SANS FILENAME
+		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
+	end if
+	
+	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+	put toLower(tStack) into tNameLower
+	put toupper(char 1 of tNameLower) into tFirstCharUpper
+	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
+
+	put tNameLower into tNameVariants[1]
+	put tNameUCfirst into tNameVariants[2]
+
+	repeat for each key tKey in tNameVariants
+		put tNameVariants[tKey] into tStackToLoad
+		
+		put rigFetchConfigItem("sublibraryPrefix") into tPrefix
+		put gAPPPATH & "stacks/" & tSubdir & tPrefix & tStackToLoad into tSubStack
+		
+		if (byte -9 to -1 of tSubStack <> ".livecode") and (byte -4 to -1 of tSubStack <> ".rev") then
+			put tSubStack & ".livecode" into tSubStackTempA
+			put tSubStack & ".rev" into tSubStackTempB
+			
+			if there is a file tSubStackTempA then
+				put tSubStackTempA into tSubStack
+				put TRUE into tSubStackExists
+			else if there is a file tSubStackTempB then
+				put tSubStackTempB into tSubStack
+				put TRUE into tSubStackExists
+			end	if
+			
+		else if there is a file tSubStack then
+			put TRUE into tSubStackExists
+		end if
+	
+		# IS THIS A STACK EXTENSION REQUEST?
+		if tSubStackExists is TRUE then
+				
+			# CHECK AND CHANGE SUFFIX AS CORE STACKS SOLELY USE "livecode"
+			if (byte -4 to -1 of tNameUCfirst is ".rev") then
+				put (byte 1 to -5 of tNameUCfirst) & ".livecode" into tNameUCfirst
+			else if (byte -9 to -1 of tNameUCfirst <> ".livecode") then
+				put tNameUCfirst & ".livecode" into tNameUCfirst
+			end if
+			
+			put gBASEPATH & "stacks/" & tNameUCfirst into tBaseStack
+
+			if there is a file tBaseStack then
+			else
+				rigLogMessage "error", "Unable to load the requested stack:" && tStackToLoad
+				rigShowError "Unable to load the requested stack:" && tStackToLoad
+			end if
+
+			# SAFETY: WAS THE STACK ALREADY LOADED BY A PREVIOUS CALL?
+			if sRiLoadedStackFiles is an array then
+
+				put FALSE into tStackInArray
+				repeat for each element thisElement in sRiLoadedStackFiles
+					if thisElement is tStackToLoad then
+						put TRUE into tStackInArray
+						exit repeat
+					end if
+				end repeat
+
+				if tStackInArray is TRUE then
+					put TRUE into tIsDuplicate
+					rigLogMessage "debug", tStackToLoad && "stack already loaded. Second attempt ignored."
+					exit _rigLoadStack
+				end if
+			end if
+
+			# LOAD BASE STACK AND BASE STACK EXTENSION
+			start using stack tBaseStack
+
+			if pPosition is "front" then
+				-- go stack tSubStack
+				# go stack IS CURRENTLY NOT WORKING PROPERLY, SO THIS
+				# IS A WORKAROUND UNTIL THIS HAS CHANGED
+				start using stack tSubStack
+				set the defaultStack to tStackToLoad
+			else
+				start using stack tSubStack
+			end if
+		
+			add 1 to tNumLoadedStacks
+			put tSubStack into sRiLoadedStackFiles[tNumLoadedStacks]
+
+			_rigRiInitStack tStackToLoad, tPrefix, pParams
+			exit _rigLoadStack
+
+		end if -- if there is a file tSubStack then
+		
+	
+		# LETS SEARCH FOR THE REQUESTED STACK FILE AND LOAD IT.
+		put FALSE into tIsDuplicate
+		put gAPPPATH into tPathVariants[1]
+		put gBASEPATH into tPathVariants[2]
+
+		repeat for each key tKey in tPathVariants
+			put tPathVariants[tKey] into tPathVar
+			put tPathVar & "stacks/" & tSubdir & tStackToLoad into tFilePath
+			
+			if (byte -9 to -1 of tFilePath <> ".livecode") and (byte -4 to -1 of tFilePath <> ".rev") then
+				put tFilePath & ".livecode" into tFilePathTempA
+				put tFilePath & ".rev" into tFilePathTempB
+				
+				if there is a file tFilePathTempA then
+					put tFilePathTempA into tFilePath
+					put TRUE into tFilePathExists
+				else if there is a file tFilePathTempB then
+					put tFilePathTempB into tFilePath
+					put TRUE into tFilePathExists
+				end	if
+				
+			else if there is a file tFilePath then
+				put TRUE into tFilePathExists
+			end if
+
+			if tFilePathExists <> TRUE then
+				next repeat
+			end if
+			
+			# SAFETY:  WAS THE STACK ALREADY LOADED BY A PREVIOUS CALL?
+			if sRiLoadedStackFiles is an array then
+
+				put FALSE into tFileIsInArray
+				repeat for each element thisElement in sRiLoadedStackFiles
+					if thisElement is tFilePath then
+						put TRUE into tFileIsInArray
+						exit repeat
+					end if
+				end repeat
+
+				if tFileIsInArray is TRUE then
+					put TRUE into tIsDuplicate
+					rigLogMessage "debug", tStackToLoad && "stack already loaded. Second attempt ignored."
+					exit _rigLoadStack
+				end if
+			end if
+
+			if pPosition is "front" then
+				-- go stack tFilePath
+				# go stack IS CURRENTLY NOT WORKING PROPERLY, SO THIS
+				# IS A WORKAROUND UNTIL THIS HAS CHANGED
+				start using stack tFilePath
+				set the defaultStack to tStackToLoad
+			else
+				start using stack tFilePath
+			end if
+			
+			add 1 to tNumLoadedStacks
+			put tFilePath into sRiLoadedStackFiles[tNumLoadedStacks]
+
+			_rigRiInitStack tStackToLoad, "", pParams
+			exit _rigLoadStack
+
+		end repeat
+	end repeat -- for each key tKey in tNameVariants
+	
+	
+	# ONE LAST ATTEMPT.  MAYBE THE STACK IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?	
+	if tSubdir is "" then
+		put toLower(tStack) & "/" & tStackToLoad into tPathNotSpecified
+		_rigLoadStack tPathNotSpecified, pPosition
+		exit _rigLoadStack
+	end if
+
+	# IF WE GOT THIS FAR WE WERE UNABLE TO FIND THE REQUESTED STACK.
+	# WE DO NOT ISSUE ERRORS IF THE LOAD CALL FAILED DUE TO A DUPLICATE REQUEST
+	if tIsDuplicate is FALSE then
+		rigLogMessage "error", "Unable to load the requested stack:" && tStackToLoad
+		rigShowError "Unable to load the requested stack:" && tStackToLoad
+	end if
+end _rigLoadStack
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLibIsLoaded
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 29-07-09
+--| Last Mod: 29-07-09
+--| Requires: --
+--|
+--| Summary: Check if a given library is loaded.
+--| 
+--| Format:  rigLibIsLoaded(param1)
+--|
+--| Parameters: string <pName>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigLibIsLoaded pName
+	if sRiLibs is not an array then
+		return FALSE
+	end if
+
+	put sRiLibs into tLoadedLibs
+
+	combine tLoadedLibs using comma
+	return (pName is among the items of tLoadedLibs)
+end rigLibIsLoaded
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigHelperIsLoaded
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 29-07-09
+--| Last Mod: 29-07-09
+--| Requires: --
+--|
+--| Summary: Check if a given helper is loaded.
+--| 
+--| Format:  rigHelperIsLoaded(param1)
+--|
+--| Parameters: string <pName>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigHelperIsLoaded pName
+	if sRiHelpers is not an array then
+		return FALSE
+	end if
+
+	put sRiHelpers into tLoadedHelpers
+
+	combine tLoadedHelpers using comma
+	return (pName is among the items of tLoadedHelpers)
+end rigHelperIsLoaded
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigRiInitLibrary
+--|
+--| Author: rabit
+--| Version:  1.5
+--| Created: 07-07-09
+--| Last Mod: 16-07-11
+--| Requires: --
+--|
+--| Summary: Load config file associated with loaded library.
+--| 
+--| Format:  _rigRiInitLibrary param1, param2, param3
+--|
+--| Parameters: string <pLib> the item that is being loaded, string <pPrefix>, array <pConfig>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigRiInitLibrary pLib pPrefix pConfig
+	put FALSE into tConfigFileFound
+
+	if sRiLibs is an array then
+		put the number of lines in the keys of sRiLibs into tLibsKeyNum
+	else
+		put 0 into tLibsKeyNum
+	end if
+
+	# IS THERE AN ASSOCIATED CONFIG FILE FOR THIS LIBRARY?
+	if pConfig is not an array then
+		# WE TEST FOR BOTH UPPERCASE AND LOWERCASE, FOR SERVERS THAT
+		# ARE CASE-SENSITIVE WITH REGARD TO FILE NAMES
+		put toLower(pLib) into tNameLower
+		put toupper(char 1 of tNameLower) into tFirstCharUpper
+		put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
+
+		put gAPPPATH & "config/" & tNameLower & gEXT into tPath
+		if there is a file tPath then
+			require tPath
+			put TRUE into tConfigFileFound
+		else
+			put gAPPPATH & "config/" & tNameUCfirst & gEXT into tPath
+			if there is a file tPath then
+				require tPath
+				put TRUE into tConfigFileFound
+			end if
+		end if
+	end if
+
+	if pPrefix is empty then
+		put pLib into tLibName
+	else
+		put pPrefix & pLib into tLibName
+	end if
+	
+	add 1 to tLibsKeyNum
+	put tLibName into sRiLibs[tLibsKeyNum]
+
+	# RUN THE CONFIGURATION HANDLER IF NO CONFIGURATION FILE WAS FOUND
+	# OTHERWISE, THIS IS DONE BY THE CONFIGURATION FILE ITSELF
+	if tConfigFileFound is not TRUE then
+		put "rigRunInitial" & pLib & "Config" into tHandler
+		combine pConfig using numtochar(1) and numtochar(2)
+
+		do tHandler && quote & pConfig & quote
+	end if
+end _rigRiInitLibrary
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigRiInitStack
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 31-07-2011
+--| Last Mod: 31-07-2011
+--| Requires: --
+--|
+--| Summary: Load config file associated with loaded stack.
+--| 
+--| Format:  _rigRiInitStack param1, param2, param3
+--|
+--| Parameters: string <pStack> the item that is being loaded, string <pPrefix>, array <pConfig>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigRiInitStack pStack pPrefix pConfig
+	put FALSE into tConfigFileFound
+
+	if sRiStacks is an array then
+		put the number of lines in the keys of sRiStacks into tStacksKeyNum
+	else
+		put 0 into tStacksKeyNum
+	end if
+
+	# IS THERE AN ASSOCIATED CONFIG FILE FOR THIS LIBRARY?
+	if pConfig is not an array then
+		# WE TEST FOR BOTH UPPERCASE AND LOWERCASE, FOR SERVERS THAT
+		# ARE CASE-SENSITIVE WITH REGARD TO FILE NAMES
+		put toLower(pStack) into tNameLower
+		put toupper(char 1 of tNameLower) into tFirstCharUpper
+		put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
+
+		put gAPPPATH & "config/" & tNameLower & gEXT into tPath
+		if there is a file tPath then
+			require tPath
+			put TRUE into tConfigFileFound
+		else
+			put gAPPPATH & "config/" & tNameUCfirst & gEXT into tPath
+			if there is a file tPath then
+				require tPath
+				put TRUE into tConfigFileFound
+			end if
+		end if
+	end if
+
+	put pPrefix & pStack into tStackName
+	
+	add 1 to tStacksKeyNum
+	put tStackName into sRiStacks[tStacksKeyNum]
+
+	# RUN THE CONFIGURATION HANDLER IF NO CONFIGURATION FILE WAS FOUND
+	# OTHERWISE, THIS IS DONE BY THE CONFIGURATION FILE ITSELF
+	if tConfigFileFound is not TRUE then
+		put "rigRunInitial" & pStack & "StackConfig" into tHandler
+		combine pConfig using numtochar(1) and numtochar(2)
+
+		do tHandler && quote & pConfig & quote
+	end if
+end _rigRiInitStack
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchDBlibLoaded
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-07-09
+--| Last Mod: 22-07-09
+--| Requires: --
+--|
+--| Summary: This function checks if the database libraries are loaded.
+--| 
+--| Format:  rigFetchDBlibLoaded()
+--|
+--| Parameters: --
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function rigFetchDBlibLoaded
+	if sRiDBlibLoaded is TRUE then
+		return TRUE
+	else
+		return FALSE
+	end if
+end rigFetchDBlibLoaded
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigSetViewPath
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 26-01-10
+--| Last Mod: 26-01-10
+--| Requires: --
+--|
+--| Summary: Set path to view files (needed by Scaffolding.lc).
+--| 
+--| Format:  _rigSetViewPath param1
+--|
+--| Parameters: string <pPath>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigSetViewPath pPath
+	put pPath into sRiViewPath
+end _rigSetViewPath
+
+
+
+
+
+
+
+
+
+
+--| END OF Loader.lc
+--| Location:  ./system/libraries/Loader.lc
+----------------------------------------------------------------------

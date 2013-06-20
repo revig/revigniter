@@ -1,0 +1,25 @@
+<?rev
+
+put "Unable to find a post variable called userfile." into gLang["upload_userfile_not_set"]
+put "The uploaded file exceeds the maximum allowed size in your configuration file." into gLang["upload_file_exceeds_limit"]
+put "The uploaded file exceeds the maximum size allowed by the submission form." into gLang["upload_file_exceeds_form_limit"]
+put "The file was only partially uploaded." into gLang["upload_file_partial"]
+put "The temporary folder is missing." into gLang["upload_no_temp_directory"]
+put "The file could not be written to disk." into gLang["upload_unable_to_write_file"]
+put "The file upload was stopped by extension." into gLang["upload_stopped_by_extension"]
+put "You did not select a file to upload." into gLang["upload_no_file_selected"]
+put "The filetype you are attempting to upload is not allowed." into gLang["upload_invalid_filetype"]
+put "The file you are attempting to upload is larger than the permitted size." into gLang["upload_invalid_filesize"]
+put "The image you are attempting to upload exceedes the maximum height or width." into gLang["upload_invalid_dimensions"]
+put "A problem was encountered while attempting to move the uploaded file to the final destination." into gLang["upload_destination_error"]
+put "The upload path does not appear to be valid." into gLang["upload_no_filepath"]
+put "You have not specified any allowed file types." into gLang["upload_no_file_types"]
+put "The file name you submitted already exists on the server." into gLang["upload_bad_filename"]
+put "The upload destination folder does not appear to be writable." into gLang["upload_not_writable"]
+put "The upload failed." into gLang["upload_failed"]
+put "The path to the (temp) image is not correct." into gLang["upload_invalid_path"]
+
+
+--| END OF uploadLang.lc
+--| Location:  ./system/language/english/uploadLang.lc
+----------------------------------------------------------------------

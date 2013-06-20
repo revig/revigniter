@@ -1,0 +1,33 @@
+<?rev
+
+put "Das Feld %s ist ein Pflichtfeld." into gLang["requiredR"]
+put "Das Feld %s muss einen Wert enthalten." into gLang["isset"]
+put "Das Feld %s muss eine g&uuml;ltige E-Mail-Adresse enthalten." into gLang["validEmailR"]
+put "Das Feld %s kann nur g&uuml;ltige E-Mail-Adressen enthalten." into gLang["validEmailsR"]
+put "Das Feld %s muss eine g&uuml;ltige Web-Adresse (URL) enthalten." into gLang["validUrlR"]
+put "Das Feld %s muss eine g&uuml;ltige IP enthalten." into gLang["validIpR"]
+put "Das Feld %s muss mindestens %s Zeichen lang sein." into gLang["minLengthR"]
+put "Das Feld %s darf nicht l&auml;nger als %s Zeichen lang sein." into gLang["maxLengthR"]
+put "Das Feld %s muss genau %s lang sein." into gLang["exactLengthR"]
+put "Das Feld %s darf nur Buchstaben enthalten." into gLang["alphaR"]
+put "Das Feld %s darf nur Buchstaben und/oder Zahlen enthalten." into gLang["alphaNumericR"]
+put "Das Feld %s darf nur Buchstaben, Zahlen, Bindestriche und Unterstriche enthalten." into gLang["alphaDashR"]
+put "Das Feld %s darf nur Buchstaben und Akzentbuchstaben enthalten." into gLang["alphaAccentR"]
+put "Das Feld %s darf nur Buchstaben, Akzentbuchstaben und/oder Zahlen enthalten." into gLang["alphaNumericAccentR"]
+put "Das Feld %s darf nur Buchstaben, Akzentbuchstaben, Zahlen, Bindestriche und Unterstriche enthalten." into gLang["alphaDashAccentR"]
+put "Das Feld %s darf nur Zahlen enthalten." into gLang["numericR"]
+put "Das Feld %s darf nur Zahlen enthalten." into gLang["isNumericR"]
+put "Das Feld %s muss einen ganzzahligen Wert enthalten." into gLang["integerR"]
+put "Das Feld %s muss mit dem Feld %s &uuml;bereinstimmen." into gLang["matchesR"]
+put "Das Feld %s darf nur positive Zahlen enthalten." into gLang["isNaturalR"]
+put "Das Feld %s darf nur Zahlen gr&uouml;&szlig;er Null enthalten." into gLang["isNaturalNoZeroR"]
+put "Das Feld %s darf nur g&uuml;ltige Base64 Zeichen enthalten." into gLang["validBase64R"]
+put "Das Feld %s muss eine Dezimalzahl enthalten." into gLang["decimalR"]
+put "Das Feld %s muss eine Zahl gr&ouml;sser als %s enthalten." into gLang["greaterThanR"]
+put "Das Feld %s muss eine Zahl kleiner als %s enthalten." into gLang["lessThanR"]
+
+
+
+--| END OF formvalidationLang.lc
+--| Location:  ./system/language/german/formvalidationLang.lc
+----------------------------------------------------------------------

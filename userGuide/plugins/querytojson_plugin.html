@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>QueryToJSON Plugin : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+QueryToJSON Plugin
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>QueryToJSON Plugin</h1>
+
+<p>The QueryToJSON Plugin file contains a function for converting database query result arrays to the JSON format.</p>
+
+
+<h2>Loading this Plugin</h2>
+
+<p>This plugin is loaded using the following code:</p>
+<pre><code>rigLoadPlugin "querytojson"</code></pre>
+
+<p>The function:</p>
+
+<h2>rigQueryToJSON(<var>pResult</var>, <var>pFieldnames</var>)</h2>
+
+<p>The first parameter is a database query result array. The optional second parameter is an array containing the field names
+	of the database table. Example:</p>
+
+
+
+<pre><code># MODEL DATABASE QUERY
+put mymodelFetchAllData("recipe") into tQuery
+put tQuery["resultarray"] into tResult
+put tQuery["fieldnames"] into tFieldNames
+
+# CONVERT ARRAY TO JSON
+put rigQueryToJSON(tResult, tFieldNames) into gData["jsonData"]
+</code></pre>
+
+<p>Conversion example:</p>
+
+<p>Input: database table</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>ID</th><th>Name</th><th>Directions</th></tr>
+<tr>
+<td class="td">1</td><td class="td">Banana Bread</td><td class="td">How to make banana bread.</td></tr>
+<tr>
+<td class="td">2</td><td class="td">Pancakes</td><td class="td">How to make pancakes.</td></tr>
+</table>
+</div>
+
+<p>Output: JSON</p>
+
+<pre><code>{
+"queryToJSON":[
+{
+"ID":"1",
+"Name":"Banana Bread",
+"Directions":"How to make banana bread."
+},
+{
+"ID":"2",
+"Name":"Pancakes",
+"Directions":"How to make pancakes."
+}
+]
+}
+</code></pre>
+
+
+
+
+<p>To reference the JSON object use the term "queryToJSON". To reference individual items of the JSON records use the table field names.
+	If the "fieldnames" parameter is empty, item names are "field1", "field2", "field3" ... etc. Example:</p>
+
+<pre><code>rigJQopen
+rigJQeventOpen "'#go'", "'click'"
+put "getjsontest/getjsondata" into tAjax["url"]
+put "'json'" into tAjax["dataType"]
+
+put rigJQvarR("jsObj, data;") & return into tSuccess
+put rigJQsetR("'#resultData'", "append", "'&lt;p>' + element.myTabeleFieldName + '&lt;/p>'") into tCallback
+put rigJQeachOpenR("jsObj.queryToJSON", , tCallback) && rigJQeachCloseR() after tSuccess
+
+put tSuccess into tAjax["success"]
+
+rigJQajax tAjax
+
+rigJQeventClose
+rigJQclose
+
+put the result into gData["JQscript"]
+</code></pre>
+
+
+<p>In the example above we perform an Ajax request. We store the retrieved data in a variable called "jsObj" and reference the
+	JSON object with "jsObj.queryToJSON". We iterate over the JSON object using "element.myTabeleFieldName" for an item
+	"myTabeleFieldName" in each JSON record "element" where "myTabeleFieldName" is the name of a database tabel field and
+	"element" is an argument of the JQuery .each function (rigJQeachOpenR).</p>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="../plugins/markdown_plugin.html">Markdown Plugin</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../plugins/queryvalues_plugin.html">QueryValues Plugin</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

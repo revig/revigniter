@@ -1,0 +1,829 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Router Library
+#
+# Parses URIs and determines routing
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Libraries
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/libraries/routing.html
+##
+
+
+# LOGGING
+rigLogMessage "debug", "Router Library Loaded"
+
+
+# DECLARE LOCAL VARIABLES
+local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigSetRouting
+--|
+--| Author: rabit
+--| Version:  1.4
+--| Created: 19-06-09
+--| Last Mod: 20-01-10
+--| Requires: _rigFilterUri, rigSetController, rigSetHandler, _rigValidateQueryRequest(), _rigFetchUriString
+--|                  rigShowError, _rigSetRequest, rigLogMessage, _rigRemoveUrlSuffix, _rigExplodeSegments, _rigParseRoutes, rigTrim()
+--|
+--| Summary:  Set the route mapping
+--|                    This command determines what should be served based on the URI request,
+--|                    as well as any "routes" that have been set in the routing config file.
+--| 
+--| Format:  _rigSetRouting
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigSetRouting
+	## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
+	## IF SO, WE'RE DONE SINCE SEGMENT BASED URIS ARE NOT USED WITH QUERY STRINGS.
+		if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
+			put _rigFilterUri($_GET[rigFetchConfigItem("controllerTrigger")]) into tFilteredStrippedString
+
+			# TRIM WHITESPACE
+			-- put replacetext(tFilteredStrippedString,"(^\s+)|(\s+$)",empty) into tFilteredStrippedString
+			put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
+
+			rigSetController tFilteredStrippedString
+
+			if $_GET[rigFetchConfigItem("methodTrigger")] is not empty then
+				put _rigFilterUri($_GET[rigFetchConfigItem("methodTrigger")]) into tFilteredStrippedString
+				# TRIM WHITESPACE
+				-- put replacetext(tFilteredStrippedString,"(^\s+)|(\s+$)",empty) into tFilteredStrippedString
+				put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
+				rigSetHandler tFilteredStrippedString
+			else
+				rigSetHandler "index"
+			end if
+
+			get _rigValidateQueryRequest(gController, gHandler)
+
+			# COMPILE THE URI KEY VALUE PAIRS INTO AN ARRAY -- variance
+			_rigExplodeSegments			
+
+			exit _rigSetRouting
+		end if
+
+	# LOAD THE routes.lc FILE.
+	include gAPPPATH & "config/routes" & gEXT
+	put gRoute into sRoutes
+
+	# SET THE DEFAULT CONTROLLER SO WE CAN DISPLAY IT IN THE EVENT
+	# THE URI DOESN'T CORRELATED TO A VALID CONTROLLER.
+	if sRoutes[1]["defaultController"] is "" then
+		put FALSE into sDefaultController
+	else
+		put sRoutes[1]["defaultController"] into sDefaultController
+	end if
+
+	# FETCH THE COMPLETE URI STRING
+	put _rigFetchUriString() into tUriString
+
+--breakpoint
+--put "username=name&password=pw&passconf=pwc&email=em" into tUriString
+
+
+	# IS THERE A URI STRING? IF NOT, THE DEFAULT CONTROLLER SPECIFIED IN THE "ROUTES" FILE WILL BE SHOWN.
+	if tUriString is "" then
+		if sDefaultController is FALSE then
+			rigShowError "Unable to determine what should be displayed. A default route has not been specified in the routing file."
+		end if
+
+		if sDefaultController contains "/" then
+			put sDefaultController into tX
+			set the itemDelimiter to "/"
+			put item -1 of tX into tController
+			rigSetController tController
+			rigSetHandler "index"
+			split tX by "/"
+			_rigSetRequest tX
+		else
+			rigSetController sDefaultController
+			rigSetHandler "index"
+			-- put "index" into tTempArray[sDefaultController]
+			put sDefaultController into tTempArray[1]
+			put "index" into tTempArray[2]
+			_rigSetRequest tTempArray
+		end if
+
+		rigLogMessage "debug", "No URI present. Default controller set."
+		exit _rigSetRouting
+	end if
+
+	delete variable sRoutes[1]["defaultController"]
+
+	# DO WE NEED TO REMOVE THE URL SUFFIX?
+	_rigRemoveUrlSuffix
+
+	# COMPILE THE SEGMENTS INTO AN ARRAY
+	_rigExplodeSegments
+		
+	# PARSE ANY CUSTOM ROUTING THAT MAY EXIST
+	_rigParseRoutes
+
+end _rigSetRouting
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigScaffoldingRequest
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 27-10-09
+--| Last Mod: 27-10-09
+--| Requires: --
+--|
+--| Summary: Return rigScaffolding request flag.
+--| 
+--| Format:  rigScaffoldingRequest()
+--|
+--| Parameters: --
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigScaffoldingRequest
+	return sScaffoldingRequest
+end rigScaffoldingRequest
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigSetRequest
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 19-06-09
+--| Last Mod: 20-01-10
+--| Requires: _rigValidateRequest(), rigSetController, rigSetHandler
+--|
+--| Summary:  Set the Route.
+--|                    This handler takes an array of URI segments as
+--|                    input, and sets the current controller/method
+--| 
+--| Format:  _rigSetRequest param1
+--|
+--| Parameters: array <pSegmentsArray>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigSetRequest pSegmentsArray
+	put _rigValidateRequest(pSegmentsArray) into tSegmentsArray
+	
+	if (the number of lines in the keys of tSegmentsArray) = 0 then
+		exit _rigSetRequest
+	end if
+
+	rigSetController tSegmentsArray[1]
+
+	if tSegmentsArray[2] <> empty then
+		# A SCAFFOLDING REQUEST. NO FUNNY BUSINESS WITH THE URL
+		if sRoutes[1]["scaffoldingTrigger"] = tSegmentsArray[2] then
+			put TRUE into sScaffoldingRequest
+			delete variable sRoutes[1]["scaffoldingTrigger"]
+		else
+			# A STANDARD METHOD REQUEST
+			rigSetHandler tSegmentsArray[2]
+		end if
+	else
+		# THIS LETS THE "ROUTED" SEGMENT ARRAY IDENTIFY THAT THE DEFAULT
+		# INDEX HANDLER IS BEING USED.
+		put "index" into tSegmentsArray[2]
+		put "index" into gHandler
+	end if
+
+	# UPDATE OUR "ROUTED" SEGMENT ARRAY TO CONTAIN THE SEGMENTS.
+	# NOTE: IF THERE IS NO CUSTOM ROUTING, THIS ARRAY WILL BE
+	# IDENTICAL TO gSegments
+	put tSegmentsArray into gRSegments
+end _rigSetRequest
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigValidateRequest
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 19-06-09
+--| Last Mod: 24-11-12
+--| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler
+--|
+--| Summary: Validates the supplied segments. Attempts to determine the path
+--|          to the controller.
+--| 
+--| Format:  _rigValidateRequest(param1)
+--|
+--| Parameters: array <pSegmentsArray>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function _rigValidateRequest pSegmentsArray
+	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
+	if there is a file (gAPPPATH & "controllers/" & pSegmentsArray[1] & gEXT) then
+		return pSegmentsArray
+	end if
+
+	# IS THE CONTROLLER IN A SUB-FOLDER?
+	if there is a folder (gAPPPATH & "controllers/" & pSegmentsArray[1]) then
+		# SET THE DIRECTORY AND REMOVE IT FROM THE SEGMENT ARRAY
+		put pSegmentsArray[1] into tDirectory
+		rigSetDirectory tDirectory
+		put pSegmentsArray into tSegments
+
+		combine tSegments using "/"
+		set the itemdelimiter to "/"
+		put item 2 to -1 of tSegments into tSegments
+		split tSegments by "/"
+
+		if (the number of lines in the keys of tSegments) > 0 then
+			# DOES THE REQUESTED CONTROLLER EXIST IN THE SUB-FOLDER?
+			if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & tSegments[1] & gEXT) then
+			else
+
+				# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS OTHERWISE SEND THE DEFAULT 404 ERROR PAGE 
+				if gRoute[1]["404Override"] <> empty then
+					put gRoute[1]["404Override"] into t404ErrorSegments
+
+					split t404ErrorSegments by "/"
+
+					rigSetDirectory ""
+
+					return t404ErrorSegments
+				else
+
+					put rigFetchDirectory() & tSegments[1] into tErrMsg
+					rigShow404 tErrMsg
+
+				end if
+
+			end if
+		else
+			rigSetController sDefaultController
+			rigSetHandler "index"
+			# DOES THE DEFAULT CONTROLLER EXIST IN THE SUB-FOLDER?
+			if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & sDefaultController & gEXT) then
+				put "" into sDirectory
+				put "" into tTemp[1]
+				return tTemp
+			end if
+
+		end if
+
+		return tSegments
+	end if
+
+	# THE URI DOES NOT CORRELATE TO A VALID CONTROLLER
+	# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS BEFORE SENDING THE DEFAULT 404 ERROR PAGE
+	if gRoute[1]["404Override"] <> empty then
+		put gRoute[1]["404Override"] into t404ErrorSegments
+
+		split t404ErrorSegments by "/"
+
+		return t404ErrorSegments
+	end if
+
+	# CAN'T FIND THE REQUESTED CONTROLLER...
+	# SEND THE 404 ERROR TEMPLATE TO THE BROWSER
+	if pSegmentsArray[2] is empty then
+		put "index" into tSegmentTwo
+	else
+		put pSegmentsArray[2] into tSegmentTwo
+	end if
+
+	rigShow404 pSegmentsArray[1] & "/" & tSegmentTwo
+
+end _rigValidateRequest
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigParseRoutes
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 19-06-09
+--| Last Mod: 20-01-10
+--| Requires: _rigSetRequest
+--|
+--| Summary:  This handler matches any routes that may exist in
+--|                     the config/routes.lc file against the URI to
+--|                     determine if the controller/method needs to be remapped.
+--| 
+--| Format:  _rigParseRoutes
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command _rigParseRoutes
+	# DO WE EVEN HAVE ANY CUSTOM ROUTING TO DEAL WITH?
+	# THERE IS A DEFAULT  SCAFFOLDING TRIGGER, SO WE'LL LOOK JUST FOR 1
+	if (the number of lines in the keys of sRoutes) = 1 then
+		_rigSetRequest gSegments
+		exit _rigParseRoutes
+	end if
+
+	# TURN THE SEGMENT ARRAY INTO AN URI STRING
+	put gSegments into tUri
+	combine tUri using "/"
+
+	# IS THERE A LITERAL MATCH?  IF SO WE'RE DONE
+	 put the keys of sRoutes into tRoutesKeys
+   	sort lines of tRoutesKeys ascending
+   	replace return with comma in tRoutesKeys
+   
+   	repeat for each item keyNum in tRoutesKeys
+      		if (keyNum is an integer) and (keyNum > 1) then
+
+			if sRoutes[keyNum][tUri] <> "" then
+				put sRoutes[keyNum][tUri] into tNewRoute
+         			split tNewRoute by "/"
+				_rigSetRequest tNewRoute	
+				exit _rigParseRoutes
+			end if
+
+	 	end if
+   	end repeat
+
+	# LOOP THROUGH THE ROUTE ARRAY LOOKING FOR WILD-CARDS
+	repeat for each item keyNum in tRoutesKeys
+      		if (keyNum is an integer) and (keyNum > 1) then
+			repeat for each line tKey in the keys of  sRoutes[keyNum]
+				put sRoutes[keyNum][tKey] into tRouteString
+
+				# CONVERT WILD-CARDS TO REGEX
+				replace ":num" with "[0-9]+" in tKey
+				replace ":any" with ".+" in tKey
+
+				put "^" & tKey & "$" into tRegEx
+
+				# DOES THE REGEX MATCH?
+				if matchChunk(tUri, tRegEx) then
+			 		# DO WE HAVE A BACK-REFERENCE?
+            				if ("$" is in tRouteString) and ("(" is in tKey) then
+                				get matchtext(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
+                        			tReplacement4,tReplacement5,tReplacement6,tReplacement7,tReplacement8,tReplacement9,tReplacement10)
+                
+                				if "$1" is in tRouteString then
+                    				replace "$1" with tReplacement1 in tRouteString
+                				end if
+                				if "$2" is in tRouteString then
+                    				replace "$2" with tReplacement2 in tRouteString
+                				end if
+                				if "$3" is in tRouteString then
+                    				replace "$3" with tReplacement3 in tRouteString
+                				end if
+                				if "$4" is in tRouteString then
+                    				replace "$4" with tReplacement4 in tRouteString
+                				end if
+                				if "$5" is in tRouteString then
+                    				replace "$5" with tReplacement5 in tRouteString
+                				end if
+                				if "$6" is in tRouteString then
+                    				replace "$6" with tReplacement6 in tRouteString
+                				end if
+                				if "$7" is in tRouteString then
+                    				replace "$7" with tReplacement7 in tRouteString
+                				end if
+                				if "$8" is in tRouteString then
+                    				replace "$8" with tReplacement8 in tRouteString
+                				end if
+                				if "$9" is in tRouteString then
+                    				replace "$9" with tReplacement9 in tRouteString
+                				end if
+                				if "$10" is in tRouteString then
+                    				replace "$10" with tReplacement10 in tRouteString
+                				end if
+
+            				end if
+
+					split tRouteString by "/"
+					_rigSetRequest tRouteString
+					exit _rigParseRoutes
+				end if
+			end repeat
+
+		end if
+	end repeat
+
+	# IF WE GOT THIS FAR IT MEANS WE DIDN'T ENCOUNTER A
+	# MATCHING ROUTE SO WE'LL SET THE SITE DEFAULT ROUTE
+	_rigSetRequest gSegments
+end _rigParseRoutes
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetController
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: --
+--|
+--| Summary:  Store controller name in global.
+--| 
+--| Format:  rigSetController param1
+--|
+--| Parameters: string <pController>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetController pController
+	put pController into gController
+end rigSetController
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchController
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 10-10-09
+--| Last Mod: 10-10-09
+--| Requires: --
+--|
+--| Summary: Fetch the current controller.
+--| 
+--| Format:  rigFetchController()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigFetchController
+	return gController
+end rigFetchController
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetHandler
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: --
+--|
+--| Summary:  Set the handler name.
+--| 
+--| Format:  rigSetHandler param1
+--|
+--| Parameters: string <pHandler>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetHandler pHandler
+	put pHandler into gHandler
+end rigSetHandler
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchControllerHandler
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: --
+--|
+--| Summary: Fetch the current controller handler.
+--| 
+--| Format:  rigFetchControllerHandler()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigFetchControllerHandler
+	if gHandler is gController then
+		return "index"
+	else
+		return gHandler
+	end if
+end rigFetchControllerHandler
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigSetDirectory
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: --
+--|
+--| Summary:  Set the directory name.
+--| 
+--| Format:  rigSetDirectory param1
+--|
+--| Parameters: string <pDir>
+--|
+--| Return: empty
+----------------------------------------------------------------------
+
+command rigSetDirectory pDir
+	put pDir & "/" into sDirectory
+end rigSetDirectory
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchDirectory
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-06-09
+--| Last Mod: 19-06-09
+--| Requires: --
+--|
+--| Summary: Fetch the sub-directory (if any) that contains the requested controller library.
+--| 
+--| Format:  rigFetchDirectory()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigFetchDirectory
+	return sDirectory
+end rigFetchDirectory
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigValidateQueryRequest
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 29-06-09
+--| Last Mod: 29-06-09
+--| Requires: --
+--|
+--| Summary: Validates the supplied query request.  Attempts to determine the path to
+--|                    the controller.
+--| 
+--| Format:  _rigValidateQueryRequest(param1, param2)
+--|
+--| Parameters: string <pController>, string <pHandler>
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function _rigValidateQueryRequest pController pHandler
+	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
+	if there is a file (gAPPPATH & "controllers/" & pController & gEXT) then
+		return TRUE
+	else
+		rigSetController sDefaultController
+		rigSetHandler "index"
+		#DOES THE DEFAULT CONTROLLER EXIST IN THE ROOT FOLDER?
+		if there is a file (gAPPPATH & "controllers/" & sDefaultController & gEXT) then
+			return TRUE
+		end if
+	end if
+
+	# CAN'T FIND THE REQUESTED CONTROLLER...
+	put pController & "/" & pHandler into tErrMsg
+	rigShow404 tErrMsg
+
+end _rigValidateQueryRequest
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigParseURL
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 06-07-09
+--| Last Mod: 06-07-09
+--| Requires: --
+--|
+--| Summary: Parse an URL and return its components.
+--| 
+--| Format:  _rigParseURL(param1)
+--|
+--| Parameters: string <pURL>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function _rigParseURL pURL
+    put pURL into tURL
+    ## 
+    # DSNs MUST HAVE THIS PROTOTYPE:
+    # DSN = 'DRIVER://USERNAME:PASSWORD@HOSTNAME/DATABASE';
+    ##
+    
+    # GET SCHEME
+    put offset("://",tURL) into tSchemeOffset
+    
+    if tSchemeOffset is 0 then
+        put "" into tScheme
+    else
+        put char 1 to (tSchemeOffset - 1) of tURL into tScheme
+        
+        # REMOVE SCHEME PART
+        put the number of chars of tScheme into tSchemeLength
+        put tSchemeLength + 3 into tSchemeLength
+        put char (tSchemeLength + 1) to -1 of tURL into tURL
+    end if
+    put tScheme into tURLarray["scheme"]
+    
+    # GET HOSTNAME
+    put offset("@",tURL) into tHostnameOffsetStart
+    put offset("/",tURL) into tHostnameOffsetEnd
+    
+    if tHostnameOffsetStart is 0 or tHostnameOffsetEnd is 0 then
+        put "" into tHostname
+    else
+        put char (tHostnameOffsetStart + 1) to (tHostnameOffsetEnd - 1) of tURL into tHostname
+    end if
+    put tHostname into tURLarray["host"]
+    
+    # GET USER NAME
+    put offset(":",tURL) into tUsernameOffsetEnd
+    
+    if tUsernameOffsetEnd is 0 then
+        put "" into tUsername
+    else
+        put char 1 to (tUsernameOffsetEnd - 1) of tURL into tUsername
+    end if
+    put tUsername into tURLarray["user"]
+    
+    # GET PASSWORD
+    put offset(":",tURL) into tPasswordOffsetStart
+    put offset("@",tURL) into tPasswordOffsetEnd
+    
+    if tPasswordOffsetStart is 0 or tPasswordOffsetEnd is 0 then
+        put "" into tPassword
+    else
+        put char (tPasswordOffsetStart + 1) to (tPasswordOffsetEnd - 1) of tURL into tPassword
+    end if
+    put tPassword into tURLarray["pass"]
+    
+    # GET PATH
+    put offset("/",tURL) into tPathOffsetStart
+    put offset("?",tURL) into tPathOffsetEnd
+    
+    if tPathOffsetStart is 0 or tPathOffsetEnd is 0 then
+        put "" into tPath
+    else
+        put char tPathOffsetStart to (tPathOffsetEnd - 1) of tURL into tPath
+    end if
+    put tPath into tURLarray["path"]
+    
+    # GET QUERY
+    put offset("?",tURL) into tQueryOffset
+    
+    if tQueryOffset is 0 then
+        put "" into tQueryString
+    else
+        put char (tQueryOffset + 1) to -1 of tURL into tQueryString
+        if tQueryString contains "#" then
+            put offset("#",tQueryString) into tFragmentOffset
+            put char 1 to (tFragmentOffset -1) of tQueryString into tQuery
+        end if
+    end if
+    put tQuery into tURLarray["query"]
+    
+    # GET FRAGMENT
+    if tFragmentOffset is 0 then
+        put "" into tFragment
+    else
+        put char (tFragmentOffset + 1) to -1 of tQueryString into tFragment
+    end if
+    put tFragment into tURLarray["fragment"]
+     
+    return tURLarray
+end _rigParseURL
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigParseQueryStr
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 06-07-09
+--| Last Mod: 06-07-09
+--| Requires: --
+--|
+--| Summary: Parse an URL query string and return its components as array.
+--| 
+--| Format:  _rigParseQueryStr(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function _rigParseQueryStr pStr
+    put pStr into tStr
+    split tStr by "&" and "="
+    return tStr
+end _rigParseQueryStr
+
+
+
+
+# CALL INITIAL HANDLERS
+_rigSetRouting
+
+
+
+--| END OF Router.lc
+--| Location:  ./system/libraries/Router.lc
+----------------------------------------------------------------------

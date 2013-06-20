@@ -1,0 +1,361 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# MySQL Result Library
+#
+# This library extends DBresult.
+#
+# @category	Database
+# @author		rabit@revigniter.com
+# @link		  http://revigniter.com/userGuide/database/
+##
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigNumRows
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 20-07-09
+--| Last Mod: 02-10-09
+--| Requires: rigFetchDBdriverSetting()
+--|
+--| Summary: Number of rows in the result set.
+--| 
+--| Format:  rigNumRows(param1)
+--|
+--| Parameters: integer <pResultID>
+--|
+--| Return: integer
+----------------------------------------------------------------------
+
+function rigNumRows pResultID
+	if pResultID is empty then
+		put rigFetchDBdriverSetting("resultid") into tResultID
+	else
+		put pResultID into tResultID
+	end if
+
+	put revNumberOfRecords(tResultID) into tNumRows
+
+	if item 1 of tNumRows is "revdberr" then
+		delete item 1 of tNumRows
+	end if
+
+	return tNumRows
+end rigNumRows
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigNumFields
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 02-10-09
+--| Last Mod: 02-10-09
+--| Requires: rigFetchDBdriverSetting()
+--|
+--| Summary: Number of fields in the result set.
+--| 
+--| Format:  rigNumFields(param1)
+--|
+--| Parameters: integer <pResultID>
+--|
+--| Return: integer
+----------------------------------------------------------------------
+
+function rigNumFields pResultID
+	if pResultID is empty then
+		put rigFetchDBdriverSetting("resultid") into tResultID
+	else
+		put pResultID into tResultID
+	end if
+
+	put revDatabaseColumnCount(tResultID) into tNumFields
+
+	if item 1 of tNumFields is "revdberr" then
+		delete item 1 of tNumRows
+	end if
+
+	return tNumFields
+end rigNumFields
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigListFields
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 22-07-09
+--| Last Mod: 02-10-09
+--| Requires: --
+--|
+--| Summary: Generates an array of column names.
+--| 
+--| Format:  rigListFields(param1)
+--|
+--| Parameters: integer <pResultID>
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigListFields pResultID
+	if pResultID is empty then
+		put rigFetchDBdriverSetting("resultid") into tResultID
+	else
+		put pResultID into tResultID
+	end if
+
+	/*
+	put revDatabaseColumnNames(pResultID) into tFieldNamesString
+	
+	put 0 into tCounter
+	repeat for each item thisItem in tFieldNamesString
+		add 1 to tCounter
+
+		put thisItem into tFieldNamesArray[tCounter]
+	end repeat
+	
+	return tFieldNamesArray
+	*/
+
+	put revDatabaseColumnNames(tResultID) into tFieldNames
+	split tFieldNames using comma
+
+	return tFieldNames
+end rigListFields
+
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigFieldData
+--|
+--| Author: rabit
+--| Version:  1.4
+--| Created: 01-10-09
+--| Last Mod: 03-08-12
+--| Requires: rigFetchDBdriverSetting(), revDatabaseColumnNames(), revDatabaseColumnTypes(),
+--| 					revDatabaseColumnLengths(), rigDbQuery()
+--|
+--| Summary: Generates an array of arrays containing field meta-data 
+--|					(name, type, maxlength, default, primary).
+--| 
+--| Format:  rigFieldData(param1)
+--|
+--| Parameters: string <pTable>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function rigFieldData pTable
+	put rigFetchDBdriverSetting("resultid") into tResultID
+	put revDatabaseColumnNames(tResultID) into tFieldNames
+	put revDatabaseColumnTypes(tResultID) into tTypes
+	put revDatabaseColumnLengths(tResultID) into tMaxLengths
+
+	# GET primary FIELD AND DEFAULT VALUE
+	if pTable is not empty then
+		put rigDbQuery("DESCRIBE" && pTable) into tTableDesc
+
+		repeat with tField = 1 to the number of lines in the keys of tTableDesc["resultarray"]
+			if tTableDesc["resultarray"][tField][4] is "PRI" then
+				put tTableDesc["resultarray"][tField][1] into tPrimaryField
+			end if
+			put tTableDesc["resultarray"][tField][5] & comma after tDefaults
+		end repeat
+
+	else
+		put "" into tPrimaryField
+		put comma into tDefaults
+	end if
+
+	delete byte -1 of  tDefaults
+
+	put 0 into tCounter
+	repeat for each item thisItem in tFieldNames
+		add 1 to tCounter
+
+		put thisItem into tFieldData[tCounter]["name"]
+		put item tCounter of tTypes into tFieldData[tCounter]["type"]
+		put item tCounter of tMaxLengths into tFieldData[tCounter]["maxlength"]
+		put item tCounter of tDefaults into tFieldData[tCounter]["default"]
+		if thisItem is tPrimaryField then
+			put 1 into tFieldData[tCounter]["primarykey"]
+		else
+			put "" into tFieldData[tCounter]["primarykey"]
+		end if
+	end repeat
+
+	return tFieldData
+end rigFieldData
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION _rigDataSeek
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 17-07-09
+--| Last Mod: 12-10-09
+--| Requires: --
+--|
+--| Summary: MOVES THE INTERNAL POINTER TO THE DESIRED OFFSET.  WE CALL
+--|                    THIS INTERNALLY BEFORE FETCHING RESULTS TO MAKE SURE THE
+--|                    RESULT SET STARTS AT ZERO.
+--| 
+--| Format:  _rigDataSeek(param1, param2)
+--|
+--| Parameters: integer <pRecordsetID>, integer <pN> record number
+--|
+--| Return: bool
+----------------------------------------------------------------------
+
+function _rigDataSeek pRecordsetID pN
+	if pN is empty then
+		put 1 into tN
+	else
+		put pN into tN
+	end if
+
+	revMoveToRecord pRecordsetID, tN
+
+	return the result
+end _rigDataSeek
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND _rigFetchAssoc
+--|
+--| Author: Trevor DeVore
+--| Version:  1.1
+--| Created: 17-07-09
+--| Last Mod: 02-10-09
+--| Requires: --
+--|
+--| Summary: Returns the result set as an associative array.
+--| 
+--| Format: _rigFetchAssoc
+--|
+--| Parameters: integer <pRecordSetID>, reference array <@pRefArray>
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+command _rigFetchAssoc pRecordSetID, @pRefArray
+	 put revDatabaseColumnNames(pRecordSetID) into tFieldNames
+
+	if tFieldNames begins with "revdberr," then 
+		put item 2 to -1 of tFieldNames into tError 
+	end if 
+    
+	if tError is "" then 
+		put 0 into tCounter
+		repeat until revQueryIsAtEnd(pRecordSetID) 
+			add 1 to tCounter
+             	
+			put 0 into tFieldCounter
+
+			repeat for each item theField in tFieldNames
+				add 1 to tFieldCounter
+				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][theField]
+				put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter] 
+				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter & "," & theField] 
+			end repeat 
+             
+			revMoveToNextRecord pRecordSetID 
+		end repeat 
+	end if 
+     
+	return tError
+end _rigFetchAssoc
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigDbLastInsertID
+--|
+--| Author: Monte Goulding
+--| Modification: rabit
+--| Version:  1.0
+--| Created: 24-02-12
+--| Last Mod: --
+--| Requires: rigDBQuery(), rigDbRow()
+--|
+--| Summary: Returns the last automatically generated value successfully
+--| 				inserted for an AUTO_INCREMENT column as a result of the most
+--| 				recently executed INSERT statement.
+--| 
+--| Format:	_rigDbLastInsertID(param1)
+--|
+--| Parameters: string <pTable>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function _rigDbLastInsertID pTable
+	put rigDBQuery("SELECT LAST_INSERT_ID()") into tQuery
+	
+	if tQuery["numrows"] = 1 then
+		put rigDbRow(1) into tRow
+		return tRow["LAST_INSERT_ID()"]
+	else
+		return FALSE
+	end if
+end _rigDbLastInsertID
+
+
+
+
+
+
+--| END OF mysqlResult.lc
+--| Location:  ./system/database/drivers/mysql/mysqlResult.lc
+----------------------------------------------------------------------

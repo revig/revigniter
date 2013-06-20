@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Calendaring Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Calendaring Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Calendaring Library</h1>
+
+<p>The Calendar library enables you to dynamically create calendars. Your calendars can be formatted through the use of a calendar
+template, allowing 100% control over every aspect of its design. In addition, you can pass data to your calendar cells.</p>
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Calendar library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Calendar"</code></pre>
+
+
+<h2>Displaying a Calendar</h2>
+
+<p>Here is a very simple example showing how you can display a calendar:</p>
+
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
+put rigCalGenerate() into gData["calendar"]</code></pre>
+
+<p>The above code will generate a calendar for the current month/year based on your server time.
+To show a calendar for a specific month and year you will pass this information to the calendar generating function:</p>
+
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
+put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code></pre>
+
+<p>The above code will generate a calendar showing the month of June in 2006.  The first parameter specifies the year, the second parameter specifies the month.</p>
+
+<h2>Passing Data to your Calendar Cells</h2>
+
+<p>To add data to your calendar cells involves creating an associative array in which the keys correspond to the days
+you wish to populate and the array value contains the data.  The array is passed to the third parameter of the calendar
+generating function.  Consider this example:</p>
+
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
+put "http://example.com/news/article/2006/03/" into tCalData["3"] 
+put "http://example.com/news/article/2006/07/" into tCalData["7"] 
+put "http://example.com/news/article/2006/13/" into tCalData["13"] 
+put "http://example.com/news/article/2006/26/" into tCalData["26"] 
+ 
+put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>, <var>tCalData</var>) into gData["calendar"]</code></pre>
+
+<p>Using the above example, day numbers 3, 7, 13, and 26 will become links pointing to the URLs you've provided.</p>
+
+<p class="important"><strong>Note:</strong> By default it is assumed that your array will contain links.
+In the section that explains the calendar template below you'll see how you can customize
+how data passed to your cells is handled so you can pass different types of information.</p>
+
+
+<h2>Setting Display Preferences</h2>
+
+<p>There are seven preferences you can set to control various aspects of the calendar.  Preferences are set by passing an 
+array of preferences in the second parameter of the loading handler. Here is an example:</p>
+
+
+<code>
+put "monday" into tPrefs["startDay"] 
+put "long" into tPrefs["monthType"] 
+put "short" into tPrefs["dayType"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
+put rigCalGenerate() into gData["calendar"]
+</code></pre>
+
+<p>The above code would start the calendar on monday, use the "long" month heading, and the "short" day names.  More information
+regarding preferences below.</p>
+
+
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>template</strong></td><td class="td">None</td><td class="td">None</td><td class="td">A string containing your calendar template. See the template section below.</td>
+</tr><tr>
+<td class="td"><strong>localTime</strong></td><td class="td">the seconds</td><td class="td">None</td><td class="td">A Unix timestamp corresponding to the current time.</td>
+</tr><tr>
+<td class="td"><strong>startDay</strong></td><td class="td">sunday</td><td class="td">Any week day (sunday, monday, tuesday, etc.)</td><td class="td">Sets the day of the week the calendar should start on.</td>
+</tr><tr>
+<td class="td"><strong>monthType</strong></td><td class="td">long</td><td class="td">long, short</td><td class="td">Determines what version of the month name to use in the header. long = January, short = Jan.</td>
+</tr><tr>
+<td class="td"><strong>dayType</strong></td><td class="td">abr</td><td class="td">long, short, abr</td><td class="td">Determines what version of the weekday names to use in the column headers. long = Sunday, short = Sun, abr = Su.</td>
+</tr><tr>
+<td class="td"><strong>showNextPrev</strong></td><td class="td">FALSE</td><td class="td">TRUE/FALSE</td><td class="td">Determines whether to display links allowing you to toggle to next/previous months. See information on this feature below.</td>
+</tr><tr>
+<td class="td"><strong>nextPrevUrl</strong></td><td class="td">None</td><td class="td">A URL</td><td class="td">Sets the basepath used in the next/previous calendar links.</td>
+</tr>
+</table>
+</div>
+
+
+
+<h2>Showing Next/Previous Month Links</h2>
+
+<p>To allow your calendar to dynamically increment/decrement via the next/previous links requires that you set up your calendar
+code similar to this example:</p>
+
+
+<pre><code>put TRUE into tPrefs["showNextPrev"] 
+put "http://example.com/index.lc/calendar/show/" into tPrefs["nextPrevUrl"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
+put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>) into gData["calendar"]
+</code></pre>
+
+<p>You'll notice a few things about the above example:</p>
+
+<ul>
+<li>You must set the "showNextPrev" to TRUE.</li>
+<li>You must supply the URL to the controller containing your calendar in the "nextPrevUrl" preference.</li>
+<li>You must supply the "year" and "month" to the calendar generating function via the URI segments where they appear (Note:  The calendar library automatically adds the year/month to the base URL you provide.). This works with query string based URLs too.</li>
+</ul>
+
+
+
+<h2>Creating a Calendar Template</h2>
+
+<p>By creating a calendar template you have 100% control over the design of your calendar. Each component of your
+calendar will be placed within a pair of pseudo-variables as shown here:</p>
+
+
+<pre><code>put <dfn>"{table_open}</dfn><var>&lt;table border='0' cellpadding='4' cellspacing='0'></var><dfn>{/table_open}"</dfn> && \ 
+\ 
+<dfn>"{heading_row_start}</dfn><var>&lt;tr></var><dfn>{/heading_row_start}"</dfn> && \ 
+\ 
+<dfn>"{heading_previous_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{previous_url}</kbd><var>'>&amp;lt;&amp;lt;&lt;/a>&lt;/th></var><dfn>{/heading_previous_cell}"</dfn> && \ 
+<dfn>"{heading_title_cell}</dfn><var>&lt;th colspan='</var><kbd>{colspan}</kbd><var>'></var><kbd>{heading}</kbd><var>&lt;/th></var><dfn>{/heading_title_cell}"</dfn> && \ 
+<dfn>"{heading_next_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{next_url}</kbd><var>'>&amp;gt;&amp;gt;&lt;/a>&lt;/th></var><dfn>{/heading_next_cell}"</dfn> && \ 
+\ 
+<dfn>"{heading_row_end}</dfn><var>&lt;/tr></var><dfn>{/heading_row_end}"</dfn> && \ 
+\ 
+<dfn>"{week_row_start}</dfn><var>&lt;tr></var><dfn>{/week_row_start}"</dfn> && \ 
+<dfn>"{week_day_cell}</dfn><var>&lt;td></var><dfn>{week_day}</dfn><var>&lt;/td></var><dfn>{/week_day_cell}"</dfn> && \ 
+<dfn>"{week_row_end}</dfn><var>&lt;/tr></var><dfn>{/week_row_end}"</dfn> && \ 
+\ 
+<dfn>"{cal_row_start}</dfn><var>&lt;tr></var><dfn>{/cal_row_start}"</dfn> && \ 
+<dfn>"{cal_cell_start}</dfn><var>&lt;td></var><dfn>{/cal_cell_start}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_content}</dfn><var>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a></var><dfn>{/cal_cell_content}"</dfn> && \ 
+<dfn>"{cal_cell_content_today}</dfn><var>&lt;div class='highlight'>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a>&lt;/div></var><dfn>{/cal_cell_content_today}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_no_content}</dfn><var></var><kbd>{day}</kbd><var></var><dfn>{/cal_cell_no_content}"</dfn> && \ 
+<dfn>"{cal_cell_no_content_today}</dfn><var>&lt;div class='highlight'></var><kbd>{day}</kbd><var>&lt;/div></var><dfn>{/cal_cell_no_content_today}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_blank}</dfn><var>&amp;nbsp;</var><dfn>{/cal_cell_blank}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_end}</dfn><var>&lt;/td></var><dfn>{/cal_cell_end}"</dfn> && \ 
+<dfn>"{cal_row_end}</dfn><var>&lt;/tr></var><dfn>{/cal_row_end}"</dfn> && \ 
+\ 
+<dfn>"{table_close}</dfn><var>&lt;/table></var><dfn>{/table_close}"</dfn> into tPrefs["template"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
+put rigCalGenerate() into gData["calendar"]</code></pre>
+
+
+<p class="important"><strong>Note:</strong> Don't use quotes in your template. Use apostrophes as shown in the example above. These apostrophes will be converted to quotes while processing the template.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="captcha.html">Captcha Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

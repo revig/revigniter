@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Creating Libraries : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Creating Libraries
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Creating Libraries</h1>
+
+<p>When we use the term "Libraries" we are normally referring to the libraries that are located in the <kbd>libraries</kbd>
+directory and described in the Library Reference of this user guide.  In this case, however, we will instead describe how you can create
+your own libraries within your <dfn>application/libraries</dfn> directory in order to maintain separation between your local resources
+and the global framework resources.</p>
+
+<p>As an added bonus, revIgniter permits your libraries to <kbd>extend</kbd> native libraries if you simply need to add some functionality
+to an existing library. Or you can even replace native libraries just by placing identically named versions in your <dfn>application/libraries</dfn> folder.</p>
+
+<p>In summary:</p>
+
+<ul>
+<li>You can create entirely new libraries.</li>
+<li>You can extend native libraries.</li>
+<li>You can replace native libraries.</li>
+</ul>
+
+<p>The page below explains these concepts in detail.</p>
+
+<p class="important"><strong>Note:</strong> The Database libraries can not be extended with your own libraries. 
+All other libraries are able to be extended.</p>
+
+
+<h2>Storage</h2>
+
+<p>Your libraries should be placed within your <dfn>application/libraries</dfn> folder, as this is where revIgniter will look for them when
+they are initialized.</p>
+
+
+
+<h2>The Library File</h2>
+
+<p>Libraries should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
+
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+# LOGGING
+rigLogMessage "debug", "Your Library Loaded"
+
+# DECLARE LOCAL VARIABLES
+
+
+# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitialLibrarynameConfig
+command rigRunInitialYourlibConfig
+	--Run initial configuration procedures. Don't remove this handler, even if it does nothing.
+end rigRunInitialYourlibConfig
+
+
+command someHandler
+
+end someHandler
+</code></pre>
+
+
+<h2>Using Your Library</h2>
+
+<p>From within any of your <a href="controllers.html">Controller</a> handlers you can initialize your library using the standard:</p>
+
+<pre><code>rigLoaderLoadLibrary "Somelibrary"</code></pre>
+
+<p>Where <em>Somelibrary</em> is the file name, without the ".lc" file extension. You can submit the file name capitalized or lower case.
+revIgniter doesn't care.</p>
+
+<p>Once loaded you can access the handlers of your library.</p>
+
+
+
+<h2>Passing Parameters When Initializing Your Library</h2>
+
+<p>In the library loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your library:</p>
+
+
+<pre><code>put "large" into tParams["type"]
+put "red" into tParams["color"]
+
+rigLoaderLoadLibrary "Somelibrary", <kbd>tParams</kbd>
+</code></pre>
+
+
+<p>If you use this feature you must set up your library to expect data:</p>
+
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+# LOGGING
+rigLogMessage "debug", "Your Library Loaded"
+
+# DECLARE LOCAL VARIABLES
+
+
+# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitialLibrarynameConfig
+command rigRunInitialYourlibConfig pParams
+	--Do something with pParams.
+end rigRunInitialYourlibConfig
+</code></pre>
+
+
+<p class="important">You can also pass parameters stored in a config file. Simply create a config file named identically to the library <kbd>file name</kbd>
+and store it in your <dfn>application/config/</dfn> folder.  Note that if you dynamically pass parameters as described above,
+the config file option will not be available.</p>
+
+
+
+<h2>Replacing Native Libraries with Your Versions</h2>
+
+<p>Simply by naming your library files identically to a native library will cause revIgniter to use it instead of the native one. To use this
+feature you must name the file exactly the same as the native library.  For example, to replace the native <kbd>Email</kbd> library
+you'll create a file named <dfn>application/libraries/Email.lc</dfn>.</p>
+
+
+<p>To load your library you'll see the standard loading handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "<kbd>Email</kbd>"</code></pre>
+
+<p class="important"><strong>Note:</strong> At this time the Database libraries can not be replaced with your own versions.</p>
+
+
+<h2>Extending Native Libraries</h2>
+
+<p>If all you need to do is add some functionality to an existing library - perhaps add a function or two - then
+it's overkill to replace the entire library with your version.  In this case it's better to simply extend the library.
+Extending a library is nearly identical to replacing a library with one exception:</p>
+
+<ul>
+<li>Your new library name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
+</ul>
+
+<p>For example, to extend the native <kbd>Email</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Email.lc</kbd>.</p>
+
+
+
+<h3>Loading Your Sub-library</h3>
+
+<p>To load your sub-library you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
+to load the example above, which extends the Email library, you will use:</p>
+
+<pre><code>rigLoaderLoadLibrary "<kbd>Email</kbd>"</code></pre>
+
+
+
+<h3>Setting Your Own Prefix</h3>
+
+<p>To set your own sub-library prefix, open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
+
+<pre><code>put "MY_" into gConfig["sublibraryPrefix"]</code></pre>
+
+<p>Keep in mind that this setting applies to stacks too.</p>
+
+
+<h2>Custom Library Example Using the Quartam PDF Library</h2>
+
+
+<p>Let's say you want to integrate the Quartam PDF Library 1.1.5 (mind the version number) into revIgniter. This requires the following work steps (Note: This example assumes you name your copy of the server include file "Qrtpdflib.lc"):</p>
+
+
+<p>Step 1: Download the Quartam PDF Library from <a href="http://downloads.quartam.com/qrtpdflib_113_xplatform.zip">http://downloads.quartam.com/qrtpdflib_113_xplatform.zip</a></p>
+
+<p>Step 2: Prepare a copy of the server include file generated by qrtpdflib.livecode. This involves the following:<br />
+Name it "Qrtpdflib.lc".<br />
+Replace "&lt;?rev" at the top of the script with:
+</p>
+
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+</code></pre>
+
+<p>
+Insert the following lines right after the license notes:
+</p>
+
+<pre><code># LOGGING
+rigLogMessage "debug", "Qrtpdflib Library Loaded"
+</code></pre>
+
+
+<p>Insert the following lines right before it says "--> library handlers":</p>
+
+<pre><code>command rigRunInitialQrtpdflibConfig pConfig
+	qrtPDF_ResetAll
+end rigRunInitialQrtpdflibConfig	
+</code></pre>
+
+<p>The parameter is optional and is used to change settings upon loading the library like: rigLoaderLoadLibrary "Qrtpdflib", mySettingsArray<br />
+	<br />
+Comment out the libraryStack handler.<br />
+Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as qrtPDF_ResetAll is called in rigRunInitialQrtpdflibConfig.
+</p>
+
+<p>Step 3: Place the PDF library into system/application/libraries, the dedicated location for your own libraries.</p>
+
+<p>Step 4: Load the PDF library in your controller like: rigLoaderLoadLibrary "Qrtpdflib"</p>
+
+
+<p>Step 5: Testing and error reporting.<br />
+For testing purposes you can use the scripts from <a href="http://quartam.on-rev.com/qrtpdfdemos.irev" target="_blank">http://quartam.on-rev.com/qrtpdfdemos.irev</a></p>
+<p class="important"><strong>Note:</strong> Be careful, comment out the qrtPDF_InitLibrary line in the demo scripts of Quartam.</p>
+
+<p>For error reporting you should use revIgniter's built in mechanism. To write qrtPDFlib  errors to the error log use:</p>
+
+<pre><code>rigLogMessage "error", tError
+</code></pre>
+
+<p>To display qrtPDFlib errors use:</p>
+
+<pre><code>rigLogMessage "error", rigHtmlSpecialChars(tError), TRUE
+</code></pre>
+
+<p>Note: tError is the variable of the try catch statements of the Quartam examples.</p>
+
+<p>Note: To display the result of the demo scripts don't load any view.</p>
+
+<p>To store the result on disk there is a handler called qrtPDF_SaveDocument. After saving the PDF to disk you could attach it to eMails with the help of revIgniter's Email library or what ever you want.</p>
+
+<p>Step 6: Have fun!</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="libraries.html">Using revIgniter Libraries</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Libraries</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

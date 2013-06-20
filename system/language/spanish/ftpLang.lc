@@ -1,0 +1,18 @@
+<?rev
+
+put "No se pudo localizar una identificación de conexión válida. Por favor, asegúrese de que está conectado antes de realizar cualquier rutina con archivos." into gLang["ftp_no_connection"]
+put "No se pudo conectar a su servidor FTP con el nombre de host suministrado." into gLang["ftp_unable_to_connect"]
+put "No se pudo acceder a su servidor FTP. Por favor, compruebe su nombre de usuario y contraseña." into gLang["ftp_unable_to_login"]
+put "No se pudo crear el directorio que ha especificado." into gLang["ftp_unable_to_makdir"]
+put "No se pudo cambiar de directorio." into gLang["ftp_unable_to_changedir"]
+put "No es posible establecer permisos de archivos. Por favor, compruebe la ruta. Nota: Esta función sólo está disponible en PHP 5 o superior." into gLang["ftp_unable_to_chmod"]
+put "No se puede cargar el archivo especificado. Por favor, compruebe la ruta." into gLang["ftp_unable_to_upload"]
+put "No se encuentra el archivo de origen. Por favor, compruebe la ruta." into gLang["ftp_no_source_file"]
+put "No se pudo renombrar el archivo." into gLang["ftp_unable_to_rename"]
+put "No se pudo borrar el archivo." into gLang["ftp_unable_to_delete"]
+put "No es posible mover el archivo. Por favor, asegúrese de que el directorio de destino existe." into gLang["ftp_unable_to_move"]
+
+
+--| END OF ftpLang.lc
+--| Location:  ./system/language/spanish/ftpLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,36 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+#--------------------------------------------------------------------------
+# File and Directory Modes
+#--------------------------------------------------------------------------
+#
+# These prefs are used when checking and setting modes when working
+# with the file system.  The defaults are fine on servers with proper
+# security, but you may wish (or even need) to change the values in
+# certain environments Octal values should
+# always be used to set the mode correctly.
+#
+##
+
+	constant FILE_READ_MODE = "644"
+	constant FILE_WRITE_MODE = "666"
+	constant DIR_READ_MODE = "755"
+	constant DIR_WRITE_MODE = "777"
+
+	constant FILE_READ_UMASK = "133"
+	constant FILE_WRITE_UMASK = "111"
+	constant DIR_READ_UMASK = "022"
+	constant DIR_WRITE_UMASK = "000"
+
+
+--| END OF constants.lc
+--| Location: ./system/application/config/constants.lc
+----------------------------------------------------------------------

@@ -1,0 +1,158 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# RevIgniter Query Key Value Pairs Plugin
+#
+# @package		revIgniter
+# @subpackage	Plugins
+# @category	  Plugins
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/plugins/queryvalues_plugin.html
+##
+
+## ------------------------------------------------------------------------
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigQueryValues
+--|
+--| Author: rabit
+--| Version:  1.4
+--| Created: 25-07-09
+--| Last Mod: 03-11-12
+--| Requires: rigIsNumberedArray()
+--|
+--| Summary: Return values or key value pairs of database query result.
+--| 
+--| Format:  rigQueryValues(param1, param2, param3, param4)
+--|
+--| Parameters: array <pResult> the query result, string <pKeyValueDelim> key value delimiter,
+--|                       string <pRecordDelim> record delimiter, array <pFieldnames> the table field names
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigQueryValues pResult pKeyValueDelim pRecordDelim pFieldnames
+	if pResult is not an array then
+		return FALSE
+	else
+		put pResult into tResult
+	end if
+
+	if pKeyValueDelim is "" then
+		put " => " into tKeyValueDelim
+	else
+		put pKeyValueDelim into tKeyValueDelim
+	end if
+
+	if pRecordDelim is "" then
+		put ", " into tRecordDelim
+	else
+		put pRecordDelim into tRecordDelim
+	end if
+
+	# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+	put TRUE into tConsecutive
+	put rigIsNumberedArray(pResult, tConsecutive) into tArrayInfo
+
+	put item 1 of tArrayInfo into tNumbered
+
+	if tNumbered is TRUE then
+		# USE VALUE OF FIRST LINE OF ARRAY KEYS AS STARTING NUMBER
+		put item 2 of tArrayInfo into tCounter
+	else
+		put 1 into tCounter
+	end if
+
+	repeat for each key tRecord in tResult
+		if tRecord is an integer then
+			if tNumbered is TRUE then
+				put tCounter into tRecord
+			end if
+
+			put tResult[tRecord] into tRow
+
+			put empty into tRowData
+
+			# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
+			put TRUE into tRowConsecutive
+			put rigIsNumberedArray(tRow, tRowConsecutive) into tRowArrayInfo
+
+			put item 1 of tRowArrayInfo into tRowNumbered
+
+			if tRowNumbered is TRUE then
+				# USE VALUE OF FIRST LINE OF ARRAY KEYS AS STARTING NUMBER
+				put item 2 of tRowArrayInfo into tRowCounter
+			else
+				put 1 into tRowCounter
+			end if
+
+			repeat for each key tKey in tRow
+				if tRowNumbered is TRUE then
+					put tRowCounter into tKey
+				end if
+		
+				if tKeyValueDelim is "<>" then
+					# DON'T WRITE KEYS
+					put tRow[tKey] & tRecordDelim after tRowData
+				else
+
+					if pFieldnames is an array then
+						put pFieldnames[tKey] & tKeyValueDelim & tRow[tKey] & tRecordDelim after tRowData
+					else
+						put tKey & tKeyValueDelim & tRow[tKey] & tRecordDelim after tRowData
+					end if
+				end if
+
+				add 1 to tRowCounter
+	
+			end repeat
+			delete char -2  to -1 of tRowData
+
+			put tRowData & "<br />" & return after tResultData
+
+			add 1 to tCounter
+
+		end if
+	end repeat
+
+	delete char -7  to -1 of tResultData
+
+	return tResultData
+end rigQueryValues
+
+
+
+
+
+
+
+
+
+
+--| END OF queryValuesPi.lc
+--| Location:  ./system/plugins/queryValuesPi.lc
+----------------------------------------------------------------------

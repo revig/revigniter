@@ -1,0 +1,18 @@
+<?rev
+
+put "Impossible de d&eacute;terminer une connexion valable. Veuillez vous assurer que vous &ecirc;tes connect&eacute;(e) avant d'ex&eacute;cuter une t&acirc;che sur un fichier." into gLang["ftp_no_connection"]
+put "Connexion au serveur FTP impossible avec le nom d'h&ocirc;te (hostname) sp&eacute;cifi&eacute;." into gLang["ftp_unable_to_connect"]
+put "Connexion au serveur FTP impossible. Veuillez v&eacute;rifier vos identifiants de connexion." into gLang["ftp_unable_to_login"]
+put "Impossible de cr&eacute;er le dossier sp&eacute;cifi&eacute;." into gLang["ftp_unable_to_makdir"]
+put "Impossible de changer de r&eacute;pertoire." into gLang["ftp_unable_to_changedir"]
+put "Impossible de changer les permissions du fichier. Veuillez v&eacute;rifier le chemin d'acc&egrave;s. Note: cette fonctionnalit&eacute; n'est disponible qu'avez PHP en version 5 ou sup&eacute;rieure." into gLang["ftp_unable_to_chmod"]
+put "Impossible d'envoyer le fichier sp&eacute;cifi&eacute;. Veuillez v&eacute;rifier le chemin d'acc&egrave;s." into gLang["ftp_unable_to_upload"]
+put "Impossible de localiser le fichier source. Veuillez v&eacute;rifier le chemin d'acc&egrave;s." into gLang["ftp_no_source_file"]
+put "Impossible de renommer le fichier." into gLang["ftp_unable_to_rename"]
+put "Impossible de supprimer le fichier." into gLang["ftp_unable_to_delete"]
+put "Impossible de d&eacute;placer le fichier. Veuillez vous assurer que le r&eacute;pertoire de destination existe." into gLang["ftp_unable_to_move"]
+
+
+--| END OF ftpLang.lc
+--| Location:  ./system/language/french/ftpLang.lc
+----------------------------------------------------------------------

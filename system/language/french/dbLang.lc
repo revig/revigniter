@@ -1,0 +1,30 @@
+<?rev
+
+put "Impossible de d&eacute;terminer les param&egrave;tres de la base de donn&eacute;es avec l'instruction de connection donn&eacute;e." into gLang["db_invalid_connection_str"]
+put "Impossible de se connecter &agrave; la base de donn&eacute;es en utilisant les param&egrave;tres fournis." into gLang["db_unable_to_connect"]
+put "Impossible de s&eacute;lectionner la base de donn&eacute;es demand&eacute;e : %s" into gLang["db_unable_to_select"]
+put "Impossible de cr&eacute;er la base de donn&eacute;es demand&eacute;e: %s" into gLang["db_unable_to_create"]
+put "La requ&ecirc;te que vous avez soumise n'est pas valide." into gLang["db_invalid_query"]
+put "Vous devez sp&eacute;cifier une table &agrave; utiliser pour effectuer votre requ&ecirc;te." into gLang["db_must_set_table"]
+put "Vous devez sp&eacute;cifier la nom de la base de donn&eacutes dans votre fichier de configuration database." into gLang["db_must_set_database"]
+put "Vous devez utiliser la m&eacute;thode" && quote & "rigDbValuesSet()" & quote && "pour mettre &agrave; jour une entr&eacute;e." into gLang["db_must_use_set"]
+put "Il faut obligatoirement sp&eacute;cifier le crit&egrave;re de s&eacute;lection" && quote & "WHERE" & quote && "pour mettre &agrave; jour une entr&eacute;e." into gLang["db_must_use_where"]
+put "Il faut obligatoirement sp&eacute;cifier le crit&egrave;re de s&eacute;lection" && quote & "WHERE" & quote && "ou" && quote & "LIKE" & quote && "pour supprimer une entr&eacute;e." into gLang["db_del_must_use_where"]
+put "R&eacute;cup&eacute;rer des champs requiert le nom de la table en param&egrave;tre." into gLang["db_field_param_missing"]
+put "Cette fonctionnalit&eacute; n'est pas disponible pour la base de donn&eacute;es que vous utilisez." into gLang["db_unsupported_function"]
+put "Erreur de transaction: Rollback effectu&eacute;" into gLang["db_transaction_failure"]
+put "Impossible de supprimer la base de donn&eacute;es sp&eacute;cifi&eacute;e." into gLang["db_unable_to_drop"]
+put "Fonctionnalit&eacute; non support&eacute;e sur le syst&egrave;me de gestion de base de donn&eacute;es que vous utilisez." into gLang["db_unsuported_feature"]
+put "Le format de compression que vous avez choisi n'est pas support&eacute; par votre serveur." into gLang["db_unsuported_compression"]
+put "Ecriture des donn&eacute;es impossible dans le fichier dont vous avez indiqu&eacute; le chemin d'acc&egrave;s." into gLang["db_filepath_error"]
+put "Le dossier de cache que vous avez indiqu&eacute; n'est pas valide ou n'est pas accessible en &eacute;criture." into gLang["db_invalid_cache_path"]
+put "Un nom de table est n&eacute;cessaire &agrave; cette op&eacute;ration." into gLang["db_table_name_required"]
+put "Un nom de champ est n&eacute;cessaire &agrave; cette op&eacute;ration." into gLang["db_column_name_required"]
+put "Une d&eacute;finition de champ est n&eacute;cessaire &agrave; cette op&eacute;ration." into gLang["db_column_definition_required"]
+put "Impossible de d&eacute;finir le charset de connexion client : %s" into gLang["db_unable_to_set_charset"]
+put "Une erreur de base de donn&eacute;es s'est produite." into gLang["db_error_heading"]
+
+
+--| END OF dbLang.lc
+--| Location:  ./system/language/french/dbLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,18 @@
+<?rev
+
+put "Es konnte keine g&uuml;ltige Verbindungs-ID gefunden werden. Stellen Sie sicher, dass eine Verbindung besteht, bevor Dateioperationen ausgef&uuml;hrt werden."" into gLang["ftp_no_connection"]
+put "Es konnte keine Verbindung zum angegebenen Server hergestellt werden." into gLang["ftp_unable_to_connect"]
+put "Es konnte keine Verbindung zum angegebenen Server hergestellt werden. Bitte pr&uuml;fen Sie Benutzernamen und Passwort." into gLang["ftp_unable_to_login"]
+put "Das Verzeichnis konnte nicht erstellt werden." into gLang["ftp_unable_to_makdir"]
+put "Es konnte nicht zu dem Verzeichnis gewechselt werden." into gLang["ftp_unable_to_changedir"]
+put "Die Dateirechte konnten nicht gesetzt werden. Bitte pr&uuml;fen Sie den Pfad." into gLang["ftp_unable_to_chmod"]
+put "Die Datei konnte nicht hochgeladen werden. Bitte pr&uuml;fen Sie den Pfad." into gLang["ftp_unable_to_upload"]
+put "Die Quelldatei konnte nicht gefunden werden. Bitte pr&uuml;fen Sie den Pfad." into gLang["ftp_no_source_file"]
+put "Die Datei konnte nicht umbenannt werden." into gLang["ftp_unable_to_rename"]
+put "Die Datei konnte nicht gel&ouml;scht werden." into gLang["ftp_unable_to_delete"]
+put "Die Datei konnte nicht verschoben werden. Bitte stellen Sie sicher, dass das Zielverzeichnis existiert." into gLang["ftp_unable_to_move"]
+
+
+--| END OF ftpLang.lc
+--| Location:  ./system/language/german/ftpLang.lc
+----------------------------------------------------------------------

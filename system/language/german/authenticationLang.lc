@@ -1,0 +1,42 @@
+<?rev
+
+	put "Das Benutzerkonto wurde erfolgreich erstellt." into gLang["accountCreationSuccess"]
+	put "Das Benutzerkonto konnte nicht erstellt werden." into gLang["accountCreationUnsuccessful"]
+	put "Die E-Mail-Adresse ist ungültig oder wird bereits verwendet." into gLang["accountCreationDuplicateInvalidemail"]
+	put "Der Benutzername ist ungültig oder wird bereits verwendet." into gLang["accountCreationDuplicateInvalidusername"]
+	
+	put "Das Passwort wurde erfolgreich geändert." into gLang["passwordChangeSuccessful"]
+	put "Das Passwort konnte nicht geändert werden." into gLang["passwordChangeUnsuccessful"]
+	put "Es wurde eine E-Mail zum Zurücksetzen des Passwortes versandt." into gLang["forgotPasswordSuccessful"]
+	put "Das Passwort konnte nicht zurückgesetzt werden." into gLang["forgotPasswordUnsuccessful"]
+	
+	put "Das Benutzerkonto wurde aktiviert." into gLang["activateSuccessful"]
+	put "Das Benutzerkonto konnte nicht aktiviert werden." into gLang["activateUnsuccessful"]
+	put "Das Benutzerkonto wurde deaktiviert." into gLang["deactivateSuccessful"]
+	put "Das Benutzerkonto konnte nicht deaktiviert werden." into gLang["deactivateUnsuccessful"]
+	put "Es wurde eine E-Mail zum Aktivieren des Benutzerkontos versandt." into gLang["activationEmailSuccessful"]
+	put "Die Aktivierungs-E-Mail konnte nicht versandt werden." into gLang["activationEmailUnsuccessful"]
+	
+	put "Login erfolgreich." into gLang["loginSuccessful"]
+	put "Login fehlgeschlagen." into gLang["loginUnsuccessful"]
+	put "Benutzerkonto is nicht aktiv." into gLang["loginUnsuccessfulNotActive"]
+	put "Logout erfolgreich." into gLang["logoutSuccessful"]
+	
+	put "Aktivierung Ihres Benutzerkontos" into gLang["emailActivationSubject"]
+	put "Neues Passwort" into gLang["emailForgottenPasswordSubject"]
+	
+	put "Die Konto-Informationen wurden erfolgreich geändert." into gLang["updateSuccessful"]
+	put "Die Konto-Informationen konnten nicht geändert werden." into gLang["updateUnsuccessful"]
+	put "Das Benutzerkonto wurde gelöscht." into gLang["deleteSuccessful"]
+	put "Das Benutzerkonto konnte nicht gelöscht werden." into gLang["deleteUnsuccessful"]
+	
+	put "Passwort zurücksetzen" into gLang["resetPasswordLinkText"]
+	put "Benutzerkonto aktivieren" into gLang["activationLinkText"]
+
+	
+
+
+
+--| END OF authenticationLang.lc
+--| Location:  ./system/language/english/authenticationLang.lc
+----------------------------------------------------------------------

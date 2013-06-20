@@ -1,0 +1,38 @@
+<p>[[gData["viewAnchor"] ]]</p>
+
+
+<? return rigFormOpen(gData["action"]) ?>
+
+<table border="0" cellpadding="3" cellspacing="1">
+
+	<?
+	put 0 into tCounter
+	 repeat for each key tKey in gData["fields"]
+		add 1 to tCounter
+
+		put rigFormPrep(gData["queryResult"][tCounter]) into tValue
+
+		put "<tr>" & return & "<td>" & gData["fields"][tCounter]["name"] & "</td>" & return after tFormData
+		
+		if gData["fields"][tCounter]["primarykey"] = 1 then
+			put "<td><input class=" & quote & "input" & quote && "value=" & quote & tValue & quote && "name=" & quote & gData["fields"][tCounter]["name"] & quote && "size=" & quote & "60" & quote && "readonly=" & quote & "readonly" & quote && "disabled=" & quote & "disabled" & quote && "/></td>" & return & "</tr>" & return after tFormData
+			
+		else
+
+			if gData["fields"][tCounter]["type"] is "blob" then
+				put "<td><textarea class=" & quote & "textarea" & quote && "name=" & quote & gData["fields"][tCounter]["name"] & quote && "cols=" & quote & "60" & quote &&  "rows=" & quote & "10" & quote & ">" & tValue & "</textarea></td>" & return after tFormData
+			else
+				put "<td><input class=" & quote & "input" & quote && "value=" & quote & tValue & quote && "name=" & quote & gData["fields"][tCounter]["name"] & quote && "size=" & quote & "60" & quote && "/></td>" & return & "</tr>" & return after tFormData
+			end if
+				
+		end if
+		
+	end repeat
+
+	return tFormData
+	?>
+</table>
+
+<input type="submit" class="submit" value="Update" />
+
+</form>

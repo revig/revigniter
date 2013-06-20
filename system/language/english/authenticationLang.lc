@@ -1,0 +1,42 @@
+<?rev
+
+	put "Account successfully created." into gLang["accountCreationSuccess"]
+	put "Unable to create account." into gLang["accountCreationUnsuccessful"]
+	put "Email already used or invalid." into gLang["accountCreationDuplicateInvalidemail"]
+	put "Username already used or invalid." into gLang["accountCreationDuplicateInvalidusername"]
+	
+	put "Password successfully changed." into gLang["passwordChangeSuccessful"]
+	put "Unable to Change Password." into gLang["passwordChangeUnsuccessful"]
+	put "Password reset email sent." into gLang["forgotPasswordSuccessful"]
+	put "Unable to reset password." into gLang["forgotPasswordUnsuccessful"]
+	
+	put "Account activated." into gLang["activateSuccessful"]
+	put "Unable to activate account." into gLang["activateUnsuccessful"]
+	put "Account de-activated." into gLang["deactivateSuccessful"]
+	put "Unable to de-activate account." into gLang["deactivateUnsuccessful"]
+	put "Activation email sent." into gLang["activationEmailSuccessful"]
+	put "Unable to send activation email." into gLang["activationEmailUnsuccessful"]
+	
+	put "Logged in successfully." into gLang["loginSuccessful"]
+	put "Incorrect login." into gLang["loginUnsuccessful"]
+	put "Account is inactive." into gLang["loginUnsuccessfulNotActive"]
+	put "Logged out successfully." into gLang["logoutSuccessful"]
+	
+	put "Account Activation" into gLang["emailActivationSubject"]
+	put "Forgotten password verification." into gLang["emailForgottenPasswordSubject"]
+	
+	put "Account information successfully updated." into gLang["updateSuccessful"]
+	put "Unable to update account information." into gLang["updateUnsuccessful"]
+	put "User deleted." into gLang["deleteSuccessful"]
+	put "Unable to delete user." into gLang["deleteUnsuccessful"]
+	
+	put "Reset Your Password" into gLang["resetPasswordLinkText"]
+	put "Activate Your Account" into gLang["activationLinkText"]
+	
+
+
+
+
+--| END OF authenticationLang.lc
+--| Location:  ./system/language/english/authenticationLang.lc
+----------------------------------------------------------------------

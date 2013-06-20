@@ -1,0 +1,183 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Language Library
+#
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Language
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/libraries/language.html
+##
+
+
+# LOGGING
+rigLogMessage "debug", "Language Library Loaded"
+
+
+# DECLARE LANGUAGE VARIABLE
+global gLang
+
+# DECLARE LANGUAGE FILE IS LOADED ARRAY VARIABLE
+local sLangIsLoaded
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLangLoadLang
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 02-07-09
+--| Last Mod: 11-11-09
+--| Requires: rigShowError, rigLogMessage
+--|
+--| Summary: Load a language file.
+--| 
+--| Format:  rigLangLoadLang(param1, param2, param3)
+--|
+--| Parameters: mixed <pLangFiles> the name of the language file to be loaded (can be an array), string <pIdiom> the language , bool <pReturn>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigLangLoadLang pLangFiles pIdiom pReturn
+	if sLangIsLoaded is an array then
+		put the number of lines in the keys of sLangIsLoaded into tLangIsLoadedKeyNum
+	else
+		put 0 into tLangIsLoadedKeyNum
+	end if
+
+	put pLangFiles into tLangFiles
+	if tLangFiles is not an array then
+		put tLangFiles into tLangFiles[1]
+	end if
+
+	repeat for each element tLangFile in tLangFiles
+		put toLower(tLangFile) into tLangFile
+		replace "Lang" with "" in tLangFile
+		replace gEXT with "" in tLangFile
+		put tLangFile & "Lang" into tLangFile
+
+		# IS THE LANG FILE ALREADY LOADED
+		if sLangIsLoaded is an array then
+			put FALSE into tLangFileIsInArray
+			repeat for each element thisElement in sLangIsLoaded
+				if thisElement is tLangFile then
+					put TRUE into tLangFileIsInArray
+					exit repeat
+				end if
+			end repeat
+			if tLangFileIsInArray is TRUE then
+				exit rigLangLoadLang
+			end if
+		end if
+
+		# CHECK IDIOM
+		if pIdiom is empty then
+			put rigFetchConfigItem("language") into tDefaultLang
+			if tDefaultLang is empty then
+				put "english" into tDefaultLang
+			end if
+			put tDefaultLang into tIdiom
+		else
+			put pIdiom into tIdiom
+		end if
+
+		put gAPPPATH & "language/" & tIdiom & "/" & tLangFile & gEXT into tExtLang
+		put gBASEPATH & "language/" & tIdiom & "/" & tLangFile & gEXT into tSysLang
+
+		# DETERMINE WHERE THE LANGUAGE FILE IS AND LOAD IT
+		if there is a file tExtLang then
+			include tExtLang
+		else if there is a file tSysLang then
+			include tSysLang
+		else
+			rigShowError "Unable to load the requested language file: language/" & tIdiom & "/" & tLangFile
+		end if
+	end repeat
+
+	if the number of lines in the keys of gLang is 0 then
+		rigLogMessage "error", "Language file contains no data: language/" & tIdiom & "/" & tLangFile
+		exit rigLangLoadLang
+	end if
+
+	if pReturn is TRUE then
+		return gLang
+	end if
+
+	add 1 to tLangIsLoadedKeyNum
+	put tLangFile into sLangIsLoaded[tLangIsLoadedKeyNum]
+
+	rigLogMessage "debug", "Language file loaded: language/" & tIdiom & "/" & tLangFile
+	return TRUE
+
+end rigLangLoadLang
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLangLangLine
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 02-07-09
+--| Last Mod: 14-08-09
+--| Requires: --
+--|
+--| Summary: Fetch a single line of text from the language array.
+--| 
+--| Format:  rigLangLangLine(param1)
+--|
+--| Parameters: string <pLine> the language line
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigLangLangLine pLine
+	if pLine is empty or gLang[pLine] is empty then
+		put FALSE into tLine
+		return tLine
+	else
+		put gLang[pLine] into tLine
+	end if
+
+	return tLine
+end rigLangLangLine
+
+
+
+
+
+
+--| END OF Language.lc
+--| Location:  ./system/libraries/Language.lc
+----------------------------------------------------------------------

@@ -1,0 +1,18 @@
+<?rev
+
+put "View Records" into gLang["scaff_view_records"]
+put "Create New Record" into gLang["scaff_create_record"]
+put "Add Data" into gLang["scaff_add"]
+put "View Data" into gLang["scaff_view"]
+put "Edit" into gLang["scaff_edit"]
+put "Delete" into gLang["scaff_delete"]
+put "View All" into gLang["scaff_view_all"]
+put "Yes" into gLang["scaff_yes"]
+put "No" into gLang["scaff_no"]
+put "No data exists for this table yet." into gLang["scaff_no_data"]
+put "Are you sure you want to delete the following row:" into gLang["scaff_del_confirm"]
+
+
+--| END OF scaffoldingLang.lc
+--| Location:  ./system/language/english/scaffoldingLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Using Stacks : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Using Stacks
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Using Stacks</h1>
+
+<p>In order to maintain separation between your local resources and the global framework resources there are two storage locations for stack files.</p>
+
+<p>This concept permits your stacks to <kbd>extend</kbd> native stacks in system/stacks if you simply need to add some functionality to an existing stack. Or you can even replace native stacks just by placing identically named versions in your <dfn>application/stacks</dfn> folder.</p>
+
+<p>In summary:</p>
+
+<ul>
+<li>You can create entirely new stacks.</li>
+<li>You can extend native stacks.</li>
+<li>You can replace native stacks.</li>
+</ul>
+
+<p>The page below explains the details.</p>
+
+
+<h2>Storage</h2>
+
+<p>Your stacks should be placed within your <dfn>application/stacks</dfn> folder, as this is where revIgniter will look for them when they are initialized. revIgniter stacks are located at system/stacks.</p>
+
+
+
+<h2>The Stack File</h2>
+
+<p>For debugging purposes and to set up the stack to expect data your stack should have this basic prototype:</p>
+
+<p>Stack script:</p>
+
+<pre><code># LOGGING
+on libraryStack
+	rigLogMessage "debug", "Stack" &amp;&amp; the short name of me &amp;&amp; "Loaded"
+end libraryStack
+
+# RUN INITIAL CONFIGURATION PROCEDURES.
+command rigRunInitial<kbd>&lt;StacknameWithoutExtension></kbd>StackConfig pConfig
+	if pConfig is not an array then
+		if pConfig is not empty then
+			split pConfig using numtochar(1) and numtochar(2)
+		end if
+	end if
+
+	if pConfig is an array then
+		--Do something with pConfig.
+	end if
+end rigRunInitial<kbd>&lt;StacknameWithoutExtension></kbd>StackConfig
+</code></pre>
+
+<p>Replace "&lt;StacknameWithoutExtension>" with the file name of your stack. Don't use the stack name.</p>
+
+<p>Card script:</p>
+
+<pre><code># LOGGING
+on openStack
+	if the environment &lt;> "development" then
+		rigLogMessage "debug", "Stack" &amp;&amp; the short name of this stack &amp;&amp; "Loaded"
+	end if
+end openStack
+</code></pre>
+
+<p class="important"><strong>Note:</strong>&nbsp; If you use LiveCode version 5.5 or later you need to save your stack files in legacy format (2.7).</p>
+
+
+<h2>Using Your Stack</h2>
+
+<p>From within any of your <a href="controllers.html">Controller</a> handlers you can initialize your stack using the standard:</p>
+
+<pre><code>rigLoadStack "Somestack"</code></pre>
+
+<p>Where <em>Somestack</em> is the file name, without the ".rev" / ".livecode" file extension. You can submit the file name capitalized or lower case.
+revIgniter doesn't care.</p>
+
+<p>Once loaded you can access the handlers of your stack.</p>
+
+
+
+<h2>Passing Parameters When Initializing Your Stack</h2>
+
+<p>In the stack loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your stack:</p>
+
+
+<pre><code>put "large" into tParams["type"]
+put "red" into tParams["color"]
+
+rigLoadStack "Somestack", <kbd>tParams</kbd>
+</code></pre>
+
+
+<p class="important"><strong>Note:</strong>&nbsp; You can also pass parameters stored in a config file. Simply create a config file named identically to the stack <kbd>file name</kbd>, add the file extension revIgniter uses (like Somestack.lc) and store it in your <dfn>application/config/</dfn> folder.  Note that if you dynamically pass parameters as described above, the config file option will not be available.</p>
+
+
+
+<h2>Replacing Native Stacks with Your Versions</h2>
+
+<p>Simply by naming your stack files identically to a native stack will cause revIgniter to use it instead of the native one. To use this
+feature you must name the file exactly the same as the native stack.</dfn>.</p>
+
+
+<p>To load your stack you'll see the standard loading handler:</p>
+
+<pre><code>rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
+
+
+<h2>Extending Native Stacks</h2>
+
+<p>If all you need to do is add some functionality to an existing stack - perhaps add a function or two - then
+it's overkill to replace the entire stack with your version.  In this case it's better to simply extend the stack.
+Extending a stack is nearly identical to replacing a stack with one exception:</p>
+
+<ul>
+<li>Your new stack name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
+</ul>
+
+<p>For example, to extend the native <kbd>Nativestack</kbd> stack you'll create a file named <dfn>application/stacks/</dfn><kbd>MY_Nativestack.livecode</kbd>.</p>
+
+
+
+<h3>Loading Your Sub-stack</h3>
+
+<p>To load your sub-stack you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
+to load the example above, which extends the Nativestack stack, you will use:</p>
+
+<pre><code>rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
+
+
+
+<h3>Setting Your Own Prefix</h3>
+
+<p>To set your own sub-stack prefix, open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
+
+<pre><code>put "MY_" into gConfig["sublibraryPrefix"]</code></pre>
+
+<p>Keep in mind that this setting applies to libraries too.</p>
+
+
+<h2>Your Stack and the Home Stack</h2>
+
+<p>To tell the engine where your stack script should sit in relation to the home stack you can use the optional third parameter. There are two options "front" and "behind". If you omit this parameter it is set to "behind".</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; If you set the third parameter to "front" you need to make sure that the stack's name property is identical to the file name of the stack.</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; It seems that "go stack" is currently not working properly in the server environment. As a workaround "start using" followed by "set the defaultStack" is used if you set this parameter to "front". Unfortunately this means that in this case the stack does not receive any open and preOpen messages.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Libraries</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="hooks.html">Hooks - Extending the Core</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

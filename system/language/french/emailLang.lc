@@ -1,0 +1,25 @@
+<?rev
+
+put "La m&eacute;thode de validation d'email n'accepte que les tableaux associatifs (array)." into gLang["email_must_be_array"]
+put "Adresse email invalide : %s" into gLang["email_invalid_address"]
+put "Impossible de localiser le fichier joint suivant : %s" into gLang["email_attachment_missing"]
+put "Impossible d'ouvrir ce fichier joint : %s" into gLang["email_attachment_unreadable"]
+put "Vous devez sp&eacute;cifier des destinataires : To, Cc, ou Bcc." into gLang["email_no_recipients"]
+put "Impossible d'envoyer des emails avec le shell command" && quote & "mail." & quote && "Votre serveur n'est peut-&ecirc;tre pas configur&eacute; pour utiliser cette m&eacute;thode." into gLang["email_send_failure_mail"]
+put "Impossible d'envoyer des emails avec le shell command" && quote & "sendmail." & quote && "Votre serveur n'est peut-&ecirc;tre pas configur&eacute; pour utiliser cette m&eacute;thode." into gLang["email_send_failure_sendmail"]
+put "Impossible d'envoyer des emails avec SMTP. Votre serveur n'est peut-&ecirc;tre pas configur&eacute; pour utiliser cette m&eacute;thode." into gLang["email_send_failure_smtp"]
+put "Votre message a bien &eacute;t&eacute; exp&eacute;di&eacute; via le protocole suivant : %s" into gLang["email_sent"]
+put "Impossible d'ouvrir un socket avec Sendmail. Veuillez v&eacute;rifier votre configuration." into gLang["email_no_socket"]
+put "Vous n'avez pas sp&eacute;cific&eacute; d'h&ocirc;te SMTP." into gLang["email_no_hostname"]
+put "L'erreur SMTP suivante s'est produite : %s" into gLang["email_smtp_error"]
+put "Erreur : Vous devez sp&eacute;cifier un nom d'utilisateur et un mot de passe SMTP." into gLang["email_no_smtp_unpw"]
+put "Echec lors de l'envoi de la commande AUTH LOGIN. Erreur : %s" into gLang["email_failed_smtp_login"]
+put "Impossible d'identifier le nom d'utilisateur. Erreur : %s" into gLang["email_smtp_auth_un"]
+put "Impossible d'identifier le mot de passe. Erreur : %s" into gLang["email_smtp_auth_pw"]
+put "Impossible d'envoyer les donn&eacute;es : %s" into gLang["email_smtp_data_failure"]
+put "Code d'&eacute;tat de sortie : %s" into gLang["email_exit_status"]
+
+
+--| END OF emailLang.lc
+--| Location:  ./system/language/french/emailLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>String Helper : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+String Helper
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>String Helper</h1>
+
+<p>The String Helper file contains handlers that assist in working with strings.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code>rigLoadHelper "string"</code></pre>
+
+<p>The following handlers are available:</p>
+
+<h2>rigRandomString()</h2>
+
+<p>Generates a random string based on the type and length you specify.  Useful for creating passwords or generating random hashes.</p>
+
+<p>The first parameter specifies the type of string, the second parameter specifies the length.  The following choices are available:</p>
+
+
+<ul>
+<li><strong>alnum</strong>:&nbsp; Alpha-numeric string with lower and uppercase characters.</li>
+<li><strong>numeric</strong>:&nbsp; Numeric string.</li>
+<li><strong>nozero</strong>:&nbsp; Numeric string with no zeros.</li>
+<li><strong>unique</strong>:&nbsp; Encrypted with md5 and uniqid(). Note: The length parameter is not available for this type.
+Returns a fixed length 32 character string.</li>
+</ul>
+
+<p>Usage example:</p>
+
+<pre><code>put rigRandomString("alnum", 16) into tRandomString</code></pre>
+
+
+<h2>rigAlternator()</h2>
+
+<p>Allows two or more items to be alternated between, when cycling through a loop.  Example:</p>
+
+<pre><code>rigResetAlternator
+repeat with i = 1 to 10
+	put rigAlternator("string one", "string two") after tAlternated
+end repeat
+</code></pre>
+
+<p><strong>Note:</strong> To use multiple separate calls to this function call the <dfn>rigResetAlternator</dfn> handler first.</p>
+<p>You can add as many parameters as you want, and with each iteration of your loop the next item will be returned.</p>
+
+<pre><code>rigResetAlternator
+repeat with i = 1 to 10
+	put rigAlternator("one", "two", "three", "four", "five") after tAlternated
+end repeat
+</code></pre>
+
+
+
+<h2>rigRepeater()</h2>
+
+<p>Generates repeating copies of the data you submit. Example:</p>
+
+<pre><code>put return into tString
+put rigRepeater(tString, 30) into tRepeaatedString</code></pre>
+
+<p>The above would generate 30 newlines.</p>
+
+<h2>rigReduceDoubleSlashes()</h2>
+
+<p>Converts double slashes in a string to a single slash, except those found in http://. Example: </p>
+
+<pre><code>put &quot;http://example.com//index.lc&quot; into tString
+put rigReduceDoubleSlashes(tString) into tString -- results in &quot;http://example.com/index.lc&quot;</code></pre>
+
+<h2>rigTrimSlashes()</h2>
+
+<p>Removes any leading/trailing slashes from a string. Example:</p>
+
+<pre><code>put &quot;/this/that/theother/&quot; into tString
+put rigTrimSlashes(tString) into tString -- results in this/that/theother</code></pre>
+
+
+<h2>rigReduceMultiples()</h2>
+
+<p>Reduces multiple instances of a particular character occuring directly after each other. Example:</p>
+
+<pre><code>put "Fred, Bill,, Joe, Jimmy" into tString
+put rigReduceMultiples(tString,",") into tString -- results in "Fred, Bill, Joe, Jimmy"
+</code></pre>
+
+<p>The function accepts the following parameters:</p> 
+
+<pre><code>rigReduceMultiples(string: text to search in, string: character to reduce, boolean: whether to remove the character from the front and end of the string)</code></pre>
+
+The first parameter contains the string in which you want to reduce the multiples. The second parameter contains the character you want to have reduced.
+The third parameter is FALSE by default; if set to TRUE it will remove occurences of the character at the beginning and the end of the string. Example:
+
+<pre><code>put ",Fred, Bill,, Joe, Jimmy," into tString
+put rigReduceMultiples(tString, ",", TRUE) into tString -- results in "Fred, Bill, Joe, Jimmy"
+</code></pre>
+
+
+<h2>rigQuotesToEntities()</h2>
+
+<p>Converts single and double quotes in a string to the corresponding HTML entities. Example:</p>
+
+<pre><code>put "Joe's" && quote & "dinner" & quote into tString
+put rigQuotesToEntities(tString) into tString -- results in "Joe&amp;#39;s &amp;quot;dinner&amp;quot;"
+</code></pre>
+
+<h2>rigStripQuotes()</h2>
+
+<p>Removes single and double quotes from a string. Example:</p>
+
+<pre><code>put "Joe's" && quote & "dinner" & quote into tString
+put rigStripQuotes(tString) into tString -- results in "Joes dinner"
+</code></pre>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="language_helper.html">Language Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="url_helper.html">URL Helper</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

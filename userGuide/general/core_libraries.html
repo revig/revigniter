@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Creating Core System Libraries : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Creating Core System Libraries
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Creating Core System Libraries</h1>
+
+<p>Every time revIgniter runs there are several base libraries that are initialized automatically as part of the core framework.
+It is possible, however, to swap any of the core system libraries with your own versions or even extend the core versions.</p>
+
+<p><strong>Most users will never have any need to do this,
+but the option to replace or extend them does exist for those who would like to significantly alter the revIgniter core.</strong>
+</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; Messing with a core system libraries has a lot of implications, so make sure you
+know what you are doing before attempting it.</p>
+
+
+<h2>System Libraries List</h2>
+
+<p>The following is a list of the core system files that are invoked every time revIgniter runs:</p>
+
+<ul>
+<li>Benchmark</li>
+<li>Config</li>
+<li>Controller</li>
+<li>Exceptions</li>
+<li>Hooks</li>
+<li>Input</li>
+<li>Language</li>
+<li>Loader</li>
+<li>Log</li>
+<li>Output</li>
+<li>Router</li>
+<li>URI</li>
+</ul>
+
+<h2>Replacing Core Libraries</h2>
+
+<p>To use one of your own system libraries instead of a default one simply place your version inside your local <dfn>application/libraries</dfn> directory:</p>
+
+<pre><code>application/libraries/<dfn>some-library.lc</dfn></code></pre>
+
+<p>If this directory does not exist you can create it.</p>
+
+<p>Any file named identically to one from the list above will be used instead of the one normally used.</p>
+
+
+
+<h2>Extending Core Library</h2>
+
+<p>If all you need to do is add some functionality to an existing library - perhaps add a function or two - then
+it's overkill to replace the entire library with your version.  In this case it's better to simply extend the library.
+Extending a library is nearly identical to replacing a library with one exception:</p>
+
+<ul>
+<li>Your new library name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
+</ul>
+
+<p>For example, to extend the native <kbd>Input</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Input.lc</kbd>.</p>
+
+
+<h3>Setting Your Own Prefix</h3>
+
+<p>To set your own sub-library prefix, open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
+
+<pre><code>put "MY_" into gConfig["sublibraryPrefix"]</code></pre>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="creating_libraries.html">Creating Your Own Libraries</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="using_stacks.html">Using Stacks</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

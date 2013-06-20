@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Email Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Email Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Email Library</h1>
+
+<p>revIgniter's robust Email Library supports the following features:</p>
+
+
+<ul>
+<li>Multiple Protocols: Mail, Sendmail, and SMTP (The SMTP protocol is implemented, but, as long as the open socket command is not working in the server engine, it is not available.)</li>
+<li>Multiple recipients</li>
+<li>CC and BCCs</li>
+<li>HTML or Plaintext email (HTML email with Sendmail and SMTP only)</li>
+<li>Attachments</li>
+<li>Word wrapping</li>
+<li>Priorities</li>
+<li>BCC Batch Mode, enabling large email lists to be broken into small BCC batches.</li>
+<li>Email Debugging tools</li>
+</ul>
+
+
+<h2>Sending Email</h2>
+
+<p>Sending email is not only simple, but you can configure it on the fly or set your preferences in a config file.</p>
+
+<p>Here is a basic example demonstrating how you might send email.  Note:  This example assumes you are sending the email from one of your
+<a href="../general/controllers.html">controllers</a>.</p>
+
+<pre><code>rigLoaderLoadLibrary "Email"
+
+rigMailFrom "your@example.com", "Your Name"	
+rigMailTo "someone@example.com"
+rigMailCC "another@another-example.com"
+rigMailBcc "them@their-example.com"
+
+rigMailSubject "Email Test"
+rigMailMessage "Testing the email library."
+
+put rigMailSend() into tMailResult
+
+put rigPrintMailDebugger() into gData["mailDebug"]</code></pre>
+
+
+
+
+<h2>Setting Email Preferences</h2>
+
+<p>There are 17 different preferences available to tailor how your email messages are sent. You can either set them manually
+as described here, or automatically via preferences stored in your config file, described below:</p>
+
+<p>Preferences are set by passing an array of preference values to the email <dfn>rigInitializeMail</dfn> handler.  Here is an example of how you might set some preferences:</p>
+
+<pre><code>put "sendmail" into tConfig["protocol"]
+put "/usr/sbin/sendmail" into tConfig["mailpath"]
+put "iso-8859-1" into tConfig["charset"]
+put TRUE into tConfig["wordwrap"]
+
+rigInitializeMail tConfig</code></pre>
+
+<p><strong>Note:</strong> Most of the preferences have default values that will be used if you do not set them.</p
+
+><h3>Setting Email Preferences in a Config File</h3>
+
+<p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
+Simply create a new file called <var>email.lc</var>,  add the <var>Config</var>
+array in that file. At the end of the file write: <dfn>rigRunInitialEmailConfig yourArrayVariableName</dfn>. Then save the file at <var>config/email.lc</var> and it will be used automatically. You
+will NOT need to use the <dfn>rigInitializeMail</dfn> handler if you save your preferences in a config file. Example:</p>
+
+<pre><code>local sEmailConf
+
+put "sendmail" into sEmailConf["protocol"]
+put "/usr/sbin/sendmail" into sEmailConf["mailpath"]
+put "iso-8859-1" into sEmailConf["charset"]
+put TRUE into sEmailConf["wordwrap"]
+
+rigRunInitialEmailConfig sEmailConf</code></pre>
+
+
+<h2>Email Preferences</h2>
+
+<p>The following is a list of all the preferences that can be set when sending email.</p>
+
+<div class="table">
+<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>mailUseragent</strong></td><td class="td">revIgniter</td><td class="td">None</td><td class="td">The "user agent".</td>
+</tr><tr>
+<td class="td"><strong>protocol</strong></td><td class="td">mail</td><td class="td">mail, sendmail, or smtp</td><td class="td">The mail sending protocol.</td>
+</tr><tr>
+<td class="td"><strong>mailPath</strong></td><td class="td">/usr/sbin/sendmail</td><td class="td">None</td><td class="td">The server path to Sendmail.</td>
+</tr><tr>
+<td class="td"><strong>smtpHost</strong></td><td class="td">No Default</td><td class="td">None</td><td class="td">SMTP Server Address.</td>
+</tr><tr>
+<td class="td"><strong>smtpUser</strong></td><td class="td">No Default</td><td class="td">None</td><td class="td">SMTP Username.</td>
+</tr><tr>
+<td class="td"><strong>smtpPass</strong></td><td class="td">No Default</td><td class="td">None</td><td class="td">SMTP Password.</td>
+</tr><tr>
+<td class="td"><strong>smtpPort</strong></td><td class="td">25</td><td class="td">None</td><td class="td">SMTP Port.</td>
+</tr><tr>
+<td class="td"><strong>smtpTimeout</strong></td><td class="td">5</td><td class="td">None</td><td class="td">SMTP Timeout (in seconds).</td>
+</tr><tr>
+<td class="td"><strong>wordwrap</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Enable word-wrap.</td>
+</tr><tr>
+<td class="td"><strong>wrapchars</strong></td><td class="td">76</td><td class="td"> </td><td class="td">Character count to wrap at.</td>
+</tr><tr>
+<td class="td"><strong>mailtype</strong></td><td class="td">text</td><td class="td">text or html</td><td class="td">Type of mail. If you send HTML email you must send it as a complete web page.  Make sure you don't have any relative links or relative image paths otherwise they will not work.</td>
+</tr><tr>
+<td class="td"><strong>charset</strong></td><td class="td">utf-8</td><td class="td"></td><td class="td">Character set (utf-8, iso-8859-1, etc.).</td>
+</tr><tr>
+<td class="td"><strong>validate</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE  (boolean)</td><td class="td">Whether to validate the email address.</td>
+</tr><tr>
+<td class="td"><strong>priority</strong></td><td class="td">3</td><td class="td">1, 2, 3, 4, 5</td><td class="td">Email Priority. 1 = highest.  5 = lowest.  3 = normal.</td>
+</tr>
+<tr>
+	<td class="td"><strong>crlf</strong></td>
+	<td class="td">LF</td>
+	<td class="td">CRLF or LF or numberToChar(13)</td>
+	<td class="td">Newline character. (Use CRLF to comply with RFC 822).</td>
+</tr>
+<tr>
+<td class="td"><strong>mailNewline</strong></td><td class="td">LF</td>
+<td class="td">CRLF or LF or numberToChar(13)</td><td class="td">Newline character. (Use CRLF to comply with RFC 822).</td>
+</tr><tr>
+<td class="td"><strong>bccBatchMode</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Enable BCC Batch Mode.</td>
+</tr><tr>
+<td class="td"><strong>bccBatchSize</strong></td><td class="td">200</td><td class="td">None</td><td class="td">Number of emails in each BCC batch.</td>
+</tr>
+</table>
+</div>
+
+<h2>Email Handler Reference</h2>
+
+<h3>rigMailFrom</h3>
+<p>Sets the email address and name of the person sending the email:</p>
+<pre><code>rigMailFrom "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
+
+<h3>rigReplyTo</h3>
+<p>Sets the reply-to address.  If the information is not provided the information in the "mailFrom" handler is used. Example:</p>
+<pre><code>rigReplyTo "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
+
+
+<h3>rigMailTo</h3>
+<p>Sets the email address(s) of the recipient(s).  Can be a single email, a comma-delimited list or an array:</p>
+
+<pre><code>rigMailTo "<var>someone@example.com</var>"</code></pre>
+<pre><code>rigMailTo "<var>one@example.com</var>,<var>two@example.com</var>,<var>three@example.com</var>"</code></pre>
+
+<pre><code>put "<var>one@example.com</var>" into tList[1]
+put "<var>two@example.com</var>" into tList[2]
+put "<var>three@example.com</var>" into tList[3]
+
+rigMailTo tList</code></pre>
+
+<h3>rigMailCC</h3>
+<p>Sets the CC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list or an array.</p>
+
+<h3>rigMailBcc</h3>
+<p>Sets the BCC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list or an array.</p>
+
+
+<h3>rigMailSubject</h3>
+<p>Sets the email subject:</p>
+<pre><code>rigMailSubject "<var>This is my subject</var>"</code></pre>
+
+<h3>rigMailMessage</h3>
+<p>Sets the email message body:</p>
+<pre><code>rigMailMessage "<var>This is my message</var>"</code></pre>
+
+<h3>rigSet_sAltMessage</h3>
+<p>Sets the alternative email message body:</p>
+<pre><code>rigSet_sAltMessage "<var>This is the alternative message</var>"</code></pre>
+
+<p>This is an optional message string which can be used if you send HTML formatted email.  It lets you specify an alternative
+message with no HTML formatting which is added to the header string for people who do not accept HTML email.
+If you do not set your own message revIgniter will extract the message from your HTML email and strip the tags.</p>
+
+
+
+<h3>rigClearMail</h3>
+<p>Initializes all the email variables to an empty state.  This handler is intended for use if you run the email sending function
+in a loop, permitting the data to be reset between cycles.</p>
+<pre><code>repeat for each key tName in tList
+	put tList[tName] into tAddress
+
+	rigClearMail
+	
+	rigMailTo tAddress
+	rigMailFrom "your@example.com"
+	rigMailSubject "Here is your info" && tName
+	rigMailMessage "Hi" && tName && "Here is the info you requested."
+	put rigMailSend() into tMailResult
+end repeat
+</code></pre>
+
+<p>If you set the parameter to TRUE any attachments will be cleared as well:</p>
+
+<pre><code>rigClearMail TRUE</code></pre>
+
+
+<h3>rigMailSend()</h3>
+<p>The Email sending function. Returns boolean TRUE or FALSE based on success or failure, enabling it to be used
+conditionally:</p>
+
+<pre><code>if rigMailSend() is not TRUE then
+	-- Generate error
+end if</code></pre>
+
+
+<h3>rigMailAttach</h3>
+<p>Enables you to send an attachment. Put the file path/name in the first parameter. Note: Use a file path, not a URL.
+For multiple attachments use the function multiple times. For example:</p>
+
+<pre><code>rigMailAttach "/path/to/photo1.jpg"
+rigMailAttach "/path/to/photo2.jpg"
+rigMailAttach "/path/to/photo3.jpg"
+
+put rigMailSend() into tMailResult</code></pre>
+
+
+<h3>rigPrintMailDebugger()</h3>
+<p>Returns a string containing any server messages, the email headers, and the email messsage.  Useful for debugging.</p>
+
+
+<h2>Overriding Word Wrapping</h2>
+
+<p>If you have word wrapping enabled (recommended to comply with RFC 822) and you have a very long link in your email it can
+get wrapped too, causing it to become un-clickable by the person receiving it.  revIgniter lets you manually override
+word wrapping within part of your message like this:</p>
+
+<pre><code>The text of your email that
+gets wrapped normally.
+
+<var>{unwrap}</var>http://example.com/a_long_link_that_should_not_be_wrapped.html<var>{/unwrap}</var>
+
+More text that will be
+wrapped normally.</code></pre>
+
+<p>Place the item you do not want word-wrapped between: <var>{unwrap}</var> <var>{/unwrap}</var></p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="../database/index.html">Database Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="encryption.html">Encryption Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

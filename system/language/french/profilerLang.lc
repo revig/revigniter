@@ -1,0 +1,21 @@
+<?rev
+
+put "BASE DE DONNEES" into gLang["profiler_database"]
+put "CONTROLLER/HANDLER" into gLang["profiler_controller_info"]
+put "BENCHMARKS" into gLang["profiler_benchmarks"]
+put "REQUETES" into gLang["profiler_queries"]
+put "DONNEES GET" into gLang["profiler_get_data"]
+put "DONNEES POST" into gLang["profiler_post_data"]
+put "CHAINE URI" into gLang["profiler_uri_string"]
+put "UTILISATION DE LA MEMOIRE" into gLang["profiler_memory_usage"]
+put "Le driver de la base de donn&eacute;es n'est actuellement pas charg&eacute;" into gLang["profiler_no_db"]
+put "Aucune requ&ecirc;te n'a &eacute;t&eacute; ex&eacute;cut&eacute;e" into gLang["profiler_no_queries"]
+put "Aucune donn&eacute;e POST" into gLang["profiler_no_post"]
+put "Aucune donn&eacute;e GET" into gLang["profiler_no_get"]
+put "Aucune donn&eacute;e URI" into gLang["profiler_no_uri"]
+put "Utilisation de la m&eacute;moire indisponible" into gLang["profiler_no_memory"]
+put "Temps &eacute;coul&eacute;" into gLang["profiler_db_elapsed"]
+
+--| END OF profilerLang.lc
+--| Location:  ./system/language/french/profilerLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,18 @@
+<?rev
+
+put "Unable to locate a valid connection ID.  Please make sure you are connected before peforming any file routines." into gLang["ftp_no_connection"]
+put "Unable to connect to your FTP server using the supplied hostname." into gLang["ftp_unable_to_connect"]
+put "Unable to login to your FTP server.  Please check your username and password." into gLang["ftp_unable_to_login"]
+put "Unable to create the directory you have specified." into gLang["ftp_unable_to_makdir"]
+put "Unable to change directories." into gLang["ftp_unable_to_changedir"]
+put "Unable to set file permissions.  Please check your path." into gLang["ftp_unable_to_chmod"]
+put "Unable to upload the specified file.  Please check your path." into gLang["ftp_unable_to_upload"]
+put "Unable to locate the source file.  Please check your path." into gLang["ftp_no_source_file"]
+put "Unable to rename the file." into gLang["ftp_unable_to_rename"]
+put "Unable to delete the file." into gLang["ftp_unable_to_delete"]
+put "Unable to move the file.  Please make sure the destination directory exists." into gLang["ftp_unable_to_move"]
+
+
+--| END OF ftpLang.lc
+--| Location:  ./system/language/english/ftpLang.lc
+----------------------------------------------------------------------

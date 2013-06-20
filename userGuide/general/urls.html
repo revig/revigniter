@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>revIgniter URLs : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+URLS
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>revIgniter URLs</h1>
+
+<p>By default, URLs in revIgniter are designed to be search-engine and human friendly.  Rather than using the standard "query string"
+approach to URLs that is synonymous with dynamic systems, revIgniter uses a <strong>segment-based</strong> approach:</p>
+
+<pre><code>example.com/<var>news</var>/<dfn>article</dfn>/<samp>my_article</samp></code></pre>
+
+<p class="important"><strong>Note:</strong> Query string URLs can be optionally enabled, as described below.</p>
+
+<h2>URI Segments</h2>
+
+<p>The segments in the URL, in following with the Model-View-Controller approach, usually represent:</p>
+
+<pre><code>example.com/<var>controller</var>/<dfn>handler</dfn>/<samp>ID</samp></code></pre>
+
+<ol>
+<li>The first segment represents the controller <strong>script</strong> that should be invoked.</li>
+<li>The second segment represents the controller <strong>handler</strong>, that should be called.</li>
+<li>The third, and any additional segments, represent any variables that will be passed to the controller.<br /> These segments are not, as one might think, bound to specific parameters of any handlers.</li>
+</ol>
+
+<p>The <a href="../libraries/uri.html">URI Library</a> and the <a href="../helpers/url_helper.html">urlHelper</a>
+contain handlers that make it easy to work with your URI data.  In addition, your URLs can be remapped using the
+<a href="routing.html">URI Routing</a> feature for more flexibility.</p>
+
+
+
+<h2>Removing the index.lc file</h2>
+
+<p>By default, the <strong>index.lc</strong> file will be included in your URLs:</p>
+
+<pre><code>example.com/<var>index.lc</var>/news/article/my_article</code></pre>
+
+<p>You can easily remove this file by using a .htaccess file with some simple rules. Here is an example
+ of such a file, using the "negative" method in which everything is redirected except the specified items:</p>
+
+<pre><code>&lt;IfModule mod_rewrite.c>
+	RewriteEngine on
+	RewriteBase /
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond $1 !^(index\.lc|image|img|assets|robots\.txt|css|js)
+	RewriteRule ^(.*)$ index.lc?/$1 [L]
+&lt;/IfModule>
+</code></pre>
+
+<p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, css and js is treated as
+a request for your index.lc file.</p>
+
+<p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
+
+<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See http://httpd.apache.org/docs/current/mod/mod_rewrite.html</p>
+
+
+<h2>Adding a URL Suffix</h2>
+
+<p>In your <dfn>application/config/config.lc</dfn> file you can specify a suffix that will be added to all URLs generated
+by revIgniter.  For example, if a URL is this:</p>
+
+<pre><code>example.com/index.lc/products/view/shoes</code></pre>
+
+<p>You can optionally add a suffix, like <kbd>.html</kbd>, making the page appear to be of a certain type:</p>
+
+<pre><code>example.com/index.lc/products/view/shoes.html</code></pre>
+
+
+<h2>Enabling Query Strings</h2>
+
+<p>In some cases you might prefer to use query strings URLs:</p>
+
+<pre><code>index.lc?c=products&amp;m=view&amp;id=345</code></pre>
+
+<p>revIgniter optionally supports this capability, which can be enabled in your <dfn>application/config/config.lc</dfn> file. If you
+open your config file you'll see these items:</p>
+
+<pre><code>put FALSE into gConfig["enableQueryStrings"]
+put  "c" into gConfig["controllerTrigger"]
+put "m" into gConfig["methodTrigger"]</code></pre>
+
+<p>If you change "enableQueryStrings" to TRUE this feature will become active.  Your controllers and handlers will then
+be accessible using the "trigger" words you've set to invoke your controllers and handlers:</p>
+
+<pre><code>index.lc?c=controller&amp;m=method</code></pre>
+
+
+
+<h2>Using Secure URLs (https) Along with Normal URLs (http)</h2>
+
+<p>In case you use secure URLs along with normal URLs you need to set the "Base Site URL" in your <dfn>application/config/config.lc</dfn> file to empty like:</p>
+
+<pre><code>put "" into gConfig["baseUrl"]</code></pre>
+
+<p>If gConfig["baseUrl"] is empty revIgniter will guess the protocol, domain and path to your installation.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="controllers.html">Controllers</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

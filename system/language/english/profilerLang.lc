@@ -1,0 +1,21 @@
+<?rev
+
+put "DATABASE" into gLang["profiler_database"]
+put "CONTROLLER/HANDLER" into gLang["profiler_controller_info"]
+put "BENCHMARKS" into gLang["profiler_benchmarks"]
+put "QUERIES" into gLang["profiler_queries"]
+put "GET DATA" into gLang["profiler_get_data"]
+put "POST DATA" into gLang["profiler_post_data"]
+put "URI STRING" into gLang["profiler_uri_string"]
+put "MEMORY USAGE" into gLang["profiler_memory_usage"]
+put "Database driver is not currently loaded" into gLang["profiler_no_db"]
+put "No queries were run" into gLang["profiler_no_queries"]
+put "No POST data exists" into gLang["profiler_no_post"]
+put "No GET data exists" into gLang["profiler_no_get"]
+put "No URI data exists" into gLang["profiler_no_uri"]
+put "Memory Usage Unavailable" into gLang["profiler_no_memory"]
+put "Total elapsed time" into gLang["profiler_db_elapsed"]
+
+--| END OF profilerLang.lc
+--| Location:  ./system/language/english/profilerLang.lc
+----------------------------------------------------------------------

@@ -1,0 +1,25 @@
+<?rev
+
+put "Die POST-Variable userfile wurde nicht &uuml;bergeben." into gLang["upload_userfile_not_set"]
+put "Die Gr&ouml;sse der hochgeladenen Datei &uuml;berschreitet den in der Konfiguration angegebenen Maximalwert." into gLang["upload_file_exceeds_limit"]
+put "Die Gr&ouml;sse der hochgeladenen Datei &uuml;berschreitet den im Formular festgelegten Maximalwert." into gLang["upload_file_exceeds_form_limit"]
+put "Die Datei wurde nicht vollst&auml;ndig hochgeladen." into gLang["upload_file_partial"]
+put "Der tempor&auml;re Ordner fehlt." into gLang["upload_no_temp_directory"]
+put "Die Datei konnte nicht auf die Festplatte geschrieben werden." into gLang["upload_unable_to_write_file"]
+put "Die Datentyperweiterung verusachte den Abbruch des Ladens." into gLang["upload_stopped_by_extension"]
+put "Sie haben keine Datei zum Hochladen ausgew&auml;hlt." into gLang["upload_no_file_selected"]
+put "Dateien dieses Dateityps k&ouml;nnen nicht hochgeladen werden." into gLang["upload_invalid_filetype"]
+put "Die Gr&ouml;sse der hochgeladenen Datei &uuml;berschreitet den zul&auml;ssigen Maximalwert." into gLang["upload_invalid_filesize"]
+put "Das hochgeladene Bild &uuml;berschreitet die Maximalbreite oder -h&ouml;he." into gLang["upload_invalid_dimensions"]
+put "Die hochgeladene Datei konnte nicht an den definierten Zielort verschoben werden." into gLang["upload_destination_error"]
+put "Der Pfad zum Speichern hochgeladener Dateien ist ung&uuml;ltig." into gLang["upload_no_filepath"]
+put "Es wurden keine g&uuml;ltigen Dateitypen zum Hochladen von Dateien festgelegt." into gLang["upload_no_file_types"]
+put "Eine Datei gleichen Namens ist bereits in der Datenbank vorhanden." into gLang["upload_bad_filename"]
+put "Der Pfad zum Speichern hochgeladener Dateien ist schreibgesch&uuml;tzt." into gLang["upload_not_writable"]
+put "Hochladen fehlgeschlagen." into gLang["upload_failed"]
+put "Der Pfad zur (temporären) Bilddatei ist ung&uuml;ltig." into gLang["upload_invalid_path"]
+
+
+--| END OF uploadLang.lc
+--| Location:  ./system/language/german/uploadLang.lc
+----------------------------------------------------------------------

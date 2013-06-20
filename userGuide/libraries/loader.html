@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Loader Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Loader Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Loader Library</h1>
+
+<p>Loader, as the name suggests, is used to load elements.  These elements can be libraries, <a href="../general/using_stacks.html">Stacks</a>, <a href="../general/views.html">View files</a>,
+<a href="../general/helpers.html">Helpers</a>, <a href="../general/plugins.html">Plugins</a>, or your own files.</p>
+
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+
+<p>The following handlers are available in this library:</p>
+
+
+<h2>rigLoaderLoadLibrary "<var>libraryName</var>", <samp>tConfig</samp></h2>
+
+
+<p>This handler is used to load core libraries.  Where <var>libraryName</var> is the name of the library you want to load.</p>
+
+<p>For example, if you would like to send email with revIgniter, the first step is to load the email library within your controller:</p>
+
+<pre><code>rigLoaderLoadLibrary "Email"</code></pre>
+
+<p>Once loaded, the library will be ready for use.
+
+<p>Library files can be stored in subdirectories within the main "libraries" folder, or within your personal <dfn>application/libraries</dfn> folder.  
+To load a file located in a subdirectory, simply include the path, relative to the "libraries" folder.  
+For example, if you have a file located at:</p>
+
+<pre><code>libraries/flavors/Chocolate.lc</code></pre>
+
+<p>You will load it using:</p>
+
+<pre><code>rigLoaderLoadLibrary "flavors/Chocolate"</code></pre>
+
+<p>You may nest the file in as many subdirectories as you want.</p>
+
+<h3>Setting options</h3>
+
+<p>The second (optional) parameter allows you to optionally pass configuration settings.  You will typically pass these as an array:</p>
+
+<pre><code>put "html" into tConfig["mailtype"]
+put "utf-8" into tConfig["charset"]
+put "1" into tConfig["priority"]
+
+rigLoaderLoadLibrary "Email", tConfig</code></pre>
+
+<p>Config options can usually also be set via a config file. Each library is explained in detail in its own page, so please read the information regarding each one you would like to use.</p>
+
+<h2>rigLoadStack "<var>stackName</var>", <samp>tConfig</samp>, "<var>behind / front</var>"</h2>
+
+<p>Use this handler to load revIgniter stack files located at system/stacks as well as your own stacks which should be located at <dfn>system/application/stacks</dfn>. The first parameter is the name of the stack (the suffix can be omitted) you want to load. Use the optional second parameter to pass configuration settings in form of an array. The optional third parameter is used to define if the loaded stack should sit in front or behind the home stack, default is behind.</p>
+<p>Like library files, stacks can be stored in subdirectories. Include the path, relative to the "stacks" folder to load a stack located in a subdirectory. Assuming your stack is located at:</p>
+
+<pre><code>stacks/flavors/Strawberry.livecode
+</code></pre>
+
+<p>Load the stack using:</p>
+	
+<pre><code>rigLoadStack "flavors/Strawberry"
+</code></pre>
+
+<p>You may nest the stack in as many subdirectories as you want.</p>
+
+<h3>Setting options</h3>
+
+<p>The optional second parameter allows you to pass configuration settings.  You will typically pass these as an array:</p>
+
+<pre><code>put "strawberry" into tConfig["flavor"]
+put "big" into tConfig["size"]
+
+rigLoadStack "Icecream", tConfig</code></pre>
+
+<p>Stack config options can usually also be set via a config file. Please read about using stacks in the <a href="../general/using_stacks.html">Using Stacks</a> chapter.</p>
+
+<h2>rigLoadView("<var>fileName</var>", <kbd>TRUE/FALSE</kbd>)</h2>
+
+<p>This function is used to load your View files.  If you haven't read the <a href="../general/views.html">Views</a> section of the
+user guide it is recommended that you do since it shows you how this function is typically used.</p>
+
+<p>The first parameter is required.  It is the name of the view file you would like to load. &nbsp;Note: The .lc file extension does not need to be specified unless you use something other than <kbd>.lc</kbd>.</p>
+
+
+<p>The second <strong>optional</strong> parameter lets you change the behavior of the function so that it returns data as a string
+rather than sending it to your browser.  This can be useful if you want to process the data in some way.  If you
+set the parameter to <kbd>TRUE</kbd> (boolean) it will return data.  The default behavior is <kbd>FALSE</kbd>, which sends it
+to your browser.  Remember to assign it to a variable if you want the data returned:</p>
+
+<pre><code>put rigLoadView("<var>myfile</var>", <kbd>TRUE</kbd>) into tString</code></pre>
+
+
+<h2>rigLoadModel "<var>modelName</var>"</h2>
+
+<pre><code>rigLoadModel "<var>modelName</var>"</code></pre>
+
+<p>If your model is located in a sub-folder, include the relative path from your models folder. For example, if you have a model located at application/models/blog/queries.lc you'll load it using:</p>
+<pre><code>rigLoadModel "<var>blog/queries</var>"</code></pre>
+
+
+<h2>rigLoadDatabase("<var>options</var>", <kbd>TRUE/FALSE</kbd>, <kbd>TRUE/FALSE</kbd>)</h2>
+
+<p>This function lets you load the database library.  The three parameters are <strong>optional</strong>.  Please see the
+<a href="../database/index.html">database</a> section for more info.</p>
+
+
+<h2>rigLoadScaffolding "<var>tableName</var>"</h2>
+
+<p>This handler lets you enable scaffolding.  Please see the
+<a href="../general/scaffolding.html">Scaffolding</a> section for more info.</p>
+
+
+<h2>rigLoadHelper "<var>fileName</var>"</h2>
+<p>This handler loads helper files, where <var>fileName</var> is the name of the file, without the <kbd>Helper.lc</kbd> extension.</p>
+
+
+<h2>rigLoadPlugin "<var>fileName</var>"</h2>
+<p>This handler loads plugins files, where <var>fileName</var> is the name of the file, without the <kbd>Pi.lc</kbd> extension.</p>
+
+<h2>rigLoadFile("<var>filepath/filename</var>", <kbd>TRUE/FALSE</kbd>)</h2>
+
+<p>This is a generic file loading function.  Supply the filepath and name in the first parameter and it will open and read the file.
+By default the data is sent to your browser, just like a View file, but if you set the second parameter to <kbd>TRUE</kbd> (boolean)
+it will instead return the data as a string.</p>
+
+
+<h2>rigLoadLanguage "<var>fileName</var>", "<var>language</var>"</h2>
+<p>This handler is an alias of the <a href="language.html">language loading function</a>: rigLangLoadLang()</p>
+
+<h2>rigLoadConfig "<var>fileName</var>"</h2>
+<p>This handler is an alias of the <a href="config.html">config file loading function</a>: rigLoadConfigFile()</p>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="jquery.html">jQuery Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="language.html">Language Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?rev
+
+put "Debe especificar una imagen de origen en las preferencias." into gLang["imglib_source_image_required"]
+put "Es necesaria ImageMagick para esta característica." into gLang["imglib_im_required"]
+put "Su servidor debe soportar ImageMagick para poder determinar las propiedades de la imagen." into gLang["imglib_im_required_for_props"]
+put "Su servidor no soporta ImageMagick necesaria para este tipo de imagen." into gLang["imglib_unsupported_imagecreate"]
+put "Las imágenes de tipo GIF a menudo no son soportadas por las restricciones de la licencia. Puede usar en vez de estas PNG o JPG." into gLang["imglib_gif_not_supported"]
+put "El formato de imagen JPG no está soportado." into gLang["imglib_jpg_not_supported"]
+put "El formato de imagen PNG no está soportado." into gLang["imglib_png_not_supported"]
+put "El protocolo de redimensionamiento de imágenes especificado en las preferencias sólo funciona con tipos PNG o JPG." into gLang["imglib_jpg_or_png_required"]
+put "Se han encontrado errores mientras se trataba de reemplazar el archivo. Asegúrese de que el directorio donde se encuentra el fichero posee permisos de escritura." into gLang["imglib_copy_error"]
+put "La rotación de imágenes parece no estar soportada por su servidor." into gLang["imglib_rotate_unsupported"]
+put "La dirección para la librería de imágenes no es correcta.  Por favor, configure correctamente la dirección en las preferencias de imágenes." into gLang["imglib_libpath_invalid"]
+put "Procesado de imagen fallido.  Verifique que su servidor soporta la función escogida y que la dirección de la librería de imágenes es correcta." into gLang["imglib_image_process_failed"]
+put "Se requiere un ángulo de rotación para que la imagen pueda ser rotada." into gLang["imglib_rotation_angle_required"]
+put "Imagen GIF" into gLang["imglib_writing_failed_gif"]
+put "La dirección de la imagen no es correcta." into gLang["imglib_invalid_path"]
+put "Falló la rutina de copia de la imagen." into gLang["imglib_copy_failed"]
+put "No se ha podido encontrar la fuente que desea usar." into gLang["imglib_missing_font"]
+put "No se ha podido guardar la imagen. Por favor, compruebe que los directorios donde se encuentran la imagen y el archivo tienen permisos de escritura." into gLang["imglib_save_failed"]
+
+
+--| END OF imagelibLang.lc
+--| Location:  ./system/language/spanish/imagelibLang.lc
+----------------------------------------------------------------------

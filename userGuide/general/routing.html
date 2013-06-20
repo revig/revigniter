@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>URI Routing : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+URI Routing
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>URI Routing</h1>
+
+<p>Typically there is a one-to-one relationship between a URL string and its corresponding controller/handler.
+The segments in a URI normally follow this pattern:</p>
+
+<pre><code>example.com/<dfn>controller</dfn>/<samp>handler</samp>/<var>id</var>/</code></pre>
+
+<p>In some instances, however, you may want to remap this relationship so that a different controller/handler can be called
+instead of the one corresponding to the URL.</p>
+
+<p>For example, lets say you want your URLs to have this prototype:</p>
+
+<p>
+example.com/product/1/<br />
+example.com/product/2/<br />
+example.com/product/3/<br />
+example.com/product/4/
+</p>
+
+<p>Normally the second segment of the URL is reserved for the handler name, but in the example above it instead has a product ID.
+To overcome this, revIgniter allows you to remap the URI handler.</p>
+
+
+<h2>Setting your own routing rules</h2>
+
+<p>Routing rules are defined in your <var>application/config/routes.lc</var> file.  In it you'll see an array called <dfn>gRoute</dfn> that
+permits you to specify your own routing criteria. Routes can either be specified using <dfn>wildcards</dfn> or <dfn>Regular Expressions</dfn></p>
+
+
+<h2>Wildcards</h2>
+
+<p>A typical wildcard route might look something like this:</p>
+
+<pre><code>put "catalog/productLookup" into gRoute[2]["product/:num"]</code></pre>
+
+<p>In a route, the array key contains the URI to be matched, while the array value  contains the destination it should be re-routed to.
+In the above example, if the literal word "product" is found in the first segment of the URL, and a number is found in the second segment,
+the "catalog" controller and the "productLookup" handler are instead used.</p>
+
+<p>You can match literal values or you can use two wildcard types:</p>
+
+<p>
+:num<br />
+:any
+</p>
+
+<p><strong>:num</strong> will match a segment containing only numbers.<br />
+<strong>:any</strong> will match a segment containing any character.
+</p>
+
+<p class="important"><strong>Note:</strong> The gRoute array must be numbered and the key number for 
+reserved routes must be 1. So, the keys of your custom routes must start with 2 as in the example above. Routes will run in the order of the keys of the gRoutes array.
+Routes with lower key numbers will always take precedence over those with higher ones.</p>
+
+<h2>Examples</h2>
+
+<p>Here are a few routing examples:</p>
+
+<pre><code>put "blogs" into gRoute[2]["journals"]</code></pre>
+<p>A URL containing the word "journals" in the first segment will be remapped to the "blogs" controller.</p>
+
+<pre><code>put "blogs/users/34" into gRoute[3]["blog/joe"]</code></pre>
+<p>A URL containing the segments "blog/joe" will be remapped to the "blogs" controller and the "users" handler.  The ID will be set to "34".</p>
+
+<pre><code>put "catalog/productLookup" into gRoute[4]["product/:any"]</code></pre>
+<p>A URL with "product" as the first segment, and anything in the second will be remapped to the "catalog" controller and the  "productLookup" handler.</p>
+
+<pre><code>put "catalog/productLookupByID/$1" into gRoute[5]["product/(:num)"]</code></pre>
+<p>A URL with "product" as the first segment, and a number in the second will be remapped to the "catalog" controller and the "productLookupByID" handler passing in the match as a variable to the handler.</p>
+
+<p class="important"><strong>Important:</strong> Do not use leading/trailing slashes.</p>
+
+<h2>Regular Expressions</h2>
+
+<p>If you prefer you can use regular expressions to define your routing rules.  Any valid regular expression is allowed, as are back-references up to 10 ($1 - $10).</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; If you use back-references you must use the dollar syntax.</p>
+
+<p>A typical RegEx route might look something like this:</p>
+
+<pre><code>put "$1/id_$2" into gRoute[2]["products/([a-z]+)/(\d+)"]</code></pre>
+
+<p>In the above example, a URI similar to <dfn>products/shirts/123</dfn> would instead call the <dfn>shirts</dfn> controller and the <dfn>id_123</dfn> handler.</p>
+
+<p>You can also mix and match wildcards with regular expressions.</p>
+
+<a name="reservedRoutes">&nbsp;</a>
+<h2>Reserved Routes</h2>
+
+<p>There are three reserved routes:</p>
+
+<pre><code>put "welcome" into gRoute[1]["defaultController"]</code></pre>
+
+<p>This route indicates which controller should be loaded if the URI contains no data, which will be the case
+when people load your root URL. In the above example, the "welcome" controller would be loaded.  You
+are encouraged to always have a default route otherwise a 404 page will appear by default.</p>
+
+<pre><code>put "errors/pageMissing" into gRoute[1]["404Override"]</code></pre>
+
+<p>This route indicates which controller should be loaded if the requested controller is not found. It will override
+the default 404 error page. It won't affect to the rigShow404 handler, which will continue loading the default <dfn>error404.lc</dfn>
+file at <var>system/application/errors/error404.lc</var>. This way you can write your own 404 error controller. But there are two things you should keep in mind:</p>
+
+<p class="important"><strong>Important:</strong>&nbsp; Do <strong>not</strong> name any handler in your error controller "index". Place your error controller in system/application/controllers, do <strong>not</strong> place it in any subfolder of system/application/controllers.</p>
+
+<pre><code>put "scaffolding" into gRoute[1]["scaffoldingTrigger"]</code></pre>
+
+<p>This route lets you set a secret word, which when present in the URL, triggers the Scaffolding feature.
+Please read the <a href="scaffolding.html">Scaffolding</a> page for details.</p>
+
+<p class="important"><strong>Important:</strong>&nbsp; The gRoute array must be numbered and the key number for 
+reserved routes must be 1 as shown above.</p>
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="scaffolding.html">Scaffolding</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="errors.html">Error Handling</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

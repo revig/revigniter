@@ -1,0 +1,259 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+# -------------------------------------------------------------------
+# AUTHENTICATION SETTINGS
+# -------------------------------------------------------------------
+# This file contains the settings needed to run the authentication library.
+#
+# For complete instructions please consult the "Authentication" page
+# of the User Guide.
+#
+##
+
+
+
+local sAuthenticationConf
+
+
+##
+#--------------------------------------------------------------------------
+# Table Names
+#--------------------------------------------------------------------------
+#
+# The names of tables used for authentication.
+#
+##
+
+put "users" into sAuthenticationConf["tables"]["users"]
+put "groups" into sAuthenticationConf["tables"]["groups"]
+put "users_groups" into sAuthenticationConf["tables"]["usersGroups"]
+put "login_attempts" into sAuthenticationConf["tables"]["loginAttempts"]
+
+
+
+##
+#--------------------------------------------------------------------------
+# Joins
+#--------------------------------------------------------------------------
+#
+# Users table column and Group table column you want to join WITH.
+#
+# Joins from users.id
+# Joins from groups.id
+#
+##
+
+put "userId" into sAuthenticationConf["join"]["users"]
+put "groupId" into sAuthenticationConf["join"]["groups"]
+
+
+
+##
+#--------------------------------------------------------------------------
+# Encryption
+#--------------------------------------------------------------------------
+#
+# Cipher (algorithm) and associated key length used to encrypt passwords.
+#
+# Please see LiveCode's cipherNames() function which returns a list of ciphers
+# and their associated default key lengths in bits.
+#
+# Set the authentication encryption key here. To take maximum advantage of the
+# encryption algorithm, your key should be 32 characters in length (128 bits)
+# If you prefere to use revIgniter's universal key as set in config.lc,
+# set sAuthenticationConf["useAuthEncryptionKey"] to false.
+#
+##
+
+put "bf" into sAuthenticationConf["cipher"]
+put "128" into sAuthenticationConf["keyLength"]
+put "myKey" into sAuthenticationConf["authEncryptionKey"]
+put TRUE into sAuthenticationConf["useAuthEncryptionKey"]
+
+
+
+##
+#--------------------------------------------------------------------------
+# Options
+#--------------------------------------------------------------------------
+#
+# 'minLengthPassword' = Minimum required password length.
+# 'maxLengthPassword' = Maximum allowed password length.
+# 'identityColumn' = The database field name used to login with.
+#
+# NOTE: If you make changes to the settings above please adjust your
+# form validation accordingly.
+# 
+# 'emailActivation' = Email activation for registration.
+# 'manualActivation' = Manual activation for registration.
+# 'defaultGroup' = Name of default group.
+# 'defaultAdminGroup' = Name of default admin group.
+# 'rememberUsers' = Allow users to be remembered and enable auto-login.
+# 'autoLoginExpire' = How long to remember the user for (in seconds). Set to zero for no expiration.
+# 'userExtendOnLogin' = Extend the users session expiration everytime they auto-login.
+# 'trackLoginAttempts' = Track the number of failed login attempts for each user or ip.
+# 'maxLoginAttempts' = The maximum number of failed login attempts. This maximum is not enforced by the library. If set to 0, there is no maximum.
+# 'forgotPasswordExpiration' = The number of seconds after which a forgot password request will expire. If set to 0, forgot password requests will not expire.
+# 'enableAuthenticationHooks' = Enable / disable "hooks".
+#
+##
+
+put "Example.com" into sAuthenticationConf["siteTitle"]
+put "admin@example.com" into sAuthenticationConf["adminEmail"]
+put "8" into sAuthenticationConf["minLengthPassword"]
+put "20" into sAuthenticationConf["maxLengthPassword"]
+put TRUE into sAuthenticationConf["emailActivation"]
+put FALSE into sAuthenticationConf["manualActivation"]
+put "email" into sAuthenticationConf["identityColumn"]
+put "members" into sAuthenticationConf["defaultGroup"]
+put "admin" into sAuthenticationConf["defaultAdminGroup"]
+put TRUE into sAuthenticationConf["rememberUsers"]
+put 129600 into sAuthenticationConf["autoLoginExpire"]
+put FALSE into sAuthenticationConf["userExtendOnLogin"]
+put TRUE into sAuthenticationConf["trackLoginAttempts"]
+put 3 into sAuthenticationConf["maxLoginAttempts"]
+put 0 into sAuthenticationConf["forgotPasswordExpiration"]
+put FALSE into sAuthenticationConf["enableAuthenticationHooks"]
+
+
+##
+#--------------------------------------------------------------------------
+# Email Options
+#--------------------------------------------------------------------------
+#
+# 'sendEmails' = Send emails using revIgniters Email.lc library. False means: Return identity,
+# user id, email address and activation code. 
+# 'emailConfig' = Use 'file' if you want emails to be sent using revIgniter's default
+# configuration or a config file. Use an array to manually set your email configuration.
+#
+##
+
+put TRUE into sAuthenticationConf["sendEmails"]
+
+-- YOUR EMAIL CONFIGURATION ------------------------------------------------
+put "html" into tAuthEmailConfig["mailtype"]
+put "sendmail" into tAuthEmailConfig["protocol"]
+----------------------------------------------------------------------------
+
+put tAuthEmailConfig into sAuthenticationConf["emailConfig"]
+
+
+##
+#--------------------------------------------------------------------------
+# Email Templates
+#--------------------------------------------------------------------------
+#
+# 'pathToEmailTemplates' = Path to your authentication mail templates
+# relative to system/application/views/.
+# Leave this BLANK unless you would like to set something other than
+# the default emailTemplates/ folder.
+#
+##
+
+put "" into sAuthenticationConf["pathToEmailTemplates"]
+
+
+##
+#--------------------------------------------------------------------------
+# Account Activation Email Template
+#--------------------------------------------------------------------------
+#
+
+put "authActivate.lc" into sAuthenticationConf["emailActivate"]
+
+
+##
+#--------------------------------------------------------------------------
+# Forgotten Password Email Template
+#--------------------------------------------------------------------------
+#
+
+put "forgotPassword.lc" into sAuthenticationConf["emailForgotPassword"]
+
+
+##
+#--------------------------------------------------------------------------
+# Message Delimiters
+#--------------------------------------------------------------------------
+#
+# 'messagePrefix' = The message start delimiter.
+# 'messageSuffix' = The message end delimiter.
+# 'errorPrefix' = The error start delimiter.
+# 'errorSuffix' = The error end delimiter.
+#
+##
+
+put "<p>" into sAuthenticationConf["messagePrefix"]
+put "</p>" into sAuthenticationConf["messageSuffix"]
+put "<p>" into sAuthenticationConf["errorPrefix"]
+put "</p>" into sAuthenticationConf["errorSuffix"]
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigAuthFetchConfigItem
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-02-13
+--| Last Mod: 18-02-13
+--| Requires: --
+--|
+--| Summary: Fetch an authentication config file item.
+--| 
+--| Format:  rigAuthFetchConfigItem(param1, param2)
+--|
+--| Parameters: string <pItem> the config item name, string <pIndex> the index name (optional)
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigAuthFetchConfigItem pItem pIndex
+	if pIndex is empty then
+		if pItem is not among the keys of sAuthenticationConf then
+			return FALSE
+		end if
+
+		put sAuthenticationConf[pItem] into tPref
+	else
+		if pIndex is not among the keys of sAuthenticationConf then
+			return FALSE
+		end if
+
+		if pItem is not among the keys of sAuthenticationConf[pIndex] then
+			return FALSE
+		end if
+
+		put sAuthenticationConf[pIndex][pItem] into tPref
+	end if
+	
+	return tPref
+end rigAuthFetchConfigItem
+
+
+
+
+
+
+
+# START LIBRARY CONFIGURATION
+# THIS LINE IS MANDATORY
+# SAMPLE: rigRunInitialAuthenticationConfig yourArrayVariableName
+# PROTOTYPE: rigRunInitialLibrarynameConfig yourConfigArray
+rigRunInitialAuthenticationConfig sAuthenticationConf
+
+
+
+--| END OF authentication.lc
+--| Location: ./system/application/config/authentication.lc
+----------------------------------------------------------------------

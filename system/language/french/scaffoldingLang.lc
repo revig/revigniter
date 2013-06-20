@@ -1,0 +1,18 @@
+<?rev
+
+put "Voir les enregistrements" into gLang["scaff_view_records"]
+put "Cr&eacute;er un nouvel enregistrement" into gLang["scaff_create_record"]
+put "Ajouter des donn&eacute;es" into gLang["scaff_add"]
+put "Voir les donn&eacute;es" into gLang["scaff_view"]
+put "Modifier" into gLang["scaff_edit"]
+put "Supprimer" into gLang["scaff_delete"]
+put "Voir tout" into gLang["scaff_view_all"]
+put "Oui" into gLang["scaff_yes"]
+put "No" into gLang["scaff_no"]
+put "Il n'y a pas encore de donn&eacute;es pour cette table." into gLang["scaff_no_data"]
+put "Etes-vous s&ucirc;r(e) de vouloir supprimer cette entr&eacute;e :" into gLang["scaff_del_confirm"]
+
+
+--| END OF scaffoldingLang.lc
+--| Location:  ./system/language/french/scaffoldingLang.lc
+----------------------------------------------------------------------

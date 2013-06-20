@@ -1,0 +1,817 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>jQuery Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+jQuery Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>jQuery Library</h1>
+
+<p>revIgniter's jQuery Library lets you write jQuery code for event handling, animation and Ajax interactions using LiveCode. If you intend to build complex jQuery driven sites you may prefer to stick to JavaSript and the jQuery syntax. But if you just need simple Ajax functionality this library provides a convenient way to, even dynamically, build jQuery code without dirtying your hands with JavaScript, though you still have to make yourself familiar with jQuery to some degree. The Jquery version currently supported is 1.4.2.</p>
+
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#tutorial">Tutorial: revIgniter's Approach to jQuery</a>
+	<ul>
+		<li><a href="#controller">Controller</a></li>
+		<li><a href="#ajaxview">View "ajaxView"</a></li>
+		<li><a href="#filteredview">View "filteredView"</a></li>
+		<li><a href="#model">Model</a></li>
+	</ul>
+</li>
+<li><a href="#principles">Basic Principles</a></li>
+<li><a href="#reference">Handler Reference</a>
+</li>
+
+</ul>
+
+<p>&nbsp;</p>
+
+<a name="overview"></a>
+<h1>Overview</h1>
+
+<p>Before explaining revIgniter's approach to jQuery, let's describe how to embed jQuery code in your view file and how this code is built.</p>
+
+<ol>
+<li>First, you need to define, where jQuery is located. You may include the framework remotely without storing any copy on your host.</li> 
+<li>Then you tell the library to start writing the jQuery script.</li>
+<li>Now you can choose from a variety of functions to build all sorts of Ajax interaction.</li>
+<li>Finally you tell the library to return the complete script, so that you can store it in the <var>gData</var> variable to be merged with the view. </li>
+</ol>
+
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Jquery library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Jquery"</code></pre>
+
+
+<h2>Setting preferences</h2>
+
+<p>There are three preferences you can set by passing an array in the second parameter of the loading handler. The example below tells the library to use a copy of the jQuery framework called "jquery.js" located at <samp>assets/js/</samp>:</p>
+
+<pre><code>put FALSE into tJquerySettings["useJQremotely"]
+rigLoaderLoadLibrary "Jquery", tJquerySettings
+</code></pre>
+
+<p>To specify a different path to jQuery your code should look like this: </p>
+
+<pre><code>put "your/path/to/jquery/jquery.js" into tJquerySettings["jqueryPath"]
+rigLoaderLoadLibrary "Jquery", tJquerySettings
+</code></pre>
+
+<p>If you specify a jQuery version number like in the following example, the framework will be loaded from googleapis.com. For speed reasons this is the preferred method: </p>
+
+<pre><code>put "1.4.2" into tJquerySettings["jqueryCurrentVersion"]
+rigLoaderLoadLibrary "Jquery", tJquerySettings
+</code></pre>
+
+<p class="important"><strong>Note:</strong> If you don't set any preferences the latest version of jQuery, located at jquery.com, will be used.</p>
+
+
+<p>&nbsp;</p>
+
+<a name="tutorial"></a>
+<h1>Tutorial: revIgniter's Approach to jQuery</h1>
+
+<p>What follows is a tutorial based on the "Ajax Integration" example published by Runtime Revolution Ltd. at the <a href="http://samples.on-rev.com/ajax.irev" target="_blank">on-rev samples site</a>. It demonstrates how to filter data using text the user types into a form field. Contrary to the on-rev sample you won't write any jQuery / JavaScript code. Now let's see, what you will need:</p>
+
+<ol>
+	<li>A database table named "people".</li>
+	<li>A controller to receive and process the data submitted by the jQuery script, which processes the user's keystrokes.</li>
+	<li>A view file containing an input form field and a table.</li>
+	<li>A view file, which is used to dynamically replace the table data in the view file, mentioned above.</li>
+	<li>A very simple model, which gets data from your database table.</li>
+</ol>
+
+<p>To begin, build the table using the table structure below and insert the corresponding data. We use MySQL here as database platform.</p>
+
+<pre><code>CREATE TABLE IF NOT EXISTS `people` (
+	`id` int(11) unsigned NOT NULL auto_increment,
+	`name` varchar(64) default NULL,
+	`age` int(2) default NULL,
+	`email` varchar(64) default NULL,
+	PRIMARY KEY  (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ;
+
+INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
+(1, 'Ben Montini', 27, 'ben@montini.com'),
+(2, 'James Johnson', 31, 'james@thejohnsons.com'),
+(3, 'Michael Jordan', 52, 'michael@basketballstars.com'),
+(4, 'Tony Blair', 57, 'ex-priminister@theuk.com'),
+(5, 'Jonathan Edwards', 44, 'triple@jump.com'),
+(6, 'Tim Cook', 52, 'tim@apple.com'),
+(7, 'Bill Gates', 55, 'bill@microsoft.com'),
+(8, 'Big Bird', 34, 'bigbird@thestreet.com'),
+(9, 'Ben Saim', 22, 'ben.saim@saim.com'),
+(10, 'Barack Obama', 49, 'barack@theusa.com'),
+(11, 'David Brent', 54, 'david@funny.com'),
+(12, 'Graeme Gooch', 66, 'bat@thecricketball.com'),
+(13, 'Steven Spielberg', 64, 'me@moviemaking.com'),
+(14, 'Ralf Bitter', 99, 'rabit@revigniter.com');
+</code></pre>
+
+<p>Now let's create the irev files.</p>
+
+<a name="controller"></a>
+<h2>Controller</h2>
+
+<p>We start with the basic prototype for a controller script. Create a controller called <dfn>ajax.lc</dfn>. In it, place the code below and save it to your <samp>system/application/controllers/</samp> folder. Of course, you may remove the comments.</p>
+
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "ajax,index" into gControllerHandlers
+
+
+# THE CONTROLLER HANDLER
+command ajax
+	# LOAD REQUIRED LIBRAIES, MODELS, HELPERS, PLUGINS
+end ajax
+
+# THE DEFAULT HANDLER
+command index
+	-- do something here
+end index
+
+
+
+--| END OF ajax.lc
+--| Location: ./system/application/controllers/ajax.lc
+----------------------------------------------------------------------
+</code></pre>
+
+
+<p>Now, to load required libraries, helpers and models, insert this code into the <dfn>ajax</dfn> handler.<br />First, we load the "Jquery" library. If you don't change the default setting using the second parameter, your code will link to the latest version of jQuery on jquery.com and you don't need to store a copy of jQuery on your host, though, as mentioned above, this is not recommended in a runtime environment. <br />We load the Table library as we want to display the data in the form of a table.<br />Of course, we load the database and we need a model, which we call "ajaxmodel". </p>
+
+
+<pre><code>rigLoaderLoadLibrary "Jquery"
+rigLoaderLoadLibrary "Table"
+get rigLoadDatabase()
+rigLoadModel "ajaxmodel"
+</code></pre>
+
+
+
+<p>&nbsp;</p>
+
+<p>Let's build the <dfn>index</dfn> handler. Insert the following statement, which stores the page title in <var>gData</var>. </p>
+
+<pre><code>put "revIgniter Ajax Tutorial" into gData["pageTitle"]
+</code></pre>
+
+<p>Now to the important part, the statements, which build the jQuery script. We want the script to handle key-up events in the input field. It should post the text, the user has typed, and replace HTML code with data returned by the controller.<br />Add this statement to tell the jQuery library to start writing the jQuery script:</p>
+
+<pre><code>rigJQopen
+</code></pre>
+
+<p>Add this statement to tell the library to start writing an event function, which is triggered by key-up events in an input field with the id named "filter".</p>
+
+<pre><code>rigJQeventOpen "'#filter'", "'keyup'"
+</code></pre>
+
+<p>Add the following statement, which posts the text (value) of the input field as "search_term" to the controller and it's <dfn>datafilter</dfn> handler, and replaces the HTML code inside the "#results" div with the returned data. Note: Here we use a getter, which returns the jQuery syntax to get the value of the input field.</p>
+
+<pre><code>rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+</code></pre>
+
+<p>Tell the library to end writing the event function by adding this statement:</p>
+
+<pre><code>rigJQeventClose
+</code></pre>
+
+<p>Add this statement to close the jQuery script:</p>
+
+<pre><code>rigJQclose
+</code></pre>
+
+<p>To store the script in the <var>gData</var> variable add the following line:</p>
+
+<pre><code>put the result into gData["JQscript"]
+</code></pre>
+
+<p>The next statement calls the model function to retrieve the data from the database: </p>
+
+<pre><code>put peopleData() into tQuery
+</code></pre>
+
+<p>To build the HTML table add this statement:</p>
+
+<pre><code>buildTable tQuery
+</code></pre>
+
+<p>Finally load the view file, which we call "ajaxView":</p>
+
+<pre><code>get rigLoadView("ajaxView")
+</code></pre>
+
+
+<p>We need two handlers more. One, which retrieves the filtered data from the model, and one which stores the corresponding HTML table in the <var>gData</var> variable.</p>
+<p>Insert the code below right after the index handler.This handler is called by the jQuery script. It checks if there is POST data, that is to say if key "search_term" has a value. Then it gets the filtered data from the model, calls the <dfn>buildTable</dfn> controller handler if the query returned data, and finally loads the view "filteredView".</p>
+
+<pre><code>command datafilter
+	put rigVarPost("search_term", TRUE) into tSearchTerm
+	if (tSearchTerm &lt;> FALSE) then
+		put peopleData(tSearchTerm) into tQueryResult
+	end if
+	if tQueryResult &lt;> FALSE then
+		buildTable tQueryResult
+	else
+		put "No match!" into gData["peopleTable"]
+	end if
+	get rigLoadView("filteredView")
+end datafilter
+</code></pre>
+
+<p>Note: revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of rigVarPost() to "TRUE". </p>
+
+<p class="important"><strong>Note:</strong> Don't forget to add the handler name "datafilter" to the global variable gControllerHandlers at the top of the page.</p>
+
+<p>Insert the handler, which stores the HTML table code in the <var>gData</var> variable by processing the database data, after the <dfn>datafilter</dfn> handler to complete the controller.</p>
+
+<pre><code>command buildTable pQueryResult
+	put pQueryResult["resultarray"] into tResult
+	rigSetTableHeading pQueryResult["fieldnames"], TRUE
+	put rigGenerateTable(tResult) into gData["peopleTable"]
+end buildTable
+</code></pre>
+
+<p class="important"><strong>Note:</strong> Don't forget to add the handler name "buildTable" to the global variable gControllerHandlers at the top of the page.</p>
+
+<p>The code of your controller should now look like this:</p>
+
+<pre><code>&lt;?rev
+
+global gControllerHandlers, gData
+put "ajax,index,datafilter,buildTable" into gControllerHandlers
+
+command ajax
+	rigLoaderLoadLibrary "Jquery"
+	rigLoaderLoadLibrary "Table"
+	get rigLoadDatabase()
+	rigLoadModel "ajaxmodel"
+end ajax
+
+command index
+	put "revIgniter Ajax Tutorial" into gData["pageTitle"]
+	rigJQopen
+		rigJQeventOpen "'#filter'", "'keyup'"
+			rigJQxhRequest "load", "ajax/datafilter", "search_term:" && rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+		rigJQeventClose
+	rigJQclose
+	put the result into gData["JQscript"]
+	put peopleData() into tQuery
+	buildTable tQuery
+	get rigLoadView("ajaxView")
+end index
+
+command datafilter
+	put rigVarPost("search_term", TRUE) into tSearchTerm
+	if (tSearchTerm &lt;> FALSE) then
+		put peopleData(tSearchTerm) into tQueryResult
+	end if
+	if tQueryResult &lt;> FALSE then
+		buildTable tQueryResult
+	else
+		put "No match!" into gData["peopleTable"]
+	end if
+	get rigLoadView("filteredView")
+end datafilter
+
+command buildTable pQueryResult
+	put pQueryResult["resultarray"] into tResult
+	rigSetTableHeading pQueryResult["fieldnames"], TRUE
+	put rigGenerateTable(tResult) into gData["peopleTable"]
+end buildTable
+
+
+
+--| END OF ajax.lc
+--| Location: ./system/application/controllers/ajax.lc
+----------------------------------------------------------------------
+</code></pre>
+
+
+<a name="ajaxview"></a>
+<h2>View "ajaxView"</h2>
+
+<p>Create a view called <dfn>ajaxView.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp> folder:</p>
+
+<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+				"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	&lt;head>
+		&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+
+		&lt;? return rigJQuerySource() ?>
+
+		[[gData["JQscript"] ]]
+
+		&lt;/head>
+
+		&lt;body>
+			&lt;div class="page_margins">
+				&lt;div id="content">
+					&lt;div id="input">Name: &lt;input name="name" type="text" id="filter" />&lt;/div>
+					&lt;p>&amp;nbsp;&lt;/p>
+					&lt;h2>Dynamic Result (pulled from database)&lt;/h2>
+					&lt;div id="results">[[gData["peopleTable"] ]]&lt;/div>
+				&lt;/div>
+			&lt;/div>
+		&lt;/body>
+&lt;/html>
+</code></pre>
+
+<p>Note: <dfn>rigJQuerySource()</dfn> is a Jquery library function, which returns a html string linking to jQuery.</p>
+
+
+<a name="filteredview"></a>
+<h2>View "filteredView"</h2>
+
+<p>Create the view called <dfn>filteredView.lc</dfn>, which is loaded by the <dfn>datafilter</dfn> handler. In it, place just this expression and save it to your <samp>system/application/views/</samp> folder: </p>
+
+<pre><code>[[gData["peopleTable"] ]]
+</code></pre>
+
+
+<a name="model"></a>
+<h2>Model</h2>
+
+<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <samp>system/application/models/</samp> folder:</p>
+
+<pre><code>&lt;?rev
+
+function peopleData pSearchTerm
+	if pSearchTerm &lt;> "" then
+		rigDbLike "name", pSearchTerm
+	end if
+	put rigDbGet("people") into tQueryResult
+	if tQueryResult["numrows"] > 0 then
+		return tQueryResult
+	end if
+	return FALSE
+end peopleData
+</code></pre>
+
+
+<p>That's it, filtering the list should work as expected.</p>
+
+<p>&nbsp;</p>
+
+<a name="principles"></a>
+<h1>Basic Principles</h1>
+
+<p>There is a set of rules you should keep in mind:</p>
+
+<ul>
+	<li>The default path to jQuery is assets/js/jquery.js. This path is used, if you set the <var>useJQremotely</var> preference to FALSE.</li>
+	<li>For speed reasons simply specify a jQuery version number as explained above so that the jQuery library is loaded from Google’s AJAX Libraries CDN.</li>
+	<li>Always enclose literals, URIs and selectors, used as parameters, in single quotes, like in: rigJQeventOpen "'#logout'", "'click'"</li>
+	<li>All handler names have "JQ" as prefix.</li>
+	<li>Most handlers have an equivalent as function, distinguishable by an "R", like "return" or "result", as suffix in function names. Instead of adding statements to the jQuery script, these functions return them. This comes in handy when you need to include jQuery statements as parameters.</li>
+	<li>Don't use "bind" as event in a rigJQeventOpen handler.</li>
+	<li>jQuery event objects need to be referenced as "event".</li>
+	<li>rigJQeventOpen / rigJQeventClose pairs can be nested.</li>
+	<li>Ajax request type must be POST if query strings are not enabled in config.lc.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<a name="reference"></a>
+<h1>Handler Reference</h1>
+
+<p>The following handlers are intended for use in your controller handlers. There are some highly specialized handlers like rigJQajaxForm, rigJQeventAlert, rigJQeventEffect, rigJQeventAnim, rigJQconfirm or rigJQprompt, and others like rigJQset, rigJQgetR or rigJQeventOpen, which are more generic ones.</p>
+
+
+<h2>rigJQuerySource()</h2>
+
+<p>This function returns the html string linking to jQuery.</p>
+
+<h2>rigJQopen</h2>
+
+<p>Use this handler to tell the library to start building your jQuery script.</p>
+
+<h2>rigJQclose</h2>
+
+<p>Ends building your script and returns it. Example:</p>
+
+<pre><code>rigJQclose
+put the result into gData["JQscript"]
+</code></pre>
+
+<h2>rigJQajaxForm <var>submitBtnSelector</var>, <var>selectorList</var>, <var>postURI</var>, <var>preventDefault</var>, <var>dataToLoadURI</var>, <var>dataContainerSelector</var></h2>
+
+<p>Permits you to process form data using a xmlHTTPrequest and place the returned HTML into the matched element. Example:</p>
+
+<pre><code>rigJQajaxForm "'#submitBtn'", "'#formField'", "'myController/addDataHandler'", TRUE, "'myController/viewHandler'", "'#content'"
+</code></pre>
+
+<p>The first parameter is a selector tied to the form submit button. The second parameter is a comma delimited list of selectors of form elements. The third parameter specifies the URI to post the data to. The optional fourth parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional fifth parameter specifies the URI, which is responsibel for loading a view containing result data. The optional sixth parameter specifies the selector of an object, which acts as a container for the result data returned by the controller.</p>
+
+<p class="important"><strong>Note:</strong> This handler assumes, that IDs and names of form elements are identical.</p>
+
+<h2>rigJQeventAlert <var>selector</var>, <var>event</var>, <var>alert</var>, <var>preventDefault</var>, <var>eventData</var></h2>
+
+<p>Displays an alert on various events. Example:</p>
+
+<pre><code>rigJQeventAlert "a", "click", "'As you can see, this link no longer takes you to revIgniter.com'", TRUE
+</code></pre>
+
+<p>The first parameter specifies a selector, the second an event type. Third parameter determines the alert to be displayed. This can be a string or the eventData parameter of the event object. This data can be passed to jQuery with the fifth parameter. The optional fourth parameter is a boolean used to prevent the default action of the event to be triggered if set to TRUE.</p>
+
+<p>Here is another example showing how to use the optional fifth parameter:</p>
+
+<pre><code>rigJQvar "message,'This is an alert.'"
+rigJQeventAlert "'#testObject'", "'click'", "event.data.msg", , "msg: message"
+</code></pre>
+
+<p class="important"><strong>Note:</strong> This handler assumes an event object named "event". Mind the syntax of the Key/Value pair, a map (JavaScript object), contained in the fifth parameter.</p>
+
+<p>For more event types see the jQuery documentation.</p>
+
+<h2>rigJQalert <var>alert</var></h2>
+
+<p>This handler writes a simple alert statement. The parameter is a string to be displayed as alert.</p>
+
+<h2>rigJQalertR(<var>alert</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQalert), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQconfirm <var>varName</var>, <var>question</var>, <var>global</var></h2>
+
+<p>Adds a statement, which displays a JavaScript confirmation box and stores the returned value in a variable. The first parameter is the name of the variable. The second parameter is the question to be asked and the third parameter is a boolean, which specifies if it is a global variable. </p>
+
+<h2>rigJQconfirmR(<var>varName</var>, <var>question</var>, <var>global</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQconfirm), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQprompt <var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var></h2>
+
+<p>Adds a statement, which displays a JavaScript prompt box and stores the input value in a variable. The first parameter is the name of the variable. The second parameter is the prompt. The optional third parameter is the default value and the optional fourth parameter is a boolean, which specifies if the variable, the input value is stored in, should be global.</p>
+
+<h2>rigJQpromptR(<var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQprompt), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQset <var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var></h2>
+
+<p>Permits you to write all sorts of jQuery setter statements, which manipulate the DOM in some manner. Example:</p>
+
+<pre><code>rigJQset "'p:last'", "addClass", "'selected'"
+</code></pre>
+
+<p>The first parameter specifies a selector, the second a jQuery method. The third parameter contains the values to be set. Depending on the specified method, these can be a string, an array, a comma delimited list or a function returning the content to set. The optional fourth parameter, a boolean, tells the handler to treat the Propertyvalues parameter as function. The optional fifth parameter is only used by the toggleClass method. It is a boolean to determine whether the class should be added or removed.</p>
+
+<p>Here is another example, which shows the use of a function as property value:</p>
+
+<pre><code>put "return 'selected';" into tSetterData
+rigJQset "'p:last'", "addClass", tSetterData, TRUE
+</code></pre>
+
+<p class="important"><strong>Note:</strong> To reference the function arguments for index positions of elements in a set and for old values, always use the terms "index" and "oldVal".</p>
+
+
+<h2>rigJQsetR(<var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQset), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQgetR(<var>selector</var>, <var>method</var>, <var>getterProp</var>)</h2>
+
+<p>Permits you to retrieve information from DOM elements for later use. Example:</p>
+
+<pre><code>rigJQgetR("'#userinput'", "attr", "'value'")
+</code></pre>
+
+<p>The first parameter specifies a selector, the second a jQuery method. Use the optional third parameter to determine the property to get.</p>
+
+
+<h2>rigJQeventOpen <var>selector</var>, <var>event</var>, <var>preventDefault</var>, <var>eventData</var>, <var>eventObject</var>, <var>FunctionArguments</var></h2>
+
+<p>This tells the library to start writing statements registering behaviors to take effect when the user interacts with the browser. Example:</p>
+
+<pre><code>rigJQeventOpen "'#logout'", "'click'"
+	rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
+	rigJQcondition "logout==true", "window.location = 'logout';"
+rigJQeventClose
+</code></pre>
+
+<p>The first parameter specifies a selector, the second a JavaScript event. The optional third parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional fourth parameter contains data passed to the function. The optional fifth parameter is a function to execute each time the event is triggered. The optional sixth parameter contains additional function arguments.</p>
+
+<p>Here is another example demonstrating the use of additional function arguments:</p>
+
+<pre><code>rigJQeventOpen "'#customObject'", "'myCustomEvent'", , , , "myName, myValue"
+	rigJQset "this", "text", "myName + ', hi there!'"
+rigJQeventClose
+
+rigJQeventOpen "'#clickObject'", "'click'"
+	rigJQeventOpen "'#customObject'", "'trigger'", , "'myCustomEvent','John','TestValue'"
+	rigJQeventClose
+rigJQeventClose
+</code></pre>
+
+<p class="important"><strong>Note:</strong> Don't use "bind" as event in a rigJQeventOpen handler. jQuery event objects need to be referenced as "event".</p>
+
+<h2>rigJQeventClose</h2>
+
+<p>Used to mark the end of the event function.</p>
+
+
+<h2>rigJQeventEffect <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>effect</var>, <var>parameter</var>, <var>preventDefault</var>, <var>callback</var></h2>
+
+<p>Permits you to set special effects on various events. Example:</p>
+
+<pre><code>rigJQeventEffect "'#hideBtn'", "'#hideDiv'", "'click'", "hide", "'slow'", , rigJQeffectR("'a'", "hide")
+</code></pre>
+
+<p>The first parameter specifies an object, which triggers the event, the second determines the object the effect is applied to. The third parameter is an event type. The fourth parameter specifies an effect method. The optional fifth parameter is used to set effect parameters. The optional sixth parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional seventh parameter contains a function to call once the animation is complete.</p>
+
+<p>Here is another example:</p>
+
+<pre><code>put rigJQeffectR("'a'", "show") &amp; return &amp; rigJQalertR("'This is an alert!'") into tCallbackShow
+rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", , tCallbackShow
+</code></pre>
+
+<h2>rigJQeffect <var>selector</var>, <var>effect</var>, <var>duration</var>, <var>callback</var></h2>
+
+<p>Permits you to apply effects to objects. Example:</p>
+
+<pre><code>rigJQeffect "'a'", "hide", "'slow'"
+</code></pre>
+
+<p>The first parameter determines the object the effect is applied to. The second specifies the effect. The optional third parameter is used to set the effect duration and the optional fourth parameter contains a function to call once the animation is complete.</p>
+
+<p class="important"><strong>Note:</strong> Don't use "animate" as effect. There is a special rigJQanimate handler for this type of effect.</p>
+
+<h2>rigJQeffectR(<var>selector</var>, <var>effect</var>, <var>effectData</var>, <var>callback</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQeffect), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQeventAnim <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>properties</var>, <var>Duration</var>, <var>Easing</var>, <var>Callback</var></h2>
+
+<p>Permits you to perform a custom animation of a set of CSS properties on various events. Example:</p>
+
+<pre><code>put "'20%'" into tAnimProps["width"]
+put "0.4" into tAnimProps["opacity"]
+put "'0.6in'" into tAnimProps["marginLeft"]
+put "'3em'" into tAnimProps["fontSize"]
+put "'10px'" into tAnimProps["borderWidth"]
+rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
+</code></pre>
+
+<p>The first parameter specifies an object, which triggers the event, the second determines the object the animation is applied to. The third parameter specifies the event and the fourth the CSS properties to be animated. Put these into an array. The optional fifth parameter sets the animation duration, this can be an integer, a string or an array. The optional sixth parameter contains a string indicating which easing function to use for the animation. The optional seventh parameter contains a function to call once the animation is complete.</p>
+
+<p class="important"><strong>Note:</strong> Use an array for duration if you need to set more properties than the duration only. To provide other easing functions than the default "swing" for animation you need additional Jquery plugins.</p>
+
+<h2>rigJQanimate <var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var></h2>
+
+<p>Permits you to perform a custom animation of a set of CSS properties.</p>
+
+<p>The first parameter determines the object the animation is applied to. The second parameter contains the CSS properties to be animated. This can be an array or a string. If you don't use an array use the following form: "key1: value1, key2: value2, . . ." The optional third parameter sets the animation duration, this can be an integer, a string or an array. The optional fourth parameter contains a string indicating which easing function to use for the animation. The optional fifth parameter contains a function to call once the animation is complete.</p>
+
+<h2>rigJQanimateR(<var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQanimate), but instead of adding the statement to the script, it returns it.</p>
+
+<p class="important"><strong>Note:</strong> Use an array for duration if you need to set more properties than the duration only. To provide other easing functions than the default "swing" for animation you need additional Jquery plugins.</p>
+
+<h2>rigJQajax <var>ajaxOptions</var>, <var>setUpOnly</var></h2>
+
+<p>Permits you to perform an asynchronous HTTP (Ajax) request. Example:</p>
+
+<pre><code>put "ajax/datafilter" into tAjax["url"]
+put "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'") into tAjax["data"]
+put rigJQsetR("'#results'", "html", "data") into tAjax["success"]
+
+rigJQeventOpen "'#filter'", "'keyup'"
+	rigJQajax tAjax
+rigJQeventClose
+</code></pre>
+
+<p>The first parameter is an array of jQuery.ajax settings. If you just want to configure the default Ajax request, set the optional second parameter, a boolean, to TRUE.</p>
+
+<p class="important"><strong>Note:</strong> To reference the "success:" function argument for any data returned, always use the term "data". Reference the second argument using the term "textStatus", and the third argument using the term "XMLHttpRequest".</p>
+
+<h2>rigJQajaxR(<var>ajaxOptions</var>, <var>setUpOnly</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQajax), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQxhRequest <var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var></h2>
+
+<p>Permits you to load data from the server and, depending on the request type, place the returned HTML into the matched element without a browser page refresh. Example:</p>
+
+<pre><code>rigJQeventOpen "'#filter'", "'keyup'"
+	rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+rigJQeventClose
+</code></pre>
+
+<p>The first parameter specifies the type of request, possible values are: "get", "post", "load" and "getJSON". The optional second parameter is a string containing the URI to which the request is sent. The optional third parameter can be a map (JavaScript object), i.e. a Key/Value pair like "key: value", or string that is sent to the server with the request. The optional fourth parameter contains a callback function that is executed when the request completes. Use the terms "data", "textStatus" and "XMLHttpRequest" to reference the arguments of the callback if needed. The optional fifth parameter specifies the type of data that you're expecting back from the server. Available types are: "xml", "html", "script", "json", "jsonp" and "text". The optional sixth parameter specifies the element to place the returned HTML into. This parameter is only relevant, if the request type is "load".</p>
+
+<p class="important"><strong>Note:</strong> Mind the syntax of the Key/Value pair, a map (JavaScript object), contained in the third parameter. Don't use "get" as request type if query strings are not enabled in config.lc.</p>
+
+<p>Here is another example, which demonstrates the use of a callback:</p>
+
+<pre><code>put rigJQsetR("'#msg'", "html", "data") &amp; return into tCallback
+put rigJQalertR("'The data has been loaded'") after tCallback
+rigJQxhRequest "post", "myController", "limit: 25", tCallback
+</code></pre>
+
+
+<h2>rigJQxhRequestR(<var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQxhRequest), but instead of adding the statement to the script, it returns it.</p>
+
+
+<h2>rigJQcallFunction <var>selector</var>, <var>functionName</var>, <var>funtionArguments</var></h2>
+	
+<p>Permits you to write statements to call any jQuery or any custom function.</p>
+
+<p>The optional first parameter is a selector, use a comma delimited list if you want to deal with more than one element. The second parameter specifies the function name and the optional third parameter contains the function arguments.</p>
+
+
+<h2>rigJQfunctionOpen <var>name</var>, <var>arguments</var></h2>
+
+<p>Tells the library to start writing a custom function.</p>
+
+<p>The first parameter specifies the name of the function and the optional second parameter contains the function arguments as a comma delimited list.</p>
+
+<h2>rigJQfunctionClose</h2>
+
+<p>Use this handler to mark the end of a custom function.</p>
+
+<h2>rigJQcb</h2>
+
+<p>Marks the end of a custom function. This is a synonym for JQfunctionClose.</p>
+
+<h2>rigJQcondition <var>condition</var>, <var>ifAction</var>, <var>elseAction</var></h2>
+
+<p>Permits you to write a conditional statement. Example:</p>
+
+<pre><code>rigJQcondition "logout==true", "window.location = 'logout';"
+</code></pre>
+
+<p>The first parameter contains the condition, the second specifies what to do if the condition is met, and the optional third parameter specifies what to do if the condition is not met.</p>
+
+<h2>rigJQconditionR(<var>condition</var>, <var>ifAction</var>, <var>elseAction</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQcondition), but instead of adding the statement to the script, it returns it.</p>
+
+
+<h2>rigJQeachOpen <var>selector</var>, <var>collection</var>, <var>callback</var></h2>
+
+<p>Permits you to iterate over a jQuery object or over both, a map (JavaScript object) or an array, executing a function for each matched element or for each member of a collection.</p>
+
+<p>The first parameter is used to iterate over an object and contains a selector. The second parameter contains a collection, i.e. a map (JavaScript object) or an array. Depending on using the first or the second parameter, the third parameter contains eather a function to execute for each matched element, or a function that will be executed on every member of a collection.</p>
+
+<p>If iterating over a jQuery object reference the function arguments using the terms: "index" and "element". If iterating over a collection use the terms: "index" and "value".</p>
+
+<p class="important"><strong>Note:</strong> Use eather the first parameter or the second.</p>
+
+<h2>rigJQeachOpenR(<var>selector</var>, <var>collection</var>, <var>callback</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (JQeachOpen), but instead of adding the statement to the script, it returns it.</p>
+
+<h2>rigJQeachClose</h2>
+
+<p>Use this handler to mark the end of an iteration.</p>
+
+
+<h2>rigJQeachCloseR()</h2>
+
+<p>This function does the same as it's equivalent handler (rigJQeachClose), but instead of adding the statement to the script, it returns it.</p>
+
+
+<h2>rigJQvar <var>vars</var></h2>
+
+<p>Permits you to declare variables. Example:</p>
+
+<pre><code>rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
+</code></pre>
+
+<p>The parameter can be a string specifying a name and a value delimited by a comma, or an array to declare more than one variable with only one statement. If you use an array stick to the following form: put "name,value;" into tVarsArray[n] where n is an integer starting with 1</p>
+
+<p>Here is another example, which takes the result of a confirmation box as value:</p>
+
+<pre><code>rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
+</code></pre>
+
+<h2>rigJQvarR(<var>vars</var>)</h2>
+
+<p>This function does the same as it's equivalent handler (rigJQvar), but instead of adding the statement to the script, it returns it.</p>
+
+
+
+<h2>rigJQaddStatement <var>statement</var></h2>
+
+<p>In case your particular needs demand it: Use this handler to add standard jQuery code to your script.</p>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="loader.html">Loader Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

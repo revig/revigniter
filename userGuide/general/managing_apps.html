@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Managing your Applications : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Managing Your Application
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Managing your Applications</h1>
+
+<p>By default it is assumed that you only intend to use revIgniter to manage one application, which you will build in your
+<dfn>system/application/</dfn> directory.  It is possible, however, to have multiple sets of applications that share a single
+revIgniter installation, or even to rename or relocate your <dfn>application</dfn> folder.</p>
+
+<h2>Renaming the Application Folder</h2>
+
+<p>If you would like to rename your <dfn>application</dfn> folder you may do so as long as you open your main <kbd>index.lc</kbd>
+file and set its name using the <samp>gApplicationFolder</samp> variable:</p>
+
+<pre><code>put "application" into gApplicationFolder</code></pre>
+
+<h2>Relocating your Application Folder</h2>
+
+<p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>system</kbd> folder. 
+To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <samp>gApplicationFolder</samp> variable.</p>
+
+
+<pre><code>put "/Path/to/your/application" into gApplicationFolder</code></pre>
+
+
+<h2>Running Multiple Applications with one revIgniter Installation</h2>
+
+<p>If you would like to share a common revIgniter installation to manage several different applications simply 
+put all of the directories located inside your <kbd>application</kbd> folder into their
+own sub-folder.</p>
+
+<p>For example, let's say you want to create two applications, "foo" and "bar".  You will structure your
+application folder like this:</p>
+
+<pre><code>system/application/<var>foo</var>/
+system/application/<var>foo</var>/config/
+system/application/<var>foo</var>/controllers/
+system/application/<var>foo</var>/errors/
+system/application/<var>foo</var>/helpers/
+system/application/<var>foo</var>/hooks/
+system/application/<var>foo</var>/index.html
+system/application/<var>foo</var>/language/
+system/application/<var>foo</var>/libraries/
+system/application/<var>foo</var>/models/
+system/application/<var>foo</var>/plugins/
+system/application/<var>foo</var>/views/
+system/application/<samp>bar</samp>/
+system/application/<samp>bar</samp>/config/
+system/application/<samp>bar</samp>/controllers/
+system/application/<samp>bar</samp>/errors/
+system/application/<samp>bar</samp>/helpers/
+system/application/<samp>bar</samp>/hooks/
+system/application/<samp>bar</samp>/index.html
+system/application/<samp>bar</samp>/language/
+system/application/<samp>bar</samp>/libraries/
+system/application/<samp>bar</samp>/models/
+system/application/<samp>bar</samp>/plugins/
+system/application/<samp>bar</samp>/views/</code></pre>
+
+
+<p>To select a particular application for use requires that you open your main front controller, the <kbd>index.lc</kbd> file, and set the <dfn>gApplicationFolder</dfn>
+variable. For example, to select the "foo" application for use you would do this:</p>
+
+<pre><code>put "application/foo" into gApplicationFolder</code></pre>
+
+<p>To set the <dfn>gApplicationFolder</dfn> variable for the "bar" application you need another front controller located at document root. Let's name it <kbd>bar.lc</kbd>. The corresponding setting should read like this:</p>
+
+<pre><code>put "application/bar" into gApplicationFolder</code></pre>
+
+<p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file which 
+calls the desired application.  The index.lc file can be named anything you want.</p>
+
+<p>To exclude <kbd>index.lc</kbd> and <kbd>bar.lc</kbd> from your URLs you need to modify the mod_rewrite rules explained in <a href="urls.html">revIgniter URLs</a> like this:</p>
+
+
+<pre><code>&lt;IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.lc|bar\.lc|image|img|assets|robots\.txt|css|js|bar)
+RewriteRule ^(.*)$ index.lc?/$1 [L]
+
+RewriteCond $1 !^(bar\.lc|index\.lc|image|img|assets|robots\.txt|css|js)
+RewriteRule ^bar/?$ bar.lc?/ [L]
+RewriteRule ^(bar)/(.*)$ bar.lc?/$2 [L]
+&lt;/IfModule>
+</code></pre>
+
+
+
+
+<p>Now, assuming the name of your default controllers is "welcome.lc", the URLs of your applications look like this:</p>
+
+<p><kbd>http://www.MyDomain.com/</kbd> refers to http://www.MyDomain.com/index.lc/welcome.lc<br />
+
+<kbd>http://www.MyDomain.com/bar/</kbd> refers to http://www.MyDomain.com/bar.lc/welcome.lc</p>
+
+
+
+
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="profiling.html">Profiling Your Application</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="security.html">Security</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

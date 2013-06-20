@@ -1,0 +1,18 @@
+<?rev
+
+put "Ver registros" into gLang["scaff_view_records"]
+put "Crear nuevo registro" into gLang["scaff_create_record"]
+put "Añadir datos" into gLang["scaff_add"]
+put "Ver datos" into gLang["scaff_view"]
+put "Editar" into gLang["scaff_edit"]
+put "Eliminar" into gLang["scaff_delete"]
+put "Ver todo" into gLang["scaff_view_all"]
+put "Si" into gLang["scaff_yes"]
+put "No" into gLang["scaff_no"]
+put "Todavía no existen datos para esta tabla." into gLang["scaff_no_data"]
+put "¿Está seguro de eliminar la siguiente fila:" into gLang["scaff_del_confirm"]
+
+
+--| END OF scaffoldingLang.lc
+--| Location:  ./system/language/spanish/scaffoldingLang.lc
+----------------------------------------------------------------------

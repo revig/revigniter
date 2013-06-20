@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Connecting to your Database : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Connecting
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Connecting to your Database</h1>
+
+<p>There are two ways to connect to a database:</p>
+
+<h2>Automatically Connecting</h2>
+
+<p>The "auto connect" feature will load the database library with every page load.
+To enable "auto connecting", add the word <var>database</var> to the library array, as indicated in the following file:</p>
+
+<p><kbd>application/config/autoload.lc</kbd></p>
+
+<h2>Manually Connecting</h2>
+
+<p>If only some of your pages require database connectivity you can manually connect to your database by adding this
+line of code in any function where it is needed.</p>
+
+<pre><code>get rigLoadDatabase()</code></pre>
+
+<p class="important">If the above function does <strong>not</strong> contain any information in the first parameter it will connect
+to the group specified in your database config file. For most people, this is the preferred method of use.</p>
+
+<h3>Available Parameters</h3>
+
+<ol>
+	<li>The database connection values, passed either as an array or a DSN string.</li>
+	<li>TRUE/FALSE (boolean).  Whether to return the connection ID (see Connecting to Multiple Databases below).</li>
+	<li>TRUE/FALSE (boolean).  Whether to enable the Active Record library.  Set to TRUE by default.</li>
+</ol>
+
+
+<h3>Manually Connecting to a Database</h3>
+
+<p>The first parameter of this function can <strong>optionally</strong> be used to specify a particular database group
+from your config file, or you can even submit connection values for a database that is not specified in your config file.
+Examples:</p>
+
+<p>To choose a specific group from your config file you can do this:</p>
+
+<pre><code>get rigLoadDatabase("<samp>groupName</samp>")</code></pre>
+
+<p>Where <samp>groupName</samp> is the name of the connection group from your config file.</p>
+
+
+<p>To connect manually to a desired database you can pass an array of values:</p>
+
+<pre><code>put "localhost" into tConfig["hostname"]
+put "myusername" into tConfig["username"]
+put "mypassword" into tConfig["password"]
+put "mydatabase" into tConfig["database"]
+put "mysql" into tConfig["dbdriver"]
+put "" into tConfig["dbprefix"]
+put FALSE into tConfig["pconnect"]
+put TRUE into tConfig["dbdebug"]
+put FALSE into tConfig["cacheon"]
+put "" into tConfig["cachedir"]
+put "utf8" into tConfig["charset"]
+put "utf8_general_ci" into tConfig["dbcollat"]
+
+get rigLoadDatabase(<samp>tConfig</samp>);</code></pre>
+
+<p>For information on each of these values please see the <a href="configuration.html">configuration page</a>.</p>
+
+<p>Or you can submit your database values as a Data Source Name. DSNs must have this prototype:</p>
+
+<pre><code>put "'dbdriver://username:password@hostname/database'" into tDSN
+
+get rigLoadDatabase(<samp>tDSN</samp>)</code></pre>
+
+<p>To override default config values when connecting with a DSN string, add the config variables as a query string.</p>
+
+<pre><code>put "'dbdriver://username:password@hostname/database?char_set=utf8&amp;dbcollat=utf8_general_ci&amp;cache_on=true&amp;cachedir=/path/to/cache'" into tDSN
+
+get rigLoadDatabase(<samp>tDSN</samp>)</code></pre>
+
+<h2>Connecting to Multiple Databases</h2>
+
+<p>Connecting to more than one database simultaneously is currently not supported.</p>
+
+
+
+	
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="configuration.html">Database Configuration</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="queries.html">Queries</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

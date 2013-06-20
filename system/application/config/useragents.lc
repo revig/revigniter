@@ -1,0 +1,271 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+
+##
+# -------------------------------------------------------------------
+# USER AGENT TYPES
+# -------------------------------------------------------------------
+# This file contains four arrays of user agent data.  It is used by the
+# Useragent Library to help identify browser, platform, robot, and
+# Mobile device data.  The array keys are used to identify the device
+# and the array values are used to set the actual name of the item.
+#
+##
+
+
+
+# DECLARE VARIABLES
+local sPlatforms, sBrowsers, sMobiles, sRobots
+
+
+
+# PLATFORMS
+
+put "Windows Longhorn" into sPlatforms[1]["windows nt 6.0"]
+put "Windows 2003" into sPlatforms[2]["windows nt 5.2"]
+put "Windows 2000" into sPlatforms[3]["windows nt 5.0"]
+put "Windows XP" into sPlatforms[4]["windows nt 5.1"]
+put "Windows NT 4.0" into sPlatforms[5]["windows nt 4.0"]
+put "Windows NT 4.0" into sPlatforms[6]["winnt4.0"]
+put "Windows NT" into sPlatforms[7]["winnt 4.0"]
+put "Windows NT" into sPlatforms[8]["winnt"]
+put "Windows 98" into sPlatforms[9]["windows 98"]
+put "Windows 98" into sPlatforms[10]["win98"]
+put "Windows 95" into sPlatforms[11]["windows 95"]
+put "Windows 95" into sPlatforms[12]["win95"]
+put "Unknown Windows OS" into sPlatforms[13]["windows"]
+put "Mac OS X" into sPlatforms[14]["os x"]
+put "Power PC Mac" into sPlatforms[15]["ppc mac"]
+put "FreeBSD" into sPlatforms[16]["freebsd"]
+put "Macintosh" into sPlatforms[17]["ppc"]
+put "Linux" into sPlatforms[18]["linux"]
+put "Debian" into sPlatforms[19]["debian"]
+put "Sun Solaris" into sPlatforms[20]["sunos"]
+put "BeOS" into sPlatforms[21]["beos"]
+put "ApacheBench" into sPlatforms[22]["apachebench"]
+put "AIX" into sPlatforms[23]["aix"]
+put "Irix" into sPlatforms[24]["irix"]
+put "DEC OSF" into sPlatforms[25]["osf"]
+put "HP-UX" into sPlatforms[26]["hp-ux"]
+put "NetBSD" into sPlatforms[27]["netbsd"]
+put "BSDi" into sPlatforms[28]["bsdi"]
+put "OpenBSD" into sPlatforms[29]["openbsd"]
+put "GNU/Linux" into sPlatforms[30]["gnu"]
+put "Unknown Unix OS" into sPlatforms[31]["unix"]
+
+
+# BROWSERS
+
+put "Flock" into sBrowsers[1]["Flock"]
+put "Chrome" into sBrowsers[2]["Chrome"]
+put "Opera" into sBrowsers[3]["Opera"]
+put "Internet Explorer" into sBrowsers[4]["MSIE"]
+put "Internet Explorer" into sBrowsers[5]["Internet Explorer"]
+put "Shiira" into sBrowsers[6]["Shiira"]
+put "Firefox" into sBrowsers[7]["Firefox"]
+put "Chimera" into sBrowsers[8]["Chimera"]
+put "Phoenix" into sBrowsers[9]["Phoenix"]
+put "Firebird" into sBrowsers[10]["Firebird"]
+put "Camino" into sBrowsers[11]["Camino"]
+put "Netscape" into sBrowsers[12]["Netscape"]
+put "OmniWeb" into sBrowsers[13]["OmniWeb"]
+put "Safari" into sBrowsers[14]["Safari"]
+put "Mozilla" into sBrowsers[15]["Mozilla"]
+put "Konqueror" into sBrowsers[16]["Konqueror"]
+put "iCab" into sBrowsers[17]["icab"]
+put "Lynx" into sBrowsers[18]["Lynx"]
+put "Links" into sBrowsers[19]["Links"]
+put "HotJava" into sBrowsers[20]["hotjava"]
+put "Amaya" into sBrowsers[21]["amaya"]
+put "IBrowse" into sBrowsers[22]["IBrowse"]
+
+
+
+# MOBILES
+#
+put "Mobile Explorer" into sMobiles[1]["mobileexplorer"]
+put "Palm" into sMobiles[2]["palmsource"]
+put "Palmscape" into sMobiles[3]["palmscape"]
+
+# PHONES AND MANUFACTURERS
+
+put "Motorola" into sMobiles[4]["motorola"]
+put "Nokia" into sMobiles[5]["nokia"]
+put "Palm" into sMobiles[6]["palm"]
+put "Apple iPhone" into sMobiles[7]["iphone"]
+put "Apple iPod Touch" into sMobiles[8]["ipod"]
+put "Apple iPad" into sMobiles[9]["ipad"]
+put "Sony Ericsson" into sMobiles[10]["sony"]
+put "Sony Ericsson" into sMobiles[11]["ericsson"]
+put "BlackBerry" into sMobiles[12]["blackberry"]
+put "O2 Cocoon" into sMobiles[13]["cocoon"]
+put "Treo" into sMobiles[14]["blazer"]
+put "LG" into sMobiles[15]["lg"]
+put "Amoi" into sMobiles[16]["amoi"]
+put "XDA" into sMobiles[17]["xda"]
+put "MDA" into sMobiles[18]["mda"]
+put "Vario" into sMobiles[19]["vario"]
+put "HTC" into sMobiles[20]["htc"]
+put "Samsung" into sMobiles[21]["samsung"]
+put "Sharp" into sMobiles[22]["sharp"]
+put "Siemens" into sMobiles[23]["sie-"]
+put "Alcatel" into sMobiles[24]["alcatel"]
+put "BenQ" into sMobiles[25]["benq"]
+put "HP iPaq" into sMobiles[26]["ipaq"]
+put "Motorola" into sMobiles[27]["mot-"]
+put "PlayStation Portable" into sMobiles[28]["playstation portable"]
+put "Danger Hiptop" into sMobiles[29]["hiptop"]
+put "NEC" into sMobiles[30]["nec-"]
+put "Panasonic" into sMobiles[31]["panasonic"]
+put "Philips" into sMobiles[32]["philips"]
+put "Sagem" into sMobiles[33]["sagem"]
+put "Sanyo" into sMobiles[34]["sanyo"]
+put "SPV" into sMobiles[35]["spv"]
+put "ZTE" into sMobiles[36]["zte"]
+put "Sendo" into sMobiles[37]["sendo"]
+
+# OPERATING SYSTEMS
+
+put "Symbian" into sMobiles[38]["symbian"]
+put "SymbianOS" into sMobiles[39]["SymbianOS"] 
+put "Palm" into sMobiles[40]["elaine"]
+put "Palm" into sMobiles[41]["palm"]
+put "Symbian S60" into sMobiles[42]["series60"]
+put "Windows CE" into sMobiles[43]["windows ce"]
+put "Mac OS X" into sMobiles[44]["os x"]
+
+# BROWSERS
+
+put "Obigo" into sMobiles[45]["obigo"]
+put "Netfront Browser" into sMobiles[46]["netfront"]
+put "Openwave Browser" into sMobiles[47]["openwave"]
+put "Mobile Explorer" into sMobiles[48]["mobilexplorer"]
+put "Opera Mini" into sMobiles[49]["operamini"]
+put "Opera Mini" into sMobiles[50]["opera mini"]
+put "safari" into sMobiles[51]["Safari"]
+
+# OTHER
+
+put "Digital Paths" into sMobiles[52]["digital paths"]
+put "AvantGo" into sMobiles[53]["avantgo"]
+put "Xiino" into sMobiles[54]["xiino"]
+put "Novarra Transcoder" into sMobiles[55]["novarra"]
+put "Vodafone" into sMobiles[56]["vodafone"]
+put "NTT DoCoMo" into sMobiles[57]["docomo"]
+put "O2" into sMobiles[58]["o2"]
+
+# FALLBACK
+
+put "Generic Mobile" into sMobiles[59]["mobile"]
+put "Generic Mobile" into sMobiles[60]["wireless"]
+put "Generic Mobile" into sMobiles[61]["j2me"]
+put "Generic Mobile" into sMobiles[62]["midp"]
+put "Generic Mobile" into sMobiles[63]["cldc"]
+put "Generic Mobile" into sMobiles[64]["up.link"]
+put "Generic Mobile" into sMobiles[65]["up.browser"]
+put "Generic Mobile" into sMobiles[66]["smartphone"]
+put "Generic Mobile" into sMobiles[67]["cellphone"]
+
+
+
+# ROBOTS
+# THERE ARE HUNDREDS OF BOTS BUT THESE ARE THE MOST COMMON
+
+put "Googlebot" into sRobots[1]["googlebot"]
+put "MSNBot" into sRobots[2]["msnbot"]
+put "Inktomi Slurp" into sRobots[3]["slurp"]
+put "Yahoo" into sRobots[4]["yahoo"]
+put "AskJeeves" into sRobots[5]["askjeeves"]
+put "FastCrawler" into sRobots[6]["fastcrawler"]
+put "InfoSeek Robot 1.0" into sRobots[7]["infoseek"]
+put "Lycos" into sRobots[8]["lycos"]
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchAgentsData
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-10-09
+--| Last Mod: 07-10-09
+--| Requires: --
+--|
+--| Summary: Fetch agent arrays.
+--| 
+--| Format:  rigFetchAgentsData(param1)
+--|
+--| Parameters: string <pType>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigFetchAgentsData pType
+	switch pType
+		case "platforms"
+             		return sPlatforms
+		case "browsers"
+             		return sBrowsers
+		case "mobiles"
+             		return sMobiles
+		case "robots"
+             		return sRobots
+		default
+            		return FALSE
+	end switch
+end rigFetchAgentsData
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| COMMAND rigDeleteAgentsVar
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-10-09
+--| Last Mod: 07-10-09
+--| Requires: --
+--|
+--| Summary: Delete agent arrays.
+--| 
+--| Format:  rigDeleteAgentsVar param1
+--|
+--| Parameters: string <pWhich>
+--|
+--| Return: void
+----------------------------------------------------------------------
+
+command rigDeleteAgentsVar pWhich
+	switch pType
+		case "platforms"
+             		delete variable sPlatforms
+		case "browsers"
+             		delete variable sBrowsers
+		case "mobiles"
+             		delete variable sMobiles
+		case "robots"
+             		delete variable sRobots
+	end switch
+end rigDeleteAgentsVar
+
+
+
+
+--| END OF useragents.lc
+--| Location: ./system/application/config/useragents.lc
+----------------------------------------------------------------------

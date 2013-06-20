@@ -1,0 +1,74 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# Revigniter Language Helpers
+#
+# @package		revIgniter
+# @subpackage	Helpers
+# @category	  Helpers
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/helpers/languageHelper.html
+##
+
+## ------------------------------------------------------------------------
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigLangLine
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 14-08-09
+--| Last Mod: 07-01-10
+--| Requires: rigLibIsLoaded()
+--|
+--| Summary: Fetches a language variable and optionally outputs a form label.
+--| 
+--| Format:  rigLangLine(param1, param2)
+--|
+--| Parameters: string <pLine> the language line, string <pID> the id of the form element
+--|
+--| Return: string
+----------------------------------------------------------------------
+
+function rigLangLine pLine pID
+	put rigLangLangLine(pLine) into tLine
+
+	if pID is not empty then
+		put "<label for=" & quote & pID & quote & ">" & tLine & "</label>" into tLine
+	end if
+
+	return tLine
+end rigLangLine
+
+
+
+
+
+
+--| END OF languageHelper.lc
+--| Location:  ./system/helpers/languageHelper.lc
+----------------------------------------------------------------------

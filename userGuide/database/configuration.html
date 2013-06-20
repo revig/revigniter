@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Database Configuration : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Configuration
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Database Configuration</h1>
+
+<p>revIgniter has a config file that lets you store your database connection values (username, password, database name, etc.).
+The config file is located at:</p>
+
+<p><kbd>application/config/database.lc</kbd></p>
+
+<p>The config settings are stored in a multi-dimensional array with this prototype:</p>
+
+<pre><code>put "localhost" into sDB["default"]["hostname"]
+put "root" into sDB["default"]["username"]
+put "" into sDB["default"]["password"]
+put "databaseName" into sDB["default"]["database"]
+put "mysql" into sDB["default"]["dbdriver"]
+put "" into sDB["default"]["dbprefix"]
+put TRUE into sDB["default"]["pconnect"] -- currently not implemented
+put FALSE into sDB["default"]["dbdebug"]
+put "" into sDB["default"]["dbRedirectOnError"]
+put FALSE into sDB["default"]["cacheon"]
+put "" into sDB["default"]["cachedir"]
+put "utf8" into sDB["default"]["charset"]
+put "utf8_general_ci" into sDB["default"]["dbcollat"]
+put TRUE into sDB["default"]["cacheautodel"]
+</code></pre>
+
+<p>The reason we use a multi-dimensional array rather than a more simple one is to permit you to optionally store
+multiple sets of connection values.  If, for example,  you run multiple environments (development, production, test, etc.)
+under a single installation, you can set up a connection group for each, then switch between groups as needed.
+For example, to set up a "test" environment you would do this:</p>
+
+<pre><code>put "localhost" into sDB["test"]["hostname"]
+put "root" into sDB["test"]["username"]
+put "" into sDB["test"]["password"]
+put "databaseName" into sDB["test"]["database"]
+put "mysql" into sDB["test"]["dbdriver"]
+put "" into sDB["test"]["dbprefix"]
+put TRUE into sDB["test"]["pconnect"] -- currently not implemented
+put FALSE into sDB["test"]["dbdebug"]
+put "" into sDB["test"]["dbRedirectOnError"]
+put FALSE into sDB["test"]["cacheon"]
+put "" into sDB["test"]["cachedir"]
+put "utf8" into sDB["test"]["charset"]
+put "utf8_general_ci" into sDB["test"]["dbcollat"]
+put TRUE into sDB["test"]["cacheautodel"]
+</code></pre>
+
+
+<p>Then, to globally tell the system to use that group you would set this variable located in the config file:</p>
+
+<pre><code>put "test" into sActiveGroup</code></pre>
+
+<p>Note: The name "test" is arbitrary.  It can be anything you want. By default we've used the word "default"
+for the primary connection, but it too can be renamed to something more relevant to your project.</p>
+
+<h3>Active Record</h3>
+
+<p>The <a href="active_record.html">Active Record Library</a> is globally enabled or disabled by setting the gActiveRecord variable in the database configuration file to TRUE/FALSE (boolean). If you are not using the active record library, setting it to FALSE will utilize fewer resources when the database libraries are initialized.</p>
+
+<pre><code>put TRUE into gActiveRecord</code></pre>
+
+<p class="important"><strong>Note:</strong> that some revIgniter libraries such as Sessions require Active Records be enabled to access certain functionality.</p>
+
+<h3>Explanation of Values:</h3>
+
+<ul>
+<li><strong>hostname</strong> - The hostname of your database server. Often this is "localhost".</li>
+<li><strong>username</strong> - The username used to connect to the database.</li>
+<li><strong>password</strong> - The password used to connect to the database.</li>
+<li><strong>database</strong> - The name of the database you want to connect to.</li>
+<li><strong>dbdriver</strong> - The database type. ie: mysql, postgre, etc. Must be specified in lower case.</li>
+<li><strong>dbprefix</strong> - An optional table prefix which will added to the table name when running <a href="active_record.html">Active Record</a> queries.  This permits multiple revIgniter installations to share one database.</li>
+<li><strong>pconnect</strong> - TRUE/FALSE (boolean) - Whether to use a persistent connection (currently not implemented).</li>
+<li><strong>dbdebug</strong> - TRUE/FALSE (boolean) - Whether database errors should be displayed.</li>
+<li><strong>dbRedirectOnError</strong> - The local URI ("myController/myHandler") to be used for a redirect in case a database error occurs. Providing a handler name is optional. Note: You need to set dbdebug to FALSE for this to work.</li>
+<li><strong>cacheon</strong> - TRUE/FALSE (boolean) - Whether database query caching is enabled, see also <a href="caching.html">Database Caching Library</a>.</li>
+<li><strong>cachedir</strong> - The absolute server path to your database query cache directory.</li>
+<li><strong>charset</strong> - The character set used in communicating with the database.</li>
+<li><strong>dbcollat</strong> - The character collation used in communicating with the database.</li>
+<li><strong>port</strong> - The database port number.  Currently only used with the Postgres driver. To use this value you have to add a line to the database config array.<pre><code>put 5432 into sDB["default"]["port"]</code></pre></li>
+</ul>
+
+<p class="important"><strong>Note:</strong> Depending on what database platform you are using (MySQL, Postgres, etc.)
+not all values will be needed.  For example, when using SQLite (not implemented yet) you will not need to supply a username or password, and
+the database name will be the path to your database file. The information above assumes you are using MySQL.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="examples.html">Quick Start: Usage Examples</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="connecting.html">Connecting to your Database</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

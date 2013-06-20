@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Security : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Security
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Security</h1>
+
+<p>This page describes some "best practices" regarding web security, and details
+revIgniter's internal security features.</p>
+
+
+<h2>URI Security</h2>
+
+<p>revIgniter is fairly restrictive regarding which characters it allows in your URI strings in order to help
+minimize the possibility that malicious data can be passed to your application.  URIs may only contain the following:
+</p>
+
+<ul>
+<li>Alpha-numeric text</li>
+<li>Tilde: ~ </li>
+<li>Period: .</li>
+<li>Colon: :</li>
+<li>Underscore: _</li>
+<li>Dash: -</li>
+</ul>
+
+<h2>GET Data</h2>
+
+<p>GET data is simply disallowed by revIgniter since the system utilizes URI segments rather than traditional URL query strings (unless
+you have the query string option enabled in your config file).  The global GET
+array is set to <strong>empty</strong> by the Input library during system initialization.</p>
+
+
+<h1>Best Practices</h1>
+
+<p>Before accepting any data into your application, whether it be POST data from a form submission, COOKIE data, URI data,
+XML-RPC data, or even data from the SERVER array, you are encouraged to practice this three step approach:</p>
+
+<ol>
+<li>Filter the data as if it were tainted.</li>
+<li>Validate the data to ensure it conforms to the correct  type, length, size, etc. (sometimes this step can replace step one)</li>
+<li>Escape the data before submitting it into your database.</li>
+</ol>
+
+<p>revIgniter provides the following handlers to assist in this process:</p>
+
+<ul>
+
+<li><h2>XSS Filtering</h2>
+
+<p>revIgniter comes with a Cross Site Scripting filter.  This filter looks for commonly
+used techniques to embed malicious Javascript into your data, or other types of code that attempt to hijack cookies
+or do other malicious things. The XSS Filter is described <a href="../libraries/input.html">here</a>.
+</p>
+</li>
+
+<li><h2>Validate the data</h2>
+
+<p>revIgniter has a <a href="../libraries/form_validation.html">Form Validation Library</a> that assists you in validating, filtering, and prepping
+your data.</p>
+</li>
+
+<li><h2>Escape all data before database insertion</h2>
+
+<p>Never insert information into your database without escaping it. Please see the section that discusses
+<a href="../database/queries.html">queries</a> for more information.</p>
+
+</li>
+
+</ul>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="managing_apps.html">Managing Applications</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

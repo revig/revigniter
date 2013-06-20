@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Scaffolding : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Scaffolding
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Scaffolding</h1>
+
+<p>revIgniter's Scaffolding feature provides a fast and very convenient way to add, edit, or delete information in your database
+during development.</p>
+
+<p class="important"><strong>Very Important:</strong>  Scaffolding is intended for development use only.  It provides very little
+security other than a "secret" word, so anyone who has access to your revIgniter site can potentially edit or delete your information.
+If you use Scaffolding make sure you disable it immediately after you are through using it.  DO NOT leave it enabled on a live site.
+And please, set a secret word before you use it.</p>
+
+<h2>Why would someone use scaffolding?</h2>
+
+<p>Here's a typical scenario:  You create a new database table during development and you'd like a quick way to insert some data
+into it to work with.  Without Scaffolding your choices are either to write some inserts using the command line or to use a
+database management tool like phpMyAdmin.  With revIgniter's Scaffolding feature you can quickly add some data using its browser
+interface.  And when you are through using the data you can easily delete it.</p>
+
+<h2>Setting a Secret Word</h2>
+
+<p>Before enabling Scaffolding please take a moment to set a secret word.  This word, when encountered in your URL,
+will launch the Scaffolding interface, so please pick something obscure that no one is likely to guess.</p>
+
+<p>To set a secret word, open your <kbd>application/config/routes.lc</kbd> file and look for this item:</p>
+
+<pre><code>put "" into gRoute["scaffoldingTrigger"]</code></pre>
+
+<p>Once you've found it add your own unique word.</p>
+
+<p class="important"><strong>Note:</strong> The Scaffolding word can <strong>not</strong> start with an underscore.</p>
+
+
+<h2>Enabling Scaffolding</h2>
+
+<p>Note: The information on this page assumes you already know how <a href="controllers.html">controllers</a> work, and that you have
+a working one available.  It also assumes you have configured revIgniter to auto-connect to your <a href="../database/index.html">database</a>.
+If not, the information here won't be very relevant, so you are encouraged to go through those sections first.
+</p>
+
+<p>To enable Scaffolding you will initialize it in your controller with just one line of code like this:</p>
+
+<pre><code>&lt;?rev
+
+# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
+global gControllerHandlers, gData
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "blog" into gControllerHandlers
+
+command blog
+	<kbd>rigLoadScaffolding "tableName"</kbd>
+end blog
+
+
+command index
+	-- Your code here …
+
+	get rigLoadView("blogview.lc")
+end index
+
+
+
+--| END OF blog.lc
+--| Location: ./system/application/controllers/blog.lc
+----------------------------------------------------------------------
+</code></pre>
+
+<p>Where <kbd>tableName</kbd> is the name of the table (table, not database) you wish to work with.</p>
+
+<p class="important"><strong>Note:</strong> The rigLoadScaffolding handler must be called before anything else. 
+So, in the example above rigLoadScaffolding is in the blog handler as it is run before the index handler. </p>
+
+<p>Once you've initialized Scaffolding, you will access it with this URL prototype:</p>
+
+<pre><code>example.com/index.lc/<var>controller</var>/<dfn>secret_word</dfn>/</code></pre>
+
+<p>For example, using a controller named <var>Blog</var>, and <dfn>abracadabra</dfn> as the secret word,
+you would access Scaffolding like this:</p>
+
+<pre><code>example.com/index.lc/<var>blog</var>/<dfn>abracadabra</dfn>/</code></pre>
+
+<p>The Scaffolding interface should be self-explanatory.  You can add, edit or delete records.</p>
+
+<p>To change the number of records displayed open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
+
+<pre><code>put 10 into gConfig["scaffNumRecords"]</code></pre>
+
+
+<h2>A Final Note:</h2>
+
+<p>The Scaffolding feature will only work with tables that contain a primary key, as this information is needed to perform the various
+database functions.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="common_handlers.html">Common Handlers</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="routing.html">URI Routing</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

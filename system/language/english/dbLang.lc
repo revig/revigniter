@@ -1,0 +1,30 @@
+<?rev
+
+put "Unable to determine the database settings based on the connection string you submitted." into gLang["db_invalid_connection_str"]
+put "Unable to connect to your database server using the provided settings." into gLang["db_unable_to_connect"]
+put "Unable to select the specified database: %s" into gLang["db_unable_to_select"]
+put "Unable to create the specified database: %s" into gLang["db_unable_to_create"]
+put "The query you submitted is not valid." into gLang["db_invalid_query"]
+put "You must set the database table to be used with your query." into gLang["db_must_set_table"]
+put "You must set the database name in your database config file." into gLang["db_must_set_database"]
+put "You must use the" && quote & "rigDbValuesSet()" & quote && "function to update an entry." into gLang["db_must_use_set"]
+put "Updates are not allowed unless they contain a" && quote & "where" & quote && "clause." into gLang["db_must_use_where"]
+put "Deletes are not allowed unless they contain a" && quote & "where" & quote && "or" && quote & "like" & quote && "clause." into gLang["db_del_must_use_where"]
+put "To fetch fields requires the name of the table as a parameter." into gLang["db_field_param_missing"]
+put "This feature is not available for the database you are using." into gLang["db_unsupported_function"]
+put "Transaction failure: Rollback performed." into gLang["db_transaction_failure"]
+put "Unable to drop the specified database." into gLang["db_unable_to_drop"]
+put "Unsupported feature of the database platform you are using." into gLang["db_unsuported_feature"]
+put "The file compression format you chose is not supported by your server." into gLang["db_unsuported_compression"]
+put "Unable to write data to the file path you have submitted." into gLang["db_filepath_error"]
+put "The cache path you submitted is not valid or writable." into gLang["db_invalid_cache_path"]
+put "A table name is required for that operation." into gLang["db_table_name_required"]
+put "A column name is required for that operation." into gLang["db_column_name_required"]
+put "A column definition is required for that operation." into gLang["db_column_definition_required"]
+put "Unable to set client connection character set: %s" into gLang["db_unable_to_set_charset"]
+put "A Database Error Occurred" into gLang["db_error_heading"]
+
+
+--| END OF dbLang.lc
+--| Location:  ./system/language/english/dbLang.lc
+----------------------------------------------------------------------

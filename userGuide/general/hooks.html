@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Hooks : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Hooks - Extending the Framework Core
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+<h1>Hooks - Extending the Framework Core</h1>
+
+<p>revIgniter's hooks feature provides a means to tap into and modify the inner workings of the framework without hacking the core files.
+When revIgniter runs it follows a specific execution process, diagramed in the <a href="../overview/appflow.html">Application Flow</a> page.
+There may be instances, however, where you'd like to cause some action to take place at a particular stage in the execution process.
+For example, you might want to run a script right before your controllers get loaded, or right after, or you might want to trigger one of
+your own scripts in some other location.
+</p>
+
+<h2>Enabling Hooks</h2>
+
+<p>The hooks feature can be globally enabled/disabled by setting the following item in the <dfn>application/config/config.lc</dfn> file:</p>
+
+<pre><code>put TRUE into gConfig["enableHooks"]</code></pre>
+
+
+<h2>Defining a Hook</h2>
+
+<p>Hooks are defined in the <dfn>application/config/hooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
+
+<pre><code>	put "MyHandler" into gHooks["preController"]["handler"]
+	put "MyScript.lc" into gHooks["preController"]["filename"]
+	put "hooks" into gHooks["preController"]["filepath"]
+	put "beer" into gHooks["preController"]["params"][1]
+	put "wine" into gHooks["preController"]["params"][2]
+	put "snacks" into gHooks["preController"]["params"][3]
+</code></pre>
+
+<p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
+use.  In the above example the hook point is <kbd>preController</kbd>. A list of hook points is found below.
+The following items should be defined in your associative hook array:</p>
+
+<ul>
+<li><strong>handler</strong>&nbsp; The handler name you wish to call. If you call a function, append a pair of brackets to the name like: "MyHandler()".</li>
+<li><strong>filename</strong>&nbsp; The file name containing your handler.</li>
+<li><strong>filepath</strong>&nbsp; The name of the directory containing your script.  Note: Your script must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your script is located in <dfn>application/hooks</dfn>, you will simply use <samp>hooks</samp> as your filepath.  If your script is located in <dfn>application/hooks/utilities</dfn> you will use <samp>hooks/utilities</samp> as your filepath. No trailing slash.</li>
+<li><strong>params</strong>&nbsp; Any parameters you wish to pass to your script. This item is optional.</li>
+</ul>
+
+
+<h2>Multiple Calls to the Same Hook</h2>
+
+<p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
+
+<pre><code>	put "MyHandler" into gHooks["preController"][1]["handler"]
+	put "MyScript.lc" into gHooks["preController"][1]["filename"]
+	put "hooks" into gHooks["preController"][1]["filepath"]
+	put "beer" into gHooks["preController"][1]["params"][1]
+	put "wine" into gHooks["preController"][1]["params"][2]
+	put "snacks" into gHooks["preController"][1]["params"][3]
+
+	put "MyOtherHandler" into gHooks["preController"][2]["handler"]
+	put "MyOtherScript.lc" into gHooks["preController"][2]["filename"]
+	put "hooks" into gHooks["preController"][2]["filepath"]
+	put "red" into gHooks["preController"][2]["params"][1]
+	put "yellow" into gHooks["preController"][2]["params"][2]
+	put "blue" into gHooks["preController"][2]["params"][3]
+</code></pre>
+
+<p>This permits you to have the same hook point with multiple scripts.  The order you define your array will be the execution order.</p>
+
+
+<h2>Hook Points</h2>
+
+<p>The following is a list of available hook points.</p>
+
+<ul>
+		<li><strong>preSystem</strong><br />
+			Called very early during system execution.  Only the benchmark and hooks library have been loaded at this point. No routing or other processes have happened.</li>
+		<li><strong>preController</strong><br />
+			Called immediately prior to any of your controllers being called. All base libraries, routing, and security checks have been done.</li>
+		<li><strong>postControllerConstructor</strong><br />
+			Called immediately after your controller is loaded, but prior to any handler calls happening.</li>
+		<li><strong>postController</strong><br />
+			Called immediately after your controller is fully executed.</li>
+		<li><strong>displayOverride</strong><br />
+			Overrides the <dfn>_rigDisplay</dfn> command, used to send the finalized page to the web browser at the end of system execution.  This permits you to
+			use your own display methodology.  The finalized data will be available by calling <dfn>rigGetOutput()</dfn></li>
+		<li><strong>cacheOverride</strong><br />
+			Enables you to call your own handler instead of the <dfn>_rigOutDisplayCache()</dfn> function in the output library.  This permits you to use your own cache display mechanism.</li>
+		<li><strong>scaffoldingOverride</strong><br />
+			Permits a scaffolding request to trigger your own script instead.</li>
+		<li><strong>postSystem</strong><br />
+			Called after the final rendered page is sent to the browser, at the end of system execution after the finalized data is sent to the browser.</li>
+	</ul>
+	
+	
+	<h2>Hook Example Using displayOverride as Hook Point to Minify Output</h2>
+	
+	<p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
+	
+	<p>First you need a script which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks</dfn> for your convenience:</p>
+	
+<pre><code>&lt;?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigMinifyOutput
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 13-05-2011
+--| Last Mod: 29-06-2011
+--| Requires: rigGetOutput(), rigPregReplace(), rigSetOutput, _rigDisplay
+--|
+--| Summary: Minifies HTML output.
+--| 
+--| Format:  rigMinifyOutput	
+--|
+--| Parameters: --
+--|
+--| Return: void
+----------------------------------------------------------------------*/
+
+command rigMinifyOutput
+	put rigGetOutput() into tRawHTML
+
+	# REMOVE COMMENTS
+	put "(?s)(\&lt;!--\s*[^\s\[\>\&lt;].*?--\>)" into tRegEx
+	put " " into tReplacement
+	put rigPregReplace(tRawHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	# REMOVE WHITESPACE
+	put "(?s)(\>\s+\&lt;)" into tRegEx
+	put ">&lt;" into tReplacement
+	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	put "(?s)((\s)+)" into tRegEx
+	put " " into tReplacement
+	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+
+	# DISPLAY HTML
+	rigSetOutput tMinifiedHTML
+	_rigDisplay
+end rigMinifyOutput
+
+
+
+
+--| END OF overrideOutput.lc
+--| Location:  ./system/application/hooks/overrideOutput.lc
+----------------------------------------------------------------------	
+</code></pre>
+
+<p>The next step is to add the following lines to your hooks.lc file in <dfn>system/application/config</dfn>:</p>
+
+
+<pre><code># MINIFY OUTPUT
+put "rigMinifyOutput" into gHooks["displayOverride"]["handler"]
+put "overrideOutput.lc" into gHooks["displayOverride"]["filename"]
+put "hooks" into gHooks["displayOverride"]["filepath"]
+</code></pre>
+	
+
+<p>Now enable hooks in <dfn>system/application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
+
+	
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="using_stacks.html">Using Stacks</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="autoloader.html">Auto-loading Resources</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

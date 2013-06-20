@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+
+<title>[[gData["pageTitle"] ]]</title>
+
+<style type="text/css">
+<? return rigLoadFile(gBASEPATH & "scaffolding/views/stylesheet.css", TRUE) ?>
+</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="expires" content="-1" />
+<meta http-equiv= "pragma" content="no-cache" />
+
+</head>
+<body>
+
+<div id="header">
+<div id="header_left">
+<h3>Scaffolding:&nbsp; [[gData["title"] ]]</h3>
+</div>
+<div id="header_right">
+[[gData["viewAnchor"] ]] &nbsp;&nbsp;|&nbsp;&nbsp; [[gData["addAnchor"] ]]
+
+</div>
+</div>
+
+<br clear="all">
+<div id="outer">

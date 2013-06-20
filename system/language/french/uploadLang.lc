@@ -1,0 +1,25 @@
+<?rev
+
+put "Impossible de trouver une variable de type POST nomm&eacute;e userfile." into gLang["upload_userfile_not_set"]
+put "Le fichier envoy&eacute; d&eacute;passe la taille limite d&eacute;finie dans votre fichier de configuration." into gLang["upload_file_exceeds_limit"]
+put "Le fichier envoy&eacute; d&eacute;passe la taille limite d&eacute;finie dans votre formulaire d'envoi." into gLang["upload_file_exceeds_form_limit"]
+put "Le fichier n'a &eacute;t&eacute; que partiellement envoy&eacute;." into gLang["upload_file_partial"]
+put "Il manque le r&eacute;pertoire temporaire." into gLang["upload_no_temp_directory"]
+put "Le fichier n'a pas pu &ecirc;tre enregistr&eacute; sur le disque." into gLang["upload_unable_to_write_file"]
+put "L'envoi du fichier a &eacute;t&eacute; stopp&eacute; par l'extension." into gLang["upload_stopped_by_extension"]
+put "Vous n'avez pas choisi de fichier &agrave; envoyer." into gLang["upload_no_file_selected"]
+put "Le type de fichier que vous tentez d'envoyer n'est pas autoris&eacute;." into gLang["upload_invalid_filetype"]
+put "Le fichier que vous tentez d'envoyer est plus gros que la taille autoris&eacute;e." into gLang["upload_invalid_filesize"]
+put "L'image que vous tentez d'envoyer d&eacute;passe les valeurs maximales autoris&eacute;es pour la hauteur ou la largeur." into gLang["upload_invalid_dimensions"]
+put "Une erreur est survenue lors du d&eacute;placement du fichier envoy&eacute; vers sa destination finale." into gLang["upload_destination_error"]
+put "Le chemin de destination semble invalide." into gLang["upload_no_filepath"]
+put "Vous n'avez pas sp&eacute;cifi&eacute; de type de fichiers autoris&eacute;s." into gLang["upload_no_file_types"]
+put "Un fichier avec le m&ecirc;me nom que celui que vous avez envoy&eacute; existe d&eacute;j&agrave; sur le serveur." into gLang["upload_bad_filename"]
+put "Le r&eacute;pertoire de destination ne semble pas &ecirc;tre accessible en &eacute;criture." into gLang["upload_not_writable"]
+put "L'envoi du fichier a échoué." into gLang["upload_failed"]
+put "Le chemin d'acc&egrave;s &agrave; l'image (temp) est incorrect." into gLang["upload_invalid_path"]
+
+
+--| END OF uploadLang.lc
+--| Location:  ./system/language/french/uploadLang.lc
+----------------------------------------------------------------------

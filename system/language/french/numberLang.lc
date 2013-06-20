@@ -1,0 +1,11 @@
+<?rev
+
+put "To" into gLang["terabyte_abbr"]
+put "Go" into gLang["gigabyte_abbr"]
+put "Mo" into gLang["megabyte_abbr"]
+put "Ko" into gLang["kilobyte_abbr"]
+put "Octets" into gLang["bytes"]
+
+--| END OF numberLang.lc
+--| Location:  ./system/language/french/numberLang.lc
+----------------------------------------------------------------------

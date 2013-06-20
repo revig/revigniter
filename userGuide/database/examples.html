@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Database Quick Start : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
+Database Example Code
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Database Quick Start: Example Code</h1>
+
+<p>The following page contains example code showing how the database library is used.  For complete details please
+read the individual pages describing each method.</p>
+
+
+<h2>Initializing the Database Library</h2>
+
+<p>The following code loads and initializes the database library based on your <a href="configuration.html">configuration</a> settings:</p>
+
+<pre><code>get rigLoadDatabase()</code></pre>
+
+<p>Once loaded the library is ready to be used as described below.</p>
+
+<p>Note: If all your pages require database access you can connect automatically.  See the <a href="connecting.html">connecting</a> page for details.</p>
+
+
+<h2>Standard Query With Multiple Results</h2>
+
+<pre><code>put rigDbQuery("SELECT name, title, email FROM myTable") into tQuery
+
+repeat with i = 1 to tQuery["numrows"]
+	put rigDbRow(i) into tRowData
+	put tRowData["title"] & comma after tResultData
+	put tRowData["name"] & comma after tResultData
+	put tRowData["email"] & return after tResultData
+end repeat
+</code></pre>
+
+<p>The above <dfn>rigDbQuery()</dfn> function returns an array.</p>
+
+<h2>Testing for Results</h2>
+
+<p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test for a result first:</p>
+
+
+<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+
+# CHECK IF THE QUERY RESULT HAS DATA
+if tQuery["numrows"] > 0 then
+
+	repeat with i = 1 to tQuery["numrows"]
+		put rigDbRow(i) into tRowData
+		put tRowData["title"] & comma after tResultData
+		put tRowData["name"] & comma after tResultData
+		put tRowData["body"] & return after tResultData
+	end repeat
+end if
+</code></pre>
+
+
+
+<h2>Standard Query With Single Result</h2>
+
+<pre><code>get rigDbQuery("SELECT name FROM myTable LIMIT 1")
+
+put rigDbRow(1) into tRow
+put tRow["name"] into tName
+</code></pre>
+
+
+<h2>Standard Insert</h2>
+
+<pre><code>put "INSERT INTO mytable (title, name) 
+						VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
+
+get rigDbQuery(tSQL)
+
+put rigDbAffectedRows() into tAffectedRows
+</code></pre>
+
+<p>The function rigDbAffectedRows() returns an integer or a boolean.</p>
+
+
+<h2>Active Record Query</h2>
+
+<p>The <a href="active_record.html">Active Record Pattern</a> gives you a simplified means of retrieving data:</p>
+
+<pre><code>put rigDbGet("tableName") into tQuery
+
+repeat with i = 1 to tQuery["numrows"]
+	put rigDbRow(i) into tRowData
+	put tRowData["title"] & comma after tTitles
+end repeat
+</code></pre>
+
+<p>The above <dfn>rigDbGet()</dfn> function retrieves all the results from the supplied table.
+The <a href="active_record.html">Active Record</a> library contains a full compliment of handlers
+for working with data.</p>
+
+
+<h2>Active Record Insert</h2>
+
+<pre><code>put tTitle into tData["title"]
+put tName into tData["name"]
+put tDate into tData["date"]
+
+get rigDbInsert("mytable", tData)
+
+-- Produces: "INSERT INTO mytable (title, name, date) VALUES ('" & tTitle & "', '" & tName & "', '" & tData & "')"
+</code></pre>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="index.html">Database Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="configuration.html">Database Configuration</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

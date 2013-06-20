@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv='expires' content='0' />
+<meta http-equiv= 'pragma' content='no-cache' />
+<meta name='robots' content='all' />
+
+<meta name="author" content="rabit" />
+<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
+<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
+<meta name='description' content='revIgniter User Guide' />
+
+<title>Config Library : revIgniter User Guide</title>
+
+<style type='text/css' media='all'>@import url('../userguide.css');</style>
+<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
+
+<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script type="text/javascript" src="../js/nav.js"></script>
+
+ 
+
+
+
+</head>
+<body>
+
+<!-- START PAGE HEAD -->
+<div id="nav"><a name="top">&nbsp;</a>
+<div id="masthead">
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
+</tr>
+</table>
+</div>
+</div>
+<!-- END PAGE HEAD -->
+
+
+<!-- START BREADCRUMB -->
+<div id="breadcrumbCont">
+
+<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+<tr>
+<td id="breadcrumb">
+<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
+<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
+Config Library
+</td>
+<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
+</tr>
+</table>
+
+</div>
+<!-- END BREADCRUMB -->
+
+<br clear="all" />
+
+
+<!-- START SLIDEBOX -->
+<div class="slide-panel top">
+<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+<div id="open-button" class="slide-button">Table of Contents</div>
+<div id="close-button" class="slide-button">Close</div>
+</div>
+<!-- END SLIDEBOX -->
+
+
+<!-- START CONTENT -->
+<div id="content">
+
+
+<h1>Config Library</h1>
+
+<p>The Config library provides a means to retrieve configuration preferences.  These preferences can
+come from the default config file (<samp>application/config/config.lc</samp>) or from your own custom config files.</p>
+
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+
+
+<h2>Anatomy of a Config File</h2>
+
+<p>By default, revIgniter has a one primary config file, located at <samp>application/config/config.lc</samp>.  If you open the file using
+your text editor you'll see that config items are stored in a global array variable called <var>gConfig</var>.</p>
+
+<p>You can add your own config items to
+this file, or if you prefer to keep your configuration items separate (assuming you even need config items),
+simply create your own file and save it in <dfn>config</dfn> folder.</p>
+
+<p><strong>Note:</strong> If you do create your own config files use the same format as the primary one, storing your items in
+an array called  <var>gConfig</var>. revIgniter will intelligently manage these files so there will be no conflict even though
+the array has the same name (assuming an array index is not named the same as another).</p>
+
+<h2>Loading a Config File</h2>
+
+<p><strong>Note:</strong> revIgniter automatically loads the primary config file (<samp>application/config/config.lc</samp>),
+so you will only need to load a config file if you have created your own.</p>
+
+<p>There are two ways to load a config file:</p>
+
+<ol><li><strong>Manual Loading</strong>
+
+<p>To load one of your custom config files you will use the following function within the <a href="../general/controllers.html">controller</a> that needs it:</p>
+
+<pre><code>get rigLoadConfigFile("<var>filename</var>")</code></pre>
+
+<p>Where <var>filename</var> is the name of your config file, without the .lc file extension.</p>
+
+<p>If you need to load multiple config files normally they will be merged into one master config array.  Name collisions can occur, however, if
+you have identically named array indexes in different config files.  To avoid collisions you can set the second parameter to <kbd>TRUE</kbd>
+and each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
+
+<pre><code>// Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
+get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)</code></pre>
+
+<p>Please see the section entitled <dfn>Fetching Config Items</dfn> below to learn how to retrieve config items set this way.</p>
+
+<p>The third parameter allows you to suppress errors in the event that a config file does not exist:</p>
+
+<pre><code>get rigLoadConfigFile("<var>blogSettings</var>", <dfn>FALSE</dfn>, <kbd>TRUE</kbd>)</code></pre>
+
+</li>
+<li><strong>Auto-loading</strong>
+
+<p>If you find that you need a particular config file globally, you can have it loaded automatically by the system.  To do this,
+open the <strong>autoload.lc</strong> file, located at <samp>application/config/autoload.lc</samp>, and add your config file as
+indicated in the file.</p>
+</li>
+</ol>
+
+
+<h2>Fetching Config Items</h2>
+
+<p>To retrieve an item from your config file, use the following function:</p>
+
+<pre><code>put rigFetchConfigItem("<var>item name</var>") into tConfigItem</code></pre>
+
+<p>Where <var>item name</var> is the gConfig array index you want to retrieve. For example, to fetch your language choice you'll do this:</p>
+
+<pre><code>put rigFetchConfigItem("language") into tLang</code></pre>
+
+<p>The function returns FALSE if the item you are trying to fetch does not exist.</p>
+
+<p>If you are using the second parameter of the <kbd>rigLoadConfigFile()</kbd> function in order to assign your config items to a specific index
+you can retrieve it by specifying the index name in the second parameter of the <kbd>rigFetchConfigItem()</kbd> function.  Example:</p>
+
+<pre><code>// Loads a config file named blogSettings.lc and assigns it to an index named "blogSettings"<br />
+get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)<br /><br />
+
+// Retrieve a config item named siteName contained within the blogSettings array<br />
+put rigFetchConfigItem("<dfn>siteName</dfn>", "<var>blogSettings</var>") into tSiteName<br /><br />
+
+// An alternate way to specify the same item:<br />
+put rigFetchConfigItem("<var>blogSettings</var>") into tBlogConfig<br />
+put tBlogConfig["siteName"] into tSiteName</code></pre>
+
+<h2>Setting a Config Item</h2>
+
+<p>If you would like to dynamically set a config item or change an existing one, you can so using:</p>
+
+<pre><code>rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>"</code></pre>
+
+<p>Where <var>itemName</var> is the gConfig array index you want to change, and <var>itemValue</var> is its value.</p>
+
+
+<h2>Helper Functions</h2>
+
+<p>The config library has the following helper functions:</p>
+
+<h2>rigSiteURL()</h2>
+<p>This function retrieves the URL to your site, along with the "index" value you've specified in the config file.</p>
+
+<h2>rigSystemURL()</h2>
+<p>This function retrieves the URL to your <dfn>system folder</dfn>.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+
+<div id="footer">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="captcha.html">Captcha Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../database/index.html">Database Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+</div>
+
+<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript" src="../js/highlight.pack.js"></script>
+  <script>
+  hljs.tabReplace = '    ';
+  hljs.initHighlightingOnLoad();
+  </script>
+
+<script src="../js/script-ck.js" type="text/javascript"></script>
+<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>
