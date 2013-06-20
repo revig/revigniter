@@ -1,0 +1,10 @@
+.DS_Store
+
+system/cache/*
+!system/cache/index.html
+
+system/logs/*
+!system/logs/index.html
+
+system/temp/*
+!system/temp/index.html
