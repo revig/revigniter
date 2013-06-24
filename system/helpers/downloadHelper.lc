@@ -41,10 +41,10 @@ end if
 --| COMMAND rigForceDownload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 08-10-09
---| Last Mod: 08-10-09
---| Requires: rigLogMessage
+--| Last Mod: 24-06-13
+--| Requires: rigLogMessage, rigFetchMimeType()
 --|
 --| Summary: Generates headers that force a download to happen.
 --| 
@@ -80,7 +80,7 @@ command rigForceDownload pFileName pData
 
 	# SET A DEFAULT MIME IF WE CAN'T FIND IT
 	put rigFetchMimeType(tExtension) into tMime
-	if tMime is empty then
+	if (tMime is empty) or (tMime is FALSE) then
 		put "application/octet-stream" into tMime
 	else
 		if tMime is an array then
