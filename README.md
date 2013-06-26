@@ -14,6 +14,10 @@ LiveCode Server or [On-Rev](http://www.on-rev.com/) server engine.
 
 Please see the [installation section](http://revigniter.com/userGuide/installation/index.html) of the User Guide.
 
+### Upgrading
+
+For upgrading from a previous version see the [upgrade section](http://revigniter.com/userGuide/installation/upgrading.html) of the User Guide.
+
 ### License
 
 For the license terms see `LICENSE.txt` / `NOTICE.txt` files.
