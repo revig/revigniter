@@ -43,7 +43,7 @@ rigLogMessage "debug", "Input Library Loaded"
 global gCOOKIE
 
 local sUseXssClean, sAllowGetArray, sXSShash, sIPaddress, sUserAgent, sEntityChart, sNeverAllowedStr, sNeverAllowedRegex
-local sEnableCSRF, sCSRFexpire, sCSRFtokenName, sCSRFcookieName, sCSRFhash
+local sEnableCSRF, sCSRFexpire, sCSRFtokenName, sCSRFcookieName, sCSRFhash, sContentType
 
 # DEFAULT VALUES
 put FALSE into sIPaddress
@@ -78,6 +78,7 @@ put "[removed]" into sNeverAllowedRegex["expression\s*(\(|&\#40;)"]
 put "[removed]" into sNeverAllowedRegex["vbscript\s*:"]
 put "[removed]" into sNeverAllowedRegex["Redirect\s+302"]
 
+put $_SERVER["CONTENT_TYPE"] into sContentType
 
 
 
@@ -88,13 +89,13 @@ rigLoadLibrary "Config"
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 17-06-09
---| Last Mod: 14-07-12
+--| Last Mod: 27-06-13
 --| Requires: Log library, _rigInputConfig, _rigCleanInputData(), _rigVarPostFallback(),
 --|           rigLogMessage, _rigCSRFconfig, rigCSRFverify
 --|
@@ -109,7 +110,7 @@ rigLoadLibrary "Config"
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigSanitizeGlobals
 	# INPUT CONFIGURATION
@@ -140,17 +141,43 @@ command _rigSanitizeGlobals
 		end if
 	end if
 
-	# IF $_POST IS EMPTY MAY BE WE ARE DEALING WITH AN AJAX REQUEST
+	# IF $_POST IS NOT AN ARRAY MAY BE WE ARE DEALING WITH AN AJAX REQUEST
 	# SO WE CALL A FALLBACK FUNCTION (A WORK AROUND FOR AN ENGINE ISSUE
 	# WHERE THE $_POST VARIABLE IS EMPTY) TO RETRIEVE THE POST ARRAY.
 	if ($_SERVER["REQUEST_METHOD"] = "POST") and ($_POST is not an array) then
-		put _rigVarPostFallback() into $_POST
-	end if
+		
+		# FIRST CHECK IF POST DATA IS JSON
+		if sContentType is "application/json" then
+			set the itemdelimiter to "="
+			put item 1 of $_POST_RAW into tPOSTrawVariableKey
+			put item 2 of $_POST_RAW into tPOSTrawVariableValue
+			
+			if tPOSTrawVariableValue is empty then
+				# SHOULD WE FILTER THE DATA?
+				if sUseXssClean is TRUE then
+					put rigXssClean(tPOSTrawVariableKey) into item 1 of $_POST_RAW
+				end if
+
+				put $_POST_RAW into $_POST
+			end if
+
+		else
+		# WE ARE NOT DEALING WITH JSON, SO CALL THE FALLBACK FUNCTION			
+			put _rigVarPostFallback() into $_POST
+		end if
+	end if -- if ($_SERVER["REQUEST_METHOD"] = "POST") and ($_POST is not an array) then
 
 
 	# CLEAN $_POST DATA
 	if $_POST is an array then  -- variance
-		put _rigCleanInputData($_POST) into $_POST
+		# CHECK THE CONTENT TYPE HEADER TO BE ABLE TO DETERMINE
+		# IF WE ARE DEALING WITH LIVECODE ARRAYS
+		if (sContentType is "application/lc.array") or (sContentType is "application/lc.array.compressed") then
+			put rigSerializedPOSTtoArray($_POST) into $_POST
+		else
+					
+			put _rigCleanInputData($_POST) into $_POST
+		end if
 	end if  -- variance
 
 
@@ -621,14 +648,14 @@ end _rigCleanInputKeys
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigFetchFromArray
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 30-05-09
---| Last Mod: 30-06-10
---| Requires: rigXssClean()
+--| Last Mod: 27-06-13
+--| Requires: rigXssClean(), rigXssCleanArray()
 --|
 --| Summary: This is a helper function to retrieve values from global arrays.
 --| 
@@ -637,7 +664,7 @@ end _rigCleanInputKeys
 --| Parameters: array <pArray>, string <pIndex>, bool <pXssFlag>, string <pType> (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigFetchFromArray pArray pIndex pXssClean pType
 	if pXSSclean is empty then
@@ -657,7 +684,11 @@ function _rigFetchFromArray pArray pIndex pXssClean pType
     	end if
 
 	if tXSSclean is TRUE then
-		return rigXssClean(pArray[pIndex], "", tType)
+		if pArray[pIndex] is not an array then
+			return rigXssClean(pArray[pIndex], "", tType)
+		else
+			return rigXssCleanArray(pArray[pIndex])
+		end if
 	end if
 
 	return pArray[pIndex]
@@ -708,10 +739,10 @@ end rigVarGet
 --| FUNCTION rigVarPost
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 20-06-09
---| Last Mod: 20-09-10
---| Requires: _rigFetchFromArray()
+--| Last Mod: 27-06-13
+--| Requires: _rigFetchFromArray(), rigXssClean()
 --|
 --| Summary: Fetch an item from the POST array.
 --| 
@@ -731,6 +762,12 @@ function rigVarPost pIndex pXSSclean
 
 	if $_POST is an array then
 		return _rigFetchFromArray($_POST, pIndex, tXSSclean)
+		
+	else
+		if pXSSclean is TRUE then
+			return rigXssClean($_POST)
+		end if
+		return $_POST
 	end if
 	
 	return FALSE
@@ -1771,6 +1808,45 @@ end rigXssClean
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigXssCleanArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 26-06-2013
+--| Last Mod: 26-06-2013
+--| Requires: rigXssClean()
+--|
+--| Summary: Traverses arrays in POST data and sanitizes the array
+--|          values using rigXssClean.
+--| 
+--| Format:  rigXssCleanArray(param1)
+--|
+--| Parameters: array <pArray>
+--|
+--| Return: returnType
+----------------------------------------------------------------------*/
+
+function rigXssCleanArray pArray
+	if pArray is an array then
+		repeat for each key tKey in pArray
+			if pArray[tKey] is an array then
+				put rigXssCleanArray(pArray[tKey]) into pArray[tKey]
+			else
+				put rigXssClean(pArray[tKey]) into pArray[tKey]
+			end if
+		end repeat
+		return pArray
+	end if
+  	
+	return FALSE
+end rigXssCleanArray
+
+
+
+
+
+
 
 ----------------------------------------------------------------------
 --| FUNCTION rigXssHash
@@ -2341,6 +2417,73 @@ function rigCookieExpirationDate pSecondsToAdd
     return tExpirationDate
 end rigCookieExpirationDate
 
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigSerializedPOSTtoArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 26-06-2013
+--| Last Mod: 26-06-2013
+--| Requires: _rigCleanInputKeys(), _rigCleanInputData()
+--|
+--| Summary: Clean, decode and decompress $_POST data including
+--|          encoded / compressed LiveCode arrays.
+--| 
+--| Format:  rigSerializedPOSTtoArray(param1)
+--|
+--| Parameters: array <pPOSTdata>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function rigSerializedPOSTtoArray pPOSTdata  
+	# TRAVERSE THE POST ARRAY, DECODE / DECOMPRESS ENCODED ARRAYS
+	# AND SANITIZE ALL KEYS AND VALUES
+	if pPOSTdata is an array then
+		
+		repeat for each key tDataKey in pPOSTdata
+
+			put _rigCleanInputKeys(tDataKey) into tDataKey
+			
+			if pPOSTdata[tDataKey] is an array then
+				put rigSerializedPOSTtoArray(pPOSTdata[tDataKey], tDataKey) into pPOSTdata[tDataKey]
+			else
+				
+				# IF THE STRING IS AN ENCODED ARRAY WE NEED TO DECODE OR DECODE AND DECOMPRESS
+				# THE POST DATA DEPENDING ON THE CONTENT TYPE
+				if sContentType is "application/lc.array" then
+			  	try
+			  		put arrayDecode(urlDecode(pPOSTdata[tDataKey])) into pPOSTdata[tDataKey]
+			    	put rigSerializedPOSTtoArray(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+			  	catch err
+			    	-- rigLogMessage "info", "Failed to decode POST data of type application/lc.array."
+               
+			    	put _rigCleanInputData(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+			  	end try
+				else if sContentType is "application/lc.array.compressed" then
+					try
+						 put arrayDecode(decompress(base64Decode(pPOSTdata[tDataKey]))) into pPOSTdata[tDataKey]
+						 put rigSerializedPOSTtoArray(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+		 			catch err
+						-- rigLogMessage "info", "Failed to decode POST data of type application/lc.array.compressed."
+						
+						put _rigCleanInputData(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+		 			end try
+				end if
+				
+			end if
+		end repeat
+		return pPOSTdata
+	end if
+   	
+	return FALSE
+end rigSerializedPOSTtoArray
 
 
 
