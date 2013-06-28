@@ -1824,7 +1824,7 @@ end rigXssClean
 --|
 --| Parameters: array <pArray>
 --|
---| Return: returnType
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigXssCleanArray pArray
@@ -2439,7 +2439,7 @@ end rigCookieExpirationDate
 --|
 --| Parameters: array <pPOSTdata>
 --|
---| Return: array
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigSerializedPOSTtoArray pPOSTdata  
