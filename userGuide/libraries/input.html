@@ -201,7 +201,7 @@ end if
 
 <h2>Using POST, COOKIE, or SERVER Data</h2>
 
-<p>revIgniter comes with three helper functions that let you fetch POST, COOKIE or SERVER items.  The main advantage of using the provided
+<p>revIgniter comes with five helper functions that let you fetch POST, COOKIE or SERVER items.  The main advantage of using the provided
 functions rather than fetching an item directly ($_POST["something"]) is that the functions will check to see if the item exists and
 return false (boolean) if not.  This lets you conveniently use data without having to test whether an item exists first.
 In other words, normally you might do something like this:</p>
@@ -226,7 +226,7 @@ else
 <li>rigVarServer()</li>
 </ul>
 
-<h2>rigVarPost()</h2>
+<h3>rigVarPost()</h3>
 
 <p>The first parameter will contain the name of the POST item you are looking for:</p>
 
@@ -238,29 +238,61 @@ else
 
 <pre><code>get rigVarPost("someData", TRUE)</code></pre>
 
-<h2>rigVarGet()</h2>
+<h3>rigVarGet()</h3>
 
 <p>This function is identical to the post function, only it fetches get data:</p>
 
 <pre><code>get rigVarGet("someData", TRUE)</code></pre>
 
-<h2>rigVarGetPost()</h2>
+<h3>rigVarGetPost()</h3>
 
 <p>This function will search through both the post and get streams for data, looking first in post, and then in get:</p>
 
 <pre><code>get rigVarGetPost("someData", TRUE)</code></pre>
 
-<h2>rigVarCookie()</h2>
+<h3>rigVarCookie()</h3>
 
 <p>This function is identical to the post function, only it fetches cookie data:</p>
 
 <pre><code>get rigVarCookie("someData", TRUE)</code></pre>
 
-<h2>rigVarServer()</h2>
+<h3>rigVarServer()</h3>
 
 <p>This function is identical to the above functions, only it fetches server data:</p>
 
 <pre><code>get rigVarServer("someData")</code></pre>
+
+
+
+
+<h2>Dealing with LiveCode Arrays in Post Data</h2>
+
+<p>You can send LiveCode arrays to revIgniter using POST. For this to work the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd> respectively in case you like to send your array in compressed form.<br />Use 
+	<pre><code>urlEncode(arrayEncode(myArray))</code></pre> 
+	or 
+	<pre><code>base64Encode(compress(arrayEncode(myArray)))</code></pre> 
+to prepare LiveCode arrays on the client side.</p>
+
+<p>Then format your data using LiveCode's libURLFormData() function like:</p>
+
+<pre><code>put libURLFormData("arrayName", tMyPreparedArray, "anotherArrayName", tMyOtherPreparedArray, "keyForSomeString", "myString") into tDataToSend</code></pre> 
+
+<p>Set the correct header and send the data to revIgniter:</p>
+
+
+<pre><code>set the httpHeaders to "Content-Type: application/lc.array.compressed"
+post tDataToSend to URL "http://mysite.com/mycontroller/"
+</code></pre>
+
+
+<p>On the server side you can retrieve your data like:</p>
+
+<pre><code>put rigVarPost("arrayName") into tMyArray</code></pre>
+
+
+<h2>Dealing with JSON in Post Data</h2>
+
+<p>To post JSON send <kbd>"Content-Type: application/json"</kbd> along with the POST data. This way there is no need to send JSON as form data.<br />On the server side JSON data can be retrieved from <dfn>$_POST</dfn> and from <dfn>$_POST_RAW</dfn> as well as from <dfn>rigVarPost()</dfn> or from <dfn>rigVarPost(, TRUE)</dfn> respectively.</p>
 
 
 
