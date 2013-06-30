@@ -12,7 +12,7 @@
 <meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
 <meta name='description' content='revIgniter User Guide' />
 
-<title>Upgrading from 1.0.1b to 1.1b : revIgniter User Guide</title>
+<title>Upgrading from 1.6.3 to 1.6.4 : revIgniter User Guide</title>
 
 <style type='text/css' media='all'>@import url('../userguide.css');</style>
 <link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
@@ -51,7 +51,7 @@ Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" i
 <td id="breadcrumb">
 <a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
 <a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-Upgrading from 1.0.1b to 1.1b
+Upgrading from 1.6.3 to 1.6.4
 </td>
 <td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
 </tr>
@@ -75,39 +75,42 @@ Upgrading from 1.0.1b to 1.1b
 <!-- START CONTENT -->
 <div id="content">
 
-<h1>Upgrading from 1.0.1b to 1.1b</h1>
+<h1>Upgrading from 1.6.3 to 1.6.4</h1>
 
-<p>Before performing an update you should take your site offline by replacing the index.irev file with a static one.</p>
+
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
 
 <h2>Step 1: Update your revIgniter files</h2>
 
-<p>Add this file to your "system/libraries" folder:</p>
-
-<ul>
-<li><dfn>Calendar.irev</dfn></li>
-</ul>
 
 <p>Replace this file in your "system/libraries" folder with the new version:</p>
 
 <ul>
-<li><dfn>Router.irev</dfn></li>
+	<li><dfn>Input.lc</dfn></li>
 </ul>
 
-<p>Replace this file in your "system/application/config" folder with the new version:</p>
+
+<p>Replace this file in your "system/helpers" folder with the new version:</p>
 
 <ul>
-<li><dfn>routes.irev</dfn></li>
+	<li><dfn>downloadHelper.lc</dfn></li>
 </ul>
 
 
-<h2>Step 2: Adjust your new routes.irev file</h2>
-<p>If you previously modified the routes.irev file assign your settings to your new routes.irev file. Note, that the gRoutes array now must be numbered 
-as defined in the routes.irev file.</p>
 
-<h2>Step 3: Update your user guide</h2>
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+<h2>Step 2: Update your user guide</h2>
 <p>Please replace your local copy of the user guide with the new version.</p>
+
+
 
 </div>
 <!-- END CONTENT -->
