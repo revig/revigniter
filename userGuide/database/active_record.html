@@ -32,7 +32,7 @@
 <div id="masthead">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
-<td><h1>revIgniter User Guide Version 1.6.3</h1></td>
+<td><h1>revIgniter User Guide Version 1.6.4</h1></td>
 <td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
 Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
 &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
@@ -301,6 +301,12 @@ rigDbWhere tWhere, "", FALSE</code></pre></li>
 <p>rigDbWhere accepts an optional third parameter. If you set it to FALSE, revIgniter will not try to protect your field or table names with backticks.</p>
 <pre><code>rigDbWhere "MATCH (field) AGAINST (" & quote & value & quote & ")", "", FALSE
 </code></pre>
+
+<p>Note: To check for fields that are empty you need to set the value to a space like:</p>
+
+<pre><code>rigDbWhere "name =", " "
+</code></pre>
+
 <h2>rigDbOrWhere</h2>
 <p>This handler is identical to the one above, except that multiple instances are joined by OR:</p>
 
