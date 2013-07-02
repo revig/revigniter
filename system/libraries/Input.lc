@@ -2272,23 +2272,23 @@ end rigStripImgTags
 --| COMMAND _rigInputSetCookie
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 15-07-12
---| Last Mod: --
+--| Last Mod: 02-07-13
 --| Requires: rigCookieExpirationDate(), rigSetHeader
 --|
---| Summary: Accepts seven parameters, or you can submit an associative
+--| Summary: Accepts nine parameters, or you can submit an associative
 --| 	       array in the first parameter containing all the values.
 --| 
---| Format:  _rigInputSetCookie param1, param2, param3, param4, param5, param6, param7, param8
+--| Format:  _rigInputSetCookie param1, param2, param3, param4, param5, param6, param7, param8, param9
 --|
 --| Parameters: string <pName>, string <pValue>, integer <pExp>, string <pDomain> usually: .yourdomain.com,
---|             string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>
+--|             string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure
+command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
 	## IS pName AN ARRAY?
 	if pName is an array then
 		put pName into tCookieArray
@@ -2301,6 +2301,7 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 		put tCookieArray["prefix"] into pPrefix
 		put tCookieArray["replace"] into pReplace
 		put tCookieArray["secure"] into pSecure
+		put tCookieArray["httponly"] into pHttpOnly
 	end if
 
 	if pDomain is not empty then
@@ -2345,13 +2346,20 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 			exit _rigInputSetCookie
 		end if		
 	end if
+	
+	if (pHttpOnly is empty) or (pHttpOnly is TRUE) then
+			# SET THE HttpOnly FLAG
+			put  "; HttpOnly" into pHttpOnly
+		else
+			put empty into pHttpOnly
+		end if
 
 	if pExp is not empty then
-		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & "; expires=" & rigCookieExpirationDate(pExp) & pDomain into tHeaderString
+		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & "; expires=" & rigCookieExpirationDate(pExp) & pDomain & pHttpOnly into tHeaderString
 		rigSetHeader tHeaderString, pReplace
 
 	else
-		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & pDomain into tHeaderString
+		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & pDomain & pHttpOnly into tHeaderString
 		rigSetHeader tHeaderString, pReplace
 	end if
 end _rigInputSetCookie

@@ -40,24 +40,25 @@ end if
 --| COMMAND rigSetCookie
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 30-05-09
---| Last Mod: 15-07-12
+--| Last Mod: 02-07-13
 --| Requires: Input.lc, _rigInputSetCookie
 --|
---| Summary: Wrapper for _rigInputSetCookie in Input library. Accepts seven parameters, or you
+--| Summary: Wrapper for _rigInputSetCookie in Input library. Accepts nine parameters, or you
 --| 	       can submit an associative array in the first parameter containing all the values.
+--| 				 Please see the User Guide for key names or _rigInputSetCookie in Input.lc.
 --| 
---| Format:  rigSetCookie param1, param2, param3, param4, param5, param6, param7, param8
+--| Format:  rigSetCookie param1, param2, param3, param4, param5, param6, param7, param8, param9
 --|
 --| Parameters: string <pName>, string <pValue>, integer <pExp>, string <pDomain> usually: .yourdomain.com,
---|             string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>
+--|             string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure
-	_rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure
+command rigSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
+	_rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
 end rigSetCookie
 
 
