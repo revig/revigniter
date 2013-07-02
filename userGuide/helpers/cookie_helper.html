@@ -105,6 +105,7 @@ put "/" into tCookie["path"]
 put "myprefix" into tCookie["prefix"]
 put FALSE into tCookie["replace"] -- set to TRUE, if you want to overwrite the most recent cookie header
 put TRUE into tCookie["secure"]
+put FALSE into tCookie["httponly"]
 
 rigSetCookie tCookie
 </code></pre>
@@ -121,12 +122,13 @@ zero the cookie will only last as long as the browser is open.</p>
 <p>The <strong>prefix</strong> is only needed if you need to avoid name collisions with other identically named cookies for your server.</p>
 <p>Set the <strong>replace</strong> boolean to TRUE, if you want to overwrite the most recent cookie header</p>
 <p>The <strong>secure</strong> boolean is only needed if you want to make it a secure cookie by setting it to TRUE (Cookies will only be set if a secure HTTPS connection exists).</p>
+<p>Use the <strong>httponly</strong> boolean to unset the HttpOnly flag. This flag is set by default so that the cookie can't be read locally via JavaScript.</p>
 
 <h4>Discrete Parameters</h4>
 
 <p>If you prefer, you can set the cookie by passing data using individual parameters:</p>
 
-<pre><code>rigSetCookie tName, tValue, tExp, tDomain, tPath, tPrefix, tReplace, pSecure</code></pre>
+<pre><code>rigSetCookie tName, tValue, tExp, tDomain, tPath, tPrefix, tReplace, pSecure, pHttpOnly</code></pre>
 
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
 
