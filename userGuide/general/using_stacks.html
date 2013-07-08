@@ -230,7 +230,7 @@ Insert the lines below right after the license notes: </p>
 
 <pre><code># LOGGING
 on libraryStack
-	rigLogMessage "debug", "Stack" && the short name of me && "Loaded";
+	rigLogMessage "debug", "Stack" &amp;&amp; the short name of me &amp;&amp; "Loaded";
 end libraryStack
 </code></pre>
 
@@ -263,8 +263,8 @@ Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as
 
 <pre><code># LOGGING
 on openStack
-	if the environment &lt;&gt; &quot;development&quot; then
-		rigLogMessage &quot;debug&quot;, &quot;Stack&quot; &amp;&amp; the short name of this stack &amp;&amp; &quot;Loaded&quot;
+	if the environment &lt;&gt; "development" then
+		rigLogMessage "debug", "Stack" &amp;&amp; the short name of this stack &amp;&amp; "Loaded";
 	end if
 end openStack
 </code></pre>
