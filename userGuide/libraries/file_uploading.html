@@ -219,7 +219,7 @@ command doUpload
 	put "./uploads/" into tConfig["UploadPath"]
 	put "gif|jpg|png" into tConfig["AllowedTypes"]
 	put 100 into tConfig["MaxSize"]
-	put 1024 into tConfig["MaxWidht"]
+	put 1024 into tConfig["MaxWidth"]
 	put 768 into tConfig["MaxHeight"]
 
 	rigLoaderLoadLibrary "Upload", tConfig
@@ -284,7 +284,7 @@ built above you set the following preferences:</p>
 <pre><code>put "./uploads/" into tConfig["UploadPath"]
 put "gif|jpg|png" into tConfig["AllowedTypes"]
 put 100 into tConfig["MaxSize"]
-put 1024 into tConfig["MaxWidht"]
+put 1024 into tConfig["MaxWidth"]
 put 768 into tConfig["MaxHeight"]
 
 rigLoaderLoadLibrary "Upload", tConfig
@@ -404,7 +404,7 @@ will NOT need to use the <dfn>rigInitializeUpload</dfn> command if you save your
 put "./uploads/" into sUploadConf["UploadPath"]
 put "gif|jpg|png" into sUploadConf["AllowedTypes"]
 put 100 into sUploadConf["MaxSize"]
-put 1024 into sUploadConf["MaxWidht"]
+put 1024 into sUploadConf["MaxWidth"]
 put 768 into sUploadConf["MaxHeight"]
 
 rigRunInitialUploadConfig sUploadConf</code></pre>
