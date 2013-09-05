@@ -795,9 +795,9 @@ end rigLoadstacks
 --| FUNCTION _rigLoad
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 19-06-09
---| Last Mod: 16-02-11
+--| Last Mod: 05-09-13
 --| Requires: --
 --|
 --| Summary: This function is used to load views and files.
@@ -843,19 +843,17 @@ function _rigLoad pDataArray
 	else
 		rigShowError "Unable to load the requested file: " & tRiFile
 	end if
-
-
+	
 	##
-	# BUFFER THE OUTPUT
+	# MERGING VIEWS
 	#
-	# WE BUFFER THE OUTPUT FOR TWO REASONS:
-	# 1. SPEED. YOU GET A SIGNIFICANT SPEED BOOST.
-	# 2. SO THAT THE FINAL RENDERED TEMPLATE CAN BE
-	# POST-PROCESSED BY THE OUTPUT LIBRARY.  WHY DO WE
-	# NEED POST PROCESSING?  FOR ONE THING, IN ORDER TO
-	# SHOW THE ELAPSED PAGE LOAD TIME.  UNLESS WE
-	# CAN INTERCEPT THE CONTENT RIGHT BEFORE IT'S SENT TO
-	# THE BROWSER AND THEN STOP THE TIMER IT WON'T BE ACCURATE.
+	# ALL VIEWS AND NESTED VIEWS ARE MERGED SEPARATELY INTO
+	# THE FINAL OUTPUT DATA WHICH CAN THEN BE POST-PROCESSED
+	# BY THE OUTPUT LIBRARY.  WHY DO WE NEED POST PROCESSING? 
+	# FOR ONE THING, IN ORDER TO SHOW THE ELAPSED PAGE LOAD TIME.
+	# UNLESS WE CAN INTERCEPT THE CONTENT RIGHT BEFORE IT'S
+	# SENT TO THE BROWSER AND THEN STOP THE TIMER IT WON'T
+	# BE ACCURATE.
 	##
 	put URL format("binfile:%s", tRiPath) into sRiPageBuffer
 		
@@ -863,13 +861,13 @@ function _rigLoad pDataArray
 
 	# RETURN THE FILE DATA IF REQUESTED
 	if tRiReturn is TRUE then
-		put sRiPageBuffer into tBuffer
+		put merge(sRiPageBuffer) into tBuffer
 		put empty into sRiPageBuffer
 		return tBuffer
 	end if
 
 	# CALL HANDLER IN OUTPUT.LC TO APPEND OUTPUT DATA
-	rigAppendOutput sRiPageBuffer
+	rigAppendOutput merge(sRiPageBuffer)
 
 end _rigLoad
 
