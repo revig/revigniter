@@ -264,7 +264,7 @@ end rigOutputCache
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
---|           controller library: sFinalOutput
+--|           Loader library: sFinalOutput
 --|
 --|           This handler sends the finalized output data to the browser along
 --|           with any server headers and profile data.  It also stops the

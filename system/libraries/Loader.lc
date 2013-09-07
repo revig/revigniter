@@ -861,7 +861,8 @@ function _rigLoad pDataArray
 
 	# RETURN THE FILE DATA IF REQUESTED
 	if tRiReturn is TRUE then
-		put merge(sRiPageBuffer) into tBuffer
+		put sRiPageBuffer into tBuffer1
+		put merge(tBuffer1) into tBuffer
 		put empty into sRiPageBuffer
 		return tBuffer
 	end if
