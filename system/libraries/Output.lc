@@ -258,13 +258,13 @@ end rigOutputCache
 --| COMMAND _rigDisplay
 --|
 --| Author: rabit
---| Version:  2.3
+--| Version:  2.4
 --| Created: 19-06-09
---| Last Mod: 14-02-13
+--| Last Mod: 05-09-13
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
---|           controller library: sFinalOutput
+--|           Loader library: sFinalOutput
 --|
 --|           This handler sends the finalized output data to the browser along
 --|           with any server headers and profile data.  It also stops the
@@ -284,15 +284,14 @@ command _rigDisplay pOutput, pCached
 	else
 		put pOutput into tOutput
 	end if
-
-	# PARSE OUT THE ELAPSED TIME,
-	put rigElapsedTime("totalExecutionTime_start", "totalExecutionTime_end", 4) into tElapsed
-	put merge(tOutput) into tOutput
 	
 	# DO WE NEED TO WRITE A CACHE FILE?
-	if sCacheExpiration >0 then
+	if sCacheExpiration > 0 then
 		_rigWriteCache tOutput
 	end if
+	
+	# PARSE OUT THE ELAPSED TIME
+	put rigElapsedTime("totalExecutionTime_start", "totalExecutionTime_end", 4) into tElapsed
 
 	# SWAP THE VARIABLES WITH THE DATA, WHICH NEED TO BE UPDATED IN CACHED PAGES
 	put rigCacheVarsMerged(tOutput) into tOutput

@@ -32,7 +32,7 @@
 <div id="masthead">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
-<td><h1>revIgniter User Guide Version 1.6.4</h1></td>
+<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
 <td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
 Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
 &nbsp;<input type="image" id="submitSearch" src="images/searchGo.gif" /></form></td>
@@ -79,6 +79,7 @@ Change Log
 
 
 <ul>
+<li><a href="#version165">Version 1.6.5</a></li>
 <li><a href="#version164">Version 1.6.4</a></li>
 <li><a href="#version163">Version 1.6.3</a></li>
 <li><a href="#version162">Version 1.6.2</a></li>
@@ -149,6 +150,20 @@ Change Log
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
 
+
+<h2><a name="version165">&nbsp;</a>Version 1.6.5</h2>
+<p>Release Date: September 07, 2013</p>
+
+
+<p>
+<ul>
+	<li>Added HttpOnly flag to cookie parameters. Modified rigSetCookie in system/helpers/cookieHelper.lc. Modified _rigInputSetCookie in system/libraries/Input.lc.</li>
+	<li>Replaced uuidgen shell calls with LiveCodes's uuid() function (this applies to server version ≥ 6.1 only).</li>
+	<li>User Guide: Added instructions on how to implement the Quartam PDF Library stack.</li>
+	<li>Fixed bug regarding nested views being limited to 2 levels (thanks Alex). Files changed: system/libraries/Loader.lc -> _rigLoad and system/libraries/Output.lc -> _rigDisplay</li>
+	<li>Fixed bug in system/libraries/Loader.lc -> _rigLoad whiched caused in some circumstances a variable to be over-written in case of nested views (thanks Alex).</li>
+</ul>
+</p>
 
 
 <h2><a name="version164">&nbsp;</a>Version 1.6.4</h2>

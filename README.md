@@ -26,14 +26,15 @@ For the license terms see `LICENSE.txt` / `NOTICE.txt` files.
 
 Make your contributions to revIgniter in the form of pull requests on the [revIgniter repository](https://github.com/revig/revigniter/) on GitHub.  
 revIgniter adheres to the [git-flow](http://nvie.com/posts/a-successful-git-branching-model/) process. This workflow requires that all commits need to be made to "develop" and all pull requests need to be sent to the "develop" branch.  
-In case your contribution requires the documentation to be extended please read the [documentation guidelines](http://revigniter.com/userGuide/docStyle/index.html) in the User Guide and add to the User Guide whatever is needed.  
+Please respect the coding conventions used throughout the project (indentation, comments, etc.) and any other requirements. In case your contribution requires the documentation to be extended please read the [documentation guidelines](http://revigniter.com/userGuide/docStyle/index.html) in the User Guide and add to the User Guide whatever is needed.  
+Before generating a significant pull request (new features, refactoring code etc.) please ask. Otherwise you risk spending a lot of time on something the project's developers might be reluctant to merge into the project.  
 Please note: By sending a pull request to the [revIgniter repository](https://github.com/revig/revigniter/) on GitHub, you certify to a "Developer's Certificate of Origin" as in `DCO.txt` located in the root of this repository. This requires you to sign your work like `git commit --signoff`.
 
 	
 
 ### Meta
 
-- Version: 1.6.3
+- Version: 1.6.5
 - Web Site: http://revigniter.com/
 - User Guide: http://revigniter.com/userGuide/index.html
 - Author:  [Ralf Bitter](mailto:rabit@revigniter.com)

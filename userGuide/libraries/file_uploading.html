@@ -37,7 +37,7 @@
 <div id="masthead">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
-<td><h1>revIgniter User Guide Version 1.6.4</h1></td>
+<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
 <td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
 Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
 &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
@@ -219,7 +219,7 @@ command doUpload
 	put "./uploads/" into tConfig["UploadPath"]
 	put "gif|jpg|png" into tConfig["AllowedTypes"]
 	put 100 into tConfig["MaxSize"]
-	put 1024 into tConfig["MaxWidht"]
+	put 1024 into tConfig["MaxWidth"]
 	put 768 into tConfig["MaxHeight"]
 
 	rigLoaderLoadLibrary "Upload", tConfig
@@ -284,7 +284,7 @@ built above you set the following preferences:</p>
 <pre><code>put "./uploads/" into tConfig["UploadPath"]
 put "gif|jpg|png" into tConfig["AllowedTypes"]
 put 100 into tConfig["MaxSize"]
-put 1024 into tConfig["MaxWidht"]
+put 1024 into tConfig["MaxWidth"]
 put 768 into tConfig["MaxHeight"]
 
 rigLoaderLoadLibrary "Upload", tConfig
@@ -404,7 +404,7 @@ will NOT need to use the <dfn>rigInitializeUpload</dfn> command if you save your
 put "./uploads/" into sUploadConf["UploadPath"]
 put "gif|jpg|png" into sUploadConf["AllowedTypes"]
 put 100 into sUploadConf["MaxSize"]
-put 1024 into sUploadConf["MaxWidht"]
+put 1024 into sUploadConf["MaxWidth"]
 put 768 into sUploadConf["MaxHeight"]
 
 rigRunInitialUploadConfig sUploadConf</code></pre>
