@@ -891,23 +891,24 @@ end rigDbTransStatus
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCompileBinds
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 18-07-09
---| Last Mod: 27-12-09
+--| Last Mod: 10-09-13
 --| Requires: rigDbEscape()
 --|
 --| Summary: Compile bindings. pBinds must be a comma separated list or a numbered array.
 --| 
 --| Format:  rigCompileBinds(param1, param2)
 --|
---| Parameters: string <pSQL> the sql statement, array <pBinds> an array of bind data
+--| Parameters: string <pSQL> the sql statement, mixed <pBinds> an array or a
+--|             comma separated list of bind data
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCompileBinds pSQL pBinds
 	if ":1" is not in pSQL then
@@ -918,25 +919,25 @@ function rigCompileBinds pSQL pBinds
 	put pBinds into tBinds
 
 	# GET LIST OF ESCAPED BIND VALUES
-	# WE DON'T USE COMBINE TO KEEP THE CORRECT ARRAY VALUE ORDER
+	# TO KEEP THE CORRECT ARRAY VALUE ORDER WE DON'T USE COMBINE
 	if tBinds is an array then
 		put 0 into tCounter
-		put the number of lines on the keys of tBinds into tNumOfBinds
+		put the number of lines of the keys of tBinds into tNumOfBinds
 		repeat with i = 1 to tNumOfBinds
-			put rigDbEscape(tBinds[i]) & comma after tBindsEscaped
+			put rigDbEscape(tBinds[i]) into tBindsEscaped[i]
 		end repeat
 	else
-		repeat for each item tItem in tBinds
-			put rigDbEscape(tItem) & comma after tBindsEscaped
-		end repeat	
-	end if
-	delete byte -1 of tBindsEscaped
+		put 0 into tNumOfBinds
 
-	# SUBSTITUDE BINDMARKERS
-	put 0 into tCounter
-	repeat for each item tBindValue in tBindsEscaped
-		add 1 to tCounter
-		replace ":" & tCounter with tBindValue in tSQl
+		repeat for each item tItem in tBinds
+			add 1 to tNumOfBinds
+			put rigDbEscape(tItem) into tBindsEscaped[tNumOfBinds]
+		end repeat
+	end if
+
+	# SUBSTITUTE BIND MARKERS
+	repeat with i = 1 to tNumOfBinds
+		replace ":" & i with tBindsEscaped[i] in tSQl
 	end repeat
 
 	return tSQl
