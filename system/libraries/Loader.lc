@@ -768,8 +768,8 @@ end rigLoadstack
 --|
 --| Author: rabit
 --| Version:  1.0
---| Created: 19-06-09
---| Last Mod: 19-06-09
+--| Created: 30-07-2011
+--| Last Mod: 30-07-2011
 --| Requires: rigLoadHelper
 --|
 --| Summary: This is simply an alias to the above handler in case the
