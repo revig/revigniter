@@ -1,78 +1,88 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Date Helper : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv='expires' content='0' />
-<meta http-equiv= 'pragma' content='no-cache' />
-<meta name='robots' content='all' />
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-<meta name="author" content="rabit" />
-<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
-<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
-<meta name='description' content='revIgniter User Guide' />
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
 
-<title>Date Helper : revIgniter User Guide</title>
-
-<style type='text/css' media='all'>@import url('../userguide.css');</style>
-<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
-
-<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript" src="../js/nav.js"></script>
-
- 
-
-
-
-</head>
+	</head>
 <body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
 
-<!-- START PAGE HEAD -->
-<div id="nav"><a name="top">&nbsp;</a>
-<div id="masthead">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
-<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
-Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
-&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
-</tr>
-</table>
-</div>
-</div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Date Helper</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
 <!-- END PAGE HEAD -->
-
-
-<!-- START BREADCRUMB -->
-<div id="breadcrumbCont">
-
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td id="breadcrumb">
-<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
-<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-Date Helper
-</td>
-<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
-</tr>
-</table>
-
-</div>
-<!-- END BREADCRUMB -->
 
 <br clear="all" />
 
-
-<!-- START SLIDEBOX -->
-<div class="slide-panel top">
-<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-<div id="open-button" class="slide-button">Table of Contents</div>
-<div id="close-button" class="slide-button">Close</div>
-</div>
-<!-- END SLIDEBOX -->
-
-
 <!-- START CONTENT -->
+<div class="container">
+	
 <div id="content">
 
 
@@ -89,7 +99,7 @@ Date Helper
 
 <p>The following handlers are available:</p>
 
-<h2>rigNow()</h2>
+<h3>rigNow()</h3>
 
 <p>Returns the current time as a timestamp (seconds), referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.  If you do not intend to set your master time reference to GMT (which you'll typically do if you run a site that lets each user set their own timezone settings) there is no benefit to using this function over LiveCode's seconds() function.
 </p>
@@ -97,7 +107,7 @@ Date Helper
 
 
 
-<h2>rigMdate(<var>dateString</var>, <var>time</var>)</h2>
+<h3>rigMdate(<var>dateString</var>, <var>time</var>)</h3>
 
 <p>This function lets you use MySQL style date codes, where each code letter is preceded with a percent sign:  %Y %m %d etc. Example:</p>
 
@@ -112,7 +122,7 @@ put rigMdate(tDateString, tTime) into gData["mdate"]
 
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 	<tr>
 		<th>Specifier</th>
 		<th>Description</th>
@@ -234,7 +244,7 @@ put rigMdate(tDateString, tTime) into gData["mdate"]
 
 <p class="important"><strong>Note:</strong> The text generated by this function is found in the following language file: language/&lt;yourLang&gt;/dateLang.lc</p>
 
-<h2>rigStandardDate(<var>format</var>, <var>time</var>)</h2>
+<h3>rigStandardDate(<var>format</var>, <var>time</var>)</h3>
 
 <p>Lets you generate a date string in one of several standardized formats. Example:</p>
 
@@ -249,7 +259,7 @@ put rigStandardDate(tFormat, tTime) into gData["standardDate"]
 
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 	<tr>
 		<th>Constant</th>
 		<th>Description</th>
@@ -308,7 +318,7 @@ put rigStandardDate(tFormat, tTime) into gData["standardDate"]
 </table>
 </div>
 
-<h2>rigLocalToGMT(<var>time</var>)</h2>
+<h3>rigLocalToGMT(<var>time</var>)</h3>
 
 <p>Takes a timestamp (seconds) as input and returns it as GMT. If no parameter is provided, a timestamp of the current time is used. Example:</p>
 
@@ -316,7 +326,7 @@ put rigStandardDate(tFormat, tTime) into gData["standardDate"]
 </code></pre>
 
 
-<h2>rigGmtToLocal(<var>time</var>, <var>timeZone</var>, <var>DST</var>)</h2>
+<h3>rigGmtToLocal(<var>time</var>, <var>timeZone</var>, <var>DST</var>)</h3>
 
 <p>Takes a timestamp (seconds) (referenced to GMT) as input, and converts it to a localized timestamp based on the
 timezone and Daylight Saving time submitted.  Example:</p>
@@ -327,7 +337,7 @@ put rigGmtToLocal(tTimestamp, "UM4", TRUE) into gData["gmtToLocal"]
 
 <p><strong>Note:</strong> For a list of timezones see the reference at the bottom of this page.</p>
 
-<h2>rigMysqlTimeToSeconds(<var>mysqlTime</var>)</h2>
+<h3>rigMysqlTimeToSeconds(<var>mysqlTime</var>)</h3>
 
 <p>Takes a MySQL Timestamp as input and returns it as seconds. Example:</p>
 
@@ -336,7 +346,7 @@ put rigMysqlTimeToSeconds(tMysql) into gData["mysqlToSeconds"]
 </code></pre>
 
 
-<h2>rigTimestampToHuman(<var>time</var>, <var>showSecs</var>, <var>format</var>)</h2>
+<h3>rigTimestampToHuman(<var>time</var>, <var>showSecs</var>, <var>format</var>)</h3>
 
 <p>Takes a timestamp (seconds) as input and returns it in a human readable format with this prototype:</p>
 
@@ -357,7 +367,7 @@ put rigTimestampToHuman(tTimestamp, TRUE, "us") into gData["timestampToHuman"] -
 </code></pre>
 
 
-<h2>rigHumanToTimestamp(<var>datestring</var>)</h2>
+<h3>rigHumanToTimestamp(<var>datestring</var>)</h3>
 
 <p>The opposite of the above function.  Takes a "human" time as input and returns it as timestamp.  This function is
 useful if you accept "human" formatted dates submitted via a form.  Returns FALSE if the date string passed to it is not formatted as indicated above.  Example:</p>
@@ -368,7 +378,7 @@ put rigHumanToTimestamp(tDatestring) into gData["humanToTimestamp"]
 
 
 
-<h2>rigTimespan(<var>seconds</var>, <var>time</var>)</h2>
+<h3>rigTimespan(<var>seconds</var>, <var>time</var>)</h3>
 
 <p>Formats a timestamp (seconds) so that is appears similar to this:</p>
 
@@ -383,7 +393,7 @@ for this function is to show how much time has elapsed from some point in time i
 <p class="important"><strong>Note:</strong> The text generated by this function is found in the following language file: language/&lt;yourLang&gt;/dateLang.lc</p>
 
 
-<h2>rigDaysInMonth(<var>month</var>, <var>year</var>)</h2>
+<h3>rigDaysInMonth(<var>month</var>, <var>year</var>)</h3>
 
 <p>Returns the number of days in a given month/year. Takes leap years into account.  Example:</p>
 <pre><code>put rigDaysInMonth("2", "2010") into gData["daysInMonth"]
@@ -391,7 +401,7 @@ for this function is to show how much time has elapsed from some point in time i
 
 <p>If the second parameter is empty, the current year will be used.</p>
 
-<h2>rigTimezones(<var>timeZone</var>)</h2>
+<h3>rigTimezones(<var>timeZone</var>)</h3>
 
 <p> Takes a timezone reference (for a list of valid timezones, see the &quot;Timezone Reference&quot; below) and returns the number of hours offset from UTC.</p>
 
@@ -400,7 +410,7 @@ for this function is to show how much time has elapsed from some point in time i
 
 <p>This function is useful when used with rigTimezoneMenu(). </p>
 
-<h2>rigTimezoneMenu(<var>default</var>, <var>class</var>, <var>name</var>)</h2>
+<h3>rigTimezoneMenu(<var>default</var>, <var>class</var>, <var>name</var>)</h3>
 
 <p>Generates a pull-down menu of timezones, like this one:</p>
 
@@ -459,7 +469,7 @@ for this function is to show how much time has elapsed from some point in time i
 <p>The following table indicates each timezone and its location.</p>
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 <tr>
 <th>Time Zone</th>
 <th>Location</th>
@@ -532,8 +542,11 @@ for this function is to show how much time has elapsed from some point in time i
 </div>
 <!-- END CONTENT -->
 
+</div> <!-- /container -->
+
 
 <div id="footer">
+	<div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="cookie_helper.html">Cookie Helper</a>
 <span class="separator"> :: </span>
@@ -541,18 +554,20 @@ Previous Topic:&nbsp;&nbsp;<a href="cookie_helper.html">Cookie Helper</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="download_helper.html">Download Helper</a></p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
-</div>
+	</div>
+</div>	
 
-<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script>
-  hljs.tabReplace = '    ';
-  hljs.initHighlightingOnLoad();
-  </script>
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
 
-<script src="../js/script-ck.js" type="text/javascript"></script>
-<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
 
 
 </body>

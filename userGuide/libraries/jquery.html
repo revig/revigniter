@@ -1,78 +1,88 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>JQuery Library : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv='expires' content='0' />
-<meta http-equiv= 'pragma' content='no-cache' />
-<meta name='robots' content='all' />
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-<meta name="author" content="rabit" />
-<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
-<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
-<meta name='description' content='revIgniter User Guide' />
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
 
-<title>jQuery Library : revIgniter User Guide</title>
-
-<style type='text/css' media='all'>@import url('../userguide.css');</style>
-<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
-
-<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript" src="../js/nav.js"></script>
-
- 
-
-
-
-</head>
+	</head>
 <body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
 
-<!-- START PAGE HEAD -->
-<div id="nav"><a name="top">&nbsp;</a>
-<div id="masthead">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
-<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
-Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
-&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
-</tr>
-</table>
-</div>
-</div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">JQuery Library</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
 <!-- END PAGE HEAD -->
-
-
-<!-- START BREADCRUMB -->
-<div id="breadcrumbCont">
-
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td id="breadcrumb">
-<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
-<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-jQuery Library
-</td>
-<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
-</tr>
-</table>
-
-</div>
-<!-- END BREADCRUMB -->
 
 <br clear="all" />
 
-
-<!-- START SLIDEBOX -->
-<div class="slide-panel top">
-<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-<div id="open-button" class="slide-button">Table of Contents</div>
-<div id="close-button" class="slide-button">Close</div>
-</div>
-<!-- END SLIDEBOX -->
-
-
 <!-- START CONTENT -->
+<div class="container">
+	
 <div id="content">
 
 
@@ -457,20 +467,20 @@ end peopleData
 <p>&nbsp;</p>
 
 <a name="reference"></a>
-<h1>Handler Reference</h1>
+<h2>Handler Reference</h2>
 
 <p>The following handlers are intended for use in your controller handlers. There are some highly specialized handlers like rigJQajaxForm, rigJQeventAlert, rigJQeventEffect, rigJQeventAnim, rigJQconfirm or rigJQprompt, and others like rigJQset, rigJQgetR or rigJQeventOpen, which are more generic ones.</p>
 
 
-<h2>rigJQuerySource()</h2>
+<h3>rigJQuerySource()</h3>
 
 <p>This function returns the html string linking to jQuery.</p>
 
-<h2>rigJQopen</h2>
+<h3>rigJQopen</h3>
 
 <p>Use this handler to tell the library to start building your jQuery script.</p>
 
-<h2>rigJQclose</h2>
+<h3>rigJQclose</h3>
 
 <p>Ends building your script and returns it. Example:</p>
 
@@ -478,7 +488,7 @@ end peopleData
 put the result into gData["JQscript"]
 </code></pre>
 
-<h2>rigJQajaxForm <var>submitBtnSelector</var>, <var>selectorList</var>, <var>postURI</var>, <var>preventDefault</var>, <var>dataToLoadURI</var>, <var>dataContainerSelector</var></h2>
+<h3>rigJQajaxForm <var>submitBtnSelector</var>, <var>selectorList</var>, <var>postURI</var>, <var>preventDefault</var>, <var>dataToLoadURI</var>, <var>dataContainerSelector</var></h3>
 
 <p>Permits you to process form data using a xmlHTTPrequest and place the returned HTML into the matched element. Example:</p>
 
@@ -489,7 +499,7 @@ put the result into gData["JQscript"]
 
 <p class="important"><strong>Note:</strong> This handler assumes, that IDs and names of form elements are identical.</p>
 
-<h2>rigJQeventAlert <var>selector</var>, <var>event</var>, <var>alert</var>, <var>preventDefault</var>, <var>eventData</var></h2>
+<h3>rigJQeventAlert <var>selector</var>, <var>event</var>, <var>alert</var>, <var>preventDefault</var>, <var>eventData</var></h3>
 
 <p>Displays an alert on various events. Example:</p>
 
@@ -508,31 +518,31 @@ rigJQeventAlert "'#testObject'", "'click'", "event.data.msg", , "msg: message"
 
 <p>For more event types see the jQuery documentation.</p>
 
-<h2>rigJQalert <var>alert</var></h2>
+<h3>rigJQalert <var>alert</var></h3>
 
 <p>This handler writes a simple alert statement. The parameter is a string to be displayed as alert.</p>
 
-<h2>rigJQalertR(<var>alert</var>)</h2>
+<h3>rigJQalertR(<var>alert</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQalert), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQconfirm <var>varName</var>, <var>question</var>, <var>global</var></h2>
+<h3>rigJQconfirm <var>varName</var>, <var>question</var>, <var>global</var></h3>
 
 <p>Adds a statement, which displays a JavaScript confirmation box and stores the returned value in a variable. The first parameter is the name of the variable. The second parameter is the question to be asked and the third parameter is a boolean, which specifies if it is a global variable. </p>
 
-<h2>rigJQconfirmR(<var>varName</var>, <var>question</var>, <var>global</var>)</h2>
+<h3>rigJQconfirmR(<var>varName</var>, <var>question</var>, <var>global</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQconfirm), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQprompt <var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var></h2>
+<h3>rigJQprompt <var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var></h3>
 
 <p>Adds a statement, which displays a JavaScript prompt box and stores the input value in a variable. The first parameter is the name of the variable. The second parameter is the prompt. The optional third parameter is the default value and the optional fourth parameter is a boolean, which specifies if the variable, the input value is stored in, should be global.</p>
 
-<h2>rigJQpromptR(<var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var>)</h2>
+<h3>rigJQpromptR(<var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQprompt), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQset <var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var></h2>
+<h3>rigJQset <var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var></h3>
 
 <p>Permits you to write all sorts of jQuery setter statements, which manipulate the DOM in some manner. Example:</p>
 
@@ -550,11 +560,11 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 <p class="important"><strong>Note:</strong> To reference the function arguments for index positions of elements in a set and for old values, always use the terms "index" and "oldVal".</p>
 
 
-<h2>rigJQsetR(<var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var>)</h2>
+<h3>rigJQsetR(<var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQset), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQgetR(<var>selector</var>, <var>method</var>, <var>getterProp</var>)</h2>
+<h3>rigJQgetR(<var>selector</var>, <var>method</var>, <var>getterProp</var>)</h3>
 
 <p>Permits you to retrieve information from DOM elements for later use. Example:</p>
 
@@ -564,7 +574,7 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 <p>The first parameter specifies a selector, the second a jQuery method. Use the optional third parameter to determine the property to get.</p>
 
 
-<h2>rigJQeventOpen <var>selector</var>, <var>event</var>, <var>preventDefault</var>, <var>eventData</var>, <var>eventObject</var>, <var>FunctionArguments</var></h2>
+<h3>rigJQeventOpen <var>selector</var>, <var>event</var>, <var>preventDefault</var>, <var>eventData</var>, <var>eventObject</var>, <var>FunctionArguments</var></h3>
 
 <p>This tells the library to start writing statements registering behaviors to take effect when the user interacts with the browser. Example:</p>
 
@@ -590,12 +600,12 @@ rigJQeventClose
 
 <p class="important"><strong>Note:</strong> Don't use "bind" as event in a rigJQeventOpen handler. jQuery event objects need to be referenced as "event".</p>
 
-<h2>rigJQeventClose</h2>
+<h3>rigJQeventClose</h3>
 
 <p>Used to mark the end of the event function.</p>
 
 
-<h2>rigJQeventEffect <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>effect</var>, <var>parameter</var>, <var>preventDefault</var>, <var>callback</var></h2>
+<h3>rigJQeventEffect <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>effect</var>, <var>parameter</var>, <var>preventDefault</var>, <var>callback</var></h3>
 
 <p>Permits you to set special effects on various events. Example:</p>
 
@@ -610,7 +620,7 @@ rigJQeventClose
 rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", , tCallbackShow
 </code></pre>
 
-<h2>rigJQeffect <var>selector</var>, <var>effect</var>, <var>duration</var>, <var>callback</var></h2>
+<h3>rigJQeffect <var>selector</var>, <var>effect</var>, <var>duration</var>, <var>callback</var></h3>
 
 <p>Permits you to apply effects to objects. Example:</p>
 
@@ -621,11 +631,11 @@ rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", ,
 
 <p class="important"><strong>Note:</strong> Don't use "animate" as effect. There is a special rigJQanimate handler for this type of effect.</p>
 
-<h2>rigJQeffectR(<var>selector</var>, <var>effect</var>, <var>effectData</var>, <var>callback</var>)</h2>
+<h3>rigJQeffectR(<var>selector</var>, <var>effect</var>, <var>effectData</var>, <var>callback</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQeffect), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQeventAnim <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>properties</var>, <var>Duration</var>, <var>Easing</var>, <var>Callback</var></h2>
+<h3>rigJQeventAnim <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>properties</var>, <var>Duration</var>, <var>Easing</var>, <var>Callback</var></h3>
 
 <p>Permits you to perform a custom animation of a set of CSS properties on various events. Example:</p>
 
@@ -641,19 +651,19 @@ rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 
 <p class="important"><strong>Note:</strong> Use an array for duration if you need to set more properties than the duration only. To provide other easing functions than the default "swing" for animation you need additional Jquery plugins.</p>
 
-<h2>rigJQanimate <var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var></h2>
+<h3>rigJQanimate <var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var></h3>
 
 <p>Permits you to perform a custom animation of a set of CSS properties.</p>
 
 <p>The first parameter determines the object the animation is applied to. The second parameter contains the CSS properties to be animated. This can be an array or a string. If you don't use an array use the following form: "key1: value1, key2: value2, . . ." The optional third parameter sets the animation duration, this can be an integer, a string or an array. The optional fourth parameter contains a string indicating which easing function to use for the animation. The optional fifth parameter contains a function to call once the animation is complete.</p>
 
-<h2>rigJQanimateR(<var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var>)</h2>
+<h3>rigJQanimateR(<var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQanimate), but instead of adding the statement to the script, it returns it.</p>
 
 <p class="important"><strong>Note:</strong> Use an array for duration if you need to set more properties than the duration only. To provide other easing functions than the default "swing" for animation you need additional Jquery plugins.</p>
 
-<h2>rigJQajax <var>ajaxOptions</var>, <var>setUpOnly</var></h2>
+<h3>rigJQajax <var>ajaxOptions</var>, <var>setUpOnly</var></h3>
 
 <p>Permits you to perform an asynchronous HTTP (Ajax) request. Example:</p>
 
@@ -670,11 +680,11 @@ rigJQeventClose
 
 <p class="important"><strong>Note:</strong> To reference the "success:" function argument for any data returned, always use the term "data". Reference the second argument using the term "textStatus", and the third argument using the term "XMLHttpRequest".</p>
 
-<h2>rigJQajaxR(<var>ajaxOptions</var>, <var>setUpOnly</var>)</h2>
+<h3>rigJQajaxR(<var>ajaxOptions</var>, <var>setUpOnly</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQajax), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQxhRequest <var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var></h2>
+<h3>rigJQxhRequest <var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var></h3>
 
 <p>Permits you to load data from the server and, depending on the request type, place the returned HTML into the matched element without a browser page refresh. Example:</p>
 
@@ -695,33 +705,33 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 </code></pre>
 
 
-<h2>rigJQxhRequestR(<var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var>)</h2>
+<h3>rigJQxhRequestR(<var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQxhRequest), but instead of adding the statement to the script, it returns it.</p>
 
 
-<h2>rigJQcallFunction <var>selector</var>, <var>functionName</var>, <var>funtionArguments</var></h2>
+<h3>rigJQcallFunction <var>selector</var>, <var>functionName</var>, <var>funtionArguments</var></h3>
 	
 <p>Permits you to write statements to call any jQuery or any custom function.</p>
 
 <p>The optional first parameter is a selector, use a comma delimited list if you want to deal with more than one element. The second parameter specifies the function name and the optional third parameter contains the function arguments.</p>
 
 
-<h2>rigJQfunctionOpen <var>name</var>, <var>arguments</var></h2>
+<h3>rigJQfunctionOpen <var>name</var>, <var>arguments</var></h3>
 
 <p>Tells the library to start writing a custom function.</p>
 
 <p>The first parameter specifies the name of the function and the optional second parameter contains the function arguments as a comma delimited list.</p>
 
-<h2>rigJQfunctionClose</h2>
+<h3>rigJQfunctionClose</h3>
 
 <p>Use this handler to mark the end of a custom function.</p>
 
-<h2>rigJQcb</h2>
+<h3>rigJQcb</h3>
 
 <p>Marks the end of a custom function. This is a synonym for JQfunctionClose.</p>
 
-<h2>rigJQcondition <var>condition</var>, <var>ifAction</var>, <var>elseAction</var></h2>
+<h3>rigJQcondition <var>condition</var>, <var>ifAction</var>, <var>elseAction</var></h3>
 
 <p>Permits you to write a conditional statement. Example:</p>
 
@@ -730,12 +740,12 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 
 <p>The first parameter contains the condition, the second specifies what to do if the condition is met, and the optional third parameter specifies what to do if the condition is not met.</p>
 
-<h2>rigJQconditionR(<var>condition</var>, <var>ifAction</var>, <var>elseAction</var>)</h2>
+<h3>rigJQconditionR(<var>condition</var>, <var>ifAction</var>, <var>elseAction</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQcondition), but instead of adding the statement to the script, it returns it.</p>
 
 
-<h2>rigJQeachOpen <var>selector</var>, <var>collection</var>, <var>callback</var></h2>
+<h3>rigJQeachOpen <var>selector</var>, <var>collection</var>, <var>callback</var></h3>
 
 <p>Permits you to iterate over a jQuery object or over both, a map (JavaScript object) or an array, executing a function for each matched element or for each member of a collection.</p>
 
@@ -745,21 +755,21 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 
 <p class="important"><strong>Note:</strong> Use eather the first parameter or the second.</p>
 
-<h2>rigJQeachOpenR(<var>selector</var>, <var>collection</var>, <var>callback</var>)</h2>
+<h3>rigJQeachOpenR(<var>selector</var>, <var>collection</var>, <var>callback</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQeachOpen), but instead of adding the statement to the script, it returns it.</p>
 
-<h2>rigJQeachClose</h2>
+<h3>rigJQeachClose</h3>
 
 <p>Use this handler to mark the end of an iteration.</p>
 
 
-<h2>rigJQeachCloseR()</h2>
+<h3>rigJQeachCloseR()</h3>
 
 <p>This function does the same as it's equivalent handler (rigJQeachClose), but instead of adding the statement to the script, it returns it.</p>
 
 
-<h2>rigJQvar <var>vars</var></h2>
+<h3>rigJQvar <var>vars</var></h3>
 
 <p>Permits you to declare variables. Example:</p>
 
@@ -773,13 +783,13 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 <pre><code>rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
 </code></pre>
 
-<h2>rigJQvarR(<var>vars</var>)</h2>
+<h3>rigJQvarR(<var>vars</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (rigJQvar), but instead of adding the statement to the script, it returns it.</p>
 
 
 
-<h2>rigJQaddStatement <var>statement</var></h2>
+<h3>rigJQaddStatement <var>statement</var></h3>
 
 <p>In case your particular needs demand it: Use this handler to add standard jQuery code to your script.</p>
 
@@ -789,8 +799,11 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 </div>
 <!-- END CONTENT -->
 
+</div> <!-- /container -->
+
 
 <div id="footer">
+	<div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 <span class="separator"> :: </span>
@@ -799,18 +812,20 @@ Previous Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 Next Topic:&nbsp;&nbsp;<a href="loader.html">Loader Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
 </div>
 
-<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script>
-  hljs.tabReplace = '    ';
-  hljs.initHighlightingOnLoad();
-  </script>
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
 
-<script src="../js/script-ck.js" type="text/javascript"></script>
-<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
 
 
 </body>

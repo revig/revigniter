@@ -1,78 +1,89 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Active Record : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv='expires' content='0' />
-<meta http-equiv= 'pragma' content='no-cache' />
-<meta name='robots' content='all' />
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-<meta name="author" content="rabit" />
-<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
-<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
-<meta name='description' content='revIgniter User Guide' />
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
 
-<title>Active Record : revIgniter User Guide</title>
-
-<style type='text/css' media='all'>@import url('../userguide.css');</style>
-<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
-
-<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript" src="../js/nav.js"></script>
-
- 
-
-
-
-</head>
+	</head>
 <body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
 
-<!-- START PAGE HEAD -->
-<div id="nav"><a name="top">&nbsp;</a>
-<div id="masthead">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
-<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
-Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
-&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
-</tr>
-</table>
-</div>
-</div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Database Library</a></li>
+			 		 	<li class="active">Active Record</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
 <!-- END PAGE HEAD -->
-
-
-<!-- START BREADCRUMB -->
-<div id="breadcrumbCont">
-
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td id="breadcrumb">
-<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
-<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-<a href="index.html">Database Library</a> &nbsp;&#8250;&nbsp;
-Active Record
-</td>
-<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
-</tr>
-</table>
-
-</div>
-<!-- END BREADCRUMB -->
 
 <br clear="all" />
 
-
-<!-- START SLIDEBOX -->
-<div class="slide-panel top">
-<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-<div id="open-button" class="slide-button">Table of Contents</div>
-<div id="close-button" class="slide-button">Close</div>
-</div>
-<!-- END SLIDEBOX -->
-
 <!-- START CONTENT -->
+<div class="container">
+	
 <div id="content">
 
 <h1>Active Record Library</h1>
@@ -96,12 +107,12 @@ is generated by each database adapter.  It also allows for safer queries, since 
 <li><a href="#caching">Active Record Caching</a></li>
 </ul>
 
-<h1><a name="select">&nbsp;</a>Selecting Data</h1>
+<h2><a name="select">&nbsp;</a>Selecting Data</h2>
 
 <p>The following handlers allow you to build SQL <strong>SELECT</strong> statements.</p>
 
 
-<h2>rigDbGet()</h2>
+<h3>rigDbGet()</h3>
 
 <p>Runs the selection query and returns the result.  Can be used by itself to retrieve all records from a table:</p>
 
@@ -143,7 +154,7 @@ end repeat
 <p>Please visit the <a href="results.html">result handlers</a> page for a full discussion regarding result generation.</p>
 
 
-<h2>rigDbGetWhere()</h2>
+<h3>rigDbGetWhere()</h3>
 
 <p>Identical to the above function except that it permits you to add a "where" clause in the second parameter,
 instead of using the rigDbWhere handler:</p>
@@ -156,7 +167,7 @@ put rigDbGetWhere("mytable", tArray, tLimit, tOffset) into tQuery
 <p>Please read about the where function below for more information.</p>
 
 
-<h2>rigDbSelect</h2>
+<h3>rigDbSelect</h3>
 <p>Permits you to write the SELECT portion of your query:</p>
 <pre><code>rigDbSelect "title,content,date"
 
@@ -169,7 +180,7 @@ put rigDbGet("mytable") into tQuery
 <pre><code>rigDbSelect "SELECT SUM(payments.amount) FROM payments WHERE payments.invoice_id=4) AS amount_paid", FALSE 
 put rigDbGet("mytable") into tQuery
 </code></pre>
-<h2>rigSelectMax</h2>
+<h3>rigSelectMax</h3>
 <p>Writes a "SELECT MAX(field)" portion for your query. You can optionally include a second parameter to rename the resulting field.</p>
 <pre><code>rigSelectMax "age"
 put rigDbGet("members") into tQuery
@@ -180,25 +191,25 @@ rigSelectMax "age", "memberage"
 put rigDbGet("members") into tQuery
 -- Produces: SELECT MAX(age) as memberage FROM members</code></pre>
 
-<h2>rigSelectMin</h2>
+<h3>rigSelectMin</h3>
 <p>Writes a "SELECT MIN(field)" portion for your query. As with <dfn>rigSelectMax</dfn>, You can optionally include a second parameter to rename the resulting field.</p>
 <pre><code>rigSelectMin "age"
 put rigDbGet("members") into tQuery
 -- Produces: SELECT MIN(age) as age FROM members</code></pre>
 
-<h2>rigSelectAvg</h2>
+<h3>rigSelectAvg</h3>
 <p>Writes a "SELECT AVG(field)" portion for your query. As with <dfn>rigSelectMax</dfn>, You can optionally include a second parameter to rename the resulting field.</p>
 <pre><code>rigSelectAvg "age"
 put rigDbGet("members") into tQuery
 -- Produces: SELECT AVG(age) as age FROM members</code></pre>
 
-<h2>rigSelectSum</h2>
+<h3>rigSelectSum</h3>
 <p>Writes a "SELECT SUM(field)" portion for your query. As with <dfn>rigSelectMax</dfn>, You can optionally include a second parameter to rename the resulting field.</p>
 <pre><code>rigSelectSum "age"
 put rigDbGet("members") into tQuery
 -- Produces: SELECT SUM(age) as age FROM members</code></pre>
 
-<h2>rigDbFrom</h2>
+<h3>rigDbFrom</h3>
 
 <p>Permits you to write the FROM portion of your query:</p>
 
@@ -212,7 +223,7 @@ put rigDbGet() into tQuery
 <p class="important">Note: As shown earlier, the FROM portion of your query can be specified in the <dfn>rigDbGet()</dfn> function, so use whichever handler
 you prefer.</p>
 
-<h2>rigDbJoin</h2>
+<h3>rigDbJoin</h3>
 
 <p>Permits you to write the JOIN portion of your query:</p>
 
@@ -240,7 +251,7 @@ Options are: left, right, outer, inner, left outer, and right outer.</p>
 
 
 
-<h2>rigDbWhere</h2>
+<h3>rigDbWhere</h3>
 <p>This handler enables you to set <strong>WHERE</strong> clauses using one of four methods:</p>
 
 <p class="important"><strong>Note:</strong> All values passed to this handler are escaped automatically, producing safer queries.</p>
@@ -307,7 +318,7 @@ rigDbWhere tWhere, "", FALSE</code></pre></li>
 <pre><code>rigDbWhere "name =", " "
 </code></pre>
 
-<h2>rigDbOrWhere</h2>
+<h3>rigDbOrWhere</h3>
 <p>This handler is identical to the one above, except that multiple instances are joined by OR:</p>
 
 <pre><code>rigDbWhere "name !=", tName
@@ -316,7 +327,7 @@ rigDbOrWhere "id >", tID
 -- Produces: WHERE name != 'Joe' OR id > 50</code></pre>
 
 
-<h2>rigDbWhereIn</h2>
+<h3>rigDbWhereIn</h3>
 <p>Generates a WHERE field IN ('item', 'item') SQL query joined with  AND if appropriate</p>
 <pre><code>put "Frank" into tNames[1]
 put "Todd" into tNames[2]
@@ -324,7 +335,7 @@ put "James" into tNames[3]
 rigDbWhereIn "username", tNames
 -- Produces: WHERE username IN ('Frank', 'Todd', 'James')</code></pre>
 
-<h2>rigDbOrWhereIn</h2>
+<h3>rigDbOrWhereIn</h3>
 <p>Generates a WHERE field IN ('item', 'item') SQL query joined with OR if appropriate</p>
 <pre><code>put "Frank" into tNames[1]
 put "Todd" into tNames[2]
@@ -332,7 +343,7 @@ put "James" into tNames[3]
 rigDbOrWhereIn "username", tNames
 -- Produces: OR username IN ('Frank', 'Todd', 'James')</code></pre>
 	
-<h2>rigDbWhereNotIn</h2>
+<h3>rigDbWhereNotIn</h3>
 <p>Generates a WHERE field NOT IN ('item', 'item') SQL query joined with AND if appropriate</p>
 <pre><code>put "Frank" into tNames[1]
 put "Todd" into tNames[2]
@@ -340,7 +351,7 @@ put "James" into tNames[3]
 rigDbWhereNotIn "username", tNames
 -- Produces: WHERE username NOT IN ('Frank', 'Todd', 'James')</code></pre>
 
-<h2>rigDbOrWhereNotIn</h2>
+<h3>rigDbOrWhereNotIn</h3>
 <p>Generates a WHERE field NOT IN ('item', 'item') SQL query joined with OR if appropriate</p>
 <pre><code>put "Frank" into tNames[1]
 put "Todd" into tNames[2]
@@ -348,7 +359,7 @@ put "James" into tNames[3]
 rigDbOrWhereNotIn "username", tNames
 -- Produces: OR username NOT IN ('Frank', 'Todd', 'James')</code></pre>
 
-<h2>rigDbLike</h2>
+<h3>rigDbLike</h3>
 <p>This handler enables you to generate <strong>LIKE</strong> clauses, useful for doing searches.</p>
 
 <p class="important"><strong>Note:</strong> All values passed to this handler are escaped automatically.</p>
@@ -390,7 +401,7 @@ rigDbLike tArray
 	</ol>
 	
 	
-<h2>rigDbOrLike</h2>
+<h3>rigDbOrLike</h3>
 <p>This handler is identical to the one above, except that multiple instances are joined by OR:</p>
 
 <pre><code>rigDbLike "title", "match"
@@ -399,14 +410,14 @@ rigDbOrLike "body", tMatch
 -- WHERE title LIKE '%match%' OR  body LIKE '%match%'</code></pre>
 
 
-<h2>rigDbNotLike</h2>
+<h3>rigDbNotLike</h3>
 
 <p>This handler is identical to <strong>rigDbLike</strong>, except that it generates NOT LIKE statements:</p>
 <pre><code>rigDbNotLike "title", "match"
 
 -- WHERE title NOT LIKE '%match%</code></pre>
 
-<h2>rigDbOrNotLike</h2>
+<h3>rigDbOrNotLike</h3>
 
 <p>This handler is identical to <strong>rigDbNotLike</strong>, except that multiple instances are joined by OR:</p>
 <pre><code>rigDbLike "title", "match"
@@ -414,7 +425,7 @@ rigDbOrNotLike "body", "match"
 
 -- WHERE title  LIKE '%match% OR body NOT LIKE '%match%'</code></pre>
 
-<h2>rigDbGroupBy</h2>
+<h3>rigDbGroupBy</h3>
 
 <p>Permits you to write the GROUP BY portion of your query:</p>
 	
@@ -433,14 +444,14 @@ rigDbGroupBy tArray
 	
 
 
-<h2>rigDbDistinct</h2>
+<h3>rigDbDistinct</h3>
 <p>Adds the &quot;DISTINCT&quot; keyword to  a query</p>
 <pre><code>rigDbDistinct
 put rigDbGet("table") into tQuery
 		
 -- Produces: SELECT DISTINCT * FROM table</code></pre>
 	
-<h2>rigDbHaving</h2>
+<h3>rigDbHaving</h3>
 
 <p>Permits you to write the HAVING portion of your query. There are 2 possible syntaxe, 1 argument or 2:</p>
 	
@@ -469,11 +480,11 @@ rigDbHaving tArray
 rigDbHaving "user_id",  45, FALSE
 -- Produces: HAVING user_id = 45</code></pre>
 
-<h2>rigDbOrHaving</h2>
+<h3>rigDbOrHaving</h3>
 
 <p>Identical to rigDbHaving, only separates multiple clauses with &quot;OR&quot;.</p>
 
-<h2>rigDbOrderBy</h2>
+<h3>rigDbOrderBy</h3>
 
 <p>Lets you set an ORDER BY clause. The first parameter contains the name of the column you would like to order by.
 The second parameter lets you set the direction of the result.  Options are <kbd>asc</kbd> or <kbd>desc</kbd>, or <kbd>random</kbd>. </p>
@@ -498,7 +509,7 @@ rigDbOrderBy "name", "asc"
 -- Produces: ORDER BY title DESC, name ASC
 </code></pre>
 	
-<h2>rigDbLimit</h2>
+<h3>rigDbLimit</h3>
 
 <p>Lets you limit the number of rows you would like returned by the query:</p>
 
@@ -514,7 +525,7 @@ rigDbOrderBy "name", "asc"
 -- Produces: LIMIT 20, 10 (in MySQL.  Other databases have slightly different syntax)</code></pre>
 
 
-<h2>rigDbCountAllResults()</h2>
+<h3>rigDbCountAllResults()</h3>
 
 <p>Permits you to determine the number of rows in a particular Active Record query. Queries will accept Active Record restrictors such as rigDbWhere, rigDbOrWhere, rigDbLike, rigDbOrLike, etc. Example:</p>
 <pre><code>get rigDbCountAllResults("<var>mytable</var>")
@@ -526,7 +537,7 @@ rigDbFrom "<var>mytable</var>"
 get rigDbCountAllResults()
 -- Produces an integer, like 17 </code></pre>
 
-<h2>rigDbCountAll()</h2>
+<h3>rigDbCountAll()</h3>
 
 <p>Permits you to determine the number of rows in a particular table.  Submit the table name in the first parameter. Example:</p>
 
@@ -536,14 +547,14 @@ get rigDbCountAllResults()
 
 
 <a name="parentheses">&nbsp;</a>
-<h1>Parentheses</h1>
+<h2>Parentheses</h2>
 
-<h2>rigDbOpenParenthesis</h2>
+<h3>rigDbOpenParenthesis</h3>
 
 <p>Adds an open parenthesis to SQL SELECT statements.</p>
 
 
-<h2>rigDbCloseParenthesis</h2>
+<h3>rigDbCloseParenthesis</h3>
 
 <p>Adds a close parenthesis to SQL SELECT statements.</p>
 
@@ -576,9 +587,9 @@ put rigDBget() into tQueryResult
 
 	
 <a name="insert">&nbsp;</a>
-<h1>Inserting Data</h1>
+<h2>Inserting Data</h2>
 	
-<h2>rigDbInsert()</h2>
+<h3>rigDbInsert()</h3>
 <p>Generates an insert string based on the data you supply, and runs the query. Here is an example:</p>
 
 <pre><code>put "My Title" into tData["title"]
@@ -610,7 +621,7 @@ end if
 	
 	
 
-<h2>rigDbValuesSet()</h2>
+<h3>rigDbValuesSet()</h3>
 
 <p>This function enables you to set values for <dfn>inserts</dfn> or <dfn>updates</dfn>.</p>
 
@@ -650,9 +661,9 @@ get rigDbInsert("mytable")
 
 	
 <a name="update">&nbsp;</a>
-<h1>Updating Data</h1>
+<h2>Updating Data</h2>
 	
-<h2>rigDbUpdate()</h2>
+<h3>rigDbUpdate()</h3>
 <p>Generates an update string and runs the query based on the data you supply. Here is an example:</p>
 
 <pre><code>put tTitle into tData["title"]
@@ -686,11 +697,11 @@ get rigDbUpdate("mytable", tData, tArray)</code></pre>
 
 	
 <a name="delete">&nbsp;</a>
-<h1>Deleting Data</h1>
+<h2>Deleting Data</h2>
 
 
 	
-<h2>rigDbDelete()</h2>
+<h3>rigDbDelete()</h3>
 <p>Generates a delete SQL string and runs the query.</p>
 
 <pre><code>put tID into tArray["id"]
@@ -721,7 +732,7 @@ get rigDbDelete(tTables)</code></pre>
 
 <p>If you want to delete all data from a table, you can use the <dfn>rigDbTruncate()</dfn> function, or <dfn>rigDbEmptyTable()</dfn>.</p>
 
-<h2>rigDbEmptyTable()</h2>
+<h3>rigDbEmptyTable()</h3>
 
 <p>Generates a delete SQL string and runs the query.</p>
 
@@ -730,7 +741,7 @@ get rigDbDelete(tTables)</code></pre>
 -- Produces
 -- DELETE FROM mytable</code></pre>
 
-<h2>rigDbTruncate()</h2>
+<h3>rigDbTruncate()</h3>
 
 <p>Generates a truncate SQL string and runs the query.</p>
 
@@ -749,21 +760,21 @@ get rigDbTruncate("mytable")
 
 <p>&nbsp;</p>
 
-<h1><a name="caching">&nbsp;</a>Active Record Caching</h1>
+<h2><a name="caching">&nbsp;</a>Active Record Caching</h2>
 
 <p>While not &quot;true&quot; caching, Active Record enables you to save (or &quot;cache&quot;) certain parts of your queries for reuse at a later point in your script's execution. Normally, when an Active Record call is completed, all stored information is reset for the next call. With caching, you can prevent this reset, and reuse information easily.</p>
 
 <p>Cached calls are cumulative. If you make 2 cached rigDbSelect calls, and then 2 uncached rigDbSelect calls, this will result in 4 rigDbSelect calls. There are three Caching handlers available:</p>
 
-<h2>rigDbStartCache</h2>
+<h3>rigDbStartCache</h3>
 
 <p>This handler must be called to begin caching. All Active Record queries of the correct type (see below for supported queries) are stored for later use.</p>
 
-<h2>rigDbStopCache</h2>
+<h3>rigDbStopCache</h3>
 
 <p>This handler can be called to stop caching.</p>
 
-<h2>rigDbFlushCache</h2>
+<h3>rigDbFlushCache</h3>
 
 <p>This handler deletes all items from the Active Record cache.</p>
 
@@ -794,8 +805,11 @@ put rigDbGet("tablename") into tQuery
 </div>
 <!-- END CONTENT -->
 
+</div> <!-- /container -->
+
 
 <div id="footer">
+	<div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Functions</a>
 <span class="separator"> :: </span>
@@ -804,18 +818,20 @@ Previous Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Functions</a>
 Next Topic:&nbsp;&nbsp;<a href="transactions.html">Transactions</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
 </div>
 
-<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script>
-  hljs.tabReplace = '    ';
-  hljs.initHighlightingOnLoad();
-  </script>
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
 
-<script src="../js/script-ck.js" type="text/javascript"></script>
-<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
 
 
 </body>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Upgrading from 1.6.5 to 1.6.6 : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Upgrading from 1.6.5 to 1.6.6</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+<br clear="all" />
+
+<!-- START CONTENT -->
+<div class="container">
+	
+<div id="content">
+
+<h1>Upgrading from 1.6.5 to 1.6.6</h1>
+
+
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
+
+
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Formvalidation.lc</dfn></li>
+	<li><dfn>Loader.lc</dfn></li>
+	<li><dfn>Input.lc</dfn></li>
+</ul>
+
+
+<p>Replace this file in your "system/database" folder with the new version:</p>
+
+<ul>
+	<li><dfn>DBdriver.lc</dfn></li>
+</ul>
+
+
+
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

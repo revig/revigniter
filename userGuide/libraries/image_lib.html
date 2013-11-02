@@ -1,78 +1,88 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Image Manipulation Library : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv='expires' content='0' />
-<meta http-equiv= 'pragma' content='no-cache' />
-<meta name='robots' content='all' />
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-<meta name="author" content="rabit" />
-<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
-<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
-<meta name='description' content='revIgniter User Guide' />
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
 
-<title>Image Manipulation Library : revIgniter User Guide</title>
-
-<style type='text/css' media='all'>@import url('../userguide.css');</style>
-<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
-
-<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript" src="../js/nav.js"></script>
-
- 
-
-
-
-</head>
+	</head>
 <body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
 
-<!-- START PAGE HEAD -->
-<div id="nav"><a name="top">&nbsp;</a>
-<div id="masthead">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
-<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
-Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
-&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
-</tr>
-</table>
-</div>
-</div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Image Manipulation Library</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
 <!-- END PAGE HEAD -->
-
-
-<!-- START BREADCRUMB -->
-<div id="breadcrumbCont">
-
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td id="breadcrumb">
-<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
-<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-Image Manipulation Library
-</td>
-<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
-</tr>
-</table>
-
-</div>
-<!-- END BREADCRUMB -->
 
 <br clear="all" />
 
-
-<!-- START SLIDEBOX -->
-<div class="slide-panel top">
-<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-<div id="open-button" class="slide-button">Table of Contents</div>
-<div id="close-button" class="slide-button">Close</div>
-</div>
-<!-- END SLIDEBOX -->
-
-
 <!-- START CONTENT -->
+<div class="container">
+	
 <div id="content">
 
 
@@ -119,7 +129,7 @@ rigLoaderLoadLibrary "Image", tConfig
 put rigImageResize() into gData["imageOutput"]</code></pre>
 
 <p>The above code tells the <dfn>imageResize</dfn> function to look for an image called <em>mypic.jpg</em>
-located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels using. The path to the source image is 
+located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels. The path to the source image is 
 relative to your index.lc file. Since the <dfn>maintainRatio</dfn> option is enabled, the thumb will be as close to the target <dfn>width</dfn> and
 <dfn>height</dfn> as possible while preserving the original aspect ratio.  The thumbnail will be called <em>mypic_thumb.jpg</em>
 </p>
@@ -151,7 +161,7 @@ put rigImageWatermark() into gData["imageOutput"]</code></pre>
 
 <p>The above code tells the <dfn>imageWatermark</dfn> function to use an image overlay as watermark, to look for an image called <em>mypic.jpg</em>
 located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark 
-at the top of the source image with an vertical offset of 20 pixels and an opacity of 70% and save the source for your image tag in the controllers folder.
+at the top of the source image with a vertical offset of 20 pixels and an opacity of 70% and save the source for your image tag in the controllers folder.
 Assuming segment-based URLs are used, the returned value looks like this: &lt;img src="http://yourdomain.com/temp/dynOverlay" width="480" height="312" />.</p>
 
 
@@ -225,7 +235,7 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 <tr>
 <th>Preference</th>
 <th>Default&nbsp;Value</th>
@@ -239,7 +249,7 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 <td class="td">None</td>
 <td class="td">None</td>
 <td class="td">Sets the source image name/path.  The path must be a relative or absolute server path, not a URL.</td>
-<td class="td">R, C, S, W</td>
+<td class="td">R, C, X, W</td>
 </tr>
 
 <tr>
@@ -339,7 +349,7 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 <td class="td"><strong>rotationAngle</strong></td>
 <td class="td">None</td>
 <td class="td">90, 180, 270, vrt, hor</td>
-<td class="td">Specifies the angle of rotation when rotating images.  Note that PHP rotates counter-clockwise, so a 90 degree rotation to the right must be specified as 270.</td>
+<td class="td">Specifies the angle of rotation when rotating images.  Note that rotation is counter-clockwise, so a 90 degree rotation to the right must be specified as 270.</td>
 <td class="td">X</td>
 </tr>
 
@@ -381,7 +391,7 @@ array in that file. Then save the file in: <var>config/image.lc</var> and it wil
 Add <var>rigRunInitialImageConfig tConfig</var> as last line in the file.</p>
 
 
-<h2>rigImageResize()</h2>
+<h3>rigImageResize()</h3>
 
 <p>The image resizing function lets you resize the original image, create a copy (with or without resizing),
 or create a thumbnail image.</p>
@@ -391,7 +401,7 @@ and that a thumb will have the thumbnail marker as part of the name (ie, mypic_t
 
 <p>All preferences listed in the table above are available for this function except these four:  rotationAngle, cropAlignment, Xaxis, and Yaxis.</p>
 
-<h3>Creating a Thumbnail</h3>
+<h2>Creating a Thumbnail</h2>
 
 <p>The resizing function will create a thumbnail file (and preserve the original) if you set this preference to TRUE:</p>
 
@@ -399,7 +409,7 @@ and that a thumb will have the thumbnail marker as part of the name (ie, mypic_t
 
 <p>This single preference determines whether a thumbnail is created or not. Setting it to TRUE is the recommended way to resize large images for thumbnail creation.</p>
 
-<h3>Creating a Copy</h3>
+<h2>Creating a Copy</h2>
 
 <p>The resizing function will create a copy of the image file (and preserve the original) if you set
 a path and/or a new filename using this preference:</p>
@@ -410,17 +420,17 @@ a path and/or a new filename using this preference:</p>
 <ul>
 <li>If only the new image name is specified it will be placed in the same folder as the original</li>
 <li>If only the path is specified, the new image will be placed in the destination with the same name as the original.</li>
-<li>If both the path and image name are specified it will placed in its own destination and given the new name.</li>
+<li>If both the path and image name are specified it will be placed in its own destination and given the new name.</li>
 </ul>
 
 
-<h3>Resizing the Original Image</h3>
+<h2>Resizing the Original Image</h2>
 
 <p>If neither of the two preferences listed above (createThumb, and newImage) are used, the resizing function will instead
 target the original image for processing.</p>
 
 
-<h2>rigImageCrop()</h2>
+<h3>rigImageCrop()</h3>
 
 <p>The cropping function works nearly identically to the resizing function except it requires that you set
 preferences for the X and Y axis (in pixels or as percentages) specifying where to crop, like this:</p>
@@ -451,7 +461,7 @@ end if</code></pre>
 <p>Note: Without a visual interface it is difficult to crop images, so this function is not very useful
 unless you intend to build such an interface.</p>
 
-<h2>rigImageRotate()</h2>
+<h3>rigImageRotate()</h3>
 
 <p>The image rotation function requires that the angle of rotation be set via its preference:</p>
 
@@ -484,7 +494,7 @@ end if</code></pre>
 
 
 
-<h2>rigImgClear</h2>
+<h3>rigImgClear</h3>
 <p>The rigImgClear handler resets all of the values used when processing an image. You will want to call this if you are processing images in a loop.</p>
 
 <pre><code>rigImgClear</code></pre>
@@ -492,7 +502,7 @@ end if</code></pre>
 <p>&nbsp;</p>
 
 
-<h2>rigImageNewSettings</h2>
+<h3>rigImageNewSettings</h3>
 <p>Use this handler when calling image manipulation handlers repeatedly.</p>
 
 <pre><code>rigImageNewSettings tConfig</code></pre>
@@ -500,7 +510,7 @@ end if</code></pre>
 <p>&nbsp;</p>
 
 
-<h2>rigIMknownFonts()</h2>
+<h3>rigIMknownFonts()</h3>
 <p>Use this function to check which fonts are available for text watermarking.</p>
 
 <pre><code>put rigIMknownFonts() into tAllFonts</code></pre>
@@ -508,7 +518,7 @@ end if</code></pre>
 <p>&nbsp;</p>
 
 
-<h2>rigIMversion()</h2>
+<h3>rigIMversion()</h3>
 <p>Use this function to get the ImageMagick version.</p>
 
 <pre><code>put rigIMversion() into tVersion</code></pre>
@@ -566,7 +576,7 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 <p>This table shows the preferences that are available for both types of watermarking (text or overlay)</p>
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 <tr>
 <th>Preference</th>
 <th>Default&nbsp;Value</th>
@@ -640,7 +650,7 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 <tr>
 <th>Preference</th>
 <th>Default&nbsp;Value</th>
@@ -700,7 +710,7 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 <tr>
 <th>Preference</th>
 <th>Default&nbsp;Value</th>
@@ -727,8 +737,11 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 </div>
 <!-- END CONTENT -->
 
+</div> <!-- /container -->
+
 
 <div id="footer">
+	<div class="container">
 <p>
 Previous Topic:&nbsp;<a href="table.html">&nbsp;HTML Table Library</a><span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
@@ -736,18 +749,20 @@ Previous Topic:&nbsp;<a href="table.html">&nbsp;HTML Table Library</a><span clas
 Next Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
 </div>
 
-<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script>
-  hljs.tabReplace = '    ';
-  hljs.initHighlightingOnLoad();
-  </script>
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
 
-<script src="../js/script-ck.js" type="text/javascript"></script>
-<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
 
 
 </body>
