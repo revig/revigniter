@@ -40,7 +40,7 @@ rigLogMessage "debug", "Loader Library Loaded"
 # DECLARE VARIABLES
 global gAutoload
 
-local sRiViewPath, sRiPageBuffer, sRiHelpers, sRiPlugins, sRiModels, sRiLibs, sRiStacks, sRiLoadedFiles, sRiLoadedStackFiles, sRiDBlibLoaded --, sRiCachedVars
+local sRiViewPath, sRiHelpers, sRiPlugins, sRiModels, sRiLibs, sRiStacks, sRiLoadedFiles, sRiLoadedStackFiles, sRiDBlibLoaded --, sRiCachedVars
 
 
 put gAPPPATH & "views/" into sRiViewPath
@@ -768,8 +768,8 @@ end rigLoadstack
 --|
 --| Author: rabit
 --| Version:  1.0
---| Created: 19-06-09
---| Last Mod: 19-06-09
+--| Created: 30-07-2011
+--| Last Mod: 30-07-2011
 --| Requires: rigLoadHelper
 --|
 --| Summary: This is simply an alias to the above handler in case the
@@ -791,14 +791,14 @@ end rigLoadstacks
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigLoad
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 05-09-13
---| Requires: --
+--| Last Mod: 30-09-13
+--| Requires: rigShowError, rigLogMessage, rigAppendOutput
 --|
 --| Summary: This function is used to load views and files.
 --| 
@@ -807,7 +807,7 @@ end rigLoadstacks
 --| Parameters: array <pDataArray>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigLoad pDataArray
 	# SET THE DEFAULT DATA VARIABLES
@@ -855,20 +855,18 @@ function _rigLoad pDataArray
 	# SENT TO THE BROWSER AND THEN STOP THE TIMER IT WON'T
 	# BE ACCURATE.
 	##
-	put URL format("binfile:%s", tRiPath) into sRiPageBuffer
+	put URL format("binfile:%s", tRiPath) into tPageBuffer
 		
 	rigLogMessage "debug", "File loaded: " & tRiPath
 
 	# RETURN THE FILE DATA IF REQUESTED
 	if tRiReturn is TRUE then
-		put sRiPageBuffer into tBuffer1
-		put merge(tBuffer1) into tBuffer
-		put empty into sRiPageBuffer
+		put merge(tPageBuffer) into tBuffer
 		return tBuffer
 	end if
 
 	# CALL HANDLER IN OUTPUT.LC TO APPEND OUTPUT DATA
-	rigAppendOutput merge(sRiPageBuffer)
+	rigAppendOutput merge(tPageBuffer)
 
 end _rigLoad
 

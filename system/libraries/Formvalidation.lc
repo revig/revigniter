@@ -45,7 +45,7 @@ local sFieldData, sConfigRules, sErrorArray, sErrorMessages, sErrorPrefix, sErro
 put "<p>" into sErrorPrefix
 put "</p>" into sErrorSuffix
 put FALSE into sSafeFormData
-put "requiredR,matchesR,minLengthR,maxLengthR,exactLengthR,alphaR,alphaNumericR,alphaDashR,alphaAccentR,alphaNumericAccentR,AlphaDashAccentR,numericR,isNumericR,integerR,isNaturalR,isNaturalNoZeroR,validEmailR,validEmailsR,validIpR,validBase64R" into sRuleNames
+put "requiredR,matchesR,minLengthR,maxLengthR,exactLengthR,greaterThanR,lessThanR,alphaR,alphaNumericR,alphaDashR,alphaAccentR,alphaNumericAccentR,AlphaDashAccentR,numericR,isNumericR,integerR,decimalR,isNaturalR,isNaturalNoZeroR,validEmailR,validEmailsR,validIpR,validBase64R" into sRuleNames
 
 put "trim,md5,sha1,prepForForm,prepURL,xssClean,stripImageTags,encodeRevTags,htmlSpecialChars,urlDecodeStr" into sPrepMethods
 

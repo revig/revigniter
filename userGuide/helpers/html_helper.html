@@ -1,78 +1,88 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>HTML Helper : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
 
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv='expires' content='0' />
-<meta http-equiv= 'pragma' content='no-cache' />
-<meta name='robots' content='all' />
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-<meta name="author" content="rabit" />
-<meta name="publisher" content="softwaregestaltung.de Ralf Bitter" />
-<meta name="copyright" content="copyright 2009 - 2013 softwaregestaltung.de Ralf Bitter" />
-<meta name='description' content='revIgniter User Guide' />
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
 
-<title>HTML Helper : revIgniter User Guide</title>
-
-<style type='text/css' media='all'>@import url('../userguide.css');</style>
-<link rel='stylesheet' type='text/css' media='all' href='../userguide.css' />
-
-<script type="text/javascript" src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-<script type="text/javascript" src="../js/nav.js"></script>
-
- 
-
-
-
-</head>
+	</head>
 <body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.6</a>
+        </div>
 
-<!-- START PAGE HEAD -->
-<div id="nav"><a name="top">&nbsp;</a>
-<div id="masthead">
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td><h1>revIgniter User Guide Version 1.6.5</h1></td>
-<td id="searchbox"><form method="get" action="http://www.google.com/search"><input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
-Search User Guide&nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
-&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.gif" /></form></td>
-</tr>
-</table>
-</div>
-</div>
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">HTML Helper</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
 <!-- END PAGE HEAD -->
-
-
-<!-- START BREADCRUMB -->
-<div id="breadcrumbCont">
-
-<table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<tr>
-<td id="breadcrumb">
-<a href="http://revigniter.com/">revIgniter Home</a> &nbsp;&#8250;&nbsp;
-<a href="../index.html">User Guide Home</a> &nbsp;&#8250;&nbsp;
-HTML Helper
-</td>
-<td id="breadcrumb_right"><a href="../toc.html">Table of Contents Page</a></td>
-</tr>
-</table>
-
-</div>
-<!-- END BREADCRUMB -->
 
 <br clear="all" />
 
-
-<!-- START SLIDEBOX -->
-<div class="slide-panel top">
-<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-<div id="open-button" class="slide-button">Table of Contents</div>
-<div id="close-button" class="slide-button">Close</div>
-</div>
-<!-- END SLIDEBOX -->
-
-
 <!-- START CONTENT -->
+<div class="container">
+	
 <div id="content">
 
 
@@ -98,7 +108,7 @@ HTML Helper
 
 <p>The following handlers are available:</p>
 
-<h2><a name="br"></a>rigHtmlBr()</h2>
+<h3><a name="br"></a>rigHtmlBr()</h3>
 
 <p>Generates line break tags (&lt;br />) based on the number you submit. Example:</p>
 
@@ -106,7 +116,7 @@ HTML Helper
 
 <p>The above would produce: &lt;br />&lt;br />&lt;br /></p>
 
-<h2><a name="heading"></a>rigHtmlHeading()</h2>
+<h3><a name="heading"></a>rigHtmlHeading()</h3>
 
 <p>Lets you create HTML &lt;h1> tags.  The first parameter will contain the data, the
 second the size of the heading.  Example:</p>
@@ -115,7 +125,7 @@ second the size of the heading.  Example:</p>
 
 <p>The above would produce:  &lt;h3>Welcome!&lt;/h3></p>
 
-<h2><a name="img"></a>rigHtmlImg()</h2>
+<h3><a name="img"></a>rigHtmlImg()</h3>
 
 <p>Lets you create HTML &lt;img /&gt; tags.  The first parameter  contains the image source. Example:</p>
 
@@ -141,7 +151,7 @@ put "lightbox" into tImgProperties["rel"]
 put rigHtmlImg(tImgProperties) into gData["myPic"]
 -- &lt;img src=&quot;http://site.com/index.lc/images/picture.jpg&quot; alt=&quot;Me, demonstrating how to eat 4 slices of pizza at one time&quot; class=&quot;post_images&quot; width=&quot;200&quot; height=&quot;200&quot; title=&quot;That was quite a night&quot; rel=&quot;lightbox&quot; /&gt;</code></pre>
 
-<h2><a name="link_tag"></a>rigHtmlLinkTag()</h2>
+<h3><a name="link_tag"></a>rigHtmlLinkTag()</h3>
 
 <p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media and indexPage. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates.</p>
 
@@ -168,7 +178,7 @@ put "print" into tLink["media"]
 put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 -- &lt;link href=&quot;http://site.com/css/printer.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;</code></pre>
 	
-<h2><a name="nbs"></a>rigHtmlNbs()</h2>
+<h3><a name="nbs"></a>rigHtmlNbs()</h3>
 
 <p>Generates non-breaking spaces (&amp;nbsp;) based on the number you submit. Example:</p>
 
@@ -176,7 +186,7 @@ put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 
 <p>The above would produce: &amp;nbsp;&amp;nbsp;&amp;nbsp;</p>
 
-<h2><a name="ol_and_ul"></a>rigHtmlOL()&nbsp; and&nbsp; rigHtmlUL()</h2>
+<h3><a name="ol_and_ul"></a>rigHtmlOL()&nbsp; and&nbsp; rigHtmlUL()</h3>
 
 <p>Permits you to generate ordered or unordered HTML lists from simple or multi-dimensional arrays. Example:</p>
 
@@ -280,7 +290,7 @@ put rigHtmlUL(tList, tAttributes) into gData["myUL"]</code></pre>
 
 
 
-<h2><a name="meta"></a>rigHtmlMeta()</h2>
+<h3><a name="meta"></a>rigHtmlMeta()</h3>
 
 <p>Helps you generate meta tags.  You can pass strings to the function, or simple arrays, or multidimensional ones. Examples:</p>
 
@@ -324,7 +334,7 @@ put rigHtmlMeta(tMeta) into gData["myMeta"]
 </code></pre>
 
 
-<h2><a name="doctype"></a>rigHtmlDocType()</h2>
+<h3><a name="doctype"></a>rigHtmlDocType()</h3>
 
 <p>Helps you generate document type declarations, or DTD's. XHTML 1.0 Strict is used by default, but many doctypes are available.</p>
 
@@ -338,7 +348,7 @@ put rigHtmlDocType("html4-trans") into gData["docType"]
 <p>The following is a list of doctype choices.  These are configurable, and pulled from <samp>application/config/doctypes.lc</samp></p>
 
 <div class="table">
-<table cellpadding="0" cellspacing="1" border="0" style="width:100%" class="tableborder">
+<table>
 	<tr>
 	<th>Doctype</th>
 	<th>Option</th>
@@ -392,8 +402,11 @@ put rigHtmlDocType("html4-trans") into gData["docType"]
 </div>
 <!-- END CONTENT -->
 
+</div> <!-- /container -->
+
 
 <div id="footer">
+	<div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="formmail_helper.html">Form-Mail Helper</a>
 <span class="separator"> :: </span>
@@ -401,18 +414,20 @@ Previous Topic:&nbsp;&nbsp;<a href="formmail_helper.html">Form-Mail Helper</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="language_helper.html"> Language Helper</a></p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2013<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
 </div>
 
-<script src="../js/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="../js/highlight.pack.js"></script>
-  <script>
-  hljs.tabReplace = '    ';
-  hljs.initHighlightingOnLoad();
-  </script>
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
 
-<script src="../js/script-ck.js" type="text/javascript"></script>
-<script type="text/javascript">$(function() { Slidebox.init(); });</script>
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
 
 
 </body>

@@ -442,9 +442,9 @@ end rigCSRFverify
 --| COMMAND rigCSRFsetCookie
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 15-07-2012
---| Last Mod: --
+--| Last Mod: 12-10-2013
 --| Requires: rigFetchConfigItem(), _rigInputSetCookie, rigLogMessage
 --|
 --| Summary: Set Cross Site Request Forgery protection cookie.
@@ -473,7 +473,7 @@ command rigCSRFsetCookie
 	
 	put rigFetchConfigItem("cookie_domain") into tCookieDomain
 	put rigFetchConfigItem("cookie_path") into tCookiePath
-	_rigInputSetCookie sCSRFcookieName, sCSRFhash, sCSRFexpire, tCookieDomain, tCookiePath, "", FALSE, tSecureCookie
+	_rigInputSetCookie sCSRFcookieName, sCSRFhash, sCSRFexpire, tCookieDomain, tCookiePath, "", FALSE, tSecureCookie, TRUE
 	
 	rigLogMessage "debug", "CSRF cookie Set"
 end rigCSRFsetCookie

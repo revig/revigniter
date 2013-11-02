@@ -34,7 +34,7 @@ Please note: By sending a pull request to the [revIgniter repository](https://gi
 
 ### Meta
 
-- Version: 1.6.5
+- Version: 1.6.6
 - Web Site: http://revigniter.com/
 - User Guide: http://revigniter.com/userGuide/index.html
 - Author:  [Ralf Bitter](mailto:rabit@revigniter.com)
