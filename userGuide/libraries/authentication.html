@@ -242,7 +242,7 @@
 <h2>Handler Reference</h2>
 
 
-<h3>rigAuthLogin(<var>pIdentity</var>, <var>pPassword</var>, <var>pRemember</var>)</h3>
+<h3>rigAuthLogin( <var>pIdentity</var>, <var>pPassword</var>, <var>pRemember</var> )</h3>
 
 <p>Logs the user in.</p>
 
@@ -293,7 +293,7 @@ end logout
 
 
 
-<h3>rigAuthRegister(<var>pUsername</var>, <var>pPassword</var>, <var>pEmail</var>, <var>pExtraData</var>, <var>pGroupname</var>)</h3>
+<h3>rigAuthRegister( <var>pUsername</var>, <var>pPassword</var>, <var>pEmail</var>, <var>pExtraData</var>, <var>pGroupname</var> )</h3>
 
 <p>Register (create) a new user.</p>
 
@@ -329,7 +329,7 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 
 
 
-<h3>rigAuthUpdate(<var>pID</var>, <var>pData</var>)</h3>
+<h3>rigAuthUpdate( <var>pID</var>, <var>pData</var> )</h3>
 
 <p>Update user data.</p>
 
@@ -362,7 +362,7 @@ end if
 
 
 
-<h3>rigAuthDeleteUser(<var>pID</var>)</h3>
+<h3>rigAuthDeleteUser( <var>pID</var> )</h3>
 
 <p>Delete a user.</p>
 
@@ -384,7 +384,7 @@ end if
 
 
 
-<h3>rigAuthForgottenPassword(<var>pIdentity</var>, <var>pExtraData</var>)</h3>
+<h3>rigAuthForgottenPassword( <var>pIdentity</var>, <var>pExtraData</var> )</h3>
 
 <p>Resets the user's password by emailing the user a reset code.</p>
 
@@ -433,7 +433,7 @@ end if
 
 
 
-<h3>rigAuthIsAdmin(<var>pID</var>)</h3>
+<h3>rigAuthIsAdmin( <var>pID</var> )</h3>
 
 
 <p>Check to see if the currently logged in user is an administrator.</p>
@@ -453,7 +453,7 @@ end if
 </code></pre>
 
 
-<h3>rigAuthInGroup(<var>pGroup</var>, <var>pID</var>)</h3>
+<h3>rigAuthInGroup( <var>pGroup</var>, <var>pID</var> )</h3>
 
 
 <p>Check if user is a member of a specific group.</p>
@@ -507,7 +507,7 @@ end if
 
 
 
-<h3>rigAuthUsernameCheck(<var>pUsername</var>)</h3>
+<h3>rigAuthUsernameCheck( <var>pUsername</var> )</h3>
 
 
 <p>Check if there is an entry in the DB regarding the username provided.</p>
@@ -540,7 +540,7 @@ end if
 
 
 
-<h3>rigAuthEmailCheck(<var>pEmail</var>)</h3>
+<h3>rigAuthEmailCheck( <var>pEmail</var> )</h3>
 
 <p>Check if there is an entry in the DB regarding the email address provided.</p>
 
@@ -573,7 +573,7 @@ end if
 
 
 
-<h3>rigAuthIdentityCheck(<var>pIdentity</var>)</h3>
+<h3>rigAuthIdentityCheck( <var>pIdentity</var> )</h3>
 
 
 <p>Identity check for remembered users (auto-login).</p>
@@ -600,7 +600,7 @@ end if
 </code></pre>
 
 
-<h3>rigAuthIsMaxLoginAttemptsExceeded(<var>pIdentity</var>)</h3>
+<h3>rigAuthIsMaxLoginAttemptsExceeded( <var>pIdentity</var> )</h3>
 
 <p>If login attempt tracking is enabled, checks to see if the number of failed login attempts for this identity or ip address has been exceeded. Login attempt limits are not enforced in the library.</p>
 
@@ -620,7 +620,7 @@ end if
 
 
 
-<h3>rigAuthGetAttemptsNum(<var>pIdentity</var>)</h3>
+<h3>rigAuthGetAttemptsNum( <var>pIdentity</var> )</h3>
 
 <p>Get number of login attempts from a given ipAddress or identity.</p>
 
@@ -637,7 +637,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 
 
-<h3>rigAuthIncreaseLoginAttempts(<var>pIdentity</var>)</h3>
+<h3>rigAuthIncreaseLoginAttempts( <var>pIdentity</var> )</h3>
 
 <p>If login attempt tracking is enabled, records another failed login attempt for this identity or ip address. This function is automatically called by the rigAuthLogin() function in case the login failed.</p>
 
@@ -647,7 +647,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 
 
-<h3>rigAuthClearLoginAttempts(<var>pIdentity</var>, <var>pExpirePeriod</var>)</h3>
+<h3>rigAuthClearLoginAttempts( <var>pIdentity</var>, <var>pExpirePeriod</var> )</h3>
 
 <p>Clears all failed login attempt records for this identity or this ip address. This function is automatically called by the rigAuthLogin() function if the login succeeded.</p>
 
@@ -655,7 +655,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 	The second optional parameter is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
 	
 
-<h3>rigAuthUser(<var>pID</var>)</h3>
+<h3>rigAuthUser( <var>pID</var> )</h3>
 
 <p>Get a particular user.</p>
 
@@ -680,7 +680,7 @@ end if
 
 
 
-<h3>rigAuthUsers(<var>pGroupIDs</var>)</h3>
+<h3>rigAuthUsers( <var>pGroupIDs</var> )</h3>
 
 <p>Get the users.</p>
 
@@ -714,7 +714,7 @@ end repeat
 </code></pre>
 
 
-<h3>rigAuthGroup(<var>pID</var>)</h3>
+<h3>rigAuthGroup( <var>pID</var> )</h3>
 
 <p>Get a specific group.</p>
 
@@ -776,7 +776,7 @@ end repeat
 
 
 
-<h3>rigAuthUserGroups(<var>pID</var>)</h3>
+<h3>rigAuthUserGroups( <var>pID</var> )</h3>
 
 <p>Get groups of a specific user.</p>
 
@@ -812,7 +812,7 @@ end if
 
 
 
-<h3>rigAuthRemoveFromGroup(<var>pGroupIDs</var>, <var>pUserID</var>)</h3>
+<h3>rigAuthRemoveFromGroup( <var>pGroupIDs</var>, <var>pUserID</var> )</h3>
 
 <p>Remove user from group.</p>
 
@@ -840,7 +840,7 @@ get rigAuthRemoveFromGroup(, tUserID)
 
 
 
-<h3>rigAuthMessages(<var>pPrefix</var>, <var>pSuffix</var>)</h3>
+<h3>rigAuthMessages( <var>pPrefix</var>, <var>pSuffix</var> )</h3>
 
 <p>Get authentication messages.</p>
 
@@ -885,7 +885,7 @@ end if
 
 
 
-<h3>rigAuthErrors(<var>pPrefix</var>, <var>pSuffix</var>)</h3>
+<h3>rigAuthErrors( <var>pPrefix</var>, <var>pSuffix</var> )</h3>
 
 <p>Get authentication errors.</p>
 
@@ -932,7 +932,7 @@ end if
 
 
 
-<h3>rigAuthFetchConfigItem(<var>pItem</var>, <var>pIndex</var>)</h3>
+<h3>rigAuthFetchConfigItem( <var>pItem</var>, <var>pIndex</var> )</h3>
 
 <p>Get a value from the configuration settings array.</p>
 
@@ -958,7 +958,7 @@ put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 
 
 
-<h3>rigAuthActivate(<var>pID</var>, <var>pCode</var>)</h3>
+<h3>rigAuthActivate( <var>pID</var>, <var>pCode</var> )</h3>
 
 <p>Activate a user account.</p>
 
@@ -986,7 +986,7 @@ end if
 
 
 
-<h3>rigAuthDeactivate(<var>pID</var>)</h3>
+<h3>rigAuthDeactivate( <var>pID</var> )</h3>
 
 <p>Deactivate a user.</p>
 
@@ -1005,7 +1005,7 @@ end if
 
 
 
-<h3>rigAuthForgottenPasswordCheck(<var>pCode</var>)</h3>
+<h3>rigAuthForgottenPasswordCheck( <var>pCode</var> )</h3>
 
 <p>Check the code used to reset a password.</p>
 
@@ -1027,7 +1027,7 @@ put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 
 
 
-<h3>rigAuthClearForgottenPasswordCode(<var>pCode</var>)</h3>
+<h3>rigAuthClearForgottenPasswordCode( <var>pCode</var> )</h3>
 
 <p>Delete the forgotten password code.</p>
 
@@ -1047,7 +1047,7 @@ end if
 
 
 
-<h3>rigAuthResetPassword(<var>pIdentity</var>, <var>pNewPassword</var>)</h3>
+<h3>rigAuthResetPassword( <var>pIdentity</var>, <var>pNewPassword</var> )</h3>
 
 <p>Replace password with a new one.</p>
 
@@ -1068,7 +1068,7 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 
 
 
-<h3>rigAuthChangePassword(<var>pIdentity</var>, <var>pOldPassword</var>, <var>pNewPassword</var>)</h3>
+<h3>rigAuthChangePassword( <var>pIdentity</var>, <var>pOldPassword</var>, <var>pNewPassword</var> )</h3>
 
 <p>Validate and change a password.</p>
 
@@ -1109,7 +1109,7 @@ put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newP
 <p>The authentication hooks feature can be enabled/disabled by setting the following item in the <dfn>application/config/authentication.lc</dfn> file:</p>
 
 
-<code>put TRUE into sAuthenticationConf["enableAuthenticationHooks"]</code>
+<pre><code>put TRUE into sAuthenticationConf["enableAuthenticationHooks"]</code></pre>
 
 
 <h2>Defining an Authentication Hook</h2>
