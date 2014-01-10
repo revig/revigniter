@@ -56,15 +56,22 @@
 #
 ##
 
-	if "/" is not in gSystemFolder then
-		put $_Server["PATH_TRANSLATED"] into sTempPath
-    set the itemdel to "/"
-    put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
+	put $_Server["PATH_TRANSLATED"] into sTempPath
+	set the itemdel to "/"
+
+	if char 1 of gSystemFolder is not "/" then
+		put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
 	else
 		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
 		replace "\\" with "/" in gSystemFolder
 	end if
 
+	if char 1 of gApplicationFolder is not "/" then
+		put item 1 to -2 of sTempPath & "/" & gApplicationFolder into gApplicationFolder
+	else
+		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
+		replace "\\" with "/" in gSystemFolder
+	end if
 
 ##
 #---------------------------------------------------------------
@@ -82,7 +89,6 @@
 #
 ##
 
-	put $_Server["PATH_TRANSLATED"] into sTempPath
 	put item -1 of sTempPath into sTempFileName
 	set the itemdel to "."
 	-- constant EXT = "." & item -1 of sTempFileName
@@ -101,7 +107,8 @@
 	put sTempFileName into gSELF
 	put gSystemFolder & "/" into gBASEPATH
 
-	if there is a folder gApplicationFolder then
+	if char 1 of gApplicationFolder is "/" then
+		--if there is a folder gApplicationFolder then
 		-- constant APPPATH = gApplicationFolder & "/"
 		put gApplicationFolder & "/" into gAPPPATH
 	else
