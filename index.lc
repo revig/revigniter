@@ -107,8 +107,7 @@
 	put sTempFileName into gSELF
 	put gSystemFolder & "/" into gBASEPATH
 
-	if char 1 of gApplicationFolder is "/" then
-		--if there is a folder gApplicationFolder then
+	if there is a folder gApplicationFolder then
 		-- constant APPPATH = gApplicationFolder & "/"
 		put gApplicationFolder & "/" into gAPPPATH
 	else
