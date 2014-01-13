@@ -12,6 +12,7 @@
 # as this file.
 #
 # NO TRAILING SLASH!
+# PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
 	global gSystemFolder
@@ -32,6 +33,7 @@
 #
 #
 # NO TRAILING SLASH!
+# PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
 	global gApplicationFolder
@@ -61,16 +63,6 @@
 
 	if char 1 of gSystemFolder is not "/" then
 		put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
-	else
-		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
-		replace "\\" with "/" in gSystemFolder
-	end if
-
-	if char 1 of gApplicationFolder is not "/" then
-		put item 1 to -2 of sTempPath & "/" & gApplicationFolder into gApplicationFolder
-	else
-		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
-		replace "\\" with "/" in gSystemFolder
 	end if
 
 ##
@@ -113,7 +105,14 @@
 	else
 		if gApplicationFolder is "" then put "application" into gApplicationFolder
 		-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
-		put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+		
+		# look for app folder relative to the index directory folder
+		if there is a folder (item 1 to -2 of sTempPath & "/" & gApplicationFolder) then
+			put item 1 to -2 of sTempPath & "/" & gApplicationFolder into gAPPPATH
+		else
+			# app folder must me relative to system folder
+			put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+		end if
 	end if
 
 
