@@ -94,7 +94,7 @@
 	--constant BASEPATH = "[[gSystemFolder" && quote & "/" & quote & "]]"
 
 	put "." & item -1 of sTempFileName into gEXT
-	set the itemdel to comma
+	
 	put sTempPath into gFCPATH
 	put sTempFileName into gSELF
 	put gSystemFolder & "/" into gBASEPATH
@@ -107,6 +107,7 @@
 		# Relative path
 		if gApplicationFolder is "" then put "application" into gApplicationFolder
 		
+		set the itemDel to slash
 		# look for app folder relative to the index folder
 		if there is a folder (item 1 to -2 of sTempPath & "/" & gApplicationFolder) then
 			-- constant APPPATH = index folder & "/" & gApplicationFolder & "/"
@@ -118,6 +119,7 @@
 		end if
 	end if
 
+	set the itemDel to comma
 
 ##
 #---------------------------------------------------------------
