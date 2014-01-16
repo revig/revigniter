@@ -111,7 +111,7 @@
 		# look for app folder relative to the index folder
 		if there is a folder (item 1 to -2 of sTempPath & "/" & gApplicationFolder) then
 			-- constant APPPATH = index folder & "/" & gApplicationFolder & "/"
-			put item 1 to -2 of sTempPath & "/" & gApplicationFolder into gAPPPATH
+			put item 1 to -2 of sTempPath & "/" & gApplicationFolder & "/" into gAPPPATH
 		else
 			# app folder must me relative to system folder
 			-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
