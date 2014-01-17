@@ -12,6 +12,7 @@
 # as this file.
 #
 # NO TRAILING SLASH!
+# PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
 	global gSystemFolder
@@ -32,6 +33,7 @@
 #
 #
 # NO TRAILING SLASH!
+# PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
 	global gApplicationFolder
@@ -56,15 +58,12 @@
 #
 ##
 
-	if "/" is not in gSystemFolder then
-		put $_Server["PATH_TRANSLATED"] into sTempPath
-    set the itemdel to "/"
-    put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
-	else
-		# SWAP DIRECTORY SEPARATORS TO UNIX STYLE FOR CONSISTENCY
-		replace "\\" with "/" in gSystemFolder
-	end if
+	put $_Server["PATH_TRANSLATED"] into sTempPath
+	set the itemdel to "/"
 
+	if char 1 of gSystemFolder is not "/" then
+		put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
+	end if
 
 ##
 #---------------------------------------------------------------
@@ -82,7 +81,6 @@
 #
 ##
 
-	put $_Server["PATH_TRANSLATED"] into sTempPath
 	put item -1 of sTempPath into sTempFileName
 	set the itemdel to "."
 	-- constant EXT = "." & item -1 of sTempFileName
@@ -96,20 +94,32 @@
 	--constant BASEPATH = "[[gSystemFolder" && quote & "/" & quote & "]]"
 
 	put "." & item -1 of sTempFileName into gEXT
-	set the itemdel to comma
+	
 	put sTempPath into gFCPATH
 	put sTempFileName into gSELF
 	put gSystemFolder & "/" into gBASEPATH
 
-	if there is a folder gApplicationFolder then
+	if char 1 of gApplicationFolder is "/" then
+		# Absolute path
 		-- constant APPPATH = gApplicationFolder & "/"
 		put gApplicationFolder & "/" into gAPPPATH
 	else
+		# Relative path
 		if gApplicationFolder is "" then put "application" into gApplicationFolder
-		-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
-		put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+		
+		set the itemDel to slash
+		# look for app folder relative to the index folder
+		if there is a folder (item 1 to -2 of sTempPath & "/" & gApplicationFolder) then
+			-- constant APPPATH = index folder & "/" & gApplicationFolder & "/"
+			put item 1 to -2 of sTempPath & "/" & gApplicationFolder & "/" into gAPPPATH
+		else
+			# app folder must me relative to system folder
+			-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
+			put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+		end if
 	end if
 
+	set the itemDel to comma
 
 ##
 #---------------------------------------------------------------

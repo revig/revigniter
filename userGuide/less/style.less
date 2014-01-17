@@ -1,0 +1,723 @@
+
+
+
+
+/*
+// Custom Styles
+// -------------------------*/
+
+
+
+/*
+// Colors
+// ------------------------- > */
+
+
+@white: 										#fff;
+@black: 										#000;
+@rigGray:										#6E6E6E;
+@someGray:									#7b7b7b;
+@rigGrayLight:							#f2f2f2;
+@silver:										#f5f5f5;
+@lightSilver:								#f9f9f9;
+@darkGray:									#444;
+@charcoalGray:							#333;
+@blueGray:									#d5dbe7;
+@blueLight:									#d0d9f8;
+@blueDark:									#2b4662;
+@ruleGray:									#bbb;
+@rigGreen:									#009700;
+@rigOrange:									#FFBD00;
+@orangeBrown:								#d9a000;
+@purple:										#480091;
+@rigRed:										#d00;
+/*// < ------------------------- Colors end */
+
+
+
+/*
+// Typography
+// ------------------------- > */
+
+
+@fontFamilySans:  				"Lucida Grande", Verdana, Geneva, Sans-serif;
+@headingsFontWeight:				200;
+@headingsFontWeightNormal:	500;
+@headingsFontWeightBold:		700;
+@fontSizeBase:							12px;
+@fontSizeSmall:							10px;
+@fontSizeLarge:							14px;
+
+.fontBoldNormal {
+ font-weight: bold;
+ font-style: normal;
+}
+
+/*// < ------------------------- Typography end */
+
+
+
+
+/*
+// Mixins
+// ------------------------- > */
+
+.roundedCorners (@radius: 8px) {
+	-moz-border-radius: @radius; /* FF1+ */
+	-webkit-border-radius: @radius; /* Saf3-4 */
+	border-radius: @radius; /* Opera 10.5, IE 9, Saf5, Chrome */
+}
+
+/*// < ------------------------- Mixins end */
+
+
+
+body {
+ padding-top: 90px;
+}
+
+/*
+// Links
+// ------------------------- > */
+
+
+.breadcrumb a, #footer a {
+	color: @white;
+	// background-color: transparent;
+// 	text-decoration: none;
+//  	font-weight: normal;
+}
+
+
+.breadcrumb a:hover, #footer a:hover {
+	color: @blueLight;
+ 	// text-decoration: none;
+//  	background-color: transparent;
+}
+
+
+#breadcrumb a:visited, footer a:visited {
+	/*color: @blueLight;*/
+ 	// background-color: transparent;
+	//  	text-decoration: none;
+}
+
+
+ol.breadcrumb li.pull-right {
+	margin-right: -15px;
+}
+
+
+// needed because the fixed navbar hides part of the text scrolled to
+a[name] {
+  padding-top: 90px;
+  margin-top: -90px;
+  display: inline-block; /* required for webkit browsers */
+}
+
+
+/*// < ------------------------- Links end */
+
+
+
+
+
+
+/*
+// Navigation
+// ------------------------- > */
+
+#breadcrumbContainer {
+	background-color: @black;
+	// needed for Safari only, the reason: text rendering issues (using position absolute???????????)
+	-webkit-transform: translate3d(0,0,0);
+}
+
+
+ol.breadcrumb li {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: 3px;
+}
+
+
+/*// < ------------------------- Navigation end */
+
+
+
+
+/*
+// Search
+// ------------------------- > */
+
+input#q {
+	height: 20px;
+}
+
+#submitSearch{
+	margin-bottom: -3px;
+}
+
+
+#searchLabel {
+	color: @black;
+	font-size: @fontSizeSmall;
+}
+
+/*// < ------------------------- Search end */
+
+
+
+
+img {
+ padding:0;
+ border: 0;
+}
+
+
+/*
+#content #img_welcome {
+	width: 230px;
+}*/
+
+
+
+
+
+
+
+
+/*
+// Content
+// ------------------------- > */
+
+div .table {
+	height:auto;
+	width:auto;
+	overflow-x: auto;
+	padding:6px 0px 4px 0px;
+	margin:0 0 10px 0;
+	background-color: @blueGray;
+	color: @black;	
+	.roundedCorners;
+}
+
+
+#content {
+	padding-top: 18px;
+	h1 {
+		color: @black;
+		border-bottom: 1px solid @ruleGray;
+		background-color: transparent;
+		margin: 0 0 20px 0;
+		padding: 7px 0 7px 3px;
+	}
+	h2 {
+	  background-color: transparent;
+	  border-bottom: 1px solid @ruleGray;
+	  color: @blueDark;
+	  margin: 28px 0 16px 0;
+	  padding: 5px 0 6px 0;
+	}
+	h3 {
+	 background-color: transparent;
+	 color: @blueDark;
+	 margin: 22px 0 15px 0;
+	 padding: 0 0 0 0;
+	}
+	h4 {
+	 background-color: transparent;
+	 color: @darkGray;
+	 margin: 22px 0 10px 0;
+	 padding: 0 0 0 0;
+	}
+	img {
+	 margin: auto;
+	 padding: 0;
+ 	}
+	dfn {
+	 color: @rigGreen;
+	 .fontBoldNormal;
+	}
+	var {
+	 color: @orangeBrown;
+	 .fontBoldNormal;
+	}
+	samp {
+	 color: @purple;
+	 .fontBoldNormal;
+	}
+	kbd {
+	 color: @rigRed;
+	 .fontBoldNormal;
+	 font-size: inherit;
+	}
+	ul {
+	 list-style-image: url(../images/arrow.gif);
+	 margin: 10px 0 12px 0;
+	}
+	li {
+	 margin-bottom: 9px;
+	 p {
+	  margin-left: 0;
+	  margin-right: 0;
+	 }
+	}
+	th {
+	 font-weight: bold;
+	 text-align: left;
+	 background-color: @someGray;
+	 color: @white;
+	 padding: 4px;
+	}
+	.td {
+	 	font-weight: normal;
+	 	padding: 6px;
+	 	background-color: @silver;
+		color: @blueDark;
+	}
+	.tdpackage {
+	 font-weight: normal;
+	}
+	.important {
+	 background: @rigOrange;
+	 color: @charcoalGray;
+	 margin: 10px 0 5px 0;
+	 padding: 10px;
+	 .roundedCorners;
+	 p {
+	  margin: 6px 0 8px 0;
+	  padding: 0;
+	 }
+	 .leftpad {
+	  margin: 6px 0 8px 0;
+	  padding-left: 20px;
+	 }
+	}
+	#img_welcome {
+		width: 230px;
+	}
+}
+
+
+/*// < ------------------------- Content end */
+
+
+
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
+/*
+// Footer
+// ------------------------- > */
+
+#footer {
+	padding: 12px 0;
+	margin: 30px 0 0;
+	text-align: center;
+	background-color: @black;
+	font-size: @fontSizeSmall;
+	p {
+	  color: @blueLight;
+	  text-align: center;
+	}
+	address {
+		font-style: normal;
+	}
+}
+
+
+span.separator {
+	padding-right: 6px;
+	padding-left: 6px;
+	font-size: 1.2em;
+}
+
+/*// < ------------------------- Footer end */
+
+
+
+
+
+/*
+// Form
+// ------------------------- > */
+
+form {
+ margin: 0;
+ padding: 0;
+}
+
+.input {
+ color: @charcoalGray;
+ border: 1px solid @rigGray;
+ width: 100%;
+ font-size: 11px;
+ height: 1.5em;
+ padding: 0;
+ margin: 0;
+}
+
+.textarea {
+ font-size: @fontSizeLarge;
+ color: @blueDark;
+ background-color: @lightSilver;
+ border: 1px solid @rigGray;
+ width: 100%;
+ padding: 6px;
+ margin: 0;
+}
+
+.select {
+ background-color: @white;
+ font-size:  11px;
+ font-weight: normal;
+ color: @charcoalGray;
+ padding: 0;
+ margin: 0 0 3px 0;
+}
+
+.checkbox {
+ background-color: transparent;
+ padding: 0;
+ border: 0;
+}
+
+.submit {
+ background-color: @black;
+ color: @white;
+ font-weight: normal;
+ font-size: @fontSizeSmall;
+ border: 1px solid @white;
+ margin: 0;
+ padding: 1px 5px 2px 5px;
+}
+
+/*// < ------------------------- Form end */
+
+
+
+/*
+// Slidebox
+// ------------------------- > */
+
+.slide-panel {
+	z-index: 25;
+	width: 5px;
+	position: absolute;
+	
+	background-color: @black;
+	background-color: rgba(0,0,0,0.9);
+}
+
+
+.bottom {
+	bottom: 0px;
+}
+
+
+.top {
+	width: 100%;
+	left: 0%;
+}
+
+
+#panelContent {
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 10;
+	overflow: hidden;
+	text-align: left;
+	height: 0px;
+	width: 100%;
+	color: @white;
+}
+
+
+.slide-button {
+	position: relative;
+	width: 112px;
+	z-index: 20;
+	cursor: pointer;
+	height: 14px;
+	text-align: center;
+	color: @white;
+	font-size: @fontSizeSmall;
+	background-image: url(../images/slideBoxBtn.png);
+	margin-left: auto;
+	margin-right: auto;
+	&:hover {
+		color: @blueLight;
+	}
+}
+
+
+
+
+#close-button, #open-button {
+	display: none;
+	font-weight: 700;
+	margin-bottom: -14px;
+}
+
+
+#panelContent ul.list, #panelContent ul.list a {
+	line-height: 14px;
+	color: @white;
+	text-decoration: none;
+	list-style-type: none;
+}
+
+#panelContent ul.list li  {
+	border-bottom: 1px solid rgba(128,140,145,0.5);
+	cursor: pointer;
+	font-size: 83.33%;
+	padding-bottom: 2px;
+	padding-top: 2px;
+	color: @white;
+	&:hover {
+		color: @blueLight;
+	}
+	&.header {
+		color: @blueLight;
+		letter-spacing: 3px;
+		padding-bottom: 6px;
+		margin-top: 12px;
+		cursor: text;
+		font-size: 100%;
+		font-weight: bold;
+	}
+}
+
+#panelContent ul.list a:hover {
+	color: @blueLight;
+}
+
+
+
+div #box {
+ .roundedCorners;
+}
+
+.list {
+	padding-left: 0;
+}
+
+/*// < ------------------------- Slidebox end */
+
+
+
+
+
+/*
+// Highlight
+// ------------------------- > */
+
+pre code {
+	font-family: Monaco, Verdana, Sans-serif;
+}
+
+
+pre .assignment,
+pre .literal,
+pre .css .rule .keyword,
+pre .winutils,
+pre .javascript .title,
+pre .subst {
+  color: #954121;
+}
+
+
+pre .hexcolor {
+  color: #40a070
+}
+
+
+pre .tag .value,
+pre .tex .formula {
+  color: #219161;
+}
+
+
+pre .id {
+  color: #19469D;
+}
+pre .params {
+  color: #00F;
+}
+
+pre .javascript .title,
+pre .subst {
+  font-weight: normal
+}
+
+pre .class .title {
+  color: #458;
+  font-weight: bold
+}
+
+pre .tag,
+pre .tag .title {
+  color: #000080;
+  font-weight: normal
+}
+
+pre .attribute,
+pre .instancevar {
+  color: #008080
+}
+
+pre .regexp {
+  color: #B68
+}
+
+pre .class {
+  color: #458;
+  font-weight: bold
+}
+
+pre .symbol,
+pre .input_number {
+  color: #990073
+}
+
+pre .builtin,
+pre .constructor {
+  color: #0086b3
+}
+
+
+pre .pi,
+pre .doctype,
+pre .shebang,
+pre .cdata {
+  color: #999;
+  font-weight: bold
+}
+
+pre .deletion {
+  background: #fdd
+}
+
+pre .addition {
+  background: #dfd
+}
+
+
+pre .chunk {
+  color: #aaa
+}
+
+
+/* ------------------------- */
+
+
+pre .preprocessor {
+  color: #000;
+  font-weight: normal;
+}
+
+
+pre .built_in {
+  color: #0086b3;
+}
+
+
+pre .variable {
+	color: #318495;
+}
+
+
+pre .string {
+	color: #036A07;
+}
+
+
+pre .keyword {
+	color: #0000FF;
+}
+
+
+pre .title {
+  color: #9F6E06;
+}
+
+
+pre .comment {
+	color: #7E86AF;
+	font-style: italic;
+}
+
+
+pre .constant {
+	color: #06960E;
+}
+
+
+pre .number {
+	color: #0000CD;
+}
+
+/*// < ------------------------- Highlight end */
+
+
+
+
+/*
+// Media Queries
+// ------------------------- > */
+
+@media (max-width: 320px) {
+	.navbar-brand {
+		font-size: 16px;
+		padding-top: 10px;
+	}
+}
+
+
+@media (max-width: 480px) {
+	body {
+		padding-top: 140px;
+	}
+	#tocListItem.pull-right {
+		margin-left: -6px;
+		float: none !important;
+	}
+	ol.breadcrumb li {
+		margin-top: 5px;
+		margin-bottom: 5px;
+		&.active {
+			margin-right: 12px;
+		}
+	}
+	div .table {
+		background-color: transparent;
+		padding: 0;
+	}
+}
+
+
+// @media (min-height: 600px) and (min-width: @screen-sm-min) {
+@media (min-height: 690px) and (min-width: 600px) {
+	#open-button {
+		display: block;
+	}
+	ol.breadcrumb li {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
+
+
+/*// < ------------------------- Media Queries end */
+
+
+
+
+
+
+
+
