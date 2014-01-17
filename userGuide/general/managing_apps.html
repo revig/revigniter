@@ -89,7 +89,7 @@
 
 <p>By default it is assumed that you only intend to use revIgniter to manage one application, which you will build in your
 <dfn>system/application/</dfn> directory.  It is possible, however, to have multiple sets of applications that share a single
-revIgniter installation, or even to rename or relocate your <dfn>application</dfn> folder.</p>
+revIgniter installation, or even to rename or relocate your <dfn>application</dfn> folder and / or your <dfn>system</dfn> folder.</p>
 
 <h2>Renaming the Application Folder</h2>
 
@@ -101,10 +101,34 @@ file and set its name using the <samp>gApplicationFolder</samp> variable:</p>
 <h2>Relocating your Application Folder</h2>
 
 <p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>system</kbd> folder. 
-To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <samp>gApplicationFolder</samp> variable.</p>
+To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <samp>gApplicationFolder</samp> variable.
+You may use a relative path as long as your application folder is in the root folder or below.</p>
 
 
 <pre><code>put "/Path/to/your/application" into gApplicationFolder</code></pre>
+
+<p>If you just like to move the application folder to the root folder you do not need to modify index.lc at all.</p>
+
+<h2>Renaming the System Folder</h2>
+
+<p>Similar to the way to rename the application folder described above you may rename your system folder as long as you open your main <kbd>index.lc</kbd>
+file and set its name using the <samp>gSystemFolder</samp> variable:</p>
+
+<pre><code>put "system" into gSystemFolder</code></pre>
+
+
+<h2>Relocating your System Folder</h2>
+
+<p>To move your <dfn>system</dfn> folder to a different location on your server than your root folder open your main <kbd>index.lc</kbd> and set 
+	a <em>full server path</em> in the <samp>gSystemFolder</samp> variable.
+You may use a relative path as long as your application folder is in the root folder or below.</p>
+
+
+<pre><code>put "/Path/to/your/system" into gSystemFolder</code></pre>
+
+
+<p class="important"><strong>Note:</strong>&nbsp; The path to your application folder or system folder must use Unix style directory separators. Do not add
+	a trailing slash.</p>
 
 
 <h2>Running Multiple Applications with one revIgniter Installation</h2>
