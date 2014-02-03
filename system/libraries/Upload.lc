@@ -958,9 +958,9 @@ end _rigPrepFilename
 --| FUNCTION rigUploadMimesTypes
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 03-09-2011
---| Last Mod: 03-09-2011
+--| Last Mod: 03-02-2014
 --| Requires: rigFetchAllMimeTypes()
 --|
 --| Summary: List of mime types.
@@ -980,7 +980,7 @@ function rigUploadMimesTypes pMime
 		put rigFetchAllMimeTypes() into sMimes
 	end if
 	
-	if sMimes[pMime] is empty then
+	if sMimes[pMime] is an array then
 		put "1,2,3,4,5,6,7,8" into tArrayLvels
 		repeat for each item thisItem in tArrayLvels
 			if sMimes[pMime][thisItem] is not empty then
