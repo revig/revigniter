@@ -1300,13 +1300,13 @@ end rigSetImgError
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDisplayImgErrors
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 12-01-10
---| Last Mod: 12-01-10
+--| Last Mod: 11-02-14
 --| Requires: --
 --|
 --| Summary: Show error messages.
@@ -1316,7 +1316,7 @@ end rigSetImgError
 --| Parameters: string <pOpen>, string <pClose>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDisplayImgErrors pOpen pClose
 	if pOpen is "" then
@@ -1333,7 +1333,7 @@ function rigDisplayImgErrors pOpen pClose
 
 	put empty into tStr
 	repeat for each key tKey in sImgErrorMsg
-		put sImgErrorMsg["tKey"] into tVal
+		put sImgErrorMsg[tKey] into tVal
 		put tOpen & tVal & tClose & return after tStr
 	end repeat
 
