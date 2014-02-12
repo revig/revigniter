@@ -2083,6 +2083,56 @@ end _rigStrToArray
 
 
 
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigFileSize
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 12-02-2014
+--| Last Mod: 12-02-2014
+--| Requires: --
+--|
+--| Summary: Gets the file size of a given file.
+--| 
+--| Format:  rigFileSize(param1)
+--|
+--| Parameters: string <pFilePath>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigFileSize pFilePath
+  if there is a file pFilePath then
+  else
+    return FALSE
+  end if
+
+  # GET FOLDER AND FILE NAME
+  set the itemDel to "/"
+  put item 1 to -2 of pFilePath & "/" into tFolderName
+  put item -1 of pFilePath into tFileName
+   
+  # GET DETAILED FILES LIST
+  set the itemDel to comma
+  put the directory into tOldFolder
+  set the directory to tFolderName
+  put urldecode(the detailed files) into tFileList
+   
+  # GET INFO FOR FILE
+  filter tFileList with tFileName & "*"
+  put tFileList into tInfo
+   
+  set the directory to tOldFolder
+   
+  # RETURN FILE SIZE
+  return item 2 of tInfo
+end rigFileSize
+
+
+
+
+
 function rigQ pText
     return quote & pText & quote
 end rigQ
