@@ -1100,64 +1100,69 @@ end rigIsAllowedFileType
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetImageSize
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 03-09-11
---| Last Mod: 03-09-11
---| Requires: rigSetUploadError
+--| Last Mod: 13-02-14
+--| Requires: rigSetUploadError, rigFileSize()
 --|
---| Summary: A helper function that gets info about an image file, uses ImageMagick.
+--| Summary: A helper function that gets info about an image file.
 --| 
 --| Format:  rigGetImageSize(param1)
 --|
 --| Parameters: string <pFilepath>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetImageSize pFilepath
-	if pFilepath is empty then
-		put sFileTemp into tFilepath
-	else
-		put pFilepath into tFilepath
-	end if
+  if pFilepath is empty then
+    put sFileTemp into tFilepath
+  else
+    put pFilepath into tFilepath
+  end if
 
-	if there is a file tFilepath then
-	else
-		rigSetUploadError "upload_invalid_path"	
-		return FALSE
-	end if
-
-	put sIMbinPath & "identify -format" && quote & "%w,%h,%m,%b" & quote && tFilepath into tCmd
-	put shell(tCmd) into tVals
-
-	put empty into tMime
-	put "gif,jpg,jpeg,png,jpe" into tTypes
-	repeat for each item thisItem in tTypes
-		if thisItem is toLower(item 3 of tVals) then
-			put "image/" & thisItem into tMime
-			exit repeat
-		end if
-	end repeat
-	if tMime is empty then
-		put "image/jpg" into tMime
-	end if
-
-	if tVals is not empty then
-		put item 1 of tVals into tV["width"]
-		put item 2 of tVals into tV["height"]
-		put item 3 of tVals into tV["imageType"]
-		put item 4 of tVals into tV["sizeStr"]
-		put tMime into tV["mimeType"]
-
-		return tV
-	else
-		return FALSE
-	end if
-
+  if there is a file tFilepath then
+  else
+    rigSetUploadError "upload_invalid_path"  
+    return FALSE
+  end if
+   
+  # GET WIDTH, HEIGHT, FORMAT
+  import paint from file tFilepath
+  put the width of last image into tVals
+  put "," & the height of last image after tVals
+  put "," & toUpper(the paintCompression of last image) after tVals
+  put "," & rigFileSize(tPath) after tVals
+  delete last image
+   
+  # GET MIME TYPE
+  put empty into tMime
+  put "gif,jpeg,png,rle" into tTypes
+  repeat for each item thisItem in tTypes
+    if thisItem is toLower(item 3 of tVals) then
+      put "image/" & thisItem into tMime
+      exit repeat
+    end if
+  end repeat
+  if tMime is empty then
+    put "image/jpg" into tMime
+  end if
+   
+  if tVals is not empty then
+    put item 1 of tVals into tV["width"]
+    put item 2 of tVals into tV["height"]
+    put item 3 of tVals into tV["imageType"]
+    put item 4 of tVals into tV["sizeStr"]
+    put tMime into tV["mimeType"]
+      
+    return tV
+  else
+    return FALSE
+  end if
 end rigGetImageSize
 
 
