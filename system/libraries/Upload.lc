@@ -41,7 +41,7 @@ rigLogMessage "debug", "Upload Library Loaded"
 # DECLARE VARIABLES
 local sMaxSize, sMaxWidth, sMaxHeight, sMaxFilename, sAllowedTypes, sFileTemp, sFileName, sOrigName, sFileType, sFileSize, sFileExt
 local sUploadPath, sOverwrite, sEncryptName, sIsImage, sImageWidth, sImageHeight, sImageType, sImageSizeStr, sErrorMsg, sMimes
-local sRemoveSpaces, sXssClean, sTempPrefix, sClientName, sFileNameOverride, sValidSetHandlers, sIMbinPath
+local sRemoveSpaces, sXssClean, sTempPrefix, sClientName, sFileNameOverride, sValidSetHandlers
 
 # SET INITIAL VALUES
 put 0 into sMaxSize
@@ -54,7 +54,7 @@ put FALSE into sIsImage
 put TRUE into sRemoveSpaces
 put FALSE into sXssClean
 put "temp_file_" into sTempPrefix
-put "" into sIMbinPath
+
 
 
 put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,rigSet_sMaxHeight,rigSet_sMaxFilename,rigSet_sXssClean" into sValidSetHandlers
@@ -149,9 +149,9 @@ end rigInitializeUpload
 --| COMMAND rigSetInitialUploadValue
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 31-08-2011
---| Last Mod: 31-08-2011
+--| Last Mod: 13-02-2014
 --| Requires: --
 --|
 --| Summary: Set initial values.
@@ -178,10 +178,6 @@ command rigSetInitialUploadValue pVarName pValue
 		break
 		case "sRemoveSpaces"
         		put pValue into sRemoveSpaces
-		break
-		case "sIMbinPath"
-						put pValue into sIMbinPath
-		break
   end switch
 end rigSetInitialUploadValue
 
