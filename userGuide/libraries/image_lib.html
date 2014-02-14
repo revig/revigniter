@@ -100,10 +100,10 @@
 
 <p class="important"><strong>Note:</strong> Since revIgniter version 1.6.9 this library comes in two flavors.</p>
 
-<p>There is a .lc text file version which requires the image library ImageMagick and there is a stack version which is completely ImageMagick free. Nevertheless both versions have almost the same functionality and share the same set of handler names. So, your own code works with both. The difference is just the way the .lc file library and the stack file library respectively are loaded (rigLoaderLoadLibrary vs. rigLoadStack). Keep in mind that the version dependent on ImageMagick will be deprecated in the future and you are encouraged to use the stack version if the version of your LiveCode server is 6.5.0 or higher. Eventually all code of the stack version will be transferred to the text version.</p>
+<p>There is a legacy .lc text file version which requires the image library ImageMagick and there is a stack version which is completely ImageMagick free. Nevertheless both versions have almost the same functionality and share the same set of handler names. So, your own code works with both. The difference is just the way the .lc file library and the stack file library respectively are loaded (rigLoaderLoadLibrary vs. rigLoadStack). Keep in mind that the version dependent on ImageMagick will be deprecated in the future and you are encouraged to use the stack version if the version of your LiveCode server is 6.5.0 or higher. Eventually all code of the stack version will be transferred to the text version.</p>
 
 
-<p class="important"><strong>Note:</strong> The stack file version requires server engine 6.5.0 or higher.</p>
+<p class="important"><strong>Note:</strong> The stack file version requires server engine 6.5.0 or higher and, in case the Linux server engine is used, PangoFT2 and Glib.</p>
 
 
 <h2>Initializing the Library</h2>
@@ -526,7 +526,7 @@ end if</code></pre>
 
 
 <h3>rigIMknownFonts()</h3>
-<p>Use this function to check which fonts are available for text watermarking.</p>
+<p>Use this function to check which fonts are available for text watermarking. This function is maintained for compatibility reasons. Of course you can use <kbd>the fontNames</kbd> too.</p>
 
 <pre><code>put rigIMknownFonts() into tAllFonts</code></pre>
 
