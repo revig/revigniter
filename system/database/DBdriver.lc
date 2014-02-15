@@ -375,9 +375,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 09-07-09
---| Last Mod: 04-05-13
+--| Last Mod: 15-02-14
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
 --|           rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError
 --|
@@ -451,7 +451,7 @@ function rigDbQuery pSQL pBinds
 				put arrayDecode(tSQLcache) into tSQLcache
 
 				# SET THE sDBresult VARIABLE IN DBresult.lc
-				rigDbSetResultFromCache tSQLcache["resultarray"], tSQLcache["numrows"], tSQLcache["fieldnames"]
+				rigDbSetResultFromCache tSQLcache["resultarray"], tSQLcache["numrows"], tSQLcache["fieldnames"], tSQLcache["fieldnumbers"]
 
 				return tSQLcache
 			end if
@@ -585,6 +585,7 @@ function rigDbQuery pSQL pBinds
 	
 	# EXTRA BONUS
 	put rigListFields(sDBdriverSettings["resultid"]) into tRES["fieldnames"]
+	put rigFieldNumbers(tRES["fieldnames"]) into tRES["fieldnumbers"]
 	
 	
 	# IS QUERY CACHING ENABLED?  IF SO, WE'LL SERIALIZE THE
@@ -593,6 +594,7 @@ function rigDbQuery pSQL pBinds
 	if (sDBdriverSettings["cacheon"] is TRUE) and (tCacheInit is TRUE) then
 		put tRES["numrows"] into tCR["numrows"]
 		put tRES["fieldnames"] into tCR["fieldnames"]
+		put tRES["fieldnumbers"] into tCR["fieldnumbers"]
 		put tRES["resultarray"] into tCR["resultarray"]
 
 		--rigLoadHelper "array"
