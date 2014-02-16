@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.9</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -98,15 +98,23 @@
 <li>Image Watermarking</li>
 </ul>
 
-<p>Supported image library: ImageMagick</p>
+<p class="important"><strong>Note:</strong> Since revIgniter version 1.6.9 this library comes in two flavors.</p>
 
+<p>There is a legacy .lc text file version which requires the image library ImageMagick and there is a stack version which is completely ImageMagick free. Nevertheless both versions have almost the same functionality and share the same set of handler names. So, your own code works with both. The difference is just the way the .lc file library and the stack file library respectively are loaded (rigLoaderLoadLibrary vs. rigLoadStack). Keep in mind that the version dependent on ImageMagick will be deprecated in the future and you are encouraged to use the stack version if the version of your LiveCode server is 6.5.0 or higher. Eventually all code of the stack version will be transferred to the text version.</p>
+
+
+<p class="important"><strong>Note:</strong> The stack file version requires server engine 6.5.0 or higher and, in case the Linux server engine is used, PangoFT2 and Glib.</p>
 
 
 <h2>Initializing the Library</h2>
 
-<p>Like most other libraries in revIgniter, the image library is initialized in your controller
+<p>In case you choose the text file version the image library is initialized in your controller
 using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 <pre><code>rigLoaderLoadLibrary "Image"</code></pre>
+
+<p>If you prefer the stack file version the image library is initialized in your controller
+using the <dfn>rigLoadStack</dfn> handler:</p>
+<pre><code>rigLoadStack "Image"</code></pre>
 
 <p>Once the library is loaded it will be ready for use.</p>
 
@@ -124,7 +132,7 @@ put "75" into tConfig["width"]
 put "50" into tConfig["height"]
 
 rigLoaderLoadLibrary "Image", tConfig
-
+-- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageResize() into gData["imageOutput"]</code></pre>
 
@@ -141,7 +149,7 @@ folder containing the image files must have write permissions.</p>
 
 <h2>Dynamic Output of Processed Image</h2>
 
-<p>If you set the <dfn>dynamicOutput</dfn> option to TRUE, the resulting image data will not be written to disk. Instead an irev file
+<p>If you set the <dfn>dynamicOutput</dfn> option to TRUE, the resulting image data will not be written to disk. Instead a .lc file
 is saved, which is used as the source for an image tag in your view file.
 For example, to watermark an image without storing the image you'll do this:</p>
 
@@ -155,7 +163,7 @@ put "20" into  tConfig["WMvrtOffset"]
 put "70" into tConfig["WMopacity"]
 
 rigLoaderLoadLibrary "Image", tConfig
-
+-- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageWatermark() into gData["imageOutput"]</code></pre>
 
@@ -269,13 +277,20 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 </tr>
 
 <tr>
-<td class="td"><strong>quality</strong></td>
-<td class="td">90</td>
-<td class="td">1 - 100</td>
-<td class="td">Sets the quality of the image. The higher the quality the larger the file size.</td>
+<td class="td"><strong>exportFormat</strong></td>
+<td class="td">JPEG</td>
+<td class="td">JPEG, GIF, PNG</td>
+<td class="td">Sets the format of the processed image. This preference applies to the stack file version only.</td>
 <td class="td">R, C, X, W</td>
 </tr>
 
+<tr>
+<td class="td"><strong>quality</strong></td>
+<td class="td">90</td>
+<td class="td">1 - 100</td>
+<td class="td">Sets the quality of the image (applies to JPEG only). The higher the quality the larger the file size.</td>
+<td class="td">R, C, X, W</td>
+</tr>
 
 <tr>
 <td class="td"><strong>newImage</strong></td>
@@ -322,7 +337,7 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 <td class="td">TRUE</td>
 <td class="td">TRUE/FALSE</td>
 <td class="td">Specifies whether to maintain the original aspect ratio when resizing or use hard values.</td>
-<td class="td">R, C</td>
+<td class="td">R</td>
 </tr>
 
 
@@ -448,7 +463,7 @@ put "50%" into tConfig["Xaxis"]
 put "80%" into tConfig["Yaxis"]
 
 rigLoaderLoadLibrary "Image", tConfig
-
+-- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageCrop() into tImageOutput
 if tImageOutput is FALSE then
@@ -483,7 +498,7 @@ unless you intend to build such an interface.</p>
 put "hor" into tConfig["rotationAngle"]
 
 rigLoaderLoadLibrary "Image", tConfig
-
+-- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageRotate() into tImageOutput
 if tImageOutput is FALSE then
@@ -511,7 +526,7 @@ end if</code></pre>
 
 
 <h3>rigIMknownFonts()</h3>
-<p>Use this function to check which fonts are available for text watermarking.</p>
+<p>Use this function to check which fonts are available for text watermarking. This function is maintained for compatibility reasons. Of course you can use <kbd>the fontNames</kbd> too.</p>
 
 <pre><code>put rigIMknownFonts() into tAllFonts</code></pre>
 
@@ -519,7 +534,7 @@ end if</code></pre>
 
 
 <h3>rigIMversion()</h3>
-<p>Use this function to get the ImageMagick version.</p>
+<p>Use this function to get the ImageMagick version (applies to the text file version of the library only).</p>
 
 <pre><code>put rigIMversion() into tVersion</code></pre>
 
@@ -551,7 +566,7 @@ calling the watermark function.  Here is an example:</p>
 
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put "text" into tConfig["WMtype"]
-put "Copyright 2010 - John Doe" into tConfig["WMtext"]
+put "Copyright 2014 - John Doe" into tConfig["WMtext"]
 put "18" into tConfig["WMfontsize"]
 put "Times" into tConfig["sImgWMfont"]
 put "F6F6F6" into tConfig["WMfontcolor"]
@@ -560,12 +575,12 @@ put "North" into tConfig["WMalignment"]
 put "20" into  tConfig["WMvrtOffset"]
 
 rigLoaderLoadLibrary "Image", tConfig
-
+-- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageWatermark() into tImageOutput</code></pre>
 
 
-<p>The above example will use a 18 pixel font to create the text "Copyright 2010 - John Doe".  The watermark
+<p>The above example will use a 18 pixel font to create the text "Copyright 2014 - John Doe".  The watermark
 will be positioned at the top/center of the image, 20 pixels from the top of the image.</p>
 
 <p class="important"><strong>Note:</strong> In order for the image library to be allowed to do any processing, the image file must have &quot;write&quot; file permissions.</p>
@@ -613,10 +628,17 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 </tr>
 
 <tr>
+<td class="td"><strong>exportFormat</strong></td>
+<td class="td">JPEG</td>
+<td class="td">JPEG, GIF, PNG</td>
+<td class="td">Sets the format of the processed image. This preference applies to the stack file version only.</td>
+</tr>
+
+<tr>
 <td class="td"><strong>quality</strong></td>
 <td class="td">90</td>
 <td class="td">1 - 100</td>
-<td class="td">Sets the quality of the image. The higher the quality the larger the file size.</td>
+<td class="td">Sets the quality of the image (applies to JPEG only). The higher the quality the larger the file size.</td>
 </tr>
 
 <tr>
@@ -683,7 +705,7 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 <td class="td"><strong>WMfontcolor</strong></td>
 <td class="td">f6f6f6</td>
 <td class="td">None</td>
-<td class="td">The font color, specified in hex.  Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff).</td>
+<td class="td">The font color, specified in hex.  Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff). The stack file version of the library allows additionally to use RGB values like 248,248,248.</td>
 </tr>
 
 
@@ -691,7 +713,7 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 <td class="td"><strong>WMshadowcolor</strong></td>
 <td class="td">656565</td>
 <td class="td">None</td>
-<td class="td">The color of the drop shadow, specified in hex. If you leave this blank a drop shadow will not be used. Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff).</td>
+<td class="td">The color of the drop shadow, specified in hex. If you leave this blank a drop shadow will not be used. Note, you must use the full 6 character hex value (ie, 993300), rather than the three character abbreviated version (ie fff). The stack file version of the library allows additionally to use RGB values like 120,120,120.</td>
 </tr>
 
 <tr>
@@ -699,6 +721,20 @@ will be positioned at the top/center of the image, 20 pixels from the top of the
 <td class="td">1</td>
 <td class="td">None</td>
 <td class="td">The distance (in pixels) from the font that the drop shadow should appear.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMshadowsize</strong></td>
+<td class="td">1</td>
+<td class="td">None</td>
+<td class="td">The size of the drop shadow should. This preference applies to the stack file version of the library only.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>WMshadowopacity</strong></td>
+<td class="td">180</td>
+<td class="td">1 - 255</td>
+<td class="td">Drop shadow opacity. This preference applies to the stack file version of the library only.</td>
 </tr>
 
 </table>

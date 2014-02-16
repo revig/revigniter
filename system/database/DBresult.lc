@@ -48,18 +48,19 @@ put 0 into sDBresult["numrows"]
 put empty into sDBresult["rowdata"]
 
 put empty into sDBresult["fieldNames"]
+put empty into sDBresult["fieldNumbers"]
 
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDBresult
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 29-09-09
---| Last Mod: 29-09-09
+--| Last Mod: 15-02-14
 --| Requires: rigFetchDBdriverSetting(), _rigDataSeek(), _rigFetchAssoc, rigListFields(), rigLogMessage
 --|
 --| Summary: Query result as array.
@@ -69,7 +70,7 @@ put empty into sDBresult["fieldNames"]
 --| Parameters: --
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDBresult
 	if sDBresult["resultarray"] is an array then
@@ -97,6 +98,7 @@ function rigDBresult
 		put tTemp into sDBresult["resultarray"]
 
 		put rigListFields(tResultID) into sDBresult["fieldNames"] -- variance
+		put rigFieldNumbers(sDBresult["fieldNames"]) into sDBresult["fieldNumbers"] -- variance
 
 	--else
 		--put empty into sDBresult["resultarray"]
@@ -503,29 +505,63 @@ end rigDbResetResultValue
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbSetResultFromCache
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-10-09
---| Last Mod: 06-10-09
+--| Last Mod: 15-02-14
 --| Requires: --
 --|
 --| Summary: Set sDBresult values to cached values.
 --| 
 --| Format:  rigDbSetResultFromCache param1 param2 param3
 --|
---| Parameters: array <pResult>, integer <pNumRows>, string <pFieldNames>
+--| Parameters: array <pResult>, integer <pNumRows>, array <pFieldNames>,
+--|             array <pFieldNumbers>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigDbSetResultFromCache pResult pNumRows pFieldNames
+command rigDbSetResultFromCache pResult pNumRows pFieldNames pFieldNumbers
 	put pResult into sDBresult["resultarray"]
 	put pNumRows into sDBresult["numrows"]
 	put pFieldNames into sDBresult["fieldNames"]
+	put pFieldNumbers into sDBresult["fieldNumbers"]
 end rigDbSetResultFromCache
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigFieldNumbers
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 15-02-2014
+--| Last Mod: 15-02-2014
+--| Requires: --
+--|
+--| Summary: Returns an array containing field names as keys
+--|          and field numbers as values.
+--| 
+--| Format:  rigFieldNumbers(param1)
+--|
+--| Parameters: array <pFieldNames>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function rigFieldNumbers pFieldNames
+  repeat for each key tKey in  pFieldNames
+    put tKey into tFieldNumbers[pFieldNames[tKey]]
+  end repeat
+
+  return tFieldNumbers
+end rigFieldNumbers
 
 
 

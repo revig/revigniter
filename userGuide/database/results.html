@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.9</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -189,6 +189,23 @@ end repeat
 	<h3>yourQuery["fieldnames"]</h3>
 	
 	<p>This query result index contains the table field names in a numbered array.</p>
+	
+	
+	<h3><a name="fieldnumbers">&nbsp;</a>yourQuery["fieldnumbers"]</h3>
+	
+	<p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
+	
+	<pre><code>
+	put rigDbQuery("YOUR QUERY") into tQuery
+	
+	repeat for each key tKey in tQuery["resultarray"]
+	
+		put tQuery["resultarray"][tKey] into tRow
+		put tRow[tQuery["fieldnumbers"]["title"]] & comma after tResultData
+		put tRow[tQuery["fieldnumbers"]["name"]] & comma after tResultData
+		put tRow[tQuery["fieldnumbers"]["body"]] & return after tResultData
+	end repeat
+	</code></pre>
 
 
 	<h3>rigDbRow()</h3>
