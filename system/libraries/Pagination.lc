@@ -44,7 +44,7 @@ local sPagTotalRows						  -- Total number of items (database results)
 local sPagLinksElementID        -- The ID of the HTML element containing the pagination links (used for XMLHTTP requests only)
 local sPagDataElementID         -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
 local sPagAjax                  -- XMLHTTP Pagination flag
-local sPagAjaxServerTimeout     -- Max duration before displaying an error while making an AJAX request (milliseconds)
+local sPagAjaxServerTimeout     -- Delay to trigger an error while making an AJAX request (milliseconds)
 local sPagWidgetName            -- Name of Ajax pagination JavaScript object
 local sPagPerPage, sPagNumLinks, sPagCurPage, sPagFirstLink, sPagNextLink, sPagPrevLink, sPagLastLink, sPagUriSegment, sPagFullTagOpen, sPagFullTagClose
 local sPagFirstTagOpen, sPagFirstTagClose, sPagLastTagOpen, sPagLastTagClose, sPagCurTagOpen, sPagCurTagClose, sPagNextTagOpen, sPagNextTagClose
@@ -361,10 +361,10 @@ function rigCreatePaginationLinks
 	# AND HERE WE GO...
 	# RENDER THE "FIRST" LINK
 	if  sPagCurPage > (sPagNumLinks + 1) then
-    if sPagAjax is TRUE then -- test
-      put $sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput -- test
+    if sPagAjax is TRUE then
+      put sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
     else
-      put $sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+      put sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
     end if
 	end if
   #
@@ -375,8 +375,8 @@ function rigCreatePaginationLinks
 		if tCounter = 0 then
 			put empty into tCounter
 		end if
-    if sPagAjax is TRUE then -- test
-      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput -- test
+    if sPagAjax is TRUE then
+      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
     else
       put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
     end if
@@ -397,8 +397,8 @@ function rigCreatePaginationLinks
 					put tI into tN
 				end if
         
-        if sPagAjax is TRUE then -- test
-          put sPagNumTagOpen & "<a href='" & sPagBaseUrl & tN & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput -- test
+        if sPagAjax is TRUE then
+          put sPagNumTagOpen & "<a href='" & sPagBaseUrl & tN & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
         else
           put sPagNumTagOpen & "<a href=" & quote & sPagBaseUrl & tN & quote & ">" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
         end if
@@ -411,8 +411,8 @@ function rigCreatePaginationLinks
 	# RENDER THE "NEXT" LINK
 	if sPagCurPage < tNumPages then
 		put sPagCurPage * sPagPerPage into tJ
-    if sPagAjax is TRUE then -- test
-      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput -- test
+    if sPagAjax is TRUE then
+      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
     else
       put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
     end if
@@ -422,8 +422,8 @@ function rigCreatePaginationLinks
 	# RENDER THE "LAST" LINK
 	if (sPagCurPage + sPagNumLinks) < tNumPages then
 		put (tNumPages * sPagPerPage) - sPagPerPage into tI
-    if sPagAjax is TRUE then -- test
-      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput -- test
+    if sPagAjax is TRUE then
+      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
     else
       put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
     end if
