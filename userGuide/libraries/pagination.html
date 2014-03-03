@@ -96,6 +96,12 @@
 
 <p>The Pagination library builds the markup consisting of links used to navigate from page to page.</p>
 
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Pagination library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Pagination"</code></pre>
+
 <h2>Example</h2>
 
 <p>Here is a simple example showing how to create pagination in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
@@ -435,6 +441,28 @@ rigRunInitialPaginationConfig sConfig
 </tr>
 </table>
 </div>
+
+
+<h2>Handler Reference</h2>
+
+<h3>rigInitializePagination <var>pConfig</var></h3>
+
+<p>Run initial configuration procedures. The parameter is an array containing your configuration settings.</p>
+
+
+<h3>rigCreatePaginationLinks()</h3>
+
+<p>Generates and returns the pagination links.</p>
+
+
+<h3>rigAjaxPagination <var>pPaginationData</var>, <var>pPaginationLinks</var></h3>
+
+<p>Build and send JSON data used by the AJAX pagination script. The fist parameter contains the current data to be displayed. The second parameter contains the current pagination links.</p>
+
+
+<h3>rigAjaxPaginationCode()</h3>
+
+<p>Generates and returns the AJAX pagination JavaScript code.</p>
 
 
 </div>
