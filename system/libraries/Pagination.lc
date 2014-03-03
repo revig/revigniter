@@ -39,8 +39,13 @@ end if
 rigLogMessage "debug", "Pagination Library Loaded"
 
 # DECLARE VARIABLES
-local sPagBaseUrl							-- The page we are linking to
-local sPagTotalRows						-- Total number of items (database results)
+local sPagBaseUrl							  -- The page we are linking to
+local sPagTotalRows						  -- Total number of items (database results)
+local sPagLinksElementID        -- The ID of the HTML element containing the pagination links (used for XMLHTTP requests only)
+local sPagDataElementID         -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
+local sPagAjax                  -- XMLHTTP Pagination flag
+local sPagAjaxServerTimeout     -- Delay to trigger an error while making an AJAX request (milliseconds)
+local sPagWidgetName            -- Name of Ajax pagination JavaScript object
 local sPagPerPage, sPagNumLinks, sPagCurPage, sPagFirstLink, sPagNextLink, sPagPrevLink, sPagLastLink, sPagUriSegment, sPagFullTagOpen, sPagFullTagClose
 local sPagFirstTagOpen, sPagFirstTagClose, sPagLastTagOpen, sPagLastTagClose, sPagCurTagOpen, sPagCurTagClose, sPagNextTagOpen, sPagNextTagClose
 local sPagPrevTagOpen, sPagPrevTagClose, sPagNumTagOpen, sPagNumTagClose, sPagPageQueryString, sPagQueryStringSegment
@@ -63,10 +68,14 @@ put "&nbsp;" into sPagPrevTagOpen
 put "&nbsp;" into sPagNumTagOpen
 put FALSE into sPagPageQueryString
 put "per_page" into sPagQueryStringSegment
+put "pagination" into sPagLinksElementID
+put "paginationData" into sPagDataElementID
+put 10000 into sPagAjaxServerTimeout
+put "PaginationWidget" into sPagWidgetName
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialPaginationConfig
 --|
 --| Author: rabit
@@ -82,7 +91,7 @@ put "per_page" into sPagQueryStringSegment
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialPaginationConfig pConfig
 	put pConfig into tConfig
@@ -105,7 +114,7 @@ end rigRunInitialPaginationConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigInitializePagination
 --|
 --| Author: rabit
@@ -121,7 +130,7 @@ end rigRunInitialPaginationConfig
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigInitializePagination pConfig
 	if pConfig is an array then
@@ -141,13 +150,13 @@ end rigInitializePagination
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetInitialPaginationValue
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-09-09
---| Last Mod: 22-09-09
+--| Last Mod: 02-02-14
 --| Requires: --
 --|
 --| Summary: Set initial values.
@@ -157,7 +166,7 @@ end rigInitializePagination
 --| Parameters: string <pVarName>, mixed <pValue>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetInitialPaginationValue pVarName pValue
 	put "sPag" & pVarName into tVarName
@@ -241,6 +250,20 @@ command rigSetInitialPaginationValue pVarName pValue
 		case "sPagQueryStringSegment"
         		put pValue into sPagQueryStringSegment
 		break
+    case "sPagLinksElementID"
+    		put pValue into sPagLinksElementID
+    break
+    case "sPagDataElementID"
+        put pValue into sPagDataElementID
+    break
+    case "sPagAjax"  
+      put pValue into sPagAjax
+    break
+    case "sPagAjaxServerTimeout"
+      put pValue into sPagAjaxServerTimeout
+    break
+    case "sPagWidgetName"
+      put pValue into sPagWidgetName
     end switch
 end rigSetInitialPaginationValue
 
@@ -251,13 +274,13 @@ end rigSetInitialPaginationValue
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCreatePaginationLinks
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-09-09
---| Last Mod: 22-09-09
+--| Last Mod: 20-02-14
 --| Requires: rigCeil, rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
@@ -267,7 +290,7 @@ end rigSetInitialPaginationValue
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCreatePaginationLinks
 	# IF OUR ITEM COUNT OR PER-PAGE TOTAL IS ZERO THERE IS NO NEED TO CONTINUE
@@ -338,8 +361,13 @@ function rigCreatePaginationLinks
 	# AND HERE WE GO...
 	# RENDER THE "FIRST" LINK
 	if  sPagCurPage > (sPagNumLinks + 1) then
-		put $sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+    if sPagAjax is TRUE then
+      put sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+    else
+      put sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+    end if
 	end if
+  #
 
 	# RENDER THE "PREVIOUS" LINK
 	if sPagCurPage <> 1 then
@@ -347,8 +375,13 @@ function rigCreatePaginationLinks
 		if tCounter = 0 then
 			put empty into tCounter
 		end if
-		put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+    if sPagAjax is TRUE then
+      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+    else
+      put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+    end if
 	end if
+  #
 
 	# WRITE THE DIGIT LINKS
 	repeat with tLoopCounter = (tStart - 1) to tEnd
@@ -363,23 +396,39 @@ function rigCreatePaginationLinks
 				else
 					put tI into tN
 				end if
-
-				put sPagNumTagOpen & "<a href=" & quote & sPagBaseUrl & tN & quote & ">" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+        
+        if sPagAjax is TRUE then
+          put sPagNumTagOpen & "<a href='" & sPagBaseUrl & tN & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+        else
+          put sPagNumTagOpen & "<a href=" & quote & sPagBaseUrl & tN & quote & ">" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+        end if
+  
 			end if
 		end if
 	end repeat
+  #
 
 	# RENDER THE "NEXT" LINK
 	if sPagCurPage < tNumPages then
 		put sPagCurPage * sPagPerPage into tJ
-		put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+    if sPagAjax is TRUE then
+      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+    else
+      put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+    end if
 	end if
+  #
 
 	# RENDER THE "LAST" LINK
 	if (sPagCurPage + sPagNumLinks) < tNumPages then
 		put (tNumPages * sPagPerPage) - sPagPerPage into tI
-		put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+    if sPagAjax is TRUE then
+      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+    else
+      put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+    end if
 	end if
+  #
 
 	# KILL DOUBLE SLASHES.  NOTE: SOMETIMES WE CAN END UP WITH A DOUBLE SLASH
 	# IN THE PENULTIMATE LINK SO WE'LL KILL ALL DOUBLE SLASHES.
@@ -394,6 +443,89 @@ function rigCreatePaginationLinks
 
 	return tOutput
 end rigCreatePaginationLinks
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigAjaxPagination
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 28-02-2014
+--| Last Mod: 28-02-2014
+--| Requires: rigFetchSegment(), rigTotalRsegments(), rigLogMessage, rigElapsedTime()
+--|
+--| Summary: Build and send JSON data used by AJAX pagination script.
+--| 
+--| Format:  rigAjaxPagination param1, param2
+--|
+--| Parameters: string <pPaginationData>, string <pPaginationLinks>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+command rigAjaxPagination pPaginationData pPaginationLinks
+  # CHECK IF PAGE REQUEST IS AN XMLHTTP REQUEST
+  put (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") into tAjax
+  if (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") or (rigFetchSegment(rigTotalRsegments()) is "ajaxrequest") then
+    put TRUE into tAjax
+  end if
+  
+
+  if tAjax is TRUE then
+    # PREPARE QUOTES TO CONFORM WITH JSON
+    replace quote with "'" in pPaginationData
+
+    replace quote with "'" in pPaginationLinks
+    replace "&quot;" with "\" & quote in pPaginationLinks
+
+    # REMOVE LINEFEEDS / CARRIAGE RETURNS
+    put replaceText(pPaginationData,"[\n\r]","") into pPaginationData
+
+    # BUILD JSON OBJECT
+    put "{" & quote & "paginationData" & quote & ":" & quote & pPaginationData & quote & comma & quote & "paginationLinks" & quote & ":" & quote & pPaginationLinks & quote & "}" into tJSONpaginationData
+
+    # SEND JSON OBJECT TO BROWSER
+    put header "Content-Type: application/json"
+    put tJSONpaginationData
+    
+    rigLogMessage "debug", "Final AJAX pagination output sent to browser."
+    
+  	# PARSE OUT THE ELAPSED TIME AND WE ARE DONE
+  	put rigElapsedTime("totalExecutionTime_start", "totalExecutionTime_end", 4) into tElapsed
+    rigLogMessage "debug", "Total execution time: " & tElapsed
+    exit to top
+  end if
+end rigAjaxPagination
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigAjaxPaginationCode
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 28-02-2014
+--| Last Mod: 28-02-2014
+--| Requires: --
+--|
+--| Summary: Return AJAX pagination JavaScript code.
+--| 
+--| Format:  rigAjaxPaginationCode()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigAjaxPaginationCode
+  return "<script>var" && sPagWidgetName & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;o.requestTimer=setTimeout(function(){r.abort();" & sPagWidgetName & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPagAjaxServerTimeout & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPagWidgetName & ".writeData(r.responseText):" & sPagWidgetName & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPagWidgetName & ".paginationData.innerHTML=t.paginationData;" & sPagWidgetName & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
+end rigAjaxPaginationCode
 
 
 

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.9</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.10</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -88,24 +88,34 @@
 
 <h1>Pagination Library</h1>
 
-<p>revIgniter's Pagination library is very easy to use, and it is 100% customizable, either dynamically or via stored preferences.</p>
+<p>revIgniter's Pagination library is very easy to use. It is 100% customizable, either dynamically or via stored preferences, and it even works with AJAX.</p>
 
 <p>If you are not familiar with the term "pagination", it refers to links that allows you to navigate from page to page, like this:</p>
 
 <pre><code><a href="#">&laquo; First</a>&nbsp;&nbsp;<a href="#">&lt;</a>&nbsp;<a href="#">1</a>&nbsp;<a href="#">2</a>&nbsp;<b>3</b>&nbsp;<a href="#">4</a>&nbsp;<a href="#">5</a>&nbsp;<a href="#">&gt;</a>&nbsp;&nbsp;<a href="#">Last &raquo;</a></code></pre>
 
+<p>The Pagination library builds the markup consisting of links used to navigate from page to page.</p>
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Pagination library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Pagination"</code></pre>
+
 <h2>Example</h2>
 
 <p>Here is a simple example showing how to create pagination in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
-<pre><code>rigLoaderLoadLibrary "Pagination"	
+<pre><code>rigLoaderLoadLibrary "Pagination"
+# PAGINATION CONFIGURATION
 put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
 put 200 into tConfig["totalRows"]
 put 20 into tConfig["perPage"]
 
+# INITIALIZE PAGINATION
 rigInitializePagination tConfig
 
-
+# GET PAGINATION HTML LINKS
 put rigCreatePaginationLinks() into gData["pagination"]</code></pre>
 
 <h3>Notes:</h3>
@@ -126,12 +136,107 @@ minimum you need the three shown.  Here is a description of what those items rep
 <p>The <var>rigCreatePaginationLinks()</var> function returns an empty string when there is no pagination to show.</p>
 
 
+<h2>Another Example</h2>
+
+<p>As explained above, to build the pagination HTML links the library needs to be provided with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now the important part: The third segment is a number, the page number calculated by the library which should be evaluated by your pagination handler as shown below:</p>
+
+
+<pre><code>command page
+	# LET'S ASSUME YOU RETRIEVE YOUR DATA FROM A SQL DATABASE
+	# USING ACTIVE RECORD FEATURES
+	# SO, GET TOTAL NUMBER OF ROWS
+	put rigDbCountAllResults("yourTable") into tTotalNumRecords
+
+	# PAGINATION CONFIGURATION
+	# DO THE PAGINATION BASE URL CONFIGURATION
+	put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+	
+	# SET LIMIT OF ROWS TO BE DISPLAYED
+	# LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
+	put 20 into tConfig["perPage"]
+	
+	# SET TOTAL ROWS CONFIGURATION
+	put tTotalNumRecords into tConfig["totalRows"]
+	# CONFIGURATION END
+	
+	# INITIALIZE PAGINATION
+	rigInitializePagination tConfig
+
+	# GET PAGE NUMBER
+	# NOTE: THIS IS THE OFFSET FOR YOUR QUERY
+	put rigFetchSegment(3) into tPageNum
+	if (tPageNum is an integer) and (tPageNum > 0) and (tPageNum < tTotalNumRecords) then
+		put tPageNum into tOffset
+	else
+		put 0 into tOffset
+	end if
+
+	# GET DATABASE QUERY RESULT DATA 
+	# YOUR DATABASE QUERY STUFF HERE . . . LIKE
+	# rigDbOrderBy, rigDbWhere OR WHATEVER
+
+	# SET THE QUERY LIMITS
+	rigDbLimit tConfig["perPage"], tOffset
+
+	# GET QUERY RESULT
+	put rigDbGet("yourTable") into tQueryResult
+
+	if tQueryResult["numrows"] > 0 then
+		# DEAL WITH THE QUERY RESULT DATA HERE, BUILD A TABLE OR WHATEVER
+		# . . .
+		# STORE YOUR PAGINATION DATA IN gData
+		put tYourData into gData["paginationData"]
+	
+		# FINALLY GET PAGINATION HTML LINKS
+		put rigCreatePaginationLinks() into gData["paginationLinks"]
+	end if
+
+	# LOAD THE VIEW FILE
+	get rigLoadView("testView")
+end page
+</code></pre>
+
+<p>Now all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"] ]] and the edited data retrieved from your database like [[gData["paginationData"] ]].</p>
+
+
+<h2>AJAX Example</h2>
+
+<p>If you like to make the pagination work with XMLHTTP requests you just need to set the AJAX flag to true before initializing the library</p>
+
+<pre><code>put TRUE into tConfig["ajax"]</code></pre>
+
+
+<p>and add the following two lines of code right after calling the rigCreatePaginationLinks function like:</p>
+
+<pre><code># SEND JSON DATA TO BE PROCESSED BY AJAX PAGINATION SCRIPT TO BROWSER
+rigAjaxPagination gData["paginationData"], gData["paginationLinks"]
+  
+# GET AJAX PAGINATION SCRIPT
+put rigAjaxPaginationCode() into gData["ajaxCode"]
+</code></pre>
+
+
+<h3>Notes:</h3>
+
+<ul>
+	<li>Add the AJAX pagination script like [[gData["ajaxCode"] ]] to your view file preferably at the bottom just before the closing body tag.</li>
+	<li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
+</ul>
+
+<pre><code>put "myPaginationLinksID" into tConfig["linksElementID"]
+put "myPaginationDataID" into tConfig["dataElementID"]
+</code></pre>
+
+
+<p class="important"><strong>Note:</strong> revIgniter's AJAX pagination is not compatible with Internet Explorer 7 and below.</p>
+
+
 <h2>Setting preferences in a config file</h2>
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <var>pagination.lc</var>,  add an
 array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
-array as parameter. Then save the file in: <var>config/pagination.lc</var> and it will be used automatically. You
+array as parameter. Then save the file in: <var>application/config/pagination.lc</var> and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
 
 <p>Example:</p>
@@ -155,103 +260,209 @@ rigRunInitialPaginationConfig sConfig
 
 <h2>Customizing the Pagination</h2>
 
-<p>The following is a list of all the preferences you can pass to the initialization handler to tailor the display.</p>
+<p>The following tables list of all the preferences you can pass to the initialization handler to tailor the display.</p>
 
 
-<h4>put 3 into tConfig["uriSegment"]</h4>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["uriSegment"]</strong></td><td class="td">3</td><td class="td">None</td><td class="td">The pagination function automatically determines which segment of your URI contains the page number. If you need something different you can specify it.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["numLinks"]</strong></td><td class="td">2</td><td class="td">None</td><td class="td">The number of "digit" links you would like before and after the selected page number. For example, the number 2 will place two digits on either side, as in the example links at the very top of this page.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["pageQueryString"]</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE</td><td class="td">By default, the pagination library assumes you are using URI Segments, and constructs your links something like<br /><br />http://example.com/index.lc/test/page/20<br /><br />If you have gConfig["enableQueryStrings"] set to TRUE your links will automatically be re-written using Query Strings. This option can also be explictly set. Using tConfig["pageQueryString"] set to TRUE, the pagination link will become.<br /><br />http://example.com/index.lc?c=test&m=page&perPage=20<br /><br />Note that "perPage" is the default query string passed, however can be configured using put "your_string" into tConfig["queryStringSegment"]</td>
+</tr>
+</table>
+</div>
 
-<p>The pagination function automatically determines which segment of your URI contains the page number. If you need
-something different you can specify it.</p>
-
-<h4>put 2 into tConfig["numLinks"]</h4>
-
-<p>The number of &quot;digit&quot; links you would like before and after the selected page number. For example, the number 2
-	will place two digits on either side, as in the example links at the very top of this page.</p>
-	
-<h4>put TRUE into tConfig["pageQueryString"]</h4>
-
-<p>By default, the pagination library assumes you are using <a href="../general/urls.html">URI Segments</a>, and constructs your links something like</p>
-
-<pre><code>http://example.com/index.lc/test/page/20</code></pre>
-
-<p>If you have gConfig["enableQueryStrings"]  set to TRUE your links will automatically be re-written using Query Strings. This option can also be explictly set. Using tConfig["pageQueryString"] set to TRUE, the pagination link will become.</p>
-
-<pre><code>http://example.com/index.lc?c=test&amp;m=page&amp;perPage=20</code></pre>
-
-<p>Note that &quot;perPage&quot; is the default query string  passed, however can be configured using put "your_string" into tConfig["queryStringSegment"]</p>
 
 <h2>Adding Enclosing Markup</h2>
 
 <p>If you would like to surround the entire pagination with some markup you can do it with these two prefs:</p>
 
-<h4>put "&lt;p>" into tConfig["fullTagOpen"]</h4>
-<p>The opening tag placed on the left side of the entire result.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["fullTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag placed on the left side of the entire result.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["fullTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag placed on the right side of the entire result.</td>
+</tr>
+</table>
+</div>
 
-<h4>put "&lt;/p>" into tConfig["fullTagClose"]</h4>
-<p>The closing tag placed on the right side of the entire result.</p>
+
+<h2>Customizing the "First" Link</h2>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["firstLink"]</strong></td><td class="td">&lsaquo; First</td><td class="td">None</td><td class="td">The text you would like shown in the "first" link on the left.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["firstTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag for the "first" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["firstTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag for the "first" link.</td>
+</tr>
+</table>
+</div>
 
 
-<h2>Customizing the First Link</h2>
 
-<h4>put "First" into tConfig["firstLink"]</h4>
-<p>The text you would like shown in the "first" link on the left.</p>
+<h2>Customizing the "Last" Link</h2>
 
-<h4>put "&lt;div>" into tConfig["firstTagOpen"]</h4>
-<p>The opening tag for the "first" link.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["lastLink"]</strong></td><td class="td">Last &rsaquo;</td><td class="td">None</td><td class="td">The text you would like to be shown in the "last" link on the right.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["lastTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag for the "last" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["lastTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag for the "last" link.</td>
+</tr>
+</table>
+</div>
 
-<h4>put "&lt;/div>" into tConfig["firstTagClose"]</h4>
-<p>The closing tag for the "first" link.</p>
-
-<h2>Customizing the Last Link</h2>
-
-<h4>put "Last" into tConfig["lastLink"]</h4>
-<p>The text you would like to be shown in the "last" link on the right.</p>
-
-<h4>put "&lt;div>" into tConfig["lastTagOpen"]</h4>
-<p>The opening tag for the "last" link.</p>
-
-<h4>put "&lt;/div>" into tConfig["lastTagClose"]</h4>
-<p>The closing tag for the "last" link.</p>
 
 <h2>Customizing the "Next" Link</h2>
 
-<h4>put "&amp;gt;" into tConfig["nextLink"]</h4>
-<p>The text you would like to be shown in the "next" page link.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["nextLink"]</strong></td><td class="td">&gt;</td><td class="td">None</td><td class="td">The text you would like to be shown in the "next" page link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["nextTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag for the "next" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["nextTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag for the "next" link.</td>
+</tr>
+</table>
+</div>
 
-<h4>put "&lt;div>" into tConfig["nextTagOpen"]</h4>
-<p>The opening tag for the "next" link.</p>
-
-<h4>put "&lt;/div>" into tConfig["nextTagClose"]</h4>
-<p>The closing tag for the "next" link.</p>
 
 <h2>Customizing the "Previous" Link</h2>
 
-<h4>put "&amp;lt;" into tConfig["prevLink"]</h4>
-<p>The text you would like to be shown in the "previous" page link.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["prevLink"]</strong></td><td class="td">&lt;</td><td class="td">None</td><td class="td">The text you would like to be shown in the "previous" page link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["prevTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag for the "previous" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["prevTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag for the "previous" link.</td>
+</tr>
+</table>
+</div>
 
-<h4>put "&lt;div>" into tConfig["prevTagOpen"]</h4>
-<p>The opening tag for the "previous" link.</p>
-
-<h4>put "&lt;/div>" into tConfig["prevTagClose"]</h4>
-<p>The closing tag for the "previous" link.</p>
 
 <h2>Customizing the "Current Page" Link</h2>
 
-<h4>put "&lt;b>" into tConfig["curTagOpen"]</h4>
-<p>The opening tag for the "current" link.</p>
-
-<h4>put "&lt;/b>" into tConfig["curTagClose"]</h4>
-<p>The closing tag for the "current" link.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["curTagOpen"]</strong></td><td class="td">&lt;strong></td><td class="td">None</td><td class="td">The opening tag for the "current" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["curTagClose"]</strong></td><td class="td">&lt;/strong></td><td class="td">None</td><td class="td">The closing tag for the "current" link.</td>
+</tr>
+</table>
+</div>
 
 
 <h2>Customizing the "Digit" Link</h2>
 
-<h4>put "&lt;div>" into tConfig["numTagOpen"]</h4>
-<p>The opening tag for the "digit" link.</p>
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["numTagOpen"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The opening tag for the "digit" link.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["numTagClose"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The closing tag for the "digit" link.</td>
+</tr>
+</table>
+</div>
 
-<h4>put "&lt;/div>" into tConfig["numTagClose"]</h4>
-<p>The closing tag for the "digit" link.</p>
-		
+
+
+<h2>AJAX Preferences</h2>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["ajax"]</strong></td><td class="td">None</td><td class="td">TRUE or FALSE</td><td class="td">XMLHTTP Pagination flag.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["ajaxServerTimeout"]</strong></td><td class="td">10000</td><td class="td">None</td><td class="td">Delay to trigger an error while making an AJAX request (milliseconds).</td>
+</tr><tr>
+<td class="td"><strong>sConfig["widgetName"]</strong></td><td class="td">PaginationWidget</td><td class="td">None</td><td class="td">Name of Ajax pagination JavaScript object.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["linksElementID"]</strong></td><td class="td">pagination</td><td class="td">None</td><td class="td">The ID of the HTML element containing the pagination links.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["dataElementID"]</strong></td><td class="td">paginationData</td><td class="td">None</td><td class="td">The ID of the HTML element containing the paginated data.</td>
+</tr>
+</table>
+</div>
+
+
+<h2>Handler Reference</h2>
+
+<h3>rigInitializePagination <var>pConfig</var></h3>
+
+<p>Run initial configuration procedures. The parameter is an array containing your configuration settings.</p>
+
+
+<h3>rigCreatePaginationLinks()</h3>
+
+<p>Generates and returns the pagination links.</p>
+
+
+<h3>rigAjaxPagination <var>pPaginationData</var>, <var>pPaginationLinks</var></h3>
+
+<p>Build and send JSON data used by the AJAX pagination script. The fist parameter contains the current data to be displayed. The second parameter contains the current pagination links.</p>
+
+
+<h3>rigAjaxPaginationCode()</h3>
+
+<p>Generates and returns the AJAX pagination JavaScript code.</p>
 
 
 </div>
