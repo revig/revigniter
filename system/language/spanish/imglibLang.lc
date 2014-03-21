@@ -12,6 +12,7 @@ put "Se han encontrado errores mientras se trataba de reemplazar el archivo. Ase
 put "La rotación de imágenes parece no estar soportada por su servidor." into gLang["imglib_rotate_unsupported"]
 put "La dirección para la librería de imágenes no es correcta.  Por favor, configure correctamente la dirección en las preferencias de imágenes." into gLang["imglib_libpath_invalid"]
 put "Procesado de imagen fallido.  Verifique que su servidor soporta la función escogida y que la dirección de la librería de imágenes es correcta." into gLang["imglib_image_process_failed"]
+put "Procesado de imagen fallido." into gLang["imglib_image_processing_failed"]
 put "Se requiere un ángulo de rotación para que la imagen pueda ser rotada." into gLang["imglib_rotation_angle_required"]
 put "Imagen GIF" into gLang["imglib_writing_failed_gif"]
 put "La dirección de la imagen no es correcta." into gLang["imglib_invalid_path"]

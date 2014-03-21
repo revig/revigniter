@@ -12,6 +12,7 @@ put "Die Datei konnte nicht &uuml;berschrieben werden. Mouml;glicherweise ist da
 put "Der Server unterst&uuml;tzt das Drehen von Bildern nicht" into gLang["imglib_rotate_unsupported"]
 put "Die Bildbearbeitungs-Bibliothek konnte nicht gefunden werden. Bitte pr&uuml;fen Sie, ob der Pfad in den Einstellungen korrekt ist." into gLang["imglib_libpath_invalid"]
 put "Die Bildbearbeitung ist fehlgeschlagen. Bitte stellen Sie sicher, dass der Server das angegebene Protokoll unterst&uuml;tzt." into gLang["imglib_image_process_failed"]
+put "Die Bildbearbeitung ist fehlgeschlagen." into gLang["imglib_image_processing_failed"]
 put "Der gew&uuml;nschte Grad f&uuml;r die Drehung des Bildes muss angegeben werden." into gLang["imglib_rotation_angle_required"]
 put "Die GIF-Datei konnte nicht erzeugt werden." into gLang["imglib_writing_failed_gif"]
 put "Der Pfad zur Bilddatei ist ung&uuml;ltig." into gLang["imglib_invalid_path"]
