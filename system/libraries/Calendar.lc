@@ -186,13 +186,13 @@ end rigSetInitialCalendarValue
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCalGenerate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-01-10
---| Last Mod: 18-01-10
+--| Last Mod: 21-03-14
 --| Requires: rigAdjustDate(), rigGetTotalDays(), rigParseCalTemplate, rigGetMonthName(), rigGetDayNames(), rigLangLangLine()
 --|
 --| Summary: Generate the calendar.
@@ -202,7 +202,7 @@ end rigSetInitialCalendarValue
 --| Parameters: integer <pYear>, integer <pMonth>, array <pData> the data to be shown in the calendar cells
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCalGenerate pYear pMonth pData
 	# SET AND VALIDATE THE SUPPLIED MONTH/YEAR
@@ -221,15 +221,15 @@ function rigCalGenerate pYear pMonth pData
 		put pMonth into tMonth
 	end if
 
-	if the number of bytes of tYear is 1 then
+	if the number of chars of tYear is 1 then
 		put "200" & tYear into tYear
 	end if
 
-	if the number of bytes of tYear is 2 then
+	if the number of chars of tYear is 2 then
 		put "20" & tYear into tYear
 	end if
 
-	if the number of bytes of tMonth is 1 then
+	if the number of chars of tMonth is 1 then
 		put "0" & tMonth into tMonth
 	end if
 
@@ -288,7 +288,7 @@ function rigCalGenerate pYear pMonth pData
 
 		# ADD A TRAILING SLASH TO THE  URL IF NEEDED
 		if tStandardURLs is not TRUE then
-			if byte -1 of sCalNextPrevURL <> "/" then
+			if char -1 of sCalNextPrevURL <> "/" then
 				put sCalNextPrevURL & "/" into sCalNextPrevURL
 			end if
 		end if
@@ -421,13 +421,13 @@ end rigCalGenerate
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetMonthName
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-01-10
---| Last Mod: 18-01-10
+--| Last Mod: 21-03-14
 --| Requires: rigLangLangLine()
 --|
 --| Summary: Generates a textual month name based on the numeric
@@ -438,7 +438,7 @@ end rigCalGenerate
 --| Parameters: integer <pMonth>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetMonthName pMonth
 	if sCalMonthType is "short" then
@@ -448,7 +448,7 @@ function rigGetMonthName pMonth
 
 		repeat for each line thisLine in tAbbrMonthsList
 			add 1 to tCounter
-			if the number of bytes of tCounter is 1 then
+			if the number of chars of tCounter is 1 then
 				put "0" & tCounter into tCounter
 			end if
 
@@ -462,7 +462,7 @@ function rigGetMonthName pMonth
 
 		repeat for each line thisLine in tLongMonthsList
 			add 1 to tCounter
-			if the number of bytes of tCounter is 1 then
+			if the number of chars of tCounter is 1 then
 				put "0" & tCounter into tCounter
 			end if
 
@@ -473,7 +473,7 @@ function rigGetMonthName pMonth
 	put tMonthNames[pMonth] into tMonth
 	put rigLangLangLine(tMonth) into tLangLineMonth
 	if tLangLineMonth is FALSE then
-		put byte 5 to (the number of bytes in tMonth) of tMonth into tMonth
+		put char 5 to (the number of chars in tMonth) of tMonth into tMonth
 		put toupper(char 1 of tMonth) into tFirstCharUpper
 		put tFirstCharUpper & (char 2 to -1 of tMonth) into tMonth
 
@@ -546,13 +546,13 @@ end rigGetDayNames
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAdjustDate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-01-10
---| Last Mod: 18-01-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: This function makes sure that we have a valid month/year.
@@ -564,7 +564,7 @@ end rigGetDayNames
 --| Parameters: integer <pMonth>, integer <pYear>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAdjustDate pMonth, pYear
 	put pMonth into tDate["month"]
@@ -580,7 +580,7 @@ function rigAdjustDate pMonth, pYear
 		subtract 1 from tDate["year"]
 	end repeat
 
-	if the number of bytes of tDate["month"] = 1 then
+	if the number of chars of tDate["month"] = 1 then
 		put "0" & tDate["month"] into tDate["month"]
 	end if
 
@@ -693,13 +693,13 @@ end rigDefaultCalTemplate
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigParseCalTemplate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-01-10
---| Last Mod: 18-01-10
+--| Last Mod: 21-03-14
 --| Requires: rigDefaultCalTemplate()
 --|
 --| Summary: Harvests the data within the template {pseudo-variables}
@@ -710,7 +710,7 @@ end rigDefaultCalTemplate
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigParseCalTemplate
 	put rigDefaultCalTemplate() into sCalTemp
@@ -731,7 +731,7 @@ command rigParseCalTemplate
 		else
 			if pseudoVar is among the items of tToday then
 				# REMOVE _today
-				put byte 1 to -7 of pseudoVar into tTempPseudoVar
+				put char 1 to -7 of pseudoVar into tTempPseudoVar
 				put sCalTemp[tTempPseudoVar] into sCalTemp[pseudoVar]
 			end if
 		end if

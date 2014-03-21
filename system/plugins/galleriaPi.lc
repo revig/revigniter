@@ -40,9 +40,9 @@ end if
 --| FUNCTION rigGalleriaData
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 11-12-2011
---| Last Mod: 05-07-2012
+--| Last Mod: 21-03-2014
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
@@ -162,7 +162,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	repeat for each key tKey in tFileNamesArray
 		put tFileNamesArray[tKey] & return after tFileNamesList
 	end repeat
-	delete byte -1 of tFileNamesList
+	delete char -1 of tFileNamesList
 	sort lines of tFileNamesList ascending text by item -1 of each
 	
 	# CHECK IF JASON FILE EXISTS ALREADY
@@ -176,7 +176,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			if "creationDate" is among the words of line 1 of tJASONfileContent then
 				put TRUE into tCbJASONfile
 				set the itemDel to "="
-				put byte 1 to -2 of (item -1 of line 1 of tJASONfileContent) into tCreationDate
+				put char 1 to -2 of (item -1 of line 1 of tJASONfileContent) into tCreationDate
 			else
 				put FALSE into tCbJASONfile
 				put the secs into tCreationDate
@@ -318,8 +318,8 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 				put rigGalleriaItemData(line tCurrentMetaLineNum of tMetaData) after tGalleriaData
 			end if
 
-			if byte -2 of tGalleriaData is comma then
-				delete byte -2 of tGalleriaData
+			if char -2 of tGalleriaData is comma then
+				delete char -2 of tGalleriaData
 			end if
 
 			put "}," & return & "{" & return after tGalleriaData
@@ -332,7 +332,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	put rigGalleriaVideoIframeData(tMetaData, tGalleriaData, tURLbase, tGalleryPath) into tGalleriaData
 	
 
-	delete byte -4 to -1 of tGalleriaData
+	delete char -4 to -1 of tGalleriaData
 	
 	# BUILD GALLERIA OPTIONS DATA
 	put rigGalleriaOptions(tOptions) into tGalleriaDataOptions
@@ -363,9 +363,9 @@ end rigGalleriaData
 --| FUNCTION rigDynamicGalleriaData
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 27-12-2011
---| Last Mod: 30-12-2012
+--| Last Mod: 21-03-2014
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo()
 --|
@@ -462,7 +462,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 		set the itemDel to "."
 		
 		# DON'T PROCESS LINE IF IT IS VIDEO OR IFRAME DATA
-		if (item 2 of dataLine <> "youtube") and (item 2 of dataLine <> "dailymotion") and (byte -5 to -1 of item 1 of dataLine <> "vimeo") then
+		if (item 2 of dataLine <> "youtube") and (item 2 of dataLine <> "dailymotion") and (char -5 to -1 of item 1 of dataLine <> "vimeo") then
 
 			set the itemDel to tab
 			put item 1 of dataLine into tCurrentImagePath
@@ -562,8 +562,8 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 				put rigGalleriaItemData(dataLine) after tGalleriaData
 
 
-				if byte -2 of tGalleriaData is comma then
-					delete byte -2 of tGalleriaData
+				if char -2 of tGalleriaData is comma then
+					delete char -2 of tGalleriaData
 				end if
 
 				put "}," & return & "{" & return after tGalleriaData
@@ -579,7 +579,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 	put rigGalleriaVideoIframeData(pMetaData, tGalleriaData, tURLbase, tGalleryPath, TRUE) into tGalleriaData
 		
 
-	delete byte -4 to -1 of tGalleriaData
+	delete char -4 to -1 of tGalleriaData
 
 	
 	# BUILD GALLERIA OPTIONS DATA
@@ -662,9 +662,9 @@ end rigGalleriaItemData
 --| FUNCTION rigGalleriaOptions
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 14-04-2012
---| Last Mod: --
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Build Galleria options data.
@@ -682,7 +682,7 @@ function rigGalleriaOptions pOptions
 		put return & tKey & ":" && tVal & "," after tGalleriaDataOptions
 	end repeat
 	
-	delete byte -1 of tGalleriaDataOptions
+	delete char -1 of tGalleriaDataOptions
 	
 	return tGalleriaDataOptions
 end rigGalleriaOptions
@@ -696,9 +696,9 @@ end rigGalleriaOptions
 --| FUNCTION rigGalleriaVideoIframeData
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 15-04-2012
---| Last Mod: --
+--| Last Mod: 21-03-14
 --| Requires: rigGalleriaItemData()
 --|
 --| Summary: Get video and iFrame data from tsv file.
@@ -723,9 +723,9 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 		set the itemDel to "."
 		
 		# CHECK IF THERE IS VIDEO OR IFRAME DATA
-		if (item 2 of thisLine is "youtube") or (item 2 of thisLine is "dailymotion") or (byte -5 to -1 of item 1 of thisLine is "vimeo") then
+		if (item 2 of thisLine is "youtube") or (item 2 of thisLine is "dailymotion") or (char -5 to -1 of item 1 of thisLine is "vimeo") then
 			put "video" into tItemType
-		else if byte 1 to 4 of thisLine is "http" then
+		else if char 1 to 4 of thisLine is "http" then
 			put "iframe" into tItemType
 		else
 			put "image" into tItemType
@@ -774,8 +774,8 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 				put "thumb: '" & tThumbURL & "'," & return after tTempGalleriaData
 			end if
 
-			if byte -2 of tTempGalleriaData is comma then
-				delete byte -2 of tTempGalleriaData
+			if char -2 of tTempGalleriaData is comma then
+				delete char -2 of tTempGalleriaData
 			end if
 
 			put "}," & return & "{" & return after tTempGalleriaData
@@ -783,7 +783,7 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 			# APPEND OR INSERT DATA
 			if tImageDataExists then
 				# REMOVE RETURN CHARACTER
-				delete byte -1 of tTempGalleriaData
+				delete char -1 of tTempGalleriaData
 				put return & tTempGalleriaData after line tTotalOffsetLines of pGalleriaData
 			else
 				put tTempGalleriaData after pGalleriaData

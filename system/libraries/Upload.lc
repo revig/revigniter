@@ -1025,9 +1025,9 @@ end rigGetExtension
 --| FUNCTION rigIsAllowedFileType
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 03-09-2011
---| Last Mod: 09-09-2011
+--| Last Mod: 21-03-2014
 --| Requires: rigSetUploadError, rigGetImageSize(), rigUploadMimesTypes()
 --|
 --| Summary: Verify that the filetype is allowed.
@@ -1060,8 +1060,8 @@ function rigIsAllowedFileType pIgnoreMime
 	combine tAllowedTypes using ","
 	
 	put toLower(sFileExt) into tExt
-	if byte 1 of tExt is "." then
-		put byte 2 to -1 of tExt into tExt
+	if char 1 of tExt is "." then
+		put char 2 to -1 of tExt into tExt
 	end if
 	
 	if tExt is not among the items of tAllowedTypes then
@@ -1277,9 +1277,9 @@ end rigCleanFilename
 --| FUNCTION rigLimitFilenameLength
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 03-09-2011
---| Last Mod: 03-09-2011
+--| Last Mod: 21-03-2014
 --| Requires: --
 --|
 --| Summary: Limit the File Name Length.
@@ -1301,10 +1301,10 @@ function rigLimitFilenameLength pFilename pLength
 		set the itemDel to "."
 		put "." & (item -1 of pFilename) into tExt
 		put the length of tExt into tExtLength
-		put byte 1 to ((the length of pFilename) - (tExtLength +1)) of pFilename into pFilename
+		put char 1 to ((the length of pFilename) - (tExtLength +1)) of pFilename into pFilename
 	end if
 	
-	put (byte 1 to (pLength - (the length of tExt)) of pFilename) & tExt into tTruncName
+	put (char 1 to (pLength - (the length of tExt)) of pFilename) & tExt into tTruncName
 	
 	return tTruncName
 end rigLimitFilenameLength

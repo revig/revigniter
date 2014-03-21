@@ -69,9 +69,9 @@ end rigMarkdownVersion
 --| FUNCTION rigMarkdownAvailable
 --|
 --| Author: Andre Alves Garzia
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-01-12
---| Last Mod: 30-01-12
+--| Last Mod: 21-03-14
 --| Requires: rigMarkdownVersion()
 --|
 --| Summary: Check if Markown.pl is available.
@@ -86,7 +86,7 @@ end rigMarkdownVersion
 function rigMarkdownAvailable
 	get  rigMarkdownVersion()
 	
-	if byte 1 of it is a number then
+	if char 1 of it is a number then
 		return TRUE
 	else
 		return FALSE

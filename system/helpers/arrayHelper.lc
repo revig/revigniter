@@ -243,9 +243,9 @@ end rigArraySplice
 --| FUNCTION rigImplode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 09-07-09
---| Last Mod: 08-11-12
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Joins array elements with a string.
@@ -274,8 +274,8 @@ function rigImplode pArray pGlue
 	else
 		# ARRAY IS NOT NUMBERED
 		put pArray into tBuf
-		combine tBuf using numToByte(1)
-		replace numToByte(1) with pGlue in tBuf
+		combine tBuf using numToChar(1)
+		replace numToChar(1) with pGlue in tBuf
 	end if
 
 	return tBuf
@@ -287,13 +287,13 @@ end rigImplode
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigElementsList
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 09-07-09
---| Last Mod: 22-12-11
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Returns a list of array elements, each on a seperate line.
@@ -303,13 +303,13 @@ end rigImplode
 --| Parameters: array <pArray>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigElementsList pArray
     repeat for each element thisElement in pArray
         put thisElement & return after tElementsList
     end repeat
-    delete byte -1 of tElementsList
+    delete char -1 of tElementsList
     return tElementsList
 end rigElementsList
 
@@ -319,23 +319,23 @@ end rigElementsList
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigArrayMerge
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 30-07-09
---| Last Mod: 04-01-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Merge two one dimnensional arrays.
 --| 
 --| Format:  rigArrayMerge(param1, param2, param3, param4)
 --|
---| Parameters: array <pArrayA>, array <pArrayB>, byte <pFirstDelim>, byte <pSecondDelim>
+--| Parameters: array <pArrayA>, array <pArrayB>, char <pFirstDelim>, char <pSecondDelim>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigArrayMerge pArrayA pArrayB pFirstDelim pSecondDelim
     	put pArrayA into tArrayToReturn

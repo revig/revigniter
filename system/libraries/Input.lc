@@ -1137,10 +1137,10 @@ end _rigValid_ipv4
 --| FUNCTION _rigValid_ipv6
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 02-07-12
---| Last Mod: --
---| Requires: --
+--| Last Mod: 21-03-14
+--| Requires: _rigValid_ipv4()
 --|
 --| Summary: Validate ipv6 address.
 --| 
@@ -1205,7 +1205,7 @@ function _rigValid_ipv6 pIP
    end if
    
    repeat with d = tCounter down to 1
-      if byte 1 of tChunks[d] is ":" then
+      if char 1 of tChunks[d] is ":" then
          if tGroups - 1 is 0 then
             # TOO MANY GROUPS
             return FALSE

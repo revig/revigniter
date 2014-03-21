@@ -274,13 +274,13 @@ end _rigCompileQueries
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompileGet
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-01-10
---| Last Mod: 19-07-11
+--| Last Mod: 21-03-14
 --| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(), rigLangLangLine()
 --|
 --| Summary: Compile $_GET Data.
@@ -290,7 +290,7 @@ end _rigCompileQueries
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompileGet
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -326,9 +326,9 @@ function _rigCompileGet
 					put "[" & tValKey & "]" into tNewKey
 					put tValVal into tNewVal[tNewKey]
 				end repeat
-				combine tNewVal using numToByte(1) and numToByte(2)
-				replace numToByte(1) with ", " in tNewVal
-				replace numToByte(2) with " => " in tNewVal
+				combine tNewVal using numToChar(1) and numToChar(2)
+				replace numToChar(1) with ", " in tNewVal
+				replace numToChar(2) with " => " in tNewVal
 				
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal
@@ -357,13 +357,13 @@ end _rigCompileGet
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompilePost
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-01-10
---| Last Mod: 17-07-11
+--| Last Mod: 21-03-14
 --| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(), rigLangLangLine()
 --|
 --| Summary: Compile $_POST Data.
@@ -373,7 +373,7 @@ end _rigCompileGet
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompilePost
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -409,9 +409,9 @@ function _rigCompilePost
 					put "[" & tValKey & "]" into tNewKey
 					put tValVal into tNewVal[tNewKey]
 				end repeat
-				combine tNewVal using numToByte(1) and numToByte(2)
-				replace numToByte(1) with ", " in tNewVal
-				replace numToByte(2) with " => " in tNewVal
+				combine tNewVal using numToChar(1) and numToChar(2)
+				replace numToChar(1) with ", " in tNewVal
+				replace numToChar(2) with " => " in tNewVal
 				
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal

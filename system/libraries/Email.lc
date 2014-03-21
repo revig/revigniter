@@ -1973,9 +1973,9 @@ end _rigBuildMessage
 --| FUNCTION _rigPrepQuotedPrintable
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 20-08-09
---| Last Mod: 19-02-13
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Prepares string for Quoted-Printable Content-Transfer-Encoding
@@ -2010,11 +2010,11 @@ function _rigPrepQuotedPrintable pStr pCharLim
 
 	# STANDARDIZE NEWLINES
 	-- if "\r" is in tStr then
-	if numToByte(13) is in tStr then
+	if numToChar(13) is in tStr then
 		-- replace "\r\n" with "\n" in tStr
 		replace CRLF with LF in tStr
 		-- replace "\r" with "\n" in tStr
-		replace numToByte(13) with LF in tStr
+		replace numToChar(13) with LF in tStr
 	end if
 
 	# WE ARE INTENTIONALLY WRAPPING SO MAIL SERVERS WILL ENCODE CHARACTERS
@@ -2024,8 +2024,8 @@ function _rigPrepQuotedPrintable pStr pCharLim
 
 	# BREAK INTO AN ARRAY OF LINES
 	-- replace "\n" with numToChar(1) in tStr
-	replace LF with numToByte(1) in tStr
-	split tStr using numToByte(1)
+	replace LF with numToChar(1) in tStr
+	split tStr using numToChar(1)
 
 	put "=" into tEscape
 	put empty into tOutput
@@ -2039,8 +2039,8 @@ function _rigPrepQuotedPrintable pStr pCharLim
 		# PROCESSED LINE(S) TO THE OUTPUT (SEE COMMENT ON sCrlf VARIABLE)
 		repeat with i = 1 to tLength
 			# GRAB THE NEXT CHARACTER
-			put byte i of thisLine into tChar
-			put byteToNum(tChar) into tAscii
+			put char i of thisLine into tChar
+			put charToNum(tChar) into tAscii
 
 			# CONVERT SPACES AND TABS BUT ONLY IF IT'S THE END OF THE LINE
 			if i = tLength then
@@ -2079,9 +2079,9 @@ function _rigPrepQuotedPrintable pStr pCharLim
 	# GET RID OF EXTRA CRLF TACKED ONTO THE END
 	put TRUE into tCRLFfound
 	repeat until tCRLFfound is FALSE
-		put byte -1 of tOutput into tLastChar
-		if (byteToNum(tLastChar) is 13) or (byteToNum(tLastChar) is 10) then
-			delete byte -1 of tOutput
+		put char -1 of tOutput into tLastChar
+		if (charToNum(tLastChar) is 13) or (charToNum(tLastChar) is 10) then
+			delete char -1 of tOutput
 		else
 			put FALSE into tCRLFfound
 		end if

@@ -40,9 +40,9 @@ end if
 --| FUNCTION rigQueryToJSON
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 18-07-10
---| Last Mod: 03-11-12
+--| Last Mod: 21-03-14
 --| Requires: rigIsNumberedArray()
 --|
 --| Summary: Convert database query result to JSON.
@@ -116,7 +116,7 @@ function rigQueryToJSON pResult pFieldnames
 				add 1 to tRowCounter
 
 			end repeat
-			delete byte -1 of tRowData
+			delete char -1 of tRowData
 
 			put tRowData & "}," after tResultData
 
@@ -125,7 +125,7 @@ function rigQueryToJSON pResult pFieldnames
 		end if
 	end repeat
 
-	delete byte -1 of tResultData
+	delete char -1 of tResultData
 	
 	put "]}" after tResultData
 

@@ -902,9 +902,9 @@ end rigAuthLogout
 --| FUNCTION rigAuthRegister
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 08-02-2013
---| Last Mod: 05-05-2013
+--| Last Mod: 21-03-2014
 --| Requires: _rigAuthCallHook(), _rigAuthRegisterUser(), rigAuthSetMessage, rigAuthSetError,
 --|           rigDbWhere, rigDbGet(), rigDbRow(), rigAnchor(), rigLoadView(), rigClearMail,
 --|           rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend()
@@ -981,7 +981,7 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 		# BUILD LINK FOR ACTIVATION
 		If pExtraData["activationLink"] is empty then
 			put "auth/activate/" into pExtraData["activationLink"]
-			else if byte -1 of pExtraData["activationLink"] <> "/" then
+			else if char -1 of pExtraData["activationLink"] <> "/" then
 				put pExtraData["activationLink"] & "/" into pExtraData["activationLink"]
 		end if
 		put rigAnchor(pExtraData["activationLink"] & tID & "/" & sActivationCode & "/", rigLangLangLine("activationLinkText")) into gData["activationCode"]
@@ -999,7 +999,7 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 			if sAuth["pathToEmailTemplates"] is empty then
 				put "emailTemplates/" & sAuth["emailActivate"] into tEmailTemplate
 			else
-				if byte -1 of sAuth["pathToEmailTemplates"] <> "/" then
+				if char -1 of sAuth["pathToEmailTemplates"] <> "/" then
 					put sAuth["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
 				else
 					put sAuth["pathToEmailTemplates"] into tAuthPathToEmailTemplates
@@ -1046,9 +1046,9 @@ end rigAuthRegister
 --| FUNCTION _rigAuthRegisterUser
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 08-02-2013
---| Last Mod: 08-02-2013
+--| Last Mod: 21-03-2014
 --| Requires: _rigAuthCallHook(), rigAuthEmailCheck(), rigAuthSetError, rigAuthUsernameCheck(),
 --|           rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(),
 --|           rigDbInsert(), rigAuthWhere, rigAuthUsers(), rigDbRow(), rigAuthAddToGroup, rigAuthGroups()
@@ -1115,8 +1115,8 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	
 		# MERGE FILTERED EXTRA DATA WITH tData
 		if tFilteredData is an array then
-			put numToByte(1) into tFirstDelim
-			put numToByte(2) into tSecondDelim
+			put numToChar(1) into tFirstDelim
+			put numToChar(2) into tSecondDelim
 			combine tData using tFirstDelim and tSecondDelim
 			combine tFilteredData using tFirstDelim and tSecondDelim
 			
@@ -1892,9 +1892,9 @@ end rigAuthAddToGroup
 --| COMMAND rigAuthWhere
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 08-02-2013
---| Last Mod: 08-02-2013
+--| Last Mod: 21-03-2014
 --| Requires: _rigAuthCallHook()
 --|
 --| Summary: Add key value pairs to sAuthWhere.
@@ -1916,8 +1916,8 @@ command rigAuthWhere pWhere pValue
 	end if
 
 	if sAuthWhere is an array then
-		put numToByte(1) into tFirstDelim
-		put numToByte(2) into tSecondDelim
+		put numToChar(1) into tFirstDelim
+		put numToChar(2) into tSecondDelim
 		combine sAuthWhere using tFirstDelim and tSecondDelim
 		combine tWhereArray using tFirstDelim and tSecondDelim
 
@@ -2036,9 +2036,9 @@ end rigAuthGroup
 --| FUNCTION rigAuthForgottenPassword
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-02-2013
---| Last Mod: 05-05-2013
+--| Last Mod: 21-03-2014
 --| Requires: _rigAuthForgottenPassword(), rigAuthWhere, rigAuthUsers(), rigDbRow(),
 --|           rigAuthSetMessage, rigAnchor(), rigLoadView(), rigClearMail,
 --|           rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend(),
@@ -2077,7 +2077,7 @@ function rigAuthForgottenPassword pIdentity pExtraData
 				# BUILD LINK FOR PASSWORD RESET
 				if pExtraData["passwordResetLink"] is empty then
 					put "auth/resetPassword/" into pExtraData["passwordResetLink"]
-					else if byte -1 of pExtraData["passwordResetLink"] <> "/" then
+					else if char -1 of pExtraData["passwordResetLink"] <> "/" then
 						put pExtraData["passwordResetLink"] & "/" into pExtraData["passwordResetLink"]
 				end if
 				put rigAnchor(pExtraData["passwordResetLink"] & tUser["forgottenPasswordCode"] & "/", rigLangLangLine("resetPasswordLinkText")) into gData["forgottenPasswordCode"]
@@ -2086,7 +2086,7 @@ function rigAuthForgottenPassword pIdentity pExtraData
 				if sAuth["pathToEmailTemplates"] is empty then
 					put "emailTemplates/" & sAuth["emailForgotPassword"] into tEmailTemplate
 				else
-					if byte -1 of sAuth["pathToEmailTemplates"] <> "/" then
+					if char -1 of sAuth["pathToEmailTemplates"] <> "/" then
 						put sAuth["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
 					else
 						put sAuth["pathToEmailTemplates"] into tAuthPathToEmailTemplates
@@ -2978,9 +2978,9 @@ end _rigAuthCallHook
 --| FUNCTION _rigAuthRunHook
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-02-13
---| Last Mod: 22-02-13
+--| Last Mod: 21-03-14
 --| Requires: rigTrim()
 --|
 --| Summary: Runs a particular authentication hook.
@@ -3064,12 +3064,12 @@ function _rigAuthRunHook pData
 	combine tParams using comma
 
 	# CHECK IF HANDLER IS A FUNCTION
-	if byte -2 to -1 of tHandler is "()" then
+	if char -2 to -1 of tHandler is "()" then
 		put TRUE into tIsFunction
 	end if
 
 	if tIsFunction is TRUE then
-		put "get" && (byte 1 to -2 of tHandler)  & tParams & ")" into tHandler
+		put "get" && (char 1 to -2 of tHandler)  & tParams & ")" into tHandler
 	else
 		put tHandler && tParams into tHandler
 	end if

@@ -274,9 +274,9 @@ end rigCaptchaMathProblem
 --| COMMAND rigSetCaptchaMatrix
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Last Mod: 21-10-14
 --| Requires: --
 --|
 --| Summary: Build captcha matrix (array) for a digit.
@@ -310,7 +310,7 @@ command rigSetCaptchaMatrix pDigit
 			put sBits[i] & comma after tBitsset
 		end if
 	end repeat
-	delete byte -1 of tBitsset
+	delete char -1 of tBitsset
 
 	# CHECK IF THIS IS THE FIRST DIGIT
 	if sNumberMatrix is not an array then
@@ -342,9 +342,9 @@ end rigSetCaptchaMatrix
 --| COMMAND rigSetCaptchaNumberMatrix
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Last Mod: 21-03-14
 --| Requires: rigSetCaptchaMatrix
 --|
 --| Summary: Build captcha matrix (array) for a number.
@@ -361,7 +361,7 @@ command rigSetCaptchaNumberMatrix pNum
 		put pNum into sNum
 	end if
 
-	repeat for each byte tDigit in sNum
+	repeat for each char tDigit in sNum
 		rigSetCaptchaMatrix tDigit
 	end repeat
 end rigSetCaptchaNumberMatrix

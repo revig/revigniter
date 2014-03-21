@@ -139,13 +139,13 @@ end _rigCallHook
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigRunHook
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-06-09
---| Last Mod: 03-01-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Runs a particular hook
@@ -155,7 +155,7 @@ end _rigCallHook
 --| Parameters: array <pData>the hook details
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigRunHook pData
 	if pData is not an array then
@@ -255,12 +255,12 @@ function _rigRunHook pData
 	combine tParams using comma
 
 	# CHECK IF HANDLER IS A FUNCTION
-	if byte -2 to -1 of tHandler is "()" then
+	if char -2 to -1 of tHandler is "()" then
 		put TRUE into tIsFunction
 	end if
 
 	if tIsFunction is TRUE then
-		put "get" && (byte 1 to -2 of tHandler)  & tParams & ")" into tHandler
+		put "get" && (char 1 to -2 of tHandler)  & tParams & ")" into tHandler
 	else
 		put tHandler && tParams into tHandler
 	end if

@@ -273,13 +273,13 @@ end rigParseRequestUri
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigUriAdjusted
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 19-06-09
---| Last Mod: 19-06-09
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Truncate URI in case revIgniter is placed in a subfolder of root.
@@ -289,7 +289,7 @@ end rigParseRequestUri
 --| Parameters: string <pURIstring>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigUriAdjusted pURIstring
 	put pURIstring into tURIstring
@@ -297,25 +297,25 @@ function rigUriAdjusted pURIstring
 	# GET BASE URL
     put rigFetchConfigItem("baseUrl") into tBaseURL
     
-    # GET BYTE POSITION OF TOP LEVEL DOMAIN
+    # GET CHAR POSITION OF TOP LEVEL DOMAIN
     put "(?i)(\.[a-z]+/)" into tRegEx
     get matchchunk(tBaseURL,tRegEx,tMatchStart,tMatchEnd)
 
     # IS THE SYSTEM IN A SUBFOLDER
     # GET URI RELATIV TO SYSTEM ROOT
-    if the number of bytes of tBaseURL > tMatchEnd then
-        put byte tMatchEnd to (the number of bytes of tBaseURL) of tBaseURL into tBytesToRemoveFromURI
+    if the number of chars of tBaseURL > tMatchEnd then
+        put char tMatchEnd to (the number of chars of tBaseURL) of tBaseURL into tBytesToRemoveFromURI
          
          
-        if the number of bytes of tURIstring >= the number of bytes of tBytesToRemoveFromURI then
-            if (byte 1 to (the number of bytes of tBytesToRemoveFromURI) of tURIstring) is tBytesToRemoveFromURI then
-                put byte (the number of bytes of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
+        if the number of chars of tURIstring >= the number of chars of tBytesToRemoveFromURI then
+            if (char 1 to (the number of chars of tBytesToRemoveFromURI) of tURIstring) is tBytesToRemoveFromURI then
+                put char (the number of chars of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
             end if
              
         else
              
-            if (byte 1 to ((the number of bytes of tBytesToRemoveFromURI) -1) of tURIstring) is (byte 1 to ((the number of bytes of tBytesToRemoveFromURI) -1) of tBytesToRemoveFromURI) then
-                put byte (the number of bytes of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
+            if (char 1 to ((the number of chars of tBytesToRemoveFromURI) -1) of tURIstring) is (char 1 to ((the number of chars of tBytesToRemoveFromURI) -1) of tBytesToRemoveFromURI) then
+                put char (the number of chars of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
             end if
         end if
          

@@ -76,9 +76,9 @@ end rigNow
 --| FUNCTION rigMdate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 04-05-2010
---| Last Mod: 04-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigFragmentDate, rigTranslatedDateItem()
 --|
 --| Summary: This functon converts date codes formatted using the MySQL style.
@@ -106,15 +106,15 @@ function rigMdate pDateString, pTime
 
 	# GET DATE ITEMS OF THE DATE STRING, PUT THESE INTO A COMMA SEPARATED LIST
 	put 1 into tCounter
-	repeat for each byte thisByte in pDateString
+	repeat for each char thisByte in pDateString
 		if thisByte is "%" then
-			put "%" & byte (tCounter + 1) of pDateString & comma after tDateStringItems
+			put "%" & char (tCounter + 1) of pDateString & comma after tDateStringItems
 		end if
 
 		add 1 to tCounter
 	end repeat
 
-	delete byte -1 of tDateStringItems
+	delete char -1 of tDateStringItems
 
 	# FORMAT DATE STRING ITERATING OVER THE DATE ITEMS LIST
 	repeat for each item thisItem in tDateStringItems
@@ -134,9 +134,9 @@ end rigMdate
 --| FUNCTION rigTranslatedDateItem
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 04-05-2010
---| Last Mod: 04-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigLangLoadLang(), rigLangLangLine(), rigDayOfYear()
 --|
 --| Summary: Translates MySQL date codes.
@@ -179,7 +179,7 @@ function rigTranslatedDateItem pItem, pTime
 		# TWO DIGITS DAY
 		case "%d"
 			put item 3 of sDateItems into tTranslatedItem
-			if the number of bytes of tTranslatedItem is 1 then
+			if the number of chars of tTranslatedItem is 1 then
 				put "0" before tTranslatedItem
 			end if
 		break
@@ -189,26 +189,26 @@ function rigTranslatedDateItem pItem, pTime
 		break
 		# TWO DIGITS HOUR 00 - 24
 		case "%H"
-			put byte 1 to 2 of item 5 of sInternetDate into tTranslatedItem
+			put char 1 to 2 of item 5 of sInternetDate into tTranslatedItem
 		break
 		# TWO DIGITS HOURS 00 - 12
 		case "%h"
 			put item 1 of sLongTime into tTranslatedItem
-			if the number of bytes of tTranslatedItem is 1 then
+			if the number of chars of tTranslatedItem is 1 then
 				put "0" before tTranslatedItem
 			end if
 		break
 		# TWO DIGITS HOURS 00 - 12
 		case "%I"
 			put item 1 of sLongTime into tTranslatedItem
-			if the number of bytes of tTranslatedItem is 1 then
+			if the number of chars of tTranslatedItem is 1 then
 				put "0" before tTranslatedItem
 			end if
 		break
 		# TWO DIGITS MINUTES
 		case "%i"
 			put item 2 of sLongTime into tTranslatedItem
-			if the number of bytes of tTranslatedItem is 1 then
+			if the number of chars of tTranslatedItem is 1 then
 				put "0" before tTranslatedItem
 			end if
 		break
@@ -237,7 +237,7 @@ function rigTranslatedDateItem pItem, pTime
 		# TWO DIGITS MONTH
 		case "%m"
 			put item 2 of sDateItems into tTranslatedItem
-			if the number of bytes of tTranslatedItem is 1 then
+			if the number of chars of tTranslatedItem is 1 then
 				put "0" before tTranslatedItem
 			end if
 		break
@@ -252,7 +252,7 @@ function rigTranslatedDateItem pItem, pTime
 		# TIME hh:mm:ss FOLLOWED BY AM OR PM
 		case "%r"
 			put item 1 of sLongTime into tHour
-			if the number of bytes of tHour is 1 then
+			if the number of chars of tHour is 1 then
 				put "0" before tHour
 			end if
 			put tHour & ":" & (item 2 of sLongTime) & ":" & (item 3 of sLongTime) && (item 4 of sLongTime) into tTranslatedItem
@@ -289,7 +289,7 @@ function rigTranslatedDateItem pItem, pTime
 		break
 		# TWO DIGITS YEAR
 		case "%y"
-			put byte 3 to 4 of (item 1 of sDateItems) into tTranslatedItem
+			put char 3 to 4 of (item 1 of sDateItems) into tTranslatedItem
 		break
 		# FOUR DIGITS YEAR
 		case "%Y"
@@ -300,8 +300,8 @@ function rigTranslatedDateItem pItem, pTime
 			put "%" into tTranslatedItem
 		break
 		default
-		if (byte 1 of pItem is "%") and (the number of bytes of pItem is 2) then
-			put byte 2 of pItem into tTranslatedItem
+		if (char 1 of pItem is "%") and (the number of chars of pItem is 2) then
+			put char 2 of pItem into tTranslatedItem
 		else
 			put "?" into tTranslatedItem
 		end if
@@ -667,9 +667,9 @@ end rigGmtToLocal
 --| FUNCTION rigMysqlTimeToSeconds
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-05-2010
---| Last Mod: 06-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: --
 --|
 --| Summary: Converts a MySQL Datetime / Timestamp to seconds.
@@ -691,24 +691,24 @@ function rigMysqlTimeToSeconds pMysqlTime
 		replace ":" with comma in tMysqlTime
 	else
 		# FORMAT: YYYYMMDDHHMMSS
-		put comma after byte 4 of tMysqlTime
-		put comma after byte 7 of tMysqlTime
-		put comma after byte 10 of tMysqlTime
-		put comma after byte 13 of tMysqlTime
-		put comma after byte 16 of tMysqlTime
+		put comma after char 4 of tMysqlTime
+		put comma after char 7 of tMysqlTime
+		put comma after char 10 of tMysqlTime
+		put comma after char 13 of tMysqlTime
+		put comma after char 16 of tMysqlTime
 	end if
 
 	# BUILD THE SHORT DATE
-	put byte 3 to 4 of item 1 of tMysqlTime into tYear
+	put char 3 to 4 of item 1 of tMysqlTime into tYear
 
-	if byte 1 of item 2 of tMysqlTime is 0 then
-		put byte 2 of item 2 of tMysqlTime into tMonth
+	if char 1 of item 2 of tMysqlTime is 0 then
+		put char 2 of item 2 of tMysqlTime into tMonth
 	else
 		put item 2 of  tMysqlTime into tMonth
 	end if
 
-	if byte 1 of item 3 of tMysqlTime is 0 then
-		put byte 2 of item 3 of tMysqlTime into tDay
+	if char 1 of item 3 of tMysqlTime is 0 then
+		put char 2 of item 3 of tMysqlTime into tDay
 	else
 		put item 3 of  tMysqlTime into tDay
 	end if
@@ -737,9 +737,9 @@ end rigMysqlTimeToSeconds
 --| FUNCTION rigTimestampToHuman
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-05-2010
---| Last Mod: 07-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: --
 --|
 --| Summary: Formats timestamp (seconds) to the following prototype: 2010-08-21 11:35 PM
@@ -779,7 +779,7 @@ function rigTimestampToHuman pTime pShowSecs pFormat
 	replace space with comma in tLongTime
 
 	repeat with i = 2 to 6
-		if the number of bytes of item i of tDateItems is 1 then
+		if the number of chars of item i of tDateItems is 1 then
 			put "0" & item i of tDateItems into item i of tDateItems
 		else
 			put item i of tDateItems into item i of tDateItems
@@ -817,9 +817,9 @@ end rigTimestampToHuman
 --| FUNCTION rigHumanToTimestamp
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-05-2010
---| Last Mod: 07-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigTrim(), rigPregReplace()
 --|
 --| Summary: Convert "human" date to timestamp (seconds).
@@ -851,8 +851,8 @@ function rigHumanToTimestamp pDatestring
 
 	repeat with i = 2 to 6
 		if item i of tDatestring <> "" then
-			if (the number of bytes of item i of tDatestring = 2) and (byte 1 of item i of tDatestring is "0") then
-				delete byte 1 of item i of tDatestring
+			if (the number of chars of item i of tDatestring = 2) and (char 1 of item i of tDatestring is "0") then
+				delete char 1 of item i of tDatestring
 			end if
 		end if
 	end repeat
@@ -898,9 +898,9 @@ end rigHumanToTimestamp
 --| FUNCTION rigTimespan
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-05-2010
---| Last Mod: 07-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigLangLoadLang(), rigLangLangLine()
 --|
 --| Summary: Returns a span of seconds in this format:
@@ -1034,7 +1034,7 @@ function rigTimespan pSeconds pTime
 		end if
 	end if
 
-	return byte 1 to -3 of tDatestring
+	return char 1 to -3 of tDatestring
 end rigTimespan
 
 
@@ -1047,9 +1047,9 @@ end rigTimespan
 --| FUNCTION rigDaysInMonth
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-05-2010
---| Last Mod: 07-05-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigIsLeapYear()
 --|
 --| Summary: Takes a month/year as input and returns the number of days
@@ -1069,7 +1069,7 @@ function rigDaysInMonth pMonth pYear
 	      put pMonth into tMonth
 	   end if
 
-	   if (the number of bytes of pYear <> 4) or (pYear is not a number) then
+	   if (the number of chars of pYear <> 4) or (pYear is not a number) then
 	      put the last item of the long date into tYear
 	   else
 	      put pYear into tYear

@@ -1142,9 +1142,9 @@ end _rigAutoloader
 --| COMMAND _rigLoadStack
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-07-2011
---| Last Mod: 30-07-2011
+--| Last Mod: 21-03-2014
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
 --|
 --| Summary: This handler loads the requested stack.
@@ -1202,7 +1202,7 @@ command _rigLoadStack pStack pParams pPosition
 		put rigFetchConfigItem("sublibraryPrefix") into tPrefix
 		put gAPPPATH & "stacks/" & tSubdir & tPrefix & tStackToLoad into tSubStack
 		
-		if (byte -9 to -1 of tSubStack <> ".livecode") and (byte -4 to -1 of tSubStack <> ".rev") then
+		if (char -9 to -1 of tSubStack <> ".livecode") and (char -4 to -1 of tSubStack <> ".rev") then
 			put tSubStack & ".livecode" into tSubStackTempA
 			put tSubStack & ".rev" into tSubStackTempB
 			
@@ -1222,9 +1222,9 @@ command _rigLoadStack pStack pParams pPosition
 		if tSubStackExists is TRUE then
 				
 			# CHECK AND CHANGE SUFFIX AS CORE STACKS SOLELY USE "livecode"
-			if (byte -4 to -1 of tNameUCfirst is ".rev") then
-				put (byte 1 to -5 of tNameUCfirst) & ".livecode" into tNameUCfirst
-			else if (byte -9 to -1 of tNameUCfirst <> ".livecode") then
+			if (char -4 to -1 of tNameUCfirst is ".rev") then
+				put (char 1 to -5 of tNameUCfirst) & ".livecode" into tNameUCfirst
+			else if (char -9 to -1 of tNameUCfirst <> ".livecode") then
 				put tNameUCfirst & ".livecode" into tNameUCfirst
 			end if
 			
@@ -1285,7 +1285,7 @@ command _rigLoadStack pStack pParams pPosition
 			put tPathVariants[tKey] into tPathVar
 			put tPathVar & "stacks/" & tSubdir & tStackToLoad into tFilePath
 			
-			if (byte -9 to -1 of tFilePath <> ".livecode") and (byte -4 to -1 of tFilePath <> ".rev") then
+			if (char -9 to -1 of tFilePath <> ".livecode") and (char -4 to -1 of tFilePath <> ".rev") then
 				put tFilePath & ".livecode" into tFilePathTempA
 				put tFilePath & ".rev" into tFilePathTempB
 				

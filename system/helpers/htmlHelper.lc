@@ -178,13 +178,13 @@ end rigHtmlOL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigHtmlList
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 08-10-09
---| Last Mod: 07-01-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Generates an HTML ordered or unordered list from
@@ -197,7 +197,7 @@ end rigHtmlOL
 --| Parameters: string <pType>, mixed <pList>, mixed <pAttributes>, integer <pDepth>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitClosingTag
 	# CHECK IF THE ARRAY IS NUMBERED (LOOK AT FIRST KEY ONLY)
@@ -310,7 +310,7 @@ function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitClosingTag
 				if tLastListItem is not a number then
 					put tLastListItem & return after tOut
 				else
-					put byte 1 to -5 of tOut into tOut
+					put char 1 to -5 of tOut into tOut
 				end if
 
 				put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut
@@ -358,7 +358,7 @@ function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitClosingTag
 				if tLastListItem is not a number then
 					put tLastListItem & return after tOut
 				else
-					put byte 1 to -5 of tOut into tOut
+					put char 1 to -5 of tOut into tOut
 				end if
 
 				put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut

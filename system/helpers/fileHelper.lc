@@ -818,13 +818,13 @@ end rigFilteredFilesWithPaths
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigListFiles
 --|
 --| Author: rabit
---| Version:  1.1
---| Created:  --
---| Last Mod: 05-01-10
+--| Version:  1.2
+--| Created:  09-07-09
+--| Last Mod: 21-03-14
 --| Requires:  rigFilteredFiles(), rigFilteredFolders(), rigURLDecode()
 --|
 --| Summary: Returns a list of files in a given folder, using recursion to include files in subfolders if desired.
@@ -834,7 +834,7 @@ end rigFilteredFilesWithPaths
 --| Parameters: string<pFolder>, bool<pRecurse>, bool<pDetailedFil>, bool<pModDate>, bool<pRelPath>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
 	if pDetailedFil is TRUE then
@@ -885,7 +885,7 @@ function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
 
 		put URLDecode(tFolder) into tFolder
 
-		if byte -1 of pFolder <> "/" then
+		if char -1 of pFolder <> "/" then
 			put rigListFiles((pFolder & slash & tFolder), pRecurse, pDetailedFil, pModDate, pRelPath) into tCurrentFiles
 		else
 			put rigListFiles((pFolder & tFolder), pRecurse, pDetailedFil, pModDate, pRelPath) into tCurrentFiles
@@ -925,13 +925,13 @@ end rigListFiles
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigListFilesWithPaths
 --|
 --| Author: rabit, Oliver Kenyon (revArticles)
---| Version:  1.2
+--| Version:  1.3
 --| Created:  09-07-09
---| Last Mod: 05-01-10
+--| Last Mod: 21-03-14
 --| Requires:  rigFilteredFilesWithPaths(), rigFilteredFolders()
 --|
 --| Summary: Returns a list of files with the full paths.
@@ -941,7 +941,7 @@ end rigListFiles
 --| Parameters: string <pFolder>, bool <pRecurse>, bool<pDetailedFil>, bool<pModDate>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigListFilesWithPaths pFolder pRecurse pDetailedFil pModDate
 	if pDetailedFil is TRUE then
@@ -1001,7 +1001,7 @@ function rigListFilesWithPaths pFolder pRecurse pDetailedFil pModDate
 
     	repeat for each line tFolder in tFolders
 		put URLDecode(tFolder) into tFolder
-		if byte -1 of pFolder <> "/" then
+		if char -1 of pFolder <> "/" then
 			put rigListFilesWithPaths((pFolder & slash & tFolder), pRecurse, pDetailedFil, pModDate) into tCurrentFiles
 		else
 			put rigListFilesWithPaths((pFolder & tFolder), pRecurse, pDetailedFil, pModDate) into tCurrentFiles
@@ -1058,13 +1058,13 @@ end rigFilteredFoldersWithPaths
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigListFoldersWithPaths
 --|
 --| Author: rabit
---| Version:  1.1
---| Created:  --
---| Last Mod: 01-01-10
+--| Version:  1.2
+--| Created:  09-07-09
+--| Last Mod: 21-03-14
 --| Requires: rigFilteredFolders(), rigFilteredFoldersWithPaths()
 --|
 --| Summary: Returns a list of folders with the full paths, using recursion to include subfolders if desired.
@@ -1074,7 +1074,7 @@ end rigFilteredFoldersWithPaths
 --| Parameters: string <pFolder>, bool <pRecurse>, bool <pDetailed>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigListFoldersWithPaths pFolder pRecurse pDetailed
     	if sDefFolder is empty then
@@ -1105,7 +1105,7 @@ function rigListFoldersWithPaths pFolder pRecurse pDetailed
     	repeat for each line tFolder in tFolders
 
 		put URLDecode(tFolder) into tFolder
-		if byte -1 of pFolder <> "/" then
+		if char -1 of pFolder <> "/" then
         		put rigListFoldersWithPaths((pFolder & slash & tFolder), pRecurse, pDetailed) into tCurrentFolders
 		else
 			put rigListFoldersWithPaths((pFolder & tFolder), pRecurse, pDetailed) into tCurrentFolders
