@@ -158,9 +158,9 @@ end rigListFields
 --| FUNCTION rigFieldData
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 11-04-14
---| Last Mod: --
+--| Last Mod: 14-04-14
 --| Requires: rigDbColumnTypes(), _rigPragmaTableInfo, rigDbPrimaryField(), rigDbDefaults()
 --|
 --| Summary: Generates an array of arrays containing field meta-data 
@@ -183,7 +183,7 @@ function rigFieldData pTable
 	put revDatabaseColumnNames(tResultID) into tFieldNames
 	
   # STORE TABLE META DATA IN A VARIABLE
-  _rigPragmaTableInfo
+  _rigPragmaTableInfo pTable
   if item 1 of sTableInfo is "revdberr" then
     rigLogMessage "error", "An error occured while trying to query table info data for table:" && pTable
     put FALSE into tTableInfoQuerySuccess
@@ -231,9 +231,9 @@ end rigFieldData
 --| COMMAND _rigPragmaTableInfo
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 12-04-2014
---| Last Mod: --
+--| Last Mod: 14-04-14
 --| Requires: --
 --|
 --| Summary: Store table meta data in a variable.
@@ -251,10 +251,11 @@ command _rigPragmaTableInfo pTable
   else
     put gDatabaseID into tConnectionID
   end if
-  
+
   # GET TABLE META DATA
-  put "table_info('" &  pTable & "')" into tPragma
-  put _rigGetPragma(tConnectionID, tPragma) into sTableInfo
+  put "table_info(" &  pTable & ")" into tPragma
+
+  put rigGetPragma(tConnectionID, tPragma) into sTableInfo
 end _rigPragmaTableInfo
 
 
