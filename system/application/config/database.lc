@@ -26,7 +26,7 @@ end if
 #	["password"] The password used to connect to the database
 #	["database"] The name of the database you want to connect to
 #	["dbdriver"] The database type. ie: mysql.  Currently supported:
-#				 			 mysql, postgre. To do: odbc, sqlite, oci8
+#				 			 mysql, postgre, sqlite. To do: odbc, oci8
 #	["dbprefix"] You can add an optional prefix, which will be added
 #				 			 to the table name when using the  Active Record Library
 #	["pconnect"] TRUE/FALSE - Whether to use a persistent connection
