@@ -231,10 +231,10 @@ end rigFieldData
 --| COMMAND _rigPragmaTableInfo
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 12-04-2014
---| Last Mod: 14-04-14
---| Requires: --
+--| Last Mod: 15-04-14
+--| Requires: rigGetPragma()
 --|
 --| Summary: Store table meta data in a variable.
 --| 
@@ -246,16 +246,10 @@ end rigFieldData
 ----------------------------------------------------------------------*/
 
 command _rigPragmaTableInfo pTable
-  if gDatabaseID is "" then
-    put rigFetchDBdriverSetting("connid") into tConnectionID
-  else
-    put gDatabaseID into tConnectionID
-  end if
-
   # GET TABLE META DATA
   put "table_info(" &  pTable & ")" into tPragma
 
-  put rigGetPragma(tConnectionID, tPragma) into sTableInfo
+  put rigGetPragma(tPragma) into sTableInfo
 end _rigPragmaTableInfo
 
 
@@ -525,56 +519,58 @@ end _rigDbLastInsertID
 
 
 /*----------------------------------------------------------------------
---| FUNCTION _rigGetPragma
+--| FUNCTION rigGetPragma
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-04-14
---| Last Mod: --
---| Requires: --
+--| Last Mod: 15-04-14
+--| Requires: rigCurrentConnectionID()
 --|
 --| Summary: Get pragma value.
 --| 
---| Format:  _rigGetPragma(param1, param2)
+--| Format:  rigGetPragma(param1)
 --|
---| Parameters: integer <pConnectionID>, string <pPragma>
+--| Parameters: string <pPragma>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function _rigGetPragma pConnectionID pPragma
-   put "PRAGMA" && pPragma & ";" into tSQL
-   return revDataFromQuery(comma, return, pConnectionID, tSQL)
-end _rigGetPragma
+function rigGetPragma pPragma
+  put rigCurrentConnectionID() into tConnectionID
+  
+  put "PRAGMA" && pPragma & ";" into tSQL
+  return revDataFromQuery(comma, return, tConnectionID, tSQL)
+end rigGetPragma
 
 
 
 
 
 /*----------------------------------------------------------------------
---| COMMAND setPragma
+--| COMMAND rigSetPragma
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-04-14
---| Last Mod: --
---| Requires: --
+--| Last Mod: 15-04-14
+--| Requires: rigCurrentConnectionID()
 --|
 --| Summary: Set a pragma value.
 --| 
---| Format:  setPragma param1, param2, param3
+--| Format:  rigSetPragma param1, param2, param3
 --|
---| Parameters: integer <pConnectionID>, string <pPragma>, mixed <pValue>
+--| Parameters: string <pPragma>, mixed <pValue>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-command setPragma pConnectionID pPragma pValue
-   local tSQL, tResult
+command rigSetPragma pPragma pValue
+   put rigCurrentConnectionID() into tConnectionID
    
    # RUN QUERY
    put "PRAGMA" && pPragma && "=" && pValue &";" into tSQL
-   revExecuteSQL pConnectionID, tSQL
+   revExecuteSQL tConnectionID, tSQL
    
    put the result into tResult
    
@@ -584,7 +580,37 @@ command setPragma pConnectionID pPragma pValue
    end if
    
    return 0
-end setPragma
+end rigSetPragma
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigCurrentConnectionID
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 15-04-2014
+--| Last Mod: --
+--| Requires: rigFetchDBdriverSetting()
+--|
+--| Summary: Get database connection id.
+--| 
+--| Format:  rigCurrentConnectionID()
+--|
+--| Parameters: --
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function rigCurrentConnectionID
+  if gDatabaseID is "" then
+    return rigFetchDBdriverSetting("connid")
+  end if
+  
+  return gDatabaseID
+end rigCurrentConnectionID
 
 
 
