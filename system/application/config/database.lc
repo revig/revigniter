@@ -38,7 +38,8 @@ end if
 #	["charset"] The character set used in communicating with the database
 #	["dbcollat"] The character collation used in communicating with the database
 # ["cacheautodel"] TRUE/FALSE - Whether to delete the query cache on write queries.
-# ["options"] A comma delimited list. Can be empty or can contain "binary", "extensions" or both.
+# ["options"] A comma delimited list of SQLite options. Can be empty or can
+#             contain "binary", "extensions" or both.
 # ["port"] The port number you want to connect to.
 # ["useSSL"] TRUE/FALSE Whether to use SSL for the connection or not.
 #
