@@ -234,7 +234,7 @@ end rigFieldData
 --| Version:  1.2
 --| Created: 12-04-2014
 --| Last Mod: 15-04-14
---| Requires: rigGetPragma()
+--| Requires: rigDbGetPragma()
 --|
 --| Summary: Store table meta data in a variable.
 --| 
@@ -249,7 +249,7 @@ command _rigPragmaTableInfo pTable
   # GET TABLE META DATA
   put "table_info(" &  pTable & ")" into tPragma
 
-  put rigGetPragma(tPragma) into sTableInfo
+  put rigDbGetPragma(tPragma) into sTableInfo
 end _rigPragmaTableInfo
 
 
