@@ -98,7 +98,7 @@ put "utf8_general_ci" into sDB["default"]["dbcollat"]
 put TRUE into sDB["default"]["cacheautodel"]
 
 # SQLite DRIVER ONLY
-put "" into sDB["sqliteTest"]["options"]
+put "" into sDB["default"]["options"]
 
 # MYSQL AND THE POSTGRES DRIVER
 # DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
