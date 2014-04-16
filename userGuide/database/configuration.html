@@ -152,7 +152,7 @@ for the primary connection, but it too can be renamed to something more relevant
 <h3>Explanation of Values:</h3>
 
 <ul>
-<li><strong>hostname</strong> - The hostname of your database server. Often this is "localhost".</li>
+<li><strong>hostname</strong> - The hostname of your database server. Often this is "localhost".<br />In case you use SQLite set this variable to the database file path like: <pre><code>put gAPPPATH & "db/myDatabase.sqlite" into sDB["default"]["hostname"]</code></pre> For revIgniter to be able to access your SQLite databse the <dfn>system/application/db</dfn> folder must be set such that it is writable and executable (777),<br />your database file must be writable (666).</li>
 <li><strong>username</strong> - The username used to connect to the database.</li>
 <li><strong>password</strong> - The password used to connect to the database.</li>
 <li><strong>database</strong> - The name of the database you want to connect to.</li>
@@ -165,12 +165,43 @@ for the primary connection, but it too can be renamed to something more relevant
 <li><strong>cachedir</strong> - The absolute server path to your database query cache directory.</li>
 <li><strong>charset</strong> - The character set used in communicating with the database.</li>
 <li><strong>dbcollat</strong> - The character collation used in communicating with the database.</li>
+<li><strong>cacheautodel</strong> - TRUE/FALSE - Whether to delete the query cache on write queries.</li>
+<li><strong>options</strong> - A comma delimited list of SQLite options. Can be empty or can contain "binary", "extensions" or both.</li>
 <li><strong>port</strong> - The database port number.  Currently only used with the Postgres driver. To use this value you have to add a line to the database config array.<pre><code>put 5432 into sDB["default"]["port"]</code></pre></li>
+<li><strong>useSSL</strong> - TRUE/FALSE Whether to use SSL for the connection or not.</li>
 </ul>
 
 <p class="important"><strong>Note:</strong> Depending on what database platform you are using (MySQL, Postgres, etc.)
-not all values will be needed.  For example, when using SQLite (not implemented yet) you will not need to supply a username or password, and
-the database name will be the path to your database file. The information above assumes you are using MySQL.</p>
+not all values will be needed.  For example, when using SQLite you will not need to supply a username or password, and
+the database hostname will be the path to your database file. The information above assumes you are using MySQL.</p>
+
+
+<h2>SQLite PRAGMA Statements</h2>
+
+<p>The following handlers let you query the SQLite driver for internal data and modify the operation of SQLite.</p>
+
+
+<h3>rigDbSetPragma <var>pPragma</var>, <var>pValue</var></h3>
+
+<p>Change SQLite PRAGMA settings.  Example:</p>
+
+<pre><code>put "foreign_keys" into tPragma
+rigDbSetPragma tPragma, 1
+</code></pre>
+
+<p>The result value of this handler is 0 or, in case the query was not successful, an error message where the first word is "Error:"</p>
+
+
+<h3>rigDbGetPragma(<var>pPragma</var>)</h3>
+
+<p>Query SQLite PRAGMA settings.  Usage example:</p>
+
+<pre><code>if rigDbGetPragma("foreign_keys") is 0 then
+	-- some code...
+end if
+</code></pre>
+
+<p>This handler returns a PRAGMA value or, in case the query was not successful, an error message where the first word is "Error:"</p>
 
 
 
