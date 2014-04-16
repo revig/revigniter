@@ -1049,6 +1049,84 @@ end rigSqlDateTimeToIntDate
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigDbGetPragma
+--|
+--| Author: rabit
+--| Version:  1.2
+--| Created: 09-04-14
+--| Last Mod: 16-04-14
+--| Requires: rigCurrentConnectionID()
+--|
+--| Summary: Get pragma value.
+--| 
+--| Format:  rigDbGetPragma(param1)
+--|
+--| Parameters: string <pPragma>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigDbGetPragma pPragma
+  put rigCurrentConnectionID() into tConnectionID
+  
+  put "PRAGMA" && pPragma & ";" into tSQL
+  get revDataFromQuery(comma, return, tConnectionID, tSQL)
+  
+  put it into tPragmaValue
+  
+  # RETURN ERROR
+  if item 1 of tPragmaValue is "revdberr" then
+     return "Error:" && item 2 of tPragmaValue
+  end if
+  
+  return tPragmaValue
+end rigDbGetPragma
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigDbSetPragma
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 09-04-14
+--| Last Mod: 15-04-14
+--| Requires: rigCurrentConnectionID()
+--|
+--| Summary: Set a pragma value.
+--| 
+--| Format:  rigDbSetPragma param1, param2
+--|
+--| Parameters: string <pPragma>, mixed <pValue>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+command rigDbSetPragma pPragma pValue
+   put rigCurrentConnectionID() into tConnectionID
+   
+   # RUN QUERY
+   put "PRAGMA" && pPragma && "=" && pValue &";" into tSQL
+   revExecuteSQL tConnectionID, tSQL
+   
+   put the result into tResult
+   
+   # RETURN ERROR
+   if tResult <> 0 then
+      return "Error:" && tResult
+   end if
+   
+   return 0
+end rigDbSetPragma
+
+
+
+
+
+
 
 
 
