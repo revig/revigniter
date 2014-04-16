@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.10</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.11</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -805,8 +805,8 @@ repeat for each key tRecord in tUserGroups
 
 	put tRowData & "," after tResultData
 end repeat
-if byte -1 of tResultData is "," then
-	delete byte -1 of tResultData
+if char -1 of tResultData is "," then
+	delete char -1 of tResultData
 end if
 </code></pre>
 
@@ -1749,7 +1749,7 @@ command index
       # GET NAME OF GROUP
       put tGroupsRow[2] & ", " after tResultData[tIncr][4]
      end repeat
-     delete byte -2 to -1 of tResultData[tIncr][4]
+     delete char -2 to -1 of tResultData[tIncr][4]
     end if
 
     # GET STATUS

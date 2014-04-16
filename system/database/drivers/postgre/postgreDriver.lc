@@ -794,9 +794,9 @@ end _rigInsert
 --| FUNCTION _rigUpdate
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 28-09-09
---| Last Mod: 09-05-11
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific update string from the supplied data.
@@ -833,15 +833,15 @@ function _rigUpdate pTable pValues pWhere pOrderBy pLimit
 	end if
 
 	if the number of lines in the keys of tOrderBy >= 1 then
-		combine tOrderBy using numToByte(2)
-		replace numToByte(2) with ", " in tOrderBy
+		combine tOrderBy using numToChar(2)
+		replace numToChar(2) with ", " in tOrderBy
 		put " ORDER BY" && tOrderBy into tOrderBy
 	else
 		put "" into tOrderBy
 	end if
 
-	combine tValstr using numToByte(2)
-	replace numToByte(2) with ", " in tValstr
+	combine tValstr using numToChar(2)
+	replace numToChar(2) with ", " in tValstr
 
 	put "UPDATE" && pTable && "SET" && tValstr into tSql
 

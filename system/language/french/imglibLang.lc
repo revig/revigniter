@@ -12,6 +12,7 @@ put "Une erreur est survenue lors du remplacement du fichier. Veuillez v&eacute;
 put "Votre serveur ne supporte apparemment pas la rotation d'images." into gLang["imglib_rotate_unsupported"]
 put "Le chemin d'acc&egrave;s &agrave; votre librairie de traitement d'image n'est pas correct. Veuillez indiquer le chemin correct dans vos pr&eacute;f&eacute;rences." into gLang["imglib_libpath_invalid"]
 put "Le traitement de l'image a &eacute;chou&eacute;. Veuillez v&eacute;rifier que votre serveur supporte le protocole choisi et que le chemin d'acc&egrave;s &agrave; votre librairie de traitement d'image est correct." into gLang["imglib_image_process_failed"]
+put "Le traitement de l'image a &eacute;chou&eacute;." into gLang["imglib_image_processing_failed"]
 put "Un angle de rotation doit &ecirc;tre indiqu&eacute; pour tourner l'image." into gLang["imglib_rotation_angle_required"]
 put "Image GIF." into gLang["imglib_writing_failed_gif"]
 put "Le chemin d'acc&egrave;s &agrave; l'image est incorrect." into gLang["imglib_invalid_path"]

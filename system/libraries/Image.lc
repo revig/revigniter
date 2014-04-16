@@ -123,13 +123,13 @@ end rigRunInitialImageConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigInitializeImage
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-01-10
---| Last Mod: 10-01-10
+--| Last Mod: 21-03-14
 --| Requires: rigSetInitialImageValue, rigSetImgError, rigGetImageProperties(), rigImageReproportion
 --|
 --| Summary: Initialize preferences.
@@ -139,7 +139,7 @@ end rigRunInitialImageConfig
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigInitializeImage pConfig
 	# CONVERT ARRAY ELEMENTS INTO LIBRARY VARIABLES
@@ -163,7 +163,7 @@ command rigInitializeImage pConfig
 	put toLower(sImgImageLibrary) into sImgImageLibrary
 
 	# SET THE FULL SERVER PATH
-	if byte 1 of sImgSourceImage is "/" then
+	if char 1 of sImgSourceImage is "/" then
 		put the defaultFolder & sImgSourceImage into tFullSourcePath
 	else
 		put the defaultFolder & "/" & sImgSourceImage into tFullSourcePath
@@ -192,7 +192,7 @@ command rigInitializeImage pConfig
 			put sImgSourceFolder into sImgDestFolder
 			put sImgNewImage into sImgDestImage
 		else
-			if byte 1 of sImgSourceImage is "/" then
+			if char 1 of sImgSourceImage is "/" then
 				put the defaultFolder & sImgNewImage into tFullDestPath
 			else
 				put the defaultFolder & "/" & sImgNewImage into tFullDestPath
@@ -274,20 +274,20 @@ command rigInitializeImage pConfig
 
 	# WATERMARK-RELATED STUFF...
 	if sImgWMfontcolor <> "" then
-		if the number of bytes of sImgWMfontcolor = 6 then
+		if the number of chars of sImgWMfontcolor = 6 then
 			put "#" & sImgWMfontcolor into sImgWMfontcolor
 		end if
 	end if
 
 	if sImgWMshadowcolor <> "" then
-		if the number of bytes of sImgWMshadowcolor = 6 then
+		if the number of chars of sImgWMshadowcolor = 6 then
 			put "#" & sImgWMshadowcolor into sImgWMshadowcolor
 		end if
 		put TRUE into sImgWMuseDropshadow
 	end if
 
 	if sImgWMoverlaypath <> "" then
-		if byte 1 of sImgWMoverlaypath is "/" then
+		if char 1 of sImgWMoverlaypath is "/" then
 			put the defaultFolder & sImgWMoverlaypath into sImgWMoverlaypath
 		else
 			put the defaultFolder & "/" & sImgWMoverlaypath into sImgWMoverlaypath

@@ -186,9 +186,9 @@ end rigSetInitialJqueryValue
 --| FUNCTION rigJQuerySource
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-02-10
---| Last Mod: 22-02-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
@@ -202,8 +202,8 @@ end rigSetInitialJqueryValue
 
 function rigJQuerySource
 	if sUseJQremotely is not TRUE then
-		if byte 1 of sJqueryPath is "/" then
-			put byte 2 to (the number of bytes of sJqueryPath) of sJqueryPath into tJqueryPath
+		if char 1 of sJqueryPath is "/" then
+			put char 2 to (the number of chars of sJqueryPath) of sJqueryPath into tJqueryPath
 		else
 			put sJqueryPath into tJqueryPath
 		end if
@@ -404,9 +404,9 @@ end rigJQreadyClose
 --| COMMAND rigJQajaxForm
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-02-10
---| Last Mod: 07-03-10
+--| Last Mod: 21-03-14
 --| Requires: rigTrim()
 --|
 --| Summary: Process form data using a xmlHTTPrequest.
@@ -452,7 +452,7 @@ command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI
 		add 1 to tCounter
 	end repeat
 
-	delete byte -1 of tPostKeyValuePairs
+	delete char -1 of tPostKeyValuePairs
 
 	# POST DATA
 	put "$.post('" & rigSiteURL(tPostURI) & "', {" & tPostKeyValuePairs & "}, function() {" & return after sJqueryScript
@@ -761,9 +761,9 @@ end rigJQset
 --| FUNCTION rigJQsetR
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-04-2010
---| Last Mod: 06-04-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigTrim()
 --|
 --| Summary: Return jQuery setter statements.
@@ -804,7 +804,7 @@ function rigJQsetR pSelector pMethod pPropertyvalues pFunction pToggleClassSwitc
 			
 			put space & tKey & ":" & tVal & "," after tPropertyvalues
 		end repeat
-		delete byte -1 of tPropertyvalues
+		delete char -1 of tPropertyvalues
 		put " }" after tPropertyvalues
 
 	else
@@ -847,9 +847,9 @@ end rigJQsetR
 --| FUNCTION rigJQgetR
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-04-2010
---| Last Mod: 06-04-2010
+--| Last Mod: 07-03-2014
 --| Requires: rigTrim()
 --|
 --| Summary: Return information from DOM elements.
@@ -866,7 +866,7 @@ function rigJQgetR pSelector pMethod pGetterProp
 	put rigTrim(pMethod, "'") into tMethod
 	
 	if pGetterProp <> "" then
-		if (byte 1 of pGetterProp <> "'") and (byte -1 of pGetterProp <> "'") then
+		if (char 1 of pGetterProp <> "'") and (char -1 of pGetterProp <> "'") then
 			put "'" & pGetterProp & "'" into tGetterProp
 		else
 			put pGetterProp into tGetterProp
@@ -1221,9 +1221,9 @@ end rigJQhover
 --| COMMAND rigJQtriggerTriggerhandler
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-04-2010
---| Last Mod: 07-04-2010
+--| Last Mod: 21-03-2014
 --| Requires: --
 --|
 --| Summary: Trigger: Write statement to execute all handlers and behaviors
@@ -1246,7 +1246,7 @@ command rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEventData
 			repeat with i = 2 to (the number of items of pEventData)
 				put (item i of pEventData) & "," after tEventData
 			end repeat
-			delete byte -1 of tEventData
+			delete char -1 of tEventData
 			put "]" after tEventData
 		else
 			put pEventData into tEventData
@@ -1472,9 +1472,9 @@ end rigJQanimate
 --| FUNCTION rigJQanimateR
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 08-04-2010
---| Last Mod: 08-04-2010
+--| Last Mod: 21-03-2014
 --| Requires: --
 --|
 --| Summary: Return statement to perform a custom animation of a set of CSS properties.
@@ -1499,7 +1499,7 @@ function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
 			put pDuration[tKey] into tVal
 			put tKey & ":" && tVal & "," after tDuration
 		end repeat
-		delete byte -1 of tDuration
+		delete char -1 of tDuration
 		put "}" after tDuration
 	else
 		if pDuration <> "" then
@@ -1522,7 +1522,7 @@ function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
 		put pSelector into sCurrentAnimTarget
 	else
 		# REMOVE LAST SEMICOLON
-		delete byte -2 to -1 of sJqueryScript
+		delete char -2 to -1 of sJqueryScript
 		put ".animate({" into tScript
 	end if
 
@@ -1532,7 +1532,7 @@ function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
 			put pProperties[tKey] into tVal
 			put return & tKey & ":" && tVal & "," after tScript
 		end repeat
-		delete byte -1 of tScript
+		delete char -1 of tScript
 	
 	else
 		put pProperties after tScript
@@ -1589,9 +1589,9 @@ end rigJQajax
 --| FUNCTION rigJQajaxR
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-04-2010
---| Last Mod: 10-04-2010
+--| Last Mod: 21-03-2014
 --| Requires: rigTrim()
 --|
 --| Summary: Return statement to perform an asynchronous HTTP (Ajax) request.
@@ -1642,14 +1642,14 @@ function rigJQajaxR pAjaxOptions pSetUpOnly
 			put return & tKey & ": {" & tVal & "}," after tScript
 		else
 			put return & tKey & ":" && tVal after tScript
-			if byte -1 of tScript is ";" then
-				delete byte -1 of tScript
+			if char -1 of tScript is ";" then
+				delete char -1 of tScript
 			end if
 			put "," after tScript
 		end if
 
 	end repeat
-	delete byte -1 of tScript
+	delete char -1 of tScript
 
 	put return & "});" & return after tScript
 

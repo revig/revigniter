@@ -19,34 +19,38 @@ end if
 # EXPLANATION OF VARIABLES
 # -------------------------------------------------------------------
 #
-#	["hostname"] The hostname of your database server.
+#	["hostname"] The hostname of your database server. In case you use SQLite
+#              set this variable to the database file path like:
+#              gAPPPATH & "db/myDatabase.sqlite"
 #	["username"] The username used to connect to the database
 #	["password"] The password used to connect to the database
 #	["database"] The name of the database you want to connect to
 #	["dbdriver"] The database type. ie: mysql.  Currently supported:
-#				 mysql, postgre. To do: odbc, sqlite, oci8
+#				 			 mysql, postgre, sqlite. To do: odbc, oci8
 #	["dbprefix"] You can add an optional prefix, which will be added
-#				 to the table name when using the  Active Record Library
+#				 			 to the table name when using the  Active Record Library
 #	["pconnect"] TRUE/FALSE - Whether to use a persistent connection
 #	["dbdebug"] TRUE/FALSE - Whether database errors should be displayed.
 # ["dbRedirectOnError"] The local URI (myController/myHandler) to be used
-#        for a redirect in case a database error occurs.
+#        								for a redirect in case a database error occurs.
 #	["cacheon"] TRUE/FALSE - Enables/disables query caching
 #	["cachedir"] The path to the folder where cache files should be stored
 #	["charset"] The character set used in communicating with the database
 #	["dbcollat"] The character collation used in communicating with the database
 # ["cacheautodel"] TRUE/FALSE - Whether to delete the query cache on write queries.
+# ["options"] A comma delimited list of SQLite options. Can be empty or can
+#             contain "binary", "extensions" or both.
 # ["port"] The port number you want to connect to.
 # ["useSSL"] TRUE/FALSE Whether to use SSL for the connection or not.
 #
 # The following three variables are part of engine changes 4.6.4.
 # Be aware that these are not tested.
 # ["dbSocket"] The socket or named pipe the driver should use to connect with.
-#					If empty, the default for the host will be used.
+#							 If empty, the default for the host will be used.
 # ["dbTimeout"] The database read/write timeout in whole seconds.
-# 				Defaults to 20 seconds if empty or not a positive integer.
+# 							Defaults to 20 seconds if empty or not a positive integer.
 # ["dbAutoReconnect"] If the driver should attempt to automatically reconnect
-# 				to the database on the next interaction after connection has been lost.
+# 										to the database on the next interaction after connection has been lost.
 #
 # The sActiveGroup variable lets you choose which connection group to
 # make active.  By default there is only one group (the "default" group).
@@ -92,6 +96,9 @@ put "utf8" into sDB["default"]["charset"]
 put "utf8_general_ci" into sDB["default"]["dbcollat"]
 
 put TRUE into sDB["default"]["cacheautodel"]
+
+# SQLite DRIVER ONLY
+put "" into sDB["sqliteTest"]["options"]
 
 # MYSQL AND THE POSTGRES DRIVER
 # DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432

@@ -168,9 +168,9 @@ end rigListFields
 --| FUNCTION rigFieldData
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 01-10-09
---| Last Mod: 03-08-12
+--| Last Mod: 21-03-14
 --| Requires: rigFetchDBdriverSetting(), revDatabaseColumnNames(), revDatabaseColumnTypes(),
 --| 					revDatabaseColumnLengths(), rigDbQuery()
 --|
@@ -206,7 +206,7 @@ function rigFieldData pTable
 		put comma into tDefaults
 	end if
 
-	delete byte -1 of  tDefaults
+	delete char -1 of  tDefaults
 
 	put 0 into tCounter
 	repeat for each item thisItem in tFieldNames

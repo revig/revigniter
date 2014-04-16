@@ -258,9 +258,9 @@ end rigOutputCache
 --| COMMAND _rigDisplay
 --|
 --| Author: rabit
---| Version:  2.4
+--| Version:  2.5
 --| Created: 19-06-09
---| Last Mod: 05-09-13
+--| Last Mod: 21-03-14
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
@@ -311,7 +311,7 @@ command _rigDisplay pOutput, pCached
 
 					# CHECK IF HEADER CONTAINS A CSRF COOKIE
 					if rigFetchConfigItem("csrf_protection") is TRUE then
-						if byte 1 to 10 of tHeader is "Set-Cookie" then
+						if char 1 to 10 of tHeader is "Set-Cookie" then
 							add 1 to tCookieHeadersSet
 							set the itemDel to "="
 							-- rigLogMessage "debug", "item 1 of tHeader:" && item 1 of tHeader

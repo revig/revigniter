@@ -1002,13 +1002,13 @@ end _rigSerializeSess
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigUnserializeSess
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 12-10-09
---| Last Mod: 12-10-09
+--| Last Mod: 21-03-14
 --| Requires: rigStripSlashes()
 --|
 --| Summary: This function unserializes a data string, then converts any
@@ -1019,13 +1019,13 @@ end _rigSerializeSess
 --| Parameters: array <pData>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigUnserializeSess pData
 	put rigStripSlashes(pData) into tData
 
 	# CHECK IF TDATA IS ARRAYENCODED
-	if bytetonum(byte 1 of tData) = 5 then
+	if charToNum(char 1 of tData) = 5 then
 		# OK, THEN DECODE TDATA
 		put arrayDecode(tData) into tData
 	end if

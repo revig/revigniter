@@ -316,9 +316,9 @@ end rigSetErrorDelimiters
 --| COMMAND rigSetPrefilledValues
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-05-11
---| Last Mod: 06-05-11
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Store prefilled values of form fields in a variable for later
@@ -335,7 +335,7 @@ end rigSetErrorDelimiters
 
 command rigSetPrefilledValues pFieldValuesPrefilled
 	put empty into sPrefilledValues
-	put numToByte(2) into tTempDel
+	put numToChar(2) into tTempDel
 
 	put the itemDel into tCurrentDel
 
@@ -1247,13 +1247,13 @@ end rigFormValidSelectCheckboxRadio
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRequiredR
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 02-08-09
---| Last Mod: 06-05-11
+--| Last Mod: 21-03-14
 --| Requires: rigTrim()
 --|
 --| Summary: Required.
@@ -1263,11 +1263,11 @@ end rigFormValidSelectCheckboxRadio
 --| Parameters: mixed <pFormValue>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRequiredR pFormValue
 	put the itemDel into tCurrentDel
-	set the itemDel to numToByte(2)
+	set the itemDel to numToChar(2)
 	
 	if pFormValue is not an array then
 		if rigTrim(pFormValue) is empty then

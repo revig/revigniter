@@ -125,13 +125,13 @@ end rigFormMailReplace
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigFmSubstitute
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 03-03-10
---| Last Mod: 03-03-10
+--| Last Mod: 21-03-14
 --| Requires: --
 --|
 --| Summary: Callback handler for rigPregReplace(). Uses sFMvars array for replacements.
@@ -141,12 +141,12 @@ end rigFormMailReplace
 --| Parameters: string <pTags>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigFmSubstitute pTags	
-	put 1 + (the number of bytes of sFMprefix) into tPrefixNum
-	put -1 - (the number of bytes of sFMsuffix) into tSuffixNum
-	put byte tPrefixNum to tSuffixNum of pTags into tKey
+	put 1 + (the number of chars of sFMprefix) into tPrefixNum
+	put -1 - (the number of chars of sFMsuffix) into tSuffixNum
+	put char tPrefixNum to tSuffixNum of pTags into tKey
 
 	return sFMvars[tKey]
 end rigFmSubstitute
