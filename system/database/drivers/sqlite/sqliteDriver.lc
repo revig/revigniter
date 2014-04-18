@@ -169,7 +169,7 @@ end _rigDbVersion
 --| Version:  1.0
 --| Created: 10-04-14
 --| Last Mod: --
---| Requires: _rigPrepQuery(), rigFetchDBdriverSetting(), revQueryDatabase(), rigLogMessage
+--| Requires: _rigPrepQuery(), rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Called by the base library (driver).
 --| 
@@ -598,7 +598,7 @@ end _rigDbFieldData
 --| Version:  1.0
 --| Created: 11-04-14
 --| Last Mod: --
---| Requires: --
+--| Requires: rigFetchDBdriverSetting()
 --|
 --| Summary: The error message string.
 --| 

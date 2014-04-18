@@ -174,7 +174,7 @@ end rigDbRow
 --| Version:  1.0
 --| Created: 02-10-09
 --| Last Mod: 02-10-09
---| Requires: --
+--| Requires: rigDbRowArray()
 --|
 --| Summary: Assigns an item into a particular column slot.
 --| 
