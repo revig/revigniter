@@ -65,9 +65,9 @@ put " Random()" into _sRandomKeyword -- database specific random keyword
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-04-14
---| Last Mod: --
+--| Last Mod: 18-04-14
 --| Requires: rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Non-persistent database connection.
@@ -82,17 +82,18 @@ put " Random()" into _sRandomKeyword -- database specific random keyword
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
-  put rigFetchDBdriverSetting("hostname") into tHostname
-  put rigFetchDBdriverSetting("options") into tOptions
+	put rigFetchDBdriverSetting("hostname") into tHostname
+	put rigFetchDBdriverSetting("database") into tDatabase
+	put rigFetchDBdriverSetting("options") into tOptions
   
-   put FALSE into tDatabaseID
+	put FALSE into tDatabaseID
    
- 	try
- 		get revOpenDatabase("sqlite", tHostname, tOptions)
- 		put it into tDatabaseID
- 	catch err
- 		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
- 	end try
+	try
+		get revOpenDatabase("sqlite", tHostname, tOptions)
+		put it into tDatabaseID
+	catch err
+		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
+	end try
   
 	if tDatabaseID is an integer then
 		return tDatabaseID
