@@ -40,14 +40,15 @@ global gActiveRecord
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDB
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 04-07-09
---| Last Mod: 29-09-09
---| Requires: rigFetchDBsettingsAll(), rigShowError, _rigParseURL,  _rigParseQueryStr, rigDbDriver, rigDbInitialize()
+--| Last Mod: 18-04-14
+--| Requires: rigFetchDBsettingsAll(), rigShowError, rigFetchActiveGroup(), _rigParseURL,
+--| 					_rigParseQueryStr, rigDbDriver, rigFetchDBdriverSetting(), rigDbInitialize()
 --|
 --| Summary: Initialize the database.
 --| 
@@ -57,7 +58,7 @@ global gActiveRecord
 --|                       active record (this allows us to override the config setting).
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDB pParams pActiveRecordOverride
 	--# LOAD THE DB CONFIG FILE IF A DSN STRING WASN'T PASSED
@@ -129,6 +130,10 @@ function rigDB pParams pActiveRecordOverride
 		end if
 
 	end if
+	
+  if tParams is empty then
+    put pParams into tParams
+  end if
 
 	# NO DB SPECIFIED YET?  BEAT THEM SENSELESS...
 	if tParams["dbdriver"] is "" then
@@ -141,6 +146,9 @@ function rigDB pParams pActiveRecordOverride
 	IF pActiveRecordOverride is TRUE then
 		put TRUE into gActiveRecord
 	end if
+  if gActiveRecord is empty then
+    put TRUE into gActiveRecord
+  end if
 
 	# LOAD DATABASE DRIVER LIBRARY
 	include gBASEPATH & "database/DBdriver" & gEXT
