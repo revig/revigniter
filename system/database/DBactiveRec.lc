@@ -73,14 +73,14 @@ put "" into sActiveRecord["cacheset"]
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbSelect
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 23-09-09
 --| Last Mod: 23-09-09
---| Requires: --
+--| Requires: rigSetDBdriverSetting, rigTrim()
 --|
 --| Summary: Generates the SELECT portion of the query.
 --| 
@@ -89,7 +89,7 @@ put "" into sActiveRecord["cacheset"]
 --| Parameters: string<pSelect>, bool<pEscape> should field or table names be protected with backticks
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbSelect pSelect pEscape
 	if pSelect is empty then

@@ -163,7 +163,8 @@ end rigListFields
 --| Version:  1.1
 --| Created: 11-04-14
 --| Last Mod: 14-04-14
---| Requires: rigDbColumnTypes(), _rigPragmaTableInfo, rigDbPrimaryField(), rigDbDefaults()
+--| Requires: rigFetchDBdriverSetting(), _rigPragmaTableInfo, rigDbColumnTypes(),
+--| 					rigDbPrimaryField(), rigDbDefaults()
 --|
 --| Summary: Generates an array of arrays containing field meta-data 
 --|					(name, type, maxlength, default, primary).
