@@ -86,7 +86,7 @@ put "" into sActiveRecord["cacheset"]
 --| 
 --| Format:  rigDbSelect param1, param2
 --|
---| Parameters: string<pSelect>, bool<pEscape> should field or table names be protected with backticks
+--| Parameters: mixed <pSelect>, bool <pEscape> should field or table names be protected with backticks
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
