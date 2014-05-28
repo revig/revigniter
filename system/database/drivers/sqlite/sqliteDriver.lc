@@ -65,9 +65,9 @@ put " Random()" into _sRandomKeyword -- database specific random keyword
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.2
 --| Created: 10-04-14
---| Last Mod: --
+--| Last Mod: 28-05-14
 --| Requires: rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Non-persistent database connection.
@@ -82,17 +82,20 @@ put " Random()" into _sRandomKeyword -- database specific random keyword
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
-  put rigFetchDBdriverSetting("hostname") into tHostname
-  put rigFetchDBdriverSetting("options") into tOptions
+	put rigFetchDBdriverSetting("hostname") into tHostname
+	put rigFetchDBdriverSetting("database") into tDatabase
+	put rigFetchDBdriverSetting("options") into tOptions
   
-   put FALSE into tDatabaseID
-   
- 	try
- 		get revOpenDatabase("sqlite", tHostname, tOptions)
- 		put it into tDatabaseID
- 	catch err
- 		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
- 	end try
+	put FALSE into tDatabaseID
+
+	try
+		# FOR BACKWARD COMPATIBILITY REASONS THE FOLLOWING LINE
+		# IS LEGACY SYNTAX OF ENGINE VERSIONS PRIOR TO 6.6.0
+		get revOpenDatabase("sqlite", tHostname, tOptions, , )
+		put it into tDatabaseID
+	catch err
+		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
+	end try
   
 	if tDatabaseID is an integer then
 		return tDatabaseID
@@ -168,7 +171,7 @@ end _rigDbVersion
 --| Version:  1.0
 --| Created: 10-04-14
 --| Last Mod: --
---| Requires: _rigPrepQuery(), rigFetchDBdriverSetting(), revQueryDatabase(), rigLogMessage
+--| Requires: _rigPrepQuery(), rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Called by the base library (driver).
 --| 
@@ -597,7 +600,7 @@ end _rigDbFieldData
 --| Version:  1.0
 --| Created: 11-04-14
 --| Last Mod: --
---| Requires: --
+--| Requires: rigFetchDBdriverSetting()
 --|
 --| Summary: The error message string.
 --| 

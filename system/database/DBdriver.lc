@@ -1302,9 +1302,9 @@ end rigDbTableExists
 --| FUNCTION rigDbListFields
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 01-10-09
---| Last Mod: 04-05-13
+--| Last Mod: 18-04-14
 --| Requires: rigFetchDBdriverSetting(), rigDbDisplayError, _rigProtectIdentifiers(),
 --|           _rigDbListColumns(), rigDbRedirectOnError
 --|
@@ -1363,15 +1363,26 @@ function rigDbListFields pTable
 			return FALSE
 		end if
 
-	
+    # CHECK IF DRIVER IS SQLITE
+    put rigFetchDBdriverSetting("dbdriver") into tDriver
+		
 		put rigDbQuery(tSql) into tQuery
 
 		put 0 into tCounter
 		repeat for each key tKey in tQuery["resultarray"]
 			add 1 to tCounter
 			put tQuery["resultarray"][tKey] into tRow
-			put line 1 in the keys of tRow into tK
-			put tRow[tK] into tVal
+			
+      # THE SQLITE QUERY RETURNS A COMPREHENSIVE TABLE INFO
+      # SO, WE JUST PICK THE VALUE OF THE COLUMN NAME FIELD
+      if tDriver is "sqlite" then
+        put tRow[tQuery["fieldnumbers"]["name"]] into tVal
+      else
+      
+        # THIS IS THE PostgreSQL / MySQL VERSION
+				put line 1 in the keys of tRow into tK
+				put tRow[tK] into tVal
+			end if
 			
 			put tVal into tRetval[tCounter]
 		end repeat

@@ -73,23 +73,23 @@ put "" into sActiveRecord["cacheset"]
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbSelect
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 23-09-09
 --| Last Mod: 23-09-09
---| Requires: --
+--| Requires: rigSetDBdriverSetting, rigTrim()
 --|
 --| Summary: Generates the SELECT portion of the query.
 --| 
 --| Format:  rigDbSelect param1, param2
 --|
---| Parameters: string<pSelect>, bool<pEscape> should field or table names be protected with backticks
+--| Parameters: mixed <pSelect>, bool <pEscape> should field or table names be protected with backticks
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbSelect pSelect pEscape
 	if pSelect is empty then
@@ -646,7 +646,7 @@ end rigDbOrWhere
 --| Version:  1.3
 --| Created: 25-09-09
 --| Last Mod: 04-11-12
---| Requires: _rigProtectIdentifiers()
+--| Requires: rigFetchDBdriverSetting(), _rigProtectIdentifiers(), _rigHasOperator(), rigDbEscape()
 --|
 --| Summary: Generates the WHERE portion of the query. Separates
 --|          multiple calls with OR. Set the third parameter to FALSE with
@@ -1724,7 +1724,7 @@ end rigDbOffset
 --| Version:  1.3
 --| Created: 21-07-09
 --| Last Mod: 02-08-12
---| Requires: _rigProtectIdentifiers(), rigDbEscape()
+--| Requires: rigFetchConfigItem(), _rigProtectIdentifiers(), rigDbEscape()
 --|
 --| Summary: Allows key/value pairs to be set for inserting or updating.
 --| 
@@ -1793,14 +1793,14 @@ end rigDbValuesSet
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbGet
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 07-07-09
 --| Last Mod: 07-07-09
---| Requires: _rigTrackAliases(), rigDbFrom, rigDbLimit, _rigCompileSelect(), _rigResetSelect
+--| Requires: _rigTrackAliases(), rigDbFrom, rigDbLimit, _rigCompileSelect(), rigDbQuery(), _rigResetSelect
 --|
 --| Summary: Compiles the select statement based on the other methods called
 --|                    and runs the query.
@@ -1810,7 +1810,7 @@ end rigDbValuesSet
 --| Parameters: string <pTable> the table, integer <pLimit> the limit clause,  integer <pOffset> the offset clause
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbGet pTable pLimit pOffset
 	if pTable <> "" then
@@ -2024,7 +2024,7 @@ end rigDbInsert
 --| Created: 27-09-09
 --| Last Mod: 04-05-13
 --| Requires: _rigMergeCache, rigDbValuesSet(), rigFetchDBdriverSetting(),
---|           rigDbDisplayError, rigDbWhere, _rigProtectIdentifiers(),
+--|           rigDbDisplayError, rigDbWhere, rigDbLimit, _rigProtectIdentifiers(),
 --|           _rigUpdate(), _rigResetWrite, rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Compiles an update string and runs the query.
@@ -2294,14 +2294,14 @@ end rigDbDelete
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbPrefix
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 28-09-09
 --| Last Mod: 28-09-09
---| Requires: --
+--| Requires: rigDbDisplayError
 --|
 --| Summary: Prepends a database prefix if one exists in configuration.
 --| 
@@ -2310,7 +2310,7 @@ end rigDbDelete
 --| Parameters: string<pTable> the table
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbPrefix pTable
 	if pTable is empty then

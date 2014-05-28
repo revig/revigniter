@@ -38,10 +38,10 @@ end if
 --| FUNCTION rigNumRows
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 20-07-09
---| Last Mod: 02-10-09
---| Requires: rigFetchDBdriverSetting()
+--| Last Mod: 18-04-14
+--| Requires: rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Number of rows in the result set.
 --| 
@@ -63,6 +63,7 @@ function rigNumRows pResultID
 
 	if item 1 of tNumRows is "revdberr" then
 		delete item 1 of tNumRows
+		rigLogMessage "error", tNumRows
 	end if
 
 	return tNumRows
@@ -74,14 +75,14 @@ end rigNumRows
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigNumFields
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 02-10-09
---| Last Mod: 02-10-09
---| Requires: rigFetchDBdriverSetting()
+--| Last Mod: 18-04-14
+--| Requires: rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Number of fields in the result set.
 --| 
@@ -90,7 +91,7 @@ end rigNumRows
 --| Parameters: integer <pResultID>
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigNumFields pResultID
 	if pResultID is empty then
@@ -102,7 +103,8 @@ function rigNumFields pResultID
 	put revDatabaseColumnCount(tResultID) into tNumFields
 
 	if item 1 of tNumFields is "revdberr" then
-		delete item 1 of tNumRows
+		delete item 1 of tNumFields
+		rigLogMessage "error", tNumFields
 	end if
 
 	return tNumFields
