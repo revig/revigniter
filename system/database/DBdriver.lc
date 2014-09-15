@@ -897,9 +897,9 @@ end rigDbTransStatus
 --| FUNCTION rigCompileBinds
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 18-07-09
---| Last Mod: 10-09-13
+--| Last Mod: 15-09-14
 --| Requires: rigDbEscape()
 --|
 --| Summary: Compile bindings. pBinds must be a comma separated list or a numbered array.
@@ -938,7 +938,7 @@ function rigCompileBinds pSQL pBinds
 	end if
 
 	# SUBSTITUTE BIND MARKERS
-	repeat with i = 1 to tNumOfBinds
+	repeat with i = tNumOfBinds down to 1
 		replace ":" & i with tBindsEscaped[i] in tSQl
 	end repeat
 
