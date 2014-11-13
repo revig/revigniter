@@ -1350,13 +1350,13 @@ end rigShellEscape
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigTempMailPath
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-09-09
---| Last Mod: 17-09-09
+--| Last Mod: 13-11-14
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Build path to temporary mail data to be piped into shell commands mail or sendmail.
@@ -1366,25 +1366,33 @@ end rigShellEscape
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigTempMailPath
-	put rigFetchConfigItem("temp_path") into tPath
+	set the convertOctals to true
+	put the umask into tPreviousUmask
+	set the umask to "0077"
+	
+	repeat forever
+		try
+			put the tempName into tTempFolderPath
+			create folder tTempFolderPath
+			exit repeat
+		catch e
+			if there is a folder tTempFolderPath then next repeat
+			if there is a file tTempFolderPath then next repeat
+		end try
+	end repeat
+	
+	put the milliseconds into tMessageId
+    
+	repeat 10
+		put any char of "abcdefghijklmnopqrstuvwxyz" after tMessageId
+	end repeat
 
-	if tPath is empty then
-		put gBASEPATH & "temp/" into tTempFolderPath
-	else
-		put tPath into tTempFolderPath
-	end if
-
-	 put the milliseconds into tMessageId
-    
-    	repeat 10
-        	put any char of "abcdefghijklmnopqrstuvwxyz" after tMessageId
-    	end repeat
-    
-    
-    	put (tTempFolderPath & "tempMail" & tMessageId & ".txt") into tTempMailPath
+	put (tTempFolderPath & "/tempMail" & tMessageId & ".txt") into tTempMailPath
+	
+	set the umask to tPreviousUmask	
 
 	return tTempMailPath
 end _rigTempMailPath
