@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.13</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.14</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1614">Version 1.6.14</a></li>
 <li><a href="#version1613">Version 1.6.13</a></li>
 <li><a href="#version1612">Version 1.6.12</a></li>
 <li><a href="#version1611">Version 1.6.11</a></li>
@@ -169,6 +170,22 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+
+<h2><a name="version1614">&nbsp;</a>Version 1.6.14</h2>
+<p>Release Date: December 04, 2014</p>
+
+
+<p>
+<ul>
+	<li>DBdriver: Fixed false substitution of bind markers > :9 in system/database/DBdriver.lc -> rigCompileBinds().</li>
+	<li>Replaced do commands in system/revigniter/RevIgniter.lc with new handler _rigDo. In LiveCode server version 7 the do command does not work outside of handler context anymore.</li>
+	<li>Removed setting in config.lc for temporary file path. The system's temp file path is used instead.</li>
+	<li>Revised prototypes of session database tables in the User Guide, added a SQLite version.</li>
+</ul>
+</p>
+
 
 
 

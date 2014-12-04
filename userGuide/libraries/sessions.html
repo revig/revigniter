@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.13</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.14</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -241,26 +241,38 @@ be updated, they can only be generated when a new session is created.</p>
 <p>In order to store sessions, you must first create a database table for this purpose.  Here is the basic
 prototype required by the Session Library.<br />MySQL version:</p>
 
-<pre><code>CREATE TABLE IF NOT EXISTS  `ri_sessions` (
-session_id varchar(40) DEFAULT '0' NOT NULL,
-ip_address varchar(45) DEFAULT '0' NOT NULL,
-user_agent varchar(120) NOT NULL,
-last_activity int(10) unsigned DEFAULT 0 NOT NULL,
-user_data text NOT NULL,
-PRIMARY KEY (session_id)
-)
+<pre><code>CREATE TABLE IF NOT EXISTS `ri_sessions` (
+  `session_id` varchar(40) NOT NULL DEFAULT '0',
+  `ip_address` varchar(16) NOT NULL DEFAULT '0',
+  `user_agent` varchar(50) NOT NULL,
+  `last_activity` int(10) unsigned NOT NULL DEFAULT '0',
+  `user_data` text,
+  PRIMARY KEY (`session_id`)
+);
 </code></pre>
 
 <p>PostgreSQL version:</p>
 
-<pre><code>CREATE TABLE "ri_sessions" (
-"session_id" varchar(40) DEFAULT 0 NOT NULL,
-"ip_address" varchar(45) DEFAULT 0 NOT NULL,
-"user_agent" varchar(120) NOT NULL,
-"last_activity" integer DEFAULT 0 NOT NULL,
-"user_data" text DEFAULT '' NOT NULL,
-PRIMARY KEY("session_id"),
-CONSTRAINT "check_last_activity" CHECK(last_activity >= 0)
+<pre><code>CREATE TABLE ri_sessions (
+	session_id varchar(40) DEFAULT 0 NOT NULL,
+	ip_address varchar(45) DEFAULT 0 NOT NULL,
+	user_agent varchar(120) NOT NULL,
+	last_activity integer DEFAULT 0 NOT NULL,
+	user_data text,
+	PRIMARY KEY(session_id),
+	CONSTRAINT check_last_activity CHECK(last_activity >= 0)
+);
+</code></pre>
+
+<p>SQLite version:</p>
+
+<pre><code>CREATE TABLE "main"."ri_sessions" (
+	"session_id" text(40) NOT NULL DEFAULT '0',
+	"ip_address" text(45) NOT NULL DEFAULT '0',
+	"user_agent" text(120) NOT NULL,
+	"last_activity" integer(10) NOT NULL DEFAULT 0,
+	"user_data" text,
+	PRIMARY KEY("session_id")
 );
 </code></pre>
 

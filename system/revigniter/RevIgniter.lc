@@ -40,7 +40,7 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "1.6.13"
+	constant RIVERSION = "1.6.14"
 	constant RISTATE = "final"
 	
 	
@@ -229,7 +229,7 @@ end if
 	
 	# RUN THE CONTROLLER HANDLER IF HANDLER NAME IS IN GLOBAL gControllerHandlers
 	if gController is among the items of gControllerHandlers then
-		do gController
+		_rigDo gController
 		# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
 		# THAT ITS NAME IS IN GLOBAL gControllerHandlers
 	else if gHandler is not among the items of gControllerHandlers then
@@ -296,7 +296,7 @@ end if
 					put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 
 					if gController is among the items of gControllerHandlers then
-						do gController
+						_rigDo gController
 					else if gHandler is not among the items of gControllerHandlers then
 						put gController & "/" & gHandler into gErrorData["page"]
 						rigShow404 gErrorData
@@ -322,9 +322,9 @@ end if
 				delete last char of sHandlerParams
 				put gHandler into sHandler
 				put sHandler && sHandlerParams into sHandler
-				do sHandler
+				_rigDo sHandler
 			else
-				do gHandler
+				_rigDo gHandler
 			end if -- if (the number of lines in the keys of gRSegments) > 2 then
 		end if -- if "_remap" is among the items of gControllerHandlers then
 	
@@ -334,6 +334,18 @@ end if
 	# MARK A BENCHMARK END POINT
 	rigTimeMark "controllerExecutionTime_" & gController &  "/" & gHandler & "_end"
 
+
+##
+#------------------------------------------------------
+#  Workaround for a modification (bug?) in LiveCode server version 7.
+#  The do command and a number of other syntax pieces don't work outside
+#  of handler context. This applies to variablenames and the call command too.
+#------------------------------------------------------
+##
+
+	command _rigDo pHandler
+	  do pHandler
+	end _rigDo
 
 
 ##

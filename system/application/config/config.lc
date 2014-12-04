@@ -329,21 +329,6 @@ end if
 
 ##
 #--------------------------------------------------------------------------
-# Temporary Data Directory Path
-#--------------------------------------------------------------------------
-#
-# This directory is used to store temporary data like eMail headers for shell calls.
-# Leave this BLANK unless you would like to set something other than the default
-# system/temp/ folder.  Use a full server path with trailing slash.
-#
-##
-
-	put "" into gConfig["temp_path"]
-
-
-
-##
-#--------------------------------------------------------------------------
 # Global XSS Filtering
 #--------------------------------------------------------------------------
 #
