@@ -77,9 +77,9 @@ put "" into sActiveRecord["cacheset"]
 --| COMMAND rigDbSelect
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-09-09
---| Last Mod: 23-09-09
+--| Last Mod: 17-12-14
 --| Requires: rigSetDBdriverSetting, rigTrim()
 --|
 --| Summary: Generates the SELECT portion of the query.
@@ -107,8 +107,10 @@ command rigDbSelect pSelect pEscape
 		split tSelect using comma
 	end if
 
+	put 0 into tIncr
 	repeat for each key tKey in tSelect
-		put tSelect[tKey] into tVal
+		add 1 to tIncr
+		put tSelect[tIncr] into tVal
 
 		put rigTrim(tVal) into tVal
 
@@ -2398,14 +2400,14 @@ end _rigTrackAliases
 --| FUNCTION _rigCompileSelect
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 08-07-09
---| Last Mod: 04-11-12
+--| Last Mod: 17-12-14
 --| Requires: _rigMergeCache, rigImplode(), _rigLimit(), _rigProtectIdentifiers(),
---|           _rigFromTables, rigLoadHelper
+--|           	_rigFromTables, rigLoadHelper
 --|
 --| Summary: Generates a query string based on which methods were used.
---|          Should not be called directly. The rigDbGet() function calls it.
+--|          	Should not be called directly. The rigDbGet() function calls it.
 --| 
 --| Format:  _rigCompileSelect(param1)
 --|
@@ -2440,9 +2442,11 @@ function _rigCompileSelect pSelectOverride
 			# CYCLE THROUGH THE "SELECT" PORTION OF THE QUERY AND PREP EACH COLUMN NAME.
 			# THE REASON WE PROTECT IDENTIFIERS HERE RATHER THEN IN THE SELECT() FUNCTION
 			# IS BECAUSE UNTIL THE USER CALLS THE FROM() FUNCTION WE DON'T KNOW IF THERE ARE ALIASES
+			put 0 into tIncr
 			repeat for each key tKey in sActiveRecord["select"]
-				put _rigProtectIdentifiers(sActiveRecord["select"][tKey]) into sActiveRecord["select"][tKey]
-				put sActiveRecord["select"][tKey] & ", " after tColNames
+				add 1 to tIncr
+				put _rigProtectIdentifiers(sActiveRecord["select"][tIncr]) into sActiveRecord["select"][tIncr]
+				put sActiveRecord["select"][tIncr] & ", " after tColNames
 			end repeat
 
 			put char 1 to -3 of tColNames into tColNames
