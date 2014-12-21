@@ -1,6 +1,6 @@
 <?rev
 
-	global gEXT, gFCPATH, gSELF, gBASEPATH, gAPPPATH, gErrorData, gDatabaseID, gDocTypes
+	global gEXT, gFCPATH, gSELF, gBASEPATH, gAPPPATH, gErrorData, gDatabaseID, gDocTypes, gAdvancedUnicode
 
 ##
 #---------------------------------------------------------------
@@ -83,7 +83,7 @@
 
 	put item -1 of sTempPath into sTempFileName
 	set the itemdel to "."
-	-- constant EXT = "." & item -1 of sTempFileName
+	--constant EXT = "." & item -1 of sTempFileName
 	--constant FCPATH = sTempPath
 	--constant SELF = sTempFileName
 	--constant BASEPATH = gSystemFolder & "/"
@@ -118,6 +118,15 @@
 			put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
 		end if
 	end if
+
+  # Global gAdvancedUnicode needed to address differences
+  # between engine version ≥ 7 and prior versions.
+  set the itemDel to "."
+  if (item 1 of the version < 7) then
+    put FALSE into gAdvancedUnicode
+  else
+    put TRUE into gAdvancedUnicode
+  end if
 
 	set the itemDel to comma
 
