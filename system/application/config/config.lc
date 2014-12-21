@@ -410,24 +410,6 @@ end if
 
 ##
 #--------------------------------------------------------------------------
-# Default Character Set
-#--------------------------------------------------------------------------
-#
-# This determines which character set is used by default in handlers that
-# require a character set to be provided.
-#
-# Samples: "UTF-8", "ISO-8859-1", "MacRoman", "Native", "UTF-16"
-#
-# Default is "UTF-8"
-#
-##
-
-	put "UTF-8" into gConfig["defaultCharset"]
-		
-		
-
-##
-#--------------------------------------------------------------------------
 # Browser Cache Busting
 #--------------------------------------------------------------------------
 #
