@@ -375,17 +375,17 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 09-07-09
---| Last Mod: 15-02-14
+--| Last Mod: 21-12-14
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
---|           rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError
+--|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
 --|
 --| Summary: Accepts an SQL string as input and returns the result upon
---|                   successful execution of a "read" type query.  Returns boolean TRUE
---|                   upon successful execution of a "write" type query. Returns boolean
---|                   FALSE upon failure, and if the dbdebug variable in the database config file is set to TRUE
---|                   will raise an error.
+--|            successful execution of a "read" type query.  Returns boolean TRUE
+--|            upon successful execution of a "write" type query. Returns boolean
+--|            FALSE upon failure, and if the dbdebug variable in the database config file is set to TRUE
+--|            will raise an error.
 --| 
 --| Format:  rigDbQuery(param1, param2)
 --|
@@ -574,7 +574,7 @@ function rigDbQuery pSQL pBinds
 	if sDBdriverSettings["dbdriver"] is "oci8" then
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
-		put numToChar(0) into sDBdriverSettings["cursid"] -- NULL
+		put rigNumToCodepoint(0) into sDBdriverSettings["cursid"] -- NULL
 		put sDBdriverSettings["limitused"] into tRES["limitused"]
 		put FALSE into sDBdriverSettings["stmtid"]
 	end if
@@ -1076,24 +1076,23 @@ end rigDbLastQuery
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbEscape
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 18-07-09
---| Last Mod: 25-09-09
---| Requires: --
+--| Last Mod: 21-12-14
+--| Requires: rigNumToCodepoint()
 --|
---| Summary: Escapes data based on type
---|                    Sets boolean and null types.
+--| Summary: Escapes data based on type. Sets boolean and null types.
 --| 
 --| Format:  rigDbEscape(param1)
 --|
 --| Parameters: string <pStr> 
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbEscape pStr
 	if pStr is a boolean then
@@ -1104,7 +1103,7 @@ function rigDbEscape pStr
 		end if
 	end if
 
-	if pStr is numtochar(0) then
+	if pStr is rigNumToCodepoint(0) then
 		-- return "'" & "NULL" & "'"
 		return "NULL"
 	end if
