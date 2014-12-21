@@ -2149,6 +2149,74 @@ end rigQ
 
 
 
+/*----------------------------------------------------------------------
+--| 20-12-2014 rabit
+--|
+--| Handlers to go conform with the Unicode support of LiveCode 7 and up
+----------------------------------------------------------------------*/
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigNumToCodepoint
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 20-12-2014
+--| Last Mod: 20-12-2014
+--| Requires: --
+--|
+--| Summary: Converts an integer to a character / Unicode codepoint.
+--| 
+--| Format:  rigNumToCodepoint(param1)
+--|
+--| Parameters: integer <pNum>
+--|
+--| Return: character / codepoint
+----------------------------------------------------------------------*/
+
+function rigNumToCodepoint pNum
+  if not gAdvancedUnicode then
+    return numtochar(pNum)
+  else
+    return numToCodepoint(pNum)
+  end if
+end rigNumToCodepoint
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTextDecode
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 20-12-2014
+--| Last Mod: 20-12-2014
+--| Requires: --
+--|
+--| Summary: Converts a string from Unicode / binary data to text.
+--| 
+--| Format:  rigTextDecode(param1, param2)
+--|
+--| Parameters: string / binary data <pData>, string <pCharset>
+--|
+--| Return: text
+----------------------------------------------------------------------*/
+
+function rigTextDecode pData pCharset
+  if not gAdvancedUnicode then
+    return unidecode(uniencode(pData, pCharset))
+  else
+    return textDecode(pData, pCharset)
+  end if
+end rigTextDecode
+
+
+
+
+
 --| END OF common.lc
 --| Location:  ./system/revigniter/Common.lc
 ----------------------------------------------------------------------
