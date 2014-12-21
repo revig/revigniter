@@ -243,10 +243,10 @@ end rigArraySplice
 --| FUNCTION rigImplode
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 09-07-09
---| Last Mod: 21-03-14
---| Requires: rigIsNumberedArray()
+--| Last Mod: 21-12-14
+--| Requires: rigIsNumberedArray(), rigNumToCodepoint()
 --|
 --| Summary: Joins array elements with a string.
 --| 
@@ -274,8 +274,8 @@ function rigImplode pArray pGlue
 	else
 		# ARRAY IS NOT NUMBERED
 		put pArray into tBuf
-		combine tBuf using numToChar(1)
-		replace numToChar(1) with pGlue in tBuf
+		combine tBuf using rigNumToCodepoint(1)
+		replace rigNumToCodepoint(1) with pGlue in tBuf
 	end if
 
 	return tBuf
