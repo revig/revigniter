@@ -87,16 +87,15 @@ function rigDbConnect
 	put rigFetchDBdriverSetting("options") into tOptions
   
 	put FALSE into tDatabaseID
-  
+
 	try
 		# FOR BACKWARD COMPATIBILITY REASONS THE FOLLOWING LINE
 		# IS LEGACY SYNTAX OF ENGINE VERSIONS PRIOR TO 6.6.0
 		get revOpenDatabase("sqlite", tHostname, tOptions, , )
 		put it into tDatabaseID
-
 	catch err
 		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
-  end try
+	end try
   
 	if tDatabaseID is an integer then
 		return tDatabaseID
@@ -193,16 +192,6 @@ function _rigDbExecute pSQL pConnectionID
 		# RETURN A RECORD SET
 
 		put revQueryDatabase ( pConnectionID, tSQL ) into tRecordSetID
-    
-    
-    
-    
-    -- put revDatabaseColumnNames(tRecordSetID) into tFieldNames -------------------------------- test
-    -- put the version && tFieldNames & "<br />" & pSQL -------------------------------- test
-    
-    
-    
-    
 
 		# QUERIES LIKE COMMIT RETURN EMPTY (NO RECORD SET ID)
 		# SO CHECK FOR EMPTY TOO
@@ -400,10 +389,10 @@ end rigTransRollback
 --| FUNCTION rigEscapeStr
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 10-04-14
---| Last Mod: 21-12-14
---| Requires: rigEscapeStr(), rigNumToCodepoint()
+--| Last Mod: --
+--| Requires: rigEscapeStr()
 --|
 --| Summary: Escapes string.
 --| 
@@ -432,23 +421,23 @@ function rigEscapeStr pStr pLike
 	end if
 	
 	# \ to \\
-	replace rigNumToCodepoint(92) with rigNumToCodepoint(92) & rigNumToCodepoint(92) in tStr
+	replace numtochar(92) with numtochar(92) & numtochar(92) in tStr
 	# ' to \'
-	replace rigNumToCodepoint(39) with rigNumToCodepoint(92) & rigNumToCodepoint(39) in tStr
+	replace numtochar(39) with numtochar(92) & numtochar(39) in tStr
 	# " to \"
-	replace rigNumToCodepoint(34) with rigNumToCodepoint(92) & rigNumToCodepoint(34) in tStr
+	replace numtochar(34) with numtochar(92) & numtochar(34) in tStr
 	# backspace to \b
-	replace rigNumToCodepoint(8) with rigNumToCodepoint(92) & rigNumToCodepoint(98) in tStr
+	replace numtochar(8) with numtochar(92) & numtochar(98) in tStr
 	# NULL to \0
-	replace rigNumToCodepoint(0) with rigNumToCodepoint(92) & rigNumToCodepoint(48) in tStr
+	replace numtochar(0) with numtochar(92) & numtochar(48) in tStr
 	# Control-Z to \Z
-	replace rigNumToCodepoint(26) with rigNumToCodepoint(92) & rigNumToCodepoint(90) in tStr
+	replace numtochar(26) with numtochar(92) & numtochar(90) in tStr
 	# newline to \n
-	replace rigNumToCodepoint(10) with rigNumToCodepoint(92) & rigNumToCodepoint(110) in tStr
+	replace numtochar(10) with numtochar(92) & numtochar(110) in tStr
 	# carriage return to \r
-	replace rigNumToCodepoint(13) with rigNumToCodepoint(92) & rigNumToCodepoint(114) in tStr
+	replace numtochar(13) with numtochar(92) & numtochar(114) in tStr
 	# tab to \t
-	replace rigNumToCodepoint(9) with rigNumToCodepoint(92) & rigNumToCodepoint(116) in tStr
+	replace numtochar(9) with numtochar(92) & numtochar(116) in tStr
 
 	# ESCAPE LIKE CONDITION WILDCARDS
 	if tLike is TRUE then
@@ -760,10 +749,10 @@ end _rigInsert
 --| FUNCTION _rigUpdate
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 11-04-14
---| Last Mod: 21-12-14
---| Requires: rigNumToCodepoint()
+--| Last Mod: --
+--| Requires: --
 --|
 --| Summary: Generates a platform-specific update string from the supplied data.
 --| 
@@ -799,15 +788,15 @@ function _rigUpdate pTable pValues pWhere pOrderBy pLimit
 	end if
 
 	if the number of lines in the keys of tOrderBy >= 1 then
-		combine tOrderBy using rigNumToCodepoint(2)
-		replace rigNumToCodepoint(2) with ", " in tOrderBy
+		combine tOrderBy using numToChar(2)
+		replace numToChar(2) with ", " in tOrderBy
 		put " ORDER BY" && tOrderBy into tOrderBy
 	else
 		put "" into tOrderBy
 	end if
 
-	combine tValstr using rigNumToCodepoint(2)
-	replace rigNumToCodepoint(2) with ", " in tValstr
+	combine tValstr using numToChar(2)
+	replace numToChar(2) with ", " in tValstr
 
 	put "UPDATE" && pTable && "SET" && tValstr into tSql
 
