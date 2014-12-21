@@ -2102,71 +2102,85 @@ end _rigConvertAttribute
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigHtmlEntityDecode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-06-09
---| Last Mod: 23-06-09
---| Requires: --
+--| Last Mod: 21-12-14
+--| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode()
 --|
 --| Summary: Converts character entities.
---|                    In contrast to CodeIgniter this function does not respect
---|                    the charset setting. (Needs more work!?)
 --| 
---| Format:  _rigHtmlEntityDecode(param1)
+--| Format:  _rigHtmlEntityDecode(param1, param2)
 --|
---| Parameters: string <pStr>
+--| Parameters: string <pStr>, string <pCharset>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigHtmlEntityDecode pStr
-    put pStr into tStringToDecode
-    set the itemdelimiter to ";"
+function _rigHtmlEntityDecode pStr pCharset
+  put pStr into tStringToDecode
+
+  # DEFAULT CHARSET CONFIG SETTING USED FOR SERVER VERSION 7 AND ABOVE
+  if pCharset is empty then
+    if not gAdvancedUnicode then
+      put "UTF8" into pCharset
+    else
+      put rigFetchConfigItem("defaultCharset") into pCharset
+    end if
+  end if
+  if pCharset is empty then
+    put "UTF-8" into pCharset
+  end if
+    
+  set the itemdelimiter to ";"
+    
+  if not gAdvancedUnicode then
     set the useunicode to true
+  end if
     
-    # NUMERIC CHARACTER ENTITIES (DECIMAL)
-    repeat for each item thisItem in tStringToDecode
-        get matchtext(thisItem,"&#([0-9]{2,4})",tFoundNum)
-        if it is TRUE then
-            replace ("&#" & tFoundNum) with  numtochar(tFoundNum) in thisItem
-            put thisItem after tDecodedStringDeci
+  # NUMERIC CHARACTER ENTITIES (DECIMAL)
+  repeat for each item thisItem in tStringToDecode
+    get matchtext(thisItem,"&#([0-9]{2,4})",tFoundNum)
+    if it is TRUE then
+      replace ("&#" & tFoundNum) with rigNumToCodepoint(tFoundNum) in thisItem
+      put thisItem after tDecodedStringDeci
             
-        else
-            put thisItem & ";" after tDecodedStringDeci
-        end if
-    end repeat
+    else
+      put thisItem & ";" after tDecodedStringDeci
+    end if
+  end repeat
     
-    # NUMERIC CHARACTER ENTITIES (HEXADECIMAL)
-    repeat for each item thisItem in tDecodedStringDeci
-        get matchtext(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
-        if it is TRUE then
-            put baseconvert(tFoundNum,16,10) into tNumConverted
-            replace ("&#x" & tFoundNum) with  numtochar(tNumConverted) in thisItem
-            put thisItem after tDecodedStringHexa
-        else
-            put thisItem & ";" after tDecodedStringHexa
-        end if
-    end repeat
+  # NUMERIC CHARACTER ENTITIES (HEXADECIMAL)
+  repeat for each item thisItem in tDecodedStringDeci
+    get matchtext(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
+    if it is TRUE then
+      put baseconvert(tFoundNum,16,10) into tNumConverted
+      replace ("&#x" & tFoundNum) with rigNumToCodepoint(tNumConverted) in thisItem
+      put thisItem after tDecodedStringHexa
+    else
+      put thisItem & ";" after tDecodedStringHexa
+    end if
+  end repeat
     
-	# LITERAL ENTITIES
-	put tDecodedStringHexa into tDecodedString
-	if sEntityChart is empty then
-		put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
-		put unidecode(uniencode(sEntityChart, "UTF8")) into sEntityChart
-	end if
-	set the itemdelimiter to tab
-	repeat for each line thisLine in sEntityChart
-		if item 3 of thisLine is not empty then
-			if item 3 of thisLine is in tDecodedString then
-				replace (item 3 of thisLine) with (char 1 of thisLine) in tDecodedString
-			end if
-		end if
-	end repeat
+  # LITERAL ENTITIES
+  put tDecodedStringHexa into tDecodedString
+  if sEntityChart is empty then
+    put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
+    put rigTextDecode(sEntityChart, pCharset) into sEntityChart
+  end if
+  set the itemdelimiter to tab
+  repeat for each line thisLine in sEntityChart
+    if item 3 of thisLine is not empty then
+      if item 3 of thisLine is in tDecodedString then
+        replace (item 3 of thisLine) with (char 1 of thisLine) in tDecodedString
+      end if
+    end if
+  end repeat
     
-    return tDecodedString
+  return tDecodedString
 end _rigHtmlEntityDecode
 
 
