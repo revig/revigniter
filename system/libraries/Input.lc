@@ -568,15 +568,15 @@ end rigGetCSRFtokenName
 --| FUNCTION _rigCleanInputData
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 17-06-09
---| Last Mod: 30-06-10
---| Requires: _rigCleanInputKeys(), _rigCleanInputData(), rigXssClean()
+--| Last Mod: 21-12-14
+--| Requires: _rigCleanInputKeys(), _rigCleanInputData(), rigXssClean(), rigNumToCodepoint()
 --|
 --| Summary: This is a helper function. It escapes data and
---|                    standardizes newline characters to LF
+--|            standardizes newline characters to LF.
 --| 
---| Format:  _rigCleanInputData(param1)
+--| Format:  _rigCleanInputData(param1[, param2])
 --|
 --| Parameters: mixed <pStr>, string <pType> (optional)
 --|
@@ -613,9 +613,9 @@ function _rigCleanInputData pStr pType
 
 	# STANDARDIZE NEWLINES
 	# CONVERT CR AND CRLF TO LF
-	if tStr contains numToChar(13) then
-		replace numToChar(13) & numToChar(10) with numToChar(10) in tStr
-		replace numToChar(13) with numToChar(10) in tStr
+	if tStr contains rigNumToCodepoint(13) then
+		replace rigNumToCodepoint(13) & rigNumToCodepoint(10) with rigNumToCodepoint(10) in tStr
+		replace rigNumToCodepoint(13) with rigNumToCodepoint(10) in tStr
 	end if
 
 	return tStr
@@ -1329,14 +1329,14 @@ end rigSanitizeFilename
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigXssClean
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 23-05-09
---| Last Mod: 29-06-10
---| Requires: rigRemoveInvisibleCharacters(), _rigConvertAttribute, _rigHtmlEntityDecode, _rigCompactExplodedWords
+--| Last Mod: 21-12-14
+--| Requires: rigNumToCodepoint(), rigRemoveInvisibleCharacters(), _rigConvertAttribute, _rigHtmlEntityDecode, _rigCompactExplodedWords
 --|                   _rigJsLinkRemoval, _rigJsImgRemoval, _rigSanitizeNaughtyHtml, rigXssHash(), rigLogMessage
 --|
 --| Summary: Sanitizes data so that Cross Site Scripting Hacks can be prevented.
@@ -1358,7 +1358,7 @@ end rigSanitizeFilename
 --| Parameters: string <pString>, boolean <pImage> (optional), string <pType> (optional, needed to distinguish cookies)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigXssClean pString pImage pType
 	put pString into tStringToClean
@@ -1372,7 +1372,7 @@ function rigXssClean pString pImage pType
 	# REPLACE QUOTES. THIS IS NEEDED AS THE FUNCTION MAY BE CALLED DIRECTLY,
 	# SO THE REPLACEMENT CAN NOT BE DONE BY THE FORMVALIDATION LIBRARY
 	if quote is in tStringToClean then
-		replace quote with numtochar(2) in tStringToClean
+		replace quote with rigNumToCodepoint(2) in tStringToClean
 	end if
 
 	## IS THE STRING AN ARRAY?
@@ -1400,7 +1400,7 @@ function rigXssClean pString pImage pType
 	put empty into tTempStr
 
 	# CHARACTER TO BE REPLACED BY HASH = ASCII 1
-	put numtochar(1) into tSplitChar
+	put rigNumToCodepoint(1) into tSplitChar
 
 	# REPLACE & WITH LINEFEED, BUT LEAVE CHARACTER ENTITIES
 	repeat for each item thisItem in tStringToClean
@@ -1513,7 +1513,7 @@ function rigXssClean pString pImage pType
 	##
 	-- get matchtext(tStringToClean,"(?i)[a-z]+=([\'\"]).*?([\'\"])")
 	-- get matchtext(tStringToClean,"(?i)[a-z]+=([\'\"])(.*?)([\'\"])", tFoundStr1, tFoundStr2, tFoundStr3)
-	get matchtext(tStringToClean,"(?i)[a-z]+=([\'" & numtochar(2) & "])(.*?)([\'" & numtochar(2) & "])", tFoundStr1, tFoundStr2, tFoundStr3)
+	get matchtext(tStringToClean,"(?i)[a-z]+=([\'" & rigNumToCodepoint(2) & "])(.*?)([\'" & rigNumToCodepoint(2) & "])", tFoundStr1, tFoundStr2, tFoundStr3)
 	if it is TRUE then
 		-- put _rigConvertAttribute(tStringToClean) into tStringToClean
 		 put _rigConvertAttribute(tFoundStr2) into tStringPartConverted
@@ -1803,8 +1803,8 @@ function rigXssClean pString pImage pType
 	end if
 
 	# SET QUOTES
-	if numtochar(2) is in tStringToClean then
-		replace numtochar(2) with quote in tStringToClean
+	if rigNumToCodepoint(2) is in tStringToClean then
+		replace rigNumToCodepoint(2) with quote in tStringToClean
 	end if
 	
 	return tStringToClean
@@ -1891,14 +1891,14 @@ end rigXssHash
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigRemoveInvisibleCharacters
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-05-09
---| Last Mod: 30-05-09
---| Requires: --
+--| Last Mod: 21-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: This prevents sandwiching null characters between ascii characters, like Java\0script.
 --| 
@@ -1907,7 +1907,7 @@ end rigXssHash
 --| Parameters: string <pString>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigRemoveInvisibleCharacters pString
     put pString into tString
@@ -1916,29 +1916,29 @@ function rigRemoveInvisibleCharacters pString
     
     ## URLENCODED CHARS 1 - 8
     repeat with i = 1 to 8
-        put replacetext(tString, urlencode(numtochar(i)), "") into tString
+        put replacetext(tString, urlencode(rigNumToCodepoint(i)), "") into tString
     end repeat
     
     ## URLENCODED CHARS 11 - 12
     repeat with i = 11 to 12
-        put replacetext(tString, urlencode(numtochar(i)), "") into tString
+        put replacetext(tString, urlencode(rigNumToCodepoint(i)), "") into tString
     end repeat
     
     ## URLENCODED CHARS 14 - 31
     repeat with i = 14 to 31
-        put replacetext(tString, urlencode(numtochar(i)), "") into tString
+        put replacetext(tString, urlencode(rigNumToCodepoint(i)), "") into tString
     end repeat
     
     ## CHARS 1 - 8
-    put "[" & numtochar(1) & "-" & numtochar(8) & "]" into tSearchChunc
+    put "[" & rigNumToCodepoint(1) & "-" & rigNumToCodepoint(8) & "]" into tSearchChunc
     put replacetext(tString, tSearchChunc, "") into tString
     
      ## CHARS 11 - 12
-    put "[" & numtochar(11) & numtochar(12) & "]" into tSearchChunc
+    put "[" & rigNumToCodepoint(11) & rigNumToCodepoint(12) & "]" into tSearchChunc
     put replacetext(tString, tSearchChunc, "") into tString
     
      ## CHARS 14 - 31
-    put "[" & numtochar(14) & "-" & numtochar(31) & "]" into tSearchChunc
+    put "[" & rigNumToCodepoint(14) & "-" & rigNumToCodepoint(31) & "]" into tSearchChunc
     put replacetext(tString, tSearchChunc, "") into tString
     return tString
 end rigRemoveInvisibleCharacters
@@ -2102,71 +2102,85 @@ end _rigConvertAttribute
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigHtmlEntityDecode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-06-09
---| Last Mod: 23-06-09
---| Requires: --
+--| Last Mod: 21-12-14
+--| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode()
 --|
 --| Summary: Converts character entities.
---|                    In contrast to CodeIgniter this function does not respect
---|                    the charset setting. (Needs more work!?)
 --| 
---| Format:  _rigHtmlEntityDecode(param1)
+--| Format:  _rigHtmlEntityDecode(param1, param2)
 --|
---| Parameters: string <pStr>
+--| Parameters: string <pStr>, string <pCharset>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigHtmlEntityDecode pStr
-    put pStr into tStringToDecode
-    set the itemdelimiter to ";"
+function _rigHtmlEntityDecode pStr pCharset
+  put pStr into tStringToDecode
+
+  # DEFAULT CHARSET CONFIG SETTING USED FOR SERVER VERSION 7 AND ABOVE
+  if pCharset is empty then
+    if not gAdvancedUnicode then
+      put "UTF8" into pCharset
+    else
+      put rigFetchConfigItem("defaultCharset") into pCharset
+    end if
+  end if
+  if pCharset is empty then
+    put "UTF-8" into pCharset
+  end if
+    
+  set the itemdelimiter to ";"
+    
+  if not gAdvancedUnicode then
     set the useunicode to true
+  end if
     
-    # NUMERIC CHARACTER ENTITIES (DECIMAL)
-    repeat for each item thisItem in tStringToDecode
-        get matchtext(thisItem,"&#([0-9]{2,4})",tFoundNum)
-        if it is TRUE then
-            replace ("&#" & tFoundNum) with  numtochar(tFoundNum) in thisItem
-            put thisItem after tDecodedStringDeci
+  # NUMERIC CHARACTER ENTITIES (DECIMAL)
+  repeat for each item thisItem in tStringToDecode
+    get matchtext(thisItem,"&#([0-9]{2,4})",tFoundNum)
+    if it is TRUE then
+      replace ("&#" & tFoundNum) with rigNumToCodepoint(tFoundNum) in thisItem
+      put thisItem after tDecodedStringDeci
             
-        else
-            put thisItem & ";" after tDecodedStringDeci
-        end if
-    end repeat
+    else
+      put thisItem & ";" after tDecodedStringDeci
+    end if
+  end repeat
     
-    # NUMERIC CHARACTER ENTITIES (HEXADECIMAL)
-    repeat for each item thisItem in tDecodedStringDeci
-        get matchtext(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
-        if it is TRUE then
-            put baseconvert(tFoundNum,16,10) into tNumConverted
-            replace ("&#x" & tFoundNum) with  numtochar(tNumConverted) in thisItem
-            put thisItem after tDecodedStringHexa
-        else
-            put thisItem & ";" after tDecodedStringHexa
-        end if
-    end repeat
+  # NUMERIC CHARACTER ENTITIES (HEXADECIMAL)
+  repeat for each item thisItem in tDecodedStringDeci
+    get matchtext(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
+    if it is TRUE then
+      put baseconvert(tFoundNum,16,10) into tNumConverted
+      replace ("&#x" & tFoundNum) with rigNumToCodepoint(tNumConverted) in thisItem
+      put thisItem after tDecodedStringHexa
+    else
+      put thisItem & ";" after tDecodedStringHexa
+    end if
+  end repeat
     
-	# LITERAL ENTITIES
-	put tDecodedStringHexa into tDecodedString
-	if sEntityChart is empty then
-		put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
-		put unidecode(uniencode(sEntityChart, "UTF8")) into sEntityChart
-	end if
-	set the itemdelimiter to tab
-	repeat for each line thisLine in sEntityChart
-		if item 3 of thisLine is not empty then
-			if item 3 of thisLine is in tDecodedString then
-				replace (item 3 of thisLine) with (char 1 of thisLine) in tDecodedString
-			end if
-		end if
-	end repeat
+  # LITERAL ENTITIES
+  put tDecodedStringHexa into tDecodedString
+  if sEntityChart is empty then
+    put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
+    put rigTextDecode(sEntityChart, pCharset) into sEntityChart
+  end if
+  set the itemdelimiter to tab
+  repeat for each line thisLine in sEntityChart
+    if item 3 of thisLine is not empty then
+      if item 3 of thisLine is in tDecodedString then
+        replace (item 3 of thisLine) with (char 1 of thisLine) in tDecodedString
+      end if
+    end if
+  end repeat
     
-    return tDecodedString
+  return tDecodedString
 end _rigHtmlEntityDecode
 
 
@@ -2215,14 +2229,14 @@ end _rigFilterAttributes
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigStripImgTags
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 02-08-09
---| Last Mod: 11-08-09
---| Requires: --
+--| Last Mod: 21-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Strip image tags.
 --| 
@@ -2231,7 +2245,7 @@ end _rigFilterAttributes
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigStripImgTags pStr
 	--put "<img\s+.*?src\s*=\s*[\" & quote & "'](.+?)[\" & quote & "'].*?\>" into tRegEx
@@ -2241,10 +2255,10 @@ function rigStripImgTags pStr
 	# REPLACE QUOTES. THIS IS NEEDED AS THE FUNCTION MAY BE CALLED DIRECTLY,
 	# SO THE REPLACEMENT CAN NOT BE DONE BY THE FORMVALIDATION LIBRARY
 	if quote is in tStr then
-		replace quote with numtochar(2) in tStr
+		replace quote with rigNumToCodepoint(2) in tStr
 	end if
 
-	put "<img\s+.*?src\s*=\s*[" & numtochar(2) & "'](.+?)[" & numtochar(2) & "'].*?\>" into tRegEx
+	put "<img\s+.*?src\s*=\s*[" & rigNumToCodepoint(2) & "'](.+?)[" & rigNumToCodepoint(2) & "'].*?\>" into tRegEx
 
 	get matchtext(tStr,tRegEx,foundTextVar)
     
@@ -2263,8 +2277,8 @@ function rigStripImgTags pStr
 	end if
 
 	# SET QUOTES
-	if numtochar(2) is in tStrippedStr then
-		replace numtochar(2) with quote in tStrippedStr
+	if rigNumToCodepoint(2) is in tStrippedStr then
+		replace rigNumToCodepoint(2) with quote in tStrippedStr
 	end if
 
 	return tStrippedStr
