@@ -200,10 +200,10 @@ end rigEncode
 --| FUNCTION rigDecode
 --|
 --| Author: rabit
---| Version: 2.1
+--| Version: 2.2
 --| Created: 16-10-09
---| Last Mod: 21-03-14
---| Requires: rigGetEncryptionKey(), _rigXorDecode()
+--| Last Mod: 22-12-14
+--| Requires: rigGetEncryptionKey(), rigNumToCodepoint(), _rigXorDecode()
 --|
 --| Summary: Reverses the above process.
 --| 
@@ -217,7 +217,7 @@ end rigEncode
 function rigDecode pString pKey
    put rigGetEncryptionKey(pKey) into tKey
    -- put "[^a-zA-Z0-9\/\+=]" into tRegEx
-   put "[^a-zA-Z0-9\/\+=" & numToChar(10) & numToChar(13) & "]" into tRegEx
+   put "[^a-zA-Z0-9\/\+=" & rigNumToCodepoint(10) & rigNumToCodepoint(13) & "]" into tRegEx
    
    if matchtext(pString,tRegEx) is TRUE then
       return FALSE
@@ -245,13 +245,13 @@ end rigDecode
 --| FUNCTION _rigXorEncode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 16-10-09
---| Last Mod: 21-03-14
---| Requires: rigRandomNum(), rigHash(), rigSubstr(), _rigXorMerge()
+--| Last Mod: 22-12-14
+--| Requires: rigRandomNum(), rigHash(), rigSubstr(), rigNumToCodepoint(), _rigXorMerge()
 --|
 --| Summary: Takes a plain-text string and key as input and generates an
---|          encoded bit-string using XOR.
+--|            encoded bit-string using XOR.
 --| 
 --| Format:  _rigXorEncode(param1, param2)
 --|
@@ -269,8 +269,8 @@ function _rigXorEncode pString pKey
 	put length(tRand) into tRandLength
 	
 	repeat with i = 1 to tStringLength
-		-- put (rigSubstr(tRand, (i mod tRandLength), 1)) & numToChar(((rigSubstrToNum(tRand, (i mod tRandLength), 1)) bitXOr (rigSubstrToNum(pString, i, 1)))) after tEnc
-		put rigSubstr(tRand, ((i - 1) mod tRandLength) + 1, 1) & (numToChar(rigSubstrToNum(tRand, ((i - 1) mod tRandLength) + 1, 1) bitXOr rigSubstrToNum(pString, i, 1))) after tEnc
+		-- put (rigSubstr(tRand, (i mod tRandLength), 1)) & rigNumToCodepoint(((rigSubstrToNum(tRand, (i mod tRandLength), 1)) bitXOr (rigSubstrToNum(pString, i, 1)))) after tEnc
+		put rigSubstr(tRand, ((i - 1) mod tRandLength) + 1, 1) & (rigNumToCodepoint(rigSubstrToNum(tRand, ((i - 1) mod tRandLength) + 1, 1) bitXOr rigSubstrToNum(pString, i, 1))) after tEnc
 	end repeat
 
 	return _rigXorMerge(tEnc, pKey)
@@ -286,13 +286,13 @@ end _rigXorEncode
 --| FUNCTION _rigXorDecode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 16-10-09
---| Last Mod: 21-03-14
---| Requires: _rigXorMerge(), rigSubstr()
+--| Last Mod: 22-12-14
+--| Requires: _rigXorMerge(), rigNumToCodepoint(), rigSubstrToNum()
 --|
 --| Summary: Takes an encoded string and key as input and generates the
---|          plain-text original message.
+--|            plain-text original message.
 --| 
 --| Format:  _rigXorDecode(param1, param2)
 --|
@@ -309,7 +309,7 @@ function _rigXorDecode pString pKey
 	repeat with i = 1 to tStringLength
 		put i into j
         	add 1 to i
-        	put numToChar((rigSubstrToNum(tString, i, 1)) bitXOr (rigSubstrToNum(tString, j, 1))) after tDec
+        	put rigNumToCodepoint((rigSubstrToNum(tString, i, 1)) bitXOr (rigSubstrToNum(tString, j, 1))) after tDec
 	end repeat
 
 	return tDec
@@ -325,10 +325,10 @@ end _rigXorDecode
 --| FUNCTION _rigXorMerge
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 16-10-09
---| Last Mod: 21-03-14
---| Requires: rigHash(), rigSubstr()
+--| Last Mod: 22-12-14
+--| Requires: rigHash(), rigNumToCodepoint(), rigSubstrToNum()
 --|
 --| Summary: Takes a string and key as input and computes the difference using XOR.
 --| 
@@ -346,8 +346,8 @@ function _rigXorMerge pString pKey
 	put length(tHash) into tHashLength
 
 	repeat with i = 1 to tStringLength
-		-- put numToChar((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, (i mod tHashLength), 1))) after tStr
-		put numToChar((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, ((i - 1) mod tHashLength) + 1, 1))) after tStr
+		-- put rigNumToCodepoint((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, (i mod tHashLength), 1))) after tStr
+		put rigNumToCodepoint((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, ((i - 1) mod tHashLength) + 1, 1))) after tStr
 	end repeat
 
 	return tStr
