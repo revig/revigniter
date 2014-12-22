@@ -44,14 +44,14 @@ get rigLangLoadLang("profiler")
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialProfilerConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 21-01-10
---| Last Mod: 21-01-10
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigSetProfilerTableTemplate
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
 --| 
@@ -60,33 +60,33 @@ get rigLangLoadLang("profiler")
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialProfilerConfig pConfig
- 	if pConfig is not an array then
-      		if pConfig is not empty then
+  if pConfig is not an array then
+    if pConfig is not empty then
           
-			# BUILD TEMPLATE ARRAYS
-         		split pConfig using numToChar(1) and numToChar(2)
+      # BUILD TEMPLATE ARRAYS
+      split pConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 
-         		repeat for each key tKey in pConfig
-            			put item 1 of tKey into tName
-            			put item 2 of tKey into tItem
-            			put pConfig[tKey] into tTableTemplate[tName][tItem]
+      repeat for each key tKey in pConfig
+        put item 1 of tKey into tName
+        put item 2 of tKey into tItem
+        put pConfig[tKey] into tTableTemplate[tName][tItem]
              
-            			put tTableTemplate[tName] into tTableTemplate[tName]
-         		end repeat
+        put tTableTemplate[tName] into tTableTemplate[tName]
+      end repeat
 
-     		 end if
-   	end if
+    end if
+  end if
 
-	# SET TABLE TEMPLATES
-	if tTableTemplate is an array then
-		repeat for each key tName in tTableTemplate
-			put tTableTemplate[tName] into tTemplateData
-			rigSetProfilerTableTemplate tName, tTemplateData
-		end repeat
-	end if
+  # SET TABLE TEMPLATES
+  if tTableTemplate is an array then
+    repeat for each key tName in tTableTemplate
+      put tTableTemplate[tName] into tTemplateData
+      rigSetProfilerTableTemplate tName, tTemplateData
+    end repeat
+  end if
 end rigRunInitialProfilerConfig
 
 
@@ -278,10 +278,11 @@ end _rigCompileQueries
 --| FUNCTION _rigCompileGet
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 22-01-10
---| Last Mod: 21-03-14
---| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(), rigLangLangLine()
+--| Last Mod: 22-12-14
+--| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(),
+--|            rigLangLangLine(), rigNumToCodepoint()
 --|
 --| Summary: Compile $_GET Data.
 --| 
@@ -326,9 +327,9 @@ function _rigCompileGet
 					put "[" & tValKey & "]" into tNewKey
 					put tValVal into tNewVal[tNewKey]
 				end repeat
-				combine tNewVal using numToChar(1) and numToChar(2)
-				replace numToChar(1) with ", " in tNewVal
-				replace numToChar(2) with " => " in tNewVal
+				combine tNewVal using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+				replace rigNumToCodepoint(1) with ", " in tNewVal
+				replace rigNumToCodepoint(2) with " => " in tNewVal
 				
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal
@@ -361,10 +362,11 @@ end _rigCompileGet
 --| FUNCTION _rigCompilePost
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 22-01-10
---| Last Mod: 21-03-14
---| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(), rigLangLangLine()
+--| Last Mod: 22-12-14
+--| Requires: rigCompileProfilerTemplate, rigStripSlashes(), rigHtmlSpecialChars(),
+--|            rigLangLangLine(), rigNumToCodepoint()
 --|
 --| Summary: Compile $_POST Data.
 --| 
@@ -409,9 +411,9 @@ function _rigCompilePost
 					put "[" & tValKey & "]" into tNewKey
 					put tValVal into tNewVal[tNewKey]
 				end repeat
-				combine tNewVal using numToChar(1) and numToChar(2)
-				replace numToChar(1) with ", " in tNewVal
-				replace numToChar(2) with " => " in tNewVal
+				combine tNewVal using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+				replace rigNumToCodepoint(1) with ", " in tNewVal
+				replace rigNumToCodepoint(2) with " => " in tNewVal
 				
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal
