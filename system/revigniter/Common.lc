@@ -2188,6 +2188,37 @@ end rigNumToCodepoint
 
 
 /*----------------------------------------------------------------------
+--| FUNCTION rigCodepointToNum
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-12-2014
+--| Last Mod: 22-12-2014
+--| Requires: --
+--|
+--| Summary: Converts a character / Unicode codepoint to an integer.
+--| 
+--| Format:  rigCodepointToNum(param1)
+--|
+--| Parameters: character / codepoint <pChar>
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function rigCodepointToNum pChar
+  if not gAdvancedUnicode then
+    return charToNum(pChar)
+  else
+    return codepointToNum(pChar)
+  end if
+end rigCodepointToNum
+
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigTextDecode
 --|
 --| Author: rabit
