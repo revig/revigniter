@@ -778,14 +778,14 @@ end rigHtmlSpecialChars
 --| FUNCTION rigTrim
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 30-07-09
---| Last Mod: 21-03-14
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Trim whitespace at the start and at the end of a string.
 --| 
---| Format:  rigTrim(param1, param2)
+--| Format:  rigTrim(param1[, param2])
 --|
 --| Parameters: string <pStr>, string <pCharsList>  an optional comma delimited list of chars to remove
 --|
@@ -798,9 +798,9 @@ function rigTrim pStr pCharsList
    if pCharsList is empty then
       put FALSE into tCharsToDeleteFound
    else if pCharsList is comma then
-      replace comma with numToChar(2) in pCharsList
+      replace comma with rigNumToCodepoint(2) in pCharsList
    else if ",," is in pCharsList then
-      replace ",," with (numToChar(2) & comma) in pCharsList
+      replace ",," with (rigNumToCodepoint(2) & comma) in pCharsList
    end if
    
    put "(^\s+)|(\s+$)" into tRegExWS
@@ -818,7 +818,7 @@ function rigTrim pStr pCharsList
       if pCharsList is not empty then
          repeat for each item tChar in pCharsList
             
-            if charToNum(tChar) is 2 then
+            if rigCodepointToNum(tChar) is 2 then
                put "," into tChar
             end if
             
@@ -833,7 +833,7 @@ function rigTrim pStr pCharsList
          # CHECK IF STRING IS CLEAN NOW
          repeat for each item tChar in pCharsList
             
-            if charToNum(tChar) is 2 then
+            if rigCodepointToNum(tChar) is 2 then
                put "," into tChar
             end if
             
@@ -966,14 +966,14 @@ end rigStripSlashes
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAddCslashes
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 15-08-09
---| Last Mod: 20-09-09
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Quote string with slashes in a C style. Keep in mind, that octal escape values are used
 --|                    in parameters of this function.
@@ -983,71 +983,71 @@ end rigStripSlashes
 --| Parameters: string <pStr>, string <pCharList> like "\0..\37,\177,'," & quote & ",\", string <pItemDel>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAddCslashes pStr pCharList pItemDel
-    if pItemDel is not empty then
-        set the itemdelimiter to pItemDel
-    else
-        set the itemdelimiter to comma
-    end if
+  if pItemDel is not empty then
+    set the itemdelimiter to pItemDel
+  else
+    set the itemdelimiter to comma
+  end if
     
-    repeat for each item thisItem in pCharList
+  repeat for each item thisItem in pCharList
          
-        if ".." is in thisItem then
-            put thisItem into tRangeValues
-            replace ".." with "," in tRangeValues
-            put item 1 of tRangeValues into tFromVal
-            put item 2 of tRangeValues into tToVal
+    if ".." is in thisItem then
+      put thisItem into tRangeValues
+      replace ".." with "," in tRangeValues
+      put item 1 of tRangeValues into tFromVal
+      put item 2 of tRangeValues into tToVal
             
-            # CHECK IF WE ARE DEALING WITH ASCII NUMBERS
-            # LIKE: \0..\37
-            if (char 1 of tFromVal is "\") and (char 2 of tFromVal is an integer) then
-                delete char 1 of tFromVal
-		# CONVERT TO DECIMAL VALUES
-		put baseconvert(tFromVal,8,10) into tFromVal
-                delete char 1 of tToVal
-		# CONVERT TO DECIMAL VALUES
-		put baseconvert(tToVal,8,10) into tToVal
+      # CHECK IF WE ARE DEALING WITH ASCII NUMBERS
+      # LIKE: \0..\37
+      if (char 1 of tFromVal is "\") and (char 2 of tFromVal is an integer) then
+        delete char 1 of tFromVal
+        # CONVERT TO DECIMAL VALUES
+        put baseconvert(tFromVal,8,10) into tFromVal
+        delete char 1 of tToVal
+        # CONVERT TO DECIMAL VALUES
+        put baseconvert(tToVal,8,10) into tToVal
                  
-            else
-                # CHARACTER RANGE LIKE: A..z
-                put chartonum(tFromVal) into tFromVal
-                put chartonum(tToVal) into tToVal
-            end if
+      else
+        # CHARACTER RANGE LIKE: A..z
+        put rigCodepointToNum(tFromVal) into tFromVal
+        put rigCodepointToNum(tToVal) into tToVal
+      end if
             
-            if tToVal > tFromVal then
-                repeat with tCurrentNum = tFromVal to tToVal
-                    put numtochar(tCurrentNum) after tCharRange
-                end repeat
-            end if
-        end if
+      if tToVal > tFromVal then
+        repeat with tCurrentNum = tFromVal to tToVal
+          put rigNumToCodepoint(tCurrentNum) after tCharRange
+        end repeat
+      end if
+    end if
         
-        # ASCII NUMBER LIKE: \177
-        if (".." is not in thisItem) and (char 1 of thisItem is "\") and (char 2 of thisItem is an integer) then
-            put char 2 to -1 of thisItem into tCharNum
-	# CONVERT TO DECIMAL VALUES
-	put baseconvert(tCharNum,8,10) into tCharNum
-            put numtochar(tCharNum) after tCharRange
-        end if
+    # ASCII NUMBER LIKE: \177
+    if (".." is not in thisItem) and (char 1 of thisItem is "\") and (char 2 of thisItem is an integer) then
+      put char 2 to -1 of thisItem into tCharNum
+      # CONVERT TO DECIMAL VALUES
+      put baseconvert(tCharNum,8,10) into tCharNum
+      put rigNumToCodepoint(tCharNum) after tCharRange
+    end if
         
-        # SINGEL CHARACTER
-        if the number of chars of thisItem is 1 then
-            put thisItem after tCharRange
-        end if
-    end repeat
+    # SINGEL CHARACTER
+    if the number of chars of thisItem is 1 then
+      put thisItem after tCharRange
+    end if
+  end repeat
     
-    # CHECK EACH CHARACTER IN STRING
-    # ADD SLASH IF NEEDED
-    repeat for each char thisChar in pStr
-        if thisChar is in tCharRange then
-            put "\" & thisChar after tStrWithSlashes
-        else
-            put thisChar after tStrWithSlashes
-        end if
-    end repeat
+  # CHECK EACH CHARACTER IN STRING
+  # ADD SLASH IF NEEDED
+  repeat for each char thisChar in pStr
+    if thisChar is in tCharRange then
+      put "\" & thisChar after tStrWithSlashes
+    else
+      put thisChar after tStrWithSlashes
+    end if
+  end repeat
      
-    return tStrWithSlashes
+  return tStrWithSlashes
 end rigAddCslashes
 
 
@@ -1698,10 +1698,10 @@ end rigSubstr
 --| FUNCTION rigSubstrToNum
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 16-10-09
---| Last Mod: 21-03-14
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigCodepointToNum()
 --|
 --| Summary: Return part of a string as ascii values. 
 --| 
@@ -1717,7 +1717,7 @@ function rigSubstrToNum pString pStart pLength
     put char pStart to tLastChar of pString into tStr
      
     repeat for each char thisChar in tStr
-        put charToNum(thisChar) after tSubstr
+        put rigCodepointToNum(thisChar) after tSubstr
     end repeat
     
     return tSubstr
@@ -1835,10 +1835,10 @@ end rigIsNumberedArray
 --| FUNCTION rigUcwords
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 21-01-10
---| Last Mod: 21-03-14
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigCodepointToNum()
 --|
 --| Summary: Uppercase the first character of each word in a string.
 --| 
@@ -1850,12 +1850,11 @@ end rigIsNumberedArray
 ----------------------------------------------------------------------*/
 
 function rigUcwords pStr
-	-- put toLower(pStr) into tUCstr
 	put pStr into tUCstr
    
    	repeat for each word thisWord in tUCstr
-      		if ((charToNum(char 1 of thisWord) >= 97) and (charToNum(char 1 of thisWord) <= 122)) or \
-            		((charToNum(char 1 of thisWord) >= 135) and (charToNum(char 1 of thisWord) <= 159)) then
+      		if ((rigCodepointToNum(char 1 of thisWord) >= 97) and (rigCodepointToNum(char 1 of thisWord) <= 122)) or \
+            		((rigCodepointToNum(char 1 of thisWord) >= 135) and (rigCodepointToNum(char 1 of thisWord) <= 159)) then
           
          		put toUpper(char 1 of thisWord) into char 1 of thisWord
       		end if
@@ -1916,13 +1915,13 @@ end rigNl2br
 --| FUNCTION rigRawURLdecode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 29-06-10
---| Last Mod: 21-03-14
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Returns the decoded URL as string.
---|          Does not decode plus symbols ('+') into spaces.
+--|            Does not decode plus symbols ('+') into spaces.
 --| 
 --| Format:  rigRawURLdecode(param1)
 --|
@@ -1932,9 +1931,9 @@ end rigNl2br
 ----------------------------------------------------------------------*/
 
 function rigRawURLdecode pStr
-   replace "+" with "-r" & numToChar(1) & "b-" in pStr
+   replace "+" with "-r" & rigNumToCodepoint(1) & "b-" in pStr
    put URLDecode(pStr) into tStrDecoded
-   replace "-r" & numToChar(1) & "b-" with "+" in tStrDecoded
+   replace "-r" & rigNumToCodepoint(1) & "b-" with "+" in tStrDecoded
    
    return tStrDecoded
 end rigRawURLdecode
@@ -2176,7 +2175,7 @@ end rigQ
 
 function rigNumToCodepoint pNum
   if not gAdvancedUnicode then
-    return numtochar(pNum)
+    return numToChar(pNum)
   else
     return numToCodepoint(pNum)
   end if
@@ -2238,7 +2237,7 @@ end rigCodepointToNum
 
 function rigTextDecode pData pCharset
   if not gAdvancedUnicode then
-    return unidecode(uniencode(pData, pCharset))
+    return uniDecode(uniEncode(pData, pCharset))
   else
     return textDecode(pData, pCharset)
   end if
