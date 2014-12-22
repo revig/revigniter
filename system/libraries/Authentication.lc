@@ -41,10 +41,10 @@ end if
 rigLogMessage "debug", "Authentication Library Loaded"
 
 # DECLARE VARIABLES
-local sAuth																																											--  array containing all config values, see authentication.lc
-local sAuthMessages, sAuthErrors, sActivationCode, sAuthForgottenPasswordCode										--  misc
+local sAuth																																										--  array containing all config values, see authentication.lc
+local sAuthMessages, sAuthErrors, sActivationCode, sAuthForgottenPasswordCode									--  misc
 local sAuthHooks, sAuthHooksEnabled, sAuthHookInProgress, sAuthHooksHandlers, sAuthHooksFiles		-- "hooks" variables
-local sAuthSelect, sAuthWhere, sAuthLike, sAuthLimit, sAuthOffset, sAuthOrderBy, sAuthOrder			--  datavase related
+local sAuthSelect, sAuthWhere, sAuthLike, sAuthLimit, sAuthOffset, sAuthOrderBy, sAuthOrder			--  database related
 local sAuthQuery, sAuthFieldnames, sAuthUser
 
 
@@ -65,10 +65,10 @@ get rigLangLoadLang("authentication")
 --| COMMAND rigRunInitialAuthenticationConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-09-12
---| Last Mod: 07-09-12
---| Requires: rigInitializeAuthentication
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigInitializeAuthentication
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing!
 --| 
@@ -84,7 +84,7 @@ command rigRunInitialAuthenticationConfig pConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
@@ -1046,11 +1046,11 @@ end rigAuthRegister
 --| FUNCTION _rigAuthRegisterUser
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 08-02-2013
---| Last Mod: 21-03-2014
+--| Last Mod: 22-12-2014
 --| Requires: _rigAuthCallHook(), rigAuthEmailCheck(), rigAuthSetError, rigAuthUsernameCheck(),
---|           rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(),
+--|           rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(), rigNumToCodepoint(),
 --|           rigDbInsert(), rigAuthWhere, rigAuthUsers(), rigDbRow(), rigAuthAddToGroup, rigAuthGroups()
 --|
 --| Summary: Register new user.
@@ -1115,8 +1115,8 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	
 		# MERGE FILTERED EXTRA DATA WITH tData
 		if tFilteredData is an array then
-			put numToChar(1) into tFirstDelim
-			put numToChar(2) into tSecondDelim
+			put rigNumToCodepoint(1) into tFirstDelim
+			put rigNumToCodepoint(2) into tSecondDelim
 			combine tData using tFirstDelim and tSecondDelim
 			combine tFilteredData using tFirstDelim and tSecondDelim
 			
@@ -1892,10 +1892,10 @@ end rigAuthAddToGroup
 --| COMMAND rigAuthWhere
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 08-02-2013
---| Last Mod: 21-03-2014
---| Requires: _rigAuthCallHook()
+--| Last Mod: 22-12-2014
+--| Requires: _rigAuthCallHook(), rigNumToCodepoint()
 --|
 --| Summary: Add key value pairs to sAuthWhere.
 --| 
@@ -1916,8 +1916,8 @@ command rigAuthWhere pWhere pValue
 	end if
 
 	if sAuthWhere is an array then
-		put numToChar(1) into tFirstDelim
-		put numToChar(2) into tSecondDelim
+		put rigNumToCodepoint(1) into tFirstDelim
+		put rigNumToCodepoint(2) into tSecondDelim
 		combine sAuthWhere using tFirstDelim and tSecondDelim
 		combine tWhereArray using tFirstDelim and tSecondDelim
 
