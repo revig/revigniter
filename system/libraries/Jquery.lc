@@ -61,10 +61,10 @@ put "" into sValidJquerySetMethods
 --| COMMAND rigRunInitialJqueryConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-01-10
---| Last Mod: 22-01-10
---| Requires: rigInitializeJquery
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigInitializeJquery
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -80,7 +80,7 @@ command rigRunInitialJqueryConfig pConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
