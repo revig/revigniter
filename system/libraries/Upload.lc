@@ -67,10 +67,10 @@ put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,ri
 --| COMMAND rigRunInitialUploadConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-08-2011
---| Last Mod: 30-08-2011
---| Requires: rigInitializeUpload
+--| Last Mod: 22-12-2014
+--| Requires: rigNumToCodepoint(), rigInitializeUpload
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -86,7 +86,7 @@ command rigRunInitialUploadConfig pConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
