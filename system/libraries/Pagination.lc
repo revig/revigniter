@@ -79,10 +79,10 @@ put "PaginationWidget" into sPagWidgetName
 --| COMMAND rigRunInitialPaginationConfig
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-09-09
---| Last Mod: 27-10-09
---| Requires: rigInitializePagination
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigInitializePagination
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -98,7 +98,7 @@ command rigRunInitialPaginationConfig pConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
