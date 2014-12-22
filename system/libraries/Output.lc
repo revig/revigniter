@@ -475,12 +475,10 @@ command _rigWriteCache pOutput
 
 	put tCachePath & rigHexDigest(tUri) into tCachePath
 
-  if not gAdvancedUnicode then
-	  open file tCachePath for write
-  else
-    put rigFetchConfigItem("defaultCharset") into tCharset
-    open file tCachePath for tCharset text write
-  end if
+	open file tCachePath for write
+  # ENGINE ≥ 7 VERSION
+  -- put rigFetchConfigItem("defaultCharset") into tCharset
+  -- open file tCachePath for tCharset text write
   
 	if the result is empty then -- success!
 		put gBASEPATH & "cache/flock.txt" into tFlockPath
@@ -581,12 +579,11 @@ function _rigOutDisplayCache
 		return FALSE
 	end if
 
-  if not gAdvancedUnicode then
-	  open file tFilePath for read
-  else
-    put rigFetchConfigItem("defaultCharset") into tCharset
-    open file tFilePath for tCharset text read
-  end if
+	open file tFilePath for read
+  # ENGINE ≥ 7 VERSION
+  -- put rigFetchConfigItem("defaultCharset") into tCharset
+  -- open file tFilePath for tCharset text read
+
 	if the result is not empty then
 		return FALSE
 	end if
