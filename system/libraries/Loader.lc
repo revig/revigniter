@@ -1432,14 +1432,14 @@ end rigHelperIsLoaded
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigRiInitLibrary
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 07-07-09
---| Last Mod: 16-07-11
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Load config file associated with loaded library.
 --| 
@@ -1448,7 +1448,7 @@ end rigHelperIsLoaded
 --| Parameters: string <pLib> the item that is being loaded, string <pPrefix>, array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigRiInitLibrary pLib pPrefix pConfig
 	put FALSE into tConfigFileFound
@@ -1493,7 +1493,7 @@ command _rigRiInitLibrary pLib pPrefix pConfig
 	# OTHERWISE, THIS IS DONE BY THE CONFIGURATION FILE ITSELF
 	if tConfigFileFound is not TRUE then
 		put "rigRunInitial" & pLib & "Config" into tHandler
-		combine pConfig using numtochar(1) and numtochar(2)
+		combine pConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 
 		do tHandler && quote & pConfig & quote
 	end if
@@ -1507,10 +1507,10 @@ end _rigRiInitLibrary
 --| COMMAND _rigRiInitStack
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 31-07-2011
---| Last Mod: 31-07-2011
---| Requires: --
+--| Last Mod: 22-12-2014
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Load config file associated with loaded stack.
 --| 
@@ -1560,7 +1560,7 @@ command _rigRiInitStack pStack pPrefix pConfig
 	# OTHERWISE, THIS IS DONE BY THE CONFIGURATION FILE ITSELF
 	if tConfigFileFound is not TRUE then
 		put "rigRunInitial" & pStack & "StackConfig" into tHandler
-		combine pConfig using numtochar(1) and numtochar(2)
+		combine pConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 
 		do tHandler && quote & pConfig & quote
 	end if
