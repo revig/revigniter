@@ -92,14 +92,14 @@ put "rigSet_sAltMessage,rigSet_sMailtype,rigSet_sWordwrap,rigSet_sProtocol,rigSe
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialEmailConfig
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 14-08-09
---| Last Mod: 24-07-10
---| Requires: rigInitializeMail
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigInitializeMail
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -108,14 +108,14 @@ put "rigSet_sAltMessage,rigSet_sMailtype,rigSet_sWordwrap,rigSet_sProtocol,rigSe
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialEmailConfig pConfig
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
@@ -613,14 +613,14 @@ end rigMailSubject
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailMessage
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 16-08-09
---| Last Mod: 16-08-09
---| Requires: rigRTrim(), rigStripSlashes
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigRTrim(), rigStripSlashes
 --|
 --| Summary: Set body.
 --| 
@@ -629,12 +629,12 @@ end rigMailSubject
 --| Parameters: string <pBody>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailMessage pBody
 	put pBody into tBody
 
-	replace numToChar(13) with "" in tBody
+	replace rigNumToCodepoint(13) with "" in tBody
 	put rigRTrim(tBody) into tBody
 	put rigStripSlashes(tBody) into _sBody
 end rigMailMessage
@@ -910,14 +910,14 @@ end rigSet_sPriority
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSet_sMailNewline
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-08-09
---| Last Mod: 24-07-10
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Set newline character.
 --| 
@@ -926,7 +926,7 @@ end rigSet_sPriority
 --| Parameters: string <pNewline>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSet_sMailNewline pNewline
 	if pNewline is empty then
@@ -937,7 +937,7 @@ command rigSet_sMailNewline pNewline
 	end if
 
 	-- if (tNewline <> "\n") and (tNewline <> "\r\n") and (tNewline <> "\r") then
-	if (tNewline <> LF) and (tNewline <> CRLF) and (tNewline <> numToChar(13)) then
+	if (tNewline <> LF) and (tNewline <> CRLF) and (tNewline <> rigNumToCodepoint(13)) then
 		-- put "\n" into sMailNewline
 		put LF into sMailNewline
 		exit rigSet_sMailNewline
@@ -951,14 +951,14 @@ end rigSet_sMailNewline
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSet_sCrlf
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-08-09
---| Last Mod: 17-08-09
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Set CRLF.
 --| 
@@ -967,7 +967,7 @@ end rigSet_sMailNewline
 --| Parameters: string <pCRLF>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSet_sCrlf pCRLF
 	if pCRLF is empty then
@@ -978,7 +978,7 @@ command rigSet_sCrlf pCRLF
 	end if
 
 	-- if (tCRLF <> "\n") and (tCRLF <> "\r\n") and (tCRLF <> "\r") then
-	if (tCRLF <> LF) and (tCRLF <> CRLF) and (tCRLF <> numToChar(13)) then
+	if (tCRLF <> LF) and (tCRLF <> CRLF) and (tCRLF <> rigNumToCodepoint(13)) then
 		-- put "\n" into sCrlf
 		put LF into sCrlf
 		exit rigSet_sCrlf
@@ -1427,10 +1427,10 @@ end _rigGetAltMessage
 --| FUNCTION rigWord_wrap
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 17-08-09
---| Last Mod: 26-05-11
---| Requires: rigPregReplace(), rigWordWrap(), rigUnwrappedWrapMarkersString()
+--| Last Mod: 22-12-14
+--| Requires: rigPregReplace(), rigCodepointToNum(), rigWordWrap(), rigUnwrappedWrapMarkersString()
 --|
 --| Summary: Word wrap.
 --| 
@@ -1460,9 +1460,9 @@ function rigWord_wrap pStr pCharLim
 	put rigPregReplace(tStr, tRegEx,,tReplacement) into tStr
 
 	# STANDARDIZE NEWLINES
-	if charToNum(13) is in tStr then
+	if rigCodepointToNum(13) is in tStr then
 		replace CRLF with LF in tStr
-		replace charToNum(13) with LF in tStr
+		replace rigCodepointToNum(13) with LF in tStr
 	end if
 
 	# IF THE CURRENT WORD IS SURROUNDED BY {UNWRAP} TAGS WE'LL
@@ -1661,16 +1661,16 @@ end _rigWriteHeaders
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigBuildMessage
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 19-08-09
---| Last Mod: 24-07-10
+--| Last Mod: 22-12-14
 --| Requires: rigWord_wrap(), _rigSetBoundaries, _rigWriteHeaders, _rigGetProtocol(),
 --|           _rigGetContentType(), _rigGetMailEncoding(), _rigGetMimeMessage(),
---|           _rigGetAltMessage(), _rigPrepQuotedPrintable()
+--|           _rigGetAltMessage(), _rigPrepQuotedPrintable(), rigNumToCodepoint()
 --|
 --| Summary: Build final body and attachments.
 --| 
@@ -1679,7 +1679,7 @@ end _rigWriteHeaders
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigBuildMessage
 	if (sWordwrap is TRUE)  and  (sMailtype <> "html") then
@@ -1927,8 +1927,8 @@ command _rigBuildMessage
 		delete char -1 of tNamesOfFilesToAttach
 
 		put tAttachment into tAttachmentAsString
-		combine tAttachmentAsString using numToChar(1)
-		replace numToChar(1) with sMailNewline in tAttachmentAsString
+		combine tAttachmentAsString using rigNumToCodepoint(1)
+		replace rigNumToCodepoint(1) with sMailNewline in tAttachmentAsString
 
 	else
 		put "" into tAttachmentAsString
@@ -1939,8 +1939,8 @@ command _rigBuildMessage
 
 		put 0 into tItemCount
 		if tAttacheNameItems > 1 then
-			# USE numtochar(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
-			put tBody & numtochar(1) into _sFinalbody
+			# USE rigNumToCodepoint(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
+			put tBody & rigNumToCodepoint(1) into _sFinalbody
 
 			repeat for each item tFileItem in tFilesToAttach
 				add 1 to tItemCount
@@ -1949,8 +1949,8 @@ command _rigBuildMessage
 			end repeat
 		else
 			if tAttacheNameItems = 1 then
-				# USE numtochar(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
-				put tBody & numtochar(1) & ";uuencode" && rigQ(tFilesToAttach) && rigQ(tNamesOfFilesToAttach) into _sFinalbody
+				# USE rigNumToCodepoint(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
+				put tBody & rigNumToCodepoint(1) & ";uuencode" && rigQ(tFilesToAttach) && rigQ(tNamesOfFilesToAttach) into _sFinalbody
 			else
 				# THERE IS NO ATTACHMENT
 				put tBody into _sFinalbody
@@ -1973,13 +1973,13 @@ end _rigBuildMessage
 --| FUNCTION _rigPrepQuotedPrintable
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 20-08-09
---| Last Mod: 21-03-14
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Prepares string for Quoted-Printable Content-Transfer-Encoding
---|                    Refer to RFC 2045 http://www.ietf.org/rfc/rfc2045.txt.
+--|            Refer to RFC 2045 http://www.ietf.org/rfc/rfc2045.txt.
 --| 
 --| Format:  _rigPrepQuotedPrintable(param1, param2)
 --|
@@ -2010,11 +2010,11 @@ function _rigPrepQuotedPrintable pStr pCharLim
 
 	# STANDARDIZE NEWLINES
 	-- if "\r" is in tStr then
-	if numToChar(13) is in tStr then
+	if rigNumToCodepoint(13) is in tStr then
 		-- replace "\r\n" with "\n" in tStr
 		replace CRLF with LF in tStr
 		-- replace "\r" with "\n" in tStr
-		replace numToChar(13) with LF in tStr
+		replace rigNumToCodepoint(13) with LF in tStr
 	end if
 
 	# WE ARE INTENTIONALLY WRAPPING SO MAIL SERVERS WILL ENCODE CHARACTERS
@@ -2023,9 +2023,9 @@ function _rigPrepQuotedPrintable pStr pCharLim
 	replace "{/unwrap}" with "" in tStr
 
 	# BREAK INTO AN ARRAY OF LINES
-	-- replace "\n" with numToChar(1) in tStr
-	replace LF with numToChar(1) in tStr
-	split tStr using numToChar(1)
+	-- replace "\n" with rigNumToCodepoint(1) in tStr
+	replace LF with rigNumToCodepoint(1) in tStr
+	split tStr using rigNumToCodepoint(1)
 
 	put "=" into tEscape
 	put empty into tOutput
@@ -2040,7 +2040,7 @@ function _rigPrepQuotedPrintable pStr pCharLim
 		repeat with i = 1 to tLength
 			# GRAB THE NEXT CHARACTER
 			put char i of thisLine into tChar
-			put charToNum(tChar) into tAscii
+			put rigCodepointToNum(tChar) into tAscii
 
 			# CONVERT SPACES AND TABS BUT ONLY IF IT'S THE END OF THE LINE
 			if i = tLength then
@@ -2080,7 +2080,7 @@ function _rigPrepQuotedPrintable pStr pCharLim
 	put TRUE into tCRLFfound
 	repeat until tCRLFfound is FALSE
 		put char -1 of tOutput into tLastChar
-		if (charToNum(tLastChar) is 13) or (charToNum(tLastChar) is 10) then
+		if (rigCodepointToNum(tLastChar) is 13) or (rigCodepointToNum(tLastChar) is 10) then
 			delete char -1 of tOutput
 		else
 			put FALSE into tCRLFfound
@@ -2094,24 +2094,24 @@ end _rigPrepQuotedPrintable
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigPrepQencoding
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 16-08-09
---| Last Mod: 16-08-09
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Performs "Q Encoding" on a string for use in email headers.  It's related
---|                    but not identical to quoted-printable, so it has its own method.
+--|            but not identical to quoted-printable, so it has its own method.
 --| 
 --| Format:  _rigPrepQencoding(param1, param2)
 --|
 --| Parameters: string <pStr>, bool <pFrom> set to TRUE for processing From: headers
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigPrepQencoding pStr pFrom
 	if (pFrom is empty) or (pFrom is not a boolean) then
@@ -2123,7 +2123,7 @@ function _rigPrepQencoding pStr pFrom
 	put pStr into tStr
 	
 	-- replace "\r" with "" in tStr
-	replace numToChar(13) with "" in tStr
+	replace rigNumToCodepoint(13) with "" in tStr
 	-- replace "\n" with "" in tStr
 	replace LF with "" in tStr
 	
@@ -2147,7 +2147,7 @@ function _rigPrepQencoding pStr pFrom
 	repeat for each char thisChar in tStr
 		put thisChar into tConvertedChar
 		# GRAB THE NEXT CHARACTER
-		put charToNum(tConvertedChar) into tAscii
+		put rigCodepointToNum(tConvertedChar) into tAscii
 
 		# CONVERT ALL NON-PRINTABLE ASCII CHARACTERS AND OUR SPECIALS
 		if (tAscii < 32) or (tAscii > 126) or (rigInArray(tConvert, tConvertedChar) is TRUE) then
@@ -2276,14 +2276,15 @@ end rigMailSend
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigBatchBccSend
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 23-08-09
---| Last Mod: 15-09-09
---| Requires: _rigStrToArray(), rigCleanEmail(), _rigSetHeader, _rigBuildMessage, _rigSpoolEmail()
+--| Last Mod: 22-12-14
+--| Requires: _rigStrToArray(), rigCleanEmail(), rigNumToCodepoint(), _rigSetHeader,
+--|            _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Sends groups of BCCs in batches.
 --| 
@@ -2292,7 +2293,7 @@ end rigMailSend
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigBatchBccSend
 	put sBccBatchSize into tFloat
@@ -2328,8 +2329,8 @@ function rigBatchBccSend
 		put rigCleanEmail(tBcc) into tBcc
 
 		if sProtocol is not "smtp" then
-			combine tBcc using numToChar(1)
-			replace numToChar(1) with ", " in tBcc
+			combine tBcc using rigNumToCodepoint(1)
+			replace rigNumToCodepoint(1) with ", " in tBcc
 
 			_rigSetHeader "Bcc", tBcc
 		else
@@ -2379,14 +2380,14 @@ end _rigUnwrapSpecials
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigRemoveNlCallback
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-08-09
---| Last Mod: 23-08-09
---| Requires: --
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint()
 --|
 --| Summary: Strip line-breaks via callback.
 --| 
@@ -2395,15 +2396,15 @@ end _rigUnwrapSpecials
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigRemoveNlCallback pStr
     	put pStr into tStr
     
 	-- if ("\r" is in tStr) or ("\n" is in tStr) then
-	if (numToChar(13) is in tStr) or (LF is in tStr) then
+	if (rigNumToCodepoint(13) is in tStr) or (LF is in tStr) then
 		-- replace "\r" with "" in tStr
-		replace numToChar(13) with "" in tStr
+		replace rigNumToCodepoint(13) with "" in tStr
     		-- replace "\n" with "" in tStr
 		replace LF with "" in tStr
 	end if
@@ -2480,14 +2481,14 @@ end _rigSpoolEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSendWithMail
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 14-09-09
---| Last Mod: 22-09-09
---| Requires: rigShellEscape(), rigQ(), _rigTempMailPath(), rigLogMessage
+--| Last Mod: 22-12-14
+--| Requires: rigShellEscape(), rigNumToCodepoint(), rigQ(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using mail as shell command. Can not be used to send html mail.
 --| 
@@ -2496,7 +2497,7 @@ end _rigSpoolEmail
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigSendWithMail
 	put rigCleanEmail(_sHeaders["From"]) into tFrom
@@ -2515,7 +2516,7 @@ function _rigSendWithMail
 
 	if "uuencode" is in tFinalbody then
 		# THERE IS AN ATTACHMENT
-		set the itemdelimiter to numtochar(1)
+		set the itemdelimiter to rigNumToCodepoint(1)
     		put item 1 of tFinalbody into tBody
 		put rigShellEscape(tBody) into tBody
 		put item 2 of tFinalbody into tAttachment
