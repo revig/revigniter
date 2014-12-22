@@ -440,13 +440,13 @@ end _rigDisplay
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigWriteCache
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 25-07-09
---| Last Mod: 25-07-09
+--| Last Mod: 22-12-14
 --| Requires: rigFetchConfigItem(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
@@ -456,7 +456,7 @@ end _rigDisplay
 --| Parameters: string <pOutput>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigWriteCache pOutput
 	put rigFetchConfigItem("cache_path") into tPath
@@ -475,7 +475,12 @@ command _rigWriteCache pOutput
 
 	put tCachePath & rigHexDigest(tUri) into tCachePath
 
-	open file tCachePath for write 
+  if not gAdvancedUnicode then
+	  open file tCachePath for write
+  else
+    open file tCachePath for rigFetchConfigItem("defaultCharset") text write
+  end if
+  
 	if the result is empty then -- success!
 		put gBASEPATH & "cache/flock.txt" into tFlockPath
 
@@ -537,13 +542,13 @@ end _rigWriteCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigOutDisplayCache
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 25-07-09
---| Last Mod: 25-07-09
+--| Last Mod: 22-12-14
 --| Requires: rigFetchConfigItem(), rigLogMessage, _rigDisplay
 --|
 --| Summary:  Update/serve a cached file.
@@ -553,7 +558,7 @@ end _rigWriteCache
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigOutDisplayCache
 	put rigFetchConfigItem("cache_path") into tCachePath
@@ -575,7 +580,11 @@ function _rigOutDisplayCache
 		return FALSE
 	end if
 
-	open file tFilePath for read
+  if not gAdvancedUnicode then
+	  open file tFilePath for read
+  else
+    open file tFilePath for rigFetchConfigItem("defaultCharset") text read
+  end if
 	if the result is not empty then
 		return FALSE
 	end if
