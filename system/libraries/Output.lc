@@ -478,7 +478,8 @@ command _rigWriteCache pOutput
   if not gAdvancedUnicode then
 	  open file tCachePath for write
   else
-    open file tCachePath for rigFetchConfigItem("defaultCharset") text write
+    put rigFetchConfigItem("defaultCharset") into tCharset
+    open file tCachePath for tCharset text write
   end if
   
 	if the result is empty then -- success!
@@ -583,7 +584,8 @@ function _rigOutDisplayCache
   if not gAdvancedUnicode then
 	  open file tFilePath for read
   else
-    open file tFilePath for rigFetchConfigItem("defaultCharset") text read
+    put rigFetchConfigItem("defaultCharset") into tCharset
+    open file tFilePath for tCharset text read
   end if
 	if the result is not empty then
 		return FALSE
