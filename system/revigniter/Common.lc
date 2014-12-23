@@ -1700,27 +1700,31 @@ end rigSubstr
 --| Author: rabit
 --| Version:  1.2
 --| Created: 16-10-09
---| Last Mod: 22-12-14
+--| Last Mod: 23-12-14
 --| Requires: rigCodepointToNum()
 --|
 --| Summary: Return part of a string as ascii values. 
 --| 
---| Format:  rigSubstrToNum(param1, param2, param3)
+--| Format:  rigSubstrToNum(param1, param2, param3, param4)
 --|
---| Parameters: string <pString>, integer <pStart>, integer <pLength>
+--| Parameters: string <pString>, integer <pStart>, integer <pLength>, bool <pNative>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigSubstrToNum pString pStart pLength
-    put pStart + (pLength - 1) into tLastChar
-    put char pStart to tLastChar of pString into tStr
+function rigSubstrToNum pString pStart pLength pNative
+  put pStart + (pLength - 1) into tLastChar
+  put char pStart to tLastChar of pString into tStr
      
-    repeat for each char thisChar in tStr
-        put rigCodepointToNum(thisChar) after tSubstr
-    end repeat
+  repeat for each char thisChar in tStr
+    if pNative then
+      put rigNativeCharToNum(thisChar) after tSubstr
+    else
+      put rigCodepointToNum(thisChar) after tSubstr
+    end if
+  end repeat
     
-    return tSubstr
+  return tSubstr
 end rigSubstrToNum
 
 
@@ -2185,6 +2189,36 @@ end rigNumToCodepoint
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigNumToNativeChar
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 20-12-2014
+--| Last Mod: 22-12-2014
+--| Requires: --
+--|
+--| Summary: Converts an integer to a character.
+--| 
+--| Format:  rigNumToNativeChar(param1)
+--|
+--| Parameters: integer <pNum>
+--|
+--| Return: character
+----------------------------------------------------------------------*/
+
+function rigNumToNativeChar pNum
+ if not gAdvancedUnicode then
+    return numToChar(pNum)
+  else
+    return numToNativeChar(pNum)
+  end if
+end rigNumToNativeChar
+
+
+
+
+
 
 /*----------------------------------------------------------------------
 --| FUNCTION rigCodepointToNum
@@ -2211,6 +2245,36 @@ function rigCodepointToNum pChar
     return codepointToNum(pChar)
   end if
 end rigCodepointToNum
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigNativeCharToNum
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-12-2014
+--| Last Mod: 22-12-2014
+--| Requires: --
+--|
+--| Summary: Converts a character to an integer.
+--| 
+--| Format:  rigNativeCharToNum(param1)
+--|
+--| Parameters: character <pChar>
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function rigNativeCharToNum pChar
+  if not gAdvancedUnicode then
+    return charToNum(pChar)
+  else
+    return nativeCharToNum(pChar)
+  end if
+end rigNativeCharToNum
 
 
 
