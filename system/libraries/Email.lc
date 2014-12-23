@@ -1029,13 +1029,13 @@ end _rigSetBoundaries
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetMessageID
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-08-09
---| Last Mod: 04-05-11
+--| Last Mod: 23-12-14
 --| Requires: --
 --|
 --| Summary: Get the message id.
@@ -1045,7 +1045,7 @@ end _rigSetBoundaries
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigGetMessageID
 	put _sHeaders["Return-Path"] into tFrom
@@ -1054,12 +1054,14 @@ function _rigGetMessageID
 	
 	set the itemDelimiter to "@"
 	put item -1 of tFrom into tDomain
+  
+  # USE INTEGER AS FIRST CHAR OF ID SO THAT MESSAGE-ID IS ALWAYS SHOWN IN MAIL DEBUGGER
+  put 1 into tUniqueid
+  repeat 24
+    put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
+  end repeat
 
-	repeat 25
-        	put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
-    	end repeat
-
-	return  "<" & tUniqueid & "@" & tDomain & ">"
+  return  "<" & tUniqueid & "@" & tDomain & ">"
 end _rigGetMessageID
 
 
