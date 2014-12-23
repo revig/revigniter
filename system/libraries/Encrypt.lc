@@ -203,7 +203,7 @@ end rigEncode
 --| Version: 2.2
 --| Created: 16-10-09
 --| Last Mod: 22-12-14
---| Requires: rigGetEncryptionKey(), rigNumToCodepoint(), _rigXorDecode()
+--| Requires: rigGetEncryptionKey(), rigNumToNativeChar(), _rigXorDecode()
 --|
 --| Summary: Reverses the above process.
 --| 
@@ -217,7 +217,7 @@ end rigEncode
 function rigDecode pString pKey
    put rigGetEncryptionKey(pKey) into tKey
    -- put "[^a-zA-Z0-9\/\+=]" into tRegEx
-   put "[^a-zA-Z0-9\/\+=" & rigNumToCodepoint(10) & rigNumToCodepoint(13) & "]" into tRegEx
+   put "[^a-zA-Z0-9\/\+=" & rigNumToNativeChar(10) & rigNumToNativeChar(13) & "]" into tRegEx
    
    if matchtext(pString,tRegEx) is TRUE then
       return FALSE
@@ -247,8 +247,8 @@ end rigDecode
 --| Author: rabit
 --| Version:  1.3
 --| Created: 16-10-09
---| Last Mod: 22-12-14
---| Requires: rigRandomNum(), rigHash(), rigSubstr(), rigNumToCodepoint(), _rigXorMerge()
+--| Last Mod: 23-12-14
+--| Requires: rigRandomNum(), rigHash(), rigSubstr(), rigNumToNativeChar(), _rigXorMerge()
 --|
 --| Summary: Takes a plain-text string and key as input and generates an
 --|            encoded bit-string using XOR.
@@ -269,8 +269,7 @@ function _rigXorEncode pString pKey
 	put length(tRand) into tRandLength
 	
 	repeat with i = 1 to tStringLength
-		-- put (rigSubstr(tRand, (i mod tRandLength), 1)) & rigNumToCodepoint(((rigSubstrToNum(tRand, (i mod tRandLength), 1)) bitXOr (rigSubstrToNum(pString, i, 1)))) after tEnc
-		put rigSubstr(tRand, ((i - 1) mod tRandLength) + 1, 1) & (rigNumToCodepoint(rigSubstrToNum(tRand, ((i - 1) mod tRandLength) + 1, 1) bitXOr rigSubstrToNum(pString, i, 1))) after tEnc
+    put rigSubstr(tRand, ((i - 1) mod tRandLength) + 1, 1) & (rigNumToNativeChar(rigSubstrToNum(tRand, ((i - 1) mod tRandLength) + 1, 1, TRUE) bitXOr rigSubstrToNum(pString, i, 1, TRUE))) after tEnc
 	end repeat
 
 	return _rigXorMerge(tEnc, pKey)
@@ -288,8 +287,8 @@ end _rigXorEncode
 --| Author: rabit
 --| Version:  1.2
 --| Created: 16-10-09
---| Last Mod: 22-12-14
---| Requires: _rigXorMerge(), rigNumToCodepoint(), rigSubstrToNum()
+--| Last Mod: 23-12-14
+--| Requires: _rigXorMerge(), rigNumToNativeChar(), rigSubstrToNum()
 --|
 --| Summary: Takes an encoded string and key as input and generates the
 --|            plain-text original message.
@@ -302,17 +301,17 @@ end _rigXorEncode
 ----------------------------------------------------------------------*/
 
 function _rigXorDecode pString pKey
-	put _rigXorMerge(pString, pKey) into tString
+  put _rigXorMerge(pString, pKey) into tString
 
-	put length(tString) into tStringLength
+  put length(tString) into tStringLength
 
-	repeat with i = 1 to tStringLength
-		put i into j
-        	add 1 to i
-        	put rigNumToCodepoint((rigSubstrToNum(tString, i, 1)) bitXOr (rigSubstrToNum(tString, j, 1))) after tDec
-	end repeat
+  repeat with i = 1 to tStringLength
+    put i into j
+    add 1 to i
+    put rigNumToNativeChar((rigSubstrToNum(tString, i, 1, TRUE)) bitXOr (rigSubstrToNum(tString, j, 1, TRUE))) after tDec
+  end repeat
 
-	return tDec
+  return tDec
 end _rigXorDecode
 
 
@@ -327,8 +326,8 @@ end _rigXorDecode
 --| Author: rabit
 --| Version:  1.3
 --| Created: 16-10-09
---| Last Mod: 22-12-14
---| Requires: rigHash(), rigNumToCodepoint(), rigSubstrToNum()
+--| Last Mod: 23-12-14
+--| Requires: rigHash(), rigNumToNativeChar(), rigSubstrToNum()
 --|
 --| Summary: Takes a string and key as input and computes the difference using XOR.
 --| 
@@ -346,8 +345,7 @@ function _rigXorMerge pString pKey
 	put length(tHash) into tHashLength
 
 	repeat with i = 1 to tStringLength
-		-- put rigNumToCodepoint((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, (i mod tHashLength), 1))) after tStr
-		put rigNumToCodepoint((rigSubstrToNum(pString, i, 1)) bitXOr (rigSubstrToNum(tHash, ((i - 1) mod tHashLength) + 1, 1))) after tStr
+    put rigNumToNativeChar((rigSubstrToNum(pString, i, 1, TRUE)) bitXOr (rigSubstrToNum(tHash, ((i - 1) mod tHashLength) + 1, 1, TRUE))) after tStr
 	end repeat
 
 	return tStr
