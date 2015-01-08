@@ -1841,7 +1841,7 @@ end rigIsNumberedArray
 --| Author: rabit
 --| Version:  1.2
 --| Created: 21-01-10
---| Last Mod: 22-12-14
+--| Last Mod: 08-01-15
 --| Requires: rigCodepointToNum()
 --|
 --| Summary: Uppercase the first character of each word in a string.
@@ -1856,15 +1856,20 @@ end rigIsNumberedArray
 function rigUcwords pStr
 	put pStr into tUCstr
    
-   	repeat for each word thisWord in tUCstr
-      		if ((rigCodepointToNum(char 1 of thisWord) >= 97) and (rigCodepointToNum(char 1 of thisWord) <= 122)) or \
-            		((rigCodepointToNum(char 1 of thisWord) >= 135) and (rigCodepointToNum(char 1 of thisWord) <= 159)) then
-          
-         		put toUpper(char 1 of thisWord) into char 1 of thisWord
-      		end if
-   	end repeat
+	put 0 into tCounter
+	repeat for each word thisWord in pStr
+		add 1 to tCounter
+      
+		if ((rigCodepointToNum(char 1 of thisWord) >= 97) and (rigCodepointToNum(char 1 of thisWord) <= 122)) or \
+			((rigCodepointToNum(char 1 of thisWord) >= 135) and (rigCodepointToNum(char 1 of thisWord) <= 159)) then
+         
+			put toUpper(char 1 of thisWord) into char 1 of thisWord
+         
+			replace word tCounter of tUCstr with thisWord in tUCstr
+		end if
+	end repeat
    
-   	return tUCstr
+	return tUCstr
 end rigUcwords
 
 
