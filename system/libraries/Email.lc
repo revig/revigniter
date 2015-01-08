@@ -1056,7 +1056,7 @@ function _rigGetMessageID
 	put item -1 of tFrom into tDomain
   
   # USE INTEGER AS FIRST CHAR OF ID SO THAT MESSAGE-ID IS ALWAYS SHOWN IN MAIL DEBUGGER
-  put 1 into tUniqueid
+  put random(9) into tUniqueid
   repeat 24
     put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
   end repeat
