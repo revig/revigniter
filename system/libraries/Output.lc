@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -440,13 +440,13 @@ end _rigDisplay
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigWriteCache
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 25-07-09
---| Last Mod: 25-07-09
+--| Last Mod: 22-12-14
 --| Requires: rigFetchConfigItem(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
@@ -456,7 +456,7 @@ end _rigDisplay
 --| Parameters: string <pOutput>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigWriteCache pOutput
 	put rigFetchConfigItem("cache_path") into tPath
@@ -475,7 +475,11 @@ command _rigWriteCache pOutput
 
 	put tCachePath & rigHexDigest(tUri) into tCachePath
 
-	open file tCachePath for write 
+	open file tCachePath for write
+  # ENGINE ≥ 7 VERSION
+  -- put rigFetchConfigItem("defaultCharset") into tCharset
+  -- open file tCachePath for tCharset text write
+  
 	if the result is empty then -- success!
 		put gBASEPATH & "cache/flock.txt" into tFlockPath
 
@@ -537,13 +541,13 @@ end _rigWriteCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigOutDisplayCache
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 25-07-09
---| Last Mod: 25-07-09
+--| Last Mod: 22-12-14
 --| Requires: rigFetchConfigItem(), rigLogMessage, _rigDisplay
 --|
 --| Summary:  Update/serve a cached file.
@@ -553,7 +557,7 @@ end _rigWriteCache
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigOutDisplayCache
 	put rigFetchConfigItem("cache_path") into tCachePath
@@ -576,6 +580,10 @@ function _rigOutDisplayCache
 	end if
 
 	open file tFilePath for read
+  # ENGINE ≥ 7 VERSION
+  -- put rigFetchConfigItem("defaultCharset") into tCharset
+  -- open file tFilePath for tCharset text read
+
 	if the result is not empty then
 		return FALSE
 	end if

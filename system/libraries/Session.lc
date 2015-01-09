@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -63,15 +63,15 @@ put "" into sSession["userdata"]
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialSessionConfig
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 12-10-09
---| Last Mod: 15-07-12
---| Requires: rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigLoadDatabase(), _rigGetTime(),
---|                  _rigFlashdataSweep, _rigFlashdataMark, _rigSessGC, rigLogMessage
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigLoadDatabase(),
+--|            _rigGetTime(), _rigFlashdataSweep, _rigFlashdataMark, _rigSessGC, rigLogMessage
 --|
 --| Summary: The session routines are run automatically
 --|                    whenever the library is loaded.
@@ -81,12 +81,12 @@ put "" into sSession["userdata"]
 --| Parameters: array <pParams>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialSessionConfig pParams
 	if pParams is not an array then
 		if pParams is not empty then
-			split pParams using numtochar(1) and numtochar(2)
+			split pParams using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 
@@ -1006,13 +1006,13 @@ end _rigSerializeSess
 --| FUNCTION _rigUnserializeSess
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 12-10-09
---| Last Mod: 21-03-14
---| Requires: rigStripSlashes()
+--| Last Mod: 22-12-14
+--| Requires: rigStripSlashes(), rigCodepointToNum()
 --|
 --| Summary: This function unserializes a data string, then converts any
---|                    temporary slash markers back to actual slashes.
+--|            temporary slash markers back to actual slashes.
 --| 
 --| Format:  _rigUnserializeSess(param1)
 --|
@@ -1025,7 +1025,7 @@ function _rigUnserializeSess pData
 	put rigStripSlashes(pData) into tData
 
 	# CHECK IF TDATA IS ARRAYENCODED
-	if charToNum(char 1 of tData) = 5 then
+	if rigCodepointToNum(char 1 of tData) = 5 then
 		# OK, THEN DECODE TDATA
 		put arrayDecode(tData) into tData
 	end if

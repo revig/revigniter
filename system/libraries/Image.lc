@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -83,14 +83,14 @@ put "200x200" into sImgSizeHintForThumb
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialImageConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-01-10
---| Last Mod: 10-01-10
---| Requires: rigInitializeImage
+--| Last Mod: 22-12-14
+--| Requires: rigNumToCodepoint(), rigInitializeImage
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -99,14 +99,14 @@ put "200x200" into sImgSizeHintForThumb
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialImageConfig pConfig
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using numtochar(1) and numtochar(2)
+			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
 		end if
 	end if
 

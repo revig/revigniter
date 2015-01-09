@@ -17,7 +17,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -40,7 +40,7 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "1.6.15"
+	constant RIVERSION = "1.6.16"
 	constant RISTATE = "final"
 	
 	

@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -282,14 +282,14 @@ end rigSlashItem
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSiteURL
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 28-07-09
---| Last Mod: 08-11-09
---| Requires: rigSlashItem(), rigFetchConfigItem()
+--| Last Mod: 22-12-14
+--| Requires: rigSlashItem(), rigFetchConfigItem(), rigNumToCodepoint()
 --|
 --| Summary: Site URL
 --| 
@@ -298,98 +298,98 @@ end rigSlashItem
 --| Parameters: string <pURI> the URI string
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSiteURL pURI
-	put pURI into tURI
-	if tURI is an array then
-		combine tURI using "/"
-	end if
+  put pURI into tURI
+  if tURI is an array then
+    combine tURI using "/"
+  end if
     
-	# CHECK IF STANDARD QUERY STRING BASED URLs ARE ENABLED
-	put rigFetchConfigItem("enableQueryStrings") into tStandardURLs -- variance
+  # CHECK IF STANDARD QUERY STRING BASED URLs ARE ENABLED
+  put rigFetchConfigItem("enableQueryStrings") into tStandardURLs -- variance
 
-	if tURI is "" then
-		return rigSlashItem("baseUrl") & rigFetchConfigItem("indexPage")
-	else
-		put rigFetchConfigItem("urlSuffix") into tConfigValue
-		if tConfigValue is FALSE then
-			put "" into tSuffix
-		else
-			put tConfigValue into tSuffix
-		end if
+  if tURI is "" then
+    return rigSlashItem("baseUrl") & rigFetchConfigItem("indexPage")
+  else
+    put rigFetchConfigItem("urlSuffix") into tConfigValue
+    if tConfigValue is FALSE then
+      put "" into tSuffix
+    else
+      put tConfigValue into tSuffix
+    end if
         
-		put "^/*(.+?)/*$" into tRegEx
+    put "^/*(.+?)/*$" into tRegEx
         
-		if matchtext(tURI,tRegEx,tFoundString) is TRUE then
-			put tFoundString into tURI
-		end if
+    if matchtext(tURI,tRegEx,tFoundString) is TRUE then
+      put tFoundString into tURI
+    end if
         
-		-- variance
-		# QUERY STRING BASED URLs 
-		if tStandardURLs is TRUE then 
-			# GET CONTROLLER TRIGGER
-			put rigFetchConfigItem("controllerTrigger") into tC
+    -- variance
+    # QUERY STRING BASED URLs 
+    if tStandardURLs is TRUE then 
+      # GET CONTROLLER TRIGGER
+      put rigFetchConfigItem("controllerTrigger") into tC
 
-			if "/" is in tURI then -- controller and method 
-				# GET METHOD TRIGGER
-				put rigFetchConfigItem("methodTrigger") into tM 
-				-- replace "/" with "&" & tM & "=" in tURI 
+      if "/" is in tURI then -- controller and method 
+        # GET METHOD TRIGGER
+        put rigFetchConfigItem("methodTrigger") into tM 
+        -- replace "/" with "&" & tM & "=" in tURI 
 
-        			set the itemdel to "/"
+        set the itemdel to "/"
         
-        			put item 1 of tURI into tQueryString
+        put item 1 of tURI into tQueryString
          
-         			# START WITH ASCII VALUE 97 = a (96 +1) FOR QUERY KEYS
-        			put 96 into tCurrentKeyNum
+        # START WITH ASCII VALUE 97 = a (96 +1) FOR QUERY KEYS
+        put 96 into tCurrentKeyNum
 
-        			put 0 into tSegment
-        			repeat for each item thisItem in tURI
-            				add 1 to tSegment
+        put 0 into tSegment
+        repeat for each item thisItem in tURI
+          add 1 to tSegment
              
-            				if tSegment > 1 then
-						# METHOD SEGMENT
-                				if tSegment is 2 then
-                    				put "&" & tM & "=" & thisItem after tQueryString
-                				else
-							# OTHER SEGMENTS
-                    				put tCurrentKeyNum + 1 into tCurrentKeyNum
+          if tSegment > 1 then
+            # METHOD SEGMENT
+            if tSegment is 2 then
+              put "&" & tM & "=" & thisItem after tQueryString
+            else
+              # OTHER SEGMENTS
+              put tCurrentKeyNum + 1 into tCurrentKeyNum
                     
-                    				put FALSE into tKeyNotUsed
+              put FALSE into tKeyNotUsed
                     
-                    				repeat until tKeyNotUsed is TRUE
-                        					put numtochar(tCurrentKeyNum) into tKey
-                        					if (tKey is not tC) and (tKey is not tM) then
-                            					put TRUE into tKeyNotUsed
-                        					else
-                            					put tCurrentKeyNum + 1 into tCurrentKeyNum
-                        					end if
-                    				end repeat
+              repeat until tKeyNotUsed is TRUE
+                put rigNumToCodepoint(tCurrentKeyNum) into tKey
+                if (tKey is not tC) and (tKey is not tM) then
+                  put TRUE into tKeyNotUsed
+                else
+                  put tCurrentKeyNum + 1 into tCurrentKeyNum
+                end if
+              end repeat
                     
-                    				put "&" & tKey & "=" & thisItem after tQueryString
-                				end if
-            				end if
-        			end repeat
+              put "&" & tKey & "=" & thisItem after tQueryString
+            end if
+          end if
+        end repeat
 	
-				put "?" & tC & "=" & tQueryString into tURI
-    			else
-				put "?" & tC & "=" into tPrefix
-                		if tURI begins with tPrefix then
-                		else
-                    		put "?" & tC & "=" & tURI into tURI
-                		end if
+        put "?" & tC & "=" & tQueryString into tURI
+      else
+        put "?" & tC & "=" into tPrefix
+        if tURI begins with tPrefix then
+        else
+          put "?" & tC & "=" & tURI into tURI
+        end if
 
-			end if 
+      end if 
 
-		end if
-		-- 
+    end if
+    -- 
 
-		if tStandardURLs is TRUE then  -- variance
-			return rigSlashItem("baseUrl") & rigFetchConfigItem("indexPage") & rigTrim(tURI, "/") & tSuffix  -- variance
-		else  -- variance
-			return rigSlashItem("baseUrl") & rigSlashItem("indexPage") & rigTrim(tURI, "/") & tSuffix
-		end if  -- variance
-	end if
+    if tStandardURLs is TRUE then  -- variance
+      return rigSlashItem("baseUrl") & rigFetchConfigItem("indexPage") & rigTrim(tURI, "/") & tSuffix  -- variance
+    else  -- variance
+      return rigSlashItem("baseUrl") & rigSlashItem("indexPage") & rigTrim(tURI, "/") & tSuffix
+    end if  -- variance
+  end if
 end rigSiteURL
 
 

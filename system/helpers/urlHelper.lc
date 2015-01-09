@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2013, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -359,14 +359,14 @@ end rigMailToLink
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSafeMailToLink
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 05-10-09
---| Last Mod: 05-10-09
---| Requires: rigArrayReverse()
+--| Last Mod: 21-12-14
+--| Requires: rigCodepointToNum(), rigArrayReverse(), rigNumToCodepoint()
 --|
 --| Summary: Create a spam-protected mailTo link written in Javascript.
 --| 
@@ -375,7 +375,7 @@ end rigMailToLink
 --| Parameters: string <pEmail>, string <pTitle> the link title, mixed <pAttributes> any attributes
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSafeMailToLink pEmail pTitle pAttributes
 	if pTitle is empty then
@@ -393,7 +393,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 	repeat with i = 1 to (the number of chars in pEmail)
 		add 1 to tCharsNum
 		put char i of pEmail into tChar
-		put "|" & charToNum(tChar) into tX[tCharsNum]
+		put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
 	end repeat
 
 	add 1 to tCharsNum
@@ -410,7 +410,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 				repeat with i = 1 to (the number of chars in tVal)
 					add 1 to tCharsNum
 					put char i of tVal into tChar
-					put "|" & charToNum(tChar) into tX[tCharsNum]
+					put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
 				end repeat
 				
 				add 1 to tCharsNum
@@ -422,7 +422,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 			repeat with i = 1 to (the number of chars in pAttributes)
 				add 1 to tCharsNum
 				put char i of pAttributes into tChar
-				put "|" & charToNum(tChar) into tX[tCharsNum]
+				put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
 			end repeat
 		end if
 	end if
@@ -435,7 +435,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 	repeat with i = 1 to (the number of chars in tTitle)
 		add 1 to tCharsNum
 		put char i of tTitle into tChar
-		put charToNum(tChar) into tOrdinal
+		put rigCodepointToNum(tChar) into tOrdinal
 
 		
 		if tOrdinal < 128 then
@@ -480,7 +480,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 	put ">" into tX[tCharsNum]
 
 	# REVERSE ARRAY
-	put numtochar(1) into tItemDelimiter
+	put rigNumToCodepoint(1) into tItemDelimiter
 	put rigArrayReverse(tX, tItemDelimiter) into tX
 
 	# WRITE HTML CODE

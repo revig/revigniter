@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.15</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.16</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1407,13 +1407,11 @@ put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepat
 
 <p class="important"><strong>Note:</strong> The default admin user has the following credentials. Identity: admin@admin.com Password: revigniter. This password works as long as you use the default authentication encryption settings.</p>
 
-<p>The MySQL version:</p>
+<p><strong>The MySQL version:</strong></p>
 
 
-<pre><code># Dump of table groups
+<pre><code># Table structure for groups
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `groups`;
 
 CREATE TABLE `groups` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -1421,6 +1419,11 @@ CREATE TABLE `groups` (
   `description` varchar(100) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Records of groups
+# ------------------------------------------------------------
 
 LOCK TABLES `groups` WRITE;
 
@@ -1430,14 +1433,12 @@ VALUES
 	(2,'members','General User'),
 	(3,'other','Other User');
 
-
 UNLOCK TABLES;
 
 
-# Dump of table login_attempts
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `login_attempts`;
+# Table structure for login_attempts
+# ------------------------------------------------------------
 
 CREATE TABLE `login_attempts` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -1449,10 +1450,8 @@ CREATE TABLE `login_attempts` (
 
 
 
-# Dump of table users
+# Table structure for users
 # ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
@@ -1474,8 +1473,12 @@ CREATE TABLE `users` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-LOCK TABLES `users` WRITE;
 
+
+# Records of users
+# ------------------------------------------------------------
+
+LOCK TABLES `users` WRITE;
 
 INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
 `activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
@@ -1484,11 +1487,10 @@ INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`,
 VALUES (1,'127.0.0.1','admin','U2FsdGVkX1+rzbdtWLk7ESY6mVdUsoktJqIhpamjtAOIKzZVRnMc3g==',
 'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
 
-
 UNLOCK TABLES;
 
 
-# Dump of table users_groups
+# Table structure for users_groups
 # ------------------------------------------------------------
 
 DROP TABLE IF EXISTS `users_groups`;
@@ -1500,23 +1502,29 @@ CREATE TABLE `users_groups` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-LOCK TABLES `users_groups` WRITE;
 
+
+# Records of users_groups
+# ------------------------------------------------------------
+
+LOCK TABLES `users_groups` WRITE;
 
 INSERT INTO `users_groups` (`id`, `userId`, `groupId`)
 VALUES
 	(1,1,1),
 	(2,1,2);
 
-
 UNLOCK TABLES;
 </code></pre>
 
 
-<p>The PostgreSQL version:</p>
+<p><strong>The PostgreSQL version:</strong></p>
 
 
-<pre><code>CREATE TABLE "users" (
+<pre><code># Table structure for users
+# ------------------------------------------------------------
+
+CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "ipAddress" varchar(16) NOT NULL,
     "username" varchar(100) NOT NULL,
@@ -1539,6 +1547,10 @@ UNLOCK TABLES;
 );
 
 
+
+# Table structure for groups
+# ------------------------------------------------------------
+
 CREATE TABLE "groups" (
     "id" SERIAL NOT NULL,
     "name" varchar(20) NOT NULL,
@@ -1547,6 +1559,10 @@ CREATE TABLE "groups" (
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
 
+
+
+# Table structure for users_groups
+# ------------------------------------------------------------
 
 CREATE TABLE "users_groups" (
     "id" SERIAL NOT NULL,
@@ -1559,12 +1575,21 @@ CREATE TABLE "users_groups" (
 );
 
 
+
+# Records of groups
+# ------------------------------------------------------------
+
 INSERT INTO "groups" (id, name, description)
 SELECT 1,'admin','Administrator'
 UNION SELECT
 2,'members','General User'
 UNION SELECT
 3,'other','Other User';
+
+
+
+# Records of users
+# ------------------------------------------------------------
 
 INSERT INTO "users" ("ipAddress", username, password, email, 
 "activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
@@ -1575,11 +1600,19 @@ INSERT INTO "users" ("ipAddress", username, password, email,
 'Admin','Istrator','ADMIN','0');
 
 
+
+# Records of users_groups
+# ------------------------------------------------------------
+
 INSERT INTO "users_groups" ("userId", "groupId")
 SELECT 1, 1
 UNION SELECT
 1, 2;
 
+
+
+# Table structure for login_attempts
+# ------------------------------------------------------------
 
 CREATE TABLE "login_attempts" (
     "id" SERIAL NOT NULL,
@@ -1588,6 +1621,102 @@ CREATE TABLE "login_attempts" (
     "time" int,
   PRIMARY KEY("id"),
   CONSTRAINT "check_id" CHECK(id >= 0)
+);
+</code></pre>
+
+
+<p><strong>The SQLite version:</strong></p>
+
+
+<pre><code># Table structure for users
+# ------------------------------------------------------------
+
+CREATE TABLE "users" (
+	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "ipAddress" TEXT(16,0) NOT NULL,
+	 "username" TEXT(100,0) NOT NULL,
+	 "password" TEXT NOT NULL,
+	 "email" TEXT(100,0) NOT NULL,
+	 "activationCode" TEXT(40,0) DEFAULT NULL,
+	 "forgottenPasswordCode" TEXT(40,0) DEFAULT NULL,
+	 "forgottenPasswordTime" INTEGER(11,0) NOT NULL DEFAULT 0,
+	 "rememberCode" TEXT(40,0) DEFAULT NULL,
+	 "createdOn" INTEGER(11,0) NOT NULL,
+	 "lastLogin" INTEGER(11,0) DEFAULT NULL,
+	 "active" INTEGER(1,0) DEFAULT NULL,
+	 "firstName" TEXT(50,0) DEFAULT NULL,
+	 "lastName" TEXT(50,0) DEFAULT NULL,
+	 "company" TEXT(100,0) DEFAULT NULL,
+	 "phone" TEXT(20,0) DEFAULT NULL
+);
+
+
+
+# Table structure for groups
+# ------------------------------------------------------------
+
+CREATE TABLE "groups" (
+	 "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+	 "name" TEXT(20,0) NOT NULL,
+	 "description" TEXT(100,0) NOT NULL
+);
+
+
+
+# Table structure for users_groups
+# ------------------------------------------------------------
+
+CREATE TABLE "users_groups" (
+	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+	 "userId" INTEGER(8,0) NOT NULL,
+	 "groupId" INTEGER(8,0) NOT NULL,
+	CONSTRAINT "Foreign_UsersID" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT "Foreign_GroupsID" FOREIGN KEY ("groupId") REFERENCES "groups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+
+
+# Records of groups
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "groups" VALUES (1, 'admin', 'Administrator');
+INSERT INTO "groups" VALUES (2, 'members', 'General User');
+INSERT INTO "groups" VALUES (3, 'other', 'Other User');
+COMMIT;
+
+
+
+# Records of users
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1+rzbdtWLk7ESY6mVdUsoktJqIhpamjtAOIKzZVRnMc3g==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
+'Admin', 'Istrator', 'ADMIN', 0);
+COMMIT;
+
+
+
+# Records of users_groups
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users_groups" VALUES (1, 1, 1);
+INSERT INTO "users_groups" VALUES (2, 1, 2);
+COMMIT;
+
+
+
+# Table structure for login_attempts
+# ------------------------------------------------------------
+
+CREATE TABLE "login_attempts" (
+	 "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+	 "ipAddress" TEXT(16,0) NOT NULL,
+	 "login" TEXT(100,0) NOT NULL,
+	 "time" INTEGER(11,0) DEFAULT NULL
 );
 </code></pre>
 
@@ -3362,7 +3491,17 @@ button a {
 }
 </code></pre>
 
-<p>After having installed all those sample files go to your authentication page (yourDomain.com/auth/) and login as admin using "admin@admin.com" as user id and "revigniter" as password. Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected. Log out. Check your email account and activate your test registration. Go to yourDomain.com/auth/logout/ to log out. Go to yourDomain.com/auth/forgotPassword, enter your email address and check your email account again to reset your password. Activate / deactivate users using the admin account. In short: Have fun.</p>
+<h2>Try it!</h2>
+
+<p>After having installed all those sample files</p>
+<ul><li>go to your authentication page (yourDomain.com/auth/) and login as admin using "admin@admin.com" as user id and "revigniter" as password.</li>
+	<li>Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected.</li>
+	<li>Log out.</li>
+	<li>Check your email account and activate your test registration.</li>
+	<li>Go to yourDomain.com/auth/logout/ to log out.</li>
+	<li>Go to yourDomain.com/auth/forgotPassword, enter your email address and check your email account again to reset your password.</li>
+	<li>Activate / deactivate users using the admin account.</li>
+	<li>In short: Have fun.</li></ul>
 
 
 
@@ -3382,7 +3521,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2014<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
