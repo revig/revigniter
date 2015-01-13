@@ -163,15 +163,15 @@ end rigRunInitialSessionConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSessRead
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 12-10-09
---| Last Mod: 12-02-13
+--| Last Mod: 13-01-15
 --| Requires: rigVarCookie(), rigLogMessage, rigDecode(), rigSessDestroy, _rigUnserializeSess(),
---|                   rigIpAddress(), rigTrim(), rigDbWhere, rigDbGet(), rigDbRow()
+--|            rigIpAddress(), rigTrim(), rigDbWhere, rigDbGet(), rigDbRow()
 --|
 --| Summary: Fetch the current session data if it exists.
 --| 
@@ -180,7 +180,7 @@ end rigRunInitialSessionConfig
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSessRead
 	# FETCH THE COOKIE
@@ -194,14 +194,13 @@ function rigSessRead
 
 	# DECRYPT THE COOKIE DATA
 	if sSession["sess_encrypt_cookie"] is TRUE then
-		put urlDecode(tSession) into tSession
-		put rigDecode(tSession) into tSession
+    put base64Decode(urlDecode(tSession)) into tSession
+	  put rigDecode(tSession) into tSession
 	else
-		# ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE Md5 HASH
-		put char -32 to -1 of tSession into tHash -- get last 32 chars
-		put char 1 to -33 of tSession into tSession
-
-		put urlDecode(tSession) into tSession
+    # ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE Md5 HASH
+    put base64Decode(urlDecode(tSession)) into tSession
+	  put char -32 to -1 of tSession into tHash -- get last 32 chars
+	  put char 1 to -33 of tSession into tSession
 
 		# DOES THE Md5 HASH MATCH? THIS IS TO PREVENT MANIPULATION OF SESSION DATA IN USERSPACE
 		put tSession & sSession["encryption_key"] into tTempStr
@@ -269,7 +268,7 @@ function rigSessRead
 		# IS THERE CUSTOM DATA?  IF SO, ADD IT TO THE MAIN SESSION ARRAY
 		put rigDbRow() into tRow
 		if tRow["user_data"] is not empty then
-			put urlDecode(tRow["user_data"]) into tCustomData
+      put base64Decode(urlDecode(tRow["user_data"])) into tCustomData
 			put _rigUnserializeSess(tCustomData) into tCustomData
 			if tCustomData is an array then
 				repeat for each key tKey in tCustomData
@@ -300,9 +299,9 @@ end rigSessRead
 --| COMMAND rigSessWrite
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 12-10-09
---| Last Mod: 12-10-09
+--| Last Mod: 13-01-15
 --| Requires: _rigSetCookie, _rigSerializeSess(), rigDbWhere, rigDbUpdate()
 --|
 --| Summary: Write the session data.
@@ -339,8 +338,8 @@ command rigSessWrite
 	if the number of lines in the keys of tCustomUserdata = 0 then
 	else
 		# SERIALIZE THE CUSTOM DATA ARRAY SO WE CAN STORE IT
-		put _rigSerializeSess(tCustomUserdata) into tCustomUserdata
-		put urlEncode(tCustomUserdata) into tCustomUserdata
+	  put _rigSerializeSess(tCustomUserdata) into tCustomUserdata
+    put urlEncode(base64Encode(tCustomUserdata)) into tCustomUserdata
 	end if
 
 	# RUN THE UPDATE QUERY
@@ -1006,9 +1005,9 @@ end _rigSerializeSess
 --| FUNCTION _rigUnserializeSess
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 12-10-09
---| Last Mod: 22-12-14
+--| Last Mod: 13-01-15
 --| Requires: rigStripSlashes(), rigCodepointToNum()
 --|
 --| Summary: This function unserializes a data string, then converts any
@@ -1022,28 +1021,34 @@ end _rigSerializeSess
 ----------------------------------------------------------------------*/
 
 function _rigUnserializeSess pData
-	put rigStripSlashes(pData) into tData
+  put rigStripSlashes(pData) into tData
+ 
+  # CHECK IF TDATA IS ARRAYENCODED
+  if not gAdvancedUnicode then -- output of arrayEncode() is different since LiveCode version 7
+    put 5 into tArrayEncodedMarker
+  else
+    put 6 into tArrayEncodedMarker
+  end if
 
-	# CHECK IF TDATA IS ARRAYENCODED
-	if rigCodepointToNum(char 1 of tData) = 5 then
-		# OK, THEN DECODE TDATA
-		put arrayDecode(tData) into tData
-	end if
+  if rigCodepointToNum(char 1 of tData) = tArrayEncodedMarker then
+    # OK, THEN DECODE TDATA
+    put arrayDecode(tData) into tData
+  end if
 
-	if tData is an array then
-		repeat for each key tKey in tData
-			put tData[tKey] into tVal
+  if tData is an array then
+    repeat for each key tKey in tData
+      put tData[tKey] into tVal
 
-			replace "{{slash}}" with "\" in tVal
-			put tVal into tData[tKey]
-		end repeat
+      replace "{{slash}}" with "\" in tVal
+      put tVal into tData[tKey]
+    end repeat
 
-		return tData
-	end if
+    return tData
+  end if
 
-	replace "{{slash}}" with "\" in tData
+  replace "{{slash}}" with "\" in tData
 
-	return tData
+  return tData
 end _rigUnserializeSess
 
 

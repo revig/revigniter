@@ -72,9 +72,9 @@ end rigSetCookie
 --| FUNCTION rigGetCookie
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 30-05-09
---| Last Mod: 30-06-10
+--| Last Mod: 13-01-15
 --| Requires: Input.lc, rigGetCookies(), rigConfigItem(), rigVarCookie()
 --|
 --| Summary: Fetch an item from the COOKIE array.
@@ -102,7 +102,12 @@ function rigGetCookie pName pXssFlag
 
 	put rigVarCookie(tPrefix & pName, pXssFlag) into tCookieVal
 	
-	return URLdecode(tCookieVal)
+  put urlDecode(tCookieVal) into tURLdecodedCookieVal
+  if tURLdecodedCookieVal <> false then
+    return base64Decode(tURLdecodedCookieVal) 
+  end if
+
+  return false
 end rigGetCookie
 
 
@@ -115,9 +120,10 @@ end rigGetCookie
 --| FUNCTION rigGetCookies
 --|
 --| Author: Sarah Reichelt
---| Version:  1.1
+--| Modification: rabit
+--| Version:  1.2
 --| Created: 30-05-09
---| Last Mod: 07-08-09
+--| Last Mod: 13-01-15
 --| Requires: --
 --|
 --| Summary: Fetch all cookies stored for this site / page.
@@ -140,14 +146,15 @@ function rigGetCookies
 	if tCookiesRaw contains ";" then
 		set the lineDel to ";"
 		repeat for each line cookie in tCookiesRaw
-			put item 1 of cookie into tCookieName
+		  put item 1 of cookie into tCookieName
 			if char 1 of tCookieName = space then delete char 1 of tCookieName
-			put urlDecode(item 2 of cookie) into tCookies[tCookieName]
+        put base64Decode(urlDecode(item 2 of cookie)) into tCookies[tCookieName]
+      
 		end repeat
 	else
 		put item 1 of tCookiesRaw into tCookieName
 		if char 1 of tCookieName = space then delete char 1 of tCookieName
-		put urlDecode(item 2 of tCookiesRaw) into tCookies[tCookieName]
+      put base64Decode(urlDecode(item 2 of tCookiesRaw)) into tCookies[tCookieName]
 	end if
 
 	return tCookies
