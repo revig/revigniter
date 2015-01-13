@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.16</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.17</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -278,7 +278,7 @@ else
 <h2>Dealing with LiveCode Arrays in Post Data</h2>
 
 <p>You can send LiveCode arrays to revIgniter using POST. For this to work the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd> respectively in case you like to send your array in compressed form.<br />Use 
-	<pre><code>urlEncode(arrayEncode(myArray))</code></pre> 
+	<pre><code>base64Encode(arrayEncode(myArray))</code></pre> 
 	or 
 	<pre><code>base64Encode(compress(arrayEncode(myArray)))</code></pre> 
 to prepare LiveCode arrays on the client side.</p>
