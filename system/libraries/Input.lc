@@ -2294,9 +2294,9 @@ end rigStripImgTags
 --| COMMAND _rigInputSetCookie
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 15-07-12
---| Last Mod: 02-07-13
+--| Last Mod: 13-01-15
 --| Requires: rigCookieExpirationDate(), rigSetHeader
 --|
 --| Summary: Accepts nine parameters, or you can submit an associative
@@ -2370,19 +2370,19 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 	end if
 	
 	if (pHttpOnly is empty) or (pHttpOnly is TRUE) then
-			# SET THE HttpOnly FLAG
-			put  "; HttpOnly" into pHttpOnly
-		else
-			put empty into pHttpOnly
-		end if
-
+		# SET THE HttpOnly FLAG
+		put  "; HttpOnly" into pHttpOnly
+	else
+		put empty into pHttpOnly
+	end if
+    
 	if pExp is not empty then
-		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & "; expires=" & rigCookieExpirationDate(pExp) & pDomain & pHttpOnly into tHeaderString
-		rigSetHeader tHeaderString, pReplace
+    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & "; expires=" & rigCookieExpirationDate(pExp) & pDomain & pHttpOnly into tHeaderString
+	  rigSetHeader tHeaderString, pReplace
 
 	else
-		put "Set-Cookie: " && pName & "=" & urlEncode(pValue) & pPath & pDomain & pHttpOnly into tHeaderString
-		rigSetHeader tHeaderString, pReplace
+    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & pDomain & pHttpOnly into tHeaderString
+	  rigSetHeader tHeaderString, pReplace
 	end if
 end _rigInputSetCookie
 
@@ -2457,13 +2457,13 @@ end rigCookieExpirationDate
 --| FUNCTION rigSerializedPOSTtoArray
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 26-06-2013
---| Last Mod: 26-06-2013
+--| Last Mod: 13-01-2015
 --| Requires: _rigCleanInputKeys(), _rigCleanInputData()
 --|
 --| Summary: Clean, decode and decompress $_POST data including
---|          encoded / compressed LiveCode arrays.
+--|             encoded / compressed LiveCode arrays.
 --| 
 --| Format:  rigSerializedPOSTtoArray(param1)
 --|
@@ -2472,7 +2472,7 @@ end rigCookieExpirationDate
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigSerializedPOSTtoArray pPOSTdata  
+function rigSerializedPOSTtoArray pPOSTdata
 	# TRAVERSE THE POST ARRAY, DECODE / DECOMPRESS ENCODED ARRAYS
 	# AND SANITIZE ALL KEYS AND VALUES
 	if pPOSTdata is an array then
@@ -2488,13 +2488,13 @@ function rigSerializedPOSTtoArray pPOSTdata
 				# IF THE STRING IS AN ENCODED ARRAY WE NEED TO DECODE OR DECODE AND DECOMPRESS
 				# THE POST DATA DEPENDING ON THE CONTENT TYPE
 				if sContentType is "application/lc.array" then
-			  	try
-			  		put arrayDecode(urlDecode(pPOSTdata[tDataKey])) into pPOSTdata[tDataKey]
-			    	put rigSerializedPOSTtoArray(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+			  	try         
+              put arrayDecode(base64Decode(pPOSTdata[tDataKey])) into pPOSTdata[tDataKey]
+			    	  put rigSerializedPOSTtoArray(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
 			  	catch err
 			    	-- rigLogMessage "info", "Failed to decode POST data of type application/lc.array."
                
-			    	put _rigCleanInputData(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
+			    	  put _rigCleanInputData(pPOSTdata[tDataKey]) into pPOSTdata[tDataKey]
 			  	end try
 				else if sContentType is "application/lc.array.compressed" then
 					try
