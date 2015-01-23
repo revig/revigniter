@@ -389,9 +389,9 @@ end rigTransRollback
 --| FUNCTION rigEscapeStr
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 10-04-14
---| Last Mod: 21-12-14
+--| Last Mod: 23-01-15
 --| Requires: rigEscapeStr(), rigNumToCodepoint()
 --|
 --| Summary: Escapes string.
@@ -420,24 +420,8 @@ function rigEscapeStr pStr pLike
 		return tStr
 	end if
 	
-	# \ to \\
-	replace rigNumToCodepoint(92) with rigNumToCodepoint(92) & rigNumToCodepoint(92) in tStr
-	# ' to \'
-	replace rigNumToCodepoint(39) with rigNumToCodepoint(92) & rigNumToCodepoint(39) in tStr
-	# " to \"
-	replace rigNumToCodepoint(34) with rigNumToCodepoint(92) & rigNumToCodepoint(34) in tStr
-	# backspace to \b
-	replace rigNumToCodepoint(8) with rigNumToCodepoint(92) & rigNumToCodepoint(98) in tStr
-	# NULL to \0
-	replace rigNumToCodepoint(0) with rigNumToCodepoint(92) & rigNumToCodepoint(48) in tStr
-	# Control-Z to \Z
-	replace rigNumToCodepoint(26) with rigNumToCodepoint(92) & rigNumToCodepoint(90) in tStr
-	# newline to \n
-	replace rigNumToCodepoint(10) with rigNumToCodepoint(92) & rigNumToCodepoint(110) in tStr
-	# carriage return to \r
-	replace rigNumToCodepoint(13) with rigNumToCodepoint(92) & rigNumToCodepoint(114) in tStr
-	# tab to \t
-	replace rigNumToCodepoint(9) with rigNumToCodepoint(92) & rigNumToCodepoint(116) in tStr
+  # ' to ''
+  replace rigNumToCodepoint(39) with rigNumToCodepoint(39) & rigNumToCodepoint(39) in tStr
 
 	# ESCAPE LIKE CONDITION WILDCARDS
 	if tLike is TRUE then
