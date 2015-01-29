@@ -486,9 +486,9 @@ end rigCSRFsetCookie
 --| COMMAND rigCSRFshowError
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 14-07-2012
---| Last Mod: --
+--| Last Mod: 29-01-2015
 --| Requires: rigShowError
 --|
 --| Summary: Show CSRF error.
@@ -501,7 +501,7 @@ end rigCSRFsetCookie
 ----------------------------------------------------------------------*/
 
 command rigCSRFshowError
-	rigShowError "The action you have requested is not allowed."
+	rigShowError "The action you have requested is not allowed.", 200
 end rigCSRFshowError
 
 
