@@ -128,9 +128,6 @@ you should do so before continuing.</p>
 
 <pre><code>&lt;?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
@@ -148,9 +145,6 @@ end index
 <h2>Loading multiple views</h2>
 <p>revIgniter will intelligently handle  multiple calls to rigLoadView() from within a controller.  If more than one call happens they will be appended together. For example, you may wish to have a header view, a menu view, a content view, and a footer view. That might look something like this:</p>
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
@@ -188,9 +182,6 @@ get rigLoadView("blogview")
 
 <pre><code>&lt;?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
@@ -227,9 +218,6 @@ pull data from your database it will typically be in the form of a multi-dimensi
 
 
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
@@ -341,8 +329,6 @@ return tHeader && tContent && tFooter ?>
 <p>Then, in the controller, we solely load the main view file to send a complete web page to the browser like in the following example:</p>
 
 <pre><code>&lt;?rev
-
-global gControllerHandlers, gData
 
 put "welcome,index" into gControllerHandlers
 

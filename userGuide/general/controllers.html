@@ -126,9 +126,6 @@
 
 <pre><code>&lt;?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
@@ -161,9 +158,6 @@ end index
 
 
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,comments" into gControllerHandlers
@@ -200,9 +194,6 @@ end comments
 <p>The function rigFetchSegment(3) will return "sandals" and rigFetchSegment(4) will return "123" (URI segments 3 and 4):</p>
 
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,shoes" into gControllerHandlers
@@ -337,13 +328,10 @@ See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 <a name="good"></a>
 <h2>Good Practice</h2>
 
-<p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called automatically by the front controller. 
+<p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, plugins, models, a database etc.
 Let's say your controller is called "blog.lc", then your code would look like this:</p>
 
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,blog" into gControllerHandlers
