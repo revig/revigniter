@@ -47,7 +47,7 @@ end if
 ##
 #------------------------------------------------------
 #  DECLARE ADDITIONAL GLOBAL VARIABLES
-	 global gController, gHandler
+	 global gController, gHandler, gControllerHandlers, gData
 #------------------------------------------------------
 ##
 
