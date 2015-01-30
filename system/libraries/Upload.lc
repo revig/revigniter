@@ -415,9 +415,9 @@ end rigSet_sXssClean
 --| COMMAND rigDoUpload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 01-09-2011
---| Last Mod: 01-09-2011
+--| Last Mod: 30-01-2015
 --| Requires: rigSetUploadError, rigValidateUploadPath(), _rigPrepFilename(),
 --|						rigGetExtension(), rigIsAllowedFileType(), rigIsAllowedFileSize(),
 --|						rigIsAllowedDimensions(), rigCleanFilename(), rigLimitFilenameLength(),
@@ -475,16 +475,15 @@ command rigDoUpload pField
 	# SET THE UPLOADED DATA AS LIBRARY VARIABLES
 	put $_FILES[tField]["filename"] into sFileTemp
 	put $_FILES[tField]["size"] into sFileSize
+	
+	_rigFileMimeType $_FILES[tField]
 
-	put $_FILES[tField]["type"] into tType
-	put "^(.+?);.*$" into tRegex
-	if matchText(tType, tRegex, tType) is TRUE then
-		put tType into sFileType
-	else
-		put $_FILES[tField]["type"] into sFileType
-	end if
-	replace "\" with "" in sFileType
-	put toLower(rigTrim(sFileType, quote)) into sFileType
+  put "^(.+?);.*$" into tRegex
+  if matchText($_FILES[tField]["type"], tRegex, tType) is TRUE then
+	  put tType into sFileType
+  end if
+  replace "\" with "" in sFileType
+  put toLower(rigTrim(sFileType, quote)) into sFileType
 	
 	put _rigPrepFilename($_FILES[tField]["name"]) into sFileName
 	put rigGetExtension(sFileName) into sFileExt
@@ -1412,6 +1411,47 @@ command rigSetImageProperties pPath
 	end if
 	
 end rigSetImageProperties
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigFileMimeType
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 30-01-2015
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Detects the (actual) MIME type of the uploaded file, if possible.
+--|            The input array is expected to be $_FILES[tField] (see rigDoUpload).
+--| 
+--| Format:  _rigFileMimeType param1
+--|
+--| Parameters: array <pFile>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigFileMimeType pFile
+  # EXPRESSION TO VALIDATE THE MIME INFO STRING (e.g. image/jpeg; charset=binary)
+  put "^([a-z\-]+\/[a-z0-9\-\.\+]+)(;\s.+)?$" into tRegexp
+   
+  # UNIX-TYPE SYSTEMS PROVIDE A "NATIVE" WAY TO DETECT THE FILE TYPE, WHICH
+  # IS MORE SECURE THAN DEPENDING ON THE VALUE OF $_FILES[tField]["type"]
+  if the platform <> "Win32" then
+    put shell("file --brief --mime" && pFile["filename"] && "2>&1") into tMime
+      
+    get matchText(tMime,tRegexp,sFileType,tCharset)
+    if it is TRUE then
+      exit _rigFileMimeType
+    end if
+  end if
+  
+  put pFile["type"] into sFileType
+end _rigFileMimeType
 
 
 
