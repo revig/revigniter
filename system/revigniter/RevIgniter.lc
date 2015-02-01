@@ -343,8 +343,7 @@ end if
 ##
 #------------------------------------------------------
 #  Workaround for a modification (bug?) in LiveCode server version 7.
-#  The do command and a number of other syntax pieces don't work outside
-#  of handler context. This applies to variablenames and the call command too.
+#  The do command doesn't work outside of handler context.
 #------------------------------------------------------
 ##
 
