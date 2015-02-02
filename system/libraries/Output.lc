@@ -487,9 +487,9 @@ command _rigWriteCache pOutput
 		if there is a file tFlockPath then
 			put URL ("binfile:" & tFlockPath) into tLockedCacheFiles
 			
-      if the result <> empty then
-        rigLogMessage "error", "Failed to read file! System error:" && the sysError
-      end if
+			if the result <> empty then
+				rigLogMessage "error", "Failed to read file! System error:" && the sysError
+			end if
 			
 			put 0 into tCounter
 			repeat for each line thisLine in tLockedCacheFiles
@@ -504,7 +504,7 @@ command _rigWriteCache pOutput
 						put "writeLock" & "," & tCachePath into line tCounter of tLockedCacheFiles
 						put tLockedCacheFiles into URL ("binfile:" & tFlockPath)
 						if the result is not empty then
-							rigLogMessage "error", "Unable to secure a file lock for file at:" && tCachePath
+							rigLogMessage "error", "Unable to secure a file lock for file at:" && tCachePath && "System error:" && the sysError
 							exit _rigWriteCache
 						end if
 						exit repeat
@@ -516,6 +516,10 @@ command _rigWriteCache pOutput
 			# WRITE FLOCK FILE AND LOCK FILE
 			put "writeLock" & "," & tCachePath & return into tLockedCacheFiles
 			put tLockedCacheFiles into URL ("binfile:" & tFlockPath)
+			
+      if the result <> empty then
+        rigLogMessage "error", "Failed to write to file! System error:" && the sysError
+      end if
 		end if
 
 		# WRITE CACHE
@@ -538,6 +542,11 @@ command _rigWriteCache pOutput
 				put "unlocked" into item 1 of  tFoundString
 				put tFoundString into line tCounter of tLockedCacheFiles
 				put tLockedCacheFiles into URL ("binfile:" & tFlockPath)
+				
+	      if the result <> empty then
+	        rigLogMessage "error", "Failed to write to file! System error:" && the sysError
+	      end if
+				
 				exit repeat
 			end if
 		end repeat
