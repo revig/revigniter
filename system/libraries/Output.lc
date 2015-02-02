@@ -444,9 +444,9 @@ end _rigDisplay
 --| COMMAND _rigWriteCache
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 25-07-09
---| Last Mod: 22-12-14
+--| Last Mod: 02-02-15
 --| Requires: rigFetchConfigItem(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
@@ -486,6 +486,11 @@ command _rigWriteCache pOutput
 		# CHECK IF CACHE FILE IS LOCKED BY ANOTHER CONNECTION
 		if there is a file tFlockPath then
 			put URL ("binfile:" & tFlockPath) into tLockedCacheFiles
+			
+      if the result <> empty then
+        rigLogMessage "error", "Failed to read file! System error:" && the sysError
+      end if
+			
 			put 0 into tCounter
 			repeat for each line thisLine in tLockedCacheFiles
 				add 1 to tCounter
@@ -520,6 +525,11 @@ command _rigWriteCache pOutput
 	
 		# SET FILE UNLOCKED
 		put URL ("binfile:" & tFlockPath) into tLockedCacheFiles
+		
+    if the result <> empty then
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+		
 		put 0 into tCounter
 		repeat for each line thisLine in tLockedCacheFiles
 			add 1 to tCounter
