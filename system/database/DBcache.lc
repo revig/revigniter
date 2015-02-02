@@ -159,7 +159,7 @@ function rigReadSQLcache pSQL
 		put URL format("binfile:%s", tFilepath) into tCacheData
 		
     if the result <> empty then
-      rigLogMessage "debug", "Failed to read file! System error:" && the sysError
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
       return FALSE
     end if
 		

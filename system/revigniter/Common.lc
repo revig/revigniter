@@ -1565,7 +1565,7 @@ function rigFile_get_contents pFilePath
     if the result is empty then
       return tFileData
     else
-      rigLogMessage "debug", "Failed to read file! System error:" && the sysError
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
     end if
   end if
 
