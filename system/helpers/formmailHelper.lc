@@ -43,14 +43,14 @@ local sRawText, sFMtextComplete, sFMprefix, sFMsuffix, sFMvars
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFormMail
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 03-03-10
---| Last Mod: 03-03-10
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigLogMessage
 --|
 --| Summary: Fetch form mail template.
 --| 
@@ -60,31 +60,37 @@ local sRawText, sFMtextComplete, sFMprefix, sFMsuffix, sFMvars
 --|                       the placeholders with, string <pPrefix>, string <pSuffix>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFormMail pFilePath pFormMailVars pPrefix pSuffix
-	put pFormMailVars into sFMvars
+  put pFormMailVars into sFMvars
 
-	if pPrefix is empty then
-		put "<#" into sFMprefix
-	else
-		put pPrefix into sFMprefix
-	end if
+  if pPrefix is empty then
+    put "<#" into sFMprefix
+  else
+    put pPrefix into sFMprefix
+  end if
 
-	if pSuffix is empty then
-		put ">" into sFMsuffix
-	else
-		put pSuffix into sFMsuffix
-	end if
+  if pSuffix is empty then
+    put ">" into sFMsuffix
+  else
+    put pSuffix into sFMsuffix
+  end if
 
-	if there is a file pFilePath then
-        	put URL format("binfile:%s", pFilePath) into sRawText
-        	return TRUE
-    	end if
+  if there is a file pFilePath then
+    put URL format("binfile:%s", pFilePath) into sRawText
+    
+    if the result is empty then
+      return TRUE
+    else
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+    
+  end if
 
-	rigLogMessage "error", "The form mail template was not found!"
+  rigLogMessage "error", "The form mail template was not found!"
 
-	return FALSE
+  return FALSE
 end rigFormMail
 
 
