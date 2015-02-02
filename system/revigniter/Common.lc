@@ -1540,14 +1540,14 @@ end rigArrayReverse
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFile_get_contents
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 08-10-09
---| Last Mod: 08-10-09
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigLogMessage
 --|
 --| Summary: Reads entire file into a string.
 --| 
@@ -1556,14 +1556,20 @@ end rigArrayReverse
 --| Parameters: string <pFilePath>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFile_get_contents pFilePath
-	if there is a file pFilePath then
-		return URL format("binfile:%s", pFilePath)
-	end if
+  if there is a file pFilePath then
+    put URL format("binfile:%s", pFilePath) into tFileData
 
-	return FALSE
+    if the result is empty then
+      return tFileData
+    else
+      rigLogMessage "debug", "Failed to read file! System error:" && the sysError
+    end if
+  end if
+
+  return FALSE
 end rigFile_get_contents
 
 
