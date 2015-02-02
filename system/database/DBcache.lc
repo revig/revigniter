@@ -180,14 +180,15 @@ end rigReadSQLcache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigWriteSQLcache
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 13-07-09
---| Last Mod: 21-07-09
---| Requires: rigCheckCachePath(), rigFetchSegment(), rigFetchDBdriverSetting(), rigAddTrailingSlash(), rigHexDigest()
+--| Last Mod: 02-02-15
+--| Requires: rigCheckCachePath(), rigFetchSegment(), rigFetchDBdriverSetting(),
+--|            rigAddTrailingSlash(), rigHexDigest(), rigLogMessage
 --|
 --| Summary: Write a query to a cache file.
 --| 
@@ -196,7 +197,7 @@ end rigReadSQLcache
 --| Parameters: string <pSQL>, string <pSQLdata>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigWriteSQLcache pSQL pSQLdata
 	if rigCheckCachePath() is not TRUE then
@@ -232,6 +233,10 @@ function rigWriteSQLcache pSQL pSQLdata
 
 	set the umask to FILE_WRITE_UMASK
 	put pSQLdata into URL ("binfile:" & tCacheDir & tFileName)
+	
+  if the result <> empty then
+    rigLogMessage "error", "Failed to write file! System error:" && the sysError
+  end if
 
 	if there is not a file (tCacheDir & tFileName) then
 		return FALSE
