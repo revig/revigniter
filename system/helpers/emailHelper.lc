@@ -69,13 +69,13 @@ end rigValidEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSendEmail
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 18-09-09
---| Last Mod: 22-09-09
+--| Last Mod: 02-02-15
 --| Requires: rigCleanMailAddress(), rigShellEscape(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send an email.
@@ -85,7 +85,7 @@ end rigValidEmail
 --| Parameters: string <pRecipient>, string <pSubject>, string <pMessage>, string <pSender>, string <pCC>, string <pBCC>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
 	put rigCleanMailAddress(pSender) into tFrom
@@ -104,39 +104,43 @@ function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
 	#GET PATH TO TEMP DIRECTORY
 	put _rigTempMailPath() into tTempMailPath
 	put tBody into url ("binfile:" & tTempMailPath)
+	
+	if the result <> empty then
+		rigLogMessage "error", "Failed to read file! System error:" && the sysError
+	end if
     
-    	if there is not a file tTempMailPath then
-        	rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
-    	end if
+	if there is not a file tTempMailPath then
+		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
+	end if
 
 	# BUILD SHELL COMMAND
-	 put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
+	put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
         
-        if tCC is not empty then
-            	put " -c" && rigQ(tCC) after tCmd
-        end if
-        if tBCC is not empty then
-            	put " -b" && rigQ(tBCC) after tCmd
-        end if
+	if tCC is not empty then
+		put " -c" && rigQ(tCC) after tCmd
+	end if
+	if tBCC is not empty then
+		put " -b" && rigQ(tBCC) after tCmd
+	end if
         
-        put space & rigQ(tRecipient) && "-- -f" && rigQ(tFrom) after tCmd
+	put space & rigQ(tRecipient) && "-- -f" && rigQ(tFrom) after tCmd
 
 	# SEND SHELL COMMAND
 	put shell(tCmd) into tResult
 
 	# REMOVE TEMP MAIL FILE
 	delete file tTempMailPath
-    	if the result is not empty then
+	if the result is not empty then
 		rigLogMessage "error", "Temporary eMail data could not be deleted:" && tTempMailPath
 	end if
     
 	# CHECK MAIL RESULT
-    	if tResult is empty then
-        	return TRUE
-    	else
+	if tResult is empty then
+		return TRUE
+	else
 		rigLogMessage "error", "Error on sending eMail:" && tResult
-        	return FALSE
-    	end if
+		return FALSE
+	end if
 end rigSendEmail
 
 
