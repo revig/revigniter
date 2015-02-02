@@ -795,9 +795,9 @@ end rigLoadstacks
 --| FUNCTION _rigLoad
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 19-06-09
---| Last Mod: 30-09-13
+--| Last Mod: 02-02-15
 --| Requires: rigShowError, rigLogMessage, rigAppendOutput
 --|
 --| Summary: This function is used to load views and files.
@@ -857,7 +857,11 @@ function _rigLoad pDataArray
 	##
 	put URL format("binfile:%s", tRiPath) into tPageBuffer
 		
-	rigLogMessage "debug", "File loaded: " & tRiPath
+  if the result <> empty then
+		rigLogMessage "error", "Failed to read file! System error:" && the sysError
+	else
+		rigLogMessage "debug", "File loaded: " & tRiPath
+  end if
 
 	# RETURN THE FILE DATA IF REQUESTED
 	if tRiReturn is TRUE then
