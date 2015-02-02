@@ -106,11 +106,7 @@ function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
 	put tBody into url ("binfile:" & tTempMailPath)
 	
 	if the result <> empty then
-		rigLogMessage "error", "Failed to read file! System error:" && the sysError
-	end if
-    
-	if there is not a file tTempMailPath then
-		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
+		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath && "System error:" && the sysError
 	end if
 
 	# BUILD SHELL COMMAND
