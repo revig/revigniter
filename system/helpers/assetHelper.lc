@@ -283,6 +283,11 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
     if the result is empty then
       put merge(tCSSdata) into tCSSdata
       put tCSSdata into URL ("binfile:" & tCssPath)
+			
+		  if the result <> empty then
+		    rigLogMessage "error", "Failed to write file! System error:" && the sysError
+		  end if
+			
     else
       rigLogMessage "error", "Failed to read file! System error:" && the sysError
     end if
