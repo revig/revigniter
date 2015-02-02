@@ -100,14 +100,14 @@ end rigMarkdownAvailable
 /*----------------------------------------------------------------------
 --| FUNCTION rigMarkdown
 --|
---| Author: Andre Alves Garzia
---| Version:  1.0
+--| Author: Andre Alves Garzia, modifications rabit
+--| Version:  1.1
 --| Created: 30-01-12
---| Last Mod: 30-01-12
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigLogMessage
 --|
 --| Summary: Wrapper for the Markdown engine to convert text to structurally
---| 				 valid XHTML (or HTML).
+--| 				  valid XHTML (or HTML).
 --| 
 --| Format:  rigMarkdown(param1, param2)
 --|
@@ -126,7 +126,12 @@ function rigMarkdown pText pHTML4
 	end if
 	
 	put tempname() into tTextFile
-	put pText into url ("binfile:" & tTextFile)
+	put pText into URL ("binfile:" & tTextFile)
+	
+  if the result <> empty then
+    rigLogMessage "error", "Failed to write file! System error:" && the sysError
+  end if
+	
 	put shell("Markdown.pl" & tHTML4 && tTextFile) into tResult
 	delete file tTextFile
 	
