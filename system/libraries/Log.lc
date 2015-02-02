@@ -71,10 +71,10 @@ end if
 --| COMMAND rigWriteLog
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 29-06-09
---| Last Mod: 10-05-11
---| Requires: rigFetchSegment(), rigShow404 in Common.lc, rigLoadLibrary, rigShowErrorPage()
+--| Last Mod: 02-02-15
+--| Requires: rigFetchSegment(), rigShow404 in Common.lc, rigLoadLibrary, rigShowErrorPage(), rigLogMessage
 --|
 --| Summary: Write Log File. Generally this command will be called using the rigLogMessage command.
 --| 
@@ -86,93 +86,106 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigWriteLog pLevel, pMessage, pDisplayError
-	if sLogEnabled is FALSE then exit rigWriteLog
-
-	put toUpper(pLevel) into tLevel
-
-	if sLogLevels[tLevel] > sLogThreshold then
-		exit rigWriteLog
-	end if
-
-	if pDisplayError is not TRUE and "error404" is not in pMessage then
-
-		# CONVERT DATE IF THERE IS A TIME ZONE SET IN THE CONFIG FILE
-		put empty into tTimeZone
-		if gConfig["timeZone"] is not "" then
-			# A SIMPLE CHECK IF THE FORMAT IS CORRECT
-			if "/" is in gConfig["timeZone"] then
-				put gConfig["timeZone"] into tTimeZone
-			end if
-		end if
-
-		if tTimeZone is not empty then
-			# DON'T LEAVE PERMANENT CHANGES TO GLOBAL
-			# STATE BY STORING THE CURRENT VALUE OF THE $TZ ENVIRONMENT VARIABLE
-			put $TZ into tOldTZ
-
-			put tTimeZone into $TZ
-
-			put shell("date '+%a, %d %b %G %T %z'") into tIntDate
-			filter tIntDate with "*" -- removes the linefeed
-
-			# RESTORE THE PREVIOUS VALUE OF $TZ
-			put tOldTZ into $TZ
-
-		else
-			put the internet date into tIntDate
-		end if
-
-		# LOG ERROR
-		put the short date into tShortDate
-
-		set the itemdelimiter to "/"
+  if sLogEnabled is FALSE then exit rigWriteLog
     
-    		put item 1 of tShortDate into tMonth
-    		if the length of tMonth = 1 then
-         		put "0" & tMonth into tMonth
-    		end if
-    
-    		put item 2 of tShortDate into tDay
-    		if the length of tDay = 1 then
-         		put "0" & tDay into tDay
-    		end if
-    
-    		put "log-20" & (item 3 of tShortDate) & "-" & tMonth & "-" & tDay & ".txt" into tCurrentLogFile
+  put toUpper(pLevel) into tLevel
 
-		put sLogPath & tCurrentLogFile into tLogFilePath
-		if there is a file tLogFilePath then
-    			put URL ("binfile:" & tLogFilePath) into tCurrentLog
-    			put tLevel && "-" && tIntDate & ":" && pMessage & return after tCurrentLog
-    			put tCurrentLog into URL ("binfile:" & tLogFilePath)
-  		else
-    			put tLevel && "-" && tIntDate & ":" && pMessage & return into tCurrentLog
-    			put tCurrentLog into URL ("binfile:" & tLogFilePath)
-  		end if
-	else
-		if "error404" is in pMessage then
-			# GET REQUESTED URI SEGMENTS
-			put rigFetchSegment(1) into tSegmentOne
-			if tSegmentOne is FALSE then
-				put "default" into tSegmentOne
-			end if
+  if sLogLevels[tLevel] > sLogThreshold then
+    exit rigWriteLog
+  end if
 
-			put rigFetchSegment(2) into tSegmentTwo
-			if tSegmentTwo is FALSE then
-				put "index" into tSegmentTwo
-			end if
-			put tSegmentOne & "/" & tSegmentTwo into tURI
+  if pDisplayError is not TRUE and "error404" is not in pMessage then
 
-			# SHOW 404 ERROR PAGE
-			rigShow404 tURI
-		else
-			# DISPLAY ERROR
-			rigLoadLibrary "Exceptions"
-			replace CR with "<br />" in pMessage
-			put "Error" into tHeading
-			put rigShowErrorPage(tHeading, pMessage, "errorGeneral")
-			exit to top
-		end if
-	end if
+    # CONVERT DATE IF THERE IS A TIME ZONE SET IN THE CONFIG FILE
+    put empty into tTimeZone
+    if gConfig["timeZone"] is not "" then
+      # A SIMPLE CHECK IF THE FORMAT IS CORRECT
+      if "/" is in gConfig["timeZone"] then
+        put gConfig["timeZone"] into tTimeZone
+      end if
+    end if
+
+    if tTimeZone is not empty then
+      # DON'T LEAVE PERMANENT CHANGES TO GLOBAL
+      # STATE BY STORING THE CURRENT VALUE OF THE $TZ ENVIRONMENT VARIABLE
+      put $TZ into tOldTZ
+
+      put tTimeZone into $TZ
+
+      put shell("date '+%a, %d %b %G %T %z'") into tIntDate
+      filter tIntDate with "*" -- removes the linefeed
+
+      # RESTORE THE PREVIOUS VALUE OF $TZ
+      put tOldTZ into $TZ
+
+    else
+      put the internet date into tIntDate
+    end if
+
+    # LOG ERROR
+    put the short date into tShortDate
+
+    set the itemdelimiter to "/"
+  
+    put item 1 of tShortDate into tMonth
+    if the length of tMonth = 1 then
+      put "0" & tMonth into tMonth
+    end if
+  
+    put item 2 of tShortDate into tDay
+    if the length of tDay = 1 then
+      put "0" & tDay into tDay
+    end if
+  
+    put "log-20" & (item 3 of tShortDate) & "-" & tMonth & "-" & tDay & ".txt" into tCurrentLogFile
+
+    put sLogPath & tCurrentLogFile into tLogFilePath
+    if there is a file tLogFilePath then
+      put URL ("binfile:" & tLogFilePath) into tCurrentLog
+        
+      if the result <> empty then
+        rigLogMessage "error", "Failed to read file! System error:" && the sysError
+      end if
+        
+      put tLevel && "-" && tIntDate & ":" && pMessage & return after tCurrentLog
+      put tCurrentLog into URL ("binfile:" & tLogFilePath)
+        
+      if the result <> empty then
+        rigLogMessage "error", "Failed to write to file! System error:" && the sysError
+      end if
+    else
+      put tLevel && "-" && tIntDate & ":" && pMessage & return into tCurrentLog
+      put tCurrentLog into URL ("binfile:" & tLogFilePath)
+        
+      if the result <> empty then
+        rigLogMessage "error", "Failed to write to file! System error:" && the sysError
+      end if
+    end if -- if there is a file tLogFilePath then
+  else --if pDisplayError is not TRUE and "error404" is not in pMessage then
+    if "error404" is in pMessage then
+      # GET REQUESTED URI SEGMENTS
+      put rigFetchSegment(1) into tSegmentOne
+      if tSegmentOne is FALSE then
+        put "default" into tSegmentOne
+      end if
+
+      put rigFetchSegment(2) into tSegmentTwo
+      if tSegmentTwo is FALSE then
+        put "index" into tSegmentTwo
+      end if
+      put tSegmentOne & "/" & tSegmentTwo into tURI
+
+      # SHOW 404 ERROR PAGE
+      rigShow404 tURI
+    else
+      # DISPLAY ERROR
+      rigLoadLibrary "Exceptions"
+      replace CR with "<br />" in pMessage
+      put "Error" into tHeading
+      put rigShowErrorPage(tHeading, pMessage, "errorGeneral")
+      exit to top
+    end if
+  end if
 end rigWriteLog
 
 
