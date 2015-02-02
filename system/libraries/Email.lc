@@ -2598,13 +2598,13 @@ end _rigSendWithMail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSendWithSendmail
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-09-09
---| Last Mod: 17-09-09
+--| Last Mod: 02-02-15
 --| Requires: rigShellEscape(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using sendmail as shell command.
@@ -2614,7 +2614,7 @@ end _rigSendWithMail
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigSendWithSendmail
 	put rigCleanEmail(_sHeaders["From"]) into tEnvelopeSender
@@ -2630,10 +2630,10 @@ function _rigSendWithSendmail
 	put _rigTempMailPath() into tTempMailPath
 	put tHdr & tFinalbody into tMailData
 	put tMailData into url ("binfile:" & tTempMailPath)
-
-    	if there is not a file tTempMailPath then
-        	rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
-    	end if
+	
+	if the result <> empty then
+		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath && "System error:" && the sysError
+	end if
 
 	# BUILD COMMAND
 	put "cat" && quote & tTempMailPath & quote && "|" && sMailpath && "-t -oi -f" && rigQ(tEnvelopeSender) into tCmd
@@ -2648,12 +2648,12 @@ function _rigSendWithSendmail
 	end if
 
 	# CHECK SENDMAIL RESULT
-    	if tResult is empty then
-        	return TRUE
-    	else
+	if tResult is empty then
+		return TRUE
+	else
 		rigLogMessage "error", "Error on sending eMail:" && tResult
-        	return FALSE
-    	end if
+		return FALSE
+	end if
 end _rigSendWithSendmail
 
 
