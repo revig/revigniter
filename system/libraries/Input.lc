@@ -2106,10 +2106,10 @@ end _rigConvertAttribute
 --| FUNCTION _rigHtmlEntityDecode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 23-06-09
---| Last Mod: 21-12-14
---| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode()
+--| Last Mod: 02-02-15
+--| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode(), rigLogMessage
 --|
 --| Summary: Converts character entities.
 --| 
@@ -2169,7 +2169,13 @@ function _rigHtmlEntityDecode pStr pCharset
   put tDecodedStringHexa into tDecodedString
   if sEntityChart is empty then
     put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
-    put rigTextDecode(sEntityChart, pCharset) into sEntityChart
+		
+    if the result is empty then
+      put rigTextDecode(sEntityChart, pCharset) into sEntityChart
+    else
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+
   end if
   set the itemdelimiter to tab
   repeat for each line thisLine in sEntityChart
