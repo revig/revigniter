@@ -72,36 +72,27 @@ end rigReadFile
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigReadBinFile
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-11-09
---| Last Mod: 09-11-09
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigFile_get_contents()
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
---|                    without translating end-of-line markers.
+--|            without translating end-of-line markers.
 --| 
 --| Format:  rigReadBinFile(param1)
 --|
---| Parameters: string <pFile> path to file
+--| Parameters: string <pFilePath>
 --|
---| Return: string
-----------------------------------------------------------------------
+--| Return: mixed
+----------------------------------------------------------------------*/
 
-function rigReadBinFile pFile
-    -----
-
-    local tData    -----
-    
-    if there is a file pFile then
-        put URL format("binfile:%s", pFile) into tData
-        return tData
-    else
-        return FALSE
-    end if
+function rigReadBinFile pFilePath
+    return rigFile_get_contents(pFilePath)
 end rigReadBinFile
 
 
