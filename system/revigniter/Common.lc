@@ -442,14 +442,14 @@ end rigSetStatusHeader
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigExceptionHandler
 --|
 --| Author: Andre Garcia, modifications rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 29-06-09
---| Last Mod: 18-07-11
---| Requires: errorsList.txt
+--| Last Mod: 02-02-15
+--| Requires: errorsList.txt, rigLoadLibrary, rigLogMessage
 --|
 --| Summary: This function is used to log Rev errors, called by catch statements, in our log file.
 --|                    It also intercepts 404 errors. 
@@ -459,7 +459,7 @@ end rigSetStatusHeader
 --| Parameters: string <pContexts>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigExceptionHandler pContexts
 	rigLoadLibrary "Exceptions"
@@ -473,6 +473,11 @@ function _rigExceptionHandler pContexts
 	if sErrorNames is empty then
 		put gBASEPATH & "revigniter/errorsList.txt" into tErrorsNameFilePath
 		put URL format("binfile:%s", tErrorsNameFilePath) into sErrorNames
+		
+    if the result <> empty then
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+		
 	end if
 
 	put the number of lines in sErrorNames into tTotalErrorListLines
