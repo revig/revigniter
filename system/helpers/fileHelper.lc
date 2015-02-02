@@ -38,27 +38,32 @@ end if
 local sDefFolder, sMimesFileLoaded
 
 
-/*----------------------------------------------------------------------
+----------------------------------------------------------------------
 --| FUNCTION rigReadFile
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.1
 --| Created: 09-07-09
---| Last Mod: 02-02-15
---| Requires: rigFile_get_contents()
+--| Last Mod: 05-11-09
+--| Requires: --
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
---|            with translated end-of-line markers.
+--|               with translated end-of-line markers.
 --| 
 --| Format:  rigReadFile(param1)
 --|
---| Parameters: string <pFilePath>
+--| Parameters: string <pFile> path to file
 --|
 --| Return: string
-----------------------------------------------------------------------*/
+----------------------------------------------------------------------
 
-function rigReadFile pFilePath
-	return rigFile_get_contents(pFilePath)	
+function rigReadFile pFile
+	if there is a file pFile then
+		put URL format("file:%s", pFile) into tData
+		return tData
+	end if
+
+	return FALSE	
 end rigReadFile
 
 
