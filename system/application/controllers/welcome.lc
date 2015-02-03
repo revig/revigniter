@@ -1,8 +1,5 @@
 <?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR METHOD NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "welcome,index" into gControllerHandlers
 

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.18</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -203,9 +203,6 @@ INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
 
 <pre><code>&lt;?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "ajax,index" into gControllerHandlers
 
@@ -328,7 +325,6 @@ end buildTable
 
 <pre><code>&lt;?rev
 
-global gControllerHandlers, gData
 put "ajax,index,datafilter,buildTable" into gControllerHandlers
 
 command ajax

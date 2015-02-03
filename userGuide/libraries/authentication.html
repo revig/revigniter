@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.18</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1802,8 +1802,6 @@ CREATE TABLE "login_attempts" (
 <p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your system/application/controllers/ folder.</p>
 
 <pre><code>&lt;?rev
-
-global gControllerHandlers, gData
 
 put "auth,index,login,logout,createUser,activate,deactivate,forgotPassword" & \
 ",resetPassword,changePassword,editUser,deleteUser" into gControllerHandlers

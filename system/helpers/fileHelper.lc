@@ -38,32 +38,37 @@ end if
 local sDefFolder, sMimesFileLoaded
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigReadFile
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 09-07-09
---| Last Mod: 05-11-09
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigLogMessage
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
---|               with translated end-of-line markers.
+--|            with translated end-of-line markers.
 --| 
 --| Format:  rigReadFile(param1)
 --|
---| Parameters: string <pFile> path to file
+--| Parameters: string <pFilePath>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigReadFile pFile
-	if there is a file pFile then
-		put URL format("file:%s", pFile) into tData
-		return tData
-	end if
+function rigReadFile pFilePath
+  if there is a file pFilePath then
+    put URL format("file:%s", pFilePath) into tFileData
 
-	return FALSE	
+    if the result is empty then
+      return tFileData
+    else
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+  end if
+
+  return FALSE
 end rigReadFile
 
 
@@ -72,36 +77,27 @@ end rigReadFile
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigReadBinFile
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-11-09
---| Last Mod: 09-11-09
---| Requires: --
+--| Last Mod: 02-02-15
+--| Requires: rigFile_get_contents()
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
---|                    without translating end-of-line markers.
+--|            without translating end-of-line markers.
 --| 
 --| Format:  rigReadBinFile(param1)
 --|
---| Parameters: string <pFile> path to file
+--| Parameters: string <pFilePath>
 --|
---| Return: string
-----------------------------------------------------------------------
+--| Return: mixed
+----------------------------------------------------------------------*/
 
-function rigReadBinFile pFile
-    -----
-
-    local tData    -----
-    
-    if there is a file pFile then
-        put URL format("binfile:%s", pFile) into tData
-        return tData
-    else
-        return FALSE
-    end if
+function rigReadBinFile pFilePath
+    return rigFile_get_contents(pFilePath)
 end rigReadBinFile
 
 

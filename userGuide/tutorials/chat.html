@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.18</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -107,7 +107,7 @@
 <p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
 
 <p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in assets/css/chat.css
-and build the table using the table structure below. We are using CSS3 here, so the functionality is limited to FireFox, Chrome and Safari. </p>
+and build the table using the table structure below.</p>
 
 	<p>The stylesheet:</p>
 
@@ -283,14 +283,11 @@ a:hover {
 
 <h2>Controller</h2>
 
-<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries, helpers and plugins plus models and the database if needed. Don't forget to call this handler at the end of the script. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
+<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries, helpers and plugins plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
 
 <p>We start with the basic prototype for a controller script:</p>
 
 <pre><code>&lt;?rev
-
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,chat" into gControllerHandlers
@@ -691,12 +688,10 @@ end _addMsg
 <p>As mentioned above, the Login page and the Chat page use the same header and footer. The content is different. So, we split the pages into three separate view files. Start with the header view and save the following code in <samp>system/application/views</samp> as chatheader.lc:</p>
 
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
 &lt;head>
-	&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	&lt;meta charset="utf-8">
 </code></pre>
 
 <p>This is just the doctype declaration and a meta description. Now add the page title:</p>
@@ -738,20 +733,18 @@ end _addMsg
 
 <p>Your chatheader.lc script should now look like this:</p>
 
-<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-					"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
 &lt;head>
-	&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	&lt;meta charset="utf-8">
 
-&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+	&lt;title>[[gData["pageTitle"] ]]&lt;/title>
 
-&lt;? return rigJQuerySource() ?>
+	&lt;? return rigJQuerySource() ?>
 
-&lt;? return rigCssAsset("chat.css") ?>
+	&lt;? return rigCssAsset("chat.css") ?>
 
-[[gData["JQscript"] ]]
+	[[gData["JQscript"] ]]
 
 &lt;/head>
 

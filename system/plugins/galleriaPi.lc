@@ -40,9 +40,9 @@ end if
 --| FUNCTION rigGalleriaData
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 11-12-2011
---| Last Mod: 21-03-2014
+--| Last Mod: 02-02-2015
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
@@ -173,6 +173,11 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			
 			# CHECK FOR CACHE BUSTING ON LAST SAVE
 			put URL format("file:%s", tCurrentVal) into tJASONfileContent
+			
+      	if the result <> empty then
+        	rigLogMessage "error", "Failed to read file! System error:" && the sysError
+      	end if
+			
 			if "creationDate" is among the words of line 1 of tJASONfileContent then
 				put TRUE into tCbJASONfile
 				set the itemDel to "="
@@ -224,6 +229,10 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 		if item -1 of tCurrentVal is "tsv" then
 			put tCurrentVal into tMetaDataFile
 			put URL format("file:%s", tMetaDataFile) into tMetaData
+
+      	if the result <> empty then
+        	rigLogMessage "error", "Failed to read file! System error:" && the sysError
+      	end if
 
 			# ESCAPE CHARACTERS
 			put rigGalleriaDataEscape(tMetaData) into tMetaData

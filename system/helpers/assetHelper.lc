@@ -225,9 +225,9 @@ end rigCssAsset
 --| FUNCTION rigDynamicCssAsset
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.2
 --| Created: 09-06-2011
---| Last Mod: 09-06-2011
+--| Last Mod: 02-02-2015
 --| Requires: _rigParseAssetHTML(), rigFetchConfigItem, rigLogMessage, rigCssAssetURL
 --|
 --| Summary: Simple CSS preprocessor which dynamically generates CSS files using the
@@ -279,8 +279,19 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
 	# MERGE RAW FILE AND SAVE CSS TO BE LINKED TO
 	if there is a file tRawCssPath then
   	put URL ("binfile:" & tRawCssPath) into tCSSdata
-  	put merge(tCSSdata) into tCSSdata
-  	put tCSSdata into URL ("binfile:" & tCssPath)
+		
+    if the result is empty then
+      put merge(tCSSdata) into tCSSdata
+      put tCSSdata into URL ("binfile:" & tCssPath)
+			
+		  if the result <> empty then
+		    rigLogMessage "error", "Failed to write file! System error:" && the sysError
+		  end if
+			
+    else
+      rigLogMessage "error", "Failed to read file! System error:" && the sysError
+    end if
+		
 	else
 		rigLogMessage "error", "Raw CSS file" && quote & tRawCssPath & quote && "missing!"
 	end if

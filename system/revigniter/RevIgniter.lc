@@ -1,6 +1,11 @@
 <?rev
-# THE variablenames FUNCTION OUTSIDE HANDLERS YIELDS A SERVER ERROR
+# THE variablenames FUNCTION OUTSIDE HANDLERS RETURNS NOTHING, YIELDS A SERVER ERROR IN revIgniter.
+
 -- if "gBASEPATH" is not among the items of line 4 of the variablenames then
+
+# NOTE: THIS HAS CHANGED IN SERVER VERSION 7!
+# HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gBASEPATH IS TREATED AS A LOCAL VARIABLE
+# CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gBASEPATH IS 2.
 
 put gBASEPATH into gBASEPATH
 
@@ -40,14 +45,14 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "1.6.18"
+	constant RIVERSION = "1.6.19"
 	constant RISTATE = "final"
 	
 	
 ##
 #------------------------------------------------------
 #  DECLARE ADDITIONAL GLOBAL VARIABLES
-	 global gController, gHandler
+	 global gController, gHandler, gControllerHandlers, gData
 #------------------------------------------------------
 ##
 
@@ -338,8 +343,7 @@ end if
 ##
 #------------------------------------------------------
 #  Workaround for a modification (bug?) in LiveCode server version 7.
-#  The do command and a number of other syntax pieces don't work outside
-#  of handler context. This applies to variablenames and the call command too.
+#  The do command doesn't work outside of handler context.
 #------------------------------------------------------
 ##
 

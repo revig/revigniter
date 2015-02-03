@@ -2487,9 +2487,9 @@ end _rigSpoolEmail
 --| FUNCTION _rigSendWithMail
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 14-09-09
---| Last Mod: 22-12-14
+--| Last Mod: 02-02-15
 --| Requires: rigShellEscape(), rigNumToCodepoint(), rigQ(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using mail as shell command. Can not be used to send html mail.
@@ -2541,40 +2541,38 @@ function _rigSendWithMail
 	#
 	#GET PATH TO TEMP DIRECTORY
 	put _rigTempMailPath() into tTempMailPath
-	put tBody into url ("binfile:" & tTempMailPath)
-    
-    	if there is not a file tTempMailPath then
-        	rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
-    	end if
+	put tBody into URL ("binfile:" & tTempMailPath)
 
-
+	if the result <> empty then
+		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath && "System error:" && the sysError
+	end if
 
 	if "uuencode" is not in _sFinalbody then
 		# THERE IS NO ATTACHMENT	
 		# BUILD SHELL COMMAND
-	 	put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
+		put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
         
-        	if tCC is not empty then
-            		put " -c" && rigQ(tCC) after tCmd
-        	end if
-        	if tBCC is not empty then
-            		put " -b" && rigQ(tBCC) after tCmd
-        	end if
+		if tCC is not empty then
+			put " -c" && rigQ(tCC) after tCmd
+		end if
+		if tBCC is not empty then
+			put " -b" && rigQ(tBCC) after tCmd
+		end if
         
-        	put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
 
 	else	
 		# BUILD SHELL COMMAND
-	 	put "(cat" && rigQ(tTempMailPath) & tAttachment &")" && "| mail -s" && rigQ(tSubject) into tCmd
+		put "(cat" && rigQ(tTempMailPath) & tAttachment &")" && "| mail -s" && rigQ(tSubject) into tCmd
         
-        	if tCC is not empty then
-            		put " -c" && rigQ(tCC) after tCmd
-        	end if
-        	if tBCC is not empty then
-            		put " -b" && rigQ(tBCC) after tCmd
-        	end if
+		if tCC is not empty then
+			put " -c" && rigQ(tCC) after tCmd
+		end if
+		if tBCC is not empty then
+			put " -b" && rigQ(tBCC) after tCmd
+		end if
         
-        	put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
 
 	end if
 
@@ -2583,30 +2581,30 @@ function _rigSendWithMail
 
 	# REMOVE TEMP MAIL FILE
 	delete file tTempMailPath
-    	if the result is not empty then
+	if the result is not empty then
 		rigLogMessage "error", "Temporary eMail data could not be deleted:" && tTempMailPath
 	end if
 
 	# CHECK MAIL RESULT
-    	if tResult is empty then
-        	return TRUE
-    	else
+	if tResult is empty then
+		return TRUE
+	else
 		rigLogMessage "error", "Error on sending eMail:" && tResult
-        	return FALSE
-    	end if
+		return FALSE
+	end if
 
 end _rigSendWithMail
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSendWithSendmail
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-09-09
---| Last Mod: 17-09-09
+--| Last Mod: 02-02-15
 --| Requires: rigShellEscape(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using sendmail as shell command.
@@ -2616,7 +2614,7 @@ end _rigSendWithMail
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigSendWithSendmail
 	put rigCleanEmail(_sHeaders["From"]) into tEnvelopeSender
@@ -2632,10 +2630,10 @@ function _rigSendWithSendmail
 	put _rigTempMailPath() into tTempMailPath
 	put tHdr & tFinalbody into tMailData
 	put tMailData into url ("binfile:" & tTempMailPath)
-
-    	if there is not a file tTempMailPath then
-        	rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath
-    	end if
+	
+	if the result <> empty then
+		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath && "System error:" && the sysError
+	end if
 
 	# BUILD COMMAND
 	put "cat" && quote & tTempMailPath & quote && "|" && sMailpath && "-t -oi -f" && rigQ(tEnvelopeSender) into tCmd
@@ -2650,12 +2648,12 @@ function _rigSendWithSendmail
 	end if
 
 	# CHECK SENDMAIL RESULT
-    	if tResult is empty then
-        	return TRUE
-    	else
+	if tResult is empty then
+		return TRUE
+	else
 		rigLogMessage "error", "Error on sending eMail:" && tResult
-        	return FALSE
-    	end if
+		return FALSE
+	end if
 end _rigSendWithSendmail
 
 

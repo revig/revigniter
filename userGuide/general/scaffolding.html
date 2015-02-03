@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.18</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -127,11 +127,8 @@ If not, the information here won't be very relevant, so you are encouraged to go
 
 <pre><code>&lt;?rev
 
-# DECLARE GLOBAL VARIABLES gControllerHandlers AND gData
-global gControllerHandlers, gData
-
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
-put "blog" into gControllerHandlers
+put "blog,index" into gControllerHandlers
 
 command blog
 	<kbd>rigLoadScaffolding "tableName"</kbd>
