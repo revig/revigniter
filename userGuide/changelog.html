@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1619">Version 1.6.19</a></li>
 <li><a href="#version1618">Version 1.6.18</a></li>
 <li><a href="#version1617">Version 1.6.17</a></li>
 <li><a href="#version1616">Version 1.6.16</a></li>
@@ -174,6 +175,25 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+
+<h2><a name="version1619">&nbsp;</a>Version 1.6.19</h2>
+<p>Release Date: February 02, 2015</p>
+
+
+<p>
+<ul>
+	<li><strong>Improved security regarding file uploads.</strong> Modified system/libraries/Upload.lc -> rigDoUpload. Added handler _rigFileMimeType to detect mime types of uploaded files using a shell command.</li>
+	<li><strong>There is no need to declare globals gControllerHandlers and gData in your controllers anymore.</strong> Moved declaration of these variables from controllers to system/revigniter/RevIgniter.lc. Adjusted the User Guide accordingly.</li>
+	<li><strong>Modified</strong> system/revigniter/Common.lc -> rigFile_get_contents() and _rigExceptionHandler(), system/database/DBcache-lc -> rigReadSQLcache(), system/Helpers/assetHelper.lc -> rigDynamicCssAsset(), system/helpers/fileHelper.lc -> rigReadFile() and rigReadBinFile(), system/helpers/formmailHelper.lc -> rigFormMail(), system/libraries/Exceptions.lc -> rigShowErrorPage(), system/libraries/Input.lc -> _rigHtmlEntityDecode(), system/libraries/Loader.lc -> _rigLoad(), system/libraries/Log.lc -> rigWriteLog, system/libraries/Output.lc -> rigWriteCache and system/plugins/galleriaPi.lc -> rigGalleriaData().<br /><strong>These handlers now check the result of file reads and log sysError() values on failure.</strong></li>
+	<li><strong>Modified</strong> system/database/DBcache.lc -> rigWriteSQLcache(), system/database/drivers/postgre/postgreResult.lc -> rigFieldData(), system/Helpers/assetHelper.lc -> rigDynamicCssAsset(), system/Helpers/emailHelper.lc -> rigSendEmail(), system/libraries/Email.lc -> _rigSendWithMail(), system/libraries/Output.lc -> rigWriteCache and systems/plugins/markdownPi.lc -> rigMarkdown().<br /><strong>These handlers now check the result of file writes and log sysError() values on failure.</strong></li>
+	<li><strong>Fixed bug in system/libraries/Input.lc -> rigCSRFshowError</strong> which caused a server error in case a CSRF verification failed.</li>
+	<li><strong>Revised the chat tutorial in the User Guide.</strong></li>
+</ul>
+</p>
+
+
 
 
 <h2><a name="version1618">&nbsp;</a>Version 1.6.18</h2>
