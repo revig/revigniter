@@ -78,24 +78,24 @@ end rigRunInitialEncryptConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetEncryptionKey
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 16-10-09
---| Last Mod: 16-10-09
+--| Last Mod: 06-02-15
 --| Requires: rigFetchConfigItem(), rigHexDigest()
 --|
---| Summary: Fetch the encryption key. Returns it as md5 in order to have an
---|          exact-length 128 bit key. 
+--| Summary: Fetch the encryption key. Returns it as md5 in text format
+--|            as a 32 digit hexadecimal number. 
 --| 
 --| Format:  rigGetEncryptionKey(param1)
 --|
 --| Parameters: string <pKey>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetEncryptionKey pKey
 	if pKey is empty then
@@ -103,13 +103,13 @@ function rigGetEncryptionKey pKey
 			return sEncryptionKey
 		end if
 
-		put rigFetchConfigItem("encryption_key") into tKey
-		if tKey is empty then
+		put rigFetchConfigItem("encryption_key") into pKey
+		if pKey is empty then
 			rigShowError "In order to use the Encrypt library requires that you set an encryption key in your config file."
 		end if
 	end if
 
-	return rigHexDigest(tKey)
+	return rigHexDigest(pKey)
 end rigGetEncryptionKey
 
 
