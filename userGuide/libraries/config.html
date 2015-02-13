@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.20</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -126,7 +126,7 @@ so you will only need to load a config file if you have created your own.</p>
 you have identically named array indexes in different config files.  To avoid collisions you can set the second parameter to <kbd>TRUE</kbd>
 and each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
 
-<pre><code>// Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
+<pre><code># Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
 get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)</code></pre>
 
 <p>Please see the section entitled <dfn>Fetching Config Items</dfn> below to learn how to retrieve config items set this way.</p>
@@ -160,13 +160,13 @@ indicated in the file.</p>
 <p>If you are using the second parameter of the <kbd>rigLoadConfigFile()</kbd> function in order to assign your config items to a specific index
 you can retrieve it by specifying the index name in the second parameter of the <kbd>rigFetchConfigItem()</kbd> function.  Example:</p>
 
-<pre><code>// Loads a config file named blogSettings.lc and assigns it to an index named "blogSettings"<br />
+<pre><code># Loads a config file named blogSettings.lc and assigns it to an index named "blogSettings"<br />
 get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)<br /><br />
 
-// Retrieve a config item named siteName contained within the blogSettings array<br />
+# Retrieve a config item named siteName contained within the blogSettings array<br />
 put rigFetchConfigItem("<dfn>siteName</dfn>", "<var>blogSettings</var>") into tSiteName<br /><br />
 
-// An alternate way to specify the same item:<br />
+# An alternate way to specify the same item:<br />
 put rigFetchConfigItem("<var>blogSettings</var>") into tBlogConfig<br />
 put tBlogConfig["siteName"] into tSiteName</code></pre>
 

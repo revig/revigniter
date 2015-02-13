@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.20</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -183,15 +183,15 @@ some of the query result handlers are not available for use.</p>
 <p>Manually enables/disables caching.  This can be useful if you want to
 keep certain queries from being cached.  Example:</p>
 
-<pre><code>// Turn caching on
+<pre><code># Turn caching on
 get rigDbCacheOn()
 put rigDbQuery("SELECT * FROM mytable") into tQuery
 
-// Turn caching off for this one query
+# Turn caching off for this one query
 get rigDbCacheOff()
 put rigDbQuery("SELECT * FROM members WHERE member_id = '" & tCurrentUser & "'") into tQuery
 
-// Turn caching back on
+# Turn caching back on
 get rigDbCacheOn()
 put rigDbQuery("SELECT * FROM anothertable") into tQuery
 </code></pre>
