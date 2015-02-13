@@ -2738,13 +2738,13 @@ end _rigSendWithSmtp
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSmtpConnect
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-09-09
---| Last Mod: 20-07-11
+--| Last Mod: 13-02-15
 --| Requires: rigResetSmtpVars, _rigSetErrorMessage, _rigSendSmtpCommand
 --|
 --| Summary: SMTP connect.
@@ -2754,13 +2754,13 @@ end _rigSendWithSmtp
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigSmtpConnect
 	# RESET SMTP VARIABLES
 	rigResetSmtpVars
 
-	put sSmtpHost & ":25" into _sSmtpConnect
+	put sSmtpHost & ":" & sSmtpPort into _sSmtpConnect
 
 	open socket to _sSmtpConnect with message "_rigGetSmtpData"
 
