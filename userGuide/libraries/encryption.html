@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.19</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.20</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -105,8 +105,7 @@ Should someone gain access to your key, the data will be easily decoded.  If you
 it's impossible to ensure key security so you may want to think carefully before using it for anything
 that requires high security, like storing credit card numbers.</p>
 
-<p>To take maximum advantage of the encryption algorithm, your key should be 32 characters in length (128 bits).
-The key should be as random a string as you can concoct, with numbers and uppercase and lowercase letters.
+<p>The key should be as random a string as you can concoct, with numbers and uppercase and lowercase letters.
 Your key should <strong>not</strong> be a simple text string. In order to be cryptographically secure it
 needs to be as random as possible.</p>
 
@@ -119,10 +118,10 @@ storage mechanism and pass the key dynamically when encoding/decoding.</p>
 
 <h2>Message Length</h2>
 
-<p>It's important for you to know that the encoded messages the encryption function generates will be approximately 2.6 times longer than the original
-message.  For example, if you encrypt the string "my super secret data", which is 21 characters in length, you'll end up
-with an encoded string that is roughly 55 characters (we say "roughly" because the encoded string length increments in
-64 bit clusters, so it's not exactly linear).  Keep this information in mind when selecting your data storage mechanism.  Cookies,
+<p>It's important for you to know that, dependent on the chosen cipher, the encoded messages the encryption function generates will be 
+	approximately 3 to 4.5 times longer than the original message (we say "approximately" because the increase in length is not exactly linear). 
+	For example, if you encrypt the string "my super secret data", which is 20 characters in length, using blowfish you'll end up
+with an encoded string that is 89 characters.  Keep this information in mind when selecting your data storage mechanism. Cookies,
 for example, can only hold 4K of information.</p>
 
 
