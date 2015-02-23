@@ -150,14 +150,14 @@ put rigEncode(tMsg, tKey) into tEncryptedString</code></pre>
 
 <p>Decrypts an encoded string.  Example:</p>
 
-<pre><code>put "APANtByIGI1BpVXZTJgcsAG8GZl8pdwwa84" into tEncryptedString
+<pre><code>put "U2FsdGVkX180lz6BW4yPRwVGYoGusZ0vX7Qe3wyhcxSdCAwTHUrlGyQPpDZQ0rUX+2qoFvf+" & return & "Vew=" into tEncryptedString
 
 put rigDecode(tEncryptedString) into tPlaintextString</code></pre>
 
 
 <p>You can optionally pass your encryption key via the second parameter if you don't want to use the one in your config file:</p>
 
-<pre><code>put "APANtByIGI1BpVXZTJgcsAG8GZl8pdwwa84" into tEncryptedString
+<pre><code>put "U2FsdGVkX1+X1ziDFFg/0bkTX9ABsfqoxyWzzhQ3Vlidx9XjCgN6Xd/0Z9G/ZLDJFbFy0KVJ" & return & "eR8=" into tEncryptedString
 put "superSecretKey" into tKey
 
 put rigDecode(tEncryptedString, tKey) into tPlaintextString</code></pre>
