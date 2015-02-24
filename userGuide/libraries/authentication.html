@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.20</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.21</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -484,7 +484,7 @@ end if
 put "members" into tGroups[1]
 put "other" into tGroups[2]
 if rigAuthInGroup(tGroups) then
-	rigSetSessFlashdata "message", "You must be a member of group "members" or of group "other" to view this page."
+	rigSetSessFlashdata "message", "You must be a member of group members or of group other to view this page."
 	rigRedirect "/"
 end if
 
@@ -1484,7 +1484,7 @@ INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`,
 `activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
 `rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
 `lastName`, `company`, `phone`)
-VALUES (1,'127.0.0.1','admin','U2FsdGVkX1+rzbdtWLk7ESY6mVdUsoktJqIhpamjtAOIKzZVRnMc3g==',
+VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
 'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
 
 UNLOCK TABLES;
@@ -1595,7 +1595,7 @@ INSERT INTO "users" ("ipAddress", username, password, email,
 "activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
 "rememberCode", "createdOn", "lastLogin", active, "firstName", 
 "lastName", company, phone) VALUES 
-('127.0.0.1','admin','U2FsdGVkX1+rzbdtWLk7ESY6mVdUsoktJqIhpamjtAOIKzZVRnMc3g==',
+('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
 'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
 'Admin','Istrator','ADMIN','0');
 
@@ -1692,7 +1692,7 @@ COMMIT;
 
 BEGIN;
 INSERT INTO "users" VALUES 
-(1, '127.0.0.1', 'admin', 'U2FsdGVkX1+rzbdtWLk7ESY6mVdUsoktJqIhpamjtAOIKzZVRnMc3g==', 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
 'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
 'Admin', 'Istrator', 'ADMIN', 0);
 COMMIT;

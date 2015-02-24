@@ -66,8 +66,8 @@ put "groupId" into sAuthenticationConf["join"]["groups"]
 # Please see LiveCode's cipherNames() function which returns a list of ciphers
 # and their associated default key lengths in bits.
 #
-# Set the authentication encryption key here. To take maximum advantage of the
-# encryption algorithm, your key should be 32 characters in length (128 bits)
+# Set the authentication encryption key here. In order to be cryptographically
+# secure it needs to be as random as possible.
 # If you prefere to use revIgniter's universal key as set in config.lc,
 # set sAuthenticationConf["useAuthEncryptionKey"] to false.
 #
