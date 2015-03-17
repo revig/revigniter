@@ -449,7 +449,7 @@ function rigAuthInGroup pGroup pID
 		repeat for each key tKey in pGroup
 			put pGroup[tKey] into tVal
 			
-			# DETERMINE WHICH ARRAY SHOULD BE YOUSED FOR CHECKING
+			# DETERMINE WHICH ARRAY SHOULD BE USED FOR CHECKING
 			if tVal is an integer then
 				put tGroupsByID into tGroups
 			else
@@ -464,7 +464,7 @@ function rigAuthInGroup pGroup pID
 		
 	else
 		
-		# DETERMINE WHICH ARRAY SHOULD BE YOUSED FOR CHECKING
+		# DETERMINE WHICH ARRAY SHOULD BE USED FOR CHECKING
 		if pGroup is an integer then
 				put tGroupsByID into tGroups
 			else
