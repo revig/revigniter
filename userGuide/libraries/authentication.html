@@ -329,6 +329,33 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 
 
 
+<h3>rigAuthAddToGroup <var>pGroupID</var>, <var>pUserID</var></h3>
+
+<p>Add user to a group.</p>
+
+<p>The first parameter is an integer, the ID of the group a user should be added to.<br />
+	The second parameter is the user's ID.</p>
+	
+	<p>Example:</p>
+
+
+<pre><code># GET USER ID
+put rigFetchSegment(3) into tUserID
+
+# CHECK POST ARRAY DATA
+if $_POST is an array then
+	# VALIDATE THE REQUEST
+	if tUserID &lt;> rigVarPOST("hiddenUserID") then
+		rigLogMessage "error", "This form post did not pass the security check.", TRUE
+	else
+	
+		rigAuthAddToGroup 3, tUserID
+	end if
+end if
+</code></pre>
+
+
+
 <h3>rigAuthUpdate( <var>pID</var>, <var>pData</var> )</h3>
 
 <p>Update user data.</p>
