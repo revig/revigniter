@@ -56,7 +56,7 @@ put 0 into sPagCurPage					-- The current page being viewed
 put "&lsaquo; First" into sPagFirstLink
 put "&gt;" into sPagNextLink
 put "&lt;" into sPagPrevLink
-put "Last &rsaquo;" into sPagLastLink
+put "Last &raquo;" into sPagLastLink
 put 3 into sPagUriSegment
 put "&nbsp;" into sPagFirstTagClose
 put "&nbsp;" into sPagLastTagOpen
