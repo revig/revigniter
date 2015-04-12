@@ -509,9 +509,9 @@ end rigAjaxPagination
 --| FUNCTION rigAjaxPaginationCode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 28-02-2014
---| Last Mod: 28-02-2014
+--| Last Mod: 11-04-2015
 --| Requires: --
 --|
 --| Summary: Return AJAX pagination JavaScript code.
@@ -524,7 +524,7 @@ end rigAjaxPagination
 ----------------------------------------------------------------------*/
 
 function rigAjaxPaginationCode
-  return "<script>var" && sPagWidgetName & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;o.requestTimer=setTimeout(function(){r.abort();" & sPagWidgetName & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPagAjaxServerTimeout & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPagWidgetName & ".writeData(r.responseText):" & sPagWidgetName & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPagWidgetName & ".paginationData.innerHTML=t.paginationData;" & sPagWidgetName & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
+	return "<script>var" && sPagWidgetName & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPagWidgetName & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPagAjaxServerTimeout & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPagWidgetName & ".writeData(r.responseText):" & sPagWidgetName & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPagWidgetName & ".paginationData.innerHTML=t.paginationData;" & sPagWidgetName & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
 end rigAjaxPaginationCode
 
 
