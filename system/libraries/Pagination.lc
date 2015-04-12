@@ -278,9 +278,9 @@ end rigSetInitialPaginationValue
 --| FUNCTION rigCreatePaginationLinks
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-09-09
---| Last Mod: 20-02-14
+--| Last Mod: 12-04-15
 --| Requires: rigCeil, rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
@@ -361,24 +361,38 @@ function rigCreatePaginationLinks
 	# AND HERE WE GO...
 	# RENDER THE "FIRST" LINK
 	if  sPagCurPage > (sPagNumLinks + 1) then
+		# ARIA
+		if sPagFirstLink contains "&lsaquo;" then
+			put "aria-label=" & quote & "First" & quote into tAriaLabel
+		else
+			put empty into tAriaLabel
+		end if
+		#
     if sPagAjax is TRUE then
-      put sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+      put sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
     else
-      put sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+      put sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote && tAriaLabel & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
     end if
 	end if
   #
 
 	# RENDER THE "PREVIOUS" LINK
 	if sPagCurPage <> 1 then
+			# ARIA
+			if sPagPrevLink contains "&lt;" then
+				put "aria-label=" & quote & "Previous" & quote into tAriaLabel
+			else
+				put empty into tAriaLabel
+			end if
+			#
 		put tUriPageNumber - sPagPerPage into tCounter
 		if tCounter = 0 then
 			put empty into tCounter
 		end if
     if sPagAjax is TRUE then
-      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
     else
-      put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+      put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote && tAriaLabel & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
     end if
 	end if
   #
@@ -410,22 +424,36 @@ function rigCreatePaginationLinks
 
 	# RENDER THE "NEXT" LINK
 	if sPagCurPage < tNumPages then
+		# ARIA
+		if sPagNextLink contains "&gt;" then
+			put "aria-label=" & quote & "Next" & quote into tAriaLabel
+		else
+			put empty into tAriaLabel
+		end if
+		#
 		put sPagCurPage * sPagPerPage into tJ
     if sPagAjax is TRUE then
-      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
     else
-      put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+      put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote && tAriaLabel & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
     end if
 	end if
   #
 
 	# RENDER THE "LAST" LINK
 	if (sPagCurPage + sPagNumLinks) < tNumPages then
+		# ARIA
+		if sPagLastLink contains "&raquo;" then
+			put "aria-label=" & quote & "Last" & quote into tAriaLabel
+		else
+			put empty into tAriaLabel
+		end if
+		#
 		put (tNumPages * sPagPerPage) - sPagPerPage into tI
     if sPagAjax is TRUE then
-      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
     else
-      put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+      put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote && tAriaLabel & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
     end if
 	end if
   #
