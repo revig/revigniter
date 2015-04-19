@@ -2106,9 +2106,9 @@ end _rigConvertAttribute
 --| FUNCTION _rigHtmlEntityDecode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 23-06-09
---| Last Mod: 02-02-15
+--| Last Mod: 20-04-15
 --| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode(), rigLogMessage
 --|
 --| Summary: Converts character entities.
@@ -2168,7 +2168,7 @@ function _rigHtmlEntityDecode pStr pCharset
   # LITERAL ENTITIES
   put tDecodedStringHexa into tDecodedString
   if sEntityChart is empty then
-    put URL "binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt" into sEntityChart
+    put URL ("binfile:" & gBASEPATH & "revigniter/htmlEntityChart.txt") into sEntityChart
 		
     if the result is empty then
       put rigTextDecode(sEntityChart, pCharset) into sEntityChart
