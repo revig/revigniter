@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1622">Version 1.6.22</a></li>
 <li><a href="#version1621">Version 1.6.21</a></li>
 <li><a href="#version1620">Version 1.6.20</a></li>
 <li><a href="#version1619">Version 1.6.19</a></li>
@@ -177,6 +178,26 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+
+<h2><a name="version1622">&nbsp;</a>Version 1.6.22</h2>
+<p>Release Date: April 23, 2015</p>
+
+
+<p>
+<ul>
+	<li><strong>Changed:</strong> AJAX code in pagination library. The click event target is now switched to parent node if the event target node name is not "A".</li>
+	<li><strong>Changed:</strong> Added ARIA labels to pagination links in system/libraries/Pagination.lc -> rigCreatePaginationLinks().</li>
+	<li><strong>Added:</strong> Info about the "ajaxrequest" segment added to pagination links by the AJAX pagination script. See section “Pagination Library” of the User Guide.</li>
+	<li><strong>Added:</strong> Comments regarding rigAuthAddToGroup. See section “Authentication Library” of the User Guide.</li>
+	<li><strong>Fixed:</strong> Typo in value of sPagLastLink variable of the pagination library.</li>
+	<li><strong>Fixed:</strong> Missing slash in base URL of assets in case none is provided in config.lc and cache busting is enabled.</li>
+	<li><strong>Fixed:</strong> Missing parenthesis in system/libraries/Input.lc ->  _rigHtmlEntityDecode(). On MacOS the result of put URL "binfile:/path/to/file" (without using parethesis) is "invalid URL: binfile:"</li>
+</ul>
+</p>
+
+
 
 
 <h2><a name="version1621">&nbsp;</a>Version 1.6.21</h2>
@@ -1432,7 +1453,7 @@ Previous Topic:&nbsp;&nbsp;<a href="license.html">License</a>
 <a href="index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="./general/credits.html">Credits</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
