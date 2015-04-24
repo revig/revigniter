@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.21</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.22</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -220,6 +220,7 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 
 <ul>
 	<li>Add the AJAX pagination script like [[gData["ajaxCode"] ]] to your view file preferably at the bottom just before the closing body tag.</li>
+	<li>The AJAX pagination code adds a segment named "ajaxrequest" to pagination links. This allows us with the help of the <dfn>rigFetchSegment()</dfn> function or the <dfn>reigFetchRsegment()</dfn> function respectively to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard http request.</li>
 	<li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
 </ul>
 
@@ -480,7 +481,7 @@ Previous Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

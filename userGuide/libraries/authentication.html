@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.21</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.22</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -809,6 +809,34 @@ if char -1 of tResultData is "," then
 	delete char -1 of tResultData
 end if
 </code></pre>
+
+
+
+<h3>rigAuthAddToGroup <var>pGroupID</var>, <var>pUserID</var></h3>
+
+<p>Add user to a group.</p>
+
+<p>The first parameter is an integer, the ID of the group a user should be added to.<br />
+	The second parameter is the user's ID.</p>
+	
+	<p>Example:</p>
+
+
+<pre><code># GET USER ID
+put rigFetchSegment(3) into tUserID
+
+# CHECK POST ARRAY DATA
+if $_POST is an array then
+	# VALIDATE THE REQUEST
+	if tUserID &lt;> rigVarPOST("hiddenUserID") then
+		rigLogMessage "error", "This form post did not pass the security check.", TRUE
+	else
+	
+		rigAuthAddToGroup 3, tUserID
+	end if
+end if
+</code></pre>
+
 
 
 
@@ -3519,7 +3547,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://www.softwaregestaltung.de/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
