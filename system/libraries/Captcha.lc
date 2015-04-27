@@ -61,7 +61,7 @@ put 10 into sMathRandomLimit				-- used by rigCaptchaMathProblem
 put "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384" into sBits
 split sBits using comma
 
-# THESE ARE THE CORRESPONDING BITMASKS
+# FOLLOWING THE CALCULATED BITMASKS FOR DIGITS 0 TO 9 IN DECIMAL NOTATION
 put "31599,18740,29607,31143,18921,31183,31695,18855,31727,31215" into sBitmasks
 split sBitmasks using comma
 
