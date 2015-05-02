@@ -3193,7 +3193,7 @@ function rigPrintMailDebugger
 
 	put rigHtmlSpecialChars(_sSubject) into tSubject
 	put rigHtmlSpecialChars(_sFinalbody) into tFinalbody
-	put "<pre>" & _sHeaderStr & "<br />" & tSubject & "<br />" & tFinalbody & "</pre>" after tMsg
+	put "<pre>" & tHeaderStr & "<br />" & tSubject & "<br />" & tFinalbody & "</pre>" after tMsg
 
 	return tMsg
 end rigPrintMailDebugger
