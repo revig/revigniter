@@ -3162,13 +3162,13 @@ end _rigGetHostname
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigPrintMailDebugger
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-09-09
---| Last Mod: 18-09-09
+--| Last Mod: 03-05-15
 --| Requires: rigHtmlSpecialChars()
 --|
 --| Summary: Get debug message.
@@ -3178,7 +3178,7 @@ end _rigGetHostname
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigPrintMailDebugger
 	if the number of lines in the keys of _sDebugMsg > 0 then
@@ -3187,6 +3187,9 @@ function rigPrintMailDebugger
 			put tVal after tMsg
 		end repeat
 	end if
+	
+	put _sHeaderStr into tHeaderStr
+	replace "<" with "&lt;" in tHeaderStr
 
 	put rigHtmlSpecialChars(_sSubject) into tSubject
 	put rigHtmlSpecialChars(_sFinalbody) into tFinalbody
