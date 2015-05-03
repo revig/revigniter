@@ -2489,9 +2489,9 @@ end _rigSpoolEmail
 --| FUNCTION _rigSendWithMail
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 14-09-09
---| Last Mod: 02-02-15
+--| Last Mod: 03-05-15
 --| Requires: rigShellEscape(), rigNumToCodepoint(), rigQ(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using mail as shell command. Can not be used to send html mail.
@@ -2561,7 +2561,16 @@ function _rigSendWithMail
 			put " -b" && rigQ(tBCC) after tCmd
 		end if
         
-		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		if tFrom is not empty then
+			# THE DOUBLE DASH STOPS MAIL FROM PARSING THE -f OPTION AND PASSES IT TO SENDMAIL.
+			# THE -f OPTION SETS THE ENVELOPE SENDER ADDRESS IN SENDMAIL.
+			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+			# THE BEHAVIOR FOR -- HAS CHANGED AND IT SEEMS THAT THERE IS NO WAY TO SPECIFY
+			# THE SENDER ADDRESS USING MAIL THROUGH THE COMMAND LINE ANYMORE.
+			# SO, THIS IS WHY THE SENDER ADDRESS IS OPTIONAL SINCE HANDLER VERSION 1.4
+		else
+			put space & rigQ(tRecipients) after tCmd
+		end if
 
 	else	
 		# BUILD SHELL COMMAND
@@ -2573,8 +2582,12 @@ function _rigSendWithMail
 		if tBCC is not empty then
 			put " -b" && rigQ(tBCC) after tCmd
 		end if
-        
-		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+     
+		if tFrom is not empty then
+			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		else
+			put space & rigQ(tRecipients) after tCmd
+		end if
 
 	end if
 
