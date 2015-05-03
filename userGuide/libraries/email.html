@@ -223,6 +223,9 @@ rigRunInitialEmailConfig sEmailConf</code></pre>
 <p>Sets the email address and name of the person sending the email:</p>
 <pre><code>rigMailFrom "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
 
+<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of the double dash sending mail through the command line has changed it is preferred to not set the sender address if you use the default protocol setting (mail). Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. 
+	It's the account name and host name of the sending user.</p>
+
 <h3>rigReplyTo</h3>
 <p>Sets the reply-to address.  If the information is not provided the information in the "mailFrom" handler is used. Example:</p>
 <pre><code>rigReplyTo "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
