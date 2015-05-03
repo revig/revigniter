@@ -2213,13 +2213,13 @@ end _rigPrepQencoding
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMailSend
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-08-09
---| Last Mod: 23-08-09
+--| Last Mod: 03-05-15
 --| Requires: _rigSetErrorMessage, _rigBuildHeaders, rigBatchBccSend(), _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Send email.
@@ -2229,11 +2229,13 @@ end _rigPrepQencoding
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigMailSend
 	if _sReplytoFlag is FALSE then
-		rigReplyTo _sHeaders["From"]
+		if (sProtocol <> "mail") or ((sProtocol is "mail") and (_sHeaders["From"] <> empty)) then
+			rigReplyTo _sHeaders["From"]
+		end if
 	end if
 
 	if (_sRecipients is not an array) and (_sRecipients is empty) then
