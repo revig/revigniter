@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Upgrading From a Previous Version : revIgniter User Guide</title>
+		<title>Upgrading from 1.6.22 to 1.6.23 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Upgrading From a Previous Version</li>
+			 		 	<li class="active">Upgrading from 1.6.22 to 1.6.23</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,61 +85,44 @@
 	
 <div id="content">
 
-<h1>Upgrading From a Previous Version</h1>
+<h1>Upgrading from 1.6.22 to 1.6.23</h1>
 
-<p>Please read the upgrade notes corresponding to the version you are upgrading from.</p>
+
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
+
+
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
 
 <ul>
-<li><a href="upgrade_1623.html">Upgrading from 1.6.22 to 1.6.23</a></li>
-<li><a href="upgrade_1622.html">Upgrading from 1.6.21 to 1.6.22</a></li>
-<li><a href="upgrade_1621.html">Upgrading from 1.6.20 to 1.6.21</a></li>
-<li><a href="upgrade_1620.html">Upgrading from 1.6.19 to 1.6.20</a></li>
-<li><a href="upgrade_1619.html">Upgrading from 1.6.18 to 1.6.19</a></li>
-<li><a href="upgrade_1618.html">Upgrading from 1.6.17 to 1.6.18</a></li>
-<li><a href="upgrade_1617.html">Upgrading from 1.6.16 to 1.6.17</a></li>
-<li><a href="upgrade_1616.html">Upgrading from 1.6.15 to 1.6.16</a></li>
-<li><a href="upgrade_1615.html">Upgrading from 1.6.14 to 1.6.15</a></li>
-<li><a href="upgrade_1614.html">Upgrading from 1.6.13 to 1.6.14</a></li>
-<li><a href="upgrade_1613.html">Upgrading from 1.6.12 to 1.6.13</a></li>
-<li><a href="upgrade_1612.html">Upgrading from 1.6.11 to 1.6.12</a></li>
-<li><a href="upgrade_1611.html">Upgrading from 1.6.10 to 1.6.11</a></li>
-<li><a href="upgrade_1610.html">Upgrading from 1.6.9 to 1.6.10</a></li>
-<li><a href="upgrade_169.html">Upgrading from 1.6.8 to 1.6.9</a></li>
-<li><a href="upgrade_168.html">Upgrading from 1.6.7 to 1.6.8</a></li>
-<li><a href="upgrade_167.html">Upgrading from 1.6.6 to 1.6.7</a></li>
-<li><a href="upgrade_166.html">Upgrading from 1.6.5 to 1.6.6</a></li>
-<li><a href="upgrade_165.html">Upgrading from 1.6.4 to 1.6.5</a></li>
-<li><a href="upgrade_164.html">Upgrading from 1.6.3 to 1.6.4</a></li>
-<li><a href="upgrade_163.html">Upgrading from 1.6.2 to 1.6.3</a></li>
-<li><a href="upgrade_162.html">Upgrading from 1.6.1 to 1.6.2</a></li>
-<li><a href="upgrade_161.html">Upgrading from 1.6 to 1.6.1</a></li>
-<li><a href="upgrade_16.html">Upgrading from 1.5.21b to 1.6</a></li>
-<li><a href="upgrade_1521b.html">Upgrading from 1.5.20b to 1.5.21b</a></li>
-<li><a href="upgrade_1520b.html">Upgrading from 1.5.19b to 1.5.20b</a></li>
-<li><a href="upgrade_1519b.html">Upgrading from 1.5.18b to 1.5.19b</a></li>
-<li><a href="upgrade_1518b.html">Upgrading from 1.5.17b to 1.5.18b</a></li>
-<li><a href="upgrade_1517b.html">Upgrading from 1.5.16b to 1.5.17b</a></li>
-<li><a href="upgrade_1516b.html">Upgrading from 1.5.15b to 1.5.16b</a></li>
-<li><a href="upgrade_1515b.html">Upgrading from 1.5.14b to 1.5.15b</a></li>
-<li><a href="upgrade_1514b.html">Upgrading from 1.5.13b to 1.5.14b</a></li>
-<li><a href="upgrade_1513b.html">Upgrading from 1.5.12b to 1.5.13b</a></li>
-<li><a href="upgrade_1512b.html">Upgrading from 1.5.11b to 1.5.12b</a></li>
-<li><a href="upgrade_1511b.html">Upgrading from 1.5.10b to 1.5.11b</a></li>
-<li><a href="upgrade_1510b.html">Upgrading from 1.5.9b to 1.5.10b</a></li>
-<li><a href="upgrade_159b.html">Upgrading from 1.5.8b to 1.5.9b</a></li>
-<li><a href="upgrade_158b.html">Upgrading from 1.5.7b to 1.5.8b</a></li>
-<li><a href="upgrade_157b.html">Upgrading from 1.5.6b to 1.5.7b</a></li>
-<li><a href="upgrade_156b.html">Upgrading from 1.5.5b to 1.5.6b</a></li>
-<li><a href="upgrade_155b.html">Upgrading from 1.5.4b to 1.5.5b</a></li>
-<li><a href="upgrade_154b.html">Upgrading from 1.5.3b to 1.5.4b</a></li>
-<li><a href="upgrade_153b.html">Upgrading from 1.5.2b to 1.5.3b</a></li>
-<li><a href="upgrade_152b.html">Upgrading from 1.5.1b to 1.5.2b</a></li>
-<li><a href="upgrade_151b.html">Upgrading from 1.5b to 1.5.1b</a></li>
-<li><a href="upgrade_15b.html">Upgrading from 1.4.2b to 1.5b</a></li>
-<li><a href="upgrade_142b.html">Upgrading from 1.4.1b to 1.4.2b</a></li>
-<li><a href="upgrade_141b.html">Upgrading from 1.4b to 1.4.1b</a></li>
-<li><a href="upgrade_14b.html">Upgrading from 1.3.25b to 1.4b</a></li>
+	<li><dfn>Captcha.lc</dfn></li>
+	<li><dfn>Email.lc</dfn></li>	
 </ul>
+
+
+<p>Replace these files in your "system/helpers" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>urlHelper.lc</dfn></li>	
+	<li><dfn>emailHelper.lc</dfn></li>	
+</ul>
+
+
+
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
 
 
 </div>
@@ -151,7 +134,7 @@
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="index.html">Installation Instructions</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>

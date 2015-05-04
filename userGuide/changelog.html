@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1623">Version 1.6.23</a></li>
 <li><a href="#version1622">Version 1.6.22</a></li>
 <li><a href="#version1621">Version 1.6.21</a></li>
 <li><a href="#version1620">Version 1.6.20</a></li>
@@ -181,8 +182,28 @@
 
 
 
+
+<h2><a name="version1623">&nbsp;</a>Version 1.6.23</h2>
+<p>Release Date: 2015-05-04</p>
+
+
+<p>
+<ul>
+	<li><strong>Fixed:</strong> system/libraries/Captcha.lc -> rigCaptchaCode. The captcha library now works with LiveCode 7.</li>
+	<li><strong>Changed:</strong> Removed CDATA tag in system/helpers/urlHelper.lc -> rigSafeMailToLink().</li>
+	<li><strong>Changed:</strong> Made the pSender parameter in system/helpers/emailHelper.lc -> rigSendMail() optional to address the fact that the behavior of double dash in shell commands used to send emails has changed. Adjusted the User Guide accordingly. Note: The number of parameters for rigSendMail() has changed. If you used this function with previous revIgniter versions you should make adjustments accordingly.</li>
+	<li><strong>Changed:</strong> Converted less than signs in mail debugging data to entities so that email addresses are not interpreted as tags (see system/libraries/Email.lc -> rigPrintMailDebugger().</li>
+	<li><strong>Changed:</strong> Made the sender address optional for sending mail using the default protocol setting to send emails through the command line (see system/libraries/Email.lc -> _rigSendWithMail()). Adjusted the User Guide accordingly. Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you use the default protocol setting (mail). Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. It's the account name and host name of the sending user.</li>
+	<li><strong>Changed:</strong> Updated highlight.pack.js used for code highlighting in the User Guide.</li>
+</ul>
+</p>
+
+
+
+
+
 <h2><a name="version1622">&nbsp;</a>Version 1.6.22</h2>
-<p>Release Date: April 23, 2015</p>
+<p>Release Date: 2015-04-23</p>
 
 
 <p>
@@ -201,7 +222,7 @@
 
 
 <h2><a name="version1621">&nbsp;</a>Version 1.6.21</h2>
-<p>Release Date: February 24, 2015</p>
+<p>Release Date: 2015-02-24</p>
 
 
 <p>
@@ -214,7 +235,7 @@
 
 
 <h2><a name="version1620">&nbsp;</a>Version 1.6.20</h2>
-<p>Release Date: February 14, 2015</p>
+<p>Release Date: 2015-02-14</p>
 
 
 <p>
@@ -232,7 +253,7 @@
 
 
 <h2><a name="version1619">&nbsp;</a>Version 1.6.19</h2>
-<p>Release Date: February 02, 2015</p>
+<p>Release Date: 2015-02-02</p>
 
 
 <p>
@@ -250,7 +271,7 @@
 
 
 <h2><a name="version1618">&nbsp;</a>Version 1.6.18</h2>
-<p>Release Date: January 23, 2015</p>
+<p>Release Date: 2015-01-23</p>
 
 
 <p>
@@ -263,7 +284,7 @@
 
 
 <h2><a name="version1617">&nbsp;</a>Version 1.6.17</h2>
-<p>Release Date: January 13, 2015</p>
+<p>Release Date: 2015-01-13</p>
 
 
 <p>
@@ -276,7 +297,7 @@
 
 
 <h2><a name="version1616">&nbsp;</a>Version 1.6.16</h2>
-<p>Release Date: January 09, 2015</p>
+<p>Release Date: 2015-01-09</p>
 
 
 <p>
