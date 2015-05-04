@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Design and Architectural Goals : revIgniter User Guide</title>
+		<title>Upgrading from 1.6.22 to 1.6.23 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Design and Architectural Goals</li>
+			 		 	<li class="active">Upgrading from 1.6.22 to 1.6.23</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,25 +85,43 @@
 	
 <div id="content">
 
-<h2>Design and Architectural Goals</h2>
+<h1>Upgrading from 1.6.22 to 1.6.23</h1>
 
-<p>The goal for revIgniter is <dfn>maximum performance, capability, and flexibility in the smallest, lightest possible package</dfn>.</p>
 
-<p>To meet this goal we are committed to benchmarking, re-factoring, and simplifying at every step of the development process,
-rejecting anything that doesn't further the stated objective.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
-<p>From a technical and architectural standpoint, revIgniter was created with the following objectives:</p>
+
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
 
 <ul>
-<li><strong>Dynamic Component Loading.</strong>  In revIgniter, components are loaded and routines executed only when requested, rather than globally.  No assumptions are made by the system regarding what may be needed beyond the minimal core resources, so the system is very light-weight by default.  The events, as triggered by the HTTP request, and the controllers and views you design will determine what is invoked.</li>
-<li><strong>Loose Coupling.</strong>  Coupling is the degree to which components of a system rely on each other.  The less components depend on each other the more reusable and flexible the system becomes. The goal was to develop a very loosely coupled system.</li>
-<li><strong>Component Singularity.</strong>  Singularity is the degree to which components have a narrowly focused purpose.  In revIgniter, each library and its handlers are highly autonomous in order to allow maximum usefulness.</li>
+	<li><dfn>Captcha.lc</dfn></li>
+	<li><dfn>Email.lc</dfn></li>	
 </ul>
 
-<p>revIgniter is a dynamically loading, loosely coupled system with high component singularity. It strives for simplicity, flexibility, and high performance in a small footprint package.</p>
+
+<p>Replace these files in your "system/helpers" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>urlHelper.lc</dfn></li>	
+	<li><dfn>emailHelper.lc</dfn></li>	
+</ul>
 
 
 
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
 
 
 
@@ -116,11 +134,11 @@ rejecting anything that doesn't further the stated objective.</p>
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="mvc.html">Model-View-Controller</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="./getting_started.html">Getting Started</a>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>

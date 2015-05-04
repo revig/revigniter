@@ -2213,13 +2213,13 @@ end _rigPrepQencoding
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMailSend
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 23-08-09
---| Last Mod: 23-08-09
+--| Last Mod: 03-05-15
 --| Requires: _rigSetErrorMessage, _rigBuildHeaders, rigBatchBccSend(), _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Send email.
@@ -2229,11 +2229,13 @@ end _rigPrepQencoding
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigMailSend
 	if _sReplytoFlag is FALSE then
-		rigReplyTo _sHeaders["From"]
+		if (sProtocol <> "mail") or ((sProtocol is "mail") and (_sHeaders["From"] <> empty)) then
+			rigReplyTo _sHeaders["From"]
+		end if
 	end if
 
 	if (_sRecipients is not an array) and (_sRecipients is empty) then
@@ -2487,9 +2489,9 @@ end _rigSpoolEmail
 --| FUNCTION _rigSendWithMail
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 14-09-09
---| Last Mod: 02-02-15
+--| Last Mod: 03-05-15
 --| Requires: rigShellEscape(), rigNumToCodepoint(), rigQ(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using mail as shell command. Can not be used to send html mail.
@@ -2559,7 +2561,16 @@ function _rigSendWithMail
 			put " -b" && rigQ(tBCC) after tCmd
 		end if
         
-		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		if tFrom is not empty then
+			# THE DOUBLE DASH STOPS MAIL FROM PARSING THE -f OPTION AND PASSES IT TO SENDMAIL.
+			# THE -f OPTION SETS THE ENVELOPE SENDER ADDRESS IN SENDMAIL.
+			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+			# THE BEHAVIOR FOR -- HAS CHANGED AND IT SEEMS THAT THERE IS NO WAY TO SPECIFY
+			# THE SENDER ADDRESS USING MAIL THROUGH THE COMMAND LINE ANYMORE.
+			# SO, THIS IS WHY THE SENDER ADDRESS IS OPTIONAL SINCE HANDLER VERSION 1.4
+		else
+			put space & rigQ(tRecipients) after tCmd
+		end if
 
 	else	
 		# BUILD SHELL COMMAND
@@ -2571,8 +2582,12 @@ function _rigSendWithMail
 		if tBCC is not empty then
 			put " -b" && rigQ(tBCC) after tCmd
 		end if
-        
-		put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+     
+		if tFrom is not empty then
+			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
+		else
+			put space & rigQ(tRecipients) after tCmd
+		end if
 
 	end if
 
@@ -3162,13 +3177,13 @@ end _rigGetHostname
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigPrintMailDebugger
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 18-09-09
---| Last Mod: 18-09-09
+--| Last Mod: 03-05-15
 --| Requires: rigHtmlSpecialChars()
 --|
 --| Summary: Get debug message.
@@ -3178,7 +3193,7 @@ end _rigGetHostname
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigPrintMailDebugger
 	if the number of lines in the keys of _sDebugMsg > 0 then
@@ -3187,10 +3202,13 @@ function rigPrintMailDebugger
 			put tVal after tMsg
 		end repeat
 	end if
+	
+	put _sHeaderStr into tHeaderStr
+	replace "<" with "&lt;" in tHeaderStr
 
 	put rigHtmlSpecialChars(_sSubject) into tSubject
 	put rigHtmlSpecialChars(_sFinalbody) into tFinalbody
-	put "<pre>" & _sHeaderStr & "<br />" & tSubject & "<br />" & tFinalbody & "</pre>" after tMsg
+	put "<pre>" & tHeaderStr & "<br />" & tSubject & "<br />" & tFinalbody & "</pre>" after tMsg
 
 	return tMsg
 end rigPrintMailDebugger

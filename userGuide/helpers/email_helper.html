@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.22</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.23</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -110,10 +110,13 @@ else
 	put "email is not valid" into gData["emailCheck"]
 end if</code></pre>
 
-<h3>rigSendEmail("<var>recipient</var>", "<var>subject</var>", "<var>message</var>", "<var>sender</var>", "<var>cc</var>", "<var>bcc</var>")</h3>
+<h3>rigSendEmail("<var>recipient</var>", "<var>subject</var>", "<var>message</var>", "<var>cc</var>", "<var>bcc</var>")</h3>
 
 <p>Sends an email using Mail. For a more robust email solution, see revIgniter's <a href="../libraries/email.html">Email Library</a>.</p>
 <p>It returns TRUE/FALSE</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; The sender field appears as "&lt;username@domain.com>" in default configurations. 
+	It's the account name and host name of the sending user.</p>
 
 </div>
 <!-- END CONTENT -->

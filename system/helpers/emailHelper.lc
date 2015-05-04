@@ -73,22 +73,25 @@ end rigValidEmail
 --| FUNCTION rigSendEmail
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 18-09-09
---| Last Mod: 02-02-15
+--| Last Mod: 02-05-15
 --| Requires: rigCleanMailAddress(), rigShellEscape(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send an email.
 --| 
---| Format:  rigSendEmail(param1)
+--| Format:  rigSendEmail(param1, param2, param3[, param4][, param5][, param6])
 --|
---| Parameters: string <pRecipient>, string <pSubject>, string <pMessage>, string <pSender>, string <pCC>, string <pBCC>
+--| Parameters: string <pRecipient>, string <pSubject>, string <pMessage>, 
+--|               string <pCC> (optional), string <pBCC> (optional), string <pSender> (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
-	put rigCleanMailAddress(pSender) into tFrom
+function rigSendEmail pRecipient pSubject pMessage pCC pBCC pSender
+	if pSender is not empty then
+		put rigCleanMailAddress(pSender) into tFrom
+	end if
 	put rigCleanMailAddress(pRecipient) into tRecipient
 
 	# PREPARE HEADER DATA FOR SHELL COMMAND
@@ -119,7 +122,18 @@ function rigSendEmail pRecipient pSubject pMessage pSender pCC pBCC
 		put " -b" && rigQ(tBCC) after tCmd
 	end if
         
-	put space & rigQ(tRecipient) && "-- -f" && rigQ(tFrom) after tCmd
+	if tFrom is not empty then
+		# THE DOUBLE DASH STOPS MAIL FROM PARSING THE -f OPTION AND PASSES IT TO SENDMAIL.
+		# THE -f OPTION SETS THE ENVELOPE SENDER ADDRESS IN SENDMAIL.
+		put space & rigQ(tRecipient) && "-- -f" && rigQ(tFrom) after tCmd
+		# HOWEVER THE BEHAVIOR FOR -- HAS CHANGED AND IT SEEMS THAT THERE IS NO WAY
+		# TO SPECIFY THE SENDER ADDRESS USING MAIL THROUGH THE COMMAND LINE ANYMORE.
+		# SO, THIS IS WHY THE pSender PARAMETER IS OPTIONAL SINCE HANDLER VERSION 1.3
+	else
+		# IF NO SENDER ADDRESS IS PROVIDED THE SENDER FIELD APPEARS AS "<username@domain.com>"
+		# IN DEFAULT CONFIGURATIONS, IT'S THE ACCOUNT NAME AND HOST NAME OF THE SENDING USER.
+		put space & rigQ(tRecipient) after tCmd
+	end if
 
 	# SEND SHELL COMMAND
 	put shell(tCmd) into tResult

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.22</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.23</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -222,6 +222,9 @@ rigRunInitialEmailConfig sEmailConf</code></pre>
 <h3>rigMailFrom</h3>
 <p>Sets the email address and name of the person sending the email:</p>
 <pre><code>rigMailFrom "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
+
+<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you use the default protocol setting (mail). Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. 
+	It's the account name and host name of the sending user.</p>
 
 <h3>rigReplyTo</h3>
 <p>Sets the reply-to address.  If the information is not provided the information in the "mailFrom" handler is used. Example:</p>

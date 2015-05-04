@@ -61,7 +61,7 @@ put 10 into sMathRandomLimit				-- used by rigCaptchaMathProblem
 put "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384" into sBits
 split sBits using comma
 
-# THESE ARE THE CORRESPONDING BITMASKS
+# FOLLOWING THE CALCULATED BITMASKS FOR DIGITS 0 TO 9 IN DECIMAL NOTATION
 put "31599,18740,29607,31143,18921,31183,31695,18855,31727,31215" into sBitmasks
 split sBitmasks using comma
 
@@ -436,9 +436,9 @@ end rigCaptchaStyle
 --| FUNCTION rigCaptchaCode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Last Mod: 27-04-15
 --| Requires: --
 --|
 --| Summary: Get captcha html code.
@@ -451,31 +451,30 @@ end rigCaptchaStyle
 ----------------------------------------------------------------------*/
 
 function rigCaptchaCode
-    	put the number of lines in the keys of sNumberMatrix[1] into tNumRows
+	put the number of lines in the keys of sNumberMatrix[1] into tNumRows
 
 	put sCaptchaPrefs["captchaLength"] into tNumDigits
     
 	# SET BACKGROUND COLOR OF NUMBER CELLS ROW BY ROW 
-    	repeat with tRow = 1 to tNumRows
+	repeat with tRow = 1 to tNumRows
          
-    -- repeat for each key tDigit in sNumberMatrix -- DON'T DO THAT, AS THE DISPLAYED NUMBER GETS SCREWED
-		# IF THE NUMBER OF NUMBERED KEYS IS > 7 DUE TO AN INCORRECT ARRAY ORDER - WEIRD!!!!!!
+		-- repeat for each key tDigit in sNumberMatrix -- DON'T DO THAT, AS THE ARRAY KEYS ARE NOT ORDERED
 		repeat with tDigit = 1 to tNumDigits
 
-            		repeat for each key tCell in sNumberMatrix[tDigit][tRow]
-                		put sNumberMatrix[tDigit][tRow][tCell] into tVal
-                		put "<span class=" & quote & tVal & quote & ">&nbsp;&nbsp;</span>" after tCaptcha
-            		end repeat
+			repeat with tCell = 1 to 3
+				put sNumberMatrix[tDigit][tRow][tCell] into tVal
+				put "<span class=" & quote & tVal & quote & ">&nbsp;&nbsp;</span>" after tCaptcha
+			end repeat
 			# SPACE BETWEEN DIGITS
 			if tDigit is not tNumDigits then
-            			put "<span class=" & quote & "w" & quote & ">&nbsp;&nbsp;</span>" after tCaptcha
+				put "<span class=" & quote & "w" & quote & ">&nbsp;&nbsp;</span>" after tCaptcha
 			end if
-        	end repeat
+		end repeat
 		# END OF MATRIX ROW
-        	put "<br />" after tCaptcha
-    	end repeat
+		put "<br />" after tCaptcha
+	end repeat
     
-    	return tCaptcha
+	return tCaptcha
 end rigCaptchaCode
 
 

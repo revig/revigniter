@@ -363,9 +363,9 @@ end rigMailToLink
 --| FUNCTION rigSafeMailToLink
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 05-10-09
---| Last Mod: 21-12-14
+--| Last Mod: 27-04-15
 --| Requires: rigCodepointToNum(), rigArrayReverse(), rigNumToCodepoint()
 --|
 --| Summary: Create a spam-protected mailTo link written in Javascript.
@@ -485,7 +485,6 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 
 	# WRITE HTML CODE
 	put "<script type=" & quote & "text/javascript" & quote & ">" & return & \
-	"//<![CDATA[" & return & \
 	"var l=new Array();" & return into tOutput
 
 	put 0 into tNum
@@ -501,7 +500,6 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 	"if (l[i].substring(0, 1) == '|') document.write(" & quote & "&#" & quote & "+unescape(l[i].substring(1))+" & quote & ";" & quote & ");" & return & \
 	"else document.write(unescape(l[i]));" & return & \
 	"}" & return & \
-	"//]]>" & return & \
 	"</script>" after tOutput
 
 	return tOutput
