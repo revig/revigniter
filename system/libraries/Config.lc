@@ -49,9 +49,9 @@ local sConfigIsLoaded
 --| COMMAND _setBaseURL
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 01-10-2012
---| Last Mod: 07-04-2015
+--| Last Mod: 10-05-2015
 --| Requires: rigFetchConfigItem(), rigSetConfigItem
 --|
 --| Summary: Set the base URL if none was provided in system/application/config.lc.
@@ -80,13 +80,17 @@ command _setBaseURL
 			
 			put "://" & tHTTPhost after tBaseURL
 
-			if $_SERVER["QUERY_STRING"] <> empty then
-				put offset($_SERVER["QUERY_STRING"], tRequestURI) into tQueryOffset
-				put char 1 to tQueryOffset of tRequestURI after tBaseURL
-			
-			else
-				put "/" after tBaseURL
-			end if
+      if $_SERVER["QUERY_STRING"] <> empty then
+   
+        put $_SERVER["QUERY_STRING"] into tQueryString
+        put replacetext(tQueryString,"[ ]+","%20") into tQueryString
+   
+        put offset(tQueryString, tRequestURI) into tQueryOffset
+        put char 1 to tQueryOffset of tRequestURI after tBaseURL
+
+      else
+       put "/" after tBaseURL
+     end if
 
 		else
 			put "http://localhost/" into tBaseURL
