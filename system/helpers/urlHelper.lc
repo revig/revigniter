@@ -844,6 +844,54 @@ end _rigParseAttributes
 
 
 
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigURLstripSpace
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 11-05-2015
+--| Last Mod: 11-05-2015
+--| Requires: --
+--|
+--| Summary: Remove or replace whitespace in URLs.
+--| 
+--| Format:  rigURLstripSpace(param1[, param2])
+--|
+--| Parameters: string <pURL>, string <pSeparator> (optional)
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigURLstripSpace pURL pSeparator
+  if pURL <> empty then
+    # TRIM WHITESPACE AT THE START AND AT THE END
+    put "(^\s+)|(\s+$)" into tRegExWS
+    put replacetext(pURL,tRegExWS,empty) into tCleanURL
+      
+    # GET DOMAIN, DON'T APPLY SEPARATORS TO DOMAIN
+    get matchText(tCleanURL,"(\.[a-zA-Z\s]*/)",tTopLevel)
+    put (offset(tTopLevel, tCleanURL)) + (the number of chars of tTopLevel) into tTopLevelOffset
+    put char 1 to tTopLevelOffset of tCleanURL into tDomain
+    put char tTopLevelOffset to -1 of tCleanURL into tSegments
+      
+    # REMOVE WHITESPACE IN DOMAIN
+    put replacetext(tDomain,"[ ]+", "") into tDomain
+      
+    # REPLACE WHITESPACE
+    put replacetext(tSegments,"[ ]+", pSeparator) into tSegments
+      
+    return tDomain & tSegments
+  end if
+   
+  return false
+end rigURLstripSpace
+
+
+
+
+
 --| END OF urlHelper.lc
 --| Location:  ./system/helpers/urlHelper.lc
 ----------------------------------------------------------------------
