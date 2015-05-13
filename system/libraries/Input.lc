@@ -1333,9 +1333,9 @@ end rigSanitizeFilename
 --| FUNCTION rigXssClean
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 23-05-09
---| Last Mod: 21-12-14
+--| Last Mod: 07-05-15
 --| Requires: rigNumToCodepoint(), rigRemoveInvisibleCharacters(), _rigConvertAttribute, _rigHtmlEntityDecode, _rigCompactExplodedWords
 --|                   _rigJsLinkRemoval, _rigJsImgRemoval, _rigSanitizeNaughtyHtml, rigXssHash(), rigLogMessage
 --|
@@ -1569,18 +1569,20 @@ function rigXssClean pString pImage pType
 	end repeat
 
 	##
-	# MAKES IREV TAGS SAFE
+	# MAKES LIVECODE TAGS SAFE
 	##
-	if pImage is TRUE then
-		# IMAGES HAVE A TENDENCY TO HAVE THE CLOSING TAGS EVERY SO OFTEN
-		# SO WE SKIP THOSE AND ONLY DO THE OPENING TAGS.
-		replace "<?rev" with "&lt;?rev" in tStringToClean
-		replace "<?REV" with "&lt;?REV" in tStringToClean
-	else
-		replace "<?rev" with "&lt;?rev" in tStringToClean
-		replace "<?REV" with "&lt;?REV" in tStringToClean
-		replace "?>" with "?&gt;" in tStringToClean
-	end if
+  put "rev&lc&livecode" into tLCtagnames
+  
+   repeat for each item tTagname in tLCtagnames
+      if ("<?" & tTagname) is in tStringToClean then
+         replace ("<?" & tTagname) with ("&lt;?" & tTagname) in tStringToClean
+      end if     
+   end repeat  
+   # IMAGES HAVE A TENDENCY TO HAVE THE CLOSING TAGS EVERY SO OFTEN
+   # SO WE SKIP THOSE AND ONLY DO THE OPENING TAGS.
+   if pImage <> TRUE then
+      replace "?>" with "?&gt;" in tStringToClean
+   end if
 
 	##
 	# COMPACT ANY EXPLODED WORDS
