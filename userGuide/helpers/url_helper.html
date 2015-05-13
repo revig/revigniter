@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.23</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.24</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -276,6 +276,20 @@ put rigUrlTitle(tTitle, "underscore", TRUE) into tURLtitle
 <p>This function will add <kbd>http://</kbd> in the event it is missing from a URL.  Pass the URL string to the function like this:</p>
 <pre><code>put "example.com" into tURL
 put rigUrlPrep(tURL) into tURL</code></pre>
+
+
+
+
+<h3>rigURLstripSpace()</h3>
+
+<p>Use this function to remove or replace whitespace in URLs. Example:</p>
+<pre><code>put " http:// www.mydomain.com/my site/foo/bar/the item " into tURL
+put rigURLstripSpace(tURL, "%20") into tCleanURL
+
+-- result: http://www.mydomain.com/my%20site/foo/bar/the%20item
+</code></pre>
+
+<p>The second parameter is optional and is used as a replacement for whitespace. If it is not provided all whitespace is stripped. Whitespace in domain names is always stripped.</p>
 
 
 
