@@ -681,13 +681,13 @@ end _rigValidateQueryRequest
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigParseURL
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 06-07-09
---| Last Mod: 06-07-09
+--| Last Mod: 14-06-15
 --| Requires: --
 --|
 --| Summary: Parse an URL and return its components.
@@ -697,7 +697,7 @@ end _rigValidateQueryRequest
 --| Parameters: string <pURL>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigParseURL pURL
     put pURL into tURL
@@ -730,28 +730,35 @@ function _rigParseURL pURL
     else
         put char (tHostnameOffsetStart + 1) to (tHostnameOffsetEnd - 1) of tURL into tHostname
     end if
-    put tHostname into tURLarray["host"]
     
-    # GET USER NAME
-    put offset(":",tURL) into tUsernameOffsetEnd
+    # THIS IS NOT A DSN, SECOND TRY TO GET THE HOSTNAME
+    if tHostname <> "" then
+      put tHostname into tURLarray["host"]
     
-    if tUsernameOffsetEnd is 0 then
+      # GET USER NAME
+      put offset(":",tURL) into tUsernameOffsetEnd
+    
+      if tUsernameOffsetEnd is 0 then
         put "" into tUsername
-    else
+      else
         put char 1 to (tUsernameOffsetEnd - 1) of tURL into tUsername
-    end if
-    put tUsername into tURLarray["user"]
+      end if
+      put tUsername into tURLarray["user"]
     
-    # GET PASSWORD
-    put offset(":",tURL) into tPasswordOffsetStart
-    put offset("@",tURL) into tPasswordOffsetEnd
+      # GET PASSWORD
+      put offset(":",tURL) into tPasswordOffsetStart
+      put offset("@",tURL) into tPasswordOffsetEnd
     
-    if tPasswordOffsetStart is 0 or tPasswordOffsetEnd is 0 then
+      if tPasswordOffsetStart is 0 or tPasswordOffsetEnd is 0 then
         put "" into tPassword
-    else
+      else
         put char (tPasswordOffsetStart + 1) to (tPasswordOffsetEnd - 1) of tURL into tPassword
-    end if
-    put tPassword into tURLarray["pass"]
+      end if
+      put tPassword into tURLarray["pass"]
+    
+    else -- if tHostname <> "" then
+      put char 1 to (offset("/",tURL) - 1) of tURL into tURLarray["host"]
+    end if -- if tHostname <> "" then
     
     # GET PATH
     put offset("/",tURL) into tPathOffsetStart
