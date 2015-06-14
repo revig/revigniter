@@ -1,0 +1,835 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright  Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
+# @license	  http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# revIgniter Trackback Sending/Receiving Library
+#
+#
+# @package		  revIgniter
+# @subpackage	Libraries
+# @category		  Trackbacks
+# @author			  rabit@revigniter.com
+# @link				  http://revigniter.com/userGuide/libraries/trackback.html
+##
+
+## ------------------------------------------------------------------------
+
+
+# LOGGING
+rigLogMessage "debug", "Trackback Library Loaded"
+
+# DECLARE VARIABLES
+local sTBtimeFormat, sTBcharset, sTBdataA, sTBconvertAscii, sTBresponse, sTBerrorMsgA
+
+# SET INITIAL VALUES
+put "local" into sTBtimeFormat
+put "UTF-8" into sTBcharset
+put "" into sTBdataA["url"]
+put "" into sTBdataA["title"]
+put "" into sTBdataA["excerpt"]
+put "" into sTBdataA["blog_name"]
+put "" into sTBdataA["charset"]
+put TRUE into sTBconvertAscii
+put "" into sTBresponse
+
+
+
+# AUTOMATICALLY LOAD XML Helper
+rigLoadHelper "xml"
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigRunInitialTrackbackConfig
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-05-15
+--| Last Mod: 18-05-2015
+--| Requires: --
+--|
+--| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
+--| 
+--| Format:  rigRunInitialTrackbackConfig param1
+--|
+--| Parameters: array <pConfig>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigRunInitialTrackbackConfig pConfig
+
+end rigRunInitialTrackbackConfig
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackSend
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-05-2015
+--| Last Mod: 18-05-2015
+--| Requires: rigTrackbackSetError, rigTrackbackExtractURLs(), rigStripHTML(), rigStripSlashes()
+--|            rigXmlConvert(), rigTrackbackLimitChars(), rigTrackbackConvertAscii(), rigTrackbackProcess()
+--|
+--| Summary: Send trackback.
+--| 
+--| Format:  rigTrackbackSend(param1)
+--|
+--| Parameters: array <pTBdataA>
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigTrackbackSend pTBdataA
+  if  pTBdataA is not an array then
+    rigTrackbackSetError "The rigTrackbackSend() function must be passed an array."
+    return FALSE
+  end if
+  
+  # PRE-PROCESS THE TRACKBACK DATA
+  repeat for each key tKey in pTBdataA
+    if pTBdataA[tKey] is empty then
+      rigTrackbackSetError "Trackback required item missing:" && tKey
+      return FALSE
+    end if
+    
+    switch tKey
+      case "ping_url"
+        put rigTrackbackExtractURLs(pTBdataA[tKey]) into tPingURLA
+      break
+      
+      case "excerpt"
+        put rigStripHTML(rigStripSlashes(pTBdataA[tKey])) into tExerpt
+        put rigXmlConvert(replacetext(tExerpt,tab, "")) into tExerpt
+        put rigTrackbackLimitChars(tExerpt) into tExerpt        
+      break
+      
+      case "url"
+        put rigStripHTML(rigStripSlashes(pTBdataA[tKey])) into tURL
+        put rigXmlConvert(replacetext(tURL,tab, "")) into tURL
+        put replacetext(tURL,"&#45;", "-") into tURL
+      break
+      
+      default
+        do "put rigStripHTML(rigStripSlashes(" & quote & pTBdataA[tKey] & quote & ")) into t" & tKey
+        do "put rigXmlConvert(replacetext(t" & tKey & ",tab," & quote & quote & ")) into t" & tKey
+    end switch
+    
+    # CONVERT HIGH ASCII CHARACTERS
+    if sTBconvertAscii is TRUE then
+      if tKey is "excerpt" then
+          put rigTrackbackConvertAscii(tExerpt) into tExerpt
+        else if tKey is "title" then
+          put rigTrackbackConvertAscii(pTBdataA["title"]) into tTitle
+        else if tKey is "blog_name" then
+          put rigTrackbackConvertAscii(pTBdataA["blog_name"]) into tBlogName
+      end if
+      
+    end if 
+  end repeat
+  
+  # BUILD THE TRACKBACK DATA STRING
+  if pTBdataA["charset"] is empty then
+    put sTBcharset into tCharset
+  else
+    put pTBdataA["charset"] into tCharset
+  end if
+  
+	put "url=" & URLencode(tURL) & "&title=" & URLencode(tTitle) & "&blog_name=" & URLencode(tBlogName) & "&excerpt=" & URLencode(tExerpt) & "&charset=" & URLencode(tCharset) into tData
+  
+  # SEND TRACKBACK(S)
+  put TRUE into tReturn
+  
+  if the number of lines in the keys of tPingURLA > 0 then
+    repeat for each key tKey in tPingURLA
+      if rigTrackbackProcess(tPingURLA[tKey], tData) is FALSE then
+        put FALSE into tReturn
+      end if
+      
+    end repeat
+  end if
+  
+  return tReturn
+end rigTrackbackSend
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackReceive
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 05-06-2015
+--| Last Mod: 05-06-2015
+--| Requires: rigVarPost(), rigTrim(), rigTrackbackSetError, rigConvertEncoding(),
+--|            rigXmlConvert(), rigStripHTML(), rigTrackbackLimitChars()
+--|
+--| Summary: Receive trackback data. This function simply validates the incoming TB data.
+--|            It returns FALSE on failure and TRUE on success. If the data is valid it is set
+--|            to the sTBdataA array so that it can be inserted into a database.
+--| 
+--| Format:  rigTrackbackReceive()
+--|
+--| Parameters: --
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigTrackbackReceive
+  put "url,title,blog_name,excerpt" into tTBdataItems
+  
+  put rigVarPost("charset", TRUE) into tCharset
+  if tCharset is FALSE then
+    # NO CHARSET PROVIDED. SO, WE ASSUME IT IS UTF-8.
+    put "UTF-8" into sTBdataA["charset"]
+  else
+    put toUpper(rigTrim(tCharset)) into sTBdataA["charset"]
+  end if
+  
+  repeat for each item tItem in tTBdataItems
+    put rigVarPost(tItem, TRUE) into tItemVal
+    
+    if tItemVal is FALSE then
+	    rigTrackbackSetError "The following required POST variable is missing:" && tItem & "."
+		  return FALSE
+    end if
+    
+    if tItem <> "url" then
+      if sTBdataA["charset"] <> sTBcharset then
+        get rigConvertEncoding(tItemVal, sTBcharset, sTBdataA["charset"])
+        if it <> FALSE then
+          put it into tItemVal
+        end if
+        
+      end if
+      
+      put rigXmlConvert(rigStripHTML(tItemVal)) into tItemVal
+     
+    else
+      put rigStripHTML(tItemVal) into tItemVal
+    end if
+    
+    if tItem is "excerpt" then
+      put rigTrackbackLimitChars(tItemVal) into tItemVal
+    end if
+    
+    put tItemVal into sTBdataA[tItem]
+ 
+  end repeat
+  
+  return sTBdataA
+end rigTrackbackReceive
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigTrackbackSetError
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-05-2015
+--| Last Mod: 18-05-2015
+--| Requires: rigLogMessage
+--|
+--| Summary: Set error message.
+--| 
+--| Format:  rigTrackbackSetError param1
+--|
+--| Parameters: string <pMsg>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigTrackbackSetError pMsg
+  rigLogMessage "error", pMsg
+
+  if sTBerrorMsgA is an array then
+    put pMsg into sTBerrorMsgA[(the number of lines in the keys of sTBerrorMsgA) + 1]
+  else
+    put pMsg into sTBerrorMsgA[1]
+  end if
+end rigTrackbackSetError
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackDisplayErrors
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-06-2015
+--| Last Mod: 07-06-2015
+--| Requires: --
+--|
+--| Summary: Show error messages.
+--| 
+--| Format:  rigTrackbackDisplayErrors([param1][, param2])
+--|
+--| Parameters: string <pOpenTag> (optional), string <pCloseTag> (optional)
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigTrackbackDisplayErrors pOpenTag pCloseTag
+  if sTBerrorMsgA is an array then
+    if pOpenTag is empty then
+      put "<p>" into pOpenTag
+    end if
+    if pCloseTag is empty then
+      put "</p>" into pCloseTag
+    end if
+  
+    put empty into tStr
+  
+    put the keys of sTBerrorMsgA into tErrorsKeysList
+    sort lines of tErrorsKeysList numeric
+  
+    repeat for each line thisLine in tErrorsKeysList
+      put pOpenTag & sTBerrorMsgA[thisLine] & pCloseTag after tStr
+    end repeat
+    
+    return tStr
+  end if
+  
+  return FALSE
+end rigTrackbackDisplayErrors
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackExtractURLs
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 18-05-2015
+--| Last Mod: 18-05-2015
+--| Requires: rigTrackbackValidateURL
+--|
+--| Summary: Extract trackback URLs. This function lets multiple trackbacks be sent.
+--|            It takes a string of URLs (separated by comma or space) and puts
+--|            each URL into an array
+--| 
+--| Format:  rigTrackbackExtractURLs(param1)
+--|
+--| Parameters: string <pURLs>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function rigTrackbackExtractURLs pURLs
+  # REMOVE THE PESKY WHITE SPACE AND REPLACE WITH A COMMA
+  put replacetext( pURLs,"[ ]+", ",") into tURLs
+
+  # IF THEY USE COMMAS GET RID OF THE DOUBLES
+  put replacetext(tURLs,",,", ",") into tURLs
+
+  # REMOVE ANY COMMA THAT MIGHT BE AT THE END
+  if char -1 of tURLs is "," then
+    put char 1 to -2 of tURLs into tURLs
+  end if
+  
+  put empty into tURLsA
+  put 0 into tKey
+  # REMOVES DUPLICATES
+  repeat for each item tItem in tURLs
+    if tItem is not among the items of tURLsA then
+      # SIMPLE VALIDATION
+      rigTrackbackValidateURL tItem
+      
+      put tItem & comma after tURLsA
+    end if
+  end repeat
+   
+  delete char -1 of tURLsA
+
+  split tURLsA by comma
+  
+  return tURLsA
+end rigTrackbackExtractURLs
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigTrackbackValidateURL
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 20-05-2015
+--| Last Mod: 20-05-2015
+--| Requires: rigTrim()
+--|
+--| Summary: Simply adds "http://" if missing.
+--| 
+--| Format:  rigTrackbackValidateURL param1
+--|
+--| Parameters: string <pURL>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+command rigTrackbackValidateURL @pURL
+  put rigTrim(pURL) into pURL
+  
+  if char 1 to 4 of pURL <> "http" then
+    put "http://" & pURL into pURL
+  end if
+end rigTrackbackValidateURL
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackLimitChars
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-05-2015
+--| Last Mod: 22-05-2015
+--| Requires: rigNumToCodepoint()
+--|
+--| Summary: Character limiter. Limits the string based on the character count.
+--|            Will preserve complete words.
+--| 
+--| Format:  rigTrackbackLimitChars(param1[, param2][, param3])
+--|
+--| Parameters: string <pStr>, integer <pN> (optional), string <pEndChar> (optional) 
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigTrackbackLimitChars pStr pN pEndChar
+  if (pN is empty) or (pN is not a number) then
+    put 500 into pN
+  end if
+   
+  # REMOVE NEWLINE CHARS
+  if rigNumToCodepoint(13) is in pStr then
+    replace CRLF with " " in pStr
+    replace rigNumToCodepoint(13) with " " in pStr
+  end if
+  replace rigNumToCodepoint(10) with " " in pStr
+   
+  # REPLACE MULTIPLE SPACE CHARS
+  put replacetext(pStr,"[ ]+", " ") into pStr
+   
+  # TRIM WHITESPACE AT THE START AND AT THE END
+  put "(^\s+)|(\s+$)" into tRegExWS
+  put replacetext(pStr,tRegExWS,empty) into pStr
+   
+  # NOW CHECK THE REMAINING NUMBER OF CHARS
+  if the number of chars of pStr <= pN then
+    return pStr
+  end if
+   
+  if pEndChar is empty then
+    put "&#8230;" into pEndChar
+  end if
+   
+  # TRUNCATE THE STRING
+  put char 1 to pN of pStr into pStr
+   
+  # CHECK IF LAST WORD IS NOT TRUNCATED
+  if char (pN + 1) of pStr is " " then
+    return pStr & pEndChar
+    # NEEDS INTERNATIONALIZATION
+  else if char (pN + 1) of pStr is among the items of ".,!,?" then
+    return pStr & char (pN + 1) of pStr
+  end if
+   
+  # REMOVE TRUNCATED LAST WORD
+  put (the number of words of pStr) - 1 into tNumWords
+  put word 1 to tNumWords of pStr into pStr
+   
+  return pStr & pEndChar
+end rigTrackbackLimitChars
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackConvertAscii
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 22-05-2015
+--| Last Mod: 22-05-2015
+--| Requires: rigCodepointToNum()
+--|
+--| Summary: High ASCII to Entities. Converts Hight ascii text and MS Word
+--|            special chars to character entities
+--| 
+--| Format:  rigTrackbackConvertAscii(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigTrackbackConvertAscii pStr
+  put 1 into tCount
+  put "" into tOut
+  put empty into tTempA
+  
+  repeat with i = 1 to the number of chars in pStr
+    put rigCodepointToNum(char i of pStr) into tAscii
+    
+    if tAscii < 128 then
+      put char i of pStr after tOut
+    else
+      put "&#" & tAscii & ";" after tOut
+    end if
+  end repeat
+  
+  return tOut
+end rigTrackbackConvertAscii
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackProcess
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 23-05-2015
+--| Last Mod: 23-05-2015
+--| Requires: _rigParseURL(), rigTrackbackSetError, rigTrackbackGetID(), rigTrim(), rigTrackbackSetError
+--|
+--| Summary: Process trackback. Opens a socket connection and passes the data
+--|            to the server.  Returns TRUE on success, FALSE on failure.
+--| 
+--| Format:  rigTrackbackProcess(param1, param2)
+--|
+--| Parameters: string <pURL>, string <pData>
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigTrackbackProcess pURL pData
+  put _rigParseURL(pURL) into tTargetA
+  
+  # OPEN THE SOCKET
+  open socket tTargetA["host"] & ":80"
+
+  if the result is not empty then
+		rigTrackbackSetError "Invalid connection:" && pURL & "." && the result
+		return FALSE
+  end if
+  
+  # BUILD THE PATH
+  if tTargetA["path"] <> empty then
+    put tTargetA["path"] into tPPath
+  else
+    put pURL into tPPath
+  end if
+  
+  if tTargetA["query"] <> empty then
+    put tPPath & "?" & tTargetA["query"] into tPath
+  else
+    put tPPath into tPath
+  end if
+
+  # ADD THE TRACKBACK ID TO THE DATA STRING
+  put rigTrackbackGetID(pURL) into tID
+
+  if tID <> FALSE then
+    put "tb_id=" & tID & "&" & pData into pData
+  end if
+
+  # TRANSFER THE DATA
+  put the length of pData into tDataLength
+  write "POST" && tPath && "HTTP/1.0" & CRLF to socket tTargetA["host"] & ":80"
+  write "Host:" && tTargetA["host"] & CRLF to socket tTargetA["host"] & ":80"
+  write "Content-type: application/x-www-form-urlencoded" & CRLF to socket tTargetA["host"] & ":80"
+  write "Content-length:" && tDataLength & CRLF to socket tTargetA["host"] & ":80"
+  write "Connection: close" & CRLF & CRLF to socket tTargetA["host"] & ":80"
+  write pData to socket tTargetA["host"] & ":80"
+  
+  put empty into tResponse
+  put FALSE into tEndOfResponse
+  repeat until tEndOfResponse is TRUE
+    read from socket tTargetA["host"] & ":80" for 128
+    if it <> empty then
+      put it after tResponse
+    else
+      put TRUE into tEndOfResponse
+    end if
+  end repeat
+  
+  close socket tTargetA["host"] & ":80"
+
+  if "<error>0</error>" is not in tResponse then
+    put "An unknown error was encountered" into tMessage
+    
+    if matchText(tResponse, "(?is)<message>(.*?)<\/message>", theMessage) then
+      put rigTrim(theMessage) into tMessage
+    end if
+    
+    rigTrackbackSetError tMessage
+    return FALSE
+  end if
+  
+  
+  return TRUE
+end rigTrackbackProcess
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackGetID
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 06-06-2015
+--| Last Mod: 06-06-2015
+--| Requires: rigRTrim()
+--|
+--| Summary: Find the Trackback URL's ID.
+--| 
+--| Format:  rigTrackbackGetID(param1)
+--|
+--| Parameters: string <pURL>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigTrackbackGetID pURL
+  put empty into tTBid
+  
+  if "?" is in pURL then
+    set the itemDel to "/"
+    put item -1 of pURL into tTBend
+    
+    if tTBend is not a number then
+      put item -2 of pURL into tTBend
+    end if
+    
+    set the itemDel to "="
+    put item -1 of tTBend into tTBid
+    
+  else
+    put rigRTrim(pURL, "/") into pURL
+    
+    set the itemDel to "/"
+    put item -1 of pURL into tTBid
+    
+    if tTBid is not a number then
+      put item -2 of pURL into tTBid
+    end if
+  end if
+  
+  if not matchText(tTBid, "^([0-9]+)$") then
+    return FALSE
+  end if
+  
+  return tTBid
+end rigTrackbackGetID
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigTrackbackSendError
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 06-06-2015
+--| Last Mod: 06-06-2015
+--| Requires: --
+--|
+--| Summary: Send trackback error message. Allows custom errors to be set. By default it
+--|            sends the "incomplete information" error, as that's the most common one. 
+--| 
+--| Format:  rigTrackbackSendError [param1]
+--|
+--| Parameters: string <pMessage> (optional)
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigTrackbackSendError pMessage
+  if pMessage is empty then
+    put "Incomplete Information" into pMessage
+  end if
+  
+  put "<?xml version=" & quote & "1.0" & quote && "encoding=" & quote & "utf-8" & quote & "?>" & LF & "<response>" & LF & "<error>1</error>" & LF & "<message>" & pMessage & "</message>" & LF & "</response>"
+  exit to top
+end rigTrackbackSendError
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigTrackbackSendSuccess
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 06-06-2015
+--| Last Mod: 06-06-2015
+--| Requires: --
+--|
+--| Summary: Send trackback success message.
+--| 
+--| Format:  rigTrackbackSendSuccess
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigTrackbackSendSuccess
+  put "<?xml version=" & quote & "1.0" & quote && "encoding=" & quote & "utf-8" & quote & "?>" & LF & "<response>" & LF & "<error>0</error>" & LF & "</response>"
+  exit to top
+end rigTrackbackSendSuccess
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackData
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-06-2015
+--| Last Mod: 07-06-2015
+--| Requires: --
+--|
+--| Summary: Fetch a particular item.
+--| 
+--| Format:  rigTrackbackData(param1)
+--|
+--| Parameters: string <pItem>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigTrackbackData pItem
+  return sTBdataA[pItem]
+end rigTrackbackData
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigTrackbackHasLink
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 07-06-2015
+--| Last Mod: 07-06-2015
+--| Requires: --
+--|
+--| Summary: Check if trackback page has a link to the corresponding blog entry.
+--| 
+--| Format:  rigTrackbackHasLink(param1, param2)
+--|
+--| Parameters: string <pTrackbackURL>, string <pURL> your weblog entry URL
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigTrackbackHasLink pTrackbackURL pURL
+  # ALLOW URLs OMITTING "www"
+  put offset("www", pURL) into tWWWoffset
+  if it is not empty then
+    put (char 1 to (tWWWoffset - 1) of pURL) & (char (tWWWoffset + 4) to -1 of pURL) into tLinkVariant
+  else if "localhost" is not in pURL then
+    put offset("://", pURL) into tProtocolOffset
+    put (char 1 to tProtocolOffset of pURL) & "//www." & (char (tProtocolOffset + 3) to - 1 of pURL) into tLinkVariant
+    
+  else
+    put pURL into tLinkVariant
+  end if
+   
+  # GET TRACKBACK PAGE
+  put URL pTrackbackURL into tPageData
+  
+  if ("href=" & quote & pURL & quote is in tPageData) or ("href=" & quote & tLinkVariant & quote is in tPageData) then
+    return TRUE
+  end if
+   
+  return FALSE
+end rigTrackbackHasLink
+
+
+
+
+
+
+
+
+on socketError pID, pError
+  rigTrackbackSetError "Socket error:" && pID & "." && pError
+  close socket pID
+end socketError
+
+
+
+
+
+
+
+
+--| END OF Trackback.lc
+--| Location:  ./system/libraries/Trackback.lc
+----------------------------------------------------------------------
