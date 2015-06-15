@@ -801,7 +801,7 @@ function rigTrackbackHasLink pTrackbackURL pURL
     put pURL into tLinkVariant
   end if
    
-  # GET TRACKBACK PAGE
+  # GET TRACKBACK PAGE AND CHECK IF THERE IS A LINK TO YOUR WEBLOG ENTRY
   put URL pTrackbackURL into tPageData
   
   if ("href=" & quote & pURL & quote is in tPageData) or ("href=" & quote & tLinkVariant & quote is in tPageData) then
