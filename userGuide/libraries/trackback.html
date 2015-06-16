@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Trackback Library : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.24</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Trackback Library</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container">
+	
+<div id="content">
+
+
+<h1>Trackback Library</h1>
+
+<p>The Trackback Library provides handlers that enable you to send and receive Trackback data. If you are not familiar with Trackbacks you'll find more information <a href="http://en.wikipedia.org/wiki/Trackback" target="_blank">here</a>.</p>
+
+
+<p class="important"><strong>Note:</strong> As of server version 7.0.6-rc-1 this library does not work on Linux because the write to socket command is still not working in the Linux server engine. On Mac OS X Trackback should work as expected since server version 7.0.1.</p>
+
+
+<h2>Initializing the Library</h2>
+
+<p>Like most other libraries in revIgniter, the Trackback library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Trackback"</code></pre>
+
+
+<h2>Sending Trackbacks</h2>
+
+<p>A Trackback can be sent from any of your controller handlers using code similar to this example:</p>
+
+<pre><code>rigLoaderLoadLibrary "Trackback"
+
+put "http://example.com/trackback/receive/456" into tTBdataArray["ping_url"]
+put "http://www.my-example.com/blog/entry/123" into tTBdataArray["url"]
+put "The Title of My Entry" into tTBdataArray["title"]
+put "The entry content." into tTBdataArray["excerpt"]
+put "My Blog Name" into tTBdataArray["blog_name"]
+put "utf-8" into tTBdataArray["charset"]
+
+if rigTrackbackSend(tTBdataArray) is FALSE then
+  put rigTrackbackDisplayErrors()
+else
+  put "Trackback was sent!"
+end if
+
+</code></pre>
+
+
+<p>Description of array data:</p>
+
+<ul>
+<li><strong>ping_url</strong> - The URL of the site you are sending the Trackback to. You can send Trackbacks to multiple URLs by separating each URL with a comma.</li>
+<li><strong>url</strong> - The URL to YOUR site where the weblog entry can be seen.</li>
+<li><strong>title</strong> - The title of your weblog entry.</li>
+<li><strong>excerpt</strong> - The content of your weblog entry. Note: the Trackback library will automatically send only the first 500 characters of your entry.  It will also strip all HTML.</li>
+<li><strong>blog_name</strong> - The name of your weblog.</li>
+<li><strong>charset</strong> - The character encoding your weblog is written in.  If omitted, UTF-8 will be used.</li>
+</ul>
+
+<h2>Display Errors</h2>
+
+<p>The Trackback sending function returns TRUE/FALSE (boolean) on success or failure.  If it fails, you can retrieve the error message using:</p>
+
+<h3>rigTrackbackDisplayErrors(<var>openTag</var>, <var>closeTag</var>)</h3>
+
+<p>Example:</p>
+
+<pre><code>get rigTrackbackDisplayErrors()</code></pre>
+
+<p>Optionally you can include opening and closing tags (default is "&lt;p>" and "&lt;/p>" respectively) like:</p>
+
+<pre><code>get rigTrackbackDisplayErrors("&lt;li>", "&lt;/li>")</code></pre>
+
+
+<h2>Receiving Trackbacks</h2>
+
+<p>Before you can receive Trackbacks you must create a weblog.  If you don't have a blog yet there's no point in continuing.</p>
+
+<p>Receiving Trackbacks is a little more complex than sending them, only because you will need a database table in which to store them,
+and you will need to validate the incoming trackback data.  You are encouraged to implement a thorough validation process to
+guard against spam and duplicate data.  You may also want to limit the number of Trackbacks you allow from a particular IP within
+a given span of time to further curtail spam.  The process of receiving a Trackback is quite simple;
+the validation is what takes most of the effort.</p>
+
+<h2>Your Ping URL</h2>
+
+<p>In order to accept Trackbacks you must display a Trackback URL next to each one of your weblog entries.  This will be the URL
+that people will use to send you Trackbacks (we will refer to this as your "Ping URL").</p>
+
+<p>Your Ping URL must point to a controller function where your Trackback receiving code is located, and the URL
+must contain the ID number for each particular entry, so that when the Trackback is received you'll be
+able to associate it with a particular entry.</p>
+
+<p>For example, if your controller is called <dfn>trackback</dfn>, and the receiving handler is called <dfn>receive</dfn>, your
+Ping URLs will look something like this:</p>
+
+<pre><code>http://example.com/index.lc/trackback/receive/entry_id</code></pre>
+
+<p>Where <samp>entry_id</samp> represents the individual ID number for each of your entries.</p>
+
+<h2>Creating a Trackback Table</h2>
+
+<p>Before you can receive Trackbacks you must create a table in which to store them.  Here is a basic prototype for such a table:</p>
+
+<pre><code># Table structure for trackback
+# ------------------------------------------------------------
+
+CREATE TABLE `trackbacks` (
+ `tb_id` int(10) unsigned NOT NULL auto_increment,
+ `entry_id` int(10) unsigned NOT NULL default 0,
+ `url` varchar(200) NOT NULL,
+ `title` varchar(100) NOT NULL,
+ `excerpt` text NOT NULL,
+ `blog_name` varchar(100) NOT NULL,
+ `tb_date` int(10) NOT NULL,
+ `ip_address` varchar(16) NOT NULL,
+ PRIMARY KEY `tb_id` (`tb_id`),
+ KEY `entry_id` (`entry_id`)
+);
+</code></pre>
+
+
+<p>The Trackback specification only requires four pieces of information to be sent in a Trackback (url, title, excerpt, blog_name),
+but to make the data more useful we've added a few more fields in the above table schema (date, IP address, etc.).</p>
+
+<h2>Processing a Trackback</h2>
+
+<p>Here is an example showing how you will receive and process a Trackback.  The following
+code is intended for use within the controller handler where you expect to receive Trackbacks.</p>
+
+<pre><code>rigLoaderLoadLibrary "Trackback"
+get rigLoadDatabase()
+
+if rigFetchSegment(3) is FALSE then
+  rigTrackbackSendError "Unable to determine the entry ID"
+end if
+
+if rigTrackbackReceive() is FALSE then
+  rigTrackbackSendError "The Trackback did not contain valid data"
+end if
+
+put rigFetchSegment(3) into tTrackbackDataA["entry_id"]
+put rigTrackbackData("url") into tTrackbackDataA["url"]
+put rigTrackbackData("title") into tTrackbackDataA["title"]
+put rigTrackbackData("excerpt") into tTrackbackDataA["excerpt"]
+put rigTrackbackData("blog_name") into tTrackbackDataA["blog_name"]
+put the seconds into tTrackbackDataA["tb_date"]
+put rigIpAddress() into tTrackbackDataA["ip_address"]
+
+put rigDbInsertString("trackbacks", tTrackbackDataA) into tSQL
+get rigDbQuery(tSQL)
+
+rigTrackbackSendSuccess
+</code></pre>
+
+<h4>Notes:</h4>
+
+<p>The entry ID number is expected in the third segment of your URL. This is based on the URI example we gave earlier:</p>
+
+<pre><code>http://example.com/index.lc/trackback/receive/entry_id</code></pre>
+
+<p>Notice the entry_id is in the third URI segment, which you can retrieve using:</p>
+
+<pre><code>get rigFetchSegment(3)</code></pre>
+
+<p>In our Trackback receiving code above, if the third segment is missing, we will issue an error.  Without a valid entry ID, there's no
+reason to continue.</p>
+
+<p>The <dfn>rigTrackbackReceive()</dfn> function is simply a validation function that looks at the incoming data
+and makes sure it contains the four pieces of data that are required (url, title, excerpt, blog_name).
+It returns TRUE on success and FALSE on failure.  If it fails you will issue an error message.</p>
+
+<p>The incoming Trackback data can be retrieved using this function:</p>
+
+<pre><code>rigTrackbackData("<var>item</var>")</code></pre>
+
+<p>Where <var>item</var> represents one of these four pieces of info: url, title, excerpt, or blog_name</p>
+
+<p>If the Trackback data is successfully received, you will issue a success message using:</p>
+
+<pre><code>rigTrackbackSendSuccess</code></pre>
+
+<p class="important"><strong>Note:</strong> The above code contains no data validation, which you are encouraged to add.</p>
+
+
+<h2>How to Reduce Spam</h2>
+
+<p>To make the life of spammers who like to increase their number of inbound links using Trackback without publishing any link to your blog entry a little bit harder you can check if the trackback page has a link to your weblog entry. This is done using:</p>
+
+<h3>rigTrackbackHasLink(<var>trackbackURL</var>, <var>entryURL</var>)</h3>
+
+
+<p>Example:</p>
+
+<pre><code>rigLoaderLoadLibrary "Trackback"
+get rigLoadDatabase()
+
+if rigFetchSegment(3) is FALSE then
+  rigTrackbackSendError "Unable to determine the entry ID"
+end if
+
+if rigTrackbackReceive() is FALSE then
+  rigTrackbackSendError "The Trackback did not contain valid data"
+end if
+
+put rigFetchSegment(3) into tTrackbackDataA["entry_id"]
+put rigTrackbackData("url") into tTrackbackDataA["url"]
+
+# CHECK IF TRACKBACK PAGE HAS A LINK TO YOUR BLOG ENTRY
+put "http://www.my-example.com/blog/entry/" & tTrackbackDataA["entry_id"] into tLink
+if rigTrackbackHasLink(tTrackbackDataA["url"], tLink) then
+	
+  put rigTrackbackData("title") into tTrackbackDataA["title"]
+  put rigTrackbackData("excerpt") into tTrackbackDataA["excerpt"]
+  put rigTrackbackData("blog_name") into tTrackbackDataA["blog_name"]
+  put the seconds into tTrackbackDataA["tb_date"]
+  put rigIpAddress() into tTrackbackDataA["ip_address"]
+
+  put rigDbInsertString("trackbacks", tTrackbackDataA) into tSQL
+  get rigDbQuery(tSQL)
+
+  rigTrackbackSendSuccess
+
+else
+  # LINK TO YOUR ENTRY IS MISSING, YOU MAY SEND AN ERROR MESSAGE LIKE:
+  rigTrackbackSendError "The Trackback page has no link to the corresponding blog entry."
+end if
+</code></pre>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="uri.html">URI Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>
