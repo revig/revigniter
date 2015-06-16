@@ -91,7 +91,7 @@
 
 
 <ul>
-<li>Multiple Protocols: Mail, Sendmail, and SMTP (The SMTP protocol is implemented, but, as of server version 7.0.2-rc-2 it is not available on Linux because the open socket with message command is still not working in the Linux server engine. On Mac OS X SMTP should work as expected since server version 7.0.1.)</li>
+<li>Multiple Protocols: Mail, Sendmail, and SMTP.</li>
 <li>Multiple recipients</li>
 <li>CC and BCCs</li>
 <li>HTML or Plaintext email (HTML email with Sendmail and SMTP only)</li>
@@ -101,6 +101,9 @@
 <li>BCC Batch Mode, enabling large email lists to be broken into small BCC batches.</li>
 <li>Email Debugging tools</li>
 </ul>
+
+
+<p class="important"><strong>Note:</strong> The SMTP protocol is implemented, but, as of server version 7.0.6-rc-1 it is not available on Linux because the commands open socket with message and write to socket are still not working in the Linux server engine. On Mac OS X SMTP should work as expected since server version 7.0.1.</p>
 
 
 <h2>Sending Email</h2>
