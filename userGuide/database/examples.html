@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.24</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -150,8 +150,7 @@ put tRow["name"] into tName
 
 <h2>Standard Insert</h2>
 
-<pre><code>put "INSERT INTO mytable (title, name) 
-						VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
+<pre><code>put "INSERT INTO mytable (title, name) VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
 
 get rigDbQuery(tSQL)
 
