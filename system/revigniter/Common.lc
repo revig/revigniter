@@ -2240,23 +2240,23 @@ end rigNumToNativeChar
 --| FUNCTION rigCodepointToNum
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-12-2014
---| Last Mod: 22-12-2014
+--| Last Mod: 17-06-2015
 --| Requires: --
 --|
 --| Summary: Converts a character / Unicode codepoint to an integer.
 --| 
---| Format:  rigCodepointToNum(param1)
+--| Format:  rigCodepointToNum(param1[, param2])
 --|
---| Parameters: character / codepoint <pChar>
+--| Parameters: character / codepoint <pChar>, string <pLanguage> (optional)
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
 
-function rigCodepointToNum pChar
+function rigCodepointToNum pChar pLanguage
   if not gAdvancedUnicode then
-    return charToNum(pChar)
+    return charToNum(uniEncode(pChar, pLanguage))
   else
     return codepointToNum(pChar)
   end if
