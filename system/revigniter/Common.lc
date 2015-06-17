@@ -2240,23 +2240,23 @@ end rigNumToNativeChar
 --| FUNCTION rigCodepointToNum
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-12-2014
---| Last Mod: 22-12-2014
+--| Last Mod: 17-06-2015
 --| Requires: --
 --|
 --| Summary: Converts a character / Unicode codepoint to an integer.
 --| 
---| Format:  rigCodepointToNum(param1)
+--| Format:  rigCodepointToNum(param1[, param2])
 --|
---| Parameters: character / codepoint <pChar>
+--| Parameters: character / codepoint <pChar>, string <pLanguage> (optional)
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
 
-function rigCodepointToNum pChar
+function rigCodepointToNum pChar pLanguage
   if not gAdvancedUnicode then
-    return charToNum(pChar)
+    return charToNum(uniEncode(pChar, pLanguage))
   else
     return codepointToNum(pChar)
   end if
@@ -2322,6 +2322,39 @@ function rigTextDecode pData pCharset
     return textDecode(pData, pCharset)
   end if
 end rigTextDecode
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigConvertEncoding
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 05-06-2015
+--| Last Mod: 05-06-2015
+--| Requires: --
+--|
+--| Summary: Converts the character encoding of binary data.
+--| 
+--| Format:  rigConvertEncoding(param1, param2, param3)
+--|
+--| Parameters: string <pData>, string <pToEncoding>, string <pFromEncoding>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigConvertEncoding pData pToEncoding pFromEncoding
+  put "ASCII,ISO-8859-1,MacRoman,Native,UTF-16,UTF16,UTF-16BE,UTF-16LE,UTF-32,UTF-32BE,UTF-32LE,UTF-8,UTF8,CP1252" into tEncodings
+  
+  if (pToEncoding is not among the items of tEncodings) or (pFromEncoding is not among the items of tEncodings) then
+    return FALSE
+  end if
+  
+  return textEncode(textDecode(pData, pFromEncoding), pToEncoding)
+end rigConvertEncoding
 
 
 

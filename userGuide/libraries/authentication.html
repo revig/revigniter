@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.6.24</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1747,6 +1747,9 @@ CREATE TABLE "login_attempts" (
 	 "time" INTEGER(11,0) DEFAULT NULL
 );
 </code></pre>
+
+
+<p class="important"><strong>Note:</strong> As of server version 7.0.6-rc-1 connecting to a SQLite database on Linux returns an error because revOpenDatabase() using SQLite is still not working in the Linux server engine. On Mac OS X connecting to SQLite should work as expected.</p>
 
 
 <p class="important"><strong>Note:</strong> If, for security reasons, you need to validate session IDs please follow the instructions in the User Guide regarding <a href="sessions.html#savingSessionData">Saving Session Data to a Database</a> and create an additional table to store sessions.</p>

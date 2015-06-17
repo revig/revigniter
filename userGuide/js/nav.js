@@ -1,6 +1,6 @@
 function create_menu(basepath)
 {
-	var base = (basepath == 'null') ? '' : basepath;
+	var base = (basepath === 'null') ? '' : basepath;
 
 	document.getElementById('panelContent').innerHTML='<div class="row">' +
 			'<div class="col-sm-3">' +
@@ -84,6 +84,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'libraries/output.html">Output Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/pagination.html">Pagination Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/sessions.html">Session Library</a></li>' +
+			'<li class="item"><a href="'+base+'libraries/trackback.html">Trackback Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/uri.html">URI Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/user_agent.html">User Agent Library</a></li>' +
 		'</ul>' +
