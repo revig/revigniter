@@ -134,7 +134,7 @@ This rule causes assets with names like &lt;name>-cb&lt;lastModified>.suffix to 
 
 <p>The following functions are available:</p>
 
-<h3>rigCssAsset(tAsset, tAttributes, tModule, tCacheBuster)</h3>
+<h3>rigCssAsset(<var>tAsset</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Generates a css asset location html code.</p>
 
@@ -148,7 +148,7 @@ which determines if asset file names should include the timestamp of last modifi
 
 <pre><code>&lt;? return rigCssAsset("myCSS.css") ?></code></pre>
 
-<h3>rigDynamicCssAsset(tRawCSS, tAttributes, tModule, tCacheBuster)</h3>
+<h3>rigDynamicCssAsset(<var>tRawCSS</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Simple CSS preprocessor which dynamically generates a CSS file and the corresponding CSS asset location html code.</p>
 
@@ -206,7 +206,7 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 	&lt;body>
 </code></pre>
 
-<h3>rigImgAssetURL(tAsset, tModule, tCacheBuster)</h3>
+<h3>rigImgAssetURL(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Used mainly in conjunction with the rigDynamicCssAsset() function to generate image URLs as values for the gData array variable.</p> <p>The first parameter is the name of your image file like myPic.jpg. Assets can be nested in folders, then the value of this
 	parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img. The second parameter is optional, it is the name of 
@@ -215,7 +215,7 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above). See usage in the example above.</p>
 
 
-<h3>rigImageAsset(tAsset, tAttributes, tModule, tCacheBuster)</h3>
+<h3>rigImageAsset(<var>tAsset</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Generates image asset location html code.</p>
 
@@ -235,7 +235,7 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 <p>"aboutMe" would be a folder in your "assets/modules" folder.</p>
 
 
-<h3>rigJsAsset(tAsset, tModule, tCacheBuster)</h3>
+<h3>rigJsAsset(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>, <var>tAttribute</var>)</h3>
 
 <p>Generates JavaScript asset location html code.</p>
 
@@ -243,16 +243,20 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 	parameter looks like: myFirstFolder/mySecondFolder/myScript.js. These folders would be located in assets/js. The second optional parameter is a folder name where you store assets 
 for the current page if you like to organize assets for different pages in separate folders. This folder 
  should be located in a "modules" folder, which is located in the "assets" folder". The third optional parameter is a boolean,
-which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</p>
+which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above). The optional fourth parameter is an async and / or defer script attribute.</p>
 
 <p>Here is an example for your view file:</p>
 
 <pre><code>&lt;? return rigJsAsset("myScript.js") ?></code></pre>
 
+<p>or</p>
 
-<h3>rigJsAsset(tGoogleApisAsset, tModule, tLocalFallbackAsset)</h3>
+<pre><code>&lt;? return rigJsAsset("myScript.js", , , "async") ?></code></pre>
 
-<p>If you want to use the Google Apis CDN to serve an open-source JavaScript library you can do so by setting the first parameter of the rigJsAsset() function to a value like: jsGoogleapis-&lt;name>-&lt;version>. <br />The second optional parameter is a folder name where you store assets  for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder". The optional third parameter is the name of a JavaScript file on your server which serves as a fallback in case a connection to the Google content distribution network is not possible.<br />Examples:</p>
+
+<h3>rigJsAsset(<var>tGoogleApisAsset</var>, <var>tModule</var>, <var>tLocalFallbackAsset</var>, <var>tAttribute</var>)</h3>
+
+<p>If you want to use the Google Apis CDN to serve an open-source JavaScript library you can do so by setting the first parameter of the rigJsAsset() function to a value like: jsGoogleapis-&lt;name>-&lt;version>. <br />The second optional parameter is a folder name where you store assets  for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder". The optional third parameter is the name of a JavaScript file on your server which serves as a fallback in case a connection to the Google content distribution network is not possible. The optional fourth parameter is an async and / or defer script attribute.<br />Examples:</p>
 
 <pre><code>&lt;? return rigJsAsset("jsGoogleapis-jquery-1.7.1", , "jQuery.js") ?></code></pre>
 
@@ -263,7 +267,7 @@ which determines if asset file names should include the timestamp of last modifi
 <p>For a list of available libraries see: <a href="http://code.google.com/apis/libraries/devguide.html" target="_blank" >Google Libraries API - Developer's Guide.</a></p>
 
 
-<h3>rigAddFavicon(tModule, tCacheBuster)</h3>
+<h3>rigAddFavicon(<var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Generates a link tag using the base url that points to favicon.</p>
 
@@ -278,7 +282,7 @@ which determines if asset file names should include the timestamp of last modifi
 <pre><code>&lt;? return rigAddFavicon() ?></code></pre>
 
 
-<h3>rigWriteManifest tResourcesDir, tManifestName, tUseAbsoluteURI, tResourcesOnlineOnly, tFallbackResources, tDirToIgnore</h3>
+<h3>rigWriteManifest <var>tResourcesDir</var>, <var>tManifestName</var>, <var>tUseAbsoluteURI</var>, <var>tResourcesOnlineOnly</var>, <var>tFallbackResources</var>, <var>tDirToIgnore</var></h3>
 
 <p>Generates a manifest file used to store resources in the HTML5 application cache.</p>
 
