@@ -617,31 +617,37 @@ end rigAutoLink
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigUrlPrep
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 05-10-09
---| Last Mod: 05-10-09
+--| Last Mod: 29-06-15
 --| Requires: --
 --|
---| Summary: Simply adds the http:// part if missing.
+--| Summary: Simply adds the http:// or https:// part if missing.
 --| 
---| Format: rigUrlPrep(param1, param2, param3)
+--| Format: rigUrlPrep(param1, param2)
 --|
---| Parameters: string <pStr> the URL
+--| Parameters: string <pStr> the URL, bool <pSecure>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigUrlPrep pStr
+function rigUrlPrep pStr pSecure
 	if pStr is "http://" or pStr is empty then
 		return ""
 	end if
 
 	if (char 1 to 7 of pStr is not "http://") and (char 1 to 8 of pStr is not "https://") then
-		put "http://" & pStr into tStr
+		if pSecure then
+			put "https://" & pStr into tStr
+		else
+			put "http://" & pStr into tStr
+		end if
+	else
+		return pStr
 	end if
 
 	return tStr
