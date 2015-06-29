@@ -273,10 +273,19 @@ put rigUrlTitle(tTitle, "underscore", TRUE) into tURLtitle
 
 <h3>rigUrlPrep()</h3>
 
-<p>This function will add <kbd>http://</kbd> in the event it is missing from a URL.  Pass the URL string to the function like this:</p>
+<p>This function will add <kbd>http://</kbd> or <kbd>https://</kbd> respectively in the event it is missing from a URL. Pass the URL string to the function like this:</p>
 <pre><code>put "example.com" into tURL
-put rigUrlPrep(tURL) into tURL</code></pre>
+put rigUrlPrep(tURL) into tURL
 
+-- result: http://www.example.com
+</code></pre>
+
+<p>The second optional parameter is used to add "https://" like in the following example:</p>
+<pre><code>put "example.com" into tURL
+put rigUrlPrep(tURL, true) into tURL
+
+-- result: https://www.example.com
+</code></pre>
 
 
 
