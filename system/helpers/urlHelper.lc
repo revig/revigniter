@@ -628,9 +628,9 @@ end rigAutoLink
 --|
 --| Summary: Simply adds the http:// or https:// part if missing.
 --| 
---| Format: rigUrlPrep(param1, param2)
+--| Format: rigUrlPrep(param1[, param2])
 --|
---| Parameters: string <pStr> the URL, bool <pSecure>
+--| Parameters: string <pStr> the URL, bool <pSecure> use https (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
