@@ -636,7 +636,7 @@ end rigAutoLink
 ----------------------------------------------------------------------*/
 
 function rigUrlPrep pStr pSecure
-	if pStr is "http://" or pStr is empty then
+	if (pStr is "http://") or (pStr is "https://") or (pStr is empty) then
 		return ""
 	end if
 
