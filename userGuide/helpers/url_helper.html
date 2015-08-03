@@ -253,7 +253,7 @@ put rigUrlTitle(tTitle) into tURLtitle
 </code></pre>
 
 
-<p>The second parameter determines the word delimiter.  By default dashes are used.  Options are:  <dfn>dash</dfn>, or <dfn>underscore</dfn>:</p>
+<p>The second parameter determines the word delimiter.  By default dashes are used.  Options are: <dfn>dash</dfn>, <dfn>underscore</dfn>, <dfn>-</dfn> or <dfn>_</dfn>:</p>
 
 <pre><code>put "What's wrong with CSS?" into tTitle
 
@@ -266,7 +266,7 @@ put rigUrlTitle(tTitle, "underscore") into tURLtitle
 
 <pre><code>put "What's wrong with CSS?" into tTitle
 
-put rigUrlTitle(tTitle, "underscore", TRUE) into tURLtitle
+put rigUrlTitle(tTitle, "_", TRUE) into tURLtitle
 
 -- Produces:  whats_wrong_with_css
 </code></pre>
