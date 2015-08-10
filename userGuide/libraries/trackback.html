@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -103,7 +103,11 @@
 
 <h2>Sending Trackbacks</h2>
 
-<p>A Trackback can be sent from any of your controller handlers using code similar to this example:</p>
+<p>A Trackback can be sent from any of your controller handlers using</p>
+
+<h3>rigTrackbackSend(<var>tDataArray</var>)</h3>
+
+<p>and code similar to this example:</p>
 
 <pre><code>rigLoaderLoadLibrary "Trackback"
 
@@ -190,7 +194,7 @@ CREATE TABLE `trackbacks` (
  `excerpt` text NOT NULL,
  `blog_name` varchar(100) NOT NULL,
  `tb_date` int(10) NOT NULL,
- `ip_address` varchar(16) NOT NULL,
+ `ip_address` varchar(45) NOT NULL,
  PRIMARY KEY `tb_id` (`tb_id`),
  KEY `entry_id` (`entry_id`)
 );
@@ -240,11 +244,16 @@ rigTrackbackSendSuccess
 
 <pre><code>get rigFetchSegment(3)</code></pre>
 
-<p>In our Trackback receiving code above, if the third segment is missing, we will issue an error.  Without a valid entry ID, there's no
-reason to continue.</p>
+<p>Without a valid entry ID, there's no reason to continue. In our Trackback receiving code above, if the third segment is missing, we will issue an error using</p>
 
-<p>The <dfn>rigTrackbackReceive()</dfn> function is simply a validation function that looks at the incoming data
-and makes sure it contains the four pieces of data that are required (url, title, excerpt, blog_name).
+<h3>rigTrackbackSendError "Your error string."</h3>
+
+
+<p>To validate the completeness of incoming data use:</p>
+
+<h3>rigTrackbackReceive()</h3>
+
+<p>This function simply looks at the incoming data and makes sure it contains the four pieces of data that are required (url, title, excerpt, blog_name).
 It returns TRUE on success and FALSE on failure.  If it fails you will issue an error message.</p>
 
 <p>The incoming Trackback data can be retrieved using this function:</p>

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -242,15 +242,31 @@ put rigDbGet() into tQuery
 
 <p>Multiple handler calls can be made if you need several joins in one query.</p>
 
-<p>If you need something other than a natural JOIN you can specify it via the third parameter of the function.
+<p>If you need something other than a natural JOIN you can specify it via the optional third parameter of the function.
 Options are: left, right, outer, inner, left outer, and right outer.</p>
 
 <pre><code>rigDbJoin "comments", "comments.id = blogs.id", <strong>"left"</strong>
 
 -- Produces: LEFT JOIN comments ON comments.id = blogs.id</code></pre>
 
+<p>rigDbJoin accepts an optional fourth parameter. If you set it to FALSE, revIgniter will not try to protect your field or table names with backticks.</p>
+
+<pre><code>rigDbJoin "comments", "comments.id = blogs.id", "left", <strong>FALSE</strong>
+
+</code></pre>
 
 
+<p>rigDbJoin supports multiple conditions like:</p>
+
+<pre><code>rigDbJoin "comments", "comments.id = blogs.id OR comments.title = blogs.title", "", FALSE
+</code></pre>
+
+
+<p>rigDbJoin supports the USING clause like:</p>
+
+<pre><code>rigDbJoin "comments", "id", "left", FALSE
+
+-- Produces: LEFT JOIN comments USING (id)</code></pre>
 
 
 <h3>rigDbWhere</h3>
@@ -311,7 +327,7 @@ rigDbWhere tWhere, "", FALSE</code></pre></li>
 	</ol>
 
 
-<p>rigDbWhere accepts an optional third parameter. If you set it to FALSE, revIgniter will not try to protect your field or table names with backticks.</p>
+<p>rigDbWhere accepts an optional fourth parameter. If you set it to FALSE, revIgniter will not try to protect your field or table names with backticks.</p>
 <pre><code>rigDbWhere "MATCH (field) AGAINST (" & quote & value & quote & ")", "", FALSE
 </code></pre>
 

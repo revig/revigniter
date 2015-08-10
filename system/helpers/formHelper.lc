@@ -1045,38 +1045,37 @@ end rigFormPrep
 --| FUNCTION rigSetValue
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 29-07-09
---| Last Mod: 27-10-09
+--| Last Mod: 05-08-15
 --| Requires: rigLibIsLoaded(), rigFormValidSetValue()
 --|
 --| Summary: Grabs a value from the POST array for the specified field so you can
---|                   re-populate an input field or textarea.  If Form Validation
---|                   is active it retrieves the info from the validation library.
+--|            re-populate an input field or textarea.  If Form Validation
+--|            is active it retrieves the info from the validation library.
 --| 
 --| Format:  rigSetValue(param1, param2)
 --|
---| Parameters: string <pField>, mixed <pDefault>
+--| Parameters: string <pField>, mixed <pDefault>, bool <pHtmlEscape> whether to escape HTML tags
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigSetValue pField pDefault
+function rigSetValue pField pDefault pHtmlEscape
+	if pHtmlEscape is empty then
+		put TRUE into tHtmlEscape
+	else
+		put pHtmlEscape into tHtmlEscape
+	end if
+  
 	if rigLibIsLoaded("Formvalidation") is not TRUE then
 		rigLoaderLoadLibrary "Formvalidation"
-
-		# LIBRARAY NOT LOADED
-		/*
-		if it is FALSE then
-			if $_POST[pField] is empty then
-				return pDefault
-			end if
-
-			return rigFormPrep($_POST[pField], pField)
-		end if
-		*/
 	end if
 
+  if tHtmlEscape is FALSE then
+    return rigFormValidSetValue(pField, pDefault)
+  end if
+  
 	return rigFormPrep(rigFormValidSetValue(pField, pDefault), pField)
 end rigSetValue
 

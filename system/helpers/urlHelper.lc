@@ -617,31 +617,37 @@ end rigAutoLink
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigUrlPrep
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 05-10-09
---| Last Mod: 05-10-09
+--| Last Mod: 29-06-15
 --| Requires: --
 --|
---| Summary: Simply adds the http:// part if missing.
+--| Summary: Simply adds the http:// or https:// part if missing.
 --| 
---| Format: rigUrlPrep(param1, param2, param3)
+--| Format: rigUrlPrep(param1[, param2])
 --|
---| Parameters: string <pStr> the URL
+--| Parameters: string <pStr> the URL, bool <pSecure> use https (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigUrlPrep pStr
-	if pStr is "http://" or pStr is empty then
+function rigUrlPrep pStr pSecure
+	if (pStr is "http://") or (pStr is "https://") or (pStr is empty) then
 		return ""
 	end if
 
 	if (char 1 to 7 of pStr is not "http://") and (char 1 to 8 of pStr is not "https://") then
-		put "http://" & pStr into tStr
+		if pSecure then
+			put "https://" & pStr into tStr
+		else
+			put "http://" & pStr into tStr
+		end if
+	else
+		return pStr
 	end if
 
 	return tStr
@@ -657,69 +663,89 @@ end rigUrlPrep
 --| FUNCTION rigUrlTitle
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 05-10-09
---| Last Mod: 06-12-09
+--| Last Mod: 03-08-15
 --| Requires: rigStripHTML(), rigPregReplace(), rigStripSlashes()
 --|
 --| Summary: Takes a "title" string as input and creates a
---|                    human-friendly URL string with either a dash
---|                    or an underscore as the word separator.
+--|             human-friendly URL string with either a dash
+--|             or an underscore as the word separator.
 --| 
 --| Format: rigUrlTitle(param1, param2, param3)
 --|
---| Parameters: string <pStr>, char <pSeparator> the separator: dash, or underscore, bool <pLowercase>
+--| Parameters: string <pStr>, char <pSeparator> the separator: dash, underscore, -, or _, bool <pLowercase>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigUrlTitle pStr pSeparator pLowercase
-	if pSeparator is empty then
-		put "dash" into tSeparator
-	else
-		put pSeparator into tSeparator
-	end if
-
-	if pLowercase is empty then
-		put FALSE into tLowercase
-	else
-		put pLowercase into tLowercase
-	end if
-
-	if tSeparator is "dash" then
-		put "-" into tReplace
-	else
-		put "_" into tReplace
-	end if
-
-	put "" into tTrans["(&\#\d+?;)"]
-    	put "" into tTrans["(&\S+?;)"]
-    	put tReplace into tTrans["(\s+)"]
-    	put "" into tTrans["([^a-z0-9\-\._])"]
-    	put "(" & tReplace & "+)" into tTemp
-    	put tReplace into tTrans[tTemp]
-    	put "(" & tReplace & "$)" into tTemp
-    	put tReplace into tTrans[tTemp]
-    	put "(^" & tReplace & ")" into tTemp
-    	put tReplace into tTrans[tTemp]
-    	put "" into tTrans["(\.+$)"]
-
-	put rigStripHTML(pStr) into tStr
-
-	repeat for each key tKey in tTrans
-		put tTrans[tKey] into tVal
-
-		put "(?i)" & tKey into tRegEx
-		put rigPregReplace(tStr, tRegEx, "", tVal) into tStr
-	end repeat
-
-	if tLowercase is TRUE then
-		put toLower(tStr) into tStr
-	end if
-
-	put rigStripSlashes(tStr) into tStr
-	
-	return rigTrim(tStr)
+   if pSeparator is among the items of "dash,underscore,-,_" then
+      put pSeparator into tSeparator
+   end if
+   
+   if tSeparator is "dash" then
+      put "-" into tSeparator
+   end if
+   if tSeparator is "underscore" then
+      put "_" into tSeparator
+   end if
+   
+   if tSeparator is empty then
+      put "-" into tReplace
+   else
+      put tSeparator into tReplace
+   end if
+   
+   if pLowercase is empty then
+      put FALSE into tLowercase
+   else
+      put pLowercase into tLowercase
+   end if
+   
+   # BUILD REGULAR EXPRESSIONS
+   put "" into tTransA[1]["(&\#\d+?;)"]
+   put "" into tTransA[2]["(&\S+?;)"]
+   put tReplace into tTransA[3]["(\s+)"]
+   put "" into tTransA[4]["([^a-z0-9\-\._])"]
+   put "(" & tReplace & "+)" into tTemp
+   put tReplace into tTransA[5][tTemp]
+   put "(" & tReplace & "$)" into tTemp
+   put tReplace into tTransA[6][tTemp]
+   put "(^" & tReplace & ")" into tTemp
+   put tReplace into tTransA[7][tTemp]
+   put "" into tTransA[8]["(\.+$)"]
+   
+   # STRIP HTML TAGS
+   put rigStripHTML(pStr) into tStr
+   
+   put the number of lines in the keys of tTransA into tTransAitemNum
+   
+   put 0 into tCounter 
+   
+   # REPLACE SPACES AND OTHER CHARACTERS
+   repeat forever
+      add 1 to tCounter
+      
+      put tTransA[tCounter] into tTransItemA
+      put line 1 in the keys of tTransItemA into tKey
+      
+      put tTransItemA[tKey] into tVal
+      
+      put "(?i)" & tKey into tRegEx
+      put rigPregReplace(tStr, tRegEx, "", tVal) into tStr
+      if tCounter is tTransAitemNum then
+         exit repeat
+      end if
+   end repeat
+   
+   if tLowercase is TRUE then
+      put toLower(tStr) into tStr
+   end if
+   
+   put rigStripSlashes(tStr) into tStr
+   	
+   return rigTrim(tStr)
 end rigUrlTitle
 
 

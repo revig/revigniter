@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version171">Version 1.7.1</a></li>
 <li><a href="#version170">Version 1.7.0</a></li>
 <li><a href="#version1624">Version 1.6.24</a></li>
 <li><a href="#version1623">Version 1.6.23</a></li>
@@ -182,6 +183,32 @@
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
 
+
+
+<h2><a name="version171">&nbsp;</a>Version 1.7.1</h2>
+<p>Release Date: 2015-08-10</p>
+
+
+<p>
+<ul>
+	<li><strong>Added:</strong> Parameter for async and / or defer attribute to system/helpers/assetHelper.lc -> rigJsAsset().</li>
+	<li><strong>Added:</strong> Info about new parameter for asset helper function rigJsAsset() in User Guide.</li>
+	<li><strong>Added:</strong> Parameter for https to system/helpers/urlHelper.lc -> rigUrlPrep(). Adjusted the User Guide accordingly.</li>
+	<li><strong>Added:</strong> Info about new parameter for url helper function rigUrlPrep() in User Guide.</li>
+	<li><strong>Added:</strong> Extended the list of platforms, browsers, mobiles and robots in system/application/config/useragents.lc.</li>
+	<li><strong>Added:</strong> Extended the list of mime types in system/application/config/mimes.lc.</li>
+	<li><strong>Added:</strong> "-" and "_" as valid separators to system/helpers/urlHelper.lc -> rigUrlTitle().</li>
+	<li><strong>Added:</strong> Optional third parameter to system/helpers/formHelper.lc -> rigSetValue(), allowing to turn off HTML escaping of the value.</li>
+	<li><strong>Added:</strong> Extra SQL operators to check for in system/database/DBdriver.lc -> _rigHasOperator().</li>
+	<li><strong>Added:</strong> Support for rigDbJoin with multiple conditions, added function _rigDbJoinConditionsArray() to split multiple conditions to system/database/DBactiveRec.lc.</li>
+	<li><strong>Added:</strong> Optional fourth parameter to system/database/DBactiveRec.lc -> rgDbJoin which allows to prevent protecting field and table names with backticks.</li>
+	<li><strong>Added:</strong> Info regarding modifications to system/database/DBactiveRec.lc -> rgDbJoin in User Guide.</li>
+	<li><strong>Changed:</strong> Tweaked User Guide instructions regarding the Trackback library.</li>
+	<li><strong>Changed:</strong> Tweaked info about server version 7 and SQLite in the troubleshooting section of the User Guide.</li>
+	<li><strong>Fixed:</strong> Case where URL passed to system/helpers/urlHelper.lc -> rigUrlPrep() already starts with "http://“.</li>
+	<li><strong>Fixed:</strong> Bug in system/helpers/urlHelper.lc -> rigUrlTitle() which affected those using server version ≥ 7.</li>
+</ul>
+</p>
 
 
 

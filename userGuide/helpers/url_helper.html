@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -253,7 +253,7 @@ put rigUrlTitle(tTitle) into tURLtitle
 </code></pre>
 
 
-<p>The second parameter determines the word delimiter.  By default dashes are used.  Options are:  <dfn>dash</dfn>, or <dfn>underscore</dfn>:</p>
+<p>The second parameter determines the word delimiter.  By default dashes are used.  Options are: <dfn>dash</dfn>, <dfn>underscore</dfn>, <dfn>-</dfn> or <dfn>_</dfn>:</p>
 
 <pre><code>put "What's wrong with CSS?" into tTitle
 
@@ -266,17 +266,26 @@ put rigUrlTitle(tTitle, "underscore") into tURLtitle
 
 <pre><code>put "What's wrong with CSS?" into tTitle
 
-put rigUrlTitle(tTitle, "underscore", TRUE) into tURLtitle
+put rigUrlTitle(tTitle, "_", TRUE) into tURLtitle
 
 -- Produces:  whats_wrong_with_css
 </code></pre>
 
 <h3>rigUrlPrep()</h3>
 
-<p>This function will add <kbd>http://</kbd> in the event it is missing from a URL.  Pass the URL string to the function like this:</p>
+<p>This function will add <kbd>http://</kbd> or <kbd>https://</kbd> respectively in the event it is missing from a URL. Pass the URL string to the function like this:</p>
 <pre><code>put "example.com" into tURL
-put rigUrlPrep(tURL) into tURL</code></pre>
+put rigUrlPrep(tURL) into tURL
 
+-- result: http://www.example.com
+</code></pre>
+
+<p>The second optional parameter is used to add "https://" like in the following example:</p>
+<pre><code>put "example.com" into tURL
+put rigUrlPrep(tURL, true) into tURL
+
+-- result: https://www.example.com
+</code></pre>
 
 
 

@@ -406,9 +406,9 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 06-10-09
---| Last Mod: 21-03-14
+--| Last Mod: 21-06-15
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
@@ -423,16 +423,21 @@ end rigJsAssetURL
 --| Parameters: string <pAsset> the name of the file or asset,
 --|             string <pModule> optional module name,
 --|             bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names (optional) / 
---|							fallback asset in case a request to jsGoogleapis is not possible (optional)
+--|					fallback asset in case a request to jsGoogleapis is not possible (optional), string <pAttribute> async and / or defer attribute (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset
+function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
+	put empty into tAttribute
+	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
+		put " " & pAttribute into tAttribute
+	end if
+	
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
       
-      return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tAssetUrl & quote & "></script>"
+      return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
    else
       set the itemDelimiter to "-"
       put item 2 of pAsset into tLib
@@ -484,13 +489,13 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset
       end switch
       
 			if pCacheBusterOrFallbackAsset is empty then
-      	return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & "http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote & "></script>"
-   		end if
+  			return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & "http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote & "></script>"
+			end if
 
 			put rigJsAssetURL(pCacheBusterOrFallbackAsset, pModule) into tAssetUrl
-			
-			put "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
-			& "<script>window." & tObject && "|| document.write(" & quote & "<script type='text/javascript' src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
+
+			put "<script type='text/javascript'" & tAttribute && "src='http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
+& "<script>window." & tObject && "|| document.write(" & quote & "<script type='text/javascript'" & tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
 			
 			return tScriptReference
 		end if

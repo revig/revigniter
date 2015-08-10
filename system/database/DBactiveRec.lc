@@ -484,69 +484,132 @@ end rigDbFrom
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbJoin
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 24-09-09
---| Last Mod: 03-07-10
---| Requires: rigTrim(), _rigTrackAliases(), _rigProtectIdentifiers()
+--| Last Mod: 09-08-15
+--| Requires: rigTrim(), _rigTrackAliases(), _rigProtectIdentifiers(),
+--|            _rigDbJoinConditionsArray(), _rigEscapeIdentifiers()
 --|
 --| Summary: Generates the JOIN portion of the query.
 --| 
---| Format:  rigDbJoin param1, param2, param3
+--| Format:  rigDbJoin param1, param2[, param3][, param4]
 --|
---| Parameters: string<pTable>, string <pCond>the join condition, string <pType> the type of join
+--| Parameters: string<pTable>, string <pCond>the join condition,
+--|               string <pType> the type of join (optional), bool <pEscape> (optional)
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigDbJoin pTable pCond pType
-	put pCond into tCond
-	put pType into tType
+command rigDbJoin pTable pCond pType pEscape
+  put pCond into tCond
+  put pType into tType
 
-	if tType is not empty then
-		put rigTrim(tType) into tType
-		put toUpper(tType) into tType
-		if tType is not among the items of "LEFT,RIGHT,OUTER,INNER,LEFT OUTER,RIGHT OUTER" then
-			put empty into tType
-		else
-			put space after tType
-		end if
-	end if
+  if tType is not empty then
+    put rigTrim(tType) into tType
+    put toUpper(tType) into tType
+    if tType is not among the items of "LEFT,RIGHT,OUTER,INNER,LEFT OUTER,RIGHT OUTER" then
+      put empty into tType
+    else
+      put space after tType
+    end if
+  end if
 
-	# EXTRACT ANY ALIASES THAT MIGHT EXIST.  WE USE THIS INFORMATION
-	# IN THE _PROTECT_IDENTIFIERS TO KNOW WHETHER TO ADD A TABLE PREFIX
-	get _rigTrackAliases(pTable)
+  # EXTRACT ANY ALIASES THAT MIGHT EXIST.  WE USE THIS INFORMATION
+  # IN THE _rigProtectIdentifiers FUNCTION TO KNOW WHETHER TO ADD A TABLE PREFIX
+  get _rigTrackAliases(pTable)
 
-	# STRIP APART THE CONDITION AND PROTECT THE IDENTIFIERS
-	put "([\w\.]+)([\W\s]+)(.+)" into tRegEx
-	get matchtext(tCond,tRegEx,tMatch1, tMatch2, tMatch3)
-	if it is TRUE then
-		put _rigProtectIdentifiers(tMatch1) into tMatch1
-		put _rigProtectIdentifiers(tMatch3) into tMatch3
+  # IF THE ESCAPE VALUE WAS NOT SET WE WILL BASE IT ON THE GLOBAL SETTING
+  if pEscape is not a boolean then
+    put rigFetchDBdriverSetting("protectIdentifiers") into tEscape
+  else
+    put pEscape into tEscape
+  end if
 
-		put tMatch1 & tMatch2 & tMatch3 into tCond
-	end if
+  # SPLIT MULTIPLE CONDITIONS
+  # REGEX TO CHECK FOR MULTIPLE CONDITIONS
+  put "(?i)(\sAND\s|\sOR\s)" into tRegEx
+  get matchtext(tCond,tRegEx)
+  # REGEX TO STRIP APART SINGLE CONDITIONS
+  put "([\[\]\w\.'-]+)(\s*[^\" & quote & "\[`'\w]+\s*)(.+)" into tRegEx
 
-	# ASSEMBLE THE JOIN STATEMENT
-	put _rigProtectIdentifiers(pTable, TRUE, "", FALSE) into tTable
-	put tType & "JOIN" && tTable && "ON" && tCond into tJoin
+  if (it is true) and (tEscape is true) then
+    # STORE MULTIPLE CONDITIONS IN AN ARRAY
+    put _rigDbJoinConditionsArray(tCond) into tCondA
 
-	put the number of lines in the keys of sActiveRecord["join"] into tJoinsNum
-	put tJoinsNum + 1 into tNewJoinsNum
-	put tJoin into sActiveRecord["join"][tNewJoinsNum]
+    put 0 into tCounter
+    repeat the number of lines in the keys of tCondA
+      add 1 to tCounter
+      if tCondA[tCounter]["op"] <> empty then
+        if matchtext(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
+          put _rigProtectIdentifiers(tMatch1) into tMatch1
+          put _rigProtectIdentifiers(tMatch3) into tMatch3
 
-	if sActiveRecord["caching"] is TRUE then
-		put the number of lines in the keys of sActiveRecord["cachejoin"] into tCacheJoinsNum
-		put tCacheJoinsNum + 1 into tNewCacheJoinsNum
-		put tJoin into sActiveRecord["cachejoin"][tNewCacheJoinsNum]
+          put tMatch1 & tMatch2 & tMatch3 && tCondA[tCounter]["op"] & " " after tNewCond
+        else
+          put tCondA[tCounter]["cond"] && tCondA[tCounter]["op"] & " " after tNewCond
+        end if
 
-		put the number of lines in the keys of sActiveRecord["cacheexists"] into tCacheExistsNum
-		put tCacheExistsNum + 1 into tNewCacheExistsNum
-		put "join" into sActiveRecord["cacheexists"][tNewCacheExistsNum]
-	end if
+      else
+        if matchtext(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
+          put _rigProtectIdentifiers(tMatch1) into tMatch1
+          put _rigProtectIdentifiers(tMatch3) into tMatch3
+
+          put tMatch1 & tMatch2 & tMatch3 after tNewCond
+        else
+          put tCondA[tCounter]["cond"] after tNewCond
+        end if
+
+      end if
+    end repeat
+
+    put "ON" && tNewCond into tCond
+
+  # SINGLE CONDITION
+  # STRIP APART THE CONDITION AND PROTECT THE IDENTIFIERS
+  else if (matchtext(tCond,tRegEx,tMatch1, tMatch2, tMatch3) is true) and (tEscape is true) then
+    put _rigProtectIdentifiers(tMatch1) into tMatch1
+    put _rigProtectIdentifiers(tMatch3) into tMatch3
+
+    put "ON" && tMatch1 & tMatch2 & tMatch3 into tCond
+
+    # MISSING OPERATOR, USE USING CLAUSE
+  else if _rigHasOperator(tCond) is false then
+    if tEscape is true then
+      put _rigEscapeIdentifiers(tCond) into tCond
+    end if
+      put "USING (" & tCond & ")" into tCond
+
+  else
+    put "ON" && tCond into tCond
+  end if
+
+  # DO WE WANT TO ESCAPE THE TABLE NAME?
+  if tEscape is true then
+    put _rigProtectIdentifiers(pTable, TRUE, "", FALSE) into tTable
+  else
+    put pTable into tTable
+  end if
+
+  # ASSEMBLE THE JOIN STATEMENT
+  put tType & "JOIN" && tTable && tCond into tJoin
+
+  put the number of lines in the keys of sActiveRecord["join"] into tJoinsNum
+  put tJoinsNum + 1 into tNewJoinsNum
+  put tJoin into sActiveRecord["join"][tNewJoinsNum]
+
+  if sActiveRecord["caching"] is TRUE then
+    put the number of lines in the keys of sActiveRecord["cachejoin"] into tCacheJoinsNum
+    put tCacheJoinsNum + 1 into tNewCacheJoinsNum
+    put tJoin into sActiveRecord["cachejoin"][tNewCacheJoinsNum]
+
+    put the number of lines in the keys of sActiveRecord["cacheexists"] into tCacheExistsNum
+    put tCacheExistsNum + 1 into tNewCacheExistsNum
+    put "join" into sActiveRecord["cacheexists"][tNewCacheExistsNum]
+  end if
 end rigDbJoin
 
 
@@ -2902,6 +2965,89 @@ end rigDbCloseParenthesis
 
 
 
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigDbJoinConditionsArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 09-08-2015
+--| Last Mod: 09-08-2015
+--| Requires: --
+--|
+--| Summary: Split multiple join conditions and store conditions and operators in an array.
+--| 
+--| Format:  _rigDbJoinConditionsArray(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function _rigDbJoinConditionsArray pStr
+  put 1 into tStrStart
+  put 0 into tCounter
+  put empty into tConditionsA
+   
+  put offset("AND", pStr) into tAndOffset
+  put offset("OR", pStr) into tOrOffset
+   
+   
+  repeat until (tAndOffset + tOrOffset) = 0
+		add 1 to tCounter
+      
+		put the number of chars of pStr into tStrCharsNum
+      
+		# CHECK IF THERE ARE BOTH OPERATORS AND WHICH ONE IS NEXT
+		if (tAndOffset > 1) and (tOrOffset > 1) then
+			put tAndOffset > tOrOffset into tOrBeforeAnd
+         
+			# GET CONDITION AN OPERATOR
+			switch tOrBeforeAnd
+				case true
+					put char 1 to (tOrOffset - 1) of pStr into tConditionsA[tCounter]["cond"]
+					put "OR" into tConditionsA[tCounter]["op"]
+					put tOrOffset + 3 into tStrStart
+				case false
+					put char 1 to (tAndOffset - 1) of pStr into tConditionsA[tCounter]["cond"]
+					put "AND" into tConditionsA[tCounter]["op"]
+					put tAndOffset + 4 into tStrStart
+     	 end switch
+         
+			 put char tStrStart to tStrCharsNum of pStr into pStr
+			 
+			 put offset("AND", pStr) into tAndOffset
+			 put offset("OR", pStr) into tOrOffset
+			 next repeat
+		 end if
+      
+		 # GET CONDITION AN OPERATOR
+		 if tAndOffset > 1 then
+			put char 1 to (tAndOffset - 2) of pStr into tConditionsA[tCounter]["cond"]
+			put "AND" into tConditionsA[tCounter]["op"]
+			put tAndOffset + 4 into tStrStart
+		else if tOrOffset > 1 then
+			put char 1 to (tOrOffset - 2) of pStr into tConditionsA[tCounter]["cond"]
+			put "OR" into tConditionsA[tCounter]["op"]
+			put tOrOffset + 3 into tStrStart
+		end if
+      
+		put char tStrStart to tStrCharsNum of pStr into pStr
+      
+		put offset("AND", pStr) into tAndOffset
+		put offset("OR", pStr) into tOrOffset
+	end repeat
+   
+  # GET LAST CONDITION WHICH HAS NO OPERATOR
+  add 1 to tCounter
+  put the number of chars of pStr into tStrCharsNum
+  put char 1 to tStrCharsNum of pStr into tConditionsA[tCounter]["cond"]
+  put empty into tConditionsA[tCounter]["op"]
+   
+  return tConditionsA
+end _rigDbJoinConditionsArray
 
 
 
