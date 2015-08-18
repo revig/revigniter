@@ -233,11 +233,11 @@ end if
 	put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 	
 	# RUN THE CONTROLLER HANDLER IF HANDLER NAME IS IN GLOBAL gControllerHandlers
-	if gController is among the items of gControllerHandlers then
 		_rigDo gController
-		# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
-		# THAT ITS NAME IS IN GLOBAL gControllerHandlers
-	else if gHandler is not among the items of gControllerHandlers then
+		
+	# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
+	# THAT ITS NAME IS IN GLOBAL gControllerHandlers
+	if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
 		
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
 		if gRoute[1]["404Override"] <> empty then
@@ -300,9 +300,8 @@ end if
 					# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 					put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 
-					if gController is among the items of gControllerHandlers then
-						_rigDo gController
-					else if gHandler is not among the items of gControllerHandlers then
+					_rigDo gController
+					if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
 						put gController & "/" & gHandler into gErrorData["page"]
 						rigShow404 gErrorData
 					end if
@@ -315,7 +314,7 @@ end if
 			end if
 		
 			# CALL THE REQUESTED HANDLER.
-			# ANY URI SEGMENTS PRESENT (BESIDES THE CONTROLLER/METHOD) WILL BE PASSED TO THE HANDLER FOR CONVENIENCE
+			# ANY URI SEGMENTS PRESENT (BESIDES THE CONTROLLER/HANDLER) WILL BE PASSED TO THE HANDLER FOR CONVENIENCE
 			if (the number of lines in the keys of gRSegments) > 2 then
 				put 1 into sIncr
 				repeat for each line sRSegKey in the keys of gRSegments
@@ -348,7 +347,12 @@ end if
 ##
 
 	command _rigDo pHandler
-	  do pHandler
+  	if word 1 of pHandler is among the items of gControllerHandlers then
+    		do pHandler
+    		return empty
+  	else
+    		return "Error: handler not found!"
+  	end if
 	end _rigDo
 
 
