@@ -186,7 +186,7 @@ end if
 #  controller handlers that begin with an underscore
 ##
 
-	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerMethods())) then
+	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerLibHandlers())) then
 
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
 		if gRoute[1]["404Override"] <> empty then
