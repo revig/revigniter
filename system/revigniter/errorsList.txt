@@ -208,7 +208,7 @@ filter: bad pattern string
 filter: can't set destination
 find: bad source string
 flip: can't find image
-flip: object is not an image
+flip: object is not an editable image
 flushEvents: bad event type
 focus: not a valid control
 fontNames: error in type expression
@@ -629,3 +629,233 @@ within: not a point
 write: error in expression
 Operators bitXor: error in left operand
 Operators bitXor: error in right operand
+Property stackFileVersion: not a valid version
+Property stackFileVersion: version not supported
+External handler: exception
+export: Empty rectangle
+import: Empty rectangle
+Property dragAction: Unknown action
+Property dragImageOffset: Not a point
+Property dragDelta: Not a number
+clipboard: invalid mix of data types
+clipboard: invalid text
+wrap: bad array
+wrap: illegal type for left operand
+wrap: illegal type for right operand
+wrap: type mismatch
+wrap: overflow
+wrap: division by zero
+begins/ends with: illegal type for right operand
+begins/ends with: illegal type for left operand
+UNUSED
+UNUSED
+UNUSED
+UNUSED
+UNUSED
+UNUSED
+UNUSED
+UNUSED
+graphic: not a boolean
+graphic: bad fill rule
+graphic: bad gradient type
+graphic: bad gradient ramp
+graphic: bad gradient point
+graphic: bad gradient quality
+graphic: bad gradient key
+graphic: bad cap style
+graphic: bad join style
+byteToNum: bad expression
+numToByte: bad expression
+arrayEncode: bad expression
+arrayEncode: failure
+arrayDecode: bad expression
+arrayDecode: failure
+parentScript: bad object
+dispatch: bad message
+dispatch: bad command
+dispatch: bad target
+queryRegistry: bad destination
+parentScript: loop in hierarchy
+Security: disk access not allowed
+Security: network access not allowed
+Security: external command access not allowed
+Security: registry access not allowed
+<not used>
+Security: printer access not allowed
+Security: audio and camera access not allowed
+
+
+
+
+
+
+
+
+
+
+Security: AppleScript access not allowed
+Security: alternate script execution not allowed
+processType: bad value
+processType: cannot change
+
+
+do in browser: not supported
+do in browser: failed
+editMode: Bad value
+export: Bad palette
+export: Invalid palette size
+printing: Bad options array
+
+printing: Unknown destination
+object: cannot change id while in group edit mode
+print: bad anchor name
+print: bad anchor location
+print: anchor location not a point
+print: bad link destination
+print: bad link area
+print: link area not a rectangle
+randomBytes: bad count
+sha1Digest: bad source
+stackLimit: not a number
+could not load security library
+group: cannot be background or shared (it is nested)
+group: must be shared (it is placed on more than one card, or unplaced)
+group: cannot group background or shared groups
+print: bad bookmark title
+print: bad bookmark level
+print: bad bookmark position
+print: bad bookmark initial state
+Script File Index:
+include: could not find file
+script: parsing error
+script: bad statement
+include: not supported in this environment
+include: bad filename
+include: nesting depth limit reached
+require: not supported in this environment
+
+
+errorMode: bad value
+outputEncoding: bad value
+outputLineEnding: bad value
+Script Error Position:
+defaultNetworkInterface: network interface must be an IPv4 address
+layerMode: must be 'static', 'dynamic' or 'scrolling'
+tileSize: must be a power of two between 16 and 256
+tileCompositor: unknown type
+tileCompositor: not supported on this platform
+intersects: error in threshold expression
+intersects: threshold must be a non-negative number, "bounds", "pixels" or "opaque pixels"
+session: not supported in this environment
+sessionSavePath: bad value
+sessionLifetime: bad value
+sessionName: bad value
+sessionId: bad value
+lock: bad rect expr
+lock: not a rectangle
+field: bad listStyle value
+field: firstIndent must be an integer
+field: leftIndent must be an integer
+field: rightIndent must be an integer
+field: spaceBefore must be an integer
+field: spaceAfter must be an integer
+field: listDepth must be an integer between 1 and 16.
+field: borderWidth must be an integer
+field: listIndent must be an integer
+field: padding must be an integer
+Chunk: can't store unicode to destination container
+relayer: target not a container
+relayer: couldn't resolve target object
+relayer: couldn't resolve source control
+relayer: source not a control
+relayer: source and target not on the same card
+relayer: layer not an integer
+relayer: bad layer expression
+relayer: target not a control
+relayer: cannot move a control into a descendent
+relayer: required objects disappeared while processing
+controlAtLoc: location not a point
+do: no caller
+read: invalid command for datagram socket
+field: listIndex must be an integer
+image cache limit: not a number
+controls don't have the same owner
+uuid: bad type expression
+uuid: wrong number of arguments for specified type
+uuid: unsupported type
+uuid: bad namespace expression
+uuid: namespace not a uuid
+uuid: bad name expression
+uuid: not enough randomness available
+avgDev: error in source expression
+geometricMean: error in source expression
+harmonicMean: error in source expression
+pStdDev: error in source expression
+pVariance: error in source expression
+variance: error in source expression
+group: object cannot be grouped
+measureText: no object
+font: couldn't find font
+edit script: bad at expression
+fullscreenmode: not a valid mode
+Import: no image selected, or image not open
+Resolve image: error in source expression
+Internal BSDiff: error in old file expression
+Internal BSDiff: error in new file expression
+Internal BSDiff: error in patch filename expression
+Internal Bootstrap: error in stack file
+IDE script configure: error in settings expression
+IDE script replace: error in text expression
+IDE script classify: error in script expression
+IDE filter control: error in pattern expression
+Engine PutInto: error in variable expression
+Engine DeleteVariableChunk: error in expression
+IDE Extract: error in segment expression
+IDE Extract: error in section name expression
+IDE Extract: error in filename expression
+MCInternalPayloadPatch: error in output filename expression
+MCInternalListTasksWithModule: error in module expression
+MCInternalCanDeleteFile: error in filename expression
+MCInternalCanDeleteKey: error in key expression
+MCHandler: error in expression
+textDecode: bad data expression
+textDecode: bad text encoding expression
+textDecode: could not decode data
+textEncode: bad text expression
+textEncode: bad text encoding expression
+textEncode: could not encode text
+normalizeText: bad normal form
+normalizeText: bad text expression
+codepointProperty: bad codepoint
+codepointProperty: bad property name
+pixelScale: not a valid scale value
+scaleFactor: not a valid scale value
+pixelScale: the pixelScale property cannot be set on this platform
+usePixelScaling: the usePixelScaling property cannot be set on this platform
+secure: error in socket expression
+paramCount: could not find handler
+open: bad text encoding
+open: unsupported encoding
+send: too many pending messages
+secure: error in host name expression
+open: error in host name expression
+bidiDirection: error in source expression
+start: script of specified stack won't compile
+hostnameToAddress: callbacks are not allowed on server
+Chunk: bad extents provided
+Error evaluating expression
+Property: value is not a character
+Property: value is not a string
+Property: value is not a color
+Property: value is not a rectangle
+Property: value is not a point
+Property: value is not a pair of integers
+Property: value is not a quadruple of integers
+Property: invalid enumeration value
+Backdrop: invalid value
+Property: value is not an array
+MCInternalPayloadPatch: error in patch item expression
+MCInternalPayloadPatch: error in base item expression
+floor: bad parameter
+ceil: bad parameter
+commandArguments: bad parameter
