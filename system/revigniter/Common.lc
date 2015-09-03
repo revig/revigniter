@@ -2166,6 +2166,33 @@ end rigFileSize
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION trueFalseToDigit
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 04-09-2015
+--| Last Mod: 04-09-2015
+--| Requires: --
+--|
+--| Summary: Converts true, false to digits 1, 0.
+--| 
+--| Format:  trueFalseToDigit(param1)
+--|
+--| Parameters: string <pEval> can be something like "tX > tY" or "tStr is line 5 of tList", etc.
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function trueFalseToDigit pEval
+  if pEval is TRUE then return 1
+  return 0
+end trueFalseToDigit
+
+
+
+
+
 function rigQ pText
     return quote & pText & quote
 end rigQ
