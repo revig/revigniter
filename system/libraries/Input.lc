@@ -747,9 +747,9 @@ end rigVarGet
 --| FUNCTION rigVarPost
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 20-06-09
---| Last Mod: 27-06-13
+--| Last Mod: 10-09-15
 --| Requires: _rigFetchFromArray(), rigXssClean()
 --|
 --| Summary: Fetch an item from the POST array.
@@ -758,7 +758,7 @@ end rigVarGet
 --|
 --| Parameters: string <pIndex>, bool <pXSSclean>
 --|
---| Return: string
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigVarPost pIndex pXSSclean
@@ -772,10 +772,12 @@ function rigVarPost pIndex pXSSclean
 		return _rigFetchFromArray($_POST, pIndex, tXSSclean)
 		
 	else
-		if pXSSclean is TRUE then
-			return rigXssClean($_POST)
+		if $_POST <> empty then
+			if pXSSclean is TRUE then
+				return rigXssClean($_POST)
+			end if
+			return $_POST
 		end if
-		return $_POST
 	end if
 	
 	return FALSE
