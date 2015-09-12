@@ -1046,12 +1046,12 @@ end rigAuthRegister
 --| FUNCTION _rigAuthRegisterUser
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 08-02-2013
---| Last Mod: 22-12-2014
+--| Last Mod: 12-09-2015
 --| Requires: _rigAuthCallHook(), rigAuthEmailCheck(), rigAuthSetError, rigAuthUsernameCheck(),
---|           rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(), rigNumToCodepoint(),
---|           rigDbInsert(), rigAuthWhere, rigAuthUsers(), rigDbRow(), rigAuthAddToGroup, rigAuthGroups()
+--|            rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(), rigNumToCodepoint(),
+--|            rigDbInsert(), rigAuthWhere, rigAuthUsers(), rigDbRow(), rigAuthAddToGroup, rigAuthGroups()
 --|
 --| Summary: Register new user.
 --| 
@@ -1078,7 +1078,7 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	end if
 	
 	# IF USERNAME ALREADY EXISTS ADD A NUMBER LIKE USERNAME1, USERNAME2 ETC.
-	if sAuth["identityColumn"] is "username" then
+	if sAuth["identityColumn"] <> "username" then
 		put pUsername into tOriginalUsername
 		put TRUE into tUsernameExists
 		
@@ -1127,47 +1127,35 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	
 	get _rigAuthCallHook("authExtraSet")
 
-	# INSERT USER DATA
-	get rigDbInsert(sAuth["tables"]["users"], tData)
-	
-	# GET ID NUMBER OF LAST INSERT
-	rigAuthWhere "email", pEmail
-	get rigAuthUsers()
-	if sAuthQuery <> FALSE then
-		put rigDbRow() into tUserRow
-		put tUserRow["id"] into tUserID
-	else
-		put empty into tUserID
-	end if
+	# INSERT USER DATA AND GET ID OF LAST INSERT
+	put rigDbInsert(sAuth["tables"]["users"], tData, TRUE) into tUserID
 	
 	# ADD USER ID TO TABLE users_groups
-	if tUserID <> empty then
+	if tUserID <> FALSE then
 		if pGroups is an array then
 			repeat for each key tKey in pGroups
 				rigAuthAddToGroup pGroups[tKey], tUserID
 			end repeat
 		end if
-	end if
 	
-	# GET ID OF DEFAULT GROUP
-	rigAuthWhere "name", sAuth["defaultGroup"]
-	put 1 into sAuthLimit
-	get rigAuthGroups()
-	if sAuthQuery <> FALSE then
-		put rigDbRow() into tGroupRow
-		put tGroupRow["id"] into tGroupID
-	else
-		put empty into tGroupID
-	end if
+		# GET ID OF DEFAULT GROUP
+		rigAuthWhere "name", sAuth["defaultGroup"]
+		put 1 into sAuthLimit
+		get rigAuthGroups()
+		if sAuthQuery <> FALSE then
+			put rigDbRow() into tGroupRow
+			put tGroupRow["id"] into tGroupID
+		else
+			put empty into tGroupID
+		end if
 	
-	# ADD USER TO DEFAULT GROUP IF NOT SET ALREADY
-	if ((tGroupID <> empty) and (pGroups is not an array)) or ((pGroups is an array) and (tGroupID is not among the keys of pGroups)) then
-		rigAuthAddToGroup tGroupID, tUserID
-	end if
+		# ADD USER TO DEFAULT GROUP IF NOT SET ALREADY
+		if ((tGroupID <> empty) and (pGroups is not an array)) or ((pGroups is an array) and (tGroupID is not among the keys of pGroups)) then
+			rigAuthAddToGroup tGroupID, tUserID
+		end if
 	
-	get _rigAuthCallHook("authPostRegister")
+		get _rigAuthCallHook("authPostRegister")
 	
-	if tUserID <> empty then
 		return tUserID
 	end if
 	
