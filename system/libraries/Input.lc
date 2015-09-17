@@ -99,7 +99,7 @@ rigLoadLibrary "Config"
 --| Requires: Log library, _rigInputConfig, _rigCleanInputData(), _rigVarPostFallback(),
 --|           	rigLogMessage, _rigCSRFconfig, rigCSRFverify
 --|
---| Summary: This function does the following:
+--| Summary: This command does the following:
 --| 	          Cleans $_GET data (if query strings are enabled) 
 --|             Cleans $_POST data
 --|             Cleans special cookie data
