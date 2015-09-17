@@ -628,14 +628,14 @@ end _rigCleanInputData
 --| FUNCTION _rigCleanInputKeys
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-06-09
---| Last Mod: 17-06-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: This is a helper function. To prevent malicious users
---|                    from trying to exploit keys we make sure that keys are
---|                    only named with alpha-numeric text and a few other items.
+--|            from trying to exploit keys we make sure that keys are
+--|            only named with alpha-numeric text and a few other items.
 --| 
 --| Format:  _rigCleanInputKeys(param1)
 --|
@@ -645,7 +645,11 @@ end _rigCleanInputData
 ----------------------------------------------------------------------*/
 
 function _rigCleanInputKeys pKey
-	if matchchunk(pKey, "(?i)^[a-z0-9:_\/-]+$") is FALSE then
+  # BRACKETS ARE INCLUDED IN THE REGEX BECAUSE SINCE ENGINE VERSION 7
+  # CHECKBOX KEY VALUE PAIRS IN $_POST_RAW ARE NOT CONVERTED
+  # TO ARRAYS IN $_POST AND ARRAY KEYS KEEP BRACKETS IN $_POST, SEE BUG 15946
+  # THAT SAID BRACKETS ARE INCLUDED FOR MULTIDIMENSIONAL ARRAYS USED AS FIELD NAMES
+  if matchchunk(pKey, "(?i)^[a-z0-9:_\/-\[\]]+$") is FALSE then
 		put "Disallowed Key Characters."
 		exit to top
 	end if
