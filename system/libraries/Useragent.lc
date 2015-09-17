@@ -113,13 +113,13 @@ end _rigAgentData
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigLoadAgentFile
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-10-09
---| Last Mod: 07-10-09
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigFetchAgentsData(), rigDeleteAgentsVar
 --|
 --| Summary: Compile the user agent data.
@@ -129,12 +129,12 @@ end _rigAgentData
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigLoadAgentFile
 	if sUseragentsFileLoaded is not TRUE then
 		try
-			include gAPPPATH & "config/useragents" & gEXT
+			require gAPPPATH & "config/useragents" & gEXT
 		catch err
 			rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gEXT
 			return FALSE

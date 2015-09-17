@@ -501,27 +501,27 @@ end rigHtmlImg
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlDocType
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-10-09
---| Last Mod: 09-10-09
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage
 --|
 --| Summary: Generates a page document type declaration.
 --|
---|                   Valid options are xhtml11, xhtml1-strict, xhtml1-trans, xhtml1-frame, html5,
---|                   html4-strict, html4-trans, and html4-frame.  Values are saved in the
---|                   doctypes config file.
+--|             Valid options are xhtml11, xhtml1-strict, xhtml1-trans, xhtml1-frame, html5,
+--|             html4-strict, html4-trans, and html4-frame.  Values are saved in the
+--|             doctypes config file.
 --| 
 --| Format:  rigHtmlDocType(param1)
 --|
 --| Parameters: string <pType> the doctype to be generated
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlDocType pType
 	if pType is empty then
@@ -533,7 +533,7 @@ function rigHtmlDocType pType
 	if gDocTypes is not an array then
 		# LOAD THE DOC TYPES
 		try
-			include gAPPPATH & "config/doctypes" & gEXT
+			require gAPPPATH & "config/doctypes" & gEXT
 		catch err
 			rigLogMessage "error", "An error occured while trying to include file:" && "doctypes" & gEXT
 			return FALSE

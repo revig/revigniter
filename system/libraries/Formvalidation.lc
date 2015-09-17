@@ -435,13 +435,13 @@ end rigFormValidErrorString
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFormValidRun
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 30-07-09
---| Last Mod: 17-07-11
+--| Last Mod: 17-09-15
 --| Requires: rigSetRules, rigLogMessage, _rigReduceArray()
 --|
 --| Summary: Run the validator. This function does all the work.
@@ -451,7 +451,7 @@ end rigFormValidErrorString
 --| Parameters: array <pGroup>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFormValidRun pGroup
 	if pGroup is an array then
@@ -460,7 +460,7 @@ function rigFormValidRun pGroup
 		if sConfigLoaded is not TRUE then
 			put gAPPPATH & "config/validation" & gEXT into tValidationConfig
 			if there is a file tValidationConfig then
-				include tValidationConfig
+				require tValidationConfig
 				put TRUE into sConfigLoaded
 
 				put fetchValidationConf() into tConfigArray

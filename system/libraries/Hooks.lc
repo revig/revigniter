@@ -46,13 +46,13 @@ local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigInitHooksPrefs
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 17-06-09
---| Last Mod: 29-07-11
+--| Last Mod: 17-09-15
 --| Requires: Config library, rigFetchConfigItem(), rigLogMessage
 --|
 --| Summary: Initialize the Hooks Preferences
@@ -63,7 +63,7 @@ local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigInitHooksPrefs
 	rigLoadLibrary "Config"
@@ -77,7 +77,7 @@ command _rigInitHooksPrefs
 	# IF THERE ARE NO HOOKS, WE'RE DONE.
 
 	try
-		include gAPPPATH & "config/hooks" & gEXT
+		require gAPPPATH & "config/hooks" & gEXT
 	catch err
 		rigLogMessage "error", "An error occured while trying to include configuration file:" && "hooks" & gEXT
 	end try
@@ -143,9 +143,9 @@ end _rigCallHook
 --| FUNCTION _rigRunHook
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 17-06-09
---| Last Mod: 21-03-14
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Runs a particular hook
@@ -213,7 +213,7 @@ function _rigRunHook pData
 		if itemOffset(tLib, sLoadedHooks) is 0 then
 
 			if itemOffset(tFilename, sHooksfiles) is 0 then
-				include tFilepath
+				require tFilepath
 
 				if sHooksfiles is empty then
 					put tFilename into sHooksfiles
@@ -234,7 +234,7 @@ function _rigRunHook pData
 
 
 			if itemOffset(tFilename, sHooksfiles) is 0 then
-				include tFilepath
+				require tFilepath
 
 				if sHooksfiles is empty then
 					put tFilename into sHooksfiles

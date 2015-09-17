@@ -419,13 +419,13 @@ end rigGetFileInfo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetMimeByExtension
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-07-09
---| Last Mod: 10-07-09
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigFetchMimeType()
 --|
 --| Summary: Translates a file extension into a mime type based on config/mimes.lc. 
@@ -436,7 +436,7 @@ end rigGetFileInfo
 --| Parameters: string <pFile> path to file
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetMimeByExtension pFile
 	set the itemDelimiter to "."
@@ -444,7 +444,7 @@ function rigGetMimeByExtension pFile
 
 	if sMimesFileLoaded is not TRUE then
 		try
-			include gAPPPATH & "config/mimes" & gEXT
+			require gAPPPATH & "config/mimes" & gEXT
 		catch err
 			rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gEXT
 			return FALSE

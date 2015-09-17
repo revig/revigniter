@@ -105,13 +105,13 @@ end _setBaseURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigLoadConfigFile
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 30-06-09
---| Last Mod: 01-11-09
+--| Last Mod: 17-09-15
 --| Requires: rigShowError, rigLogMessage, rigIsMainConfigLoaded()
 --|
 --| Summary: Loads any configuration file.
@@ -121,7 +121,7 @@ end _setBaseURL
 --| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
 	if sConfigIsLoaded is an array then
@@ -168,7 +168,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
 	if pUseSections is not TRUE then -- gConfig ARRAY IS USED FOR CONFIGURATION DATA
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
 		put the number of lines in the keys of gConfig into tCurrentConfigItemNum
-		include tFilepath
+		require tFilepath
 		put the number of lines in the keys of gConfig into tNewConfigItemNum
 
 		if tNewConfigItemNum = tCurrentConfigItemNum then
@@ -181,7 +181,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
 
 	else -- ARRAY IS USED TO AVOID NAME COLLISIONS
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
-		include tFilepath
+		require tFilepath
 		put gConfig[tConfigFileName] into tSectionArray
 
 		if tSectionArray is not an array then

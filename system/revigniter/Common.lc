@@ -51,24 +51,24 @@ end if
 	local sLoadedLibs, sMainConf, sErrorNames
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigLoadLibrary
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-05-09
---| Last Mod: 30-05-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Library registry. 
---| 				Loads the requested library or sublibrary, if it was not included previously.
+--| 				  Loads the requested library or sublibrary, if it was not included previously.
 --| 
 --| Format:  rigLoadLibrary param1
 --|
 --| Parameters: string <pName> the library beeing requested
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigLoadLibrary pLibName
 	put sLoadedLibs into tLoadedLibs
@@ -79,14 +79,14 @@ command rigLoadLibrary pLibName
 		exit rigLoadLibrary
 	else
 		if there is a file (gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT) then
-			include gBASEPATH & "libraries/" & pLibName & gEXT
-			include gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
+			require gBASEPATH & "libraries/" & pLibName & gEXT
+			require gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
 		else
 			if there is a file (gAPPPATH & "libraries/" & pLibName & gEXT) then
-				include gAPPPATH & "libraries/" & pLibName & gEXT
+				require gAPPPATH & "libraries/" & pLibName & gEXT
 				
 			else
-				include gBASEPATH & "libraries/" & pLibName & gEXT
+				require gBASEPATH & "libraries/" & pLibName & gEXT
 			end if
 		end if
 		rigAddToLibArray pLibName
@@ -99,13 +99,13 @@ end rigLoadLibrary
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-05-09
---| Last Mod: 30-05-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Includes the main config file.
@@ -115,13 +115,13 @@ end rigLoadLibrary
 --| Parameters: --
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetConfig
 	if sMainConf[1] is not an array then
 	# FIRST CALL TO rigGetConfig
 		if there is a file (gAPPPATH & "config/config" & gEXT) then
-			include gAPPPATH & "config/config" & gEXT
+			require gAPPPATH & "config/config" & gEXT
 			if line 1 of the keys of gConfig is empty then
 				put "Your config file does not appear to be formatted correctly."
 				exit to top

@@ -617,13 +617,13 @@ end rigDbQuery
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigLoadRdriver
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-07-09
---| Last Mod: 17-07-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Load the result drivers.
@@ -633,12 +633,12 @@ end rigDbQuery
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigLoadRdriver
 	if sResultDriversLoaded is not TRUE then
-		include gBASEPATH & "database/DBresult" & gEXT
-		include gBASEPATH & "database/drivers/" & sDBdriverSettings["dbdriver"] & "/" & sDBdriverSettings["dbdriver"] & "Result" & gEXT
+		require gBASEPATH & "database/DBresult" & gEXT
+		require gBASEPATH & "database/drivers/" & sDBdriverSettings["dbdriver"] & "/" & sDBdriverSettings["dbdriver"] & "Result" & gEXT
 
 		put TRUE into sResultDriversLoaded
 	end if
@@ -1771,13 +1771,13 @@ end rigDbCacheDeleteAll
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCacheInit
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 09-07-09
---| Last Mod: 09-07-09
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigDbCacheOff()
 --|
 --| Summary: Initialize the cache library.
@@ -1787,14 +1787,14 @@ end rigDbCacheDeleteAll
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCacheInit
 	if sCacheLibLoaded is TRUE then
 		return TRUE
 	else
 		try
-			include gBASEPATH & "database/DBcache" & gEXT
+			require gBASEPATH & "database/DBcache" & gEXT
 		catch err
 			rigLogMessage "error", "An error occured while trying to include database library:" && "DBcache"
 			return rigDbCacheOff()

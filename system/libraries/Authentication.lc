@@ -2842,9 +2842,9 @@ end rigAuthSetErrorDelimiters
 --| COMMAND _rigInitAuthHooksPrefs
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 22-02-13
---| Last Mod: 22-02-13
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage
 --|
 --| Summary: Initialize the authentication hooks preferences.
@@ -2867,7 +2867,7 @@ command _rigInitAuthHooksPrefs
 	# GRAB THE AUTHENTICATION HOOKS DEFINITION FILE.
 	# IF THERE ARE NO HOOKS, WE'RE DONE.
 	try
-		include gAPPPATH & "config/authenticationHooks" & gEXT
+		require gAPPPATH & "config/authenticationHooks" & gEXT
 	catch err
 		rigLogMessage "error", "An error occured while trying to include configuration file:" && "authenticationHooks" & gEXT
 	end try
@@ -2966,9 +2966,9 @@ end _rigAuthCallHook
 --| FUNCTION _rigAuthRunHook
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-02-13
---| Last Mod: 21-03-14
+--| Last Mod: 17-09-15
 --| Requires: rigTrim()
 --|
 --| Summary: Runs a particular authentication hook.
@@ -3032,7 +3032,7 @@ function _rigAuthRunHook pData
 
 
 		if itemOffset(tFilename, sAuthHooksFiles) is 0 then
-			include tFilepath
+			require tFilepath
 
 			if sAuthHooksFiles is empty then
 				put tFilename into sAuthHooksFiles
