@@ -118,24 +118,24 @@ end rigSetConfigRules
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetRules
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 30-07-09
---| Last Mod: 17-07-11
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: This handler takes an array of field names and validation
---|                    rules as input, validates the info, and stores it.
+--|            rules as input, validates the info, and stores it.
 --| 
 --| Format:  rigSetRules param1, param2, param3
 --|
 --| Parameters: mixed <pField>, string <pLabel>, string <pRules>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetRules pField, pLabel, pRules
 	put pField into tField
