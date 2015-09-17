@@ -182,35 +182,11 @@ command rigSetRules pField, pLabel, pRules
 		put pLabel into tLabel
 	end if
 
-	# IS THE FIELD NAME AN ARRAY?  WE TEST FOR THE EXISTENCE OF A BRACKET "[" IN
-	# THE FIELD NAME TO DETERMINE THIS.  IF IT IS AN ARRAY, WE BREAK IT APART
-	# INTO ITS COMPONENTS SO THAT WE CAN FETCH THE CORRESPONDING POST DATA LATER
-	put "\[(.*?)\]" into tRegEx
-
-	if ("[" is in tField) and (matchtext(tField,tRegEx) is true) then
-
-		put tField into tTemp
-		--split tField using "["
-		split tTemp using "["
-
-		--repeat for each key tKey in tField
-			--put tField[tKey] into tVal
-		repeat for each key tKey in tTemp
-			put tTemp[tKey] into tVal
-			if char -1 of tVal is "]" then
-				delete char -1 of tVal
-			end if
-             
-			if tVal is not empty then
-				if quote is not in tVal then
-					put quote & tVal & quote into tVal
-				end if
-                 
-				put tKey & comma & tVal & return after tIndexes
-			end if
-		end repeat
-        
-        	split tIndexes using return and comma
+	# IS THE FIELD NAME AN ARRAY?  WE TEST FOR THE EXISTENCE OF A BRACKETS "[]" IN
+	# THE FIELD NAME TO DETERMINE THIS.  IF IT IS AN ARRAY, WE REMOVE THE BRACKETS
+	# SO THAT WE CAN FETCH THE CORRESPONDING POST DATA LATER
+	if "[]" is in tField then
+		put char 1 to -3 of tField into tIndexes[1]
 		put TRUE into tIsArray
 
 	else
