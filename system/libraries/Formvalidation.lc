@@ -39,7 +39,7 @@ end if
 rigLogMessage "debug", "Formvalidation Library Loaded"
 
 # DECLARE VARIABLES
-local sFieldData, sConfigRules, sErrorArray, sErrorMessages, sErrorPrefix, sErrorSuffix, sErrorString, sSafeFormData, sRuleNames, sPrepMethods, sConfigLoaded, sPrefilledValues
+local sFieldData, sConfigRules, sErrorArray, sErrorMessages, sErrorPrefix, sErrorSuffix, sErrorString, sSafeFormData, sRuleNames, sPrepMethods, sConfigLoaded, sPrefilledValues, sGroupName, sRulesIndex, sGroupRulesIndex
 
 # SET INITIAL VALUES
 put "<p>" into sErrorPrefix
@@ -2307,6 +2307,75 @@ end rigHtmlSpecialChars
 command rigUrlDecodeStr pStr
 	return urlDecode(pStr)
 end rigUrlDecodeStr
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigAddValidationGrp
+--|
+--| Author: Alex Tweedly, modifications rabit
+--| Version:  1.0
+--| Created: 18-09-2015
+--| Last Mod: 18-09-2015
+--| Requires: --
+--|
+--| Summary: Define a group name for a set o of validation rules.
+--| 
+--| Format: rigAddValidationGrp param1
+--|
+--| Parameters: string <pGroup>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigAddValidationGrp pGroup
+  put pGroup into sGroupName
+  
+  if pGroup <> empty then
+    put 0 into sGroupRulesIndex
+  end if
+end rigAddValidationGrp
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigAddValidationRules
+--|
+--| Author: Alex Tweedly, modifications rabit
+--| Version:  1.0
+--| Created: 18-09-2015
+--| Last Mod: 18-09-2015
+--| Requires: --
+--|
+--| Summary: Add rules to array in validation configuration file.
+--| 
+--| Format: rigAddValidationRules param1, param2, param3, param4
+--|
+--| Parameters: string <pField> the field name, string <pLabel> the field label,
+--|               string <pRules> the validation rules, array <@confArray> the referenced config array
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigAddValidationRules pField pLabel pRules @confArray
+  if sGroupName <> empty then
+    add 1 to sGroupRulesIndex
+    put pField into confArray[sGroupName][sGroupRulesIndex]["field"]
+    put pLabel into confArray[sGroupName][sGroupRulesIndex]["label"]
+    put pRules into confArray[sGroupName][sGroupRulesIndex]["rules"]
+
+  else
+    add 1 to sRulesIndex
+    put pField into confArray[sRulesIndex]["field"]
+    put pLabel into confArray[sRulesIndex]["label"]
+    put pRules into confArray[sRulesIndex]["rules"]
+  end if
+end rigAddValidationRules
 
 
 
