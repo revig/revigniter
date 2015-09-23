@@ -2324,9 +2324,9 @@ end rigUrlDecodeStr
 --|
 --| Summary: Define a group name for a set o of validation rules.
 --| 
---| Format: rigAddValidationGrp param1
+--| Format: rigAddValidationGrp [param1]
 --|
---| Parameters: string <pGroup>
+--| Parameters: string <pGroup> (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
