@@ -325,14 +325,14 @@ end rigDbPlatform
 --| FUNCTION rigDbVersion
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 29-09-09
---| Last Mod: 04-05-13
+--| Last Mod: 27-09-15
 --| Requires: _rigDbVersion(), rigFetchDBdriverSetting(), rigDbDisplayError,
---|           rigDbRedirectOnError
+--|            rigDbRedirectOnError, rigDbQuery(), rigDbRow()
 --|
 --| Summary: Database Version Number.  Returns a string containing the
---|                    version of the database being used.
+--|            version of the database being used.
 --| 
 --| Format:  rigDbVersion()
 --|
@@ -361,8 +361,8 @@ function rigDbVersion
 	end if
 
 	put rigDbQuery(tSql) into tQuery
-return tQuery	
-	--return rigDbRow("ver")
+	
+	return rigDbRow("ver")
 end rigDbVersion
 
 
