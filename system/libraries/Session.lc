@@ -852,14 +852,14 @@ end _rigFlashdataMark
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigFlashdataSweep
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 14-10-09
---| Last Mod: 14-10-09
---| Requires: rigUnsetSessUserdata
+--| Last Mod: 29-09-15
+--| Requires: rigSessAllUserdata(), rigUnsetSessUserdata
 --|
 --| Summary: Removes all flashdata marked as 'old'.
 --| 
@@ -868,13 +868,12 @@ end _rigFlashdataMark
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigFlashdataSweep
 	put rigSessAllUserdata() into tUserData
 	
 	repeat for each key tKey in tUserData
-		put tUserData[tKey] into tVal
 		
 		if ":old:" is in tKey then
 			rigUnsetSessUserdata tKey
