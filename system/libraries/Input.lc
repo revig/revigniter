@@ -1124,9 +1124,9 @@ end rigValidIP
 --| FUNCTION _rigValid_ipv4
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 02-07-12
---| Last Mod: --
+--| Last Mod: 29-09-15
 --| Requires: --
 --|
 --| Summary: Validate ipv4 address.
@@ -1154,7 +1154,7 @@ function _rigValid_ipv4 pIP
 	end if
 
 	# CHECK EACH SEGMENT
-	repeat for each item tSegment in tIPsegments then
+	repeat for each item tSegment in tIPsegments
 		# IP SEGMENTS MUST BE DIGITS AND CAN NOT BE 
 		# LONGER THAN 3 DIGITS OR GREATER THEN 255
 		put "[^0-9]" into tRegEx
