@@ -769,7 +769,7 @@ end rigSetSessFlashdata
 command rigKeepSessFlashdata pKey
 	# 'OLD' FLASHDATA GETS REMOVED.  HERE WE MARK ALL
 	# FLASHDATA AS 'NEW' TO PRESERVE IT FROM _rigFlashdataSweep
-	# NOTE THE FUNCTION WILL RETURN FALSE IF THE $KEY
+	# NOTE THE FUNCTION WILL RETURN FALSE IF THE pKey
 	# PROVIDED CANNOT BE FOUND
 	put sSession["flashdata_key"] & ":old:" & pKey into tOldFlashDataKey
 	put rigSessUserdata(tOldFlashDataKey) into tValue
