@@ -665,35 +665,32 @@ end rigSetSessUserdata
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigUnsetSessUserdata
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 14-10-09
---| Last Mod: 14-10-09
+--| Last Mod: 30-09-15
 --| Requires: rigSessWrite
 --|
 --| Summary: Delete a session variable from the "userdata" array.
 --| 
 --| Format:  rigUnsetSessUserdata param1
 --|
---| Parameters: mixed <pNewData>
+--| Parameters: mixed <pKey>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigUnsetSessUserdata pNewData
-	if pNewData is not an array then
-		put "" into tArray[pNewData]
-		put tArray into tNewData
+command rigUnsetSessUserdata pKey
+	if pKey is not an array then
+		put "" into tUnsetA[pKey]
 	else
-		put pNewData into tNewData
+		put pKey into tUnsetA
 	end if
 
-	repeat for each key tKey in tNewData
-		put tNewData[tKey] into tVal
-
+	repeat for each key tKey in tUnsetA
 		delete variable sSession["userdata"][tKey]
 	end repeat
 
