@@ -827,13 +827,13 @@ end rigSessFlashdata
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigFlashdataMark
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 14-10-09
---| Last Mod: 14-10-09
+--| Last Mod: 30-09-15
 --| Requires: rigSetSessUserdata, rigUnsetSessUserdata
 --|
 --| Summary: Identifies flashdata as 'old' for removal when _rigFlashdataSweep runs.
@@ -843,22 +843,24 @@ end rigSessFlashdata
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigFlashdataMark
 	put rigSessAllUserdata() into tUserData
 	
-	repeat for each key tKey in tUserData
-		put tUserData[tKey] into tVal
-
-		put tKey into tParts
-		split tParts using ":"
-		if (tParts is an array) and (the number of lines in the keys of tParts = 3) then
-			put sSession["flashdata_key"] & ":old:" & tParts[3] into tNewName
-			rigSetSessUserdata tNewName, tVal
-			rigUnsetSessUserdata tKey
-		end if
-	end repeat
+  put the keys of tUserData into tUserdataKeys
+  put "^" & sSession["flashdata_key"] & ":new:.+$" into tRegEx
+  filter tUserdataKeys matching regex pattern tRegEx into tFlashDataArrayKeys
+  
+  set the itemDel to ":"
+  repeat for each line tLine in tFlashDataArrayKeys
+    put tUserData[tLine] into tVal
+    
+    put item 3 of tLine into tName
+    put sSession["flashdata_key"] & ":old:" & tName into tNewKey
+    rigSetSessUserdata tNewKey, tVal
+    rigUnsetSessUserdata tLine
+  end repeat
 end _rigFlashdataMark
 
 
