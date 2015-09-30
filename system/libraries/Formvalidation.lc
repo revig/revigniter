@@ -2316,7 +2316,8 @@ end rigUrlDecodeStr
 /*----------------------------------------------------------------------
 --| COMMAND rigAddValidationGrp
 --|
---| Author: Alex Tweedly, modifications rabit
+--| Author: Alex Tweedly
+--| Modifications: rabit
 --| Version:  1.0
 --| Created: 18-09-2015
 --| Last Mod: 18-09-2015
@@ -2346,7 +2347,8 @@ end rigAddValidationGrp
 /*----------------------------------------------------------------------
 --| COMMAND rigAddValidationRules
 --|
---| Author: Alex Tweedly, modifications rabit
+--| Author: Alex Tweedly
+--| Modifications: rabit
 --| Version:  1.0
 --| Created: 18-09-2015
 --| Last Mod: 18-09-2015
