@@ -132,7 +132,7 @@ command _rigCreateSessionFolder
   create folder sSession["sess_save_location"]
   
   if the result is not empty then
-    if pPath is not empty then
+    if (item 1 to -2 of the tempname) is in sSession["sess_save_location"] then
       # USING TEMPORARY FOLDER
       rigLogMessage "error", "Session: Folder name in tmp folder already taken! Please set a custom sess_save_location in config.lc. System error:" && the sysError
     else
