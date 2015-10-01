@@ -253,10 +253,12 @@ function rigSessRead
 	end if
 
 	# IS THERE A CORRESPONDING SESSION IN THE SAVE LOCATION?
-  put rigGetSessData(tSession["session_id"], tSession["ip_address"], tSession["user_agent"], tSession) into tSession
-  if tSession is FALSE then
-    return FALSE
-  end if
+	if sSession["sess_driver"] <> empty then
+  	put rigGetSessData(tSession["session_id"], tSession["ip_address"], tSession["user_agent"], tSession) into tSession
+  	if tSession is FALSE then
+    		return FALSE
+  	end if
+	end if
 
 	# SESSION IS VALID!
 	put tSession into sSession["userdata"]
