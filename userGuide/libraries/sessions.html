@@ -90,7 +90,7 @@
 
 <p>The Session Library permits you maintain a user's "state" and track their activity while they browse your site.
 The Session Library stores session information for each user as serialized (and optionally encrypted) data in a cookie.
-It can also store the session data in a database table for added security, as this permits the session ID in the
+It can also store the session data in a database table or in a plain text file for added security, as this permits the session ID in the
 user's cookie to be matched against the stored session ID. By default only the cookie is saved.  If you choose to
 use the database option you'll need to create the session table as indicated below.
 </p>
@@ -111,7 +111,7 @@ will cause it to read, create, and update sessions.</p>
 <pre><code>rigLoaderLoadLibrary "Session"</code></pre>
 
 
-<p class="important"><strong>Note:</strong> Keep in mind, if sess_use_database is set to TRUE in your config file, that initializing 
+<p class="important"><strong>Note:</strong> Keep in mind, if gConfig["sess_driver"] is set to "database" in your config file, that initializing 
 the Session Library connects to your database using the default connection group specified in your database config file. If you need 
 to choose another connection group connect to your database before initializing the Session Library.</p>
 
@@ -146,7 +146,7 @@ tArray["user_agent"] -- "string - user agent data"
 tArray["last_activity"] -- timestamp
 </code></pre>
 
-<p>If you have the encryption option enabled, the serialized array will be encrypted before being stored in the cookie,
+<p>If you have the encryption option gConfig["sess_encrypt_cookie"] enabled, the serialized array will be encrypted before being stored in the cookie,
 making the data highly secure and impervious to being read or altered by someone. More info regarding encryption
 can be <a href="encryption.html">found here</a>, although the Session Library will take care of initializing
 and encrypting the data automatically.</p>
@@ -215,30 +215,88 @@ rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
 
 <p>revIgniter supports &quot;flashdata&quot;, or session data that will only be available for the next server request, and are then automatically cleared. These can be very useful, and are typically used for informational or status messages (for example: &quot;record 2 deleted&quot;).</p>
 <p>Note: Flash variables are prefaced with &quot;flash&quot; so avoid this prefix in your own session names.</p>
+
 <p>To add flashdata:</p>
 
 <pre><code>rigSetSessFlashdata "item", "value"</code></pre>
 
 <p>You can also pass an array to rigSetSessFlashdata, in the same manner as setSessUserdata. </p>
+
 <p>To read a flashdata variable:</p>
 
 <pre><code>get rigSessFlashdata("item")</code></pre>
+
+<p>Or to get an array with all flashdata, simply omit the key parameter:</p>
+
+<pre><code>get rigSessFlashdata()</code></pre>
 
 <p>If you find that you need to preserve a flashdata variable through an additional request, you can do so using the rigKeepSessFlashdata handler.</p>
 
 <pre><code>rigKeepSessFlashdata "item"</code></pre>
 
+
+<p>To mark an existing session array item as "flashdata":</p>
+
+<pre><code>rigSessMarkAsFlash "item"</code></pre>
+
+<p>You can pass an array to rigSessMarkAsFlash like in the following example:</p>
+
+<pre><code>put "" into tExistingItemsArray["username"]
+put "" into tExistingItemsArray["logged_in"]
+rigSessMarkAsFlash tExistingItemsArray
+</code></pre>
+
+
+<h2>Tempdata</h2>
+
+<p>revIgniter supports session data items with a specific expiration time. After the value expires, or the session expires or is deleted, the session array item is automatically removed.</p>
+
+<p>To add tempdata:</p>
+
+<pre><code>rigSetSessTempdata "item", "value", 300</code></pre>
+
+<p>The third parameter is the time-to-live value in seconds.</p>
+<p>You can also pass an array to rigSetSessTempdata like in the following example:</p>
+
+<pre><code>put "johndoe" into tTempDataA["username"]
+put TRUE into tTempDataA["logged_in"]
+rigSetSessTempdata tTempDataA
+</code></pre>
+
+<p>To read a tempdata variable:</p>
+
+<pre><code>get rigSessTempdata("item")</code></pre>
+
+<p>Or to retrieve all existing tempdata as an array, simply omit the key parameter:</p>
+
+<pre><code>get rigSessTempdata()</code></pre>
+
+<p>To mark an existing session array item as "tempdata", simply pass its name and time-to-live (in seconds!) to the rigSessMarkAsTemp handler:</p>
+
+<pre><code>rigSessMarkAsTemp "item", 300</code></pre>
+
+<p>You can pass an array to rigSessMarkAsTemp like in the following example:</p>
+
+<pre><code>put "" into tExistingItemsArray["username"]
+put "" into tExistingItemsArray["logged_in"]
+rigSessMarkAsTemp tExistingItemsArray, , 240
+</code></pre>
+
+<p class="important"><strong>Note:</strong> If the expiration parameter is omitted the default time-to-live value of 300 seconds will be used.</p>
+
+
+
 <h2><a name="savingSessionData"></a>Saving Session Data to a Database</h2>
 
 <p>While the session data array stored in the user's cookie contains a Session ID,
-unless you store session data in a database there is no way to validate it.  For some applications that require little or no
+unless you store session data in a database or in a file on your server there is no way to validate it.  For some applications that require little or no
 security, session ID validation may not be needed, but if your application requires security, validation is mandatory.</p>
 
 <p>When session data is available in a database, every time a valid session is found in the user's cookie, a database
 query is performed to match it.  If the session ID does not match, the session is destroyed.  Session IDs can never
 be updated, they can only be generated when a new session is created.</p>
 
-<p>In order to store sessions, you must first create a database table for this purpose.  Here is the basic
+<p>In order to store sessions in a database, you must first create a database table for this purpose.  Here is the basic
 prototype required by the Session Library.<br />MySQL version:</p>
 
 <pre><code>CREATE TABLE IF NOT EXISTS `ri_sessions` (
@@ -280,16 +338,35 @@ prototype required by the Session Library.<br />MySQL version:</p>
 as long as you update the <kbd>application/config/config.lc</kbd> file so that it contains the name you have chosen.
 Once you have created your database table you can enable the database option in your config.lc file as follows:</p>
 
-<pre><code>put TRUE into gConfig["sess_use_database"]</code></pre>
+<pre><code>put "database" into gConfig["sess_driver"]</code></pre>
 
 <p>Once enabled, the Session Library will store session data in the DB.</p>
 
-<p>Make sure you've specified the table name in your config file as well:</p>
+<p>If you don't use the default table name "ri_sessions" make sure you've specified the name in your config file as well:</p>
 
-<pre><code>put "ri_sessions" into gConfig["sess_table_name"]</code></pre>
+<pre><code>put "mySessions" into gConfig["sess_save_location"]</code></pre>
 
 <p class="important"><strong>Note:</strong> The Session Library has built-in garbage collection which clears out expired sessions so you
 do not need to write your own routine to do it.</p>
+
+
+
+<h2>Saving Session Data to a File</h2>
+
+<p>Another option to establish session ID validation is to save session data to a file. To use your file system for storing session data set the session driver to "files" in your config file as follows:</p>
+
+<pre><code>put "files" into gConfig["sess_driver"]</code></pre>
+	
+<p>You can specify a location to save sessions to by setting gConfig["sess_save_location"] to an <strong>absolute</strong> path to a <strong>writable</strong> directory like:</p>
+
+<pre><code>put "/my/absolute/path/to/sessionLocation" into gConfig["sess_save_location"]</code></pre>
+
+<p>If set to empty the standard temporary folder is used.</p>
+
+<p>Similar to the database option when session data is stored in a file, every time a valid session is found in the user's cookie, your storage location is searched for a matching file name.  If the session ID does not match, the session is destroyed.  Session IDs can never be updated, they can only be generated when a new session is created.</p>
+
+<p>Session directory permissions are automatically set to 0700 so only the directory’s owner is allowed to perform read and write operations on it.</p>
+
 
 
 <h2>Destroying a Session </h2>
@@ -344,16 +421,16 @@ do not need to write your own routine to do it.</p>
 	<td class="td">Whether to encrypt the session data.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_use_database</strong></td>
-	<td class="td">FALSE</td>
-	<td class="td">TRUE/FALSE (boolean)</td>
-	<td class="td">Whether to save the session data to a database.  You must create the table before enabling this option.</td>
+	<td class="td"><strong>sess_driver</strong></td>
+	<td class="td"></td>
+	<td class="td">database/files</td>
+	<td class="td">Whether to save the session data to a database, to a file or in a cookie.  You must create the table before enabling the database option. If this option is set to empty all session data is stored in a cookie.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_table_name</strong></td>
-	<td class="td">ri_sessions</td>
-	<td class="td">Any valid SQL table name</td>
-	<td class="td">The name of the session database table.</td>
+	<td class="td"><strong>sess_save_location</strong></td>
+	<td class="td"></td>
+	<td class="td">Any valid SQL table name or any valid absolute path to a writable directory respectively. If set to empty the default table name "ri_sessions" or the standard temporary folder respectively is used in case sess_driver is "database" or "files".</td>
+	<td class="td">The location to save sessions to. Of course this is driver dependant.</td>
 </tr>
 <tr>
 	<td class="td"><strong>sess_time_to_update</strong></td>
