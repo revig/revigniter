@@ -731,7 +731,7 @@ end rigSetSessFlashdata
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigMarkAsFlash
+--| COMMAND rigSessMarkAsFlash
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -741,14 +741,14 @@ end rigSetSessFlashdata
 --|
 --| Summary: Mark an existing item as flashdata.
 --| 
---| Format:  rigMarkAsFlash param1
+--| Format:  rigSessMarkAsFlash param1
 --|
 --| Parameters: mixed <pKey>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command rigMarkAsFlash pKey
+command rigSessMarkAsFlash pKey
   put rigSessAllUserdata() into tUserData
   
   if tUserData <> FALSE then
@@ -784,7 +784,7 @@ command rigMarkAsFlash pKey
   end if -- if tUserData <> FALSE then
     
   return FALSE
-end rigMarkAsFlash
+end rigSessMarkAsFlash
 
 
 
@@ -1024,7 +1024,7 @@ end rigSetSessTempdata
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigMarkAsTemp
+--| COMMAND rigSessMarkAsTemp
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1034,14 +1034,14 @@ end rigSetSessTempdata
 --|
 --| Summary: Mark an existing item as tempdata.
 --| 
---| Format:  rigMarkAsTemp param1[, param2]
+--| Format:  rigSessMarkAsTemp param1[, param2]
 --|
 --| Parameters: mixed <pKey>, integer <pTTL> Time-To-Live in seconds (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command rigMarkAsTemp pKey pTTL
+command rigSessMarkAsTemp pKey pTTL
   # SET EXPIRATION TIME IN SECONDS
   if (pTTL is empty) or (pTTL is not an integer) then
     put the seconds + 300 into tTTL
@@ -1084,7 +1084,7 @@ command rigMarkAsTemp pKey pTTL
   end if -- if tUserData <> FALSE then
     
   return FALSE
-end rigMarkAsTemp
+end rigSessMarkAsTemp
 
 
 
