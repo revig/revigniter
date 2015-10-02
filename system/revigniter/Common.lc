@@ -51,24 +51,24 @@ end if
 	local sLoadedLibs, sMainConf, sErrorNames
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigLoadLibrary
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-05-09
---| Last Mod: 30-05-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Library registry. 
---| 				Loads the requested library or sublibrary, if it was not included previously.
+--| 				  Loads the requested library or sublibrary, if it was not included previously.
 --| 
 --| Format:  rigLoadLibrary param1
 --|
 --| Parameters: string <pName> the library beeing requested
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigLoadLibrary pLibName
 	put sLoadedLibs into tLoadedLibs
@@ -79,14 +79,14 @@ command rigLoadLibrary pLibName
 		exit rigLoadLibrary
 	else
 		if there is a file (gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT) then
-			include gBASEPATH & "libraries/" & pLibName & gEXT
-			include gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
+			require gBASEPATH & "libraries/" & pLibName & gEXT
+			require gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
 		else
 			if there is a file (gAPPPATH & "libraries/" & pLibName & gEXT) then
-				include gAPPPATH & "libraries/" & pLibName & gEXT
+				require gAPPPATH & "libraries/" & pLibName & gEXT
 				
 			else
-				include gBASEPATH & "libraries/" & pLibName & gEXT
+				require gBASEPATH & "libraries/" & pLibName & gEXT
 			end if
 		end if
 		rigAddToLibArray pLibName
@@ -99,13 +99,13 @@ end rigLoadLibrary
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetConfig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 30-05-09
---| Last Mod: 30-05-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: Includes the main config file.
@@ -115,13 +115,13 @@ end rigLoadLibrary
 --| Parameters: --
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetConfig
 	if sMainConf[1] is not an array then
 	# FIRST CALL TO rigGetConfig
 		if there is a file (gAPPPATH & "config/config" & gEXT) then
-			include gAPPPATH & "config/config" & gEXT
+			require gAPPPATH & "config/config" & gEXT
 			if line 1 of the keys of gConfig is empty then
 				put "Your config file does not appear to be formatted correctly."
 				exit to top
@@ -446,13 +446,13 @@ end rigSetStatusHeader
 --| FUNCTION _rigExceptionHandler
 --|
 --| Author: Andre Garcia, modifications rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 29-06-09
---| Last Mod: 02-02-15
+--| Last Mod: 02-09-15
 --| Requires: errorsList.txt, rigLoadLibrary, rigLogMessage
 --|
 --| Summary: This function is used to log Rev errors, called by catch statements, in our log file.
---|                    It also intercepts 404 errors. 
+--|            It also intercepts 404 errors. 
 --| 
 --| Format:  _rigExceptionHandler(param1)
 --|
@@ -463,11 +463,15 @@ end rigSetStatusHeader
 
 function _rigExceptionHandler pContexts
 	rigLoadLibrary "Exceptions"
+  
+  split pContexts by return
+  put the number of lines in the keys of pContexts into tContextsKeysNum
 
-	put the number of lines in pContexts into tNumLines
-
-	if tNumLines > 100 then
-		delete line 100 to tNumLines of pContexts
+  if tContextsKeysNum > 100 then
+    repeat with tIndex = 100 to tContextsKeysNum
+      delete variable pContexts[tIndex]
+    end repeat
+    put 99 into tContextsKeysNum
 	end if
 
 	if sErrorNames is empty then
@@ -480,27 +484,28 @@ function _rigExceptionHandler pContexts
 		
 	end if
 
-	put the number of lines in sErrorNames into tTotalErrorListLines
-	
-	repeat with i = tNumLines down to 1
-		put item 1 of line i of pContexts into tLineNumToGet
+  split sErrorNames by return
+  put the number of lines in the keys of sErrorNames into tTotalErrorListLines
+
+  repeat with i = tContextsKeysNum down to 1
+	  put item 1 of pContexts[i] into tLineNumToGet
 		
-		if tLineNumToGet > tTotalErrorListLines then
+      if tLineNumToGet > tTotalErrorListLines then
 			next repeat
 		end if
-		
-		put line tLineNumToGet of sErrorNames into tErrMsg
+
+    put sErrorNames[tLineNumToGet] into tErrMsg
 
 		if tErrMsg is "Object Name:" then
-			put item 4 of line i of pContexts into tObject
+			put item 4 of pContexts[i] into tObject
 			put tObject into tObjectName
 		else
-			if item 2 of line i of pContexts is not 0 then
-				put item 2 of line i of pContexts into tLinenr
-				put item 3 of line i of pContexts into tColumn
+			if item 2 of pContexts[i] is not 0 then
+				put item 2 of pContexts[i] into tLinenr
+				put item 3 of pContexts[i] into tColumn
 			end if
 
-			put item 4 of line i of pContexts into tProcToken
+			put item 4 of pContexts[i] into tProcToken
 			
 			# CHECK IF IT IS A 404 ERROR 
 			# BUILD ERROR STRING
@@ -520,6 +525,7 @@ function _rigExceptionHandler pContexts
 	if last char of tErrorString = CR then
 		delete last char of tErrorString
 	end if
+  
 	return tErrorString
 end _rigExceptionHandler
 
@@ -2155,6 +2161,33 @@ function rigFileSize pFilePath
   # RETURN FILE SIZE
   return item 2 of tInfo
 end rigFileSize
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION trueFalseToDigit
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 04-09-2015
+--| Last Mod: 04-09-2015
+--| Requires: --
+--|
+--| Summary: Converts true, false to digits 1, 0.
+--| 
+--| Format:  trueFalseToDigit(param1)
+--|
+--| Parameters: string <pEval> can be something like "tX > tY" or "tStr is line 5 of tList", etc.
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+function trueFalseToDigit pEval
+  if pEval is TRUE then return 1
+  return 0
+end trueFalseToDigit
 
 
 

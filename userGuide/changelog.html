@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version172">Version 1.7.2</a></li>
 <li><a href="#version171">Version 1.7.1</a></li>
 <li><a href="#version170">Version 1.7.0</a></li>
 <li><a href="#version1624">Version 1.6.24</a></li>
@@ -185,6 +186,41 @@
 
 
 
+<h2><a name="version172">&nbsp;</a>Version 1.7.2</h2>
+<p>Release Date: 2015-10-02</p>
+
+
+<p>
+<ul>
+	<li><strong>Added:</strong> handlers rigAddValidationGrp and rigAddValidationRules to system/libraries/Formvalidation.lc to reduce the amount of code needed to prepare a form validation array variable in system/application/config/validation.lc (thanks Alex). Please see the <a href="libraries/form_validation.html#savingtoconfig">Saving Sets of Validation Rules to a Config File</a> section of the User Guide.</li></li>
+	<li><strong>Added:</strong> session driver files system/libraries/sessionDrivers/sessionFilesDriver.lc and system/libraries/sessionDrivers/sessionDatabaseDriver.lc. These are required by the enhanced session library.</li></li>
+	<li><strong>Changed:</strong> User Guide, info about the SMTP protocol (see Email library) on Linux.</li>
+	<li><strong>Changed:</strong> User Guide, info about requirements for the Trackback library on Linux.</li>
+	<li><strong>Changed:</strong> Set Sendmail to the default mail protocol in system/libraries/Email.lc. Adjusted the UserGuide accordingly.</li>
+	<li><strong>Changed:</strong> Tweaked security measures regarding the do command, _rigDo respectively in system/revigniter/RevIgniter.lc.</li>
+	<li><strong>Changed:</strong> Renamed the rigFetchControllerMethods function and the sControllerMethods variable in system/libraries/Controller.lc and system/revigniter/RevIgniter.lc.</li>
+	<li><strong>Changed:</strong> Tweaked system/RevIgniter/common.lc -> _rigExceptionHandler to speed up handler execution.</li>
+	<li><strong>Changed:</strong> Added brackets to regex in system/library/Input.lc -> _rigCleanInputKeys() to address an issue with $_POST key names in server 7 and up.</li>
+	<li><strong>Changed:</strong> Modified system/library/Input.lc -> _rigSanitizeGlobals to address an issue related to $_POST_RAW key value pairs and server ≥ 7. Using server 7 and up $_POST_RAW key value pairs of form checkboxes are not converted to arrays In $_POST.</li>
+	<li><strong>Changed:</strong> Tweaked checking for field names being arrays in system/libraries/Formvalidation.lc -> rigSetRules.</li>
+	<li><strong>Changed:</strong> Replaced “include” with “require” in system/database/DB.lc, system/database/DBdriver.lc, system/helpers/downloadHelper.lc, system/helpers/fileHelper.lc, system/helpers/htmlHelper.lc, system/libraries/Authentication.lc, system/libraries/Config.lc, system/libraries/Formvalidation.lc, system/libraries/Hooks.lc, system/libraries/Language.lc, system/libraries/Router.lc, system/libraries/Useragent.lc and system/revigniter/Common.lc.</li>
+	<li><strong>Changed:</strong> Made revIgniter Windows friendly. So far construction of the server path did not account for Windows environments.</li>
+	<li><strong>Changed:</strong> Removed needless code in system/libraries/Session.lc -> rigUnsetSessUserdata.</li>
+	<li><strong>Changed:</strong> Tweaked system/libraries/Session.lc -> _rigFlashdataMark.</li>
+	<li><strong>Changed:</strong> Modified the section “Session Variables” in system/application/config/config.lc. This is required by the new enhanced session library.</li>
+	<li><strong>Changed:</strong> Revised the session library. Transfered relevant code to the new session driver files. Added handlers to enhance the current library and to address the requirements for session temp data items. Session data can now be stored in plain text files. Please read about the new <a href="libraries/sessions.html">Session Library</a> in the User Guide.</li>
+	<li><strong>Fixed:</strong> User Guide, revised MySQL prototype of session database table to address IPv6 requirements.</li>
+	<li><strong>Fixed:</strong> system/libraries/Input.lc -> rigVarPost() should return FALSE instead of empty in case $_POST is empty.</li>
+	<li><strong>Fixed:</strong> bug in system/libraries/Authentication.lc -> _rigAuthRegisterUser() which takes effect in case the user name is used to identify a user and there are multiple users with the same email address (thanks Alex).</li>
+	<li><strong>Fixed:</strong> variable name in system/helpers/fileHelper.lc -> rigFilterDots().</li>
+	<li><strong>Fixed:</strong> type of data the function system/database/DBdriver.lc -> rigDbVersion() returns. This function now returns a string as proposed primarily instead of an array.</li>
+	<li><strong>Fixed:</strong> Removed needless "then" keyword in system/libraries/Input.lc -> _rigValid_ipv4(). This was overlooked because server engine versions prior to 8 were forgiving and didn't complain. Engine 8 yields an error.</li>
+</ul>
+</p>
+
+
+
+
 <h2><a name="version171">&nbsp;</a>Version 1.7.1</h2>
 <p>Release Date: 2015-08-10</p>
 
@@ -257,7 +293,7 @@
 <ul>
 	<li><strong>Fixed:</strong> system/libraries/Captcha.lc -> rigCaptchaCode. The captcha library now works with LiveCode 7.</li>
 	<li><strong>Changed:</strong> Removed CDATA tag in system/helpers/urlHelper.lc -> rigSafeMailToLink().</li>
-	<li><strong>Changed:</strong> Made the pSender parameter in system/helpers/emailHelper.lc -> rigSendMail() optional to address the fact that the behavior of double dash in shell commands used to send emails has changed. Adjusted the User Guide accordingly. Note: The number of parameters for rigSendMail() has changed. If you used this function with previous revIgniter versions you should make adjustments accordingly.</li>
+	<li><strong>Changed:</strong> Made the pSender parameter in system/helpers/emailHelper.lc -> rigSendEmail() optional to address the fact that the behavior of double dash in shell commands used to send emails has changed. Adjusted the User Guide accordingly. Note: The number of parameters for rigSendMail() has changed. If you used this function with previous revIgniter versions you should make adjustments accordingly.</li>
 	<li><strong>Changed:</strong> Converted less than signs in mail debugging data to entities so that email addresses are not interpreted as tags (see system/libraries/Email.lc -> rigPrintMailDebugger().</li>
 	<li><strong>Changed:</strong> Made the sender address optional for sending mail using the default protocol setting to send emails through the command line (see system/libraries/Email.lc -> _rigSendWithMail()). Adjusted the User Guide accordingly. Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you use the default protocol setting (mail). Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. It's the account name and host name of the sending user.</li>
 	<li><strong>Changed:</strong> Updated highlight.pack.js used for code highlighting in the User Guide.</li>

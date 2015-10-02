@@ -59,11 +59,17 @@
 ##
 
 	put $_Server["PATH_TRANSLATED"] into sTempPath
-	set the itemdel to "/"
 
-	if char 1 of gSystemFolder is not "/" then
-		put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
-	end if
+  put (the platform is "Win32") into sIsWin
+  if sIsWin is TRUE then
+    replace "\" with "/" in sTempPath
+  end if
+  
+  set the itemdel to "/"
+  
+  if ((sIsWin is FALSE) and (char 1 of gSystemFolder is not "/")) or ((sIsWin is TRUE) and (char 2 of gSystemFolder is not ":")) then
+    put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
+  end if
 
 ##
 #---------------------------------------------------------------

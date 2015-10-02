@@ -41,9 +41,9 @@ end if
 --| COMMAND rigForceDownload
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 08-10-09
---| Last Mod: 24-06-13
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigFetchMimeType()
 --|
 --| Summary: Generates headers that force a download to happen.
@@ -72,7 +72,7 @@ command rigForceDownload pFileName pData
 
 	# LOAD THE MIME TYPES
 	try
-		include gAPPPATH & "config/mimes" & gEXT
+		require gAPPPATH & "config/mimes" & gEXT
 	catch err
 		rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gEXT
 		return FALSE

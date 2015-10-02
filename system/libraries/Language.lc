@@ -48,13 +48,13 @@ local sLangIsLoaded
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigLangLoadLang
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 02-07-09
---| Last Mod: 11-11-09
+--| Last Mod: 17-09-15
 --| Requires: rigShowError, rigLogMessage
 --|
 --| Summary: Load a language file.
@@ -64,7 +64,7 @@ local sLangIsLoaded
 --| Parameters: mixed <pLangFiles> the name of the language file to be loaded (can be an array), string <pIdiom> the language , bool <pReturn>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigLangLoadLang pLangFiles pIdiom pReturn
 	if sLangIsLoaded is an array then
@@ -114,9 +114,9 @@ function rigLangLoadLang pLangFiles pIdiom pReturn
 
 		# DETERMINE WHERE THE LANGUAGE FILE IS AND LOAD IT
 		if there is a file tExtLang then
-			include tExtLang
+			require tExtLang
 		else if there is a file tSysLang then
-			include tSysLang
+			require tSysLang
 		else
 			rigShowError "Unable to load the requested language file: language/" & tIdiom & "/" & tLangFile
 		end if

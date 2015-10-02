@@ -261,18 +261,20 @@ end if
 # Session Variables
 #--------------------------------------------------------------------------
 #
-# 'sess_cookie_name' = the name you want for the cookie
-# 'sess_expiration'  = the number of SECONDS you want the session to last.
-# by default sessions last 129600 seconds (36 hours related to server time).  Set to zero for no expiration.
-# 'sess_expire_on_close' = Whether to cause the session to expire automatically.
-# 'sess_encrypt_cookie' = TRUE/FALSE (boolean).  Whether to encrypt the cookie
-# 'sess_use_database' = Whether to save the session data to a database. You must create the table
-# before enabling this option.
-# 'sess_table_name' = The name of the session database table.
-# 'sess_match_ip' = Whether to match the user's IP address when reading the session data. Note that some
-# ISPs dynamically change the IP, so if you want a non-expiring session you will likely set this to FALSE.
-# 'sess_match_useragent' = Whether to match the User Agent when reading the session data.
-# 'sess_time_to_update' = How many seconds between revIgniter refreshing Session Information.
+# 'sess_cookie_name' 		= the name you want for the cookie
+# 'sess_expiration'  			= the number of SECONDS you want the session to last.
+#  by default sessions last 129600 seconds (36 hours related to server time).  Set to zero for no expiration.
+# 'sess_expire_on_close' 	= Whether to cause the session to expire automatically.
+# 'sess_encrypt_cookie' 	= TRUE/FALSE (boolean).  Whether to encrypt the cookie
+# 'sess_driver' 					= The storage driver to use: "files", "database" or empty. If set to emppty all data is stored in the cookie.
+# 'sess_save_location' 		= The location to save sessions to. Of course this is driver dependant.
+#  For the "files" driver, it's an absolute path to a writable directory or empty. If set to empty the standard temporary folder is used.
+#  For the "database" driver, it's a table name or empty. If set to empty "ri_sessions" is used as table name. You must create the
+#  table before enabling the "database" driver option.
+# 'sess_match_ip' 				= Whether to match the user's IP address when reading the session data. Note that some
+#  ISPs dynamically change the IP, so if you want a non-expiring session you will likely set this to FALSE.
+# 'sess_match_useragent'	= Whether to match the User Agent when reading the session data.
+# 'sess_time_to_update' 	= How many seconds between revIgniter refreshing Session Information.
 #
 ##
 
@@ -280,8 +282,8 @@ end if
 	put 129600 into gConfig["sess_expiration"]
 	put FALSE into gConfig["sess_expire_on_close"]
 	put FALSE into gConfig["sess_encrypt_cookie"]
-	put FALSE into gConfig["sess_use_database"]
-	put "ri_sessions" into gConfig["sess_table_name"]
+	put "" into gConfig["sess_driver"]
+	put "" into gConfig["sess_save_location"]
 	put FALSE into gConfig["sess_match_ip"]
 	put TRUE into gConfig["sess_match_useragent"]
 	put 300 into gConfig["sess_time_to_update"]

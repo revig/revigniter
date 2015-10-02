@@ -93,17 +93,17 @@ rigLoadLibrary "Config"
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 17-06-09
---| Last Mod: 27-06-13
+--| Last Mod: 17-09-15
 --| Requires: Log library, _rigInputConfig, _rigCleanInputData(), _rigVarPostFallback(),
---|           rigLogMessage, _rigCSRFconfig, rigCSRFverify
+--|           	rigLogMessage, _rigCSRFconfig, rigCSRFverify
 --|
---| Summary: This function does the following:
---| 	                Cleans $_GET data (if query strings are enabled) 
---|                   Cleans $_POST data
---|                   Cleans special cookie data
---|                   Standardizes newline characters to LF
+--| Summary: This command does the following:
+--| 	          Cleans $_GET data (if query strings are enabled) 
+--|             Cleans $_POST data
+--|             Cleans special cookie data
+--|             Standardizes newline characters to LF
 --| 
 --| Format:  _rigSanitizeGlobals
 --|
@@ -175,7 +175,44 @@ command _rigSanitizeGlobals
 		if (sContentType is "application/lc.array") or (sContentType is "application/lc.array.compressed") then
 			put rigSerializedPOSTtoArray($_POST) into $_POST
 		else
-					
+			
+      # WORKAROUND FOR ENGINE BUG 15946 INTRODUCED WITH VERSION 7:
+      # CHECKBOX KEY VALUE PAIRS IN $_POST_RAW ARE NOT CONVERTED TO ARRAYS IN $_POST
+      # THAT SAID THIS IS NEEDED IF MULTIDIMENSIONAL ARRAYS ARE USED AS FIELD NAMES
+      #
+      # GET $_POST ELEMENTS AS ARRAYS FROM RAW DATA
+      put URLdecode($_POST_RAW) into tPostRaw
+      
+      if "[]" is in tPostRaw then
+        put empty into tCurrentVarKey
+
+        set the itemdelimiter to "&"
+        repeat for each item tVarPair in tPostRaw
+          set the itemdelimiter to "="
+          put item 1 of tVarPair into tVarKey
+          put item 2 of tVarPair into tVarValue
+
+          # IS THIS KEY AN ARRAY
+          if char -2 to -1 of tVarKey is "[]" then
+            if tVarKey <> tCurrentVarKey then
+              # THIS IS A NEW ARRAY
+              put tVarKey into tCurrentVarKey
+              put 1 into tKeyCounter
+            else
+              # ADD KEY VALUE PAIRS TO CURRENT ARRAY
+              add 1 to tKeyCounter
+            end if
+      
+            # ADD NEW $_POST ARRAY ELEMENT WITHOUT BRACKETS
+            put char 1 to -3 of tVarKey into tVarKey
+            put tVarValue into $_POST[tVarKey][tKeyCounter]
+
+          end if
+
+          set the itemdelimiter to "&"
+        end repeat
+      end if
+			
 			put _rigCleanInputData($_POST) into $_POST
 		end if
 	end if  -- variance
@@ -628,14 +665,14 @@ end _rigCleanInputData
 --| FUNCTION _rigCleanInputKeys
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-06-09
---| Last Mod: 17-06-09
+--| Last Mod: 17-09-15
 --| Requires: --
 --|
 --| Summary: This is a helper function. To prevent malicious users
---|                    from trying to exploit keys we make sure that keys are
---|                    only named with alpha-numeric text and a few other items.
+--|            from trying to exploit keys we make sure that keys are
+--|            only named with alpha-numeric text and a few other items.
 --| 
 --| Format:  _rigCleanInputKeys(param1)
 --|
@@ -645,7 +682,11 @@ end _rigCleanInputData
 ----------------------------------------------------------------------*/
 
 function _rigCleanInputKeys pKey
-	if matchchunk(pKey, "(?i)^[a-z0-9:_\/-]+$") is FALSE then
+  # BRACKETS ARE INCLUDED IN THE REGEX BECAUSE SINCE ENGINE VERSION 7
+  # CHECKBOX KEY VALUE PAIRS IN $_POST_RAW ARE NOT CONVERTED
+  # TO ARRAYS IN $_POST AND ARRAY KEYS KEEP BRACKETS IN $_POST, SEE BUG 15946
+  # THAT SAID BRACKETS ARE INCLUDED FOR MULTIDIMENSIONAL ARRAYS USED AS FIELD NAMES
+  if matchchunk(pKey, "(?i)^[a-z0-9:_\/-\[\]]+$") is FALSE then
 		put "Disallowed Key Characters."
 		exit to top
 	end if
@@ -747,9 +788,9 @@ end rigVarGet
 --| FUNCTION rigVarPost
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 20-06-09
---| Last Mod: 27-06-13
+--| Last Mod: 10-09-15
 --| Requires: _rigFetchFromArray(), rigXssClean()
 --|
 --| Summary: Fetch an item from the POST array.
@@ -758,7 +799,7 @@ end rigVarGet
 --|
 --| Parameters: string <pIndex>, bool <pXSSclean>
 --|
---| Return: string
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigVarPost pIndex pXSSclean
@@ -772,10 +813,12 @@ function rigVarPost pIndex pXSSclean
 		return _rigFetchFromArray($_POST, pIndex, tXSSclean)
 		
 	else
-		if pXSSclean is TRUE then
-			return rigXssClean($_POST)
+		if $_POST <> empty then
+			if pXSSclean is TRUE then
+				return rigXssClean($_POST)
+			end if
+			return $_POST
 		end if
-		return $_POST
 	end if
 	
 	return FALSE
@@ -1081,9 +1124,9 @@ end rigValidIP
 --| FUNCTION _rigValid_ipv4
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 02-07-12
---| Last Mod: --
+--| Last Mod: 29-09-15
 --| Requires: --
 --|
 --| Summary: Validate ipv4 address.
@@ -1111,7 +1154,7 @@ function _rigValid_ipv4 pIP
 	end if
 
 	# CHECK EACH SEGMENT
-	repeat for each item tSegment in tIPsegments then
+	repeat for each item tSegment in tIPsegments
 		# IP SEGMENTS MUST BE DIGITS AND CAN NOT BE 
 		# LONGER THAN 3 DIGITS OR GREATER THEN 255
 		put "[^0-9]" into tRegEx

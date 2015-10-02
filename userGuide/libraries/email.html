@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -103,7 +103,9 @@
 </ul>
 
 
-<p class="important"><strong>Note:</strong> The SMTP protocol is implemented, but, as of server version 7.0.6-rc-1 it is not available on Linux because the commands open socket with message and write to socket are still not working in the Linux server engine. On Mac OS X SMTP should work as expected since server version 7.0.1.</p>
+<p class="important"><strong>Note:</strong> On Linux the SMTP protocol requires LiveCode server version 7.1.0 RC 1 or higher. On Mac OS X SMTP should work as expected since server version 7.0.1.</p>
+
+<p class="important"><strong>Note:</strong> The mail protocol is deprecated and will be removed in future versions.</p>
 
 
 <h2>Sending Email</h2>
@@ -177,7 +179,7 @@ rigRunInitialEmailConfig sEmailConf</code></pre>
 </tr><tr>
 <td class="td"><strong>mailUseragent</strong></td><td class="td">revIgniter</td><td class="td">None</td><td class="td">The "user agent".</td>
 </tr><tr>
-<td class="td"><strong>protocol</strong></td><td class="td">mail</td><td class="td">mail, sendmail, or smtp</td><td class="td">The mail sending protocol.</td>
+<td class="td"><strong>protocol</strong></td><td class="td">sendmail</td><td class="td">mail, sendmail, or smtp</td><td class="td">The mail sending protocol. Please note that mail is deprecated and will be removed in future versions.</td>
 </tr><tr>
 <td class="td"><strong>mailPath</strong></td><td class="td">/usr/sbin/sendmail</td><td class="td">None</td><td class="td">The server path to Sendmail.</td>
 </tr><tr>
@@ -226,7 +228,7 @@ rigRunInitialEmailConfig sEmailConf</code></pre>
 <p>Sets the email address and name of the person sending the email:</p>
 <pre><code>rigMailFrom "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
 
-<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you use the default protocol setting (mail). Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. 
+<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you set the protocol to mail. Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. 
 	It's the account name and host name of the sending user.</p>
 
 <h3>rigReplyTo</h3>

@@ -50,19 +50,19 @@ local sValidSetMethods
 # SET INITIAL VALUES
 put "revIgniter" into sMailUseragent
 put "/usr/sbin/sendmail" into sMailpath		-- Sendmail path
-put "mail" into sProtocol 								-- mail/sendmail/smtp
+put "sendmail" into sProtocol 							-- mail/sendmail/smtp
 put "25" into sSmtpPort										-- SMTP Port
 put 300000 into sSmtpTimeout							-- SMTP Timeout in milliseconds
-put TRUE into sWordwrap										-- TRUE/FALSE  Turns word-wrap on/off
+put TRUE into sWordwrap									-- TRUE/FALSE  Turns word-wrap on/off
 put "76" into sWrapchars									-- Number of characters to wrap at
 put "text" into sMailtype									-- text/html  Defines email formatting
 put "utf-8" into sCharset									-- Default char set: iso-8859-1 or us-ascii
 put "mixed" into sMultipart								-- "mixed" (in the body) or "related" (separate)
 put FALSE into sValidate									-- TRUE/FALSE.  Enables email validation
-put "3" into sPriority										-- Default priority (1 - 5)
+put "3" into sPriority											-- Default priority (1 - 5)
 -- put "\n" into sMailNewline
 -- put "\n" into sCrlf
-put LF into sMailNewline									-- Default newline.  CRLF or LF (Use CRLF to comply with RFC 822)
+put LF into sMailNewline										-- Default newline.  CRLF or LF (Use CRLF to comply with RFC 822)
 put LF into sCrlf													-- The RFC 2045 compliant CRLF for quoted-printable is numberToChar(13) & numberToChar(10).  Apparently some servers,
 																					-- even on the receiving end think they need to muck with CRLFs, so using LF, while
 																					-- distasteful, is the only thing that seems to work for all environments.
@@ -831,33 +831,33 @@ end rigSet_sWordwrap
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSet_sProtocol
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 17-08-09
---| Last Mod: 17-08-09
---| Requires: --
+--| Last Mod: 16-08-15
+--| Requires: rigInArray()
 --|
 --| Summary: Set protocol.
 --| 
 --| Format:  rigSet_sProtocol param1
 --|
---| Parameters: bool <pProtocol>
+--| Parameters: string <pProtocol>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSet_sProtocol pProtocol
 	if pProtocol is empty then
-		put "mail" into tProtocol
+		put "sendmail" into tProtocol
 	else
 		put pProtocol into tProtocol
 	end if
 
 	if rigInArray(_sProtocols, tProtocol) is FALSE then
-		put "mail" into sProtocol
+		put "sendmail" into sProtocol
 	else
 		put toLower(tProtocol) into sProtocol
 	end if
@@ -1067,14 +1067,14 @@ end _rigGetMessageID
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetProtocol
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 16-08-09
---| Last Mod: 16-08-09
---| Requires: --
+--| Last Mod: 16-08-15
+--| Requires: rigInArray()
 --|
 --| Summary: Get mail protocol.
 --| 
@@ -1083,7 +1083,7 @@ end _rigGetMessageID
 --| Parameters: bool <pReturn>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigGetProtocol pReturn
 	if pReturn is empty then
@@ -1095,7 +1095,7 @@ function _rigGetProtocol pReturn
 	put toLower(sProtocol) into sProtocol
 
 	if rigInArray(_sProtocols, sProtocol) is FALSE then
-		put "mail" into sProtocol
+		put "sendmail" into sProtocol
 	end if
 
 	if tReturn is TRUE then

@@ -419,13 +419,13 @@ end rigGetFileInfo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigGetMimeByExtension
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-07-09
---| Last Mod: 10-07-09
+--| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigFetchMimeType()
 --|
 --| Summary: Translates a file extension into a mime type based on config/mimes.lc. 
@@ -436,7 +436,7 @@ end rigGetFileInfo
 --| Parameters: string <pFile> path to file
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigGetMimeByExtension pFile
 	set the itemDelimiter to "."
@@ -444,7 +444,7 @@ function rigGetMimeByExtension pFile
 
 	if sMimesFileLoaded is not TRUE then
 		try
-			include gAPPPATH & "config/mimes" & gEXT
+			require gAPPPATH & "config/mimes" & gEXT
 		catch err
 			rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gEXT
 			return FALSE
@@ -643,13 +643,13 @@ end rigFileInfo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFilterDots
 --|
 --| Author: rabit, Oliver Kenyon (revArticles)
---| Version:  1.0
+--| Version:  1.1
 --| Created:  --
---| Last Mod: 09-07-09
+--| Last Mod: 25-09-15
 --| Requires:  --
 --|
 --| Summary: Filters the strings "." and ".." from a list.
@@ -659,27 +659,26 @@ end rigFileInfo
 --| Parameters: string <pList>, bool <pDetailed>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFilterDots pList pDetailed
-    put pList into tList
     if pDetailed is not true then
-        filter tList without "."
-        filter tList without ".."
-        filter tList without ".DS_Store" -- Mac only
+        filter pList without "."
+        filter pList without ".."
+        filter pList without ".DS_Store" -- Mac only
         
         -----????????????????????
-        filter filesList without "Icon%0D"
-        filter filesList without "MACSfdrp" -- remove folder aliases
+        filter pList without "Icon%0D"
+        filter pList without "MACSfdrp" -- remove folder aliases
         -----????????????????????
     else
-        filter tList without "*.,*"
-        filter tList without "*..,*"
-        filter tList without "*.DS_Store,*" -- Mac only
-        filter filesList without "Icon%0D*"
-        filter filesList without "*,MACSfdrp" -- remove folder aliases
+        filter pList without "*.,*"
+        filter pList without "*..,*"
+        filter pList without "*.DS_Store,*" -- Mac only
+        filter pList without "Icon%0D*"
+        filter pList without "*,MACSfdrp" -- remove folder aliases
     end if
-    return tList
+    return pList
 end rigFilterDots
 
 

@@ -47,26 +47,26 @@ local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetRouting
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 19-06-09
---| Last Mod: 20-01-10
+--| Last Mod: 17-09-15
 --| Requires: _rigFilterUri, rigSetController, rigSetHandler, _rigValidateQueryRequest(), _rigFetchUriString
---|                  rigShowError, _rigSetRequest, rigLogMessage, _rigRemoveUrlSuffix, _rigExplodeSegments, _rigParseRoutes, rigTrim()
+--|            rigShowError, _rigSetRequest, rigLogMessage, _rigRemoveUrlSuffix, _rigExplodeSegments, _rigParseRoutes, rigTrim()
 --|
 --| Summary:  Set the route mapping
---|                    This command determines what should be served based on the URI request,
---|                    as well as any "routes" that have been set in the routing config file.
+--|             This command determines what should be served based on the URI request,
+--|             as well as any "routes" that have been set in the routing config file.
 --| 
 --| Format:  _rigSetRouting
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigSetRouting
 	## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
@@ -99,7 +99,7 @@ command _rigSetRouting
 		end if
 
 	# LOAD THE routes.lc FILE.
-	include gAPPPATH & "config/routes" & gEXT
+	require gAPPPATH & "config/routes" & gEXT
 	put gRoute into sRoutes
 
 	# SET THE DEFAULT CONTROLLER SO WE CAN DISPLAY IT IN THE EVENT

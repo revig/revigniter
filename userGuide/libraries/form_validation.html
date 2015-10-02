@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -833,6 +833,31 @@ end fetchValidationConf
 
 <p class="important">Please note that you MUST add the <dfn>fetchValidationConf()</dfn> function to your configuration file as shown above.</p>
 
+
+<p><br />There is an alternative to generate the rules array in a config file. It significantly reduces the required amount of code. Using this approach the example above would read like:</p>
+
+
+<pre><code>&lt;?rev
+
+
+local sConfig
+
+
+rigAddValidationGrp
+rigAddValidationRules "username", "Username", "requiredR", sConfig
+rigAddValidationRules "password", "Password", "requiredR", sConfig
+rigAddValidationRules "passconf", "Password", "requiredR", sConfig
+rigAddValidationRules "email", "Email", "requiredR", sConfig
+
+
+# THIS FUNCTION IS MANDATORY
+function fetchValidationConf
+	return sConfig
+end fetchValidationConf
+</code></pre>
+
+
+
 <h2>Creating Sets of Rules</h2>
 
 <p>In order to organize your rules into "sets" requires that you place them into "sub arrays".  Consider the following example, showing two sets of rules.
@@ -885,6 +910,37 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+
+
+<p><br />Similar to the simple array example above there is an alternative to generate rules organized into "sets" too. Here is an example using the rules above:</p>
+
+
+<pre><code>&lt;?rev
+
+
+local sConfig
+
+
+rigAddValidationGrp "signup"
+rigAddValidationRules "username", "Username", "requiredR", sConfig
+rigAddValidationRules "password", "Password", "requiredR", sConfig
+rigAddValidationRules "passconf", "Password", "requiredR", sConfig
+rigAddValidationRules "email", "Email", "requiredR", sConfig
+
+rigAddValidationGrp "email"
+rigAddValidationRules "emailaddress", "EmailAddress", "requiredR|validEmailR", sConfig
+rigAddValidationRules "name", "Name", "requiredR|alphaR", sConfig
+rigAddValidationRules "title", "Title", "requiredR", sConfig
+rigAddValidationRules "message", "MessageBody", "requiredR", sConfig
+
+
+
+# THIS FUNCTION IS MANDATORY
+function fetchValidationConf
+	return sConfig
+end fetchValidationConf
+</code></pre>
+
 
 
 <h2>Calling a Specific Rule Group</h2>
@@ -968,6 +1024,30 @@ end fetchValidationConf
 </code></pre>
 
 <p><dfn>When a rule group is named identically to a controller/handler it will be used automatically when the rigFormValidRun() function is invoked from that controller/handler.</dfn></p>
+
+<p><br />Similar to examples above you can reduce the amount of required code using the following approach:</p>
+
+
+<pre><code>&lt;?rev
+
+
+local sConfig
+
+
+rigAddValidationGrp "member/signup"
+rigAddValidationRules "username", "Username", "requiredR", sConfig
+rigAddValidationRules "password", "Password", "requiredR", sConfig
+rigAddValidationRules "passconf", "Password", "requiredR", sConfig
+rigAddValidationRules "email", "Email", "requiredR", sConfig
+
+
+
+# THIS FUNCTION IS MANDATORY
+function fetchValidationConf
+	return sConfig
+end fetchValidationConf
+</code></pre>
+
 
 <p>&nbsp;</p>
 
@@ -1295,6 +1375,16 @@ put the result into tStringValidResult
 </ul>
 
 
+<h3>rigAddValidationGrp <var>pGroup</var></h3>
+
+<p>Defines a group name for a set of validation rules used in a validation configuration file, see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>. The "pGroup" parameter is optional. If you neither want to specify a group nor an associated controller handler you can omit it.</p>
+
+
+<h3>rigAddValidationRules <var>pField</var>, <var>pLabel</var>, <var>pRules</var>, <var>pConfArray</var></h3>
+
+<p>Adds rules to a validation array in a configuration file. The first parameter is the name of the form field. The second parameter specifies a form field label used for example in error messages to identify a field. The third parameter includes all required rules. The fourth parameter is the name of your validation array variable used in your validation config file.  Please see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
+
+
 <h3>rigFormValidRun()</h3>
 
 <p>Runs the validation routines.  Returns boolean TRUE on success and FALSE on failure. You can optionally pass the name of the validation
@@ -1324,6 +1414,7 @@ rigSetPrefilledValues tPrefilledArray
 </code></pre>
 
 
+
 <p>&nbsp;</p>
 
 <a name="helperreference"></a>
@@ -1340,13 +1431,17 @@ rigSetPrefilledValues tPrefilledArray
 <p>The error delimiters can be optionally specified.  See the <a href="#errordelimiters">Changing the Error Delimiters</a> section above.</p>
 
 
-
 <h3>rigValidationErrors()</h3>
 <p>Shows all error messages as a string:  Example:</p>
 
 <pre><code>put rigValidationErrors() into gData["formErrors"]</code></pre>
 
 <p>The error delimiters can be optionally specified.  See the <a href="#errordelimiters">Changing the Error Delimiters</a> section above.</p>
+
+
+<h3>rigSetErrorDelimiters <var>pOpenTag</var>, <var>pCloseTag</var></h3>
+
+<p>Use this handler to change error delimiters globally in your controller. Please see the <a href="#errordelimiters">Changing the Error Delimiters</a> section above.</p>
 
 
 
