@@ -159,7 +159,7 @@ the cookie was written. This time is configurable by changing the gConfig["sess_
 
 <p>Any piece of information from the session array is available using the following function:</p>
 
-<pre><code>rigSessUserdata("<samp>item</samp>")</code></pre>
+<pre><code>get rigSessUserdata("<samp>item</samp>")</code></pre>
 
 <p>Where <samp>item</samp> is the array index corresponding to the item you wish to fetch.  For example, to fetch the session ID you
 will do this:</p>
@@ -167,6 +167,10 @@ will do this:</p>
 <pre><code>put rigSessUserdata("<samp>session_id</samp>") into tSessionID</code></pre>
 
 <p><strong>Note:</strong> The function returns FALSE (boolean) if the item you are trying to access does not exist.</p>
+
+<p>To get all session data as an array simply omit the key parameter.</p>
+
+<pre><code>get rigSessUserdata()</code></pre>
 
 
 <h2>Adding Custom Session Data</h2>
