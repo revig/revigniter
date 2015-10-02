@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Upgrading from 1.6.6 to 1.6.7 : revIgniter User Guide</title>
+		<title>Upgrading from 1.7.1 to 1.7.2 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Upgrading from 1.6.6 to 1.6.7</li>
+			 		 	<li class="active">Upgrading from 1.7.1 to 1.7.2</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,7 +85,7 @@
 	
 <div id="content">
 
-<h1>Upgrading from 1.6.6 to 1.6.7</h1>
+<h1>Upgrading from 1.7.1 to 1.7.2</h1>
 
 
 <p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
@@ -94,7 +94,6 @@
 
 <h2>Step 1: Update your revIgniter files</h2>
 
-
 <p>Replace this file in your root folder with the new version:</p>
 
 <ul>
@@ -102,6 +101,66 @@
 </ul>
 
 <p>You may need to take your modifications made in your old index file over in case you altered the path to your application or system folder.</p>
+
+<p>Make a copy of the configuration file in your "system/application/config" folder and replace this file with the new version:</p>
+
+<ul>
+	<li><dfn>config.lc</dfn></li>
+</ul>
+
+<p>Replace the default settings in this file with your settings saved before. If you used a database to validate session IDs make sure you set gConfig["sess_driver"] to "database" and gConfig["sess_save_location"] to the name of your session data table.</p>
+
+
+<p>Add this folder and its content to your "system/libraries" folder:</p>
+
+<ul>
+	<li><dfn>sessionDrivers</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Authentication.lc</dfn></li>
+	<li><dfn>Config.lc</dfn></li>
+	<li><dfn>Email.lc</dfn></li>
+	<li><dfn>Formvalidation.lc</dfn></li>
+	<li><dfn>Hooks.lc</dfn></li>
+	<li><dfn>Input.lc</dfn></li>
+	<li><dfn>Language.lc</dfn></li>
+	<li><dfn>Router.lc</dfn></li>
+	<li><dfn>Session.lc</dfn></li>
+	<li><dfn>Useragent.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/helpers" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>downloadHelper.lc</dfn></li>
+	<li><dfn>fileHelper.lc</dfn></li>
+	<li><dfn>htmlHelper.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/database" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>DB.lc</dfn></li>
+	<li><dfn>DBdriver.lc</dfn></li>
+</ul>
+
+
+
+<p>Replace these files in your "system/revigniter" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>errorsList.txt</dfn></li>
+	<li><dfn>Common.lc</dfn></li>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
 
 <h2>Step 2: Update your user guide</h2>
 <p>Please replace your local copy of the user guide with the new version.</p>
