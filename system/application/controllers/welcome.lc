@@ -1,6 +1,6 @@
 <?rev
 
-# PUT YOUR METHOD NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+# PUT YOUR HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "welcome,index" into gControllerHandlers
 
 

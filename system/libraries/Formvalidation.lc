@@ -850,7 +850,7 @@ command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 			put foundTextVar2 into tParam
     		end if
 
-		# CALL THE METHOD THAT CORRESPONDS TO THE RULE
+		# CALL THE HANDLER THAT CORRESPONDS TO THE RULE
 		if tCallback is TRUE then
 			if tRule is not among the items of gControllerHandlers then
 				next repeat

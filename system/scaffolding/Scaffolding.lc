@@ -40,7 +40,7 @@ end if
 local sScaffCurrentTable, sScaffBaseURL, sScaffBaseURI, sScaffLang
 
 
-# PUT SCAFFOLDING METHOD NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+# PUT SCAFFOLDING HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigScaffView,rigScaffDelete,rigScaffDoDelete" into gControllerHandlers
 
 
