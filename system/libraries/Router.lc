@@ -201,7 +201,7 @@ end rigScaffoldingRequest
 --|
 --| Summary:  Set the Route.
 --|                    This handler takes an array of URI segments as
---|                    input, and sets the current controller/handler
+--|                    input, and sets the current controller/method
 --| 
 --| Format:  _rigSetRequest param1
 --|
@@ -225,7 +225,7 @@ command _rigSetRequest pSegmentsArray
 			put TRUE into sScaffoldingRequest
 			delete variable sRoutes[1]["scaffoldingTrigger"]
 		else
-			# A STANDARD HANDLER REQUEST
+			# A STANDARD METHOD REQUEST
 			rigSetHandler tSegmentsArray[2]
 		end if
 	else
@@ -357,7 +357,7 @@ end _rigValidateRequest
 --|
 --| Summary:  This handler matches any routes that may exist in
 --|                     the config/routes.lc file against the URI to
---|                     determine if the controller/handler needs to be remapped.
+--|                     determine if the controller/method needs to be remapped.
 --| 
 --| Format:  _rigParseRoutes
 --|

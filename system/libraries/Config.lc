@@ -340,8 +340,8 @@ function rigSiteURL pURI
       # GET CONTROLLER TRIGGER
       put rigFetchConfigItem("controllerTrigger") into tC
 
-      if "/" is in tURI then -- controller and handler 
-        # GET HANDLER TRIGGER
+      if "/" is in tURI then -- controller and method 
+        # GET METHOD TRIGGER
         put rigFetchConfigItem("methodTrigger") into tM 
         -- replace "/" with "&" & tM & "=" in tURI 
 
@@ -357,7 +357,7 @@ function rigSiteURL pURI
           add 1 to tSegment
              
           if tSegment > 1 then
-            # HANDLER SEGMENT
+            # METHOD SEGMENT
             if tSegment is 2 then
               put "&" & tM & "=" & thisItem after tQueryString
             else

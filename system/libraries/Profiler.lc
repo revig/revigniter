@@ -497,7 +497,7 @@ end _rigCompileURIstring
 --| Last Mod: 22-01-10
 --| Requires: rigCompileProfilerTemplate, rigLangLangLine()
 --|
---| Summary: Show the controller and handler that were called.
+--| Summary: Show the controller and method that were called.
 --| 
 --| Format:  _rigCompileControllerInfo()
 --|
