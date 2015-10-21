@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.2</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version173">Version 1.7.3</a></li>
 <li><a href="#version172">Version 1.7.2</a></li>
 <li><a href="#version171">Version 1.7.1</a></li>
 <li><a href="#version170">Version 1.7.0</a></li>
@@ -186,13 +187,28 @@
 
 
 
+
+<h2><a name="version173">&nbsp;</a>Version 1.7.3</h2>
+<p>Release Date: 2015-10-21</p>
+
+
+<p>
+<ul>
+	<li><strong>Fixed:</strong> issue regarding escaping wildcard characters in system/database/drivers/postgre/postgreDriver.lc -> rigEscapeStr() and in system/database/drivers/sqlite/sqliteDriver.lc -> rigEscapeStr(). Statements used to replace wildcard characters were in the wrong order.</li>
+	<li><strong>Changed:</strong> Rolled back workaround of version 1.7.2 for engine bug 15946. This bug is fixed since LiveCode version 8.0.0 DP 7 and 7.1.1 RC 1.</li>
+</ul>
+</p>
+
+
+
+
 <h2><a name="version172">&nbsp;</a>Version 1.7.2</h2>
 <p>Release Date: 2015-10-02</p>
 
 
 <p>
 <ul>
-	<li><strong>Added:</strong> handlers rigAddValidationGrp and rigAddValidationRules to system/libraries/Formvalidation.lc to reduce the amount of code needed to prepare a form validation array variable in system/application/config/validation.lc (thanks Alex). Please see the <a href="libraries/form_validation.html#savingtoconfig">Saving Sets of Validation Rules to a Config File</a> section of the User Guide.</li></li>
+	<li><strong>Added:</strong> handlers rigAddValidationGrp and rigAddValidationRules to system/libraries/Formvalidation.lc to reduce the amount of code needed to prepare a form validation array variable in system/application/config/validation.lc (thanks Alex). Please see the <a href="libraries/form_validation.html#savingtoconfig">Saving Sets of Validation Rules to a Config File</a> section of the User Guide.</li>
 	<li><strong>Added:</strong> session driver files system/libraries/sessionDrivers/sessionFilesDriver.lc and system/libraries/sessionDrivers/sessionDatabaseDriver.lc. These are required by the enhanced session library.</li></li>
 	<li><strong>Changed:</strong> User Guide, info about the SMTP protocol (see Email library) on Linux.</li>
 	<li><strong>Changed:</strong> User Guide, info about requirements for the Trackback library on Linux.</li>
