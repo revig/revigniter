@@ -1993,7 +1993,7 @@ end rigProtectIdentifiers
 --| Requires: --
 --|
 --| Summary: This function is used extensively by the Active Record library, and by
---|                    a couple methods in this library. 
+--|                    a couple handlers in this library. 
 --|                    It takes a column or table name (optionally with an alias) and inserts
 --|                    the table prefix onto it.  Some logic is necessary in order to deal with
 --|                    column names that include the path.  Consider a query like this:

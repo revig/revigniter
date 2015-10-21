@@ -1867,7 +1867,7 @@ end rigDbValuesSet
 --| Last Mod: 07-07-09
 --| Requires: _rigTrackAliases(), rigDbFrom, rigDbLimit, _rigCompileSelect(), rigDbQuery(), _rigResetSelect
 --|
---| Summary: Compiles the select statement based on the other methods called
+--| Summary: Compiles the select statement based on the other handlers called
 --|                    and runs the query.
 --| 
 --| Format:  rigDbGet(param1, param2, param3)
@@ -2469,7 +2469,7 @@ end _rigTrackAliases
 --| Requires: _rigMergeCache, rigImplode(), _rigLimit(), _rigProtectIdentifiers(),
 --|           	_rigFromTables, rigLoadHelper
 --|
---| Summary: Generates a query string based on which methods were used.
+--| Summary: Generates a query string based on which handlers were used.
 --|          	Should not be called directly. The rigDbGet() function calls it.
 --| 
 --| Format:  _rigCompileSelect(param1)
