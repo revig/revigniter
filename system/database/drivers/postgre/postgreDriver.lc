@@ -439,9 +439,9 @@ end rigTransRollback
 --| FUNCTION rigEscapeStr
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 18-07-09
---| Last Mod: 21-12-14
+--| Last Mod: 06-10-15
 --| Requires: rigNumToCodepoint()
 --|
 --| Summary: Escapes string.
@@ -490,9 +490,9 @@ function rigEscapeStr pStr pLike
 
 	# ESCAPE LIKE CONDITION WILDCARDS
 	if tLike is TRUE then
+		replace _sLikeEscapeChr with _sLikeEscapeChr & _sLikeEscapeChr in tStr
 		replace "%" with _sLikeEscapeChr & "%" in tStr
 		replace "_" with _sLikeEscapeChr & "_" in tStr
-		replace _sLikeEscapeChr with _sLikeEscapeChr & _sLikeEscapeChr in tStr
 	end if
 
 	return tStr

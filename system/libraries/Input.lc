@@ -93,9 +93,9 @@ rigLoadLibrary "Config"
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 17-06-09
---| Last Mod: 17-09-15
+--| Last Mod: 15-10-15
 --| Requires: Log library, _rigInputConfig, _rigCleanInputData(), _rigVarPostFallback(),
 --|           	rigLogMessage, _rigCSRFconfig, rigCSRFverify
 --|
@@ -175,44 +175,6 @@ command _rigSanitizeGlobals
 		if (sContentType is "application/lc.array") or (sContentType is "application/lc.array.compressed") then
 			put rigSerializedPOSTtoArray($_POST) into $_POST
 		else
-			
-      # WORKAROUND FOR ENGINE BUG 15946 INTRODUCED WITH VERSION 7:
-      # CHECKBOX KEY VALUE PAIRS IN $_POST_RAW ARE NOT CONVERTED TO ARRAYS IN $_POST
-      # THAT SAID THIS IS NEEDED IF MULTIDIMENSIONAL ARRAYS ARE USED AS FIELD NAMES
-      #
-      # GET $_POST ELEMENTS AS ARRAYS FROM RAW DATA
-      put URLdecode($_POST_RAW) into tPostRaw
-      
-      if "[]" is in tPostRaw then
-        put empty into tCurrentVarKey
-
-        set the itemdelimiter to "&"
-        repeat for each item tVarPair in tPostRaw
-          set the itemdelimiter to "="
-          put item 1 of tVarPair into tVarKey
-          put item 2 of tVarPair into tVarValue
-
-          # IS THIS KEY AN ARRAY
-          if char -2 to -1 of tVarKey is "[]" then
-            if tVarKey <> tCurrentVarKey then
-              # THIS IS A NEW ARRAY
-              put tVarKey into tCurrentVarKey
-              put 1 into tKeyCounter
-            else
-              # ADD KEY VALUE PAIRS TO CURRENT ARRAY
-              add 1 to tKeyCounter
-            end if
-      
-            # ADD NEW $_POST ARRAY ELEMENT WITHOUT BRACKETS
-            put char 1 to -3 of tVarKey into tVarKey
-            put tVarValue into $_POST[tVarKey][tKeyCounter]
-
-          end if
-
-          set the itemdelimiter to "&"
-        end repeat
-      end if
-			
 			put _rigCleanInputData($_POST) into $_POST
 		end if
 	end if  -- variance
@@ -665,9 +627,9 @@ end _rigCleanInputData
 --| FUNCTION _rigCleanInputKeys
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-06-09
---| Last Mod: 17-09-15
+--| Last Mod: 15-10-15
 --| Requires: --
 --|
 --| Summary: This is a helper function. To prevent malicious users
@@ -682,11 +644,7 @@ end _rigCleanInputData
 ----------------------------------------------------------------------*/
 
 function _rigCleanInputKeys pKey
-  # BRACKETS ARE INCLUDED IN THE REGEX BECAUSE SINCE ENGINE VERSION 7
-  # CHECKBOX KEY VALUE PAIRS IN $_POST_RAW ARE NOT CONVERTED
-  # TO ARRAYS IN $_POST AND ARRAY KEYS KEEP BRACKETS IN $_POST, SEE BUG 15946
-  # THAT SAID BRACKETS ARE INCLUDED FOR MULTIDIMENSIONAL ARRAYS USED AS FIELD NAMES
-  if matchchunk(pKey, "(?i)^[a-z0-9:_\/-\[\]]+$") is FALSE then
+  if matchchunk(pKey, "(?i)^[a-z0-9:_\/-]+$") is FALSE then
 		put "Disallowed Key Characters."
 		exit to top
 	end if
