@@ -619,7 +619,7 @@ end rigDbJoin
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbWhere
 --|
 --| Author: rabit
@@ -629,14 +629,14 @@ end rigDbJoin
 --| Requires: _rigWhere
 --|
 --| Summary: Generates the WHERE portion of the query. Separates
---|                    multiple calls with AND. Set the third parameter to FALSE with manually wrtitten where clauses.
+--|            multiple calls with AND. Set the third parameter to FALSE with manually written where clauses.
 --| 
 --| Format:  rigDbWhere param1, param2, param3
 --|
 --| Parameters: mixed<pKey>, mixed <pValue>, bool <pEscape>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbWhere pKey pValue pEscape
 	if pValue is empty then
