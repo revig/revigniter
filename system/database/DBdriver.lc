@@ -1593,9 +1593,9 @@ end rigDbUpdateString
 --| FUNCTION _rigHasOperator
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 25-09-09
---| Last Mod: 08-08-15
+--| Last Mod: 12-11-15
 --| Requires: rigTrim()
 --|
 --| Summary: Tests whether the string has an SQL operator.
@@ -1608,7 +1608,7 @@ end rigDbUpdateString
 ----------------------------------------------------------------------*/
 
 function _rigHasOperator pStr
-  get matchtext(rigTrim(pStr), "(?i)(<|>|!|=|\sIS NULL|\sIS NOT NULL|\sEXISTS|\sBETWEEN|\sLIKE|\sIN\s*\()")
+  get matchtext(rigTrim(pStr), "(?i)(<|>|!|=|\sIS NULL|\sIS NOT NULL|\sEXISTS|\sBETWEEN|\sLIKE|\sIN\s*\(?)")
 
 	return it
 end _rigHasOperator
