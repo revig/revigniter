@@ -619,24 +619,24 @@ end rigDbJoin
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbWhere
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 25-09-09
---| Last Mod: 25-09-09
+--| Last Mod: 12-11-15
 --| Requires: _rigWhere
 --|
---| Summary: Generates the WHERE portion of the query. Separates
---|                    multiple calls with AND. Set the third parameter to FALSE with manually wrtitten where clauses.
+--| Summary: Generates the WHERE portion of the query. Separates multiple calls with AND.
+--|            Set the third parameter to FALSE with manually written where clauses.
 --| 
 --| Format:  rigDbWhere param1, param2, param3
 --|
 --| Parameters: mixed<pKey>, mixed <pValue>, bool <pEscape>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbWhere pKey pValue pEscape
 	if pValue is empty then
@@ -645,11 +645,17 @@ command rigDbWhere pKey pValue pEscape
 		put pValue into tValue
 	end if
 
-	if pEscape is empty then
-		put TRUE into tEscape
-	else
-		put pEscape into tEscape
-	end if
+  # CHECK IF WE ARE DEALING WITH A SUBQUERY
+  # IF SO SET THE ESCAPE PARAMETER TO FALSE
+  if word 1 of pValue is among the items of "(SELECT,(INSERT,(UPDATE,(DELETE" then
+    put FALSE into tEscape
+  else
+	  if pEscape is empty then
+		  put TRUE into tEscape
+	  else
+		  put pEscape into tEscape
+	  end if
+  end if
 
 	_rigWhere pKey, tValue, "AND ", tEscape
 end rigDbWhere
@@ -1862,22 +1868,23 @@ end rigDbValuesSet
 --| FUNCTION rigDbGet
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 07-07-09
---| Last Mod: 07-07-09
+--| Last Mod: 12-11-15
 --| Requires: _rigTrackAliases(), rigDbFrom, rigDbLimit, _rigCompileSelect(), rigDbQuery(), _rigResetSelect
 --|
---| Summary: Compiles the select statement based on the other handlers called
---|                    and runs the query.
+--| Summary: Compiles the select statement based on the other handlers called,
+--|            runs the query or returns the query string if requested.
 --| 
 --| Format:  rigDbGet(param1, param2, param3)
 --|
---| Parameters: string <pTable> the table, integer <pLimit> the limit clause,  integer <pOffset> the offset clause
+--| Parameters: string <pTable> the table, integer <pLimit> the limit clause,
+--|						integer <pOffset> the offset clause, bool <pReturnSubqueryString>
 --|
---| Return: array
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigDbGet pTable pLimit pOffset
+function rigDbGet pTable pLimit pOffset pReturnSubqueryString
 	if pTable <> "" then
 		get _rigTrackAliases(pTable)
 		rigDbFrom pTable
@@ -1888,13 +1895,17 @@ function rigDbGet pTable pLimit pOffset
 	end if
 
 	put _rigCompileSelect() into tSQL
+	
+  if pReturnSubqueryString is TRUE then
+    _rigResetSelect
+    return " (" & tSQL & ")"
+  end if
+	
 	put rigDbQuery(tSQL) into tResult
 	_rigResetSelect
 
 	return tResult
 end rigDbGet
-
-
 
 
 
