@@ -413,14 +413,14 @@ end _rigRemoveUrlSuffix
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigExplodeSegments
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 19-06-09
---| Last Mod: 11-10-09
---| Requires: rigTrim()
+--| Last Mod: 01-12-15
+--| Requires: rigTrim(), _rigFilterUri(), rigUriString()
 --|
 --| Summary:  Explode the URI Segments. The individual segments will
 --|                     be stored in the gSegments array.
@@ -430,9 +430,11 @@ end _rigRemoveUrlSuffix
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigExplodeSegments
+	put the number of lines in the keys of gSegments into tNumKeys
+	
 	# SEGMENT BASED URLs
 	if gConfig["enableQueryStrings"] is not TRUE then
 		replace "\\" with "/" in sUriString
@@ -442,13 +444,13 @@ command _rigExplodeSegments
 		set the itemDelimiter to "/"
 		repeat with i = 1 to the number of items of sUriString
 			put item i of sUriString into tTempStr
+			
 			# TRIM WHITESPACE
-			-- put replacetext(tTempStr,"(^\s+)|(\s+$)",empty) into tTempStr
 			put rigTrim(tTempStr) into tTempStr
+			
 			# FILTER SEGMENTS FOR SECURITY
 			put _rigFilterUri(tTempStr) into tTempStr
 			if tTempStr <> "" then
-				put the number of lines in the keys of gSegments into tNumKeys
 				add 1 to tNumKeys
 				put tTempStr into gSegments[tNumKeys]
 			end if
@@ -480,7 +482,6 @@ command _rigExplodeSegments
 		put tTempStr1 & "=" & tTempStr2 into tTempStr
 
 		if tTempStr <> "" then
-			put the number of lines in the keys of gSegments into tNumKeys
 			add 1 to tNumKeys
 			put tTempStr into gSegments[tNumKeys]
 		end if
