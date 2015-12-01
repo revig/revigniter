@@ -342,14 +342,14 @@ end rigUriAdjusted
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigFilterUri
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 19-06-09
---| Last Mod: 19-06-09
---| Requires: --
+--| Last Mod: 01-12-15
+--| Requires: rigShowError
 --|
 --| Summary: Filter segments for malicious characters.
 --| 
@@ -358,11 +358,11 @@ end rigUriAdjusted
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigFilterUri pStr
 	if pStr <> "" and rigFetchConfigItem("permittedUriChars") <> "" and rigFetchConfigItem("enableQueryStrings") is FALSE then
-		if matchchunk(pStr, rigFetchConfigItem("permittedUriChars")) is TRUE then
+		if matchchunk(pStr, "(?i)^[" & rigFetchConfigItem("permittedUriChars") & "]+$") is FALSE then
 			# CHARS NOT PERMITTED FOUND
 			put new header "HTTP/1.1 400 Bad Request"
 			rigShowError "The URI you submitted has disallowed characters." 
