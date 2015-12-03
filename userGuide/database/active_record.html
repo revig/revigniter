@@ -755,7 +755,7 @@ get rigDbDelete("mytable", tArray)
 -- "DELETE FROM mytable 
 -- WHERE id = " & tID</code></pre>
 
-<p>The first parameter is the table name, the second is the where clause. You can also use the <dfn>rigDbWhere</dfn> or <dfn>rigDbOrWhere</dfn> handlers instead of passing
+<p>The first parameter is the table name, the second is the where clause. You can also use the <dfn>rigDbWhere</dfn>, <dfn>rigDbOrWhere</dfn> or <dfn>rigDbWhereIn</dfn> handlers instead of passing
 the data to the second parameter of the function:</p>
 
 <pre><code>rigDbWhere "id", tID
