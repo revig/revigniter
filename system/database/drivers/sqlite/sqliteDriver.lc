@@ -831,10 +831,10 @@ end _rigTruncate
 --| FUNCTION _rigDelete
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 11-04-14
---| Last Mod: --
---| Requires: rigFetchDBactiveRecSetting()
+--| Last Mod: 03-12-15
+--| Requires: rigFetchDBactiveRecSetting(), rigNumToCodepoint()
 --|
 --| Summary: Generates a platform-specific delete string from the supplied data.
 --| 
@@ -857,8 +857,9 @@ function _rigDelete pTable pWhere pLike pLimit
 	if (the number of lines in the keys of pWhere > 0) or (the number of lines in the keys of tLike > 0) then
 		put LF & "WHERE " into tConditions
 		put rigFetchDBactiveRecSetting("where") into tARwhere
-		combine tARwhere using comma
-		replace comma with LF in tARwhere
+		put rigNumToCodepoint(1) into tSeparator
+		combine tARwhere using tSeparator
+		replace tSeparator with LF in tARwhere
 		put tARwhere after tConditions
 		
 		if (the number of lines in the keys of pWhere > 0) and (the number of lines in the keys of tLike > 0) then
