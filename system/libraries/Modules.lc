@@ -183,7 +183,7 @@ end rigLoadModule
 --| 
 --| Format:  rigRunModule(param1)
 --|
---| Parameters: string <pModuleSegments>, array <pParamsA>
+--| Parameters: string <pModuleSegments>, array <pParamsA> (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
