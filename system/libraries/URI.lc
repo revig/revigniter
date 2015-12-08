@@ -695,9 +695,9 @@ end rigRuriToAssoc
 --| FUNCTION _rigUriToAssoc
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 11-10-09
---| Last Mod: 24-08-12
+--| Last Mod: 08-12-15
 --| Requires: rigTotalSegments(), rigSegmentArray(), rigTotalRsegments(), rigRSegmentArray()
 --|
 --| Summary: Generate a key value pair from the URI string or Re-routed URI string.
@@ -763,11 +763,14 @@ function _rigUriToAssoc pN pDefault pWhich
 			put tSegmentArray[i] into tSlicedArray[tK]
 		end repeat
 
+		put 0 into tIncr
 		put 0 into tI
 		put "" into tLastVal
 		
-		repeat with tKey = 1 to (the number of lines in the keys of tSlicedArray)
-			put tSlicedArray[tKey] into tVal
+		repeat for each key tKey in tSlicedArray
+      add 1 to tIncr
+			
+			put tSlicedArray[tIncr] into tVal
 
 			if (tI mod 2) is not 0 then
 				put tVal into tRetval[tLastVal]
