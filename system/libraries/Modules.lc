@@ -179,13 +179,13 @@ end rigLoadModule
 --| Last Mod: 17-11-2015
 --| Requires: rigTrim(), rigModuleError(), _rigGetViewPath(), _rigSetViewPath, _rigDo
 --|
---| Summary: Return output (a view) from a module controller.
+--| Summary: Return output (a view) or a return value from a module controller.
 --| 
 --| Format:  rigRunModule(param1)
 --|
 --| Parameters: string <pModuleSegments>, array <pParamsA>
 --|
---| Return: string
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigRunModule pModuleSegments pParamsA
