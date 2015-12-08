@@ -109,21 +109,21 @@ end _setBaseURL
 --| FUNCTION rigLoadConfigFile
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 30-06-09
---| Last Mod: 17-09-15
---| Requires: rigShowError, rigLogMessage, rigIsMainConfigLoaded()
+--| Last Mod: 08-12-15
+--| Requires: rigIsMainConfigLoaded(), rigShowError, rigLogMessage
 --|
 --| Summary: Loads any configuration file.
 --| 
 --| Format:  rigLoadConfigFile(param1, param2, param3, param4)
 --|
---| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>
+--| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
+function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 	if sConfigIsLoaded is an array then
 		put the number of lines in the keys of sConfigIsLoaded into tConfigIsLoadedKeyNum
 	else
@@ -131,17 +131,29 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
 	end if
 
 	if pConfigFile is empty then
-		put "config" into tConfigFileName
+    put "config" into tConfigFileName
+    
+    if pModule is empty then
 	
-		if rigIsMainConfigLoaded() is TRUE then
-			add 1 to tConfigIsLoadedKeyNum
-			put "config" into sConfigIsLoaded[tConfigIsLoadedKeyNum]
-		end if
-	else
-		# REMOVE SUFFIX
-		put pConfigFile into tConfigFileName
-		replace gEXT with "" in tConfigFileName
-	end if
+		  if rigIsMainConfigLoaded() is TRUE then
+			  add 1 to tConfigIsLoadedKeyNum
+			  put "config" into sConfigIsLoaded[tConfigIsLoadedKeyNum]
+		  end if
+      
+    else -- if pModule is empty then
+      put pModule & "/config" into tConfigFileName
+	  end if -- if pModule is empty then
+      
+  else -- if pConfigFile is empty then
+    # REMOVE SUFFIX
+    if pModule is empty then
+      put pConfigFile into tConfigFileName
+      replace gEXT with "" in tConfigFileName     
+    else
+      put pModule & "/" & pConfigFile into tConfigFileName
+      replace gEXT with "" in tConfigFileName
+    end if
+  end if -- if pConfigFile is empty then
 
 	put FALSE into tIsInConfigArray
 	repeat for each element thisElement in sConfigIsLoaded
@@ -153,50 +165,77 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully
 	 if tIsInConfigArray is TRUE then
 		return TRUE
 	end if
+  
+  put empty into tModulePath
+
+  # CHECK IF WE ARE DEALING WITH A CONFIG FILE OF A MODULE
+  if pModule <> empty then
+    # GET PATH TO config FOLDER OF MODULE RELATIVE TO gAPPPATH
+    put "modules/" & pModule & "/" into tModulePath
+  end if
 
 	# CHECK IF FILE EXISTS
-	put gAPPPATH & "config/" & tConfigFileName & gEXT into tFilepath
+  set the itemDel to "/"
+	put gAPPPATH & tModulePath & "config/" & item -1 of tConfigFileName & gEXT into tFilepath
+  
 	if there is a file tFilepath then
 	else
 		if pFailGracefully is TRUE then
 			return FALSE
 		else
-			rigShowError "The configuration file" && tConfigFileName & gEXT && "does not exist."
+			rigShowError "The configuration file" && item -1 of tConfigFileName & gEXT && "does not exist."
 		end if
 	end if
 
 	if pUseSections is not TRUE then -- gConfig ARRAY IS USED FOR CONFIGURATION DATA
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
-		put the number of lines in the keys of gConfig into tCurrentConfigItemNum
-		require tFilepath
-		put the number of lines in the keys of gConfig into tNewConfigItemNum
-
+    if pModule <> empty then
+      put the number of lines in the keys of gConfig[pModule] into tCurrentConfigItemNum
+      require tFilepath
+      put the number of lines in the keys of gConfig[pModule] into tNewConfigItemNum
+    else
+      put the number of lines in the keys of gConfig into tCurrentConfigItemNum
+      require tFilepath
+      put the number of lines in the keys of gConfig into tNewConfigItemNum
+    end if
+  
 		if tNewConfigItemNum = tCurrentConfigItemNum then
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 
 	else -- ARRAY IS USED TO AVOID NAME COLLISIONS
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
 		require tFilepath
-		put gConfig[tConfigFileName] into tSectionArray
+    
+    if pModule <> empty then
+      put gConfig[pModule] into tSectionArray
+    else
+      put gConfig[tConfigFileName] into tSectionArray
+    end if
 
-		if tSectionArray is not an array then
+		if the number of lines in the keys of tSectionArray is 0 then
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 	end if
 
 	add 1 to tConfigIsLoadedKeyNum
-	put pConfigFile into sConfigIsLoaded[tConfigIsLoadedKeyNum]
 
-	rigLogMessage "debug", "Config file loaded: config/" & pConfigFile & gEXT
+  put tConfigFileName into sConfigIsLoaded[tConfigIsLoadedKeyNum]
+
+  if pModule <> empty then
+    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & gEXT
+  else
+    rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & gEXT
+  end if
+  
 	return TRUE
 
 end rigLoadConfigFile

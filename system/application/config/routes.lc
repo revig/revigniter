@@ -42,7 +42,7 @@ end if
 #	put "errors/pageMissing" into gRoute[1]["404Override"]
 #
 # This route will tell the Router what URI segments to use if those
-# provided in the URL cannot be matched to a valid route. It it is
+# provided in the URL cannot be matched to a valid route. If it is
 # empty the default 404 error page is provided.
 #
 #	put "scaffolding" into gRoute[1]["scaffoldingTrigger"]
