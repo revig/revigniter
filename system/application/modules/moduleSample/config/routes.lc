@@ -46,14 +46,17 @@ end if
 #
 # There is only one reserved route for modules:
 #
-#	put "myModule/myModuleHandler" into gRoute["myModule"][1]["defaultController"] 
+#	put "myModule/pagelibrary" into gRoute["myModule"][1]["defaultController"] 
 #
 # This route indicates which controller page library should be loaded if the
-# URI contains no data. In the above example, the "myModuleHandler" page library
+# URI contains no data. In the above example, the "pagelibrary" page library
 # would be loaded.
-# If the "defaultController" route is empty the controller's index handler
-# is called which must be composed of the controller name followed by the word "Index"
-# so that the route would look like: myModule/myController/myControllerIndex.
+# If the "defaultController" route is empty and there is only one URI segment specifying
+# the name of the module revIgniter expects that there is a controller named after
+# the module and tries to load myModule/myModule.
+# If no handler is specified the module's index handler is called which must be composed
+# of the controller name followed by the word "Index" so that the route would look like:
+# myModule/myModule/myModuleIndex.
 #
 #
 # Note: Module routes are relative to application/modules/.
