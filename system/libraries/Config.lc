@@ -118,7 +118,7 @@ end _setBaseURL
 --| 
 --| Format:  rigLoadConfigFile(param1, param2, param3, param4)
 --|
---| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name
+--| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
