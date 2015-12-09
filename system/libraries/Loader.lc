@@ -1754,6 +1754,86 @@ end _rigSetViewPath
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION _rigGetViewPath
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-11-2015
+--| Last Mod: 19-11-2015
+--| Requires: --
+--|
+--| Summary: Get path to view files (needed by modules).
+--| 
+--| Format:  _rigGetViewPath()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function _rigGetViewPath
+  return sRiViewPath
+end _rigGetViewPath
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadAutoLoad
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 03-12-2015
+--| Last Mod: 03-12-2015
+--| Requires: rigShowError, rigLogMessage
+--|
+--| Summary: Load a modules autoload file.
+--| 
+--| Format:  rigLoadAutoLoad param1, param2
+--|
+--| Parameters: string <pModule>, bool <pFailGracefully>
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+command rigLoadAutoLoad pModule pFailGracefully
+  if pFailGracefully is empty then
+    put FALSE into tFailGracefully
+  else 
+    put pFailGracefully into tFailGracefully
+  end if
+  
+  # CHECK IF autoload FILE EXISTS
+  set the itemDel to "/"
+  put gAPPPATH & "modules/" & pModule & "/config/autoload" & gEXT into tFilepath
+  
+  if there is a file tFilepath then
+  else
+    if pFailGracefully is TRUE then
+      return FALSE
+    else
+      rigShowError "The autoload file of module" && pModule & "does not exist."
+    end if
+  end if
+
+  require tFilepath
+
+  rigLogMessage "debug", "Autoload file of module" && pModule && "loaded."
+
+  -- _rigModuleAutoloader pModule
+  _rigAutoloader pModule
+  
+  return the result
+end rigLoadAutoLoad
+
+
+
+
+
 
 
 --| END OF Loader.lc
