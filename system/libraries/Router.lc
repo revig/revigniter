@@ -409,7 +409,7 @@ function _rigValidateRequest pSegmentsArray
     else
       put pSegmentsArray[1] into tModule
       if gRoute[tModule][1]["404Override"] <> empty then
-        put gRoute[1]["404Override"] into t404ErrorSegments
+        put gRoute[tModule][1]["404Override"] into t404ErrorSegments
       end if
 	end if
   

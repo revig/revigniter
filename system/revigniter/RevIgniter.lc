@@ -159,10 +159,23 @@ end if
 #
 ##
 
+	put empty into tRig404Override
   put TRUE into tUnableToLaodPage
   put rigFetchDirectory() into tRigControllerDir
   
   put tRigControllerDir & gController & gEXT into tControllerPath
+	
+  if tRigControllerDir is empty then
+    if gModule is empty then
+      put "controllers/" & gController & gEXT into tControllerPath
+      put "controllers/" into tRigControllerDir
+      put gRoute[1]["404Override"] into tRig404Override
+    else
+      put "modules/" & gModule & "/controllers/" & gController & gEXT into tControllerPath
+      put "modules/" & gModule & "/controllers/" into tRigControllerDir
+      put gRoute[gModule][1]["404Override"] into tRig404Override
+    end if
+  end if
 
 	if there is a file (gAPPPATH & tControllerPath) then
 		put FALSE into tUnableToLaodPage
@@ -213,9 +226,9 @@ end if
 	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerLibHandlers())) then
 
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
-		if gRoute[1]["404Override"] <> empty then
+		if tRig404Override <> empty then
 
-			put gRoute[1]["404Override"] into t404ErrorSegments
+			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
 			put t404ErrorSegments[1] into gController
@@ -264,9 +277,9 @@ end if
 	if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
 		
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
-		if gRoute[1]["404Override"] <> empty then
+		if tRig404Override <> empty then
 			
-			put gRoute[1]["404Override"] into t404ErrorSegments
+			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
 			put t404ErrorSegments[1] into gController
@@ -311,9 +324,9 @@ end if
 			if (gHandler <> empty) and ((gHandler is not among the items of gControllerHandlers) or (gHandler is gController)) then
 				
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
-				if gRoute[1]["404Override"] <> empty then
+				if tRig404Override  <> empty then
 
-					put gRoute[1]["404Override"] into t404ErrorSegments
+					put tRig404Override into t404ErrorSegments
 
 					split t404ErrorSegments by "/"
 					put t404ErrorSegments[1] into gController

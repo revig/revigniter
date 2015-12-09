@@ -44,7 +44,7 @@ end if
 # RESERVED ROUTE
 # -------------------------------------------------------------------------
 #
-# There is only one reserved route for modules:
+# There are only two reserved routes for modules:
 #
 #	put "myModule/pagelibrary" into gRoute["myModule"][1]["defaultController"] 
 #
@@ -58,8 +58,13 @@ end if
 # of the controller name followed by the word "Index" so that the route would look like:
 # myModule/myModule/myModuleIndex.
 #
+#	put "" into gRoute["myModule"][1]["404Override"]
 #
-# Note: Module routes are relative to application/modules/.
+# This route will tell the Router what URI segments to use if those
+# provided in the URL cannot be matched to a valid route. If it is
+# empty the default 404 error page is provided.
+#
+# Note: Module routes are relative to application/modules/controllers/.
 #
 # Note: The gRoute["myModule"] array must be numbered and the key number
 # for reserved routes must be 1. So custom route key numbers start
@@ -71,6 +76,7 @@ end if
 
 
 put "" into gRoute["moduleSample"][1]["defaultController"]
+put "" into gRoute["moduleSample"][1]["404Override"]
 
 
 
