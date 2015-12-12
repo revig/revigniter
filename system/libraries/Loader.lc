@@ -1041,7 +1041,7 @@ command _rigLoadLibrary pLibrary pParams pModule
 			add 1 to tLoadedFilesKeyNum
 			put tSubLib into sRiLoadedFiles[tLoadedFilesKeyNum]
 		
-			_rigRiInitLibrary tLib, tPrefix, pParams
+			_rigRiInitLibrary tLib, tPrefix, pParams, pModule
 			exit _rigLoadLibrary
 
 		end if -- if there is a file tSubLib then
@@ -1086,7 +1086,7 @@ command _rigLoadLibrary pLibrary pParams pModule
 			require tFilePath
 			add 1 to tLoadedFilesKeyNum
 			put tFilePath into sRiLoadedFiles[tLoadedFilesKeyNum]
-			_rigRiInitLibrary tLib, "", pParams
+			_rigRiInitLibrary tLib, "", pParams, pModule
 			exit _rigLoadLibrary
 
 		end repeat
@@ -1555,21 +1555,22 @@ end rigHelperIsLoaded
 --| COMMAND _rigRiInitLibrary
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 07-07-09
---| Last Mod: 22-12-14
+--| Last Mod: 12-12-15
 --| Requires: rigNumToCodepoint()
 --|
 --| Summary: Load config file associated with loaded library.
 --| 
 --| Format:  _rigRiInitLibrary param1, param2, param3
 --|
---| Parameters: string <pLib> the item that is being loaded, string <pPrefix>, array <pConfig>
+--| Parameters: string <pLib> the item that is being loaded, string <pPrefix> (optional),
+--|               array <pConfig> (optional), string <pModule> the module name (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigRiInitLibrary pLib pPrefix pConfig
+command _rigRiInitLibrary pLib pPrefix pConfig pModule
 	put FALSE into tConfigFileFound
 
 	if sRiLibs is an array then
@@ -1577,6 +1578,12 @@ command _rigRiInitLibrary pLib pPrefix pConfig
 	else
 		put 0 into tLibsKeyNum
 	end if
+	
+  # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
+  if pModule <> empty then
+      # GET PATH TO models FOLDER OF MODULE RELATIVE TO gAPPPATH
+      put "modules/" & pModule & "/" into tModulePath
+  end if
 
 	# IS THERE AN ASSOCIATED CONFIG FILE FOR THIS LIBRARY?
 	if pConfig is not an array then
@@ -1586,12 +1593,12 @@ command _rigRiInitLibrary pLib pPrefix pConfig
 		put toupper(char 1 of tNameLower) into tFirstCharUpper
 		put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
 
-		put gAPPPATH & "config/" & tNameLower & gEXT into tPath
+		put gAPPPATH & tModulePath & "config/" & tNameLower & gEXT into tPath
 		if there is a file tPath then
 			require tPath
 			put TRUE into tConfigFileFound
 		else
-			put gAPPPATH & "config/" & tNameUCfirst & gEXT into tPath
+			put gAPPPATH & tModulePath & "config/" & tNameUCfirst & gEXT into tPath
 			if there is a file tPath then
 				require tPath
 				put TRUE into tConfigFileFound
