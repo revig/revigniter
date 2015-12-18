@@ -25,7 +25,7 @@ end if
 # OVERRIDING A GLOBAL CONFIGURATION VALUE
 # -------------------------------------------------------------------
 #
-# To override global configuration date omit using the
+# To override global configuration data just omit the
 # module's name as array key.
 ##
 
