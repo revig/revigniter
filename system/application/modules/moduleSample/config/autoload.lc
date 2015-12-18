@@ -35,10 +35,6 @@ end if
 #
 ##
 
-# DECLARE VARIABLES
-# SEE LOCAL VARIABLES IN application/config/autoload.lc
-
-
 
 ##
 # -------------------------------------------------------------------
