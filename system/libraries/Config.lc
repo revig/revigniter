@@ -476,26 +476,31 @@ end rigSystemURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetConfigItem
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 10-10-09
---| Last Mod: 10-10-09
+--| Last Mod: 18-12-15
 --| Requires: --
 --|
 --| Summary: Set a config file item.
 --| 
---| Format:  rigSetConfigItem param1, param2
+--| Format:  rigSetConfigItem param1, param2[, param3]
 --|
 --| Parameters: string <pItem> the config item key, string <pValue> the config item value
+--|               string <pModule> the module name (optional)
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigSetConfigItem pItem pValue
-	put pValue into gConfig[pItem]
+command rigSetConfigItem pItem pValue pModule
+  if pModule <> empty then
+    put pValue into gConfig[pModule][pItem]
+  else
+    put pValue into gConfig[pItem]
+  end if
 end rigSetConfigItem
 
 
