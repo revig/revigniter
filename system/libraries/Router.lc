@@ -123,7 +123,7 @@ local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest, sModuleRoute
   end if
 
  	# SET THE DEFAULT CONTROLLER SO WE CAN DISPLAY IT IN THE EVENT
- 	# THE URI DOESN'T CORRELATED TO A VALID CONTROLLER.
+ 	# THE URI DOESN'T CORRELATE TO A VALID CONTROLLER.
   if tModule <> empty then
     if sModuleRoutes is an array then
       if sModuleRoutes[1]["defaultController"] is "" then
