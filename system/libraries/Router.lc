@@ -415,6 +415,7 @@ function _rigValidateRequest pSegmentsArray
   
   if t404ErrorSegments <> empty then
 		split t404ErrorSegments by "/"
+		rigSetDirectory "modules/" & tModule & "/controllers/"	
 		return t404ErrorSegments
   end if
 
