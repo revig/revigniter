@@ -41,7 +41,7 @@ end if
 # http://revigniter.com/user_guide/libraries/modules.html
 #
 #-------------------------------------------------------------------------
-# RESERVED ROUTE
+# RESERVED ROUTES
 # -------------------------------------------------------------------------
 #
 # There are only two reserved routes for modules:
