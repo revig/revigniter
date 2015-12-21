@@ -326,7 +326,7 @@ end _rigSetRequest
 --| Author: rabit
 --| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 08-12-15
+--| Last Mod: 21-12-15
 --| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler, _rigValidateModuleRequest()
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
@@ -369,7 +369,7 @@ function _rigValidateRequest pSegmentsArray
 
 					split t404ErrorSegments by "/"
 
-					rigSetDirectory "controllers/"
+					rigSetDirectory "controllers"
 
 					return t404ErrorSegments
 				else
@@ -403,19 +403,32 @@ function _rigValidateRequest pSegmentsArray
 
 	# THE URI DOES NOT CORRELATE TO A VALID CONTROLLER
 	# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS BEFORE SENDING THE DEFAULT 404 ERROR PAGE
-  put empty into t404ErrorSegments
-	if gRoute[1]["404Override"] <> empty then
+  put empty into tModule
+  if there is a folder (gAPPPATH & "modules/" & pSegmentsArray[1]) then
+    put pSegmentsArray[1] into tModule
+  end if
+	
+ 	put empty into t404ErrorSegments
+	if (gRoute[1]["404Override"] <> empty) and (tModule is empty) then
 		put gRoute[1]["404Override"] into t404ErrorSegments
-    else
-      put pSegmentsArray[1] into tModule
-      if gRoute[tModule][1]["404Override"] <> empty then
-        put gRoute[tModule][1]["404Override"] into t404ErrorSegments
-      end if
+	else
+		if tModule <> empty then
+			if gRoute[tModule][1]["404Override"] <> empty then
+				put gRoute[tModule][1]["404Override"] into t404ErrorSegments
+			end if
+		end if
 	end if
   
   if t404ErrorSegments <> empty then
 		split t404ErrorSegments by "/"
-		rigSetDirectory "modules/" & tModule & "/controllers/"	
+		
+		if tModule <> empty then
+			rigSetDirectory "modules/" & tModule & "/controllers"
+		end if
+		
+		# ACTUALLY THIS IS A HACK TO GET THE CORRECT PATH TO THE ROUTED ERROR CONTROLLER
+		put TRUE into sModuleMainController
+		#
 		return t404ErrorSegments
   end if
 
