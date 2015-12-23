@@ -326,7 +326,7 @@ end _rigSetRequest
 --| Author: rabit
 --| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 21-12-15
+--| Last Mod: 23-12-15
 --| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler, _rigValidateModuleRequest()
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
@@ -370,7 +370,8 @@ function _rigValidateRequest pSegmentsArray
 					split t404ErrorSegments by "/"
 
 					rigSetDirectory "controllers"
-
+					rigLogMessage "error", "404 Page Not Found -->" && tSegments[1]
+					
 					return t404ErrorSegments
 				else
 
@@ -429,6 +430,8 @@ function _rigValidateRequest pSegmentsArray
 		# ACTUALLY THIS IS A HACK TO GET THE CORRECT PATH TO THE ROUTED ERROR CONTROLLER
 		put TRUE into sModuleMainController
 		#
+		rigLogMessage "error", "404 Page Not Found -->" && pSegmentsArray[1]
+		
 		return t404ErrorSegments
   end if
 
