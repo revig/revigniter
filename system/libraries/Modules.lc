@@ -111,11 +111,11 @@ end _rigRegisterModuleHandlers
 --| Author: rabit
 --| Version:  1.0
 --| Created: 17-11-2015
---| Last Mod: 17-11-2015
+--| Last Mod: 26-12-2015
 --| Requires: rigTrim(), _rigValidateModuleRequest(), rigLogMessage, rigLoadConfigFile(),
 --|            rigLoadAutoLoad, rigFetchDirectory(), _rigRegisterModuleHandlers, _rigDo
 --|
---| Summary: Used to load a module controller within an application controller.
+--| Summary: Used to load a module controller within an application controller or within a module.
 --| 
 --| Format:  rigLoadModule param1
 --|
@@ -176,12 +176,12 @@ end rigLoadModule
 --| Author: rabit
 --| Version:  1.0
 --| Created: 17-11-2015
---| Last Mod: 17-11-2015
+--| Last Mod: 26-12-2015
 --| Requires: rigTrim(), rigModuleError(), _rigGetViewPath(), _rigSetViewPath, _rigDo
 --|
 --| Summary: Return output (a view) or a return value from a module controller.
 --| 
---| Format:  rigRunModule(param1)
+--| Format:  rigRunModule(param1[, param2])
 --|
 --| Parameters: string <pModuleSegments>, array <pParamsA> (optional)
 --|
@@ -318,14 +318,14 @@ end rigModuleError
 --| Author: rabit
 --| Version:  1.0
 --| Created: 22-11-15
---| Last Mod: 22-11-15
+--| Last Mod: 26-12-15
 --| Requires: --
 --|
 --| Summary: This function returns the URI segment, or URI value based on the number provided.
 --| 
---| Format: rigFetchModuleSegment(param1, param2)
+--| Format: rigFetchModuleSegment(param1[, param2])
 --|
---| Parameters: integer <pSegmentNum>, string <pNoResult>
+--| Parameters: integer <pSegmentNum>, string <pNoResult> (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
@@ -356,7 +356,7 @@ end rigFetchModuleSegment
 --| Author: rabit
 --| Version:  1.0
 --| Created: 01-12-15
---| Last Mod: 01-12-015
+--| Last Mod: 26-12-015
 --| Requires: _rigModuleUriToAssoc()
 --|
 --| Summary: Generate a key value pair from the URI string.
@@ -372,21 +372,21 @@ end rigFetchModuleSegment
 --|            tArray["location] =>value = "UK"
 --|            tArray["gender] =>value = "male"
 --| 
---| Format:  rigModuleUriToAssoc(param1, param2)
+--| Format:  rigModuleUriToAssoc(param1[, param2])
 --|
---| Parameters: integer <pN> the starting segment number, array <pDefault> an array of default values
+--| Parameters: integer <pN> the starting segment number, array <pDefaultA> an array of default values (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigModuleUriToAssoc pN pDefault
+function rigModuleUriToAssoc pN pDefaultA
 	if pN is empty then
 		put 3 into tN
 	else
 		put pN into tN
 	end if
 
-	return _rigModuleUriToAssoc(tN, pDefault)
+	return _rigModuleUriToAssoc(tN, pDefaultA)
 end rigModuleUriToAssoc
 
 
@@ -400,19 +400,19 @@ end rigModuleUriToAssoc
 --| Author: rabit
 --| Version:  1.0
 --| Created: 01-12-15
---| Last Mod: 01-12-15
+--| Last Mod: 26-12-15
 --| Requires: _rigModuleSegmentsArray()
 --|
 --| Summary: Generate key value pairs from the module URI string.
 --| 
---| Format:  _rigModuleUriToAssoc(param1, param2)
+--| Format:  _rigModuleUriToAssoc(param1[, param2])
 --|
---| Parameters: integer <pN> the starting segment number, array <pDefault> an array of default values
+--| Parameters: integer <pN> the starting segment number, array <pDefaultA> an array of default values (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigModuleUriToAssoc pN pDefault
+function _rigModuleUriToAssoc pN pDefaultA
   if pN is empty then
     put 3 into tN
   else
@@ -425,17 +425,17 @@ function _rigModuleUriToAssoc pN pDefault
   put _rigModuleSegmentsArray() into tSegmentsArray
 
   if tN is not an integer then
-    return pDefault
+    return pDefaultA
   end if
 
   # WRONG SEGMENT NUMBER
   if tTotalSegments < tN then
-    if pDefault is not an array then
+    if pDefaultA is not an array then
       return ""
     end if
 
-    repeat for each key tKey in pDefault
-      put pDefault[tKey] into tVal
+    repeat for each key tKey in pDefaultA
+      put pDefaultA[tKey] into tVal
 
       put FALSE into tRetval[tVal]
     end repeat
@@ -468,9 +468,9 @@ function _rigModuleUriToAssoc pN pDefault
     add 1 to tI
   end repeat	
 
-  if (the number of lines in the keys of pDefault) > 0 then
-    repeat for each key tKey in pDefault
-      put pDefault[tKey] into tVal
+  if (the number of lines in the keys of pDefaultA) > 0 then
+    repeat for each key tKey in pDefaultA
+      put pDefaultA[tKey] into tVal
 
       if tVal is not among the keys of tRetval then
         put FALSE into tRetval[tVal]
