@@ -618,7 +618,7 @@ end rigFetchRsegment
 --|
 --| Summary: Generate a key value pair from the URI string.
 --|
---|                   This function generates and associative array of URI data starting
+--|                   This function generates an associative array of URI data starting
 --|                   at the supplied segment. For example, if this is your URI:
 --|
 --|                   example.com/user/search/name/joe/location/UK/gender/male

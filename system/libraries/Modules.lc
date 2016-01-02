@@ -361,7 +361,7 @@ end rigFetchModuleSegment
 --|
 --| Summary: Generate a key value pair from the URI string.
 --|
---|            This function generates and associative array of module URI data starting
+--|            This function generates an associative array of module URI data starting
 --|            at the supplied segment. For example, if this is your URI:
 --|
 --|            myModule/myModuleHandler/name/joe/location/UK/gender/male
