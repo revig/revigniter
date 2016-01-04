@@ -39,7 +39,7 @@ rigLogMessage "debug", "Router Library Loaded"
 
 
 # DECLARE LOCAL VARIABLES
-local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest
+local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest, sModuleRoutes, sModuleMainController
 
 
 
@@ -51,11 +51,12 @@ local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest
 --| COMMAND _rigSetRouting
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 19-06-09
---| Last Mod: 17-09-15
---| Requires: _rigFilterUri, rigSetController, rigSetHandler, _rigValidateQueryRequest(), _rigFetchUriString
---|            rigShowError, _rigSetRequest, rigLogMessage, _rigRemoveUrlSuffix, _rigExplodeSegments, _rigParseRoutes, rigTrim()
+--| Last Mod: 08-12-15
+--| Requires: rigFetchConfigItem(), _rigFilterUri, rigTrim(), rigSetController, rigSetHandler, _rigExplodeSegments,
+--|            _rigSetRouting, _rigValidateQueryRequest(), _rigFetchUriString, rigShowError, _rigSetRequest,
+--|					rigLogMessage, _rigRemoveUrlSuffix, _rigParseRoutes
 --|
 --| Summary:  Set the route mapping
 --|             This command determines what should be served based on the URI request,
@@ -68,100 +69,131 @@ local sRoutes, sDefaultController, sDirectory, sScaffoldingRequest
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigSetRouting
-	## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
-	## IF SO, WE'RE DONE SINCE SEGMENT BASED URIS ARE NOT USED WITH QUERY STRINGS.
-		if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
-			put _rigFilterUri($_GET[rigFetchConfigItem("controllerTrigger")]) into tFilteredStrippedString
+ command _rigSetRouting
+ 	## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
+ 	## IF SO, WE'RE DONE SINCE SEGMENT BASED URIS ARE NOT USED WITH QUERY STRINGS.
+   if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
+     put _rigFilterUri($_GET[rigFetchConfigItem("controllerTrigger")]) into tFilteredStrippedString
 
-			# TRIM WHITESPACE
-			-- put replacetext(tFilteredStrippedString,"(^\s+)|(\s+$)",empty) into tFilteredStrippedString
-			put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
+     # TRIM WHITESPACE
+     put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
 
-			rigSetController tFilteredStrippedString
+     rigSetController tFilteredStrippedString
 
-			if $_GET[rigFetchConfigItem("methodTrigger")] is not empty then
-				put _rigFilterUri($_GET[rigFetchConfigItem("methodTrigger")]) into tFilteredStrippedString
-				# TRIM WHITESPACE
-				-- put replacetext(tFilteredStrippedString,"(^\s+)|(\s+$)",empty) into tFilteredStrippedString
-				put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
-				rigSetHandler tFilteredStrippedString
-			else
-				rigSetHandler "index"
-			end if
+     if $_GET[rigFetchConfigItem("methodTrigger")] is not empty then
+       put _rigFilterUri($_GET[rigFetchConfigItem("methodTrigger")]) into tFilteredStrippedString
+       # TRIM WHITESPACE
+       put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
+       rigSetHandler tFilteredStrippedString
+     else
+       rigSetHandler "index"
+     end if
 
-			get _rigValidateQueryRequest(gController, gHandler)
+     get _rigValidateQueryRequest(gController, gHandler)
 
-			# COMPILE THE URI KEY VALUE PAIRS INTO AN ARRAY -- variance
-			_rigExplodeSegments			
+     # COMPILE THE URI KEY VALUE PAIRS INTO AN ARRAY -- variance
+     _rigExplodeSegments			
 
-			exit _rigSetRouting
-		end if
+     exit _rigSetRouting
+   end if
+   
+ 	# FETCH THE COMPLETE URI STRING
+  put _rigFetchUriString() into tUriString
+  put rigTrim(tUriString, "/") into tUriString
+  
+  put empty into gModule
+  put empty into tModule
+  set the itemDelimiter to "/"
+        
+   # ARE WE DEALING WITH A MODULE?
+   if there is a folder (gAPPPATH & "modules/" & item 1 of tUriString) then
+     put item 1 of tUriString into tModule
+     put tModule into gModule
+   end if
 
-	# LOAD THE routes.lc FILE.
-	require gAPPPATH & "config/routes" & gEXT
-	put gRoute into sRoutes
+ 	# LOAD THE routes.lc FILE.
+  if tModule <> empty then
+    if there is a file (gAPPPATH & "modules/" & tModule & "/config/routes" & gEXT) then
+ 	    require gAPPPATH & "modules/" & tModule & "/config/routes" & gEXT
+ 	    put gRoute[tModule] into sModuleRoutes
+    end if
+  else
+ 	  require gAPPPATH & "config/routes" & gEXT
+ 	  put gRoute into sRoutes
+  end if
 
-	# SET THE DEFAULT CONTROLLER SO WE CAN DISPLAY IT IN THE EVENT
-	# THE URI DOESN'T CORRELATED TO A VALID CONTROLLER.
-	if sRoutes[1]["defaultController"] is "" then
-		put FALSE into sDefaultController
-	else
-		put sRoutes[1]["defaultController"] into sDefaultController
-	end if
+ 	# SET THE DEFAULT CONTROLLER SO WE CAN DISPLAY IT IN THE EVENT
+ 	# THE URI DOESN'T CORRELATE TO A VALID CONTROLLER.
+  if tModule <> empty then
+    if sModuleRoutes is an array then
+      if sModuleRoutes[1]["defaultController"] is "" then
+        
+        if item -1 of tUriString is tModule then
+          put tUriString into sDefaultController
+        else
+          put FALSE into sDefaultController
+        end if
+      else
+        put sModuleRoutes[1]["defaultController"] into sDefaultController
+      end if
+    else
+      put FALSE into sDefaultController
+    end if
+  else
+   	if sRoutes[1]["defaultController"] is "" then
+   		put FALSE into sDefaultController
+   	else
+      put sRoutes[1]["defaultController"] into sDefaultController
+   	end if
+  end if -- if tModule <> empty then
 
-	# FETCH THE COMPLETE URI STRING
-	put _rigFetchUriString() into tUriString
+ 	# IS THERE AN URI STRING? IF NOT, THE DEFAULT CONTROLLER SPECIFIED IN THE "ROUTES" FILE WILL BE SHOWN.
+  if (tUriString is "") or ((item -1 of tUriString is tModule) and (sDefaultController <> tUriString)) then
+ 		if sDefaultController is FALSE then
+ 			rigShowError "Unable to determine what should be displayed. A default route has not been specified in the routing file."
+ 		end if
 
---breakpoint
---put "username=name&password=pw&passconf=pwc&email=em" into tUriString
+    if sDefaultController contains "/" then
+      put sDefaultController into tX
+      put item -1 of tX into tController
+      rigSetController tController
+      rigSetHandler tModule & "Index"
+      split tX by "/"
+      _rigSetRequest tX
+ 		else
+      rigSetController sDefaultController
+      rigSetHandler tModule & "Index"
+      put sDefaultController into tTempArray[1]
+      put tModule & "Index" into tTempArray[2]
+      _rigSetRequest tTempArray
+ 		end if
 
+ 		rigLogMessage "debug", "No URI present. Default controller set."
+ 		exit _rigSetRouting
+ 	end if
 
-	# IS THERE A URI STRING? IF NOT, THE DEFAULT CONTROLLER SPECIFIED IN THE "ROUTES" FILE WILL BE SHOWN.
-	if tUriString is "" then
-		if sDefaultController is FALSE then
-			rigShowError "Unable to determine what should be displayed. A default route has not been specified in the routing file."
-		end if
+  if tModule <> empty then
+    delete variable sModuleRoutes[1]["defaultController"]
+  else
+ 	  delete variable sRoutes[1]["defaultController"]
+  end if
 
-		if sDefaultController contains "/" then
-			put sDefaultController into tX
-			set the itemDelimiter to "/"
-			put item -1 of tX into tController
-			rigSetController tController
-			rigSetHandler "index"
-			split tX by "/"
-			_rigSetRequest tX
-		else
-			rigSetController sDefaultController
-			rigSetHandler "index"
-			-- put "index" into tTempArray[sDefaultController]
-			put sDefaultController into tTempArray[1]
-			put "index" into tTempArray[2]
-			_rigSetRequest tTempArray
-		end if
+ 	# DO WE NEED TO REMOVE THE URL SUFFIX?
+ 	_rigRemoveUrlSuffix
 
-		rigLogMessage "debug", "No URI present. Default controller set."
-		exit _rigSetRouting
-	end if
-
-	delete variable sRoutes[1]["defaultController"]
-
-	# DO WE NEED TO REMOVE THE URL SUFFIX?
-	_rigRemoveUrlSuffix
-
-	# COMPILE THE SEGMENTS INTO AN ARRAY
-	_rigExplodeSegments
+ 	# COMPILE THE SEGMENTS INTO AN ARRAY
+ 	_rigExplodeSegments
 		
-	# PARSE ANY CUSTOM ROUTING THAT MAY EXIST
-	_rigParseRoutes
+ 	# PARSE ANY CUSTOM ROUTING THAT MAY EXIST
+ 	_rigParseRoutes
 
-end _rigSetRouting
-
-
+ end _rigSetRouting
 
 
 
-----------------------------------------------------------------------
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigScaffoldingRequest
 --|
 --| Author: rabit
@@ -177,7 +209,7 @@ end _rigSetRouting
 --| Parameters: --
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigScaffoldingRequest
 	return sScaffoldingRequest
@@ -190,25 +222,25 @@ end rigScaffoldingRequest
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetRequest
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 20-01-10
+--| Last Mod: 08-12-15
 --| Requires: _rigValidateRequest(), rigSetController, rigSetHandler
 --|
 --| Summary:  Set the Route.
---|                    This handler takes an array of URI segments as
---|                    input, and sets the current controller/handler
+--|             This handler takes an array of URI segments as
+--|             input, and sets the current controller/handler
 --| 
 --| Format:  _rigSetRequest param1
 --|
 --| Parameters: array <pSegmentsArray>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigSetRequest pSegmentsArray
 	put _rigValidateRequest(pSegmentsArray) into tSegmentsArray
@@ -217,23 +249,65 @@ command _rigSetRequest pSegmentsArray
 		exit _rigSetRequest
 	end if
 
+  set the itemDel to "/"
+
 	rigSetController tSegmentsArray[1]
 
 	if tSegmentsArray[2] <> empty then
-		# A SCAFFOLDING REQUEST. NO FUNNY BUSINESS WITH THE URL
-		if sRoutes[1]["scaffoldingTrigger"] = tSegmentsArray[2] then
-			put TRUE into sScaffoldingRequest
-			delete variable sRoutes[1]["scaffoldingTrigger"]
+    # IS THIS A SCAFFOLDING REQUEST? NO FUNNY BUSINESS WITH THE URL
+    # DON'T ALLOW SCAFFOLDING USING MODULES
+    if (sRoutes[1]["scaffoldingTrigger"] = tSegmentsArray[2]) and (sModuleRoutes is not an array) then
+      put TRUE into sScaffoldingRequest
+      delete variable sRoutes[1]["scaffoldingTrigger"]
 		else
-			# A STANDARD HANDLER REQUEST
-			rigSetHandler tSegmentsArray[2]
-		end if
-	else
+
+      # MAYBE A MODULE CONTROLLER IS USED AS AN APPLICATION CONTROLLER
+      if (item 1 of sDirectory is "modules") and (gModulesHandlersA is not an array) and (the number of items of sDirectory < 4) then
+        # AND CONTROLLER IS LOCATED AT THE ROOT OF THE CONTROLLERS FOLDER
+        if sModuleMainController <> TRUE then
+          # CONTROLLER NAME IS NOT IDENTICAL WITH MODULE NAME
+          rigSetController tSegmentsArray[2]
+        else
+          # CONTROLLER NAME IS IDENTICAL WITH MODULE NAME
+          rigSetController tSegmentsArray[1]
+        end if
+        
+        if tSegmentsArray[3] is empty then
+          if sModuleMainController <> TRUE then
+            # NO HANDLER SPECIFIED, USE DEFAULT CONTROLLER, PREFIX index WITH CONTROLLER NAME
+            rigSetHandler tSegmentsArray[2] & "Index"
+          else
+            # HANDLER SPECIFIED
+            rigSetHandler tSegmentsArray[2]
+          end if
+
+        else
+          # HANDLER SPECIFIED
+          rigSetHandler tSegmentsArray[3]
+        end if
+
+      else
+      	# A STANDARD CONTROLLER REQUEST
+				rigSetHandler tSegmentsArray[2]
+		  end if -- if (item 1 of sDirectory is "modules") and (gModulesHandlersA is not an array) and (the number of items of sDirectory < 4) then
+      ##
+    end if -- if sRoutes[1]["scaffoldingTrigger"] = tSegmentsArray[2] then
+
+    else -- if tSegmentsArray[2] <> empty then
 		# THIS LETS THE "ROUTED" SEGMENT ARRAY IDENTIFY THAT THE DEFAULT
 		# INDEX HANDLER IS BEING USED.
-		put "index" into tSegmentsArray[2]
-		put "index" into gHandler
-	end if
+
+    # IF A MODULE CONTROLLER IS USED AS AN APPLICATION CONTROLLER
+    # PREFIX index WITH CONTROLLER NAME
+    if (item 1 of sDirectory is "modules") and (gModulesHandlersA is not an array) then
+  		put tSegmentsArray[1] & "Index" into tSegmentsArray[2]
+  		put tSegmentsArray[1] & "Index" into gHandler
+    else
+
+		  put "index" into tSegmentsArray[2]
+		  put "index" into gHandler
+    end if
+	end if -- if tSegmentsArray[2] <> empty then
 
 	# UPDATE OUR "ROUTED" SEGMENT ARRAY TO CONTAIN THE SEGMENTS.
 	# NOTE: IF THERE IS NO CUSTOM ROUTING, THIS ARRAY WILL BE
@@ -250,13 +324,13 @@ end _rigSetRequest
 --| FUNCTION _rigValidateRequest
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 24-11-12
---| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler
+--| Last Mod: 23-12-15
+--| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler, _rigValidateModuleRequest()
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
---|          to the controller.
+--|          	to the controller.
 --| 
 --| Format:  _rigValidateRequest(param1)
 --|
@@ -268,13 +342,14 @@ end _rigSetRequest
 function _rigValidateRequest pSegmentsArray
 	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
 	if there is a file (gAPPPATH & "controllers/" & pSegmentsArray[1] & gEXT) then
-		return pSegmentsArray
+    rigSetDirectory "controllers"
+    return pSegmentsArray
 	end if
 
 	# IS THE CONTROLLER IN A SUB-FOLDER?
 	if there is a folder (gAPPPATH & "controllers/" & pSegmentsArray[1]) then
 		# SET THE DIRECTORY AND REMOVE IT FROM THE SEGMENT ARRAY
-		put pSegmentsArray[1] into tDirectory
+		put "controllers/" & pSegmentsArray[1] into tDirectory
 		rigSetDirectory tDirectory
 		put pSegmentsArray into tSegments
 
@@ -285,7 +360,7 @@ function _rigValidateRequest pSegmentsArray
 
 		if (the number of lines in the keys of tSegments) > 0 then
 			# DOES THE REQUESTED CONTROLLER EXIST IN THE SUB-FOLDER?
-			if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & tSegments[1] & gEXT) then
+			if there is a file (gAPPPATH & rigFetchDirectory() & tSegments[1] & gEXT) then
 			else
 
 				# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS OTHERWISE SEND THE DEFAULT 404 ERROR PAGE 
@@ -294,8 +369,9 @@ function _rigValidateRequest pSegmentsArray
 
 					split t404ErrorSegments by "/"
 
-					rigSetDirectory ""
-
+					rigSetDirectory "controllers"
+					rigLogMessage "error", "404 Page Not Found -->" && tSegments[1]
+					
 					return t404ErrorSegments
 				else
 
@@ -309,7 +385,7 @@ function _rigValidateRequest pSegmentsArray
 			rigSetController sDefaultController
 			rigSetHandler "index"
 			# DOES THE DEFAULT CONTROLLER EXIST IN THE SUB-FOLDER?
-			if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & sDefaultController & gEXT) then
+			if there is a file (gAPPPATH & rigFetchDirectory() & sDefaultController & gEXT) then
 				put "" into sDirectory
 				put "" into tTemp[1]
 				return tTemp
@@ -320,15 +396,44 @@ function _rigValidateRequest pSegmentsArray
 		return tSegments
 	end if
 
+  # ARE WE DEALING WITH A MODULE CONTROLLER?
+  put _rigValidateModuleRequest(pSegmentsArray) into tSegments
+  if tSegments is an array then
+      return tSegments
+  end if  
+
 	# THE URI DOES NOT CORRELATE TO A VALID CONTROLLER
 	# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS BEFORE SENDING THE DEFAULT 404 ERROR PAGE
-	if gRoute[1]["404Override"] <> empty then
+  put empty into tModule
+  if there is a folder (gAPPPATH & "modules/" & pSegmentsArray[1]) then
+    put pSegmentsArray[1] into tModule
+  end if
+	
+ 	put empty into t404ErrorSegments
+	if (gRoute[1]["404Override"] <> empty) and (tModule is empty) then
 		put gRoute[1]["404Override"] into t404ErrorSegments
-
-		split t404ErrorSegments by "/"
-
-		return t404ErrorSegments
+	else
+		if tModule <> empty then
+			if gRoute[tModule][1]["404Override"] <> empty then
+				put gRoute[tModule][1]["404Override"] into t404ErrorSegments
+			end if
+		end if
 	end if
+  
+  if t404ErrorSegments <> empty then
+		split t404ErrorSegments by "/"
+		
+		if tModule <> empty then
+			rigSetDirectory "modules/" & tModule & "/controllers"
+		end if
+		
+		# ACTUALLY THIS IS A HACK TO GET THE CORRECT PATH TO THE ROUTED ERROR CONTROLLER
+		put TRUE into sModuleMainController
+		#
+		rigLogMessage "error", "404 Page Not Found -->" && pSegmentsArray[1]
+		
+		return t404ErrorSegments
+  end if
 
 	# CAN'T FIND THE REQUESTED CONTROLLER...
 	# SEND THE 404 ERROR TEMPLATE TO THE BROWSER
@@ -346,121 +451,213 @@ end _rigValidateRequest
 
 
 
-----------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigValidateModuleRequest
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 19-11-2015
+--| Last Mod: 19-11-2015
+--| Requires: rigSetDirectory, rigFetchDirectory()
+--|
+--| Summary: Validates the supplied module segments. Attempts to determine the path
+--|             to the module controller.
+--| 
+--| Format:  _rigValidateModuleRequest(param1)
+--|
+--| Parameters: array <pSegmentsArray>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function _rigValidateModuleRequest pSegmentsArray
+  put FALSE into tSubfolder
+ 
+  # IS THE CONTROLLER IN A SUB-FOLDER?
+  if ((the number of lines in the keys of pSegmentsArray) > 1) and \
+    (there is a folder (gAPPPATH & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[2])) then
+    put TRUE into tSubfolder
+  end if
+
+ 	# DOES THE REQUESTED CONTROLLER EXIST IN THE MODULES CONTROLLERS FOLDER?
+  if tSubfolder is FALSE then
+    put FALSE into sModuleMainController
+    put FALSE into tControllerFound
+
+    if (the number of lines in the keys of pSegmentsArray) > 1 then
+      if there is a file (gAPPPATH & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[2] & gEXT) then
+        put TRUE into tControllerFound
+      else if there is a file (gAPPPATH & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[1] & gEXT) then
+        put TRUE into sModuleMainController
+        put TRUE into tControllerFound
+      end if
+      
+    else if there is a file (gAPPPATH & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[1] & gEXT) then
+      put TRUE into sModuleMainController
+      put TRUE into tControllerFound
+    end if
+    
+    if tControllerFound is TRUE then
+      # SET THE DIRECTORY
+      put "modules/" & pSegmentsArray[1] & "/controllers" into tDirectory
+      rigSetDirectory tDirectory
+	    return pSegmentsArray
+	  end if
+
+    else -- if tSubfolder is FALSE then
+    # SET THE DIRECTORY AND REMOVE IT FROM THE SEGMENT ARRAY
+    put "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[2] into tDirectory
+    rigSetDirectory tDirectory
+    put pSegmentsArray into tSegments
+    
+    combine tSegments using "/"
+    set the itemdelimiter to "/"
+    put item 3 to -1 of tSegments into tSegments
+    
+    split tSegments by "/"
+    
+    if (the number of lines in the keys of tSegments) > 0 then
+      # DOES THE REQUESTED CONTROLLER EXIST IN THE SUB-FOLDER?
+      if there is a file (gAPPPATH & rigFetchDirectory() & tSegments[1] & gEXT) then
+      else
+        return FALSE
+      end if
+
+    end if -- if (the number of lines in the keys of tSegments) > 0 then
+
+    return tSegments
+  end if -- if tSubfolder is FALSE then
+  
+  return FALSE
+end _rigValidateModuleRequest
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| COMMAND _rigParseRoutes
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 19-06-09
---| Last Mod: 20-01-10
+--| Last Mod: 08-12-15
 --| Requires: _rigSetRequest
 --|
 --| Summary:  This handler matches any routes that may exist in
---|                     the config/routes.lc file against the URI to
---|                     determine if the controller/handler needs to be remapped.
+--|             the config/routes.lc file against the URI to
+--|             determine if the controller/handler needs to be remapped.
 --| 
 --| Format:  _rigParseRoutes
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigParseRoutes
-	# DO WE EVEN HAVE ANY CUSTOM ROUTING TO DEAL WITH?
-	# THERE IS A DEFAULT  SCAFFOLDING TRIGGER, SO WE'LL LOOK JUST FOR 1
-	if (the number of lines in the keys of sRoutes) = 1 then
-		_rigSetRequest gSegments
-		exit _rigParseRoutes
-	end if
+  if sModuleRoutes is an array then
+    put sModuleRoutes into tRoutes
+  else
+    put sRoutes into tRoutes
+  end if
+  # DO WE EVEN HAVE ANY CUSTOM ROUTING TO DEAL WITH?
+  # THERE IS A DEFAULT  SCAFFOLDING TRIGGER, SO WE'LL LOOK JUST FOR 1
+  if (the number of lines in the keys of tRoutes) = 1 then
+    _rigSetRequest gSegments
+    exit _rigParseRoutes
+  end if
 
-	# TURN THE SEGMENT ARRAY INTO AN URI STRING
-	put gSegments into tUri
-	combine tUri using "/"
+  # TURN THE SEGMENT ARRAY INTO AN URI STRING
+  put gSegments into tUri
+  combine tUri using "/"
 
-	# IS THERE A LITERAL MATCH?  IF SO WE'RE DONE
-	 put the keys of sRoutes into tRoutesKeys
-   	sort lines of tRoutesKeys ascending
-   	replace return with comma in tRoutesKeys
-   
-   	repeat for each item keyNum in tRoutesKeys
-      		if (keyNum is an integer) and (keyNum > 1) then
+  # IS THERE A LITERAL MATCH?  IF SO WE'RE DONE
+  put the keys of tRoutes into tRoutesKeys
+  sort lines of tRoutesKeys ascending
+  replace return with comma in tRoutesKeys
+ 
+  repeat for each item keyNum in tRoutesKeys
+    if (keyNum is an integer) and (keyNum > 1) then
 
-			if sRoutes[keyNum][tUri] <> "" then
-				put sRoutes[keyNum][tUri] into tNewRoute
-         			split tNewRoute by "/"
-				_rigSetRequest tNewRoute	
-				exit _rigParseRoutes
-			end if
+      if tRoutes[keyNum][tUri] <> "" then
+        put tRoutes[keyNum][tUri] into tNewRoute
+        split tNewRoute by "/"
+        _rigSetRequest tNewRoute	
+        exit _rigParseRoutes
+      end if
 
-	 	end if
-   	end repeat
+    end if
+  end repeat
 
-	# LOOP THROUGH THE ROUTE ARRAY LOOKING FOR WILD-CARDS
-	repeat for each item keyNum in tRoutesKeys
-      		if (keyNum is an integer) and (keyNum > 1) then
-			repeat for each line tKey in the keys of  sRoutes[keyNum]
-				put sRoutes[keyNum][tKey] into tRouteString
+  # LOOP THROUGH THE ROUTE ARRAY LOOKING FOR WILD-CARDS
+  repeat for each item keyNum in tRoutesKeys
+    if (keyNum is an integer) and (keyNum > 1) then
+      repeat for each line tKey in the keys of  tRoutes[keyNum]
+        put tRoutes[keyNum][tKey] into tRouteString
 
-				# CONVERT WILD-CARDS TO REGEX
-				replace ":num" with "[0-9]+" in tKey
-				replace ":any" with ".+" in tKey
+        # CONVERT WILD-CARDS TO REGEX
+        replace ":num" with "[0-9]+" in tKey
+        replace ":any" with ".+" in tKey
 
-				put "^" & tKey & "$" into tRegEx
+        put "^" & tKey & "$" into tRegEx
 
-				# DOES THE REGEX MATCH?
-				if matchChunk(tUri, tRegEx) then
-			 		# DO WE HAVE A BACK-REFERENCE?
-            				if ("$" is in tRouteString) and ("(" is in tKey) then
-                				get matchtext(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
-                        			tReplacement4,tReplacement5,tReplacement6,tReplacement7,tReplacement8,tReplacement9,tReplacement10)
-                
-                				if "$1" is in tRouteString then
-                    				replace "$1" with tReplacement1 in tRouteString
-                				end if
-                				if "$2" is in tRouteString then
-                    				replace "$2" with tReplacement2 in tRouteString
-                				end if
-                				if "$3" is in tRouteString then
-                    				replace "$3" with tReplacement3 in tRouteString
-                				end if
-                				if "$4" is in tRouteString then
-                    				replace "$4" with tReplacement4 in tRouteString
-                				end if
-                				if "$5" is in tRouteString then
-                    				replace "$5" with tReplacement5 in tRouteString
-                				end if
-                				if "$6" is in tRouteString then
-                    				replace "$6" with tReplacement6 in tRouteString
-                				end if
-                				if "$7" is in tRouteString then
-                    				replace "$7" with tReplacement7 in tRouteString
-                				end if
-                				if "$8" is in tRouteString then
-                    				replace "$8" with tReplacement8 in tRouteString
-                				end if
-                				if "$9" is in tRouteString then
-                    				replace "$9" with tReplacement9 in tRouteString
-                				end if
-                				if "$10" is in tRouteString then
-                    				replace "$10" with tReplacement10 in tRouteString
-                				end if
+        # DOES THE REGEX MATCH?
+        if matchChunk(tUri, tRegEx) then
+          # DO WE HAVE A BACK-REFERENCE?
+          if ("$" is in tRouteString) and ("(" is in tKey) then
+            get matchtext(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
+            tReplacement4,tReplacement5,tReplacement6,tReplacement7,tReplacement8,tReplacement9,tReplacement10)
+              
+            if "$1" is in tRouteString then
+              replace "$1" with tReplacement1 in tRouteString
+            end if
+            if "$2" is in tRouteString then
+              replace "$2" with tReplacement2 in tRouteString
+            end if
+            if "$3" is in tRouteString then
+              replace "$3" with tReplacement3 in tRouteString
+            end if
+            if "$4" is in tRouteString then
+              replace "$4" with tReplacement4 in tRouteString
+            end if
+            if "$5" is in tRouteString then
+              replace "$5" with tReplacement5 in tRouteString
+            end if
+            if "$6" is in tRouteString then
+              replace "$6" with tReplacement6 in tRouteString
+            end if
+            if "$7" is in tRouteString then
+              replace "$7" with tReplacement7 in tRouteString
+            end if
+            if "$8" is in tRouteString then
+              replace "$8" with tReplacement8 in tRouteString
+            end if
+            if "$9" is in tRouteString then
+              replace "$9" with tReplacement9 in tRouteString
+            end if
+            if "$10" is in tRouteString then
+              replace "$10" with tReplacement10 in tRouteString
+            end if
 
-            				end if
+          end if
 
-					split tRouteString by "/"
-					_rigSetRequest tRouteString
-					exit _rigParseRoutes
-				end if
-			end repeat
+          split tRouteString by "/"
+          _rigSetRequest tRouteString
+          exit _rigParseRoutes
+        end if
+      end repeat
 
-		end if
-	end repeat
+    end if
+  end repeat
 
-	# IF WE GOT THIS FAR IT MEANS WE DIDN'T ENCOUNTER A
-	# MATCHING ROUTE SO WE'LL SET THE SITE DEFAULT ROUTE
-	_rigSetRequest gSegments
-end _rigParseRoutes
+  # IF WE GOT THIS FAR IT MEANS WE DIDN'T ENCOUNTER A
+  # MATCHING ROUTE SO WE'LL SET THE SITE DEFAULT ROUTE
+  _rigSetRequest gSegments
+end _rigParseRoutes 
 
 
 

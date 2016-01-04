@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.4</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version18">Version 1.8</a></li>
 <li><a href="#version174">Version 1.7.4</a></li>
 <li><a href="#version173">Version 1.7.3</a></li>
 <li><a href="#version172">Version 1.7.2</a></li>
@@ -185,6 +186,22 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+<h2><a name="version18">&nbsp;</a>Version 1.8</h2>
+<p>Release Date: 2016-01-04</p>
+
+
+<p>
+<ul>
+	<li><strong>Added:</strong> HMVC functionality. revIgniter now supports modules and widgets / view partials. Added system/libraries/Modules.lc. Modified system/libraries/Config.lc, system/libraries/Language.lc, system/libraries/Loader.lc, system/libraries/Router.lc and system/revigniter/RevIgniter.lc. Please read about <a href="overview/hmvc.html">HMVC - Extending the Model-View-Controller Pattern</a>, <a href="general/modules.html">Modules</a> and the <a href="libraries/modules.html">Modules Library</a> in the User Guide.</li>
+	<li><strong>Fixed:</strong> Missing commas in SQL query string produced by using rigDbDelet() in combination with rigDbWhereIn. Fixed in system/database/drivers/mysql/mysqlDriver.lc ->_rigDelete(), system/database/drivers/postgre/postgreDriver.lc ->_rigDelete() and system/database/drivers/sqlite/sqliteDriver.lc ->_rigDelete().</li>
+	<li><strong>Fixed:</strong> Verification of URI segments in system/libraries/URI.lc -> _rigFilterUri().</li>
+	<li><strong>Fixed:</strong> Bug in Jquery.lc -> rigJQuerySource() which affected those installations using “index.lc” in URIs.</li>
+	<li><strong>Changed:</strong> Tweaked loops in system/libraries/URI.lc -> _rigExplodeSegments and _rigUriToAssoc(), in system/libraries/URI.lc ->  _rigUriToAssoc().</li>
+</ul>
+</p>
+
 
 
 <h2><a name="version174">&nbsp;</a>Version 1.7.4</h2>

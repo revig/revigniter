@@ -1,0 +1,179 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# -------------------------------------------------------------------
+# AUTO-LOADER FOR MODULES
+# -------------------------------------------------------------------
+# This file specifies which systems should be loaded by default.
+#
+# In order to keep the framework as light-weight as possible only the
+# absolute minimal resources are loaded by default. For example,
+# the database is not connected to automatically since no assumption
+# is made regarding whether you intend to use it. This file lets
+# you globally define which systems you would like loaded with every
+# request for your module.
+#
+# -------------------------------------------------------------------
+# Instructions
+# -------------------------------------------------------------------
+#
+# These are the things you can load automatically:
+#
+# 1. Libraries
+# 2. Stacks
+# 3. Helper files
+# 4. Plugins
+# 5. Custom config files
+# 6. Language files
+# 7. Models
+#
+##
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Libraries
+# -------------------------------------------------------------------
+# These are the libraries located in the system/libraries folder,
+# in the system/application/libraries folder or in your
+# system/application/modules/yourModule/libraries folder.
+#
+# Prototype:
+#
+#     put "database" into sAutoLibraries[1]
+#     put "session" into sAutoLibraries[2]
+#     put "calendar" into sAutoLibraries[3]
+#     put "myLib" into sAutoLibraries[4]
+#
+#     or
+#     put "database,session,calendar,myLib" into sAutoLibraries
+#     split sAutoLibraries using comma
+#
+#     put sAutoLibraries into gModuleAutoload["libraries"]
+##
+
+put "" into sAutoLibraries[1]
+put sAutoLibraries into gModuleAutoload["libraries"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Stacks
+# -------------------------------------------------------------------
+# These are the stacks located in the system/stacks folder,
+# in your system/application/stacks folder or in your
+# system/application/modules/yourModule/stacks folder.
+#
+# Prototype:
+#
+#     put "chocolate" into sAutoStacks[1]
+#     put "strawberry" into sAutoStacks[2]
+#
+#     or
+#     put "chocolate,strawberry" into sAutoStacks
+#     split sAutoStacks using comma
+#
+#     put sAutoStacks into gModuleAutoload["stacks"]
+##
+
+put "" into sAutoStacks[1]
+put sAutoStacks into gModuleAutoload["stacks"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Helper Files
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "url,file,myHelper" into sAutoHelper
+#     split sAutoHelper using comma
+#
+#     put sAutoHelper into gModuleAutoload["helper"]
+##
+
+put "" into sAutoHelper[1]
+put sAutoHelper into gModuleAutoload["helper"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Plugins
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "footerlinks,jsCalendar,myPlugin" into sAutoPlugins
+#     split sAutoPlugins using comma
+#
+#     put sAutoPlugins into gModuleAutoload["plugin"]
+##
+
+put "" into sAutoPlugins[1]
+put sAutoPlugins into gModuleAutoload["plugin"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Config files
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "config1,config2" into sAutoCustConfigs
+#     split sAutoCustConfigs using comma
+#
+#     put sAutoCustConfigs into gModuleAutoload["config"]
+#
+#     NOTE: This item is intended for use ONLY if you have created custom
+#     config files for your module.  Otherwise, leave it blank.
+##
+
+put "" into sAutoCustConfigs[1]
+put sAutoCustConfigs into gModuleAutoload["config"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Language Files
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "lang1,lang2" into sAutoLangFiles
+#     split sAutoLangFiles using comma
+#
+#     put sAutoLangFiles into gModuleAutoload["language"]
+#
+#     NOTE: Do not include the "Lang" part of your file.  For example 
+#     "revigniterLang.lc" would be referenced as sAutoLangFiles["revigniter"];
+##
+
+put "" into sAutoLangFiles[1]
+put sAutoLangFiles into gModuleAutoload["language"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Models
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "model1,model2" into sAutoModels
+#     split sAutoModels using comma
+#
+#     put sAutoModels into gModuleAutoload["model"]
+#
+#     NOTE: This item is intended to be used for your module's models ONLY.
+##
+
+put "" into sAutoModels[1]
+put sAutoModels into gModuleAutoload["model"]
+
+
+--| END OF autoload.lc
+--| Location: ./system/application/modules/moduleSample/config/autoload.lc
+----------------------------------------------------------------------

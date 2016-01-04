@@ -186,9 +186,9 @@ end rigSetInitialJqueryValue
 --| FUNCTION rigJQuerySource
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 22-02-10
---| Last Mod: 21-03-14
+--| Last Mod: 03-01-16
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
@@ -209,6 +209,11 @@ function rigJQuerySource
 		end if
 
 		put rigSiteURL() into tSiteURL
+		
+    if char -8 to -1 of tSiteURL is "index.lc" then
+      put char 1 to -9 of tSiteURL into tSiteURL
+    end if
+		
 		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
 	else
 		if sJqueryCurrentVersion is empty then

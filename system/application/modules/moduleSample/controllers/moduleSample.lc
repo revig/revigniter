@@ -1,0 +1,33 @@
+<?rev
+
+# PUT ALL HANDLER NAMES WHICH ARE LIKELY TO SERVE AS URI SEGMENTS
+# INTO THE GLOBAL gModuleHandlers AS A COMMA SEPARATED LIST
+put "moduleSample,moduleSampleIndex" into gModuleHandlers
+
+
+
+
+# WRITE INITIAL STATEMENTS INTO THE CONTROLLER HANDLER
+command moduleSample
+  # code...
+end moduleSample
+
+
+# THIS COMMAND WILL BE CALLED IF NONE IS SPECIFYED IN THE URI
+# THE NAME OF THIS COMMAND MUST BE COMPOSED OF THE CONTROLLER NAME FOLLOWED BY THE WORD "Index"
+command moduleSampleIndex
+	# REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
+	put "Hello, module!" into gData["testString"]
+	
+	# LOAD THE VIEW FILE
+	get rigLoadView("moduleSampleView")
+end moduleSampleIndex
+
+
+
+
+
+
+--| END OF sampleModule.lc
+--| Location: ./application/modules/sampleModule/controllers/sampleModule.lc
+----------------------------------------------------------------------

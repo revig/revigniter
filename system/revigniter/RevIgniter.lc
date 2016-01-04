@@ -45,14 +45,14 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "1.7.4"
+	constant RIVERSION = "1.8"
 	constant RISTATE = "final"
 	
 	
 ##
 #------------------------------------------------------
 #  DECLARE ADDITIONAL GLOBAL VARIABLES
-	 global gController, gHandler, gControllerHandlers, gData
+	 global gController, gHandler, gControllerHandlers, gData, gModule, gModuleHandlers, gModulesHandlersA
 #------------------------------------------------------
 ##
 
@@ -151,7 +151,7 @@ end if
 
 ##
 #------------------------------------------------------
-#  Load the local application controller
+#  Load the local application controller or a module controller used as app controller
 #------------------------------------------------------
 #
 # Note: The Router library automatically validates the controller path.  If this include fails it 
@@ -159,11 +159,48 @@ end if
 #
 ##
 
-	if there is a file (gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT) then
-		include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
-	else
-		rigShowError "Unable to load your default controller. Please make sure the controller specified in your Routes" & gEXT & " file is valid."
+	put empty into tRig404Override
+  put TRUE into tUnableToLaodPage
+  put rigFetchDirectory() into tRigControllerDir
+  
+  put tRigControllerDir & gController & gEXT into tControllerPath
+	
+  if tRigControllerDir is empty then
+    if gModule is empty then
+      put "controllers/" & gController & gEXT into tControllerPath
+      put "controllers/" into tRigControllerDir
+      put gRoute[1]["404Override"] into tRig404Override
+    else
+      put "modules/" & gModule & "/controllers/" & gController & gEXT into tControllerPath
+      put "modules/" & gModule & "/controllers/" into tRigControllerDir
+      put gRoute[gModule][1]["404Override"] into tRig404Override
+    end if
+  end if
+
+	if there is a file (gAPPPATH & tControllerPath) then
+		put FALSE into tUnableToLaodPage
+      
+		# CHECK IF WE ARE DEALING WITH A MODULE
+		if gModule <> empty then
+
+			# LOAD CONFIG FILE ASSOCIATED WITH MODULE IF AVAILABLE
+			get rigLoadConfigFile(, TRUE, TRUE, gModule)
+        
+			# LOAD AUTOLOAD FILE ASSOCIATED WITH MODULE IF AVAILABLE
+			rigLoadAutoLoad gModule, TRUE
+		end if
+
+		include gAPPPATH & tControllerPath
+
+		if gModule <> empty then
+			put gModuleHandlers into gControllerHandlers
+		end if
 	end if
+  
+  if tUnableToLaodPage is TRUE then
+    rigShowError "Unable to load your default controller. Please make sure the controller specified in your routes" & gEXT & " file is valid."
+  end if
+
 
 
 ##
@@ -189,15 +226,15 @@ end if
 	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerLibHandlers())) then
 
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
-		if gRoute[1]["404Override"] <> empty then
+		if tRig404Override <> empty then
 
-			put gRoute[1]["404Override"] into t404ErrorSegments
+			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
 			put t404ErrorSegments[1] into gController
 			put t404ErrorSegments[2] into gHandler
 
-			include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+			include gAPPPATH & tRigControllerDir & gController & gEXT
 
 		else
 
@@ -240,15 +277,15 @@ end if
 	if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
 		
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
-		if gRoute[1]["404Override"] <> empty then
+		if tRig404Override <> empty then
 			
-			put gRoute[1]["404Override"] into t404ErrorSegments
+			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
 			put t404ErrorSegments[1] into gController
 			put t404ErrorSegments[2] into gHandler
 
-			include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+			include gAPPPATH & tRigControllerDir & gController & gEXT
 				
 			# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 			put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
@@ -287,15 +324,15 @@ end if
 			if (gHandler <> empty) and ((gHandler is not among the items of gControllerHandlers) or (gHandler is gController)) then
 				
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
-				if gRoute[1]["404Override"] <> empty then
+				if tRig404Override  <> empty then
 
-					put gRoute[1]["404Override"] into t404ErrorSegments
+					put tRig404Override into t404ErrorSegments
 
 					split t404ErrorSegments by "/"
 					put t404ErrorSegments[1] into gController
 					put t404ErrorSegments[2] into gHandler
 
-					include gAPPPATH & "controllers/" & rigFetchDirectory() & gController & gEXT
+					include gAPPPATH & tRigControllerDir & gController & gEXT
 
 					# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 					put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
@@ -346,13 +383,26 @@ end if
 #------------------------------------------------------
 ##
 
-	command _rigDo pHandler
-  	if word 1 of pHandler is among the items of gControllerHandlers then
-    		do pHandler
-    		return empty
-  	else
-    		return "Error: handler not found!"
-  	end if
+  command _rigDo pHandler pModule pParamsA
+    if pModule <> empty then
+      if word 1 of pHandler is among the items of gModulesHandlersA[pModule] then
+        if pParamsA is an array then
+          do pHandler && "pParamsA"
+        else
+          do pHandler
+        end if
+      else
+        return "Error: handler not found!"
+      end if
+      
+    else
+      if word 1 of pHandler is among the items of gControllerHandlers then
+        do pHandler
+        return empty
+      else
+        return "Error: handler not found!"
+      end if
+    end if
 	end _rigDo
 
 

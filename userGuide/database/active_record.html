@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.4</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -755,7 +755,7 @@ get rigDbDelete("mytable", tArray)
 -- "DELETE FROM mytable 
 -- WHERE id = " & tID</code></pre>
 
-<p>The first parameter is the table name, the second is the where clause. You can also use the <dfn>rigDbWhere</dfn> or <dfn>rigDbOrWhere</dfn> handlers instead of passing
+<p>The first parameter is the table name, the second is the where clause. You can also use the <dfn>rigDbWhere</dfn>, <dfn>rigDbOrWhere</dfn> or <dfn>rigDbWhereIn</dfn> handlers instead of passing
 the data to the second parameter of the function:</p>
 
 <pre><code>rigDbWhere "id", tID
