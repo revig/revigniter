@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Modules : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.7.4</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Modules</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container">
+	
+<div id="content">
+
+
+<h1>Modules</h1>
+
+<p>Modules are components of the Hierarchical Model View Controller application design pattern further explained in chapter <a href="../overview/hmvc.html">HMVC - Extending the Model-View-Controller Pattern</a>.</p>
+
+
+<h3>Table of Contents</h3>
+
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#structure">Structure of a HMVC Module</a></li>
+<li><a href="#controllerSpecifications">Module Controller Specifications</a></li>
+<li><a href="#applicationControllers">Using Modules as Application Controllers</a></li>
+<li><a href="#widgets">Using Modules as Libraries or Widgets / View Partials</a></li>
+<li><a href="#paths">Module Paths</a></li>
+<li><a href="#loadingResources">Loading Module Files and Resources</a></li>
+<li><a href="#configuration">Module Configuration</a></li>
+<li><a href="#routing">URI Routing</a></li>
+<li><a href="#assets">Module Assets</a></li>
+</ul>
+
+
+<a name="overview"></a>
+<h2>Overview</h2>
+
+<p>Following below the features and key points of revIgniter's approach to the HMVC pattern:</p>
+
+<ul>
+	<li>Modules can be used as libraries.</li>
+	<li>Module controllers can be used as application controllers.</li>
+	<li>Modules can be used as widgets or view partials respectively.</li>
+	<li>Modules can be nested, that's what "H" in HMVC means anyway.</li>
+	<li>Modules can load resources of other modules.</li>
+	<li>Controllers can be located in myModule/controllers sub-directories.</li>
+	<li>Pass any number of parameters to module controllers using URI style segments and / or an array (widgets only).</li>
+	<li>Each module may contain a models directory.</li>
+	<li>Models may be loaded from myModule/models sub-directories.</li>	
+	<li>Each module may contain a config/autoload.lc file.</li>
+	<li>Each module may contain a config/config.lc file.</li>
+	<li>Each module may contain a config/routes.lc file. Note, this file is mandatory if a module controller is used as application controller.</li>
+	<li>Each module may contain a language directory, a helpers directory, a libraries directory, a plugins directory and a stacks directory.</li>
+</ul>
+
+
+<a name="structure"></a>
+<h2>Structure of a HMVC Module</h2>
+
+<p>All modules are arranged in their own folder in the application/modules directory and may contain configuration files and sub-directories like the main 
+	MVC component in the application directory.</p>
+	
+
+<pre><code>application/modules
+   /myModule
+      /config
+      /controllers
+      /files
+      /helpers
+      /language
+      /libraries
+      /models
+      /plugins
+      /stacks
+      /views
+</code></pre>
+
+<p>Please see as an example the very basic module "moduleSample" in application/modules.</p>
+
+
+<a name="controllerSpecifications"></a>
+<h2>Module Controller Specifications</h2>
+
+<p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as uri segments into the  
+global <var>gModuleHandlers</var>.</p>
+
+<p>Provided that the controller is used as a library or widget, put the name of the main handler (the handler named after the module) as well as the index handler 
+	name and all names of handlers which are likely to be called by using the <dfn>rigRunModule()</dfn> function into the global <var>gModuleHandlers</var>.</p>
+
+<p>To avoid name collisions with standard application controller index handlers the name of your module controller's index handler must be  
+composed of the controller name followed by the word "Index" like: myModuleIndex.</p>
+
+<p>Sample code of a module controller named after the module:</p>
+
+<pre><code>&lt;?rev
+
+# PUT YOUR HANDLER NAMES INTO THE GLOBAL gModuleHandlers AS A COMMA SEPARATED LIST
+put "myModule,myModuleIndex,otherHandler" into gModuleHandlers
+
+
+command myModule
+	# MAIN HANDLER, THIS HANDLER IS CALLED WHEN THE CONTROLLER IS LOADED
+	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS, PLUGINS HERE
+	-- Code...
+end myModule
+
+
+command myModuleIndex
+	# DEFAULT HANDLER, THIS HANDLER IS CALLED WHEN THE CONTROLLER IS RUN AND NO HANDLER IS SPECIFIED
+	# REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
+	-- Code...
+end myModuleIndex
+
+
+command otherHandler
+	-- Code..., calling _privatehandler for example
+end otherHandler
+
+
+command _privatehandler
+	# HANDLER NAME NOT USED AS URI SEGMENT / NOT CALLED BY rigRunModule(), SO, THERE IS NO NEED
+	# TO STORE IT'S NAME IN gModuleHandlers
+	-- Code...
+end _privatehandler
+
+
+
+--| END OF myModule.lc
+--| Location: ./system/application/modules/myModule/controllers/myModule.lc
+----------------------------------------------------------------------
+</code></pre>
+
+
+<p>There is a very basic sample controller in modules/moduleSample/controllers which can serve as application controller as well as widget / view partial.</p>
+
+<p class="important"><strong>Note:</strong> In case you use module controllers as application controller you must include a routes.lc file in the yourModule/config directory.
+	Routing has no effect on view partials or if modules are used as libraries. Please see the sample routes file in modules/moduleSample/config.</p>
+	
+	
+<a name="applicationControllers"></a>
+<h2>Using Modules as Application Controllers</h2>
+
+<p>To use modules as application controllers specify the controller script to be invoked using URI segments. There is no difference to standard controllers.  
+For example to run the sample module as application controller the appropriate URL would read:</p>
+
+<pre><code>example.com/moduleSample</code></pre>
+
+<p class="important"><strong>Note:</strong> On the basis of the URL there is no way to distinguish between standard application controllers and module controllers 
+	used as app controllers. So, to avoid name collisions with app controller names be careful naming your module controllers. Of course this applies to naming modules 
+	used as widgets only.</p>
+
+	
+<a name="widgets"></a>
+<h2>Using Modules as Libraries or Widgets / View Partials</h2>
+
+<p>Widgets are, in contrast to modules used as app controllers, intrinsically tied to the modules library. So, please see chapter <a href="../libraries/modules.html">Modules Library</a> for further information.</p>
+
+
+<a name="paths"></a>
+<h2>Module Paths</h2>
+
+<p>Module paths and module controller paths are relative to <dfn>application/modules/</dfn>. Keep in mind that module controllers can be located in sub-folders of 
+	<dfn>myModule/controllers</dfn> and that you must omit the name of the "controllers" directory in module paths. So, paths to controller files can be:</p>
+
+
+<pre><code>myModule/myController</code></pre>
+
+<p>or (calling in each case the index handler "myControllerIndex"):</p>
+
+<pre><code>myModule/mySubDirectory/myController</code></pre>
+
+<p>To address a particular controller handler instead of the index handler add it's name as segment Like:</p>
+
+<pre><code>myModule/myController/myControllerHandler</code></pre>
+	
+<p>Use additional segments to pass parameters:</p>
+
+<pre><code>myModule/myController/myControllerHandler/name/joe</code></pre>
+
+
+<p>If you name a controller after your module and this controller is not in a sub-directory of myModule/controllers you can omit the controller name and the path would 
+	simply be:</p>
+	
+<pre><code>myModule</code></pre>
+
+<p>If you don't include a handler name the controller's index handler, myModuleIndex in this case, is called. Calling a particular handler of controller myModule of module 
+	myModule would read:</p>
+	
+<pre><code>myModule/myOtherHandler</code></pre>
+
+<p class="important"><strong>Note:</strong> Currently "query string" URLs are not compatible with modules. So, always use segment-based URLs.</p>
+
+
+<a name="loadingResources"></a>
+<h2>Loading Module Files and Resources</h2>
+
+<p>You can load models, libraries, helpers etc. like in standard application controllers. To load equivalent module files add the module's name to parameter lists like:</p>
+
+
+<pre><code>rigLoadModel "moduleModel", , "myModule"
+	
+rigLoaderLoadLibrary "Modulelibrary", , "myModule"
+
+get rigLangLoadLang("moduleLang", "french", "myModule")
+
+rigLoadHelper "moduleHelper", "myModule"
+
+rigLoadPlugin "modulePlugInPi", "myModule"
+
+get rigLoadConfigFile("mymoduleconfig", TRUE, TRUE, "myModule")
+
+rigLoadStack "moduleStack", , , "myModule"
+</code></pre>
+
+
+<h3>Auto-loading Module Resources</h3>
+
+<p>To autoload module resources, open your <dfn>application/modules/myModule/config/autoload.lc</dfn> file and add the item you want loaded to the <var>gModuleAutoload</var> array like:</p>
+
+<pre><code>put "database" into sAutoLibraries[1]
+put "myLib" into sAutoLibraries[2]
+put sAutoLibraries into gModuleAutoload["libraries"]
+</code></pre>
+
+<p>You'll find instructions in the autoload file of the sample module corresponding to each type of resource item which can be auto-loaded.</p>
+
+
+<h3>Loading Views</h3>
+
+<p>In general module view files are loaded like any other view file using <dfn>rigLoadView()</dfn>. Provided that the particular module is used as widget you must keep 
+	in mind that you should not set the second parameter of this function to true. To set this parameter is unnecessary anyway because loading the view of a widget always 
+	returns data as a string rather than sending it to the browser.</p>
+
+
+<a name="configuration"></a>
+<h2>Module Configuration</h2>
+
+<p>To configure your module simply add a configuration file "<dfn>config.lc</dfn>" to <dfn>application/modules/myModule/config/</dfn> like the one you find in the config directory of the sample module.</p>
+
+<h3>Setting a Module's Configuration Value in a Configuration File</h3>
+
+<p>To add configuration data related to your module use the module name as array key in a multidimensional array named "<var>gConfig</var>" like:</p>
+
+<pre><code>put "foo" into gConfig["myModule"]["bar"]</code></pre>
+
+<h3>Overriding a Global Configuration Value in a Configuration File</h3>
+
+<p>To override global configuration data just omit the module's name as array key.</p>
+
+<pre><code>put "french" into gConfig["language"]</code></pre>
+
+
+<h3>Fetching Module Config Items</h3>
+
+<p>To retrieve an item from your module's config file, use the standard function and add the name of your module as second parameter like:</p>
+
+<pre><code>rigFetchConfigItem("itemName", "myModule")</code></pre>
+
+<h3>Setting a Module Config Item</h3>
+
+<p>If you would like to dynamically set a module's config item or change an existing one, you can so using:</p>
+
+<pre><code>rigSetConfigItem("itemName", "itemValue", "myModule")</code></pre>
+
+<p>Where <var>itemName</var> is the <var>gConfig</var> array index you want to change, and <var>itemValue</var> is its value, and the third parameter is the name of your module.</p>
+
+
+<a name="routing"></a>
+<h2>URI Routing</h2>
+
+<p>Note, the following applies to modules only if used as application controllers. Routing has no effect on view partials or if modules are used as libraries. In case you use module controllers as application controller you must include a <dfn>routes.lc</dfn> file in the <dfn>yourModule/config directory</dfn>. This file lets you re-map URI requests to specific controller functions. Typically there is a one-to-one relationship between a module URL string and its corresponding controller page library/handler. The segments in a module URL normally follow this pattern:</p>
+
+<pre><code>example.com/myModule/handler/ID/</code></pre>
+
+<p>or in case the name of the page library is not equal to the module name</p>
+
+<pre><code>example.com/myModule/pagelibrary/handler/ID/</code></pre>
+
+<p>or using a sub-directory in myModule/controllers</p>
+
+<pre><code>example.com/myModule/sub-directory/pagelibrary/handler/ID/</code></pre>
+
+<p>In some instances, however, you may want to remap this relationship so that a different page library/handler is called than the one corresponding to the URL. Store these custom routes which are relative to <dfn>application/modules/</dfn> in the <var>gRoute["yourModule"]</var> array using a key number starting with number 2 like:</p>
+
+<pre><code>put "myModule/mysub-directory/myPagelibrary/myHandler" into gRoute["myModule"][2]["myModule/foo/bar"]</code></pre>
+
+<p>Please see chapter <a href="./routing.html">Uri Routing</a> for complete details.</p>
+
+<h3>Reserved Routes</h3>
+
+<p>There are two reserved routes for modules:</p>
+
+<pre><code>put "myModule/pagelibrary" into gRoute["myModule"][1]["defaultController"]</code></pre>
+
+<p>This route indicates which controller page library should be loaded if the URI contains no data besides the module name. In the above example, the "pagelibrary" page 
+	library would be loaded. 
+	If the "defaultController" route is empty and there is only one URI segment specifying the name of the module, revIgniter expects that there is a controller named after 
+	the module and tries to load <dfn>myModule/myModule</dfn>. If no handler is specified the module's index handler is called which must be composed of the controller 
+	name followed by the word "Index" so that the route would look like: <dfn>myModule/myModule/myModuleIndex</dfn>.</p>
+	
+<pre><code>put "" into gRoute["myModule"][1]["404Override"]</code></pre>
+
+<p>This route will tell the Router what URI segments to use if those provided in the URL cannot be matched to a valid route, in other words if the controller specified 
+	is missing. If this route is empty the default 404 error page is provided.</p>
+	
+<p class="important"><strong>Note:</strong> Module routes are relative to application/modules/. The gRoute["myModule"] array must be numbered 
+	and the key number for reserved routes must be 1. So custom route key numbers start with number 2.</p>
+
+
+<a name="assets"></a>
+<h2>Module Assets</h2>
+	
+<p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files and images is that it simplifies distribution of modules including assets. 
+	Just organize all related assets (as described in chapter <a href="../helpers/asset_helper.html">Asset Helper</a>) in a folder preferably named after your module and 
+	store it in <dfn>assets/modules</dfn>. This way installation of a module with appendant assets is as simple as copying two folders to the right place.</p>
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="routing.html">URI Routing</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="errors.html">Error Handling</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>

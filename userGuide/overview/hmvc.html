@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>revIgniter Features : revIgniter User Guide</title>
+		<title>HMVC - Extending Model-View-Controller : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">revIgniter Features</li>
+			 		 	<li class="active">HMVC - Extending MVC</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -86,49 +86,23 @@
 <div id="content">
 
 
-<h1>revIgniter Features</h1>
+<h1>HMVC - Extending the Model-View-Controller Pattern</h1>
 
-<p>Features in and of themselves are a very poor way to judge an application since they tell you nothing
-about the user experience, or how intuitively or intelligently it is designed.  Features
-don't reveal anything about the quality of the code, or the performance, or the attention to detail, or security practices.
-The only way to really judge an app is to try it and get to know the code. <a href="../installation/">Installing</a>
-revIgniter is child's play so you are encouraged to do just that.  In the mean time here's a list of revIgniter's main features:</p>
+<p>revIgniter provides HMVC functionality. HMVC stands for the Hierarchical Model View Controller application design pattern which makes your application modular.<br /> 
+	This pattern extends the <a href="./mvc.html">MVC pattern</a> and is a solution to overcome scalability problems apparent within large MVC applications. 
+</p>
 
 <ul>
-<li>Model-View-Controller Based System</li>
-<li>HMVC Functionality</li>
-<li>Extremely Light Weight</li>
-<li> Stack Support</li>
-<li>Full Featured database libraries with support for several platforms (currently only three, more to come).</li>
-<li>Active Record Database Support</li>
-<li>Form and Data Validation</li>
-<li>Security, XSS Filtering and CSRF protection</li>
-<li>Session Management</li>
-<li>Email Sending Library. Supports Attachments, HTML/Text email, multiple protocols (sendmail, smtp, and mail) and more.</li>
-<li>Image Manipulation Library (cropping, resizing, rotating, watermarking etc.). Supports ImageMagick (ImageMagick not required in case you use the stack file version).</li>
-<li>File Uploading</li>
-<li>Localization</li>
-<li>Pagination (optional AJAX pagination)</li>
-<li>Data Encryption</li>
-<li>Benchmarking</li>
-<li>Authentication Library</li>
-<li>Full Page Caching</li>
-<li>Database Query Caching</li>
-<li>Error Logging</li>
-<li>Application Profiling</li>
-<li>Scaffolding</li>
-<li>Calendaring Library</li>
-<li>Captcha Library</li>
-<li>jQuery Library</li>
-<li>User Agent Library</li>
-<li>Trackback Library</li>
-<li>Search-engine Friendly URLs</li>
-<li>Flexible URI Routing</li>
-<li>Support for System Hooks, Library Extensions, Plugins and Modules</li>
-<li>Cache Busting</li>
-<li>Large library of "helper" handlers</li>
+<li>HMVC supports the reuse of code.</li>
+<li>HMVC allows easy distribution of MVC entities stored in a single directory.</li>
+<li>HMVC reduces dependencies and allows to easily extend applications while retaining ease of maintenance.</li>
+<li> Testing is easier because the system is divided to a large extend into independent parts.</li>
 </ul>
 
+<p>A HMVC application operates using a collection of MVC entities where each MVC entity can execute without the presence of any other. Ideally each entity should never 
+load models or libraries of other entities. If you like to read more about HMVC please see: 
+<a href="http://www.javaworld.com/article/2076128/design-patterns/hmvc--the-layered-pattern-for-developing-strong-client-tiers.html" target="_blank"> HMVC: The layered pattern 
+for developing strong client tiers</a>. This article was presented on the JavaWorld web site, July 2000.</p>
 
 
 
@@ -141,11 +115,11 @@ revIgniter is child's play so you are encouraged to do just that.  In the mean t
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="cheatsheets.html">revIgniter Cheatsheets</a>
+Previous Topic:&nbsp;&nbsp;<a href="mvc.html">Model-View-Controller</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="appflow.html">Application Flow Chart</a>
+Next Topic:&nbsp;&nbsp;<a href="goals.html">Architectural Goals</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>

@@ -28,6 +28,7 @@ function create_menu(basepath)
 		 	'<li class="item"><a href="'+base+'overview/features.html">Supported Features</a></li>' +
 		 	'<li class="item"><a href="'+base+'overview/appflow.html">Application Flow Chart</a></li>' +
 		 	'<li class="item"><a href="'+base+'overview/mvc.html">Model-View-Controller</a></li>' +
+			'<li class="item"><a href="'+base+'overview/hmvc.html">HMVC - Extending MVC</a></li>' +
 		 	'<li class="item"><a href="'+base+'overview/goals.html">Architectural Goals</a></li>' +
 		'</ul>' +
 		'</div>' +
@@ -51,6 +52,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'general/common_handlers.html">Common Handlers</a></li>' +
 			'<li class="item"><a href="'+base+'general/scaffolding.html">Scaffolding</a></li>' +
 			'<li class="item"><a href="'+base+'general/routing.html">URI Routing</a></li>' +
+			'<li class="item"><a href="'+base+'general/modules.html">Modules</a></li>' +
 			'<li class="item"><a href="'+base+'general/errors.html">Error Handling</a></li>' +
 			'<li class="item"><a href="'+base+'general/caching.html">Caching</a></li>' +
 			'<li class="item"><a href="'+base+'general/profiling.html">Profiling Your Application</a></li>' +
@@ -81,6 +83,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'libraries/jquery.html">jQuery Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/language.html">Language Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/loader.html">Loader Library</a></li>' +
+			'<li class="item"><a href="'+base+'libraries/modules.html">Modules Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/output.html">Output Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/pagination.html">Pagination Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/sessions.html">Session Library</a></li>' +
