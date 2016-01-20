@@ -125,7 +125,7 @@
 
 <p>Like most other libraries in revIgniter, the Jquery library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Jquery"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Jquery"</code></pre>
 
 
 <h2>Setting preferences</h2>
@@ -245,42 +245,42 @@ rigLoadModel "ajaxmodel"
 
 <p>Now to the important part, the statements, which build the jQuery script. We want the script to handle key-up events in the input field. It should post the text, the user has typed, and replace HTML code with data returned by the controller.<br />Add this statement to tell the jQuery library to start writing the jQuery script:</p>
 
-<pre><code>rigJQopen
+<pre><code class="lang-livecodeserver">rigJQopen
 </code></pre>
 
 <p>Add this statement to tell the library to start writing an event function, which is triggered by key-up events in an input field with the id named "filter".</p>
 
-<pre><code>rigJQeventOpen "'#filter'", "'keyup'"
+<pre><code class="lang-livecodeserver">rigJQeventOpen "'#filter'", "'keyup'"
 </code></pre>
 
 <p>Add the following statement, which posts the text (value) of the input field as "search_term" to the controller and it's <dfn>datafilter</dfn> handler, and replaces the HTML code inside the "#results" div with the returned data. Note: Here we use a getter, which returns the jQuery syntax to get the value of the input field.</p>
 
-<pre><code>rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+<pre><code class="lang-livecodeserver">rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
 </code></pre>
 
 <p>Tell the library to end writing the event function by adding this statement:</p>
 
-<pre><code>rigJQeventClose
+<pre><code class="lang-livecodeserver">rigJQeventClose
 </code></pre>
 
 <p>Add this statement to close the jQuery script:</p>
 
-<pre><code>rigJQclose
+<pre><code class="lang-livecodeserver">rigJQclose
 </code></pre>
 
 <p>To store the script in the <var>gData</var> variable add the following line:</p>
 
-<pre><code>put the result into gData["JQscript"]
+<pre><code class="lang-livecodeserver">put the result into gData["JQscript"]
 </code></pre>
 
 <p>The next statement calls the model function to retrieve the data from the database: </p>
 
-<pre><code>put peopleData() into tQuery
+<pre><code class="lang-livecodeserver">put peopleData() into tQuery
 </code></pre>
 
 <p>To build the HTML table add this statement:</p>
 
-<pre><code>buildTable tQuery
+<pre><code class="lang-livecodeserver">buildTable tQuery
 </code></pre>
 
 <p>Finally load the view file, which we call "ajaxView":</p>
@@ -506,7 +506,7 @@ put the result into gData["JQscript"]
 
 <p>Here is another example showing how to use the optional fifth parameter:</p>
 
-<pre><code>rigJQvar "message,'This is an alert.'"
+<pre><code class="lang-livecodeserver">rigJQvar "message,'This is an alert.'"
 rigJQeventAlert "'#testObject'", "'click'", "event.data.msg", , "msg: message"
 </code></pre>
 
@@ -542,7 +542,7 @@ rigJQeventAlert "'#testObject'", "'click'", "event.data.msg", , "msg: message"
 
 <p>Permits you to write all sorts of jQuery setter statements, which manipulate the DOM in some manner. Example:</p>
 
-<pre><code>rigJQset "'p:last'", "addClass", "'selected'"
+<pre><code class="lang-livecodeserver">rigJQset "'p:last'", "addClass", "'selected'"
 </code></pre>
 
 <p>The first parameter specifies a selector, the second a jQuery method. The third parameter contains the values to be set. Depending on the specified method, these can be a string, an array, a comma delimited list or a function returning the content to set. The optional fourth parameter, a boolean, tells the handler to treat the Propertyvalues parameter as function. The optional fifth parameter is only used by the toggleClass method. It is a boolean to determine whether the class should be added or removed.</p>
@@ -564,7 +564,7 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 
 <p>Permits you to retrieve information from DOM elements for later use. Example:</p>
 
-<pre><code>rigJQgetR("'#userinput'", "attr", "'value'")
+<pre><code class="lang-livecodeserver">rigJQgetR("'#userinput'", "attr", "'value'")
 </code></pre>
 
 <p>The first parameter specifies a selector, the second a jQuery method. Use the optional third parameter to determine the property to get.</p>
@@ -574,7 +574,7 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 
 <p>This tells the library to start writing statements registering behaviors to take effect when the user interacts with the browser. Example:</p>
 
-<pre><code>rigJQeventOpen "'#logout'", "'click'"
+<pre><code class="lang-livecodeserver">rigJQeventOpen "'#logout'", "'click'"
 	rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
 	rigJQcondition "logout==true", "window.location = 'logout';"
 rigJQeventClose
@@ -584,7 +584,7 @@ rigJQeventClose
 
 <p>Here is another example demonstrating the use of additional function arguments:</p>
 
-<pre><code>rigJQeventOpen "'#customObject'", "'myCustomEvent'", , , , "myName, myValue"
+<pre><code class="lang-livecodeserver">rigJQeventOpen "'#customObject'", "'myCustomEvent'", , , , "myName, myValue"
 	rigJQset "this", "text", "myName + ', hi there!'"
 rigJQeventClose
 
@@ -605,14 +605,14 @@ rigJQeventClose
 
 <p>Permits you to set special effects on various events. Example:</p>
 
-<pre><code>rigJQeventEffect "'#hideBtn'", "'#hideDiv'", "'click'", "hide", "'slow'", , rigJQeffectR("'a'", "hide")
+<pre><code class="lang-livecodeserver">rigJQeventEffect "'#hideBtn'", "'#hideDiv'", "'click'", "hide", "'slow'", , rigJQeffectR("'a'", "hide")
 </code></pre>
 
 <p>The first parameter specifies an object, which triggers the event, the second determines the object the effect is applied to. The third parameter is an event type. The fourth parameter specifies an effect method. The optional fifth parameter is used to set effect parameters. The optional sixth parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional seventh parameter contains a function to call once the animation is complete.</p>
 
 <p>Here is another example:</p>
 
-<pre><code>put rigJQeffectR("'a'", "show") &amp; return &amp; rigJQalertR("'This is an alert!'") into tCallbackShow
+<pre><code class="lang-livecodeserver">put rigJQeffectR("'a'", "show") &amp; return &amp; rigJQalertR("'This is an alert!'") into tCallbackShow
 rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", , tCallbackShow
 </code></pre>
 
@@ -620,7 +620,7 @@ rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", ,
 
 <p>Permits you to apply effects to objects. Example:</p>
 
-<pre><code>rigJQeffect "'a'", "hide", "'slow'"
+<pre><code class="lang-livecodeserver">rigJQeffect "'a'", "hide", "'slow'"
 </code></pre>
 
 <p>The first parameter determines the object the effect is applied to. The second specifies the effect. The optional third parameter is used to set the effect duration and the optional fourth parameter contains a function to call once the animation is complete.</p>
@@ -684,7 +684,7 @@ rigJQeventClose
 
 <p>Permits you to load data from the server and, depending on the request type, place the returned HTML into the matched element without a browser page refresh. Example:</p>
 
-<pre><code>rigJQeventOpen "'#filter'", "'keyup'"
+<pre><code class="lang-livecodeserver">rigJQeventOpen "'#filter'", "'keyup'"
 	rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
 rigJQeventClose
 </code></pre>
@@ -731,7 +731,7 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 
 <p>Permits you to write a conditional statement. Example:</p>
 
-<pre><code>rigJQcondition "logout==true", "window.location = 'logout';"
+<pre><code class="lang-livecodeserver">rigJQcondition "logout==true", "window.location = 'logout';"
 </code></pre>
 
 <p>The first parameter contains the condition, the second specifies what to do if the condition is met, and the optional third parameter specifies what to do if the condition is not met.</p>
@@ -769,14 +769,14 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 
 <p>Permits you to declare variables. Example:</p>
 
-<pre><code>rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
+<pre><code class="lang-livecodeserver">rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
 </code></pre>
 
 <p>The parameter can be a string specifying a name and a value delimited by a comma, or an array to declare more than one variable with only one statement. If you use an array stick to the following form: put "name,value;" into tVarsArray[n] where n is an integer starting with 1</p>
 
 <p>Here is another example, which takes the result of a confirmation box as value:</p>
 
-<pre><code>rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
+<pre><code class="lang-livecodeserver">rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
 </code></pre>
 
 <h3>rigJQvarR(<var>vars</var>)</h3>

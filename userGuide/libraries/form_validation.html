@@ -333,7 +333,7 @@ whether the validation was successful it either presents the form or the success
 <p>revIgniter lets you set as many validation rules as you need for a given field, cascading them in order, and it even lets you prep and pre-process the field data
 at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn> handler:</p>
 
-<pre><code>rigSetRules</code></pre>
+<pre><code class="lang-livecodeserver">rigSetRules</code></pre>
 
 <p>The above function takes <strong>three</strong> parameters as input:</p>
 
@@ -346,7 +346,7 @@ at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn
 
 <p><br />Here is an example. In your <dfn>controller</dfn> (form.lc), add this code just below the validation initialization function:</p>
 
-<pre><code>rigSetRules "username", "Username", "requiredR"
+<pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR"
 rigSetRules "password", "Password", "requiredR"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR"
@@ -435,7 +435,7 @@ rigSetRules tConfig
 
 <p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of rule setting function, like this:</p>
 
-<pre><code>rigSetRules "username", "Username", "requiredR|minLengthR[5]|maxLengthR[12]"
+<pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR|minLengthR[5]|maxLengthR[12]"
 rigSetRules "password", "Password", "requiredR|matchesR[passconf]"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR|validEmailR"
@@ -460,7 +460,7 @@ There are numerous rules available which you can read about in the validation re
 <p>In addition to the validation functions like the ones we used above, you can also prep your data in various ways.
 For example, you can set up rules like this:</p>
 
-<pre><code>rigSetRules "username", "Username", "<kbd>trim</kbd>|requiredR|minLengthR[5]|maxLengthR[12]|<kbd>xssClean</kbd>"
+<pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "<kbd>trim</kbd>|requiredR|minLengthR[5]|maxLengthR[12]|<kbd>xssClean</kbd>"
 rigSetRules "password", "Password", "<kbd>trim</kbd>|requiredR|matchesR[passconf]|<kbd>md5</kbd>"
 rigSetRules "passconf", "Password Confirmation", "<kbd>trim</kbd>|requiredR"
 rigSetRules "email", "Email", "<kbd>trim</kbd>|requiredR|validEmailR"
@@ -482,7 +482,7 @@ the validation rules so if there is an error, the original data will be shown in
 <p>Thus far we have only been dealing with errors.  It's time to repopulate the form field with the submitted data. revIgniter offers several helper functions
 that permit you to do this. The one you will use most commonly is:</p>
 
-<pre><code>rigSetValue("fieldname")</code></pre>
+<pre><code class="lang-livecodeserver">rigSetValue("fieldname")</code></pre>
 
 <p>Complement your <dfn>form.lc</dfn> controller as shown:</p>
 
@@ -587,7 +587,7 @@ create a callback handler that does that.  Let's create a example of this.</p>
 
 <p>In your controller, change the "username" rule to this:</p>
 
-<pre><code>rigSetRules "username", "Username", "<kbd>callback_userNameCheck</kbd>"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "<kbd>callback_userNameCheck</kbd>"</code></pre>
 
 
 <p>Then add a new handler called <dfn>userNameCheck</dfn> to your controller.  Here's how your controller should now look:</p>
@@ -668,7 +668,7 @@ it is assumed that the data is your newly processed form data.</p>
 
 <p>To set your own custom message you can either edit that file, or use the following function:</p>
 
-<pre><code>rigSetMessage "<var>rule</var>", "<var>Error Message</var>"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetMessage "<var>rule</var>", "<var>Error Message</var>"</code></pre>
 
 <p>Where <var>rule</var> corresponds to the name of a particular rule, and <var>Error Message</var> is the text you would like displayed.</p>
 
@@ -676,11 +676,11 @@ it is assumed that the data is your newly processed form data.</p>
 
 <p>In the "callback" example above, the error message was set by passing the name of the handler:</p>
 
-<pre><code>rigSetMessage "userNameCheck"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetMessage "userNameCheck"</code></pre>
 
 <p>You can also override any error message found in the language file.  For example, to change the message for the "requiredR" rule you will do this:</p>
 
-<pre><code>rigSetMessage "requiredR", "Your custom message here"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetMessage "requiredR", "Your custom message here"</code></pre>
 
 
 
@@ -691,16 +691,16 @@ it is assumed that the data is your newly processed form data.</p>
 
 <p>First, prefix your "human" name with <dfn>lang:</dfn>, as in this example:</p>
 
-<pre><code>rigSetRules "firstname", "<kbd>lang:</kbd>firstname", "requiredR"
+<pre><code class="lang-livecodeserver">rigSetRules "firstname", "<kbd>lang:</kbd>firstname", "requiredR"
 </code></pre>
 
 <p>Then, store the name in one of your language file arrays (without the prefix):</p>
 
-<pre><code>put "First Name" into gLang["firstname"]</code></pre>
+<pre><code class="lang-livecodeserver">put "First Name" into gLang["firstname"]</code></pre>
 
 <p><strong>Note:</strong> If you store your array item in a language file that is not loaded automatically by revIgniter, you'll need to remember to load it in your controller using:</p>
 
-<pre><code>rigLoadLanguage "filename"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadLanguage "filename"</code></pre>
 
 <p>See the <a href="language.html">Language Library</a> page for more info regarding language files.</p>
 
@@ -1064,7 +1064,7 @@ and as your Validation Rule field name.</p>
 
 <p>For example, to set a rule for the above field you would use:</p>
 
-<pre><code>rigSetRules "<kbd>options[]</kbd>", "Options", "requiredR"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetRules "<kbd>options[]</kbd>", "Options", "requiredR"</code></pre>
 
 <p>Or, to show an error for the above field you would use:</p>
 

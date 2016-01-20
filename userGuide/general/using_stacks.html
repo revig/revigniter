@@ -152,7 +152,7 @@ end openStack
 
 <p>From within any of your <a href="controllers.html">Controller</a> handlers you can initialize your stack using the standard:</p>
 
-<pre><code>rigLoadStack "Somestack"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadStack "Somestack"</code></pre>
 
 <p>Where <em>Somestack</em> is the file name, without the ".rev" / ".livecode" file extension. You can submit the file name capitalized or lower case.
 revIgniter doesn't care.</p>
@@ -185,7 +185,7 @@ feature you must name the file exactly the same as the native stack.</dfn>.</p>
 
 <p>To load your stack you'll see the standard loading handler:</p>
 
-<pre><code>rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
 
 
 <h2>Extending Native Stacks</h2>
@@ -207,7 +207,7 @@ Extending a stack is nearly identical to replacing a stack with one exception:</
 <p>To load your sub-stack you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
 to load the example above, which extends the Nativestack stack, you will use:</p>
 
-<pre><code>rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
 
 
 
@@ -238,7 +238,7 @@ to load the example above, which extends the Nativestack stack, you will use:</p
 <p>Step 2: Prepare a copy of the qrtpdflib.livecode stack. This involves the following:<br />
 Insert the lines below right after the license notes: </p>
 
-<pre><code># LOGGING
+<pre><code class="lang-livecodeserver"># LOGGING
 on libraryStack
 	rigLogMessage "debug", "Stack" &amp;&amp; the short name of me &amp;&amp; "Loaded";
 end libraryStack
@@ -271,7 +271,7 @@ Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as
 
 <p>Add the following code to the card script: </p>
 
-<pre><code># LOGGING
+<pre><code class="lang-livecodeserver"># LOGGING
 on openStack
 	if the environment &lt;&gt; "development" then
 		rigLogMessage "debug", "Stack" &amp;&amp; the short name of this stack &amp;&amp; "Loaded";

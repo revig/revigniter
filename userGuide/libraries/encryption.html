@@ -129,7 +129,7 @@ for example, can only hold 4K of information.</p>
 
 <p>Like most other libraries in revIgniter, the Encryption library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Encrypt"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Encrypt"</code></pre>
 
 <h3>rigEncode()</h3>
 
@@ -168,7 +168,7 @@ put rigDecode(tEncryptedString, tKey) into tPlaintextString</code></pre>
 
 <p>Set the cipher and the key length. The first parameter sets the cipher name and the second the key length. Example:</p>
 
-<pre><code>rigSetCipher "bf", 128
+<pre><code class="lang-livecodeserver">rigSetCipher "bf", 128
 </code></pre>
 
 <p>Please see LiveCode's cipherNames() function which returns a list of ciphers and their associated default key lengths in bits.</p>

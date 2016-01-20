@@ -126,7 +126,7 @@ so you will only need to load a config file if you have created your own.</p>
 you have identically named array indexes in different config files.  To avoid collisions you can set the second parameter to <kbd>TRUE</kbd>
 and each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
 
-<pre><code># Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
+<pre><code class="lang-livecodeserver"># Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
 get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)</code></pre>
 
 <p>Please see the section entitled <dfn>Fetching Config Items</dfn> below to learn how to retrieve config items set this way.</p>
@@ -174,7 +174,7 @@ put tBlogConfig["siteName"] into tSiteName</code></pre>
 
 <p>If you would like to dynamically set a config item or change an existing one, you can so using:</p>
 
-<pre><code>rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>"</code></pre>
 
 <p>Where <var>itemName</var> is the gConfig array index you want to change, and <var>itemValue</var> is its value.</p>
 
