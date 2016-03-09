@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -316,12 +316,12 @@ end index
 	
 	<p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the Jquery library:</p>
 
-<pre><code>rigLoaderLoadLibrary "Jquery"
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Jquery"
 </code></pre>
 
 	<p>To store the user name, so that all messages will be sent with the associated name, we will use a cookie-based session. So we need the Session library:</p>
 	
-<pre><code>rigLoaderLoadLibrary "Session"
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"
 </code></pre>
 
 	<p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gActiveRecord</var> is set to TRUE and that your database contains the "chat" table. Add the following line to the <dfn>chat</dfn> handler:</p>
@@ -331,12 +331,12 @@ end index
 
 	<p>Further we will need the Asset helper to generate javascript and css location html code:</p> 
 	
-<pre><code>rigLoadHelper "asset"
+<pre><code class="lang-livecodeserver">rigLoadHelper "asset"
 </code></pre>
 
 <p>So far we have not built the model, but we include it here anyway and write the corresponding code afterwards:</p>
 
-<pre><code>rigLoadModel "chatmodel"
+<pre><code class="lang-livecodeserver">rigLoadModel "chatmodel"
 </code></pre>
 
 <p>Finally we save the page title in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like [[gData["pageTitle"] ]], the values of this array will be automatically combined with the view:</p>
@@ -442,7 +442,7 @@ end if
 
 <p>We need to make sure that the page will not be cached. So, we set a server header, which the Output library will send for you when outputting the final rendered display. Add the following line to the <dfn>index</dfn> handler:</p>
 
-<pre><code>rigSetHeader "Cache-Control: no-cache"
+<pre><code class="lang-livecodeserver">rigSetHeader "Cache-Control: no-cache"
 </code></pre>
 
 <p>All that is left to do is to load the view files, which we will build later. As mentioned earlier we split the page into view files, which represent the header, the content and the footer. Header and footer are identical as to the Login page and the Chat page. The content is different. So, if there is no user name specified, we load the login content, otherwise the chat content:</p>
