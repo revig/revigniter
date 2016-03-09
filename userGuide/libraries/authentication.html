@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -113,7 +113,7 @@
 
 <p>Like most other libraries in revIgniter, the Authentication library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Authentication"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Authentication"</code></pre>
 
 <p class="important"><strong>Note:</strong> In order to use authentication, you must first create the appropriate database tables for this purpose as outlined in the <a href="#tables">Authentication Tables</a> section below.</p>
 
@@ -256,7 +256,7 @@
 <p>Example:</p>
 
 
-<pre><code>put FALSE into tRemember
+<pre><code class="lang-livecodeserver">put FALSE into tRemember
 # CHECK IF THERE IS A POST VARIABLE remember
 put rigVarPost("remember") into tPostRemember
 if tPostRemember &lt;> FALSE then
@@ -373,7 +373,7 @@ end if
 <p>Example:</p>
 
 
-<pre><code># GET USER ID
+<pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tID
 
 # CHECK THE USER LEVEL
@@ -395,7 +395,7 @@ end if
 <p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case sAuthenticationConf["sendEmails"] is set to FALSE.</p>
 
 
-<pre><code># CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
+<pre><code class="lang-livecodeserver"># CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
 put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
 
 if tResetPasswordSent is TRUE then
@@ -425,7 +425,7 @@ end if
 <p>Example:</p>
 
 
-<pre><code># CHECK IF USER IS LOGGED IN
+<pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN
 if rigAuthLoggedIn() is FALSE then
 	rigRedirect "/auth/login"
 end if
@@ -445,7 +445,7 @@ end if
 <p>Example:</p>
 
 
-<pre><code># CHECK THE USER LEVEL
+<pre><code class="lang-livecodeserver"># CHECK THE USER LEVEL
 if rigAuthIsAdmin() is FALSE then
 	# REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
 	rigRedirect "/"
@@ -665,7 +665,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>Example:</p>
 
-<pre><code># GET USER DATA
+<pre><code class="lang-livecodeserver"># GET USER DATA
 put rigAuthUser() into tQueryResult
 if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
 	put rigDbRow() into tUser
@@ -822,7 +822,7 @@ end if
 	<p>Example:</p>
 
 
-<pre><code># GET USER ID
+<pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tUserID
 
 # CHECK POST ARRAY DATA
@@ -3550,7 +3550,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

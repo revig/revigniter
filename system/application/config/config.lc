@@ -261,13 +261,13 @@ end if
 # Session Variables
 #--------------------------------------------------------------------------
 #
-# 'sess_cookie_name' 		= the name you want for the cookie
-# 'sess_expiration'  			= the number of SECONDS you want the session to last.
+# 'sess_cookie_name' 		= The name you want for the cookie.
+# 'sess_expiration'  			= The number of SECONDS you want the session to last.
 #  by default sessions last 129600 seconds (36 hours related to server time).  Set to zero for no expiration.
 # 'sess_expire_on_close' 	= Whether to cause the session to expire automatically.
 # 'sess_encrypt_cookie' 	= TRUE/FALSE (boolean).  Whether to encrypt the cookie
-# 'sess_driver' 					= The storage driver to use: "files", "database" or empty. If set to emppty all data is stored in the cookie.
-# 'sess_save_location' 		= The location to save sessions to. Of course this is driver dependant.
+# 'sess_driver' 					= The storage driver to use: "files", "database" or empty. If set to empty all data is stored in the cookie.
+# 'sess_save_location' 		= The location to save sessions to. Of course this is driver dependent.
 #  For the "files" driver, it's an absolute path to a writable directory or empty. If set to empty the standard temporary folder is used.
 #  For the "database" driver, it's a table name or empty. If set to empty "ri_sessions" is used as table name. You must create the
 #  table before enabling the "database" driver option.
@@ -467,7 +467,7 @@ end if
 # This affects date and time data in log files and master time reference,
 # if set to local.
 # Use data from the server zoneinfo database in /usr/share/zoneinfo.
-# Shell calls are time-consuming, so leave empty if convertion is not important.
+# Shell calls are time-consuming, so leave empty if conversion is not important.
 #
 # Samples: "Europe/London", "Africa/Dakar", "America/New_York"
 # Default is ""

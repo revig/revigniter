@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,7 +94,7 @@
 
 <p>Like most other libraries in revIgniter, the Table library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Table"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Table"</code></pre>
 
 <h2>Examples:</h2>
 
@@ -224,13 +224,13 @@ rigSetTableTemplate tTmpl
 
 <p>Permits you to add a caption to the table.</p>
 
-<pre><code>rigSetTableCaption "Colors"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetTableCaption "Colors"</code></pre>
 
 <h3>rigSetTableHeading</h3>
 
 <p>Permits you to set the table heading.  You can submit an array or discrete params:</p>
 
-<pre><code>rigSetTableHeading "Name,Color,Size"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetTableHeading "Name,Color,Size"</code></pre>
 
 <pre><code>put "Name" into tHeading[1]
 put "Color" into tHeading[2]
@@ -247,7 +247,7 @@ rigSetTableHeading tHeading</code></pre>
 
 <p>Permits you to add a row to your table.  You can submit an array or discrete params:</p>
 
-<pre><code>rigAddTableRow "Blue,Red,Green"</code></pre>
+<pre><code class="lang-livecodeserver">rigAddTableRow "Blue,Red,Green"</code></pre>
 
 <pre><code>put "Blue" into tRow[1]
 put "Red" into tRow[2]
@@ -263,7 +263,7 @@ a multi-dimensional array with a depth equal to the number of
 columns desired.  This allows a single array with many elements to  be
 displayed in a table that has a fixed column count.  Consider this example:</p>
 
-<pre><code>put "one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve" into tList
+<pre><code class="lang-livecodeserver">put "one,two,three,four,five,six,seven,eight,nine,ten,eleven,twelve" into tList
 split tList using comma
 
 put rigMakeTableColumns(tList, 3) into tNewList
@@ -343,7 +343,7 @@ Previous Topic:&nbsp;<a href="form_validation.html">&nbsp;Form Validation Librar
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="image_lib.html">Image Manipulation Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

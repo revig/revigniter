@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -108,7 +108,7 @@ will cause it to read, create, and update sessions.</p>
 
 <p>To initialize the Session Library manually in your controller, use the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Session"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"</code></pre>
 
 
 <p class="important"><strong>Note:</strong> Keep in mind, if gConfig["sess_driver"] is set to "database" in your config file, that initializing 
@@ -184,7 +184,7 @@ having to run a database query when you need it.</p>
 
 <p>To add your data to the session array involves passing an array containing your new data to this function:</p>
 
-<pre><code>rigSetSessUserdata <samp>tArray</samp></code></pre>
+<pre><code class="lang-livecodeserver">rigSetSessUserdata <samp>tArray</samp></code></pre>
 
 <p>Where <samp>tArray</samp> is an associative array containing your new data.  Here's an example:</p>
 
@@ -197,7 +197,7 @@ rigSetSessUserdata <samp>tNewData</samp></code></pre>
 
 <p>If you want to add userdata one value at a time, rigSetSessUserdata also supports this syntax. </p>
 
-<pre><code>rigSetSessUserdata "someName", "someValue"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetSessUserdata "someName", "someValue"</code></pre>
 
 <p class="important"><strong>Note:</strong> Cookies can only hold 4KB of data, so be careful not to exceed the capacity.  The
 encryption process in particular produces a longer data string than the original so keep careful track of how much data you are storing.</p>
@@ -206,7 +206,7 @@ encryption process in particular produces a longer data string than the original
 
 <p>Just as rigSetSessUserdata can be used to add information into a session, rigUnsetSessUserdata can be used to remove it, by passing the session key. For example, if you wanted to remove "someName" from your session information: </p>
 
-<pre><code>rigUnsetSessUserdata "someName"</code></pre>
+<pre><code class="lang-livecodeserver">rigUnsetSessUserdata "someName"</code></pre>
 
 <p>This handler can also be passed an associative array of items to unset.</p>
 
@@ -222,7 +222,7 @@ rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
 
 <p>To add flashdata:</p>
 
-<pre><code>rigSetSessFlashdata "item", "value"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetSessFlashdata "item", "value"</code></pre>
 
 <p>You can also pass an array to rigSetSessFlashdata, in the same manner as setSessUserdata. </p>
 
@@ -236,12 +236,12 @@ rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
 
 <p>If you find that you need to preserve a flashdata variable through an additional request, you can do so using the rigKeepSessFlashdata handler.</p>
 
-<pre><code>rigKeepSessFlashdata "item"</code></pre>
+<pre><code class="lang-livecodeserver">rigKeepSessFlashdata "item"</code></pre>
 
 
 <p>To mark an existing session array item as "flashdata":</p>
 
-<pre><code>rigSessMarkAsFlash "item"</code></pre>
+<pre><code class="lang-livecodeserver">rigSessMarkAsFlash "item"</code></pre>
 
 <p>You can pass an array to rigSessMarkAsFlash like in the following example:</p>
 
@@ -257,7 +257,7 @@ rigSessMarkAsFlash tExistingItemsArray
 
 <p>To add tempdata:</p>
 
-<pre><code>rigSetSessTempdata "item", "value", 300</code></pre>
+<pre><code class="lang-livecodeserver">rigSetSessTempdata "item", "value", 300</code></pre>
 
 <p>The third parameter is the time-to-live value in seconds.</p>
 <p>You can also pass an array to rigSetSessTempdata like in the following example:</p>
@@ -277,7 +277,7 @@ rigSetSessTempdata tTempDataA
 
 <p>To mark an existing session array item as "tempdata", simply pass its name and time-to-live (in seconds!) to the rigSessMarkAsTemp handler:</p>
 
-<pre><code>rigSessMarkAsTemp "item", 300</code></pre>
+<pre><code class="lang-livecodeserver">rigSessMarkAsTemp "item", 300</code></pre>
 
 <p>You can pass an array to rigSessMarkAsTemp like in the following example:</p>
 
@@ -377,7 +377,7 @@ do not need to write your own routine to do it.</p>
 
 <p>To clear the current session: </p>
 
-<pre><code>rigSessDestroy</code></pre>
+<pre><code class="lang-livecodeserver">rigSessDestroy</code></pre>
 
 <p class="important"><strong>Note:</strong> This handler should be the last one called, and even flash variables will no longer be available.  If you only want some items destroyed and not all, use <dfn>rigUnsetSessUserdata</dfn>.</p>
 
@@ -386,7 +386,7 @@ do not need to write your own routine to do it.</p>
 
 <p>To start over with a new session: </p>
 
-<pre><code>rigSessCreate</code></pre>
+<pre><code class="lang-livecodeserver">rigSessCreate</code></pre>
 
 
 <h2>Session Preferences</h2>
@@ -475,7 +475,7 @@ Previous Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="trackback.html">Trackback Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -184,7 +184,7 @@ put rigDbGet("mytable") into tQuery
 <p class="important"><strong>Note:</strong> If you are selecting all (*) from a table you do not need to use this handler.  When omitted, revIgniter assumes you wish to SELECT *</p>
 
 <p>rigDbSelect accepts an optional second parameter. If you set it to FALSE, revIgniter will not try to protect your field or table names with backticks. This is useful if you need a compound select statement.</p>
-<pre><code>rigDbSelect "SELECT SUM(payments.amount) FROM payments WHERE payments.invoice_id=4) AS amount_paid", FALSE 
+<pre><code class="lang-livecodeserver">rigDbSelect "SELECT SUM(payments.amount) FROM payments WHERE payments.invoice_id=4) AS amount_paid", FALSE 
 put rigDbGet("mytable") into tQuery
 </code></pre>
 <h3>rigSelectMax</h3>
@@ -284,7 +284,7 @@ Options are: left, right, outer, inner, left outer, and right outer.</p>
 <ol>
 	<li><strong>Simple key/value method:</strong>
 
-	<pre><code>rigDbWhere "name", tName
+	<pre><code class="lang-livecodeserver">rigDbWhere "name", tName
 	
 -- Produces: WHERE name = 'Joe'	</code></pre>
 	
@@ -292,7 +292,7 @@ Options are: left, right, outer, inner, left outer, and right outer.</p>
 	
 	<p>If you use multiple function calls they will be chained together with <var>AND</var> between them:</p>
 	
-	<pre><code>rigDbWhere "name", tName
+	<pre><code class="lang-livecodeserver">rigDbWhere "name", tName
 rigDbWhere "title", tTitle
 rigDbWhere "status", tStatus
 	
@@ -302,7 +302,7 @@ rigDbWhere "status", tStatus
 	
 	<p>You can include an operator in the first parameter in order to control the comparison:</p>
 	
-	<pre><code>rigDbWhere "name !=", tName
+	<pre><code class="lang-livecodeserver">rigDbWhere "name !=", tName
 rigDbWhere "id <", tID
 	
 -- Produces: WHERE name != 'Joe' AND id < 45	</code></pre>	</li>
@@ -340,13 +340,13 @@ rigDbWhere tWhere, "", FALSE</code></pre></li>
 
 <p>Note: To check for fields that are empty you need to set the value to a space like:</p>
 
-<pre><code>rigDbWhere "name =", " "
+<pre><code class="lang-livecodeserver">rigDbWhere "name =", " "
 </code></pre>
 
 <h3>rigDbOrWhere</h3>
 <p>This handler is identical to the one above, except that multiple instances are joined by OR:</p>
 
-<pre><code>rigDbWhere "name !=", tName
+<pre><code class="lang-livecodeserver">rigDbWhere "name !=", tName
 rigDbOrWhere "id >", tID
 
 -- Produces: WHERE name != 'Joe' OR id > 50</code></pre>
@@ -393,18 +393,18 @@ rigDbOrWhereNotIn "username", tNames
 <ol>
 	<li><strong>Simple key/value method:</strong>
 
-	<pre><code>rigDbLike "title", "match"
+	<pre><code class="lang-livecodeserver">rigDbLike "title", "match"
 	
 -- Produces: WHERE title LIKE '%match%'	</code></pre>
 		
 	<p>If you use multiple handler calls they will be chained together with <var>AND</var> between them:</p>
 	
-	<pre><code>rigDbLike "title", "match"
+	<pre><code class="lang-livecodeserver">rigDbLike "title", "match"
 rigDbLike "body", "match"
 	
 -- WHERE title LIKE '%match%' AND  body LIKE '%match%</code></pre>
 	If you want to control where the wildcard (%) is placed, you can use an optional third argument. Your options are 'before', 'after' and 'both' (which is the default). 
-	<pre><code>rigDbLike "title", "match", "before"
+	<pre><code class="lang-livecodeserver">rigDbLike "title", "match", "before"
 
 -- Produces: WHERE title LIKE '%match'
 		
@@ -429,7 +429,7 @@ rigDbLike tArray
 <h3>rigDbOrLike</h3>
 <p>This handler is identical to the one above, except that multiple instances are joined by OR:</p>
 
-<pre><code>rigDbLike "title", "match"
+<pre><code class="lang-livecodeserver">rigDbLike "title", "match"
 rigDbOrLike "body", tMatch
 
 -- WHERE title LIKE '%match%' OR  body LIKE '%match%'</code></pre>
@@ -445,7 +445,7 @@ rigDbOrLike "body", tMatch
 <h3>rigDbOrNotLike</h3>
 
 <p>This handler is identical to <strong>rigDbNotLike</strong>, except that multiple instances are joined by OR:</p>
-<pre><code>rigDbLike "title", "match"
+<pre><code class="lang-livecodeserver">rigDbLike "title", "match"
 rigDbOrNotLike "body", "match"
 
 -- WHERE title  LIKE '%match% OR body NOT LIKE '%match%'</code></pre>
@@ -538,14 +538,14 @@ rigDbOrderBy "name", "asc"
 
 <p>Lets you limit the number of rows you would like returned by the query:</p>
 
-<pre><code>rigDbLimit 10
+<pre><code class="lang-livecodeserver">rigDbLimit 10
 
 -- Produces: LIMIT 10</code></pre>
 
 
 <p>The second parameter lets you set a result offset.</p>
 
-<pre><code>rigDbLimit 10, 20
+<pre><code class="lang-livecodeserver">rigDbLimit 10, 20
 
 -- Produces: LIMIT 20, 10 (in MySQL.  Other databases have slightly different syntax)</code></pre>
 
@@ -585,7 +585,7 @@ get rigDbCountAllResults()
 
 <p>Parentheses example:</p>
 
-<pre><code>rigDbFrom "recipe"
+<pre><code class="lang-livecodeserver">rigDbFrom "recipe"
 	
 rigDbWhere "name !=", "Pasta"
 rigDbWhere "id &lt;", "12"
@@ -861,7 +861,7 @@ Previous Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Functions</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="transactions.html">Transactions</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

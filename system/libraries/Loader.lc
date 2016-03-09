@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2015, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2016, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -639,9 +639,9 @@ end rigLoadLanguage
 --| FUNCTION rigLoadScaffoldingLanguage
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 10-10-09
---| Last Mod: 26-01-10
+--| Last Mod: 09-03-16
 --| Requires: rigLangLoadLang()
 --|
 --| Summary: Loads language files for scaffolding.
@@ -660,7 +660,8 @@ function rigLoadScaffoldingLanguage pFile pLang pReturn
 		put pReturn into tReturn
 	end if
 	
-	get rigLangLoadLang(pFile, pLang, tReturn)
+  # THIRD PARAMETER IS A MODULE NAME (NOT NEEDED WITH SCAFFOLDING)
+  get rigLangLoadLang(pFile, pLang, "", tReturn)
 end rigLoadScaffoldingLanguage
 
 

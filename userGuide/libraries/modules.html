@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,7 +94,7 @@
 
 <p>Like most other libraries in revIgniter, the modules library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Modules"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Modules"</code></pre>
 
 <p class="important"><strong>Note:</strong> There is no need to load the modules library if a module controller is used as application controller and no further modules are incorporated as widgets.</p>
 
@@ -106,15 +106,15 @@
 
 <p>After loading the modules library use this handler to load module controllers (as many as you like) within an application controller or within a module. Please read about <a href="../general/modules.html#controllerSpecifications">module controller specifications</a> in the "Modules" section.<br>The parameter is the path to a module controller relative to <dfn>application/modules/</dfn> excluding the <dfn>controllers</dfn> directory. Do not include the file extension (.lc).</p> <p>In the following example this handler loads module controller <dfn>myCoolModule.lc</dfn> located in <dfn>application/modules/myCoolModule/controllers</dfn> and runs the main handler <dfn>myCoolModule</dfn>. Note: In case the controller in question is named after your module the path specified in the parameter doesn't need to include the name of the controller.</p>
 
-<pre><code>rigLoadModule "myCoolModule"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadModule "myCoolModule"</code></pre>
 
 <p>The next example loads module controller <dfn>myModuleController.lc</dfn> located in <dfn>application/modules/myCoolModule/controllers</dfn> and runs the main handler <dfn>myModuleController</dfn>.</p>
 
-<pre><code>rigLoadModule "myCoolModule/myModuleController"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadModule "myCoolModule/myModuleController"</code></pre>
 
 <p>In the following example this handler loads module controller <dfn>someModuleController.lc</dfn> located in <dfn>application/modules/myCoolModule/controllers/mySubDirectory</dfn> and runs the main handler <dfn>someModuleController</dfn>.</p>
 
-<pre><code>rigLoadModule "myCoolModule/mySubDirectory/someModuleController"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadModule "myCoolModule/mySubDirectory/someModuleController"</code></pre>
 
 
 
@@ -192,9 +192,9 @@
 	 <dfn>myCoolModule/someHandler/name/joe/location/UK/gender/male</dfn>, you can use this function to generate an array with this 
 	prototype:</p>
 
-<pre><code>tArray["name] =>value = "joe"
-tArray["location] =>value = "UK"
-tArray["gender] =>value = "male"
+<pre><code class="lang-livecodeserver">tArray["name"] =>value = "joe"
+tArray["location"] =>value = "UK"
+tArray["gender"] =>value = "male"
 </code></pre>
 
 <p>The first parameter of the function lets you set an offset. By default it is set to 3 assuming your module URI contains a myModule/handler in the first and second 
@@ -234,7 +234,7 @@ Previous Topic:&nbsp;&nbsp;<a href="loader.html"> Loader Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2015<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
