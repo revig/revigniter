@@ -52,9 +52,9 @@ local sLangIsLoaded
 --| FUNCTION rigLangLoadLang
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 02-07-09
---| Last Mod: 08-12-15
+--| Last Mod: 09-03-16
 --| Requires: rigFetchConfigItem(), rigShowError, rigLogMessage
 --|
 --| Summary: Load a language file.
@@ -62,13 +62,14 @@ local sLangIsLoaded
 --| Format:  rigLangLoadLang(param1, param2, param3)
 --|
 --| Parameters: mixed <pLangFiles> the name of the language file to be loaded (can be an array),
---|               string <pIdiom> the language , mixed <pModule> can be a boolean used to return the
---|               language array but this is not documented
+--|               string <pIdiom> the language , string <pModule> module (folder) name
+--|               <pReturn> boolean used to return the language array (this is not documented but
+--|               needed by the Scaffolding library)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigLangLoadLang pLangFiles pIdiom pModule
+function rigLangLoadLang pLangFiles pIdiom pModule pReturn
 	if sLangIsLoaded is an array then
 		put the number of lines in the keys of sLangIsLoaded into tLangIsLoadedKeyNum
 	else
@@ -140,8 +141,8 @@ function rigLangLoadLang pLangFiles pIdiom pModule
 		exit rigLangLoadLang
 	end if
 
-  # THIS IS NOT DOCUMENTED
-	if (pModule is a boolean) and (pModule is TRUE) then
+  # THIS IS NOT DOCUMENTED BUT NEEDED BY THE SCAFFOLDING LIBRARY
+	if (pReturn is a boolean) and (pReturn is TRUE) then
 		return gLang
 	end if
 
