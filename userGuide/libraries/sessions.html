@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -114,8 +111,8 @@ will cause it to read, create, and update sessions.</p>
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"</code></pre>
 
 
-<p class="important"><strong>Note:</strong> Keep in mind, if gConfig["sess_driver"] is set to "database" in your config file, that initializing
-the Session Library connects to your database using the default connection group specified in your database config file. If you need
+<p class="important"><strong>Note:</strong> Keep in mind, if gConfig["sess_driver"] is set to "database" in your config file, that initializing 
+the Session Library connects to your database using the default connection group specified in your database config file. If you need 
 to choose another connection group connect to your database before initializing the Session Library.</p>
 
 
@@ -363,7 +360,7 @@ do not need to write your own routine to do it.</p>
 <p>Another option to establish session ID validation is to save session data to a file. To use your file system for storing session data set the session driver to "files" in your config file as follows:</p>
 
 <pre><code>put "files" into gConfig["sess_driver"]</code></pre>
-
+	
 <p>You can specify a location to save sessions to by setting gConfig["sess_save_location"] to an <strong>absolute</strong> path to a <strong>writable</strong> directory like:</p>
 
 <pre><code>put "/my/absolute/path/to/sessionLocation" into gConfig["sess_save_location"]</code></pre>

@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -140,7 +137,7 @@ rigLoaderLoadLibrary "Image", tConfig
 put rigImageResize() into gData["imageOutput"]</code></pre>
 
 <p>The above code tells the <dfn>imageResize</dfn> function to look for an image called <em>mypic.jpg</em>
-located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels. The path to the source image is
+located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels. The path to the source image is 
 relative to your index.lc file. Since the <dfn>maintainRatio</dfn> option is enabled, the thumb will be as close to the target <dfn>width</dfn> and
 <dfn>height</dfn> as possible while preserving the original aspect ratio.  The thumbnail will be called <em>mypic_thumb.jpg</em>
 </p>
@@ -171,13 +168,13 @@ rigLoaderLoadLibrary "Image", tConfig
 put rigImageWatermark() into gData["imageOutput"]</code></pre>
 
 <p>The above code tells the <dfn>imageWatermark</dfn> function to use an image overlay as watermark, to look for an image called <em>mypic.jpg</em>
-located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark
+located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark 
 at the top of the source image with a vertical offset of 20 pixels and an opacity of 70% and save the source for your image tag in the controllers folder.
 Assuming segment-based URLs are used, the returned value looks like this: &lt;img src="http://yourdomain.com/temp/dynOverlay" width="480" height="312" />.</p>
 
 
 
-<p class="important"><strong>Note:</strong> The file defined in the <dfn>dynamicOutputURI</dfn> option, used as source in the image tag has to be in the scope
+<p class="important"><strong>Note:</strong> The file defined in the <dfn>dynamicOutputURI</dfn> option, used as source in the image tag has to be in the scope 
 of the controllers directory. In the example above the file dynOverlay is located in a subdirectory (called temp) of the controllers directory.</p>
 
 
@@ -383,7 +380,7 @@ preferences have no effect on cropping.  The "availability" column indicates whi
 <td class="td"><strong>Xaxis</strong></td>
 <td class="td">None</td>
 <td class="td">None</td>
-<td class="td">Sets the X coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the left.
+<td class="td">Sets the X coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the left. 
 You can use percentages, then the cropAlignment preference applies.</td>
 <td class="td">C</td>
 </tr>
@@ -392,7 +389,7 @@ You can use percentages, then the cropAlignment preference applies.</td>
 <td class="td"><strong>Yaxis</strong></td>
 <td class="td">None</td>
 <td class="td">None</td>
-<td class="td">Sets the Y coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the top.
+<td class="td">Sets the Y coordinate in pixels for image cropping. For example, a setting of 30 will crop an image 30 pixels from the top. 
 You can use percentages, then the cropAlignment preference applies.</td>
 <td class="td">C</td>
 </tr>
@@ -405,7 +402,7 @@ You can use percentages, then the cropAlignment preference applies.</td>
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <var>image.lc</var>,  add the <var>tConfig</var>
-array in that file. Then save the file in: <var>config/image.lc</var> and it will be used automatically.
+array in that file. Then save the file in: <var>config/image.lc</var> and it will be used automatically. 
 Add <var>rigRunInitialImageConfig tConfig</var> as last line in the file.</p>
 
 

@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -293,11 +290,11 @@ put rigFormFieldsetClose() into gData["setClose"]
 
 
 -- Produces
-&lt;fieldset&gt;
+&lt;fieldset&gt;  
 
-&lt;legend&gt;Address Information&lt;/legend&gt;
+&lt;legend&gt;Address Information&lt;/legend&gt;  
 
-&lt;p&gt;form content here&lt;/p&gt;
+&lt;p&gt;form content here&lt;/p&gt;  
 
 &lt;/fieldset&gt;</code></pre>
 
@@ -310,16 +307,16 @@ put &lt;p&gt;"form content here"&lt;/p&gt; into gData["fieldData"]
 put rigFormFieldsetClose() into gData["setClose"]
 
 -- Produces
-&lt;fieldset id=&quot;address_info&quot; class=&quot;address_info&quot;&gt;
-&lt;legend&gt;Address Information&lt;/legend&gt;
-&lt;p&gt;form content here&lt;/p&gt;
+&lt;fieldset id=&quot;address_info&quot; class=&quot;address_info&quot;&gt; 
+&lt;legend&gt;Address Information&lt;/legend&gt; 
+&lt;p&gt;form content here&lt;/p&gt; 
 &lt;/fieldset&gt;</code></pre>
 
 <h3>rigFormFieldsetClose()</h3>
 
 <p>Produces a closing &lt;/fieldset&gt; tag.  The only advantage to using this function is it permits you to pass data to it
     which will be added below the tag.  For example:</p>
-
+    
 <pre><code>put &quot;&lt;/div&gt;&lt;/div&gt;&quot; into tString
 
 put rigFormFieldsetClose(tString) into gData["fieldClose"]
@@ -375,7 +372,7 @@ put rigFormCheckbox("newsletter", "accept", TRUE, tJS) into gData["checkbox"]</c
 
 <p>Similar to other functions, you can submit an associative array in the first parameter if you prefer to set your own attributes.
     The third parameter lets you add extra data to your form, like JavaScript.</p>
-
+    
 <h3>rigFormLabel()</h3>
 
 <p>Lets you generate a &lt;label&gt;. Simple example:</p>
@@ -392,7 +389,7 @@ put "color: #000;" into tAttributes["style"]
 
 put rigFormLabel("What is your Name", "username", tAttributes) into gData["label"]
 
--- Would produce:
+-- Would produce: 
 &lt;label for=&quot;username&quot; class=&quot;mycustomclass&quot; style=&quot;color: #000;&quot;&gt;What is your Name&lt;/label&gt;</code></pre>
 
 <h3>rigResetButton()</h3>

@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -105,15 +102,15 @@ template, allowing 100% control over every aspect of its design. In addition, yo
 
 <p>Here is a very simple example showing how you can display a calendar:</p>
 
-<pre><code>rigLoaderLoadLibrary "Calendar"
-
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
 put rigCalGenerate() into gData["calendar"]</code></pre>
 
 <p>The above code will generate a calendar for the current month/year based on your server time.
 To show a calendar for a specific month and year you will pass this information to the calendar generating function:</p>
 
-<pre><code>rigLoaderLoadLibrary "Calendar"
-
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
 put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code></pre>
 
 <p>The above code will generate a calendar showing the month of June in 2006.  The first parameter specifies the year, the second parameter specifies the month.</p>
@@ -124,13 +121,13 @@ put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code><
 you wish to populate and the array value contains the data.  The array is passed to the third parameter of the calendar
 generating function.  Consider this example:</p>
 
-<pre><code>rigLoaderLoadLibrary "Calendar"
-
-put "http://example.com/news/article/2006/03/" into tCalData["3"]
-put "http://example.com/news/article/2006/07/" into tCalData["7"]
-put "http://example.com/news/article/2006/13/" into tCalData["13"]
-put "http://example.com/news/article/2006/26/" into tCalData["26"]
-
+<pre><code>rigLoaderLoadLibrary "Calendar" 
+ 
+put "http://example.com/news/article/2006/03/" into tCalData["3"] 
+put "http://example.com/news/article/2006/07/" into tCalData["7"] 
+put "http://example.com/news/article/2006/13/" into tCalData["13"] 
+put "http://example.com/news/article/2006/26/" into tCalData["26"] 
+ 
 put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>, <var>tCalData</var>) into gData["calendar"]</code></pre>
 
 <p>Using the above example, day numbers 3, 7, 13, and 26 will become links pointing to the URLs you've provided.</p>
@@ -142,17 +139,17 @@ how data passed to your cells is handled so you can pass different types of info
 
 <h2>Setting Display Preferences</h2>
 
-<p>There are seven preferences you can set to control various aspects of the calendar.  Preferences are set by passing an
+<p>There are seven preferences you can set to control various aspects of the calendar.  Preferences are set by passing an 
 array of preferences in the second parameter of the loading handler. Here is an example:</p>
 
 
 <pre><code>
-put "monday" into tPrefs["startDay"]
-put "long" into tPrefs["monthType"]
-put "short" into tPrefs["dayType"]
-
-rigLoaderLoadLibrary "Calendar", tPrefs
-
+put "monday" into tPrefs["startDay"] 
+put "long" into tPrefs["monthType"] 
+put "short" into tPrefs["dayType"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
 put rigCalGenerate() into gData["calendar"]
 </code></pre>
 
@@ -194,11 +191,11 @@ regarding preferences below.</p>
 code similar to this example:</p>
 
 
-<pre><code>put TRUE into tPrefs["showNextPrev"]
-put "http://example.com/index.lc/calendar/show/" into tPrefs["nextPrevUrl"]
-
-rigLoaderLoadLibrary "Calendar", tPrefs
-
+<pre><code>put TRUE into tPrefs["showNextPrev"] 
+put "http://example.com/index.lc/calendar/show/" into tPrefs["nextPrevUrl"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
 put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>) into gData["calendar"]
 </code></pre>
 
@@ -218,38 +215,38 @@ put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>)
 calendar will be placed within a pair of pseudo-variables as shown here:</p>
 
 
-<pre><code class="lang-livecodeserver">put <dfn>"{table_open}</dfn><var>&lt;table border='0' cellpadding='4' cellspacing='0'></var><dfn>{/table_open}"</dfn> && \
-\
-<dfn>"{heading_row_start}</dfn><var>&lt;tr></var><dfn>{/heading_row_start}"</dfn> && \
-\
-<dfn>"{heading_previous_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{previous_url}</kbd><var>'>&amp;lt;&amp;lt;&lt;/a>&lt;/th></var><dfn>{/heading_previous_cell}"</dfn> && \
-<dfn>"{heading_title_cell}</dfn><var>&lt;th colspan='</var><kbd>{colspan}</kbd><var>'></var><kbd>{heading}</kbd><var>&lt;/th></var><dfn>{/heading_title_cell}"</dfn> && \
-<dfn>"{heading_next_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{next_url}</kbd><var>'>&amp;gt;&amp;gt;&lt;/a>&lt;/th></var><dfn>{/heading_next_cell}"</dfn> && \
-\
-<dfn>"{heading_row_end}</dfn><var>&lt;/tr></var><dfn>{/heading_row_end}"</dfn> && \
-\
-<dfn>"{week_row_start}</dfn><var>&lt;tr></var><dfn>{/week_row_start}"</dfn> && \
-<dfn>"{week_day_cell}</dfn><var>&lt;td></var><dfn>{week_day}</dfn><var>&lt;/td></var><dfn>{/week_day_cell}"</dfn> && \
-<dfn>"{week_row_end}</dfn><var>&lt;/tr></var><dfn>{/week_row_end}"</dfn> && \
-\
-<dfn>"{cal_row_start}</dfn><var>&lt;tr></var><dfn>{/cal_row_start}"</dfn> && \
-<dfn>"{cal_cell_start}</dfn><var>&lt;td></var><dfn>{/cal_cell_start}"</dfn> && \
-\
-<dfn>"{cal_cell_content}</dfn><var>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a></var><dfn>{/cal_cell_content}"</dfn> && \
-<dfn>"{cal_cell_content_today}</dfn><var>&lt;div class='highlight'>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a>&lt;/div></var><dfn>{/cal_cell_content_today}"</dfn> && \
-\
-<dfn>"{cal_cell_no_content}</dfn><var></var><kbd>{day}</kbd><var></var><dfn>{/cal_cell_no_content}"</dfn> && \
-<dfn>"{cal_cell_no_content_today}</dfn><var>&lt;div class='highlight'></var><kbd>{day}</kbd><var>&lt;/div></var><dfn>{/cal_cell_no_content_today}"</dfn> && \
-\
-<dfn>"{cal_cell_blank}</dfn><var>&amp;nbsp;</var><dfn>{/cal_cell_blank}"</dfn> && \
-\
-<dfn>"{cal_cell_end}</dfn><var>&lt;/td></var><dfn>{/cal_cell_end}"</dfn> && \
-<dfn>"{cal_row_end}</dfn><var>&lt;/tr></var><dfn>{/cal_row_end}"</dfn> && \
-\
-<dfn>"{table_close}</dfn><var>&lt;/table></var><dfn>{/table_close}"</dfn> into tPrefs["template"]
-
-rigLoaderLoadLibrary "Calendar", tPrefs
-
+<pre><code class="lang-livecodeserver">put <dfn>"{table_open}</dfn><var>&lt;table border='0' cellpadding='4' cellspacing='0'></var><dfn>{/table_open}"</dfn> && \ 
+\ 
+<dfn>"{heading_row_start}</dfn><var>&lt;tr></var><dfn>{/heading_row_start}"</dfn> && \ 
+\ 
+<dfn>"{heading_previous_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{previous_url}</kbd><var>'>&amp;lt;&amp;lt;&lt;/a>&lt;/th></var><dfn>{/heading_previous_cell}"</dfn> && \ 
+<dfn>"{heading_title_cell}</dfn><var>&lt;th colspan='</var><kbd>{colspan}</kbd><var>'></var><kbd>{heading}</kbd><var>&lt;/th></var><dfn>{/heading_title_cell}"</dfn> && \ 
+<dfn>"{heading_next_cell}</dfn><var>&lt;th>&lt;a href='</var><kbd>{next_url}</kbd><var>'>&amp;gt;&amp;gt;&lt;/a>&lt;/th></var><dfn>{/heading_next_cell}"</dfn> && \ 
+\ 
+<dfn>"{heading_row_end}</dfn><var>&lt;/tr></var><dfn>{/heading_row_end}"</dfn> && \ 
+\ 
+<dfn>"{week_row_start}</dfn><var>&lt;tr></var><dfn>{/week_row_start}"</dfn> && \ 
+<dfn>"{week_day_cell}</dfn><var>&lt;td></var><dfn>{week_day}</dfn><var>&lt;/td></var><dfn>{/week_day_cell}"</dfn> && \ 
+<dfn>"{week_row_end}</dfn><var>&lt;/tr></var><dfn>{/week_row_end}"</dfn> && \ 
+\ 
+<dfn>"{cal_row_start}</dfn><var>&lt;tr></var><dfn>{/cal_row_start}"</dfn> && \ 
+<dfn>"{cal_cell_start}</dfn><var>&lt;td></var><dfn>{/cal_cell_start}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_content}</dfn><var>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a></var><dfn>{/cal_cell_content}"</dfn> && \ 
+<dfn>"{cal_cell_content_today}</dfn><var>&lt;div class='highlight'>&lt;a href='</var><kbd>{content}</kbd><var>'></var><kbd>{day}</kbd><var>&lt;/a>&lt;/div></var><dfn>{/cal_cell_content_today}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_no_content}</dfn><var></var><kbd>{day}</kbd><var></var><dfn>{/cal_cell_no_content}"</dfn> && \ 
+<dfn>"{cal_cell_no_content_today}</dfn><var>&lt;div class='highlight'></var><kbd>{day}</kbd><var>&lt;/div></var><dfn>{/cal_cell_no_content_today}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_blank}</dfn><var>&amp;nbsp;</var><dfn>{/cal_cell_blank}"</dfn> && \ 
+\ 
+<dfn>"{cal_cell_end}</dfn><var>&lt;/td></var><dfn>{/cal_cell_end}"</dfn> && \ 
+<dfn>"{cal_row_end}</dfn><var>&lt;/tr></var><dfn>{/cal_row_end}"</dfn> && \ 
+\ 
+<dfn>"{table_close}</dfn><var>&lt;/table></var><dfn>{/table_close}"</dfn> into tPrefs["template"] 
+ 
+rigLoaderLoadLibrary "Calendar", tPrefs 
+ 
 put rigCalGenerate() into gData["calendar"]</code></pre>
 
 

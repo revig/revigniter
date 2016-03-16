@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 <h1>Managing your Applications</h1>
@@ -103,7 +100,7 @@ file and set its name using the <samp>gApplicationFolder</samp> variable:</p>
 
 <h2>Relocating your Application Folder</h2>
 
-<p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>system</kbd> folder.
+<p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>system</kbd> folder. 
 To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <samp>gApplicationFolder</samp> variable.
 You may use a relative path as long as your application folder is in the root folder or below.</p>
 
@@ -122,7 +119,7 @@ file and set its name using the <samp>gSystemFolder</samp> variable:</p>
 
 <h2>Relocating your System Folder</h2>
 
-<p>To move your <dfn>system</dfn> folder to a different location on your server than your root folder open your main <kbd>index.lc</kbd> and set
+<p>To move your <dfn>system</dfn> folder to a different location on your server than your root folder open your main <kbd>index.lc</kbd> and set 
 	a <em>full server path</em> in the <samp>gSystemFolder</samp> variable.
 You may use a relative path as long as your application folder is in the root folder or below.</p>
 
@@ -136,7 +133,7 @@ You may use a relative path as long as your application folder is in the root fo
 
 <h2>Running Multiple Applications with one revIgniter Installation</h2>
 
-<p>If you would like to share a common revIgniter installation to manage several different applications simply
+<p>If you would like to share a common revIgniter installation to manage several different applications simply 
 put all of the directories located inside your <kbd>application</kbd> folder into their
 own sub-folder.</p>
 
@@ -178,7 +175,7 @@ variable. For example, to select the "foo" application for use you would do this
 
 <pre><code>put "application/bar" into gApplicationFolder</code></pre>
 
-<p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file which
+<p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file which 
 calls the desired application.  The index.lc file can be named anything you want.</p>
 
 <p>To exclude <kbd>index.lc</kbd> and <kbd>bar.lc</kbd> from your URLs you need to modify the mod_rewrite rules explained in <a href="urls.html">revIgniter URLs</a> like this:</p>

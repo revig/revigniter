@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 <h1>Views</h1>
@@ -160,8 +157,8 @@ command index
 	get rigLoadView("footer")
 end index
 </code></pre>
-
-
+	
+	
 <p>In the example above, we are using &quot;dynamically added data&quot;, which you will see below.</p>
 <h2>Storing Views within Sub-folders</h2>
 <p>Your view files can also be stored within sub-folders if you prefer that type of organization.  When doing so you will need
@@ -256,7 +253,7 @@ end index
 &lt;/html>
 </code></pre>
 
-<p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".
+<p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
 Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement.</p>
 
 <p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
@@ -267,7 +264,7 @@ Keep in mind, that this is the only way to include LiveCode in your view files. 
 	&lt;/head>
 	&lt;body>
 		&lt;h1>&lt;? return rigLangLangLine("myInternationalHeading") ?>&lt;/h1>
-
+		
 		&lt;p>&lt;? return rigLangLangLine("myInternationalBodyText") ?>&lt;/p>
 
 	&lt;/body>
@@ -302,15 +299,15 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 <p>nestedviewsContent.lc, the content view:</p>
 
 <pre><code>&lt;h1>Welcome to revIgniter!&lt;/h1>
-
+	
 &lt;p>The page you are looking at is being generated dynamically by revIgniter.&lt;/p>
-
+	
 &lt;p>If you would like to edit this page you'll find it located at:&lt;/p>
 &lt;code>system/application/views/welcomeMessage.lc&lt;/code>
-
+	
 &lt;p>The corresponding controller for this page is found at:&lt;/p>
 &lt;code>system/application/controllers/welcome.lc&lt;/code>
-
+	
 &lt;p>If you are exploring revIgniter for the very first time, you should start by reading the &lt;a href="userGuide/">User Guide&lt;/a>.&lt;/p>
 </code></pre>
 
@@ -376,7 +373,7 @@ Next Topic:&nbsp;&nbsp;<a href="models.html">Models</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
-</div>
+</div>	
 
 <script src="../js/jquery-1.9.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>

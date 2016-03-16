@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 <h1>Authentication Library</h1>
@@ -288,7 +285,7 @@ get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 	put rigAuthMessages() into tMessages
 
 	rigSetSessFlashdata "message", tMessages
-
+	
 	# REDIRECT TO THE LOGIN PAGE
 	rigRedirect "/auth/login"
 end logout
@@ -314,7 +311,7 @@ if $_POST is an array then
 	put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
 	put rigVarPOST("password") into tPassword
 	put rigVarPOST("email") into tEmail
-
+	
 	put rigVarPOST("first") into tExtraData["firstName"]
 	put rigVarPOST("last") into tExtraData["lastName"]
 	put rigVarPOST("company") into tExtraData["company"]
@@ -339,10 +336,10 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 
 <p>The first parameter is the user's ID.<br />
 	The second parameter is an array containing the update data.</p>
-
+	
 	<p>This function returns TRUE if the user was successfully updated, otherwise it returns FALSE.</p>
-
-
+	
+	
 <p>Example:</p>
 
 
@@ -355,9 +352,9 @@ if $_POST is an array then
 	if tID &lt;> rigVarPOST("hiddenUserID") then
 		rigLogMessage "error", "This form post did not pass the security check.", TRUE
 	end if
-
+	
 	put rigVarPost("phone") into tData["phone"]
-
+	
 	get rigAuthUpdate(tID, tData)
 end if
 </code></pre>
@@ -403,12 +400,12 @@ put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
 
 if tResetPasswordSent is TRUE then
 	put rigAuthMessages() into tMessages
-
+	
 	rigSetSessFlashdata "message", tMessages
 	rigRedirect "/auth/login"
 else
 	put rigAuthErrors() into tErrors
-
+	
 	rigSetSessFlashdata "message", tErrors
 	rigRedirect "auth/forgotPassword"
 end if
@@ -656,7 +653,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>The first parameter is a string which represents the user's identity as defined in the authentication.lc config file.<br />
 	The second optional parameter is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
-
+	
 
 <h3>rigAuthUser( <var>pID</var> )</h3>
 
@@ -821,7 +818,7 @@ end if
 
 <p>The first parameter is an integer, the ID of the group a user should be added to.<br />
 	The second parameter is the user's ID.</p>
-
+	
 	<p>Example:</p>
 
 
@@ -834,7 +831,7 @@ if $_POST is an array then
 	if tUserID &lt;> rigVarPOST("hiddenUserID") then
 		rigLogMessage "error", "This form post did not pass the security check.", TRUE
 	else
-
+	
 		rigAuthAddToGroup 3, tUserID
 	end if
 end if
@@ -877,14 +874,14 @@ get rigAuthRemoveFromGroup(, tUserID)
 
 <p>The first optional parameter is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
 	The second optional parameter is a ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-
+	
 <p>This function returns all authentication messages as a string.</p>
 
 <p>Example:</p>
 
 
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
-if tRegistration &lt;> FALSE then
+if tRegistration &lt;> FALSE then		
 	put rigAuthMessages() into tMessages
 	rigSetSessFlashdata "message", tMessages
 	rigRedirect "/auth"
@@ -900,14 +897,14 @@ end if
 
 <p>The first parameter is the staring delimiter.<br />
 	The second parameter is the ending delimiter.</p>
-
+	
 <p>Example:</p>
 
 
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
 if tRegistration &lt;> FALSE then
 	rigAuthSetMessageDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
-
+		
 	put rigAuthMessages() into tMessages
 	rigSetSessFlashdata "message", tMessages
 	rigRedirect "/auth"
@@ -922,7 +919,7 @@ end if
 
 <p>The optional first parameter is the staring delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
 	The optional second parameter is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-
+	
 <p>This function returns authentication errors as a string.</p>
 
 
@@ -944,12 +941,12 @@ end if
 
 <p>The first parameter is the staring delimiter.<br />
 	The second parameter is the ending delimiter.</p>
-
+	
 <p>Example:</p>
 
 
 <pre><code>rigAuthSetErrorDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
-
+	
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
@@ -995,9 +992,9 @@ put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 
 <p>The first parameter is the user's id.<br />
 	The second optional parameter is the activation code.</p>
-
+	
 <p>This function returns TRUE in case user activation was successful, otherwise it returns FALSE.</p>
-
+	
 <p>Example:</p>
 
 
@@ -1009,10 +1006,10 @@ put FALSE into tActivation
 # ACTIVATE USER
 if tCode &lt;> FALSE then
 	put rigAuthActivate(tID, tCode) into tActivation
-
+	
 else if rigAuthIsAdmin() is TRUE then
 	put rigAuthActivate(tID) into tActivation
-end if
+end if		
 </code></pre>
 
 
@@ -1084,7 +1081,7 @@ end if
 
 <p>The first parameter is the user's email address or whatever is used to identify a user.<br />
 	The second parameter is the new password.</p>
-
+	
 <p>This function returns TRUE in case the old password was replaced successfully, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
@@ -1107,8 +1104,8 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 <p>The first parameter is the user's email address or whatever is used to identify a user.<br />
 	The second parameter is the old password.<br />
 	The third parameter is the new password.</p>
-
-<p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>
+	
+<p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>	
 
 
 <p>Example:</p>
@@ -1239,7 +1236,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 	<li><strong>authPostAccountCreation</strong><br />
 		Called after creating a new user.</li>
 	<li><strong>authPostAccountCreationSuccessful</strong><br />
-		Called after successfully creating a new user.</li>
+		Called after successfully creating a new user.</li>	
 	<li><strong>authPostAccountCreationUnsuccessful</strong><br />
 		Called after creating a new user failed.</li>
 	<li><strong>authPActivationEmailSuccessful</strong><br />
@@ -1261,7 +1258,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 	<li><strong>authRememberUserSuccessful</strong><br />
 		Called after successfully turning on auto login.</li>
 	<li><strong>authRememberUserUnsuccessful</strong><br />
-		Called after turning on auto login failed.</li>
+		Called after turning on auto login failed.</li>	
 	<li><strong>authPreLoginRememberedUser</strong><br />
 		Called before auto login of remembered users.</li>
 	<li><strong>authPostLoginRememberedUser</strong><br />
@@ -1353,8 +1350,8 @@ end if
 --| Requires: rigLogMessage
 --|
 --| Summary: Log admin login.
---|
---| Format:  rigLogAdminLogin
+--| 
+--| Format:  rigLogAdminLogin	
 --|
 --| Parameters: --
 --|
@@ -1382,8 +1379,8 @@ end rigLogAdminLogin
 --| Requires: rigSessUserdata(), rigLogMessage
 --|
 --| Summary: Log admin logout.
---|
---| Format:  rigLogAdminLogout
+--| 
+--| Format:  rigLogAdminLogout	
 --|
 --| Parameters: --
 --|
@@ -1511,9 +1508,9 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 
-INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`,
-`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`,
-`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`,
+INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
+`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
+`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
 `lastName`, `company`, `phone`)
 VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
 'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
@@ -1622,10 +1619,10 @@ UNION SELECT
 # Records of users
 # ------------------------------------------------------------
 
-INSERT INTO "users" ("ipAddress", username, password, email,
-"activationCode", "forgottenPasswordCode", "forgottenPasswordTime",
-"rememberCode", "createdOn", "lastLogin", active, "firstName",
-"lastName", company, phone) VALUES
+INSERT INTO "users" ("ipAddress", username, password, email, 
+"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
+"rememberCode", "createdOn", "lastLogin", active, "firstName", 
+"lastName", company, phone) VALUES 
 ('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
 'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
 'Admin','Istrator','ADMIN','0');
@@ -1722,9 +1719,9 @@ COMMIT;
 # ------------------------------------------------------------
 
 BEGIN;
-INSERT INTO "users" VALUES
-(1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
-'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1,
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
 'Admin', 'Istrator', 'ADMIN', 0);
 COMMIT;
 
@@ -2011,7 +2008,7 @@ end index
   #
 
   # IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
-  if tRegistration &lt;> FALSE then
+  if tRegistration &lt;> FALSE then		
    put rigAuthMessages() into tMessages
    rigSetSessFlashdata "message", tMessages
    rigRedirect "/auth"
@@ -2113,7 +2110,7 @@ end createUser
  # FORM VALIDATION
  if rigFormValidRun("auth/login") is TRUE then
 
-  # CHECK IF USER IS LOGGING IN
+  # CHECK IF USER IS LOGGING IN		
   # REMEMBER ME CHECK BOX
   put FALSE into tRemember
   # CHECK IF THERE IS A POST VARIABLE remember
@@ -2221,7 +2218,7 @@ end logout
 
   rigSetSessFlashdata "message", tErrors
   rigRedirect "auth/forgotPassword"
- end if
+ end if	
 end activate
 </code></pre>
 
@@ -2356,7 +2353,7 @@ end deactivate
 
    rigSetSessFlashdata "message", tErrors
    rigRedirect "auth/forgotPassword"
-  end if
+  end if		
 
  else
   put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
@@ -3055,7 +3052,7 @@ end fetchValidationConf
 	&lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
-&lt;/html>
+&lt;/html>	
 </code></pre>
 
 

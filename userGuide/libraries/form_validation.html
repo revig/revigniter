@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 <h1>Form Validation</h1>
@@ -138,7 +135,7 @@
 <ol>
 <li>A form is displayed.</li>
 <li>You fill it in and submit it.</li>
-<li>If you submitted something invalid, or perhaps missed a required item, the form is redisplayed containing your data
+<li>If you submitted something invalid, or perhaps missed a required item, the form is redisplayed containing your data 
 along with an error message describing the problem.</li>
 <li>This process continues until you have submitted a valid form.</li>
 </ol>
@@ -520,7 +517,7 @@ command index
 		put rigSetValue("password") into gData["pw"]
 		put rigSetValue("passconf") into gData["pwconf"]
 		put rigSetValue("email") into gData["mail"]
-
+		
 		get rigLoadView("myForm")
 	else
 		# THIS LINK IS ON THE SUCCESS PAGE
@@ -627,7 +624,7 @@ command index
 		put rigSetValue("password") into gData["pw"]
 		put rigSetValue("passconf") into gData["pwconf"]
 		put rigSetValue("email") into gData["mail"]
-
+		
 		get rigLoadView("myForm")
 	else
 		# THIS LINK IS ON THE SUCCESS PAGE
@@ -711,7 +708,7 @@ it is assumed that the data is your newly processed form data.</p>
 <a name="errordelimiters"></a>
 <h2>Changing the Error Delimiters</h2>
 
-<p>By default, the Form Validation library adds a paragraph tag (&lt;p&gt;) around each error message shown. You can either change these delimiters globally or
+<p>By default, the Form Validation library adds a paragraph tag (&lt;p&gt;) around each error message shown. You can either change these delimiters globally or 
 individually.</p>
 
 <ol>
@@ -1140,7 +1137,7 @@ POST array:</p>
 <td class="td">Returns FALSE if the form element does not match the one in the parameter.</td>
 <td class="td">matchesR[form_item]</td>
 </tr><tr>
-
+	
 
 <td class="td"><strong>minLengthR</strong></td>
 <td class="td">Yes</td>
@@ -1159,13 +1156,13 @@ POST array:</p>
 <td class="td">Returns FALSE if the form element is not exactly the parameter value.</td>
 <td class="td">exactLengthR[8]</td>
 </tr><tr>
-
+	
 <td class="td"><strong>greaterThanR</strong></td>
 <td class="td">Yes</td>
 <td class="td">Returns FALSE if the form element is less than the parameter value or not numeric.</td>
 <td class="td">greaterThanR[8]</td>
 </tr><tr>
-
+	
 <td class="td"><strong>lessThanR</strong></td>
 <td class="td">Yes</td>
 <td class="td">Returns FALSE if the form element is greater than the parameter value or not numeric.</td>
@@ -1339,7 +1336,7 @@ put the result into tStringValidResult
 <td class="td">No</td>
 <td class="td">Converts a field to md5.</td>
 </tr><tr>
-
+	
 <td class="td"><strong>sha1</strong></td>
 <td class="td">No</td>
 <td class="td">Converts a field to a base64 encoded SHA-1 digest.</td>
@@ -1403,12 +1400,12 @@ group via the function, as described in: <a href="#savingtoconfig">Saving Groups
 
 <p>This command is needed if you use any prefilled form fields in combination with the rigRequiredR validation rule so that
 	the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma delimited list or in an array.</p>
-
+	
 <p>Let's say the default values of your form fields are "First Name", "Last Name" and "name@any.com". Then you would store these
 	values in a validator variable like in the following example:</p>
 
 <pre><code>rigSetPrefilledValues "First Name,Last Name,name@any.com"
-
+	
 # OR ALTERNATIVELY
 put "First Name" into tPrefilledArray[1]
 put "Last Name" into tPrefilledArray[2]

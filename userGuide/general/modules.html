@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -124,7 +121,7 @@
 	<li>Controllers can be located in myModule/controllers sub-directories.</li>
 	<li>Pass any number of parameters to module controllers using URI style segments and / or an array (widgets only).</li>
 	<li>Each module may contain a models directory.</li>
-	<li>Models may be loaded from myModule/models sub-directories.</li>
+	<li>Models may be loaded from myModule/models sub-directories.</li>	
 	<li>Each module may contain a config/autoload.lc file.</li>
 	<li>Each module may contain a config/config.lc file.</li>
 	<li>Each module may contain a config/routes.lc file. Note, this file is mandatory if a module controller is used as application controller.</li>
@@ -135,9 +132,9 @@
 <a name="structure"></a>
 <h2>Structure of a HMVC Module</h2>
 
-<p>All modules are arranged in their own folder in the application/modules directory and may contain configuration files and sub-directories like the main
+<p>All modules are arranged in their own folder in the application/modules directory and may contain configuration files and sub-directories like the main 
 	MVC component in the application directory.</p>
-
+	
 
 <pre><code class="nohighlight">application/modules/
 		|--myModule/
@@ -159,13 +156,13 @@
 <a name="controllerSpecifications"></a>
 <h2>Module Controller Specifications</h2>
 
-<p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as uri segments into the
+<p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as uri segments into the  
 global <var>gModuleHandlers</var>.</p>
 
-<p>Provided that the controller is used as a library or widget, put the name of the main handler (the handler named after the module) as well as the index handler
+<p>Provided that the controller is used as a library or widget, put the name of the main handler (the handler named after the module) as well as the index handler 
 	name and all names of handlers which are likely to be called by using the <dfn>rigRunModule()</dfn> function into the global <var>gModuleHandlers</var>.</p>
 
-<p>To avoid name collisions with standard application controller index handlers the name of your module controller's index handler must be
+<p>To avoid name collisions with standard application controller index handlers the name of your module controller's index handler must be  
 composed of the controller name followed by the word "Index" like: myModuleIndex.</p>
 
 <p>Sample code of a module controller named after the module:</p>
@@ -213,21 +210,21 @@ end _privatehandler
 
 <p class="important"><strong>Note:</strong> In case you use module controllers as application controller you must include a routes.lc file in the yourModule/config directory.
 	Routing has no effect on view partials or if modules are used as libraries. Please see the sample routes file in modules/moduleSample/config.</p>
-
-
+	
+	
 <a name="applicationControllers"></a>
 <h2>Using Modules as Application Controllers</h2>
 
-<p>To use modules as application controllers specify the controller script to be invoked using URI segments. There is no difference to standard controllers.
+<p>To use modules as application controllers specify the controller script to be invoked using URI segments. There is no difference to standard controllers.  
 For example to run the sample module as application controller the appropriate URL would read:</p>
 
 <pre><code>example.com/moduleSample</code></pre>
 
-<p class="important"><strong>Note:</strong> On the basis of the URL there is no way to distinguish between standard application controllers and module controllers
-	used as app controllers. So, to avoid name collisions with app controller names be careful naming your module controllers. Of course this applies to naming modules
+<p class="important"><strong>Note:</strong> On the basis of the URL there is no way to distinguish between standard application controllers and module controllers 
+	used as app controllers. So, to avoid name collisions with app controller names be careful naming your module controllers. Of course this applies to naming modules 
 	used as widgets only.</p>
 
-
+	
 <a name="widgets"></a>
 <h2>Using Modules as Libraries or Widgets / View Partials</h2>
 
@@ -237,7 +234,7 @@ For example to run the sample module as application controller the appropriate U
 <a name="paths"></a>
 <h2>Module Paths</h2>
 
-<p>Module paths and module controller paths are relative to <dfn>application/modules/</dfn>. Keep in mind that module controllers can be located in sub-folders of
+<p>Module paths and module controller paths are relative to <dfn>application/modules/</dfn>. Keep in mind that module controllers can be located in sub-folders of 
 	<dfn>myModule/controllers</dfn> and that you must omit the name of the "controllers" directory in module paths. So, paths to controller files can be:</p>
 
 
@@ -250,20 +247,20 @@ For example to run the sample module as application controller the appropriate U
 <p>To address a particular controller handler instead of the index handler add it's name as segment Like:</p>
 
 <pre><code>myModule/myController/myControllerHandler</code></pre>
-
+	
 <p>Use additional segments to pass parameters:</p>
 
 <pre><code>myModule/myController/myControllerHandler/name/joe</code></pre>
 
 
-<p>If you name a controller after your module and this controller is not in a sub-directory of myModule/controllers you can omit the controller name and the path would
+<p>If you name a controller after your module and this controller is not in a sub-directory of myModule/controllers you can omit the controller name and the path would 
 	simply be:</p>
-
+	
 <pre><code>myModule</code></pre>
 
-<p>If you don't include a handler name the controller's index handler, myModuleIndex in this case, is called. Calling a particular handler of controller myModule of module
+<p>If you don't include a handler name the controller's index handler, myModuleIndex in this case, is called. Calling a particular handler of controller myModule of module 
 	myModule would read:</p>
-
+	
 <pre><code>myModule/myOtherHandler</code></pre>
 
 <p class="important"><strong>Note:</strong> Currently "query string" URLs are not compatible with modules. So, always use segment-based URLs.</p>
@@ -276,7 +273,7 @@ For example to run the sample module as application controller the appropriate U
 
 
 <pre><code>rigLoadModel "moduleModel", , "myModule"
-
+	
 rigLoaderLoadLibrary "Modulelibrary", , "myModule"
 
 get rigLangLoadLang("moduleLang", "french", "myModule")
@@ -305,8 +302,8 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 
 <h3>Loading Views</h3>
 
-<p>In general module view files are loaded like any other view file using <dfn>rigLoadView()</dfn>. Provided that the particular module is used as widget you must keep
-	in mind that you should not set the second parameter of this function to true. To set this parameter is unnecessary anyway because loading the view of a widget always
+<p>In general module view files are loaded like any other view file using <dfn>rigLoadView()</dfn>. Provided that the particular module is used as widget you must keep 
+	in mind that you should not set the second parameter of this function to true. To set this parameter is unnecessary anyway because loading the view of a widget always 
 	returns data as a string rather than sending it to the browser.</p>
 
 
@@ -370,26 +367,26 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 
 <pre><code>put "myModule/pagelibrary" into gRoute["myModule"][1]["defaultController"]</code></pre>
 
-<p>This route indicates which controller page library should be loaded if the URI contains no data besides the module name. In the above example, the "pagelibrary" page
-	library would be loaded.
-	If the "defaultController" route is empty and there is only one URI segment specifying the name of the module, revIgniter expects that there is a controller named after
-	the module and tries to load <dfn>myModule/myModule</dfn>. If no handler is specified the module's index handler is called which must be composed of the controller
+<p>This route indicates which controller page library should be loaded if the URI contains no data besides the module name. In the above example, the "pagelibrary" page 
+	library would be loaded. 
+	If the "defaultController" route is empty and there is only one URI segment specifying the name of the module, revIgniter expects that there is a controller named after 
+	the module and tries to load <dfn>myModule/myModule</dfn>. If no handler is specified the module's index handler is called which must be composed of the controller 
 	name followed by the word "Index" so that the route would look like: <dfn>myModule/myModule/myModuleIndex</dfn>.</p>
-
+	
 <pre><code>put "" into gRoute["myModule"][1]["404Override"]</code></pre>
 
-<p>This route will tell the Router what URI segments to use if those provided in the URL cannot be matched to a valid route, in other words if the controller specified
+<p>This route will tell the Router what URI segments to use if those provided in the URL cannot be matched to a valid route, in other words if the controller specified 
 	is missing. If this route is empty the default 404 error page is provided.</p>
-
-<p class="important"><strong>Note:</strong> Module routes are relative to application/modules/. The gRoute["myModule"] array must be numbered
+	
+<p class="important"><strong>Note:</strong> Module routes are relative to application/modules/. The gRoute["myModule"] array must be numbered 
 	and the key number for reserved routes must be 1. So custom route key numbers start with number 2.</p>
 
 
 <a name="assets"></a>
 <h2>Module Assets</h2>
-
-<p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files and images is that it simplifies distribution of modules including assets.
-	Just organize all related assets (as described in chapter <a href="../helpers/asset_helper.html">Asset Helper</a>) in a folder preferably named after your module and
+	
+<p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files and images is that it simplifies distribution of modules including assets. 
+	Just organize all related assets (as described in chapter <a href="../helpers/asset_helper.html">Asset Helper</a>) in a folder preferably named after your module and 
 	store it in <dfn>assets/modules</dfn>. This way installation of a module with appendant assets is as simple as copying two folders to the right place.</p>
 
 

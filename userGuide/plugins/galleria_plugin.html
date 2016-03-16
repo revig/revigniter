@@ -12,18 +12,15 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<!-- Custom CSS -->
-		<link rel="stylesheet" media="screen" href="../css/custom.css">
-
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-
+		
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-
+		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -54,8 +51,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-
-		 <!-- START BREADCRUMB -->
+		 
+		 <!-- START BREADCRUMB -->		 
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -66,8 +63,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->
-
+		<!-- END BREADCRUMB -->		
+		
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -77,15 +74,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-
+	 
   </div>
 <!-- END PAGE HEAD -->
 
-
+ 
 
 <!-- START CONTENT -->
 <div class="container">
-
+	
 <div id="content">
 
 
@@ -121,7 +118,7 @@
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage3.png<br />
 </p>
 
-<p>The file name for your image data properties ("myGalleriaCaptions.tsv" in this case) is arbitrary but the "tsv" (tab-separated-values) suffix is mandatory. This file is only needed if you don't provide the data programmatically. If you want to provide separate images for thumbnails and fullscreen mode (recommended) include them in a folder called "thumb" and "big" respectively.</p>
+<p>The file name for your image data properties ("myGalleriaCaptions.tsv" in this case) is arbitrary but the "tsv" (tab-separated-values) suffix is mandatory. This file is only needed if you don't provide the data programmatically. If you want to provide separate images for thumbnails and fullscreen mode (recommended) include them in a folder called "thumb" and "big" respectively.</p> 
 
 <p class="important"><strong>Note:</strong> This folder must be writable. Use identical file names for standard, thumbnail and fullscreen versions of your images.</p>
 
@@ -194,7 +191,7 @@ img5.jpg	Image img5 Title	This is the description of image img5.
 	<li>The optional sixth parameter is a boolean which determines whether the generated JavaScript file should be replaced every time the function is called. Defaults to FALSE.</li>
 	<li>The optional seventh parameter is a boolean which determines whether the plugin should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy for example if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
 	</ul>
-
+	
 	<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
 
 
@@ -207,7 +204,7 @@ img5.jpg	Image img5 Title	This is the description of image img5.
 	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
 	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
 	</ul>
-
+	
 	<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.</p>
 
 
