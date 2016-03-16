@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 <h1>Hooks - Extending the Framework Core</h1>
@@ -170,14 +173,14 @@ The following items should be defined in your associative hook array:</p>
 		<li><strong>postSystem</strong><br />
 			Called after the final rendered page is sent to the browser, at the end of system execution after the finalized data is sent to the browser.</li>
 	</ul>
-	
-	
+
+
 	<h2>Hook Example Using displayOverride as Hook Point to Minify Output</h2>
-	
+
 	<p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
-	
+
 	<p>First you need a script which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks</dfn> for your convenience:</p>
-	
+
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -198,8 +201,8 @@ end if
 --| Requires: rigGetOutput(), rigPregReplace(), rigSetOutput, _rigDisplay
 --|
 --| Summary: Minifies HTML output.
---| 
---| Format:  rigMinifyOutput	
+--|
+--| Format:  rigMinifyOutput
 --|
 --| Parameters: --
 --|
@@ -233,7 +236,7 @@ end rigMinifyOutput
 
 --| END OF overrideOutput.lc
 --| Location:  ./system/application/hooks/overrideOutput.lc
-----------------------------------------------------------------------	
+----------------------------------------------------------------------
 </code></pre>
 
 <p>The next step is to add the following lines to your hooks.lc file in <dfn>system/application/config</dfn>:</p>
@@ -244,11 +247,11 @@ put "rigMinifyOutput" into gHooks["displayOverride"]["handler"]
 put "overrideOutput.lc" into gHooks["displayOverride"]["filename"]
 put "hooks" into gHooks["displayOverride"]["filepath"]
 </code></pre>
-	
+
 
 <p>Now enable hooks in <dfn>system/application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
 
-	
+
 </div>
 <!-- END CONTENT -->
 

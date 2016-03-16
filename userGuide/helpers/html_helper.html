@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 
@@ -161,12 +164,12 @@ put rigHtmlImg(tImgProperties) into gData["myPic"]
 <p>Further examples:</p>
 
 <pre><code>put rigHtmlLinkTag("favicon.ico", "shortcut icon", "image/ico") into gData["myIconLink"]
--- &lt;link href=&quot;http://site.com/favicon.ico&quot; rel=&quot;shortcut icon&quot; type=&quot;image/ico&quot; /&gt; 
-	
-	
+-- &lt;link href=&quot;http://site.com/favicon.ico&quot; rel=&quot;shortcut icon&quot; type=&quot;image/ico&quot; /&gt;
+
+
 put rigHtmlLinkTag("feed", "alternate", "application/rss+xml", "My RSS Feed") into gData["myFeedLink"]
 -- &lt;link href=&quot;http://site.com/feed&quot; rel=&quot;alternate&quot; type=&quot;application/rss+xml&quot; title=&quot;My RSS Feed&quot; /&gt; </code></pre>
-	
+
 <p>Additionally, an associative array can be passed to the rigHtmlLinkTag() function for complete control over all attributes and values.</p>
 
 <pre><code>put "css/printer.css" into tLink["href"]
@@ -177,7 +180,7 @@ put "print" into tLink["media"]
 
 put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 -- &lt;link href=&quot;http://site.com/css/printer.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;</code></pre>
-	
+
 <h3><a name="nbs"></a>rigHtmlNbs()</h3>
 
 <p>Generates non-breaking spaces (&amp;nbsp;) based on the number you submit. Example:</p>
@@ -325,7 +328,7 @@ put "equiv" into tMeta[5]["type"]
 
 put rigHtmlMeta(tMeta) into gData["myMeta"]
 
--- Generates:  
+-- Generates:
 -- &lt;meta name="robots" content="no-cache" />
 -- &lt;meta name="description" content="My Great Site" />
 -- &lt;meta name="keywords" content="love, passion, intrigue, deception" />

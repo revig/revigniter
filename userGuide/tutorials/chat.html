@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 <h1>Simple Chat Application</h1>
@@ -313,14 +316,14 @@ end index
 <p>Save this script as "chat.lc" in <samp>system/application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
 <p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required libraries, helpers, plugins, models and the database.</p>
-	
+
 	<p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the Jquery library:</p>
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Jquery"
 </code></pre>
 
 	<p>To store the user name, so that all messages will be sent with the associated name, we will use a cookie-based session. So we need the Session library:</p>
-	
+
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"
 </code></pre>
 
@@ -329,8 +332,8 @@ end index
 <pre><code>get rigLoadDatabase()
 </code></pre>
 
-	<p>Further we will need the Asset helper to generate javascript and css location html code:</p> 
-	
+	<p>Further we will need the Asset helper to generate javascript and css location html code:</p>
+
 <pre><code class="lang-livecodeserver">rigLoadHelper "asset"
 </code></pre>
 
@@ -347,7 +350,7 @@ end index
 <p>Your chat handler should now look like this:</p>
 
 <pre><code>command chat
-	rigLoaderLoadLibrary "Jquery"	
+	rigLoaderLoadLibrary "Jquery"
 	rigLoaderLoadLibrary "Session"
 
 	get rigLoadDatabase()
@@ -380,7 +383,7 @@ else
 end if
 </code></pre>
 
-<p>If there is an item "name" in the session data we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p> 
+<p>If there is an item "name" in the session data we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p>
 <p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of rigVarPost() to "TRUE". </p>
 <p> If the POST data contains a value for "name" we save it in the session data as well as in the global variable <var>gData</var> and set a flag to load the Chat page, otherwise we set a flag to load the Login page.</p>
 
@@ -524,7 +527,7 @@ end index
 <pre><code>command addmsg
 	put rigSessUserdata("name") into tName
 	put rigVarPost("userinput") into tMsg
-	
+
 	if (tMsg &lt;> FALSE) and (tMsg &lt;> "") then
 		_addMsg tName, tMsg
 	end if
@@ -537,7 +540,7 @@ end addmsg
 
 <p>The next handler to add to the controller script gets the data from the model, stores it in the global variable <var>gData</var> and loads the view chatlist.lc, which consists of the messages list only:</p>
 
-<pre><code>command view 
+<pre><code>command view
 	put getMsgData() into gData["msgList"]
 
 	get rigLoadView("chatlist")
@@ -556,9 +559,9 @@ end view
 		put "User" &amp;&amp; tName &amp;&amp; "has left the chat session." into tMsg
 		_addMsg tName, tMsg
 	end if
-	
+
 	rigSessDestroy
-	
+
 	get rigLoadView("chatheader")
 	get rigLoadView("chatlogin")
 	get rigLoadView("chatfooter")
@@ -726,7 +729,7 @@ end _addMsg
 <p>Complete the chatheader.lc script with the following lines:</p>
 
 <pre><code>&lt;/head>
-	
+
 	&lt;body>
 		&lt;div class="page_margins">
 </code></pre>

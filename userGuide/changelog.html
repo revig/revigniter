@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="css/custom.css">
+
 		<script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="js/html5shiv.js"></script>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,17 +77,17 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
 
- 
+
 
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 <h1>Change Log</h1>
@@ -861,7 +864,7 @@
 		<li>Added "cookie_secure" parameter to system/libraries/Session.lc.</li>
 		<li>Moved code for setting cookies to the Input library, rigSetCookie is still available through the cookie helper.</li>
 		<li>Moved code for getting the current time to system/revigniter/Common.lc, rigNow() is still available through the date helper.</li>
-		<li>Expiration time values for cookies, session cookies and CSRF cookies are now calculated while respecting the time reference setting in the configuration file.</li>		
+		<li>Expiration time values for cookies, session cookies and CSRF cookies are now calculated while respecting the time reference setting in the configuration file.</li>
 		<li>Added function rigSanitizeFilename() to system/libraries/Input.lc.</li>
 	</ul>
 </p>
@@ -1601,11 +1604,11 @@
 
 <h2><a name="version09a">&nbsp;</a>Version Alpha 0.9 </h2>
 <p>Release Date: November 24, 2009</p>
-<p>Be warned, this is an alpha release. This version is definitely not bug free. So don't expect too much, 
+<p>Be warned, this is an alpha release. This version is definitely not bug free. So don't expect too much,
 but be assured,  a stable release will follow.</p>
 <p>Things you should keep in mind:<br />
 <ul>
-	<li>The SMTP protocol is implemented, but, as long as the open socket command is not working in the server engine, it is not available. 
+	<li>The SMTP protocol is implemented, but, as long as the open socket command is not working in the server engine, it is not available.
 Sending mail using Mail or Sendmail should work.</li>
 	<li>BCC batch processing needs to be tested.</li>
 	<li>Sha1 hashes are currently not implemented (only md5).</li>

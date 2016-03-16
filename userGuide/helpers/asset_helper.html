@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 
@@ -98,8 +101,8 @@
 
 <h2>Assets Location</h2>
 
-<p>To use this helper you should store your assets in a folder called "assets" at your root. You can change this 
-path in your <dfn>system/application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css" and 
+<p>To use this helper you should store your assets in a folder called "assets" at your root. You can change this
+path in your <dfn>system/application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css" and
 that your Javascript folder is called "js". If you don't like that, you can change the corresponding variables at the top of the helper script. The same folder structure applies if you store your files in an arbitrary named folder in assets/modules/ like:<br />
 /assets<br />
 &nbsp;&nbsp;&nbsp;/img<br />
@@ -125,9 +128,9 @@ This rule causes assets with names like &lt;name>-cb&lt;lastModified>.suffix to 
 
 <p class="important"><strong>Note:</strong>&nbsp; If you use mod_rewrite rules as described in <a href="../general/urls.html">revIgniter URLs</a>, you need to insert this rule on a seperate line before the "RewriteBase /"
 	statement.</p>
-	
+
 	<p>The asset helper functions use an optional parameter which allows to exclude assets from being affected by the global setting use_cacheBusters (if set to TRUE). That way the cache busting mechanism can be applied individually.</p>
-	
+
 <p>	All code regarding cache busting is based on ideas found at: http://cjohansen.no/en/apache/using_a_far_future_expires_header</p>
 
 <br />
@@ -139,8 +142,8 @@ This rule causes assets with names like &lt;name>-cb&lt;lastModified>.suffix to 
 <p>Generates a css asset location html code.</p>
 
 <p>The first parameter is the name of your CSS file like myCSS.css. Assets can be nested in folders, then the value of this parameter
-	looks like: myFirstFolder/mySecondFolder/myCSS.css. These folders would be located in assets/css. The second optional parameter is an array of attributes and the third optional parameter 
- a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder 
+	looks like: myFirstFolder/mySecondFolder/myCSS.css. These folders would be located in assets/css. The second optional parameter is an array of attributes and the third optional parameter
+ a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder
  should be located in a "modules" folder, which is located in the "assets" folder". The fourth optional parameter is a boolean,
 which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</p>
 
@@ -199,9 +202,9 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 		&lt;meta charset="utf-8">
 
 		&lt;title>[[gData["myTitle"] ]]</title>
-	
+
 		[[gData["myCSS"] ]]
-	
+
 	&lt;/head>
 	&lt;body>
 </code></pre>
@@ -209,8 +212,8 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 <h3>rigImgAssetURL(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
 <p>Used mainly in conjunction with the rigDynamicCssAsset() function to generate image URLs as values for the gData array variable.</p> <p>The first parameter is the name of your image file like myPic.jpg. Assets can be nested in folders, then the value of this
-	parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img. The second parameter is optional, it is the name of 
- the folder where you store all your assets for the current page if you like to organize assets for different pages in separate folders. This folder 
+	parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img. The second parameter is optional, it is the name of
+ the folder where you store all your assets for the current page if you like to organize assets for different pages in separate folders. This folder
  should be located in a "modules" folder, which is located in the "assets" folder". The fourth optional parameter is a boolean,
 which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above). See usage in the example above.</p>
 
@@ -220,8 +223,8 @@ which determines if asset file names should include the timestamp of last modifi
 <p>Generates image asset location html code.</p>
 
 <p>The first parameter is the name of your image file like myPic.jpg. Assets can be nested in folders, then the value of this
-	parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img. The second optional parameter is an array of attributes and the third optional parameter 
- a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder 
+	parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img. The second optional parameter is an array of attributes and the third optional parameter
+ a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder
  should be located in a "modules" folder, which is located in the "assets" folder". The fourth optional parameter is a boolean,
 which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</p>
 
@@ -229,7 +232,7 @@ which determines if asset file names should include the timestamp of last modifi
 
 <pre><code>put "pics" into tArray["class"]
 put "My Portrait" into tArray["alt"]
-put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]	
+put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 </code></pre>
 
 <p>"aboutMe" would be a folder in your "assets/modules" folder.</p>
@@ -240,8 +243,8 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 <p>Generates JavaScript asset location html code.</p>
 
 <p>The first parameter is the name of your Javascript file like myScript.js. Assets can be nested in folders, then the value of this
-	parameter looks like: myFirstFolder/mySecondFolder/myScript.js. These folders would be located in assets/js. The second optional parameter is a folder name where you store assets 
-for the current page if you like to organize assets for different pages in separate folders. This folder 
+	parameter looks like: myFirstFolder/mySecondFolder/myScript.js. These folders would be located in assets/js. The second optional parameter is a folder name where you store assets
+for the current page if you like to organize assets for different pages in separate folders. This folder
  should be located in a "modules" folder, which is located in the "assets" folder". The third optional parameter is a boolean,
 which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above). The optional fourth parameter is an async and / or defer script attribute.</p>
 

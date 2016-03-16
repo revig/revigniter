@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -64,8 +67,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -75,15 +78,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 
@@ -94,15 +97,15 @@
 <p>There are several ways to generate query results:</p>
 
 	<h3>rigDBresult()</h3>
-	
+
 	<p>This function returns the query result data as an array.
-	
+
 	Typically you'll use this in a loop, like this:</p>
-	
+
 <pre><code>get rigDbQuery("YOUR QUERY")
-	
+
 put rigDBresult() into tResult
-	
+
 repeat for each key tKey in tResult
 	put tResult[tKey] into tRow
 	put tRow[2] & comma after tResultData
@@ -110,96 +113,96 @@ repeat for each key tKey in tResult
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	<p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep 
+
+	<p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep
 the order of the result values, you need to add an incrementer:</p>
 
 <pre><code>get rigDbQuery("YOUR QUERY")
-	
+
 put rigDBresult() into tResult
-	
+
 put 0 into tIncr
 repeat for each key tKey in tResult
 	add 1 to tIncr
-	
+
 	put tResult[tIncr] into tRow
 	put tRow[2] & comma after tResultData
 	put tRow[4] & comma after tResultData
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	
+
+
 	<p>You may fetch the values for each row by column name like in the following example:</p>
-	
+
 <pre><code>get rigDbQuery("YOUR QUERY")
-	
+
 put rigDBresult() into tResult
-	
+
 put 0 into tIncr
 repeat for each key tKey in tResult
 	add 1 to tIncr
-	
+
 	put rigDbRow(tIncr) into tRow
-	
+
 	put tRow["title"] & comma after tResultData
 	put tRow["name"] & comma after tResultData
 	put tRow["body"] & return after tResultData
 end repeat
 </code></pre>
-	
+
 
 	<p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
-	
+
 <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
-	
+
 # CHECK IF THE QUERY RESULT HAS DATA
 if tQuery["numrows"] > 0 then
 	put rigDBresult() into tResult
-	
+
 	put 0 into tIncr
 	repeat for each key tKey in tResult
 		add 1 to tIncr
-	
+
 		put rigDbRow(tIncr) into tRow
-	
+
 		put tRow["title"] & comma after tResultData
 		put tRow["name"] & comma after tResultData
 		put tRow["body"] & return after tResultData
 	end repeat
 end if
 </code></pre>
-	
+
 	<h3>yourQuery["resultarray"]</h3>
-	
+
 	<p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
 <pre><code>
 put rigDbQuery("YOUR QUERY") into tQuery
-	
+
 repeat for each key tKey in tQuery["resultarray"]
-	
+
 	put tQuery["resultarray"][tKey] into tRow
 	put tRow[2] & comma after tResultData
 	put tRow[4] & comma after tResultData
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	
+
+
 	<h3>yourQuery["fieldnames"]</h3>
-	
+
 	<p>This query result index contains the table field names in a numbered array.</p>
-	
-	
+
+
 	<h3><a name="fieldnumbers">&nbsp;</a>yourQuery["fieldnumbers"]</h3>
-	
+
 	<p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
-	
+
 	<pre><code>
 	put rigDbQuery("YOUR QUERY") into tQuery
-	
+
 	repeat for each key tKey in tQuery["resultarray"]
-	
+
 		put tQuery["resultarray"][tKey] into tRow
 		put tRow[tQuery["fieldnumbers"]["title"]] & comma after tResultData
 		put tRow[tQuery["fieldnumbers"]["name"]] & comma after tResultData
@@ -209,28 +212,28 @@ end repeat
 
 
 	<h3>rigDbRow()</h3>
-	
+
 	<p>This function returns a single result row as an array.  If your query has more than one row, it returns only the first row.
 	The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
 <pre><code>
 put rigDbQuery("YOUR QUERY") into tQuery
-	
+
 if tQuery["numrows"] > 0 then
-	
+
 	put rigDbRow() into tRow
-	
+
 	put tRow["title"] & comma after tResultData
 	put tRow["name"] & comma after tResultData
 	put tRow["body"] & return after tResultData
 end if
 </code></pre>
-	
+
 	<p>If you want a specific row returned you can submit the row number as a digit in the first parameter:</p>
-	
+
 <pre><code>put rigDbRow(5) into tRow</code></pre>
 
 
-	
+
  	<p>In addition, you can walk forward/backwards/first/last through your results using these variations:</p>
 
 <p>
@@ -251,7 +254,7 @@ end if
 <p>The number of rows returned by the query.</p>
 
 <pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
-	
+
 get rigNumRows()
 </code></pre>
 
@@ -261,12 +264,12 @@ get rigNumRows()
 <p>The number of FIELDS (columns) returned by the query.</p>
 
 <pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
-	
+
 get rigNumFields()
 </code></pre>
 
 
-	
+
 
 </div>
 <!-- END CONTENT -->

@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 <h1>Modules Library</h1>
@@ -121,11 +124,11 @@
 
 <h3>rigRunModule(<var>pModuleSegments</var>, <var>pParamsA</var>)</h3>
 
-<p>Returns output (a view) or a return value from a module controller. The first parameter is the path to a module controller optionally including additional segments 
+<p>Returns output (a view) or a return value from a module controller. The first parameter is the path to a module controller optionally including additional segments
 	used to pass parameter values. Please see <a href="../general/modules.html#paths">module paths</a> in the "Modules" section. The second parameter is optional and
 	is used to pass parameters as an array.</p>
-	
-<p>In the first example this function calls the default handler <dfn>myCoolModuleIndex</dfn> of controller <dfn>myCoolModule.lc</dfn> which is located 
+
+<p>In the first example this function calls the default handler <dfn>myCoolModuleIndex</dfn> of controller <dfn>myCoolModule.lc</dfn> which is located
 	in <dfn>application/modules/myCoolModule/controllers</dfn>. The view or data returned is stored in <var>gData</var>.</p>
 
 <pre><code>put rigRunModule("myCoolModule") into gData["myCoolModuleOutput"]</code></pre>
@@ -189,7 +192,7 @@
 <h3>rigModuleUriToAssoc(<var>pN</var>, <var>pDefaultA</var>)</h3>
 
 <p>This function generates an associative array of module URI data starting at the supplied segment. For example, if this is your URI:
-	 <dfn>myCoolModule/someHandler/name/joe/location/UK/gender/male</dfn>, you can use this function to generate an array with this 
+	 <dfn>myCoolModule/someHandler/name/joe/location/UK/gender/male</dfn>, you can use this function to generate an array with this
 	prototype:</p>
 
 <pre><code class="lang-livecodeserver">tArray["name"] =>value = "joe"
@@ -197,17 +200,17 @@ tArray["location"] =>value = "UK"
 tArray["gender"] =>value = "male"
 </code></pre>
 
-<p>The first parameter of the function lets you set an offset. By default it is set to 3 assuming your module URI contains a myModule/handler in the first and second 
+<p>The first parameter of the function lets you set an offset. By default it is set to 3 assuming your module URI contains a myModule/handler in the first and second
 	segments. Example:</p>
-	
+
 <pre><code>put rigModuleUriToAssoc(3) into tArray
 
 put tArray["name"] into gData["name"]
 </code></pre>
 
-<p>The second parameter lets you set default key names, so that the array returned by the function will always contain expected indexes, even if missing from the URI. 
+<p>The second parameter lets you set default key names, so that the array returned by the function will always contain expected indexes, even if missing from the URI.
 	Example:</p>
-	
+
 <pre><code>put "name,location,gender" into tDefault
 split tDefault using comma
 

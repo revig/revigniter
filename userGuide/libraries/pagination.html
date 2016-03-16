@@ -12,15 +12,18 @@
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -51,8 +54,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -63,8 +66,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -74,15 +77,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 
@@ -150,15 +153,15 @@ minimum you need the three shown.  Here is a description of what those items rep
 	# PAGINATION CONFIGURATION
 	# DO THE PAGINATION BASE URL CONFIGURATION
 	put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
-	
+
 	# SET LIMIT OF ROWS TO BE DISPLAYED
 	# LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
 	put 20 into tConfig["perPage"]
-	
+
 	# SET TOTAL ROWS CONFIGURATION
 	put tTotalNumRecords into tConfig["totalRows"]
 	# CONFIGURATION END
-	
+
 	# INITIALIZE PAGINATION
 	rigInitializePagination tConfig
 
@@ -171,7 +174,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 		put 0 into tOffset
 	end if
 
-	# GET DATABASE QUERY RESULT DATA 
+	# GET DATABASE QUERY RESULT DATA
 	# YOUR DATABASE QUERY STUFF HERE . . . LIKE
 	# rigDbOrderBy, rigDbWhere OR WHATEVER
 
@@ -186,7 +189,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 		# . . .
 		# STORE YOUR PAGINATION DATA IN gData
 		put tYourData into gData["paginationData"]
-	
+
 		# FINALLY GET PAGINATION HTML LINKS
 		put rigCreatePaginationLinks() into gData["paginationLinks"]
 	end if
@@ -210,7 +213,7 @@ end page
 
 <pre><code># SEND JSON DATA TO BE PROCESSED BY AJAX PAGINATION SCRIPT TO BROWSER
 rigAjaxPagination gData["paginationData"], gData["paginationLinks"]
-  
+
 # GET AJAX PAGINATION SCRIPT
 put rigAjaxPaginationCode() into gData["ajaxCode"]
 </code></pre>
@@ -236,7 +239,7 @@ put "myPaginationDataID" into tConfig["dataElementID"]
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <var>pagination.lc</var>,  add an
-array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
+array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the
 array as parameter. Then save the file in: <var>application/config/pagination.lc</var> and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
 

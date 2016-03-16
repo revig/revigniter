@@ -11,21 +11,24 @@
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
-		
-		<style type="text/css"> 
+
+		<!-- Custom CSS -->
+		<link rel="stylesheet" media="screen" href="../css/custom.css">
+
+		<style type="text/css">
 		.b { color: black; background-color: #808080; line-height: 14px; font-size: 14px; }
 		.w { color: white; background-color: #FFFFFF; line-height: 14px; font-size: 14px; }
 		</style>
 
 		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 		<script src="../js/nav-ck.js"></script>
-		
+
 		<!-- Touch icons -->
 		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
 		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
+
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -56,8 +59,8 @@
  		 	 		</form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
+
+		 <!-- START BREADCRUMB -->
 		 <div id="breadcrumbContainer">
 			 <div class="container">
 			 		<ol class="breadcrumb">
@@ -68,8 +71,8 @@
 			 		 </ol>
 				</div>
 		</div>
-		<!-- END BREADCRUMB -->		
-		
+		<!-- END BREADCRUMB -->
+
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
@@ -79,15 +82,15 @@
 			<div id="close-button" class="slide-button">Close</div>
 		</div>
 		<!-- END SLIDEBOX -->
-	 
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container">
-	
+
 <div id="content">
 
 
@@ -135,33 +138,33 @@ The captcha library provides a means to generate two flavors of captchas. In it'
 <p>Here is a simple example showing how to create a captcha (composed of none breaking spaces) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
-<pre><code>rigLoaderLoadLibrary "Captcha" 
- 
-# GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
-put rigCaptcha() into gData["captcha"] 
- 
-# GET CAPTCHA CSS 
+<pre><code>rigLoaderLoadLibrary "Captcha"
+
+# GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS
+put rigCaptcha() into gData["captcha"]
+
+# GET CAPTCHA CSS
 put rigCaptchaStyle() into gData["captchaStyle"]
 </code></pre>
 
 
-<p><strong>Note:</strong> Place the <dfn>gData["captchaStyle"]</dfn> variable to be merged in the header of your view file. 
+<p><strong>Note:</strong> Place the <dfn>gData["captchaStyle"]</dfn> variable to be merged in the header of your view file.
 This variable holds the style data for your captcha.</p>
 
-<p>In order to prevent automated software from posting to your site you need to store a hash of the captcha digits 
-which is built from the captcha number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field. 
-Then you have to compare the posted data of the hidden field with a hash of the posted number. 
+<p>In order to prevent automated software from posting to your site you need to store a hash of the captcha digits
+which is built from the captcha number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field.
+Then you have to compare the posted data of the hidden field with a hash of the posted number.
 To retrieve the hash of the displayed captcha your code would look like this:</p>
 
-<pre><code>rigLoaderLoadLibrary "Captcha" 
- 
-# GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
-put rigCaptcha() into gData["captcha"] 
- 
-# GET CAPTCHA CSS 
-put rigCaptchaStyle() into gData["captchaStyle"] 
- 
-#GET CAPTCHA HASH 
+<pre><code>rigLoaderLoadLibrary "Captcha"
+
+# GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS
+put rigCaptcha() into gData["captcha"]
+
+# GET CAPTCHA CSS
+put rigCaptchaStyle() into gData["captchaStyle"]
+
+#GET CAPTCHA HASH
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
 
@@ -169,8 +172,8 @@ put rigGetCaptchaHash() into gData["captchaHash"]
 
 <p>Here is an example for captcha user input validation:</p>
 
-<pre><code>if rigValidCaptchaUserInput(rigVarPost("inputField"), rigVarPost("hiddenHashField")) is TRUE then 
-	get rigLoadView("formSuccess") 
+<pre><code>if rigValidCaptchaUserInput(rigVarPost("inputField"), rigVarPost("hiddenHashField")) is TRUE then
+	get rigLoadView("formSuccess")
 end if
 </code></pre>
 
@@ -180,44 +183,44 @@ end if
 
 <p>Here is an example:</p>
 
-<pre><code># VALIDATION RULES (in your validation config file in system/application/config/validation.lc) 
- 
-put "hiddenMonitorField" into sValidationConf["idOfYourForm"][1]["field"] 
-put "Enter captcha number here" into sValidationConf["idOfYourForm"][1]["label"] 
-put "callback_captchaFailed" into sValidationConf["idOfYourForm"][1]["rules"] 
- 
-put "inputField" into sValidationConf["idOfYourForm"][2]["field"] 
-put "Enter captcha number here" into sValidationConf["idOfYourForm"][2]["label"] 
-put "trim|requiredR|maxLengthR[4]|integerR" into sValidationConf["idOfYourForm"][2]["rules"] 
- 
-# CAPTCHA VALIDATION 
- 
-put FALSE into tCaptchaValid 
-if $_POST is an array then 
-	if rigVarPOST("inputField") is not FALSE then 
-		if rigValidCaptchaUserInput(rigVarPOST("inputField"), rigVarPOST("hiddenHashField")) is TRUE then 
-			put TRUE into tCaptchaValid 
-		else 
-			# SET THE INPUT OF THE HIDDEN FIELD TO TRUE, THIS WILL BE THE PARAMETER FOR THE CALLBACK HANDLER 
-			# THE PAGE WILL THEN BE SHOWN AGAIN WITH REPOPULATED FIELDS 
-			put "true" into $_POST["hiddenMonitorField"] 
-		end if 
-	end if 
-end if 
- 
-# CALLBACK HANDLER 
- 
-command captchaFailed pStr 
-# pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG 
-if pStr = "true" then 
-	# SHOW CAPTCHA ERROR 
-	put "Wrong input in field %s." into tCaptchaError 
-	rigSetMessage "captchaFailed", tCaptchaError 
-	# RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED 
-	return FALSE 
-else 
-	return TRUE 
-end if 
+<pre><code># VALIDATION RULES (in your validation config file in system/application/config/validation.lc)
+
+put "hiddenMonitorField" into sValidationConf["idOfYourForm"][1]["field"]
+put "Enter captcha number here" into sValidationConf["idOfYourForm"][1]["label"]
+put "callback_captchaFailed" into sValidationConf["idOfYourForm"][1]["rules"]
+
+put "inputField" into sValidationConf["idOfYourForm"][2]["field"]
+put "Enter captcha number here" into sValidationConf["idOfYourForm"][2]["label"]
+put "trim|requiredR|maxLengthR[4]|integerR" into sValidationConf["idOfYourForm"][2]["rules"]
+
+# CAPTCHA VALIDATION
+
+put FALSE into tCaptchaValid
+if $_POST is an array then
+	if rigVarPOST("inputField") is not FALSE then
+		if rigValidCaptchaUserInput(rigVarPOST("inputField"), rigVarPOST("hiddenHashField")) is TRUE then
+			put TRUE into tCaptchaValid
+		else
+			# SET THE INPUT OF THE HIDDEN FIELD TO TRUE, THIS WILL BE THE PARAMETER FOR THE CALLBACK HANDLER
+			# THE PAGE WILL THEN BE SHOWN AGAIN WITH REPOPULATED FIELDS
+			put "true" into $_POST["hiddenMonitorField"]
+		end if
+	end if
+end if
+
+# CALLBACK HANDLER
+
+command captchaFailed pStr
+# pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG
+if pStr = "true" then
+	# SHOW CAPTCHA ERROR
+	put "Wrong input in field %s." into tCaptchaError
+	rigSetMessage "captchaFailed", tCaptchaError
+	# RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED
+	return FALSE
+else
+	return TRUE
+end if
 end captchaFailed
 </code></pre>
 
@@ -227,17 +230,17 @@ end captchaFailed
 <p>Here is a simple example showing how to create a captcha (displaying a math problem) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
-<pre><code>rigLoaderLoadLibrary "Captcha" 
- 
-# GET CAPTCHA MATH PROBLEM 
-put rigCaptchaMathProblem() into gData["captcha"] 
- 
-#GET CAPTCHA HASH 
+<pre><code>rigLoaderLoadLibrary "Captcha"
+
+# GET CAPTCHA MATH PROBLEM
+put rigCaptchaMathProblem() into gData["captcha"]
+
+#GET CAPTCHA HASH
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
 
-<p>In order to prevent automated software from posting to your site you need to store a hash of the math problem result 
-which is built from the result number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field. 
+<p>In order to prevent automated software from posting to your site you need to store a hash of the math problem result
+which is built from the result number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field.
 Then you have to compare the posted data of the hidden field with a hash of the posted number.</p>
 
 <p><strong>Note:</strong> The methods for input validation comply with those shown above.</p>
@@ -257,15 +260,15 @@ Then you have to compare the posted data of the hidden field with a hash of the 
 </ul>
 
 
-<p>Preferences are set by passing an array of preference values to the captcha <dfn>rigInitCaptcha</dfn> handler.  Here is an example of 
+<p>Preferences are set by passing an array of preference values to the captcha <dfn>rigInitCaptcha</dfn> handler.  Here is an example of
 how you might set preferences:</p>
 
-<pre><code>rigLoaderLoadLibrary "Captcha" 
- 
-put 6 into tConfig["captchaLength"] 
-put "#FFFFFF" into tConfig["captchaBckgndColor"] 
-put "#646464" into tConfig["captchaColor"] 
- 
+<pre><code>rigLoaderLoadLibrary "Captcha"
+
+put 6 into tConfig["captchaLength"]
+put "#FFFFFF" into tConfig["captchaBckgndColor"]
+put "#646464" into tConfig["captchaColor"]
+
 rigInitCaptcha tConfig</code></pre>
 
 <p><strong>Note:</strong> To change your secret key change the corresponding entry in the config file. Don't set it manually like other preferences shown above.</p>
@@ -296,8 +299,8 @@ rigInitCaptcha tConfig</code></pre>
 
 <h3>rigValidCaptchaUserInput(pCaptchaInput, pHiddenFieldValue)</h3>
 <p>Validate captcha user input. The first parameter is the posted captcha user input and the second is the captcha hash retrieved from an hidden field. The function returns TRUE or FALSE.</p>
-<pre><code>if rigValidCaptchaUserInput(tInput, tHiddenField) is TRUE then 
-	-- your code here 
+<pre><code>if rigValidCaptchaUserInput(tInput, tHiddenField) is TRUE then
+	-- your code here
 end if
 </code></pre>
 
