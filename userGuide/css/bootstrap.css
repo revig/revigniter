@@ -3154,7 +3154,7 @@ input#q {
 }
 #searchLabel {
   color: #000;
-  font-size: 10px;
+  font-size: 12px;
 }
 /*// < ------------------------- Search end */
 img {
@@ -3302,7 +3302,7 @@ div .table {
   margin: 30px 0 0;
   text-align: center;
   background-color: #000;
-  font-size: 10px;
+  font-size: 12px;
 }
 #footer p {
   color: #d0d9f8;
@@ -3334,7 +3334,7 @@ form {
   margin: 0;
 }
 .textarea {
-  font-size: 14px;
+  font-size: 16px;
   color: #2b4662;
   background-color: #f9f9f9;
   border: 1px solid #6E6E6E;
@@ -3359,7 +3359,7 @@ form {
   background-color: #000;
   color: #fff;
   font-weight: normal;
-  font-size: 10px;
+  font-size: 12px;
   border: 1px solid #fff;
   margin: 0;
   padding: 1px 5px 2px 5px;
@@ -3394,13 +3394,13 @@ form {
 }
 .slide-button {
   position: relative;
-  width: 112px;
+  width: 180px;
   z-index: 20;
   cursor: pointer;
-  height: 14px;
+  height: 18px;
   text-align: center;
   color: #fff;
-  font-size: 10px;
+  font-size: 12px;
   background-image: url(../images/slideBoxBtn.png);
   margin-left: auto;
   margin-right: auto;
@@ -3412,7 +3412,7 @@ form {
 #open-button {
   display: none;
   font-weight: 700;
-  margin-bottom: -14px;
+  margin-bottom: -18px;
 }
 #panelContent ul.list,
 #panelContent ul.list a {
@@ -3591,7 +3591,7 @@ pre .hljs-number {
     padding: 0;
   }
 }
-@media (min-height: 690px) and (min-width: 600px) {
+@media (min-height: 690px) and (min-width: 768px) {
   #open-button {
     display: block;
   }
@@ -3619,35 +3619,35 @@ h6,
 }
 h1,
 .h1 {
-  font-size: 24px;
+  font-size: 28px;
 }
 h2,
 .h2 {
-  font-size: 18px;
+  font-size: 21px;
   font-weight: 700;
 }
 h3,
 .h3 {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
 }
 h4,
 .h4 {
-  font-size: 14px;
+  font-size: 16px;
 }
 h6,
 .h6 {
-  font-size: 11px;
+  font-size: 12px;
 }
 kbd {
   font-family: "Lucida Grande", Verdana, Geneva, Sans-serif;
-  font-size: 12px;
+  font-size: 14px;
 }
 /*// < ------------------------- Typography end */
 body {
   font-family: "Lucida Grande", Verdana, Geneva, Sans-serif;
   color: #6E6E6E;
-  font-size: 12px;
+  font-size: 14px;
 }
 /*
 // Nav
@@ -3661,7 +3661,7 @@ body {
 		background-image: -moz-linear-gradient(bottom, rgb(132,152,180) 35%, rgb(182,195,212) 70%);
 		background-image: -webkit-linear-gradient(bottom, rgb(132,152,180) 35%, rgb(182,195,212) 70%);
 		background-image: -ms-linear-gradient(bottom, rgb(132,152,180) 35%, rgb(182,195,212) 70%);
-	
+
 		background-image: -webkit-gradient(
 			linear,
 			left bottom,
@@ -3696,6 +3696,7 @@ body {
 }
 form.navbar-form.navbar-right {
   margin-right: -15px;
+  font-size: 12px;
 }
 /*// < ------------------------- Nav end */
 /*
@@ -3708,7 +3709,7 @@ form.navbar-form.navbar-right {
   margin-bottom: 0;
   background-color: transparent;
   border-radius: 0;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 .breadcrumb > li + li:before {
@@ -3760,7 +3761,7 @@ pre {
   margin-bottom: 12px;
 }
 pre code {
-  font-size: 12px;
+  font-size: 14px;
 }
 /*// < ------------------------- Code end */
 /*

@@ -60,7 +60,7 @@ var Slidebox =
 			
 			// SLIDE BOX HEIGHT FOR LARGE TABLETS AND DESKTOP
 			if (window.innerHeight > 610) {
-				Slidebox.panelShownHeight = "520";
+				Slidebox.panelShownHeight = "550";
 			}
 
 			// TRANSITION END NAME
