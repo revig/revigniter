@@ -254,7 +254,7 @@ end index
 </code></pre>
 
 <p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
-Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement.</p>
+Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?rev" in view files because all views and nested views are merged (into the final output data).</p>
 
 <p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
 
