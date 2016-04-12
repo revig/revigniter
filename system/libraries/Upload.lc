@@ -1248,7 +1248,7 @@ end rigIsAllowedDimensions
 --| Last Mod: 03-09-2011
 --| Requires: rigStripSlashes() (in Common)
 --|
---| Summary: description
+--| Summary: Remove special characters, encoded and double encoded.
 --| 
 --| Format:  rigCleanFilename(pFilename)
 --|
@@ -1377,7 +1377,6 @@ end rigDoXSSclean
 --| Requires: rigIsImage(), rigGetImageSize()
 --|
 --| Summary: Set Image Properties.
---|					 Uses ImageMagick to determine the width/height/type of image.
 --| 
 --| Format:  rigSetImageProperties param1
 --|
