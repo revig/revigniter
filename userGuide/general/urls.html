@@ -135,6 +135,8 @@ contain handlers that make it easy to work with your URI data.  In addition, you
 <p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, css and js is treated as
 a request for your index.lc file.</p>
 
+<p>If your default controller is not loaded when the URI contains no data please read about URIs in your <dfn>application/config/config.lc</dfn> file and choose another protocol to retrieve the URI string.</p>
+
 <p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
 
 <p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See http://httpd.apache.org/docs/current/mod/mod_rewrite.html</p>
