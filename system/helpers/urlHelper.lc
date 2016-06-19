@@ -242,24 +242,24 @@ end rigAnchor
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAnchorPopUp
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 05-10-09
---| Last Mod: 07-01-10
+--| Last Mod: 19-06-16
 --| Requires: rigSiteURL(), _rigParseAttributes()
 --|
 --| Summary: Creates an anchor based on the local URL. The link
---|                   opens a new window based on the attributes specified.
+--|            opens a new window based on the attributes specified.
 --| 
 --| Format: rigAnchorPopUp(param1, param2, param3)
 --|
 --| Parameters: mixed <pURI>, string <pTitle> the link title, mixed <pAttributes> any attributes
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAnchorPopUp pURI pTitle pAttributes
 	if pAttributes is not an array then
@@ -284,7 +284,8 @@ function rigAnchorPopUp pURI pTitle pAttributes
 	end if
 
 	if tAttributes is FALSE then
-		return "<a href='javascript:void(0);' onclick=" & quote & "window.open('" & tSiteURL & "', '_blank');" & quote & ">" & tTitle & "</a>"
+		# USE noopener AND noreferrer AND RESET THE opener PROPERTY TO ADDRESS SECURITY ISSUES OF _blank TARGETS
+		return "<a href=" & quote & tSiteURL & quote && "rel=" & quote & "noopener noreferrer" & quote &&  "target=" & quote & "_blank" & quote && "onclick=" & quote & "var nW = window.open(); nW.opener = null; nW.location = href; return false;" & quote & ">" & tTitle & "</a>"
 	end if
 
 	if tAttributes is not an array then
@@ -312,7 +313,8 @@ function rigAnchorPopUp pURI pTitle pAttributes
 
 	put _rigParseAttributes(tAtts, TRUE) into tAtts
 
-	return "<a href='javascript:void(0);' onclick=" & quote & "window.open('" & tSiteURL & "', '_blank', '" & tAtts & "');" & quote & tAttributes & ">" & tTitle & "</a>"
+	# RESET THE opener PROPERTY TO ADDRESS SECURITY ISSUES OF _blank TARGETS
+	return "<a href=" & quote & tSiteURL & quote && "onclick=" & quote & "var nW = window.open('" & tSiteURL & "', '_blank', '" & tAtts & "'); nW.opener = null; return false;" & quote & ">" & tTitle & "</a>"
 end rigAnchorPopUp
 
 
@@ -513,26 +515,26 @@ end rigSafeMailToLink
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAutoLink
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 05-10-09
---| Last Mod: 07-01-10
+--| Last Mod: 19-06-16
 --| Requires: rigSafeMailToLink()
 --|
 --| Summary: Automatically links URL and Email addresses.
---|                    Note: There's a bit of extra code here to deal with
---|                    URLs or emails that end in a period.  We'll strip these
---|                    off and add them after the link.
+--|            Note: There's a bit of extra code here to deal with
+--|            URLs or emails that end in a period. We'll strip these
+--|            off and add them after the link.
 --| 
 --| Format: rigAutoLink(param1, param2, param3)
 --|
 --| Parameters: string <pStr>, string <pType> the type: email, url, or both, bool <pPopUp> whether to create pop-up links
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAutoLink pStr pType pPopUp
 	put pStr into tStr
@@ -543,7 +545,8 @@ function rigAutoLink pStr pType pPopUp
 	end if
 
 	if pPopUp is TRUE then
-		put " target=" & quote & "_blank" & quote into tPopUp
+		# USE noopener AND noreferrer TO ADDRESS SECURITY ISSUES OF _blank TARGETS
+		put " rel=" & quote & "noopener noreferrer" & quote && "target=" & quote & "_blank" & quote into tPopUp
 	else
 		put "" into tPopUp
 	end if

@@ -19,9 +19,11 @@ end if
 # EXPLANATION OF VARIABLES
 # -------------------------------------------------------------------
 #
-#	["hostname"] The hostname of your database server. In case you use SQLite
-#              set this variable to the database file path like:
-#              gAPPPATH & "db/myDatabase.sqlite"
+#	["hostname"] The hostname of your database server. You may need to change
+#                the default setting "localhost" to "127.0.0.1" if the connection
+#                to a local SQL server fails.
+#                In case you use SQLite set this variable to the database file path like:
+#               gAPPPATH & "db/myDatabase.sqlite"
 #	["username"] The username used to connect to the database
 #	["password"] The password used to connect to the database
 #	["database"] The name of the database you want to connect to

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version182">Version 1.8.2</a></li>
 <li><a href="#version181">Version 1.8.1</a></li>
 <li><a href="#version18">Version 1.8</a></li>
 <li><a href="#version174">Version 1.7.4</a></li>
@@ -189,6 +190,22 @@
 </ul>
 
 
+<h2><a name="version182">&nbsp;</a>Version 1.8.2</h2>
+<p>Release Date: 2016-06-19</p>
+
+
+<p>
+<ul>
+	<li><strong>Changed:</strong> Increased font sizes of the User Guide (thanks to Bob Hall for providing the modifications).</li>
+	<li><strong>Fixed:</strong> Issue with multipart/form-data and empty $_POST. This addresses engine bug 17160 which is fixed since LiveCode version 7.1.4 RC-1.</li>
+	<li><strong>Changed:</strong> Tweaked instructions and code of the sample chat app in the User Guide.</li>
+	<li><strong>Changed:</strong> Removed "http:" from JQuery URL in system/libraries/Jquery.lc -> rigJQuerySource(). This will use http or htps, whichever protocol a page was requested with.</li>
+	<li><strong>Changed:</strong> Tweaked info in system/application/config/database.lc.</li>
+	<li><strong>Changed:</strong> Tweaked generation of anchors in rigAutoLink() and rigAnchorPopUp(). This addresses security issues of _blank targets. Windows opened using JavaScript or target="_blank" have access, even though limited, to the parent window. Unfortunately, the solution provided by rigAnchorPopUp() does not work for Safari. So, think carefully before using rigAnchorPopUp() for anything that requires high security, especially if you are dealing with user-generated content.</li>
+</ul>
+</p>
+
+
 <h2><a name="version181">&nbsp;</a>Version 1.8.1</h2>
 <p>Release Date: 2016-03-09</p>
 
@@ -207,7 +224,7 @@
 <p>
 <ul>
 	<li><strong>Added:</strong> HMVC functionality. revIgniter now supports modules and widgets / view partials. Added system/libraries/Modules.lc. Modified system/libraries/Config.lc, system/libraries/Language.lc, system/libraries/Loader.lc, system/libraries/Router.lc and system/revigniter/RevIgniter.lc. Please read about <a href="overview/hmvc.html">HMVC - Extending the Model-View-Controller Pattern</a>, <a href="general/modules.html">Modules</a> and the <a href="libraries/modules.html">Modules Library</a> in the User Guide.</li>
-	<li><strong>Fixed:</strong> Missing commas in SQL query string produced by using rigDbDelet() in combination with rigDbWhereIn. Fixed in system/database/drivers/mysql/mysqlDriver.lc ->_rigDelete(), system/database/drivers/postgre/postgreDriver.lc ->_rigDelete() and system/database/drivers/sqlite/sqliteDriver.lc ->_rigDelete().</li>
+	<li><strong>Fixed:</strong> Missing commas in SQL query string produced by using rigDbDelete() in combination with rigDbWhereIn. Fixed in system/database/drivers/mysql/mysqlDriver.lc ->_rigDelete(), system/database/drivers/postgre/postgreDriver.lc ->_rigDelete() and system/database/drivers/sqlite/sqliteDriver.lc ->_rigDelete().</li>
 	<li><strong>Fixed:</strong> Verification of URI segments in system/libraries/URI.lc -> _rigFilterUri().</li>
 	<li><strong>Fixed:</strong> Bug in Jquery.lc -> rigJQuerySource() which affected those installations using “index.lc” in URIs.</li>
 	<li><strong>Changed:</strong> Tweaked loops in system/libraries/URI.lc -> _rigExplodeSegments and _rigUriToAssoc(), in system/libraries/URI.lc ->  _rigUriToAssoc().</li>

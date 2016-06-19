@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -153,6 +153,10 @@ and build the table using the table structure below.</p>
 	margin-bottom: 6px;
 }
 
+#login input#name {
+	width: 149px;
+}
+
 #chat {
 	width: 500px;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#E3E3E3, endColorstr=#A1A1A1);
@@ -258,6 +262,7 @@ a:hover {
 }
 
 #submitbtn {
+	float: right;
 	width: 60px;
 	margin-left: 28px;
 }
@@ -314,9 +319,10 @@ end index
 
 <p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required libraries, helpers, plugins, models and the database.</p>
 	
-	<p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the Jquery library:</p>
+	<p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the jQuery library:</p>
 
-<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Jquery"
+<pre><code class="lang-livecodeserver">put "1.7.2" into tJquerySettings["jqueryCurrentVersion"]
+rigLoaderLoadLibrary "Jquery", tJquerySettings
 </code></pre>
 
 	<p>To store the user name, so that all messages will be sent with the associated name, we will use a cookie-based session. So we need the Session library:</p>
@@ -347,7 +353,9 @@ end index
 <p>Your chat handler should now look like this:</p>
 
 <pre><code>command chat
-	rigLoaderLoadLibrary "Jquery"	
+	put "1.7.2" into tJquerySettings["jqueryCurrentVersion"]
+	rigLoaderLoadLibrary "Jquery", tJquerySettings
+		
 	rigLoaderLoadLibrary "Session"
 
 	get rigLoadDatabase()
@@ -360,7 +368,7 @@ end index
 end chat
 </code></pre>
 
-
+<p class="important"><strong>Note:</strong> Mind the version number of jQuery. The jQuery library is not compatible with newer versions of jQuery. Actually it is tested against version 1.4.2 but this sample application works with version 1.7.2 too.</p>
 
 <p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. With this handler we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
 
@@ -402,12 +410,12 @@ end if
 	rigJQopen
 		# LOAD MESSAGES
 		rigJQfunctionOpen "loadMessages"
-			rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
+			rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")
 
 			put "chat/view" into tAjax["url"]
 			put "false" into tAjax["cache"]
 			put rigJQsetR("'#chatbody'", "html", "data") &amp; \
-			rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")) &amp; \
+			rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")) &amp; \
 			rigJQconditionR("currentScroll > previousScroll", rigJQanimateR("'#chatbody'", "scrollTop: currentScroll", "'normal'")) into tAjax["success"]
 			rigJQajax tAjax
 		rigJQcb
@@ -436,7 +444,7 @@ end if
 end if
 </code></pre>
 
-<p class="important"><strong>Note:</strong> If you use jQuery version >= 1.6 replace the first two jQuery attr methods with the jQuery prop method.</p>
+<p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
 
 <p>The last statement gets the messages list from the database with the help of the <dfn>getMsgData</dfn> function. This function needs to be implemented in the model later.</p>
 
@@ -476,12 +484,12 @@ get rigLoadView("chatfooter")
 	if tLogin is FALSE then
 		rigJQopen
 			rigJQfunctionOpen "loadMessages"
-				rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
+				rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")
 
 				put "chat/view" into tAjax["url"]
 				put "false" into tAjax["cache"]
 				put rigJQsetR("'#chatbody'", "html", "data") &amp; \
-				rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")) &amp; \
+				rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")) &amp; \
 				rigJQconditionR("currentScroll > previousScroll", rigJQanimateR("'#chatbody'", "scrollTop: currentScroll", "'normal'")) into tAjax["success"]
 				rigJQajax tAjax
 			rigJQcb
@@ -517,7 +525,7 @@ get rigLoadView("chatfooter")
 end index
 </code></pre>
 
-<p class="important"><strong>Note:</strong> If you use jQuery version >= 1.6 replace the first two jQuery attr methods with the jQuery prop method.</p>
+<p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
 
 <p>Now we need a handler, which adds new messages to the database. It takes the POST data, checks if the message is not empty and, along with the session data, hands it over to the model, which is responsible for database related tasks. Add the following handler to the controller script:</p>
 

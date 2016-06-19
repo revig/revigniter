@@ -186,9 +186,9 @@ end rigSetInitialJqueryValue
 --| FUNCTION rigJQuerySource
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 22-02-10
---| Last Mod: 03-01-16
+--| Last Mod: 13-05-16
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
@@ -218,10 +218,10 @@ function rigJQuerySource
 	else
 		if sJqueryCurrentVersion is empty then
 			# LATEST VERSION FROM JQUERY.COM
-			return "<script src=" & quote & "http://code.jquery.com/jquery-latest.js" & quote & "></script>"
+			return "<script src=" & quote & "//code.jquery.com/jquery-latest.js" & quote & "></script>"
 		else
 			# JQUERY FROM AJAX.GOOGLEAPIS
-			return "<script src=" & quote & "http://ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote && "type=" & quote & "text/javascript" & quote & "></script>"
+			return "<script src=" & quote & "//ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote && "type=" & quote & "text/javascript" & quote & "></script>"
 		end if
 	end if
 end rigJQuerySource

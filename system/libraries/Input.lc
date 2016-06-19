@@ -793,9 +793,9 @@ end rigVarPost
 --| FUNCTION _rigVarPostFallback
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 16-05-2010
---| Last Mod: 16-05-2010
+--| Last Mod: 18-03-2016
 --| Requires: --
 --|
 --| Summary: This function is used to address an engine issue where
@@ -811,29 +811,35 @@ end rigVarPost
 ----------------------------------------------------------------------*/
 
 function _rigVarPostFallback
-	# READ RAW DATA FROM STANDARD IN
-	if $_SERVER["CONTENT_LENGTH"] > 0 then
-		read from stdin for $_SERVER["CONTENT_LENGTH"] chars
-		put it into tPOSTdata
-	else
-		# ALTERNATIVELY CHECK $_POST_RAW
-		put $_POST_RAW into tPOSTdata
-	end if
+  # DON'T DEAL WITH MULTIPART FORM-DATA, BOUNDARIES ETC.
+  if "multipart/form-data" is not in $_SERVER["CONTENT_TYPE"] then
+    # READ RAW DATA FROM STANDARD IN
+    if $_SERVER["CONTENT_LENGTH"] > 0 then
+      read from stdin for $_SERVER["CONTENT_LENGTH"] chars
+      put it into tPOSTdata
+    else
+      # ALTERNATIVELY CHECK $_POST_RAW
+      put $_POST_RAW into tPOSTdata
+    end if
 
-	if tPOSTdata is empty then
-		# THERE IS DEFINITELY NO POST DATA
-		return FALSE
-	end if
+    if tPOSTdata is empty then
+      # THERE IS DEFINITELY NO POST DATA
+      return FALSE
+    end if
 
-	# AS POST DATA IS EXPECTED TO BE AN ARRAY CONVERT THE STRING
-	split tPOSTdata with "&" and "="
+    # AS POST DATA IS EXPECTED TO BE AN ARRAY CONVERT THE STRING
+    split tPOSTdata with "&" and "="
 
-	# DECODE THE ARRAY VALUES TO GET THE ORIGINAL DATA
-	repeat for each key tKey in tPOSTdata
-		put urlDecode(tPOSTdata[tKey]) into tPOSTdata[tKey]
-	end repeat
+    # DECODE THE ARRAY VALUES TO GET THE ORIGINAL DATA
+    repeat for each key tKey in tPOSTdata
+      put urlDecode(tPOSTdata[tKey]) into tPOSTdata[tKey]
+    end repeat
 
-	return tPOSTdata
+  else
+    return FALSE
+  end if -- if "multipart/form-data" is not in $_SERVER["CONTENT_TYPE"] then
+
+  return tPOSTdata
 end _rigVarPostFallback
 
 
