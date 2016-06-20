@@ -25,10 +25,10 @@ end if
 	constant DIR_READ_MODE = "755"
 	constant DIR_WRITE_MODE = "777"
 
-	constant FILE_READ_UMASK = "133"
-	constant FILE_WRITE_UMASK = "111"
-	constant DIR_READ_UMASK = "022"
-	constant DIR_WRITE_UMASK = "000"
+	constant FILE_READ_UMASK = "0133"
+	constant FILE_WRITE_UMASK = "0111"
+	constant DIR_READ_UMASK = "0022"
+	constant DIR_WRITE_UMASK = "0000"
 
 
 --| END OF constants.lc
