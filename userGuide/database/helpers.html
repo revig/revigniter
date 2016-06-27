@@ -97,7 +97,7 @@
 correct number of affected rows.  By default this hack is enabled but it can be turned off in the database driver file.</p>
 
 
-<h3>rigDbCountAll()</h3>
+<h3>rigDbCountAll(<var>pTable</var>)</h3>
 <p>Permits you to determine the number of rows in a particular table.  Submit the table name in the first parameter. Example:</p>
 <pre><code>get rigDbCountAll("<var>myTable</var>")
 
@@ -127,7 +127,7 @@ correct number of affected rows.  By default this hack is enabled but it can be 
 <p>The following two functions help simplify the process of writing database INSERTs and UPDATEs.</p>
 
 
-<h3>rigDbInsertString()</h3>
+<h3>rigDbInsertString(<var>pTable</var>, <var>pDataA</var>)</h3>
 <p>This function simplifies the process of writing database inserts. It returns a correctly formatted SQL insert string. Example:</p>
 
 <pre><code>put tName into tArray["name"]
@@ -144,7 +144,7 @@ put rigDbInsertString("tablename", tArray) into tStr
 
 
 
-<h3>rigDbUpdateString()</h3>
+<h3>rigDbUpdateString(<var>pTable</var>, <var>pDataA</var>, <var>pWhere</var>)</h3>
 <p>This function simplifies the process of writing database updates. It returns a correctly formatted SQL update string. Example:</p>
 
 <pre><code>put tName into tData["name"]
@@ -160,6 +160,17 @@ put rigDbUpdateString("tablename", tData, tWhere) into tStr
 <pre><code> UPDATE tablename SET name = 'Rick', email = 'rick@example.com', url = 'example.com' WHERE authorID = 1 AND status = 'active'</code></pre>
 
 <p class="important">Note: Values are automatically escaped, producing safer queries.</p>
+
+
+<h3>rigSqlDateTimeToIntDate(<var>pDateTime</var>)</h3>
+<p>This function converts SQL datetime format to Internet date format (RFC 2822). Example:</p>
+
+<pre><code>put "2016-06-27 15:45:30" into tDateTime
+put rigSqlDateTimeToIntDate(tDateTime) into gData["dateTime"]
+-- the value of gData["dateTime"] is: Mon, 27 Jun 2016 15:45:30 +0200
+</code></pre>
+
+<p>The parameter is a SQL DATETIME date and time value.</p>
 
 
 </div>
