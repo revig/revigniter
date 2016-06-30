@@ -370,9 +370,9 @@ end rigLoadFile
 --| COMMAND rigLoadHelper
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 19-06-09
---| Last Mod: 08-12-15
+--| Last Mod: 23-06-16
 --| Requires: rigShowError, rigLogMessage
 --|
 --| Summary: This function loads the specified helper file.
@@ -415,7 +415,7 @@ command rigLoadHelper pHelpers pModule
       put sRiHelpers into tTempHelpers
       combine tTempHelpers using comma
       # IS HELPER ALREADY LOADED?
-      if itemOffset((tFilePrefix & tHelper), tTempHelpers) > 0 then
+		 if (itemOffset((tFilePrefix & tHelper), tTempHelpers) > 0) or (itemOffset(tHelper, tTempHelpers) > 0) then
         exit rigLoadHelper
       end if
     end if
@@ -489,9 +489,9 @@ end rigLoadHelpers
 --| COMMAND rigLoadPlugin
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 02-07-09
---| Last Mod: 08-12-15
+--| Last Mod: 23-06-16
 --| Requires: rigShowError, rigLogMessage
 --|
 --| Summary: This function loads the specified plugin.
@@ -534,7 +534,7 @@ command rigLoadPlugin pPlugins pModule
       put sRiPlugins into tTempPlugins
       combine tTempPlugins using comma
       # IS PLUGIN ALREADY LOADED?
-      if itemOffset((tFilePrefix & tPlugin), tTempPlugins) > 0 then
+		 if (itemOffset((tFilePrefix & tPlugin), tTempPlugins) > 0) or (itemOffset(tPlugin, tTempPlugins) > 0) then
         exit rigLoadPlugin
       end if
     end if

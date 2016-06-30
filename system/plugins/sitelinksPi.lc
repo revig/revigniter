@@ -24,11 +24,11 @@ end if
 ##
 # revIgniter Site Links Plugin
 #
-# @package		revIgniter
+# @package			revIgniter
 # @subpackage	Plugins
-# @category	  Plugins
-# @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/plugins/sitelinks_plugin.html
+# @category	  	Plugins
+# @author		  	rabit@revigniter.com
+# @link		    		http://revigniter.com/userGuide/plugins/sitelinks_plugin.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -36,32 +36,38 @@ end if
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSiteLinks
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 07-10-09
---| Last Mod: 23-04-11
+--| Last Mod: 23-06-16
 --| Requires: rigAnchor() -> urlHelper function
 --|
 --| Summary: Use to write links like footer navigation links or breadcrumbs navigation links.
 --| 
---| Format:  rigSiteLinks(param1, param2, param3, param4)
+--| Format:  rigSiteLinks(param1, param2, param3, param4, param5)
 --|
 --| Parameters: array <pLinks> links to be parsed, prototype: put "URIsegment" into tLinksArray[integer][linkText],
 --|             alternative prototype: put "URIsegment,IDselector" into tLinksArray[integer][linkText]
 --|             string <pCurrentPage> name of current page, string <pSep> separator,
---|             string <pSel> the div id and paragraph class selector
+--|             string <pDivSel> the div id selector, string <pPsel> the paragraph class selector (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigSiteLinks pLinks pCurrentPage pSep pSel
+function rigSiteLinks pLinks pCurrentPage pSep pDivSel pPsel
 	if pSep is empty then
 		put " - " into tSep
 	else
 		put pSep into tSep
+	end if
+	
+	if pPsel is empty then
+		put pDivSel into tPsel
+	else
+		put pPsel into tPsel
 	end if
 	
 	# LOAD URL HELPER IF NEEDED
@@ -73,8 +79,8 @@ function rigSiteLinks pLinks pCurrentPage pSep pSel
 	if pLinks is an array then
 		put the number of lines in the keys of pLinks into tArrayCount
 
-		put "<div id=" & quote & pSel & quote & ">" & return & \
-				"<p class=" & quote & pSel & quote & ">" & return into tLinksCode
+		put "<div id=" & quote & pDivSel & quote & ">" & return & \
+				"<p class=" & quote & tPsel & quote & ">" & return into tLinksCode
 
 		repeat with i = 1 to tArrayCount
 			put line 1 of the keys of pLinks[i] into tLink

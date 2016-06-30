@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>QueryValues Plugin : revIgniter User Guide</title>
+		<title>Upgrading from 1.8.2 to 1.8.3 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">QueryValues Plugin</li>
+			 		 	<li class="active">Upgrading from 1.8.2 to 1.8.3</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,85 +85,54 @@
 	
 <div id="content">
 
-
-<h1>QueryValues Plugin</h1>
-
-<p>The QueryValues Plugin file contains a function for writing values or key value pairs of database query results.</p>
+<h1>Upgrading from 1.8.2 to 1.8.3</h1>
 
 
-<h2>Loading this Plugin</h2>
-
-<p>This plugin is loaded using the following code:</p>
-<pre><code class="lang-livecodeserver">rigLoadPlugin "queryvalues"</code></pre>
-
-<p>The function:</p>
-
-<h3>rigQueryValues(<var>pResult</var>, <var>pKeyValueDelimiter</var>, <var>pRecordDelimiter</var>, <var>pFieldnames</var>)</h3>
-
-<p>The first parameter is a database query result. The second parameter defines the key value delimiter (defaults to " => "). The third parameter defines the record delimiter (defaults to ", "). If you leave the second and third parameters blank the default values are used. "&lt;>" as the second parameter specifies, that you want to omit the array keys and retrieve the values only. The optional fourth parameter is an array containing the field names of the database table. Example:</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
 
-<pre><code># MODEL DATABASE QUERY
-put mymodelFetchAllData("recipe") into tQuery
-put tQuery["resultarray"] into tResult
+<h2>Step 1: Update your revIgniter files</h2>
 
-# DISPLAY RESULT ARRAY
-put rigQueryValues(tResult) into gData["resultData"]
-</code></pre>
+<p>Replace this file in your "system/application/config" folder with the new version:</p>
 
-
-<p>The output looks like this:</p>
-
-<pre><code>1 => 1, 2 => Banana Bread, 3 => How to make banana bread.&lt;br />
-1 => 2, 2 => Pancakes, 3 => How to make pancakes.&lt;br />
-1 => 3, 2 => Chocolate Cake, 3 => How to make chocolate cake.&lt;br />
-1 => 4, 2 => Pasta, 3 => How to make pasta.
-</code></pre>
+<ul>
+	<li><dfn>constants.lc</dfn></li>
+</ul>
 
 
-<p>Here is another example:</p>
+<p>Replace this file in your "system/database" folder with the new version:</p>
+
+<ul>
+	<li><dfn>DBcache.lc</dfn></li>
+</ul>
 
 
-<pre><code># MODEL DATABASE QUERY
-put mymodelFetchAllData("recipe") into tQuery
-put tQuery["resultarray"] into tResult
-put tQuery["fieldnames"] into tFieldNames
+<p>Replace this file in your "system/libraries" folder with the new version:</p>
 
-# DISPLAY RESULT ARRAY
-put rigQueryValues(tResult, , , tFieldNames) into gData["resultData"]
-</code></pre>
+<ul>
+	<li><dfn>Loader.lc</dfn></li>
+</ul>
 
 
-<p>The output looks like this:</p>
+<p>Replace this file in your "system/plugins" folder with the new version:</p>
 
-<pre><code>ID => 1, Name => Banana Bread, Directions => How to make banana bread.&lt;br />
-ID => 2, Name => Pancakes, Directions => How to make pancakes.&lt;br />
-ID => 3, Name => Chocolate Cake, Directions => How to make chocolate cake.&lt;br />
-ID => 4, Name => Pasta, Directions => How to make pasta.
-</code></pre>
+<ul>
+	<li><dfn>sitelinksPi.lc</dfn></li>
+</ul>
 
 
-<p>This example shows how to retrieve the values only:</p>
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
 
-<pre><code># MODEL DATABASE QUERY
-put mymodelFetchAllData("recipe") into tQuery
-put tQuery["resultarray"] into tResult
-
-# DISPLAY RESULT ARRAY
-put "&lt;>" into tKeyValueDelim
-put " - " into tRecordDelim
-put rigQueryValues(tResult, tKeyValueDelim, tRecordDelim) into gData["resultData"]
-</code></pre>
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
 
 
-<p>The output looks like this:</p>
 
-<pre><code>1 - Banana Bread - How to make banana bread.&lt;br />
-2 - Pancakes - How to make pancakes.&lt;br />
-3 - Chocolate Cake - How to make chocolate cake.&lt;br />
-4 - Pasta - How to make pasta.
-</code></pre>
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
 
 
 </div>
@@ -175,11 +144,11 @@ put rigQueryValues(tResult, tKeyValueDelim, tRecordDelim) into gData["resultData
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="../plugins/querytojson_plugin.html">QueryToJSON Plugin</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="../plugins/sitelinks_plugin.html">SiteLinks Plugin</a>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
@@ -187,12 +156,6 @@ Next Topic:&nbsp;&nbsp;<a href="../plugins/sitelinks_plugin.html">SiteLinks Plug
 
 <script src="../js/jquery-1.9.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-
-<script src="../js/highlight.pack.js"></script>
- <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
- </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>

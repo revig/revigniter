@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.2</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version183">Version 1.8.3</a></li>
 <li><a href="#version182">Version 1.8.2</a></li>
 <li><a href="#version181">Version 1.8.1</a></li>
 <li><a href="#version18">Version 1.8</a></li>
@@ -188,6 +189,21 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+<h2><a name="version183">&nbsp;</a>Version 1.8.3</h2>
+<p>Release Date: 2016-06-30</p>
+
+
+<p>
+<ul>
+	<li><strong>Changed:</strong> Added leading zeros to umask constants in system/application/config/constants.lc</li>
+	<li><strong>Fixed:</strong> Set the convertOctals to true before setting the umask in system/database/DBcache.lc -> rigWriteSQLcache().</li>
+	<li><strong>Fixed:</strong> There was an issue with modules autoloading helpers / plugins. Modules autoloading helpers / plugins yielded an error in case the helper / plugin in question was already loaded.</li>
+	<li><strong>Fixed:</strong> Missing User Guide entry for function rigSqlDateTimeToIntDate() in chapter “Database Library” section "Query Helpers".</li>
+	<li><strong>Changed:</strong> Tweaked rigSiteLinks() function in system/plugins/sitelinksPi.lc. Now the paragraph selector can be optionally different from the div selector.</li>
+</ul>
+</p>
 
 
 <h2><a name="version182">&nbsp;</a>Version 1.8.2</h2>
