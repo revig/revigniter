@@ -100,7 +100,7 @@
 
 <h3>rigSetCookie</h3>
 
-<p>Sets a cookie containing the values you specify.  There are two ways to pass information to this function so that a cookie can be set:
+<p>Sets a cookie containing the values you specify.  There are two ways to pass information to this handler so that a cookie can be set:
 Array Method, and Discrete Parameters:</p>
 
 <h4>Array Method</h4>
@@ -123,7 +123,7 @@ rigSetCookie tCookie
 <p><strong>Notes:</strong></p>
 
 <p>Only the <strong>name</strong> and <strong>value</strong> are required. To delete a cookie set it with the expiration blank.</p>
-
+<p>Although cookie <strong>values</strong> need to be strings revIgniter optionally allows to use arrays as <strong>value</strong>.</p>
 <p>The <strong>expiration</strong> is set in <strong>seconds</strong>, which will be added to the current time.  Do not include the time, but rather only the
 number of seconds from <em>now</em> that you wish the cookie to be valid.  If the expiration is set to
 zero the cookie will only last as long as the browser is open.</p>
