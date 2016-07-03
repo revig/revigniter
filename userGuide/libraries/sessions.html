@@ -428,7 +428,7 @@ do not need to write your own routine to do it.</p>
 	<td class="td"><strong>sess_driver</strong></td>
 	<td class="td"></td>
 	<td class="td">database/files</td>
-	<td class="td">Whether to save the session data to a database, to a file or in a cookie.  You must create the table before enabling the database option. If this option is set to empty all session data is stored in a cookie.</td>
+	<td class="td">Whether to save the session data to a database, to a file or in a cookie.  You must create the table before enabling the database option. If this option is set to empty all session data is stored in the cookie.</td>
 </tr>
 <tr>
 	<td class="td"><strong>sess_save_location</strong></td>
@@ -459,6 +459,9 @@ do not need to write your own routine to do it.</p>
 </div>
 
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the session expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
+
+
+<p class="important"><strong>Note:</strong> Cookie related settings as defined in <dfn>application/config/config.lc</dfn> apply to session cookies too.</p>
 
 </div>
 <!-- END CONTENT -->
