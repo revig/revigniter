@@ -2309,9 +2309,9 @@ end rigStripImgTags
 --| COMMAND _rigInputSetCookie
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 15-07-12
---| Last Mod: 13-01-15
+--| Last Mod: 03-07-16
 --| Requires: rigCookieExpirationDate(), rigSetHeader
 --|
 --| Summary: Accepts nine parameters, or you can submit an associative
@@ -2326,7 +2326,6 @@ end rigStripImgTags
 ----------------------------------------------------------------------*/
 
 command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
-	## IS pName AN ARRAY?
 	if pName is an array then
 		put pName into tCookieArray
 
@@ -2340,6 +2339,12 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 		put tCookieArray["secure"] into pSecure
 		put tCookieArray["httponly"] into pHttpOnly
 	end if
+
+	# ARRAYS NEED TO BE MARKED SO THAT THEY CAN BE RECOGNIZED
+	# AND DECODED BY THE rigGetCookie FUNCTION
+  if pValue is an array then
+    put "!a" & rigNumToCodepoint(1) & arrayEncode(pValue) & rigNumToCodepoint(1) & "a!" into pValue
+  end if
 
 	if pDomain is not empty then
 		put  "; domain=" & pDomain into pDomain

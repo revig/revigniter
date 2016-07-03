@@ -72,9 +72,9 @@ end rigSetCookie
 --| FUNCTION rigGetCookie
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 30-05-09
---| Last Mod: 13-01-15
+--| Last Mod: 03-07-16
 --| Requires: Input.lc, rigGetCookies(), rigConfigItem(), rigVarCookie()
 --|
 --| Summary: Fetch an item from the COOKIE array.
@@ -104,7 +104,14 @@ function rigGetCookie pName pXssFlag
 	
   put urlDecode(tCookieVal) into tURLdecodedCookieVal
   if tURLdecodedCookieVal <> false then
-    return base64Decode(tURLdecodedCookieVal) 
+    put base64Decode(tURLdecodedCookieVal) into tDecodedCookieVal
+		# IF THE VALUE IS MARKED AS ARRAY DECODE IT
+    if char 1 to 2 of tDecodedCookieVal is "!a" then
+      if (char 1 to 3 of tDecodedCookieVal is ("!a" & rigNumToCodepoint(1))) and (char -3 to -1 of tDecodedCookieVal is (rigNumToCodepoint(1) & "a!")) then
+        put arrayDecode(char 4 to -4 of tDecodedCookieVal) into tDecodedCookieVal
+      end if
+    end if
+    return tDecodedCookieVal
   end if
 
   return false
