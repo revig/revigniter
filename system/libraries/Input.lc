@@ -1865,27 +1865,31 @@ end rigXssCleanArray
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigXssHash
 --|
 --| Author: rabit
---| Version:  2.0
+--| Version:  2.1
 --| Created: 21-06-09
---| Last Mod: 19-07-11
+--| Last Mod: 08-07-16
 --| Requires: rigHexDigest()
 --|
 --| Summary: Random hash for protecting URLs.
 --| 
---| Format:  rigXssHash()
+--| Format:  rigXssHash([param1])
 --|
---| Parameters: --
+--| Parameters: integer <pNumBytes> (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigXssHash
+function rigXssHash pNumBytes
+  if pNumBytes is empty then
+    put 8 into pNumBytes
+  end if
+  
 	if sXSShash is "" then
-		put randomBytes(8) into sXSShash
+		put randomBytes(pNumBytes) into sXSShash
 		put rigHexDigest(sXSShash) into sXSShash
 	end if
 
