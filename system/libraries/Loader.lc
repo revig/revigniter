@@ -40,7 +40,7 @@ rigLogMessage "debug", "Loader Library Loaded"
 # DECLARE VARIABLES
 global gAutoload, gModuleAutoload
 
-local sRiViewPath, sRiHelpers, sRiPlugins, sRiModels, sRiLibs, sRiStacks, sRiLoadedFiles, sRiLoadedStackFiles, sRiDBlibLoaded, sControllerPath --, sRiCachedVars
+local sRiViewPath, sRiHelpers, sRiPlugins, sRiModels, sRiLibs, sRiStacks, sRiLoadedFiles, sRiLoadedStackFiles, sRiDBlibLoaded, sControllerPath, sRiExtensions
 
 
 # SET INITIAL VALUES
@@ -593,6 +593,120 @@ end rigLoadPlugins
 
 
 
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadExtension
+--|
+--| Author: rabit
+--| Version:  1.3
+--| Created: 2016-07-10
+--| Last Mod: 2016-07-10
+--| Requires: rigShowError, rigLogMessage
+--|
+--| Summary: This function loads the specified LiveCode Builder extension (library).
+--| 
+--| Format:  rigLoadExtension param1[, param2]
+--|
+--| Parameters: mixed <pExtensions> extension names as array or a comma separated list,
+--|               string <pModule> the module name (optional)
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigLoadExtension pExtensions pModule
+  put pExtensions into tExtensions
+  if tExtensions is not an array then
+    if comma is in tExtensions then
+      split tExtensions using comma
+    else
+      # SINGLE NAME
+      put tExtensions into tExtensions[1]
+    end if
+  end if
+
+  put empty into tModulePath
+  put empty into tFolderPrefix
+
+  # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
+  if pModule <> empty then
+    # GET PATH TO plugins FOLDER OF MODULE RELATIVE TO gAPPPATH
+    put "modules/" & pModule & "/" into tModulePath
+    put pModule & "/" into tFolderPrefix
+  end if
+
+  repeat for each element tExtension in tExtensions
+    put toLower(tExtension) into tExtension
+
+    if sRiExtensions is an array then
+      put sRiExtensions into tTempExtensions
+      combine tTempExtensions using comma
+      # IS EXTENSION ALREADY LOADED?
+     if (itemOffset((tFolderPrefix & tExtension), tTempExtensions) > 0) or (itemOffset(tExtension, tTempExtensions) > 0) then
+        exit rigLoadExtension
+      end if
+    end if
+
+    put gAPPPATH & tModulePath & "extensions/" & tExtension & "/module.lcm" into tExtExtension
+    put gBASEPATH & "extensions/" & tExtension & "/module.lcm" into tSysExtension
+
+    # CHECK IF THIS FILE IS IN THE APP-FOLDER
+    if there is a file tExtExtension then
+      try
+        load extension from file tExtExtension
+      catch err
+        rigLogMessage "debug", err
+      end try
+
+    else if there is a file tSysExtension then
+      try
+        load extension from file tSysExtension
+      catch err
+        rigLogMessage "debug", err
+      end try
+    else
+      rigShowError "Unable to load the requested file:" && tFolderPrefix & "extensions/" & tExtension & "/module.lcm"
+    end if
+
+    put the number of lines in the keys of sRiExtensions into tNumExtensions
+    put tNumExtensions + 1 into tNewExtensionKey
+    put tFolderPrefix & tExtension into sRiExtensions[tNewExtensionKey]
+
+    rigLogMessage "debug", "Extension loaded: " & tExtension
+  end repeat
+end rigLoadExtension
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLoadExtensions
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-07-10
+--| Last Mod: 2016-07-10
+--| Requires: rigLoadExtension
+--|
+--| Summary: This is simply an alias to the above handler in case the
+--|            user has written the plural form of this handler.
+--| 
+--| Format:  rigLoadExtensions param1[, param2]
+--|
+--| Parameters: mixed <pExtensions>, string <pModule> the module name (optional)
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigLoadExtensions pExtensions pModule
+	rigLoadExtension pExtensions, pModule
+end rigLoadExtensions
+
+
+
+
+
+
 
 /*----------------------------------------------------------------------
 --| COMMAND rigLoadLanguage
@@ -1117,11 +1231,11 @@ end _rigLoadLibrary
 --| COMMAND _rigAutoloader
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 30-06-09
---| Last Mod: 08-12-15
+--| Last Mod: 10-07-16
 --| Requires: rigLoadConfigFile(), rigLoadHelper, rigLoadPlugin, rigLoadLanguage, rigLoadDatabase(),
---|            rigLoadScaffolding(), rigLoaderLoadLibrary, rigLoadStack, rigLoadModel
+--|            rigLoadScaffolding(), rigLoaderLoadLibrary, rigLoadStack, rigLoadModel, rigLoadExtension
 --|
 --| Summary: The config/autoload.lc file contains an array that permits sub-systems,
 --|             libraries, plugins, and helpers to be loaded automatically.
@@ -1172,6 +1286,10 @@ command _rigAutoloader pModule
 	
 	if tAutoload["plugin"] is an array and tAutoload["plugin"][1] is not "" then
 		rigLoadPlugin tAutoload["plugin"], pModule
+	end if
+	
+	if tAutoload["extension"] is an array and tAutoload["extension"][1] is not "" then
+		rigLoadExtension tAutoload["extension"], pModule
 	end if
 
 	if tAutoload["language"] is an array and tAutoload["language"][1] is not "" then
