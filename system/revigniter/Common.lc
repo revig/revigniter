@@ -1935,6 +1935,33 @@ end rigNl2br
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigGetHTTPheader
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-07-11
+--| Last Mod: 2016-07-11
+--| Requires: --
+--|
+--| Summary: Return value of any HTTP header.
+--| 
+--| Format:  rigGetHTTPheader(param1)
+--|
+--| Parameters: string <pHeader>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigGetHTTPheader pHeader
+  replace "-" with "_" in pHeader
+  put "HTTP_" & pHeader into pHeader
+  return $_SERVER[pHeader]
+end rigGetHTTPheader
+
+
+
+
 
 
 /*----------------------------------------------------------------------
