@@ -880,12 +880,12 @@ end rigLoadScaffolding
 --|
 --| Summary: Load stack files.
 --| 
---| Format:  rigLoadstack param1, param2, param3, param4
+--| Format:  rigLoadstack param1[, param2][, param3][, param4]
 --|
 --| Parameters: mixed <pStack> the names of the stacks to load as array or comma separated list
 --|						 array <pParams> the optional parameters
 --|						 string <pPosition> either "front" or "behind", defines whether the loaded stack
---|						 should sit behind or in front of the home stack, string <pModule> the module name (optional)
+--|						 should sit behind or in front of the home stack (optional), string <pModule> the module name (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
