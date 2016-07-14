@@ -125,10 +125,10 @@ end rigLoaderLoadLibrary
 --|
 --| Summary: This handler lets users load models.
 --| 
---| Format:  rigLoadModel param1, param2, param3
+--| Format:  rigLoadModel param1[, param2][, param3]
 --|
 --| Parameters: string <pModel> the names of the models to load as array or comma separated list,
---|                       bool <pDBconn> database connection, string <pModule> the module name (optional)
+--|                       bool <pDBconn> database connection (optional), string <pModule> the module name (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
