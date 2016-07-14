@@ -73,7 +73,7 @@ set the itemDel to tCurrentItemDel
 --| Summary: This handler lets users load libraries.
 --|            It is designed to be called from a user's app / module controllers.
 --| 
---| Format:  rigLoaderLoadLibrary param1, param2, param3
+--| Format:  rigLoaderLoadLibrary param1[, param2][, param3]
 --|
 --| Parameters: mixed <pLibrary> the names of the libraries to load as array or comma separated list
 --|               array <pParams> the optional parameters, string <pModule> the module name (optional)
