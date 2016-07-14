@@ -43,7 +43,7 @@ local sSource, sIsFile, sBytesDone, sDataSize, sTail
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigInitJWThelper
+--| COMMAND rigJWTinitHelper
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -53,16 +53,16 @@ local sSource, sIsFile, sBytesDone, sDataSize, sTail
 --|
 --| Summary: Load the LiveCode Builder JSON library.
 --| 
---| Format:  rigInitJWThelper
+--| Format:  rigJWTinitHelper
 --|
 --| Parameters: --
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigInitJWThelper
+command rigJWTinitHelper
   rigLoadExtension "com.livecode.library.json"
-end rigInitJWThelper
+end rigJWTinitHelper
 
 
 
@@ -139,7 +139,7 @@ end rigJWTencode
 --| Version:  1.0
 --| Created: 2016-07-09
 --| Last Mod: 2016-07-09
---| Requires: rigGetHTTPheader(), _rigVerifySig(), rigLogMessage
+--| Requires: rigGetHTTPheader(), _rigJWTVerifySig(), rigLogMessage
 --|
 --| Summary: Decode and validate a Jason Web Token.
 --| 
@@ -170,7 +170,7 @@ function rigJWTdecode pToken
 	if (pToken <> empty) and (the number of items of pToken is 3) then
   
 		# CHECK INTEGRITY OF TOKEN
-		put _rigVerifySig(tJWTheader, tJWTpayload, tJWThmac) into tJWTDecodedA["valid"]
+		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac) into tJWTDecodedA["valid"]
 		#
  
 		put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
@@ -203,7 +203,7 @@ end rigJWTdecode
 
 
 /*----------------------------------------------------------------------
---| FUNCTION _rigVerifySig
+--| FUNCTION _rigJWTVerifySig
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -213,14 +213,14 @@ end rigJWTdecode
 --|
 --| Summary: Verify signature of token received.
 --| 
---| Format:  _rigVerifySig(param1, param2)
+--| Format:  _rigJWTVerifySig(param1, param2)
 --|
 --| Parameters: string <pHeaderEncoded>, string <pPayloadEncoded>, string <pJWThmac>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
+function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
   put gAPPPATH & "config/jwt.lc" into tSecretFile
   if there is a file tSecretFile then
     put url ("binfile:" & tSecretFile) into tJWTsecret
@@ -237,7 +237,7 @@ function _rigVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
 	replace "=" with "" in tJWThmac
 
 	return (tJWThmac is pJWThmac)
-end _rigVerifySig
+end _rigJWTVerifySig
 
 
 
@@ -352,7 +352,8 @@ end rigHmacSha2
 --| Version:  1.0
 --| Created: 2009-09-09
 --| Last Mod: 2009-09-09
---| Requires: rigInitSha256consts, initSha224vars, rigInitSha256vars, rigNextChunk(), rigProcessChunkSha256
+--| Requires: rigJWTSetInput, rigInitSha256consts, initSha224vars, rigInitSha256vars, rigNextChunk(),
+--|             rigProcessChunkSha256
 --|
 --| Summary: Used by rigHmacSha2 to encode a string using a secret.
 --| 
@@ -364,7 +365,7 @@ end rigHmacSha2
 ----------------------------------------------------------------------*/
 
 function rigsHa2 pInput, pIsFile, pNumBits
-   rigSetInput pInput, pIsFile
+   rigJWTSetInput pInput, pIsFile
    
    rigInitSha256consts
    if pNumBits = 224 then
@@ -394,7 +395,7 @@ end rigsHa2
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetInput
+--| COMMAND rigJWTSetInput
 --|
 --| Author: Mark Smith
 --| Version:  1.0
@@ -404,14 +405,14 @@ end rigsHa2
 --|
 --| Summary: Prepare script local vars using string.
 --| 
---| Format:  rigSetInput param1[, param2]
+--| Format:  rigJWTSetInput param1[, param2]
 --|
 --| Parameters: mixed <pSource>, bool <pIsFile> (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetInput pSource, pIsFile
+command rigJWTSetInput pSource, pIsFile
    put 0 into sDataSize
    put 0 into sBytesDone
    put pSource into sSource
@@ -447,7 +448,7 @@ command rigSetInput pSource, pIsFile
    
    put rigDataSizeBytes(sDataSize) into byte -8 to -1 of sTail["u"]
    
-end rigSetInput
+end rigJWTSetInput
 
 
 
@@ -837,7 +838,7 @@ end rigChunkToArray
 
 
 
-rigInitJWThelper
+rigJWTinitHelper
 
 
 
