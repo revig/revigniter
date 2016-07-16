@@ -285,6 +285,9 @@ rigLoadPlugin "modulePlugInPi", "myModule"
 get rigLoadConfig("mymoduleconfig", TRUE, TRUE, "myModule")
 
 rigLoadStack "moduleStack", , , "myModule"
+
+rigLoadExtension "com.myDomain.library.myExtension", "myModule"
+-- "com.myDomain.library.myExtension" is a folder (containing your "module.lcm" file) located in modules/myModule/extensions/
 </code></pre>
 
 
