@@ -133,7 +133,7 @@ put sAutoPlugins into gModuleAutoload["plugin"]
 #     NOTE: The array values are the names of the folders including the particular module.lcm file.
 #            Please follow the naming convention used by LiveCode Ltd. This means such a folder
 #            name should be composed of a reverse domain, followed by "library" and a library name
-#            delimited by a comma.
+#            all delimited by a period.
 ##
 
 put "" into sAutoExtensions[1]
