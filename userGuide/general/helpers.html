@@ -143,13 +143,13 @@ This is done by opening the <var>application/config/autoload.lc</var> file and a
 
 <h2>Using a Helper</h2>
 
-<p>Once you've loaded the Helper File containing the handler you intend to use, you'll call it the way you would a standard LiveCode handler.</p>
+<p>Once you've loaded the Helper File containing the handler you intend to use, you'll call it's handlers the way you would a standard LiveCode handler.</p>
 
-<p>For example, to create a link using the <dfn>rigAnchor()</dfn> function in one of your controller files you would do this:</p>
+<p>For example, to create a link using the <dfn>rigAnchor()</dfn> function (provided by the URL helper) in one of your controller files you would do this:</p>
 
 <pre><code>put rigAnchor("blog/comments", "Click Here") into gData["commentsAnchor"]</code></pre>
 
-<p>Where "Click Here" is the name of the link, and "blog/comments" is the URI to the controller/function you wish to link to.</p>
+<p>Where "Click Here" is the name of the link, and "blog/comments" is the URI to the controller/handler you wish to link to.</p>
 
 <p>In your view file you would write this:</p>
 
