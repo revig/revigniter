@@ -76,7 +76,7 @@ end rigJWTinitHelper
 --| Last Mod: 2016-07-08
 --| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha256b64()
 --|
---| Summary: Generates and returns a JASON Web Token. Note: Use a binary string as a secret.
+--| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
 --| 
 --| Format:  rigJWTencode([param1,] param2)
 --|
@@ -141,7 +141,7 @@ end rigJWTencode
 --| Last Mod: 2016-07-09
 --| Requires: rigGetHTTPheader(), _rigJWTVerifySig(), rigLogMessage
 --|
---| Summary: Decode and validate a Jason Web Token.
+--| Summary: Decode and validate a JSON Web Token.
 --| 
 --| Format:  rigJWTdecode([param1])
 --|
