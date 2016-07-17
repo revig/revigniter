@@ -600,7 +600,7 @@ end rigLoadPlugins
 --| Version:  1.3
 --| Created: 2016-07-10
 --| Last Mod: 2016-07-10
---| Requires: rigShowError, rigLogMessage
+--| Requires: _rigLoadExtension, rigShowError, rigLogMessage
 --|
 --| Summary: This function loads the specified LiveCode Builder extension (library).
 --| 
@@ -613,6 +613,13 @@ end rigLoadPlugins
 ----------------------------------------------------------------------*/
 
 command rigLoadExtension pExtensions pModule
+  # GET CODE WHICH IS NOT COMPATIBLE WITH ENGINE VERSION < 8
+  set the itemDel to "."
+  if (item 1 of the version >= 8) then
+      require gBASEPATH & "libraries/LoaderLC8patch" & gEXT
+  end if
+  #
+	
   put pExtensions into tExtensions
   if tExtensions is not an array then
     if comma is in tExtensions then
@@ -650,18 +657,11 @@ command rigLoadExtension pExtensions pModule
 
     # CHECK IF THIS FILE IS IN THE APP-FOLDER
     if there is a file tExtExtension then
-      try
-        load extension from file tExtExtension
-      catch err
-        rigLogMessage "debug", err
-      end try
+      _rigLoadExtension tExtExtension
 
     else if there is a file tSysExtension then
-      try
-        load extension from file tSysExtension
-      catch err
-        rigLogMessage "debug", err
-      end try
+      _rigLoadExtension tSysExtension
+			
     else
       rigShowError "Unable to load the requested file:" && tFolderPrefix & "extensions/" & tExtension & "/module.lcm"
     end if

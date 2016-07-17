@@ -1,0 +1,71 @@
+<?rev
+put gBASEPATH into gBASEPATH
+
+if gBASEPATH is "gBASEPATH" then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# revIgniter
+#
+# An application development framework for LiveCode
+# modeled on CodeIgniter.
+#
+# @package		revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2016, dimensionB Bitter u. Bitter GmbH
+# @license		http://revigniter.com/userGuide/license.html
+# @link		    http://revigniter.com
+##
+
+## ------------------------------------------------------------------------
+
+##
+# Patch for revIgniter Loader Library
+# This code requires engine version >= 8 and is externalized for backward compatibility reasons
+#
+# @package		revIgniter
+# @subpackage	Libraries
+# @category	  Loader
+# @author		  rabit@revigniter.com
+# @link		    http://revigniter.com/userGuide/libraries/loader.html
+##
+
+## ------------------------------------------------------------------------
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigLoadExtension
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-07-17
+--| Last Mod: 2016-07-17
+--| Requires: rigLogMessage
+--|
+--| Summary: Load a LiveCode Builder (library) extension.
+--| 
+--| Format:  _rigLoadExtension param1
+--|
+--| Parameters: string <pExtension> the path to the extension
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigLoadExtension pExtension
+  try
+    load extension from file pExtension
+  catch err
+    rigLogMessage "debug", "Unable to load the requested file:" && pExtension && ". Error:" && err
+  end try
+end _rigLoadExtension
+
+
+
+
+--| END OF LoaderLC8patch.lc
+--| Location:  ./system/libraries/LoaderLC8patch.lc
+----------------------------------------------------------------------
