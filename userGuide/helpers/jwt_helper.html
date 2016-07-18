@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>JSON Web Token Helper : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="http://www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">JSON Web Token Helper</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container">
+	
+<div id="content">
+
+
+<h1>JSON Web Token Helper</h1>
+
+<p>The JSON Web Token Helper contains handlers which allows you to generate, decode and verify JSON Web Tokens. It follows the industry standard RFC 7519 which is a means for representing claims as a JSON object to be transferred between two parties. The JWT helper uses the HMAC SHA256 hashing algorithm to sign tokens, RSA  public/private key pairs are currently not supported. If you are not familiar with JSON Web Tokens you can read about the concept at <a href="https://jwt.io">https://jwt.io</a>.</p>
+
+<p class="important"><strong>Note:</strong> This helper requires server engine 8 or higher and the LiveCode Builder (library) extension com.livecode.library.json which needs to be stored in <dfn>application/extensions</dfn>. So, the path to the extension is <dfn>application/extensions/com.livecode.library.json/module.lcm</dfn>. Please read about how to include/load the LiveCode JSON extension in chapter <a href="../general/extensions.html">"Extensions"</a>.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code class="lang-livecodeserver">rigLoadHelper "jwt"</code></pre>
+
+
+<h2>The Key</h2>
+<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <dfn>system/application/config</dfn>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you using the LiveCode randomBytes(64) function and saved to <dfn>system/application/config/jwt.lc</dfn> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
+
+<p>The following handlers are available:</p>
+
+<h3>rigJWTencode(<var>tHeader</var>, <var>tPayload</var>)</h3>
+
+<p>This function generates and returns a JSON Web Token. The first parameter which is used to build the header object is optional and is generated automatically if not defined. Usually you can leave this parameter empty or else it needs to be a comma delimited key value list or an array. The header generated by revIgniter consists of the type of the token, which is "JWT" and the hashing algorithm "HS256". Like the first parameter the mandatory second parameter can be a comma delimited key value list or an array. Example:</p>
+
+<pre><code>put the seconds into tIAT
+put tIAT + 10 into tNBF
+put tIAT + 60 into tEXP
+put uuid() into tJTI
+put "sub, jwt test, name," && tUsername & ", admin, true, iat," && tIAT & ", nbf," \
+	&& tNBF & ", exp," && tEXP & ", jti," && tJTI into tJWTpayload
+
+put rigJWTencode( , tJWTpayload) into tJWT
+
+put tJWT into tTokenA["jwt"]
+rigSetHeader "Content-type: application/json"
+put JsonExport(tTokenA)
+</code></pre>
+
+<p>Following a variant using an array as second parameter:</p>
+
+
+<pre><code>put the seconds into tIAT
+put tIAT + 10 into tNBF
+put tIAT + 60 into tEXP
+
+-- Note: Seconds need to be a string, otherwise the data of JsonExport is not valid.
+put tIAT & "" into tJWTpayloadA["iat"]
+put tNBF & "" into tJWTpayloadA["nbf"]
+put tEXP & "" into tJWTpayloadA["exp"]
+put "jwt test" into tJWTpayloadA["sub"]
+put tUsername into tJWTpayloadA["name"]
+put "true" into tJWTpayloadA["admin"]
+put uuid() into tJWTpayloadA["jti"]
+
+put rigJWTencode( , tJWTpayloadA) into tJWT
+
+put tJWT into tTokenA["jwt"]
+rigSetHeader "Content-type: application/json"
+put JsonExport(tTokenA)
+</code></pre>
+
+
+<p>These two samples above assume that the client side provides code which handles the response in form of a JSON object.</p>
+
+
+<h3>rigJWTdecode(<var>tToken</var>)</h3>
+
+<p>Decode and validate a JSON Web Token. The parameter representing a token is optional. If not provided the function assumes that the client side has sent the JWT in an "Authorization" header using the "Bearer" schema (Authorization: Bearer &lt;token>). Example:</p>
+
+<pre><code>put "The secret data." into tSecretData
+
+put rigJWTdecode() into tJWTA
+  
+put the seconds into tCurrentTime
+put TRUE into tTimeValid
+
+if tCurrentTime &lt; tJWTA["payload"]["nbf"] then
+  put "Token not yet valid." into tA["responsedata"]
+  put FALSE into tTimeValid
+else if tCurrentTime > tJWTA["payload"]["exp"] then
+  put "Token expired." into tA["responsedata"]
+  put FALSE into tTimeValid
+end if
+  
+if tTimeValid is TRUE then
+  if tJWTA["valid"] then
+    put tSecretData into tA["responsedata"]
+  else
+    put tJWTA["response"] into tA["responsedata"]
+  end if
+end if
+  
+rigSetHeader "Content-type: application/json"
+put JsonExport(tA)
+</code></pre>
+
+<p>The sample above assumes that the client side provides code which handles the response in form of a JSON object.</p>
+
+<h4>Data Returned</h4>
+
+<p>This function returns an <strong>array</strong> including the following keys:</p>
+<ul>
+	<li>"header"<br>(the value is the token header as array)</li>
+	<li>"payload"<br>(the value is the token payload as array)</li>
+	<li>"valid"<br>(the value is a boolean, this refers to the integrity of the token)</li>
+	<li>"response"<br>(the value is empty in case the token is valid, otherwise it is a string "HTTP/1.0 401 Unauthorized", in case the token can not be decoded the string is "HTTP/1.0 400 Bad Request" - use these strings as response header if something went wrong and the integrity of the token could not be determined)</li>
+</ul>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="html_helper.html">HTML Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="language_helper.html">Language Helper</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+
+</body>
+</html>
