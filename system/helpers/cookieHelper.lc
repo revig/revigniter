@@ -51,8 +51,8 @@ end if
 --| 
 --| Format:  rigSetCookie param1, param2, param3, param4, param5, param6, param7, param8, param9
 --|
---| Parameters: string <pName>, string <pValue>, integer <pExp>, string <pDomain> usually: .yourdomain.com,
---|             string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
+--| Parameters: string <pName>, mixed <pValue> can be a string or an array, integer <pExp>, string <pDomain> usually: .yourdomain.com,
+--|               string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
