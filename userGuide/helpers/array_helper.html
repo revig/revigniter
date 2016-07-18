@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -134,7 +134,7 @@ put rigArrayRandElement(tQuotes) into gData["quoteOfTheDay"]</code></pre>
 <h3>rigArrayValues()</h3>
 <p>Returns all the values from the input array and indexes the array numerically.</p>
 
-<h3>rigArraySplice(pArray, pOffset, pLength)</h3>
+<h3>rigArraySplice(<var>tArray</var>, <var>tOffset</var>, <var>tLength</var>)</h3>
 <p>Retrieve a portion of an array. Example:</p>
 
 <pre><code>put "red,blue,green,yellow,violet,black,white" into tArray
@@ -149,7 +149,7 @@ combine tSplicedArray using comma
 <p class="important"><strong>Note:</strong>&nbsp; This works with numbered arrays only as LiveCode's arrays are not ordered.</p>
 
 
-<h3>rigImplode(pArray, pGlue)</h3>
+<h3>rigImplode(<var>tArray</var>, <var>tGlue</var>)</h3>
 <p>Joins array elements with a string. Example:</p>
 
 <pre><code>put "red,yellow,blue,green" into tArray
@@ -161,11 +161,11 @@ get rigImplode(tArray, " - ")
 </code></pre>
 
 
-<h3>rigElementsList(pArray)</h3>
+<h3>rigElementsList(<var>tArray</var>)</h3>
 <p>Returns a list of array elements, each on a seperate line.</p>
 
 
-<h3>rigArrayMerge(pArrayA, pArrayB, pFirstDelim, pSecondDelim)</h3>
+<h3>rigArrayMerge(<var>tArrayA</var>, <var>tArrayB</var>, <var>tFirstDelim</var>, <var>tSecondDelim</var>)</h3>
 <p>Merge two one dimnensional arrays. The third and fourth parameter define the delimiters used to build intermediate lists. 
 If you leave those blank return and comma is used.</p>
 
