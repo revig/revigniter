@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -98,6 +98,28 @@ In most cases, to use one of these libraries involves loading it within a <a hre
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "<var>Formvalidation</var>"</code></pre>
 
 <p>Once loaded you can use it as indicated in the user guide page corresponding to that library.</p>
+
+
+<h2>Loading Multiple Libraries</h2>
+
+<p>If you need to load more than one library you can specify them in a comma separated list, like this:</p>
+
+<pre><code>put "<var>library1,library2,library3</var>" into <samp>tLibraries</samp>
+rigLoaderLoadLibrary tLibraries
+</code></pre>
+
+<p>Or you can specify them in an array, like this:</p>
+
+<pre><code>split <samp>tLibraries</samp> using comma
+rigLoaderLoadLibrary tLibraries
+</code></pre>
+
+
+<h2>Auto-loading Libraries</h2>
+
+<p>If you find that you need a particular library globally throughout your application, you can tell revIgniter to auto-load it during system initialization.
+This is done by opening the <var>application/config/autoload.lc</var> file and adding the library to the autoload array.</p>
+
 
 <h2>Creating Your Own Libraries</h2>
 

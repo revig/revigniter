@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version19">Version 1.9.0</a></li>
 <li><a href="#version183">Version 1.8.3</a></li>
 <li><a href="#version182">Version 1.8.2</a></li>
 <li><a href="#version181">Version 1.8.1</a></li>
@@ -189,6 +190,28 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+<h2><a name="version19">&nbsp;</a>Version 1.9.0</h2>
+<p>Release Date: 2016-07-19</p>
+
+
+<p>
+<ul>
+	<li><strong>Added:</strong> JSON Web Token helper. Thanks to the wonderful work of the late Mark Smith revIgniter now handles JSON Web Tokens. Please read about the JWT helper in chapter <a href="http://revigniter.com/userGuide/helpers/jwt_helper.html">"JWT Helper"</a>.</li>
+	<li><strong>Added:</strong> chapter “JSON Web Token Helper” to User Guide.</li>
+	<li><strong>Added:</strong> LiveCode Builder (library) extensions can now be loaded using the Loader library. Modified <dfn>system/libraries/Loader.lc</dfn>, <dfn>system/application/config/autoload.lc</dfn> and <dfn>system/application/modules/moduleSample/config/autoload.lc</dfn>. Added an extensions folder to <dfn>system</dfn>, to <dfn>system/application</dfn> and to <dfn>system/application/modules/moduleSample</dfn>. Please read about loading LiveCode Builder extensions in chapter <a href="http://revigniter.com/userGuide/general/extensions.html">"Extensions"</a>.</li>
+	<li><strong>Added:</strong> info to User Guide regarding loading LiveCode Builder (library) extensions. Added chapter "Extensions" to User Guide.</li>
+	<li><strong>Added:</strong> <dfn>system/libraries/LoaderLC8patch.lc</dfn>, this file includes code which is compatible with engine version 8 or higher only and is externalized for backward compatibility reasons.</li>
+	<li><strong>Added:</strong> Cookie values can be arrays.</li>
+	<li><strong>Changed:</strong> Complemented the User Guide regarding settings for session cookies and added hint that arrays can optionally be used as cookie value.</li>
+	<li><strong>Changed:</strong> Added parameter defining the number of bytes used for calculation in <dfn>system/libraries/Input.lc</dfn> -> rigXssHash().</li>
+	<li><strong>Changed:</strong> Tweaked function <dfn>system/revigniter/Common.lc</dfn> -> _rigStrToArray() so that strings can now be converted to associative arrays too.</li>
+	<li><strong>Changed:</strong> Tweaked User Guide regarding infos for helpers, plugins and libraries.</li>
+	<li><strong>Fixed:</strong> chapter "Troubleshooting" of the User Guide.</li>
+</ul>
+</p>
+
 
 
 <h2><a name="version183">&nbsp;</a>Version 1.8.3</h2>

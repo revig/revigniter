@@ -165,37 +165,37 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	delete char -1 of tFileNamesList
 	sort lines of tFileNamesList ascending text by item -1 of each
 	
-	# CHECK IF JASON FILE EXISTS ALREADY
-	put tDataVariableName & ".js" into tJASONfile
+	# CHECK IF JSON FILE EXISTS ALREADY
+	put tDataVariableName & ".js" into tJSONfile
 	repeat for each key tKey in tFileNamesArray
 		put tFileNamesArray[tKey] into tCurrentVal
-		if item -1 of tCurrentVal is tJASONfile then
+		if item -1 of tCurrentVal is tJSONfile then
 			
 			# CHECK FOR CACHE BUSTING ON LAST SAVE
-			put URL format("file:%s", tCurrentVal) into tJASONfileContent
+			put URL format("file:%s", tCurrentVal) into tJSONfileContent
 			
       	if the result <> empty then
         	rigLogMessage "error", "Failed to read file! System error:" && the sysError
       	end if
 			
-			if "creationDate" is among the words of line 1 of tJASONfileContent then
-				put TRUE into tCbJASONfile
+			if "creationDate" is among the words of line 1 of tJSONfileContent then
+				put TRUE into tCbJSONfile
 				set the itemDel to "="
-				put char 1 to -2 of (item -1 of line 1 of tJASONfileContent) into tCreationDate
+				put char 1 to -2 of (item -1 of line 1 of tJSONfileContent) into tCreationDate
 			else
-				put FALSE into tCbJASONfile
+				put FALSE into tCbJSONfile
 				put the secs into tCreationDate
 			end if
 			
 			# ADD TIMESTAMP TO NAME
 			if tDoCacheBusting is TRUE then
-				put tDataVariableName & "-cb" & tCreationDate & "." & "js" into tJASONfile
+				put tDataVariableName & "-cb" & tCreationDate & "." & "js" into tJSONfile
 			end if
 			
 			# DELETE FILE IF CACHE BUSTING SETTING HAS CHANGED
 			# OR REPLACE FILE IF FLAG IS TRUE
 			# OTHERWISE RETURN EXISTING SOURCE
-			if (tReplaceDataFile is TRUE) or (tCbJASONfile is not tDoCacheBusting) then
+			if (tReplaceDataFile is TRUE) or (tCbJSONfile is not tDoCacheBusting) then
 				try
 					delete file tCurrentVal
 				catch err
@@ -204,7 +204,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 
 			else
 				# RETURN SOURCE
-				put tURLbase & tGalleryPath & "/" & tJASONfile into tJSONurl
+				put tURLbase & tGalleryPath & "/" & tJSONfile into tJSONurl
 				return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tJSONurl & quote & "></script>"
 			end if
 
@@ -243,7 +243,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 
 	# START BUILDING GALLERIA JSON DATA
 	if tDoCacheBusting is TRUE then
-		# STORE TIMESTAMP FOR CACHE BUSTING IN JASON FILE
+		# STORE TIMESTAMP FOR CACHE BUSTING IN JSON FILE
 		put "var creationDate =" & the secs & ";" & return into tGalleriaData
 	end if
 	put "var" &&  tDataVariableName && "= [" & return & "{" & return after tGalleriaData
@@ -258,7 +258,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 		put item -1 of tCurrentImage into tCurrentImageSuffix
 
 
-		# IGNORE META DATA TEXT FILE AND JASON FILE
+		# IGNORE META DATA TEXT FILE AND JSON FILE
 		if tCurrentImageSuffix is among the words of "jpg jpeg png gif" then
 
 			# CACHE BUSTING
@@ -355,7 +355,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 
 	# RETURN SOURCE / DATA
 	if tReturnReference is TRUE then
-		put (tURLbase & tGalleryPath & "/" & tJASONfile) into tJSONurl
+		put (tURLbase & tGalleryPath & "/" & tJSONfile) into tJSONurl
 		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tJSONurl & quote & "></script>"
 	end if
 	

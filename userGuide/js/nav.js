@@ -53,6 +53,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'general/scaffolding.html">Scaffolding</a></li>' +
 			'<li class="item"><a href="'+base+'general/routing.html">URI Routing</a></li>' +
 			'<li class="item"><a href="'+base+'general/modules.html">Modules</a></li>' +
+			'<li class="item"><a href="'+base+'general/extensions.html">Extensions</a></li>' +
 			'<li class="item"><a href="'+base+'general/errors.html">Error Handling</a></li>' +
 			'<li class="item"><a href="'+base+'general/caching.html">Caching</a></li>' +
 			'<li class="item"><a href="'+base+'general/profiling.html">Profiling Your Application</a></li>' +
@@ -106,6 +107,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'helpers/form_helper.html">Form Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/formmail_helper.html">Form-Mail Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/html_helper.html">HTML Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/jwt_helper.html">JWT Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/language_helper.html">Language Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/string_helper.html">String Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/url_helper.html">URL Helper</a></li>' +

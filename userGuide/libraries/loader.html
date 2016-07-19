@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.8.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -88,8 +88,8 @@
 
 <h1>Loader Library</h1>
 
-<p>Loader, as the name suggests, is used to load elements.  These elements can be libraries, <a href="../general/using_stacks.html">Stacks</a>, <a href="../general/views.html">View files</a>,
-<a href="../general/helpers.html">Helpers</a>, <a href="../general/plugins.html">Plugins</a>, or your own files.</p>
+<p>Loader, as the name suggests, is used to load elements.  These elements can be <a href="../general/libraries.html">Libraries</a>, <a href="../general/using_stacks.html">Stacks</a>, <a href="../general/views.html">View files</a>, <a href="../general/models.html">Models</a>,
+<a href="../general/helpers.html">Helpers</a>, <a href="../general/plugins.html">Plugins</a>, Files, Language files, Custom Configuration files or <a href="../general/extensions.html">LiveCode Builder (library) Extensions</a>.</p>
 
 <p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
 
@@ -213,7 +213,8 @@ it will instead return the data as a string.</p>
 <h3>rigLoadConfig "<var>fileName</var>"</h3>
 <p>This handler is an alias of the <a href="config.html">config file loading function</a>: rigLoadConfigFile()</p>
 
-
+<h3>rigLoadExtension "<var>folderName</var>"</h3>
+<p>This handler loads LiveCode Builder extensions, where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in application/extensions/ or in system/extensions/. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name all delimited by a period.</p>
 
 
 </div>

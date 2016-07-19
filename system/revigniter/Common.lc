@@ -1935,6 +1935,33 @@ end rigNl2br
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigGetHTTPheader
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-07-11
+--| Last Mod: 2016-07-11
+--| Requires: --
+--|
+--| Summary: Return value of any HTTP header.
+--| 
+--| Format:  rigGetHTTPheader(param1)
+--|
+--| Parameters: string <pHeader>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigGetHTTPheader pHeader
+  replace "-" with "_" in pHeader
+  put "HTTP_" & pHeader into pHeader
+  return $_SERVER[pHeader]
+end rigGetHTTPheader
+
+
+
+
 
 
 /*----------------------------------------------------------------------
@@ -2058,58 +2085,82 @@ end rigMasterNow
 --| FUNCTION _rigStrToArray
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 16-08-09
---| Last Mod: 21-03-14
+--| Last Mod: 08-07-16
 --| Requires: rigTrim()
 --|
---| Summary: Convert a string ( for example a comma delimited list
---|          like "item1, item2, item3") to an array.
+--| Summary: Convert a string ( for example a comma delimited list like
+--|           "item1, item2, item3") to a numbered or associative array.
 --| 
---| Format:  _rigStrToArray(param1)
+--| Format:  _rigStrToArray(param1[, param2][, param3][, param4])
 --|
---| Parameters: mixed <pString>, char <pDelimiter> (optional)
+--| Parameters: mixed <pString>, char <pDelimiter> (optional), bool <pAssoc> (optional),
+--|               bool <pKeepSpace> (optional) keep space in keys and values
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigStrToArray pString pDelimiter
-   put pString into tStrToArray
+function _rigStrToArray pString pDelimiter pAssoc pKeepSpace
+  # SET DELIMITER
+  if pDelimiter is empty then
+    put "," into tDelimiter
+  else
+    put char 1 of pDelimiter into tDelimiter
+  end if
    
-   # SET DELIMITER
-   if pDelimiter is empty then
-      put "," into tDelimiter
-   else
-      put char 1 of pDelimiter into tDelimiter
-   end if
-   
-   # MAKE SURE WE ARE DEALING WITH A STRING
-   # OTHERWISE JUST RETURN THE FIRST PARAMETER
-   if tStrToArray is not an array then
-      # CHECK IF THE LIST CONSISTS OF MORE THAN ONE ITEM
-      if tDelimiter is in tStrToArray then
+  # MAKE SURE WE ARE DEALING WITH A STRING
+  # OTHERWISE JUST RETURN THE FIRST PARAMETER
+  if pString is not an array then
+    # CHECK IF THE LIST CONSISTS OF MORE THAN ONE ITEM
+    if tDelimiter is in pString then
          
-         # REMOVE WHITESPACE
-         if tDelimiter <> space then
-            put replacetext( tStrToArray,"[ ]+","") into tStrToArray
-         end if
-         
-         # BUILD ARRAY
-         split tStrToArray using tDelimiter
-         
-         repeat for each key tKey in tStrToArray
-            if tStrToArray[tKey] is empty then
-               delete variable tStrToArray[tKey]
-            end if
-         end repeat
-      else
-         # ONLY ONE ITEM FOUND, REMOVE WHITESPACE
-         put rigTrim(tStrToArray) into tStrToArray
-         put tStrToArray into tStrToArray[1]
+      # REMOVE WHITESPACE
+      if tDelimiter <> space then
+        if pKeepSpace is TRUE then
+          put replacetext( pString, tDelimiter & "[ ]+", tDelimiter) into pString
+        else
+          put replacetext( tStrToArray,"[ ]+","") into pString
+        end if
       end if
-   end if
+         
+      # BUILD NUMBERED ARRAY
+      if pAssoc <> TRUE then
+        put pString into tStrToArray
+        split tStrToArray using tDelimiter
+         
+        repeat for each key tKey in tStrToArray
+          if tStrToArray[tKey] is empty then
+            delete variable tStrToArray[tKey]
+          end if
+        end repeat
+           
+      else
+        # BUILD ASSOCIATIVE ARRAY
+        set the itemDel to tDelimiter
+         
+        put the number of items of pString into tNumItems
+        # THE NUMBER OF STRINGS MUST BE EVEN, IF NOT DISREGARD THE LAST ONE
+        if tNumItems mod 2 <> 0 then
+          put tNumItems -1 into tNumItems
+        end if
+         
+        repeat with tItem = 1 to (tNumItems - 1) step 2
+          put item (tItem + 1) of pString into tStrToArray[item tItem of pString]
+        end repeat
+      end if
+         
+    else -- if tDelimiter is in pString then
+      # ONLY ONE ITEM FOUND, REMOVE WHITESPACE
+      put rigTrim(pString) into tStrToArray
+      put tStrToArray into tStrToArray[1]
+    end if -- if tDelimiter is in pString then
+      
+  else -- if pString is not an array then
+    return pString
+  end if -- if pString is not an array then
    
-   return tStrToArray
+  return tStrToArray
 end _rigStrToArray
 
 

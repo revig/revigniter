@@ -29,14 +29,15 @@ end if
 # 2. Stacks
 # 3. Helper files
 # 4. Plugins
-# 5. Custom config files
-# 6. Language files
-# 7. Models
+# 5. Extensions (LiveCode Builder libraries)
+# 6. Custom config files
+# 7. Language files
+# 8. Models
 #
 ##
 
 # DECLARE VARIABLES
-local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoPlugins, sAutoCustConfigs, sAutoLangFiles, sAutoModels
+local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoPlugins, sAutoCustConfigs, sAutoLangFiles, sAutoModels, sAutoExtensions
 
 
 ##
@@ -116,6 +117,27 @@ put sAutoHelper into gAutoload["helper"]
 
 put "" into sAutoPlugins[1]
 put sAutoPlugins into gAutoload["plugin"]
+
+
+##
+# -------------------------------------------------------------------
+#  Auto-load Extensions
+# -------------------------------------------------------------------
+# Prototype:
+#
+#     put "com.livecode.library.json,com.mydomain.library.myextension" into sAutoExtensions
+#     split sAutoExtensions using comma
+#
+#     put sAutoExtensions into gAutoload["extension"]
+#
+#     NOTE: The array values are the names of the folders including the particular module.lcm file.
+#            Please follow the naming convention used by LiveCode Ltd. This means such a folder
+#            name should be composed of a reverse domain, followed by "library" and a library name
+#            all delimited by a period.
+##
+
+put "" into sAutoExtensions[1]
+put sAutoExtensions into gAutoload["extension"]
 
 
 ##
