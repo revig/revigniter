@@ -1755,21 +1755,21 @@ end rigSubstrToNum
 --| COMMAND rigDoException
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 17-10-09
---| Last Mod: 18-07-11
+--| Last Mod: 23-07-16
 --| Requires: rigConfigItem(), _rigExceptionHandler(), rigLogException
 --|
 --| Summary: Display or log exceptions of try catch statements.
 --| 
 --| Format:  rigDoException param1, param2, param3
 --|
---| Parameters: string <pContexts> a list of error numbers, string <pCurrentFile>, string <pCurrentMethod>
+--| Parameters: string <pContexts> a list of error numbers, string <pCurrentFile>, string <pCurrentHandler>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigDoException pContexts pCurrentFile pCurrentMethod
+command rigDoException pContexts pCurrentFile pCurrentHandler
 	if rigConfigItem("logThreshold") > 0 then
 		put TRUE into tDisplayError
 	else
@@ -1778,7 +1778,7 @@ command rigDoException pContexts pCurrentFile pCurrentMethod
 
 	put _rigExceptionHandler(pContexts) into tErrorData
 
-	rigLogException tErrorData, tDisplayError, pCurrentFile, pCurrentMethod
+	rigLogException tErrorData, tDisplayError, pCurrentFile, pCurrentHandler
 end rigDoException
 
 
