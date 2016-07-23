@@ -41,37 +41,37 @@ end if
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigLogException
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 28-06-09
---| Last Mod: 28-06-09
+--| Last Mod: 23-07-16
 --| Requires: rigFetchControllerHandler(), rigLogMessage
 --|
 --| Summary:  This command logs Rev error messages.
 --| 
 --| Format:  rigLogException param1, param2, param3, param4
 --|
---| Parameters: string <pErrorData>, bool <pDisplayError>, string <pFile>, string <pMethod>
+--| Parameters: string <pErrorData>, bool <pDisplayError>, string <pFile>, string <pHandler>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigLogException pErrorData pDisplayError pFile pMethod
+command rigLogException pErrorData pDisplayError pFile pHandler
 	if pFile is empty then
 		put gController into tFile
 	else
 		put pFile into tFile
 	end if
-	if pMethod is empty then
-		put rigFetchControllerHandler() into tMethod
+	if pHandler is empty then
+		put rigFetchControllerHandler() into tHandler
 	else
-		put pMethod into tMethod
+		put pHandler into tHandler
 	end if
 
-	put "RevError - Current File:" && tFile & ", Current Method:" && tMethod & CR & pErrorData into tErrorData
+	put "RevError - Current File:" && tFile & ", Current Handler:" && tHandler & CR & pErrorData into tErrorData
 	rigLogMessage "error", tErrorData, pDisplayError
 end rigLogException
 
