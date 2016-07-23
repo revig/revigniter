@@ -48,7 +48,7 @@ end if
 # DECLARE INCLUDED LIBRARIES ARRAY VARIABLE
 # DECLARE MAIN CONFIGURATION  ARRAY VARIABLE
 # DECLARE ERRORS LIST VARIABLE
-	local sLoadedLibs, sMainConf, sErrorNames
+	local sLoadedLibs, sMainConf
 
 
 /*----------------------------------------------------------------------
@@ -446,10 +446,10 @@ end rigSetStatusHeader
 --| FUNCTION _rigExceptionHandler
 --|
 --| Author: Andre Garcia, modifications rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 29-06-09
---| Last Mod: 02-09-15
---| Requires: errorsList.txt, rigLoadLibrary, rigLogMessage
+--| Last Mod: 23-07-16
+--| Requires: rigLoadLibrary
 --|
 --| Summary: This function is used to log Rev errors, called by catch statements, in our log file.
 --|            It also intercepts 404 errors. 
@@ -473,19 +473,11 @@ function _rigExceptionHandler pContexts
     end repeat
     put 99 into tContextsKeysNum
 	end if
+  
+  put the scriptExecutionErrors into tErrorNames
 
-	if sErrorNames is empty then
-		put gBASEPATH & "revigniter/errorsList.txt" into tErrorsNameFilePath
-		put URL format("binfile:%s", tErrorsNameFilePath) into sErrorNames
-		
-    if the result <> empty then
-      rigLogMessage "error", "Failed to read file! System error:" && the sysError
-    end if
-		
-	end if
-
-  split sErrorNames by return
-  put the number of lines in the keys of sErrorNames into tTotalErrorListLines
+  split tErrorNames by return
+  put the number of lines in the keys of tErrorNames into tTotalErrorListLines
 
   repeat with i = tContextsKeysNum down to 1
 	  put item 1 of pContexts[i] into tLineNumToGet
@@ -494,7 +486,7 @@ function _rigExceptionHandler pContexts
 			next repeat
 		end if
 
-    put sErrorNames[tLineNumToGet] into tErrMsg
+    put tErrorNames[tLineNumToGet] into tErrMsg
 
 		if tErrMsg is "Object Name:" then
 			put item 4 of pContexts[i] into tObject
