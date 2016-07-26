@@ -2236,6 +2236,66 @@ end trueFalseToDigit
 
 
 
+/*----------------------------------------------------------------------
+--| COMMAND rigSort
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-07-26
+--| Last Mod: 2016-07-26
+--| Requires: --
+--|
+--| Summary: Helper for sorting data using variable sort types.
+--| 
+--| Format: rigSort param1, param2
+--|
+--| Parameters: string <pData>, string <pSortType>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigSort @pData pSortType
+  switch pSortType
+  	case "ascnum"
+  		sort pData ascending numeric
+  		break
+  	case "descnum"
+  		sort pData descending numeric
+  		break
+  	case "asctext"
+  		sort pData ascending text
+  		break
+  	case "desctext"
+  		sort pData descending text
+  		break
+  	case "ascinter"
+  		sort pData ascending international
+  		break
+  	case "descinter"
+  		sort pData descending international
+  		break
+  	case "ascdate"
+  		sort pData ascending datetime
+  		break
+  	case "descdate"
+  		sort pData descending datetime
+  		break
+  	case "ascbin"
+  		sort pData ascending binary
+  		break
+  	case "descbin"
+  		sort pData descending binary
+  		break
+  	default
+      sort pData ascending text
+  end switch  
+end rigSort
+
+
+
+
+
+
 function rigQ pText
     return quote & pText & quote
 end rigQ
