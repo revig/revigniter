@@ -446,6 +446,10 @@ end rigFormMultiselect
 function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	put pOptions into tOptions
 	put pSelected into tSelected
+	
+  if (pSortType is empty) or (pSortType is not among the items of "ascnum,descnum,asctext,desctext") then
+    put "asctext" into pSortType
+  end if
 
 	if (tSelected is not an array) and (tSelected is not empty) then
 		put tSelected into tSelected[1]
@@ -479,18 +483,14 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	combine tSelectedAsElementsList using comma
 	
   get the keys of tOptions
-  if pSortType <> empty then
-    rigSort it, pSortType
-  end if
+  rigSort it, pSortType
 	
   repeat for each line tKey in it
 		put tOptions[tKey] into tVal
 
 		if tVal is an array then
-        put the keys of tVal into tValKeys
-        if pSortType <> empty then    
-          rigSort tValKeys, pSortType
-        end if
+        put the keys of tVal into tValKeys   
+        rigSort tValKeys, pSortType
 				
 			put "<optgroup label=" & quote & tKey & quote & ">" & return after tForm
 
