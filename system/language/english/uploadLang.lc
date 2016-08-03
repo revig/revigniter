@@ -18,6 +18,7 @@ put "The file name you submitted already exists on the server." into gLang["uplo
 put "The upload destination folder does not appear to be writable." into gLang["upload_not_writable"]
 put "The upload failed." into gLang["upload_failed"]
 put "The path to the (temp) image is not correct." into gLang["upload_invalid_path"]
+put "Number of files uploaded exceeds the maximum allowed in your configuration file." into gLang["upload_max_files_exceeded"]
 
 
 --| END OF uploadLang.lc
