@@ -41,13 +41,15 @@ rigLogMessage "debug", "Upload Library Loaded"
 # DECLARE VARIABLES
 local sMaxSize, sMaxWidth, sMaxHeight, sMaxFilename, sAllowedTypes, sFileTemp, sFileName, sOrigName, sFileType, sFileSize, sFileExt
 local sUploadPath, sOverwrite, sEncryptName, sIsImage, sImageWidth, sImageHeight, sImageType, sImageSizeStr, sErrorMsg, sMimes
-local sRemoveSpaces, sXssClean, sTempPrefix, sClientName, sFileNameOverride, sValidSetHandlers
+local sRemoveSpaces, sXssClean, sTempPrefix, sClientName, sFileNameOverride, sValidSetHandlers, sUplaodDataA, sUploadErrorsNum
+local sMaxUploadFiles, sMaxUploadFilesExceeded
 
 # SET INITIAL VALUES
 put 0 into sMaxSize
 put 0 into sMaxWidth
 put 0 into sMaxHeight
 put 0 into sMaxFilename
+put 0 into sMaxUploadFiles
 put FALSE into sOverwrite
 put FALSE into sEncryptName
 put FALSE into sIsImage
@@ -57,7 +59,7 @@ put "temp_file_" into sTempPrefix
 
 
 
-put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,rigSet_sMaxHeight,rigSet_sMaxFilename,rigSet_sXssClean" into sValidSetHandlers
+put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,rigSet_sMaxHeight,rigSet_sMaxFilename,rigSet_sMaxUploadFiles,rigSet_sXssClean" into sValidSetHandlers
 
 
 
@@ -344,6 +346,38 @@ end rigSet_sMaxHeight
 
 
 
+/*----------------------------------------------------------------------
+--| COMMAND rigSet_sMaxUploadFiles
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-08-02
+--| Last Mod: 2016-08-02
+--| Requires: --
+--|
+--| Summary: Set maximum number of files allowed to upload.
+--| 
+--| Format:  rigSet_sMaxUploadFiles param1
+--|
+--| Parameters: integer <pN>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigSet_sMaxUploadFiles pN
+	if pN is an integer then
+		if pN < 0 then
+			put 0 into sMaxUploadFiles
+		else
+			put pN into sMaxUploadFiles
+		end if
+	end if
+end rigSet_sMaxUploadFiles
+
+
+
+
+
 
 /*----------------------------------------------------------------------
 --| COMMAND rigSet_sMaxFilename
@@ -415,15 +449,12 @@ end rigSet_sXssClean
 --| COMMAND rigDoUpload
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  2.0
 --| Created: 01-09-2011
---| Last Mod: 30-01-2015
---| Requires: rigSetUploadError, rigValidateUploadPath(), _rigPrepFilename(),
---|						rigGetExtension(), rigIsAllowedFileType(), rigIsAllowedFileSize(),
---|						rigIsAllowedDimensions(), rigCleanFilename(), rigLimitFilenameLength(),
---|						rigPregReplace() (in Common), rigSetFilename(), rigDoXSSclean, rigSetImageProperties
+--| Last Mod: 03-08-2016
+--| Requires: rigSetUploadError, rigValidateUploadPath(),rigSort, _rigProcessUpload
 --|
---| Summary: Perform the file upload.
+--| Summary: Perform file upload(s).
 --| 
 --| Format:  rigDoUpload param1
 --|
@@ -438,7 +469,7 @@ command rigDoUpload pField
 	else
 		put pField into tField
 	end if
-
+  
 	# IF $_FILES[tField] IS NOT AN ARRAY THERE IS NO REASON TO CONTINUE
 	if $_FILES[tField] is not an array then
 		rigSetUploadError "upload_no_file_selected"
@@ -450,10 +481,72 @@ command rigDoUpload pField
 		# ERRORS WILL ALREADY BE SET BY rigValidateUploadPath() SO JUST RETURN FALSE
 		return FALSE
 	end if
-	
-	# WAS THE FILE ABLE TO BE UPLOADED? IF NOT, DETERMINE THE REASON WHY
-	if $_FILES[tField]["error"] is not empty then
-		switch $_FILES[tField]["error"]
+  
+  put the keys of $_FILES[tField] into tFilesDataKeys
+  
+  # ARE WE DEALING WITH AN UPLOAD OF MULTIPLE FILES
+  if line 1 of tFilesDataKeys is an integer then    
+    rigSort tFilesDataKeys, "ascnum"
+    
+    put 0 into sUploadErrorsNum
+    repeat for each line tKey in tFilesDataKeys
+      
+      put $_FILES[tField] into tFiles
+      _rigProcessUpload tFiles, tKey, TRUE
+    
+      if the result is FALSE then
+        add 1 to sUploadErrorsNum
+      end if
+      
+      # STOP IT IN CASE WE HAVE REACHED THE ALLOWED MAX NUMBER OF FILES
+      if sMaxUploadFilesExceeded is TRUE then
+        exit repeat
+      end if
+    end repeat
+    
+    # ALL FILES WERE PROCESSED WITHOUT FAILURE 
+    if sUploadErrorsNum < the number of lines of tFilesDataKeys then
+      return TRUE
+    end if
+    # ELSE THE RESULT OF _rigProcessUpload INDICATES A FAILURE
+  
+  else
+    # SINGLE FILE UPLOAD
+    put $_FILES[tField] into tFiles[1]
+    _rigProcessUpload tFiles, 1, FALSE
+    
+  end if
+end rigDoUpload
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigProcessUpload
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-08-03
+--| Last Mod: 2016-08-03
+--| Requires: rigSetUploadError, rigMaxFilesNumReached(), _rigFileMimeType, _rigPrepFilename(),
+--|					rigGetExtension(), rigIsAllowedFileType(), rigIsAllowedFileSize(),
+--|					rigIsAllowedDimensions(), rigCleanFilename(), rigLimitFilenameLength(),
+--|					rigPregReplace() (in Common), rigSetFilename(), rigDoXSSclean, rigSetImageProperties, rigUploadData()
+--|
+--| Summary: Process the uploaded files.
+--| 
+--| Format:  _rigProcessUpload param1, param2, param3
+--|
+--| Parameters: array <pFiles> information related to the upload(s), integer <pItemNum> file number to be processed,
+--|               bool <pMultiUpload> are we dealing with multiple files
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+command _rigProcessUpload pFiles pItemNum pMultiUpload
+	if pFiles[pItemNum]["error"] is not empty then
+		switch pFiles[pItemNum]["error"]
 			case "upload stopped"
 				rigSetUploadError "upload_file_partial"
 			break
@@ -471,21 +564,28 @@ command rigDoUpload pField
 		end switch
 		return FALSE
 	end if
+  
+  # CHECK IF THE MAXIMUM NUMBER OF ALLOWED UPLOADS IS REACHED
+  if rigMaxFilesNumReached(pItemNum) is TRUE then
+    rigSetUploadError "upload_max_files_exceeded"
+    put TRUE into sMaxUploadFilesExceeded
+    return FALSE
+  end if
 	
 	# SET THE UPLOADED DATA AS LIBRARY VARIABLES
-	put $_FILES[tField]["filename"] into sFileTemp
-	put $_FILES[tField]["size"] into sFileSize
+	put pFiles[pItemNum]["filename"] into sFileTemp
+	put pFiles[pItemNum]["size"] into sFileSize
 	
-	_rigFileMimeType $_FILES[tField]
+	_rigFileMimeType pFiles[pItemNum]
 
   put "^(.+?);.*$" into tRegex
-  if matchText($_FILES[tField]["type"], tRegex, tType) is TRUE then
+  if matchText(pFiles[pItemNum]["type"], tRegex, tType) is TRUE then
 	  put tType into sFileType
   end if
   replace "\" with "" in sFileType
   put toLower(rigTrim(sFileType, quote)) into sFileType
 	
-	put _rigPrepFilename($_FILES[tField]["name"]) into sFileName
+	put _rigPrepFilename(pFiles[pItemNum]["name"]) into sFileName  
 	put rigGetExtension(sFileName) into sFileExt
 	put sFileName into sClientName
 	
@@ -549,7 +649,7 @@ command rigDoUpload pField
 			return FALSE
 		end if
 	end if
-	
+
 	# MOVE THE FILE TO THE FINAL DESTINATION
 	put URL format("binfile:%s", sFileTemp) into URL format("binfile:%s", (sUploadPath & sFileName))
 	put the result into tResult
@@ -573,9 +673,14 @@ command rigDoUpload pField
 	put sUploadPath & sFileName into tPath
 	rigSetImageProperties tPath
 	
+  if pMultiUpload is TRUE then
+    put rigUploadData(TRUE) into sUplaodDataA[pItemNum]
+  else
+    put rigUploadData(TRUE) into sUplaodDataA
+  end if
+  
 	return TRUE
-	
-end rigDoUpload
+end _rigProcessUpload
 
 
 
@@ -688,9 +793,9 @@ end rigDisplayUploadErrors
 --| FUNCTION rigUploadData
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 01-09-2011
---| Last Mod: 01-09-2011
+--| Last Mod: 03-08-2016
 --| Requires: rigIsImage()
 --|
 --| Summary: Finalized data array.
@@ -698,14 +803,14 @@ end rigDisplayUploadErrors
 --| Returns an associative array containing all of the information related
 --| to the upload, allowing the developer easy access in one array.
 --|
---| Format:  rigUploadData()
+--| Format:  rigUploadData([param])
 --|
---| Parameters: --
+--| Parameters: bool <pLibInternalCall> (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigUploadData
+function rigUploadData pLibInternalCall
 	put sFileName into tData["FileName"]
 	put sFileType into tData["FileType"]
 	put sUploadPath into tData["FilePath"]
@@ -725,6 +830,10 @@ function rigUploadData
 	put sImageType into tData["ImageType"]
 	put sImageSizeStr into tData["ImageSizeStr"]
 	
+  if pLibInternalCall is empty then
+    return sUplaodDataA
+  end if
+  
 	return tData
 end rigUploadData
 
@@ -1159,6 +1268,36 @@ function rigGetImageSize pFilepath
     return FALSE
   end if
 end rigGetImageSize
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigMaxFilesNumReached
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2016-08-02
+--| Last Mod: 2016-08-02
+--| Requires: --
+--|
+--| Summary: Verify that the number of files uploaded doesn't excel the allowed maximum.
+--| 
+--| Format:  rigMaxFilesNumReached(param1)
+--|
+--| Parameters: integer <pFileNum>
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigMaxFilesNumReached pFileNum
+	if (sMaxUploadFiles <> 0) and (pFileNum > sMaxUploadFiles) then
+		return TRUE
+	else
+		return FALSE
+	end if
+end rigMaxFilesNumReached
 
 
 

@@ -18,6 +18,7 @@ put "Eine Datei gleichen Namens ist bereits in der Datenbank vorhanden." into gL
 put "Der Pfad zum Speichern hochgeladener Dateien ist schreibgesch&uuml;tzt." into gLang["upload_not_writable"]
 put "Hochladen fehlgeschlagen." into gLang["upload_failed"]
 put "Der Pfad zur (temporären) Bilddatei ist ung&uuml;ltig." into gLang["upload_invalid_path"]
+put "Die Anzahl der hochgeladenen Dateien &uuml;berschreitet den in der Konfiguration angegebenen Maximalwert." into gLang["upload_max_files_exceeded"]
 
 
 --| END OF uploadLang.lc

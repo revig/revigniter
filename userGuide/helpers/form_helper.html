@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -200,7 +200,9 @@ put rigFormInput(tData) into gData["input"]
 
 <p>Of course you can define the input type too by setting an array key named "type" to any valid data.</p>
 
-<p>If you would like your form to contain some additional data, like Javascript, you can pass it as a string in the
+<h4>Adding Data to &lt;input></h4>
+
+<p>If you would like your input field to contain some additional data, like Javascript, you can pass it as a string in the
 third parameter:</p>
 
 <pre><code>put "onClick=" & quote & "some_function()" & quote into tJS
@@ -227,13 +229,13 @@ example, you will instead specify "rows" and "cols".</p>
 <h3>rigFormDropDown()</h3>
 
 <p>Lets you create a standard drop-down field.  The first parameter will contain the name of the field,
-the second parameter will contain an associative array of options, and the third parameter will contain the
+the second parameter will contain an associative array of options, and the optional third parameter will contain the
 value you wish to be selected.  You can also pass an array of multiple items through the third parameter, and revIgniter will create a multiple select for you. Example:</p>
 
 <pre><code>put "Small Shirt" into tOptions["small"]
 put "Medium Shirt" into tOptions["med"]
 put "Large Shirt" into tOptions["large"]
-put "Extra Large Shirt" into tOptions["xlarge"]
+put "Extra Large Shirt" into tOptions["exlarge"]
 
 put "small" into tShirtsOnSale[1]
 put "large" into tShirtsOnSale[2]
@@ -243,9 +245,9 @@ put rigFormDropDown("shirts", tOptions, "large") into gData["dropDown"]
 -- Would produce:
 &lt;select name=&quot;shirts&quot;&gt;
 &lt;option value=&quot;small&quot;&gt;Small Shirt&lt;/option&gt;
-&lt;option value=&quot;med&quot;&gt;Medium  Shirt&lt;/option&gt;
+&lt;option value=&quot;med&quot;&gt;Medium Shirt&lt;/option&gt;
 &lt;option value=&quot;large&quot; selected=&quot;selected&quot;&gt;Large Shirt&lt;/option&gt;
-&lt;option value=&quot;xlarge&quot;&gt;Extra Large Shirt&lt;/option&gt;
+&lt;option value=&quot;exlarge&quot;&gt;Extra Large Shirt&lt;/option&gt;
 &lt;/select&gt;
 
 put rigFormDropDown("shirts", tOptions, tShirtsOnSale) into gData["dropDown"]
@@ -255,9 +257,10 @@ put rigFormDropDown("shirts", tOptions, tShirtsOnSale) into gData["dropDown"]
 &lt;option value=&quot;small&quot; selected=&quot;selected&quot;&gt;Small Shirt&lt;/option&gt;
 &lt;option value=&quot;med&quot;&gt;Medium  Shirt&lt;/option&gt;
 &lt;option value=&quot;large&quot; selected=&quot;selected&quot;&gt;Large Shirt&lt;/option&gt;
-&lt;option value=&quot;xlarge&quot;&gt;Extra Large Shirt&lt;/option&gt;
+&lt;option value=&quot;exlarge&quot;&gt;Extra Large Shirt&lt;/option&gt;
 &lt;/select&gt;</code></pre>
 
+<h4>Adding Data to &lt;select></h4>
 
 <p>If you would like the opening &lt;select> to contain additional data, like an <kbd>id</kbd> attribute or JavaScript, you can pass it as a string in the
 fourth parameter:</p>
@@ -266,11 +269,21 @@ fourth parameter:</p>
 
 put rigFormDropDown("shirts", tOptions, "large", tJS) into gData["dropDown"]</code></pre>
 
+<h4>Adding Attributes to &lt;option></h4>
+
 <p>You can add attributes to the &lt;option> tag by appending comma delimited attribute value pairs to a key of the options array like in the following example:</p>
 
 <pre><code>put "Choose a size ..." into tOptions["choose","data-placeholder=" & quote & "true" & quote,"data-hilite=" & quote & "true" & quote]</code></pre>
 
 <p>If the array passed as tOptions is a multidimensional array, rigFormDropDown() will produce an &lt;optgroup&gt; with the array key as the label.</p>
+
+<h4>Sorting</h4>
+
+<p>The optional fifth parameter let's you sort the drop-down options. Possible values defining sort direction (ascending or descending) and sort type (numeric or text) are: <var>asctext</var>, <var>desctext</var>, <var>ascnum</var> and <var>descnum</var>. If sort type is not specified ascending text is applied. Following an example sorting the options above from "small" to "exlarge" or from "Small Shirt" to "Extra Large Shirt" respectively:</p>
+
+<pre><code>put rigFormDropDown("shirts", tOptions, "large", , "desctext") into gData["dropDown"]</code></pre>
+
+<p class="important"><strong>Note:</strong> Sorting applies to option keys, not values.<br>This way, as option keys are arbitrary, you can achieve any order for drop-down options independent from their values.</p>
 
 <h3>rigFormMultiselect()</h3>
 

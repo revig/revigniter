@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -88,13 +88,13 @@
 
 <h1>File Uploading Library</h1>
 
-<p>revIgniter's File Uploading Library permits files to be uploaded.  You can set various
+<p>revIgniter's File Uploading Library permits to upload either a single file or multiple files.  You can set various
 preferences, restricting the type and size of the files.</p>
 
 
 <h2>The Process</h2>
 
-<p>Uploading a file involves the following general process:</p>
+<p>Uploading a file involves the following general process (single file example):</p>
 
 
 <ul>
@@ -116,32 +116,32 @@ folder:</p>
 
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
-	&lt;head>
-		&lt;meta charset="utf-8">
+  &lt;head>
+    &lt;meta charset="utf-8">
 
-		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+    &lt;title>[[gData["pageTitle"] ]]&lt;/title>
 
-	&lt;/head>
-	&lt;body>
+  &lt;/head>
+  &lt;body>
 
-	[[gData["uploadError"] ]]
+  [[gData["uploadError"] ]]
 
-	[[gData["formOpen"] ]]
+  [[gData["formOpen"] ]]
 
-	[[gData["input"] ]]
+  [[gData["input"] ]]
 
-	&lt;br />&lt;br />
+  &lt;br>&lt;br>
 
-	[[gData["submit"] ]]
+  [[gData["submit"] ]]
 
-	&lt;/form>
+  &lt;/form>
 
-	&lt;/body>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 
-<p>You'll notice we have a gData["formOpen"] variable which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
-creates the proper syntax for you.  You'll also notice we have a gData["uploadError"] variable.  This is so we can show error messages in the event
+<p>You'll notice we have a <var>gData["formOpen"]</var> variable which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
+creates the proper syntax for you.  You'll also notice we have a <var>gData["uploadError"]</var> variable.  This is so we can show error messages in the event
 the user does something wrong.</p>
 
 
@@ -152,27 +152,27 @@ In it, place this code and save it to your <samp>applications/views/</samp> fold
 
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
-	&lt;head>
-		&lt;meta charset="utf-8">
+  &lt;head>
+    &lt;meta charset="utf-8">
 
-		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+    &lt;title>[[gData["pageTitle"] ]]&lt;/title>
 	
-	&lt;/head>
-	&lt;body>
+  &lt;/head>
+  &lt;body>
 
-		&lt;h3>Your file was successfully uploaded!&lt;/h3>
+    &lt;h3>Your file was successfully uploaded!&lt;/h3>
 
-		&lt;? put "&lt;ul>" into tUploadData
-		repeat for each key tKey in gData["uploadData"]
-			put gData["uploadData"][tKey] into tVal
-			put "&lt;li>" &amp; tKey &amp; ":" &amp;&amp; tVal &amp; "&lt;/li>" after tUploadData
-		end repeat
-		put "&lt;/ul>" after tUploadData
-		return tUploadData ?>
+    &lt;? put "&lt;ul>" into tUploadData
+    repeat for each key tKey in gData["uploadData"]
+      put gData["uploadData"][tKey] into tVal
+      put "&lt;li>" &amp; tKey &amp; ":" &amp;&amp; tVal &amp; "&lt;/li>" after tUploadData
+    end repeat
+    put "&lt;/ul>" after tUploadData
+    return tUploadData ?>
 
-		&lt;p>[[gData["uploadLink"] ]]&lt;/p>
+    &lt;p>[[gData["uploadLink"] ]]&lt;/p>
 
-	&lt;/body>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 
@@ -188,58 +188,58 @@ folder:</p>
 put "doUpload,buildForm,upload,index" into gControllerHandlers
 
 command upload
-	put "form,url" into tHelpers
-	rigLoadHelper tHelpers
+  put "form,url" into tHelpers
+  rigLoadHelper tHelpers
 
-	# SET PAGE TITLE
-	put "Upload Form" into gData["pageTitle"]
+  # SET PAGE TITLE
+  put "Upload Form" into gData["pageTitle"]
 end upload
 
 
 command index
-	buildForm
+  buildForm
 
-	# LOAD THE VIEW FILE
-	get rigLoadView("uploadFormView")
+  # LOAD THE VIEW FILE
+  get rigLoadView("uploadFormView")
 end index
 
 
 command buildForm
-	put rigFormOpenMultiPart("upload/doUpload") into gData["formOpen"]
+  put rigFormOpenMultiPart("upload/doUpload") into gData["formOpen"]
 
-	put "userfile" into tData["name"]
-	put "20" into tData["size"]
-	put rigFormUpload(tData) into gData["input"]
+  put "userfile" into tData["name"]
+  put "20" into tData["size"]
+  put rigFormUpload(tData) into gData["input"]
 
-	put rigSubmitButton("uploadBtn", "upload") into gData["submit"]
+  put rigSubmitButton("uploadBtn", "upload") into gData["submit"]
 end buildForm
 
 
 command doUpload
-	put "./uploads/" into tConfig["UploadPath"]
-	put "gif|jpg|png" into tConfig["AllowedTypes"]
-	put 100 into tConfig["MaxSize"]
-	put 1024 into tConfig["MaxWidth"]
-	put 768 into tConfig["MaxHeight"]
+  put "./uploads/" into tConfig["UploadPath"]
+  put "gif|jpg|png" into tConfig["AllowedTypes"]
+  put 100 into tConfig["MaxSize"]
+  put 1024 into tConfig["MaxWidth"]
+  put 768 into tConfig["MaxHeight"]
 
-	rigLoaderLoadLibrary "Upload", tConfig
+  rigLoaderLoadLibrary "Upload", tConfig
 
-	rigDoUpload
+  rigDoUpload
 
-	if the result is FALSE then
-		put rigDisplayUploadErrors() into gData["uploadError"]
+  if the result is FALSE then
+    put rigDisplayUploadErrors() into gData["uploadError"]
 
-		buildForm
+    buildForm
 
-		# LOAD THE VIEW FILE
-		get rigLoadView("uploadFormView")
-	else
-		put rigUploadData() into gData["uploadData"]
-		put rigAnchor("upload", "Upload Another File!") into gData["uploadLink"]
+    # LOAD THE VIEW FILE
+    get rigLoadView("uploadFormView")
+  else
+    put rigUploadData() into gData["uploadData"]
+    put rigAnchor("upload", "Upload Another File!") into gData["uploadLink"]
 
-		# LOAD THE VIEW FILE
-		get rigLoadView("uploadSuccessView")
-	end if
+    # LOAD THE VIEW FILE
+    get rigLoadView("uploadSuccessView")
+  end if
 end doUpload
 
 --| END OF upload.lc
@@ -264,6 +264,94 @@ end doUpload
 controller is correct it should work.</p>
 
 
+<h2>Uploading Multiple Files</h2>
+
+<p>The process to upload multiple files (directories) is similar to the one outlined above with a few exceptions.</p>
+
+<ul>
+<li>The upload form needs to be modified, allowing a user to select multiple files (a directory).</li>
+<li>You should check for upload errors using <dfn>rigDisplayUploadErrors()</dfn> even if the result of rigDoUpload is TRUE. On uploading multiple files the result of <dfn>rigDoUpload</dfn> is FALSE only if all files failed to upload.</li>
+<li>Regarding the example above this means the success page needs a section to display errors in case some of the files failed to upload.</li>
+<li>The array returned by <dfn>rigUploadData()</dfn> is different. It includes data information of each file in a numbered array. The prototype of the array returned by <dfn>rigUploadData()</dfn> is: <var>dataArray[filesInfos][fileNumber][infoKey]</var>. According to this the repeat loop in the success page of the sample above needs to be adjusted.</li>
+</ul>
+
+<p>Following modifications of the sample code above needed to upload multiple files:<br>The controller needs a new <dfn>buildForm</dfn> handler and an additional line of code to check for upload errors in the <dfn>doUpload</dfn> handler. If you like you can set a limit for the maximum number of files allowed to be uploaded as shown below.</p>
+
+<pre><code>command buildForm
+  put rigFormOpenMultiPart("upload/doUpload") into gData["formOpen"]
+
+  put "userfile[]" into tData["name"]
+  put "userfile" into tData["id"]
+  put "20" into tData["size"]
+  put "" into tData["multiple"]
+  put "" into tData["directory"]
+  put "" into tData["webkitdirectory"]
+  put "" into tData["mozdirectory"]
+  put rigFormUpload(tData) into gData["input"]
+
+  put rigSubmitButton("uploadBtn", "upload") into gData["submit"]
+end buildForm
+
+
+command doUpload
+  put "./uploads/" into tConfig["UploadPath"]
+  put "gif|jpg|png" into tConfig["AllowedTypes"]
+  put 100 into tConfig["MaxSize"]
+  put 1024 into tConfig["MaxWidth"]
+  put 768 into tConfig["MaxHeight"]
+  put 5 into tConfig["MaxUploadFiles"]
+
+  rigLoaderLoadLibrary "Upload", tConfig
+
+  rigDoUpload
+
+  if the result is FALSE then
+    put rigDisplayUploadErrors() into gData["uploadError"]
+
+    buildForm
+
+    # LOAD THE VIEW FILE
+    get rigLoadView("uploadFormView")
+  else
+    put rigDisplayUploadErrors() into gData["uploadError"]
+    put rigUploadData() into gData["uploadData"]
+    put rigAnchor("upload", "Upload Another File!") into gData["uploadLink"]
+
+    # LOAD THE VIEW FILE
+    get rigLoadView("uploadSuccessView")
+  end if
+end doUpload
+</code></pre>
+
+<p>Note: The name of the input field needs brackets as suffix.</p>
+
+
+<p>The repeat loop of the success page needs to be adjusted like:</p>
+
+<pre><code class="lang-livecodeserver">[[gData["uploadError"] ]]
+		
+&lt;h3>File(s) successfully uploaded:&lt;/h3>
+
+&lt;? put the keys of gData["uploadData"] into tDataKeys
+   rigSort tDataKeys, "ascnum"
+      
+   repeat for each line tItem in tDataKeys
+     put "&lt;p>--------------&lt;/p>" after tUploadData
+     put "&lt;ul>" after tUploadData
+     repeat for each key tKey in gData["uploadData"][tItem]
+       put gData["uploadData"][tItem][tKey] into tVal
+       put "&lt;li>" &amp; tKey &amp; ":" &amp;&amp; tVal &amp; "&lt;/li>" after tUploadData
+     end repeat
+   put "&lt;/ul>" after tUploadData
+          
+   end repeat 
+   return tUploadData ?>
+
+</code></pre>
+
+<p>Note: There is an additional section for upload errors.</p>
+
+
 <p>&nbsp;</p>
 
 <h1>Reference Guide</h1>
@@ -278,7 +366,7 @@ controller is correct it should work.</p>
 
 <h2>Setting Preferences</h2>
 
-<p>Similar to other libraries, you'll control what is allowed to be uploaded based on your preferences.  In the controller you
+<p>Similar to other libraries, you'll control what is allowed to be uploaded based on your preferences. In the controller you
 built above you set the following preferences:</p>
 
 <pre><code>put "./uploads/" into tConfig["UploadPath"]
@@ -382,6 +470,13 @@ rigInitializeUpload tConfig
 <td class="td">TRUE/FALSE</td>
 <td class="td">If set to TRUE, any spaces in the file name will be converted to underscores. This is recommended.</td>
 </tr>
+
+<tr>
+<td class="td"><strong>MaxUploadFiles</strong></td>
+<td class="td">0</td>
+<td class="td">None</td>
+<td class="td">The maximum number of files allowed to be uploaded. Set to zero for no limit.</td>
+</tr>
 </table>
 </div>
 
@@ -399,6 +494,7 @@ put "gif|jpg|png" into sUploadConf["AllowedTypes"]
 put 100 into sUploadConf["MaxSize"]
 put 1024 into sUploadConf["MaxWidth"]
 put 768 into sUploadConf["MaxHeight"]
+put 5 into sUploadConf["MaxUploadFiles"]
 
 rigRunInitialUploadConfig sUploadConf</code></pre>
 
@@ -450,6 +546,24 @@ tData["ImageWidth"] # => 800
 tData["ImageHeight"] # => 600
 tData["ImageType"] # => jpeg
 tData["ImageSizeStr"] # => height="600" width="800"
+</code></pre>
+
+<p>In case multiple files were uploaded this data is returned in a numbered array like:</p>
+
+<pre><code>tData[tFileNumber]["FileName"] # => mypic.jpg
+tData[tFileNumber]["FileType"] # => image/jpeg
+tData[tFileNumber]["FilePath"] # => /path/to/your/upload/
+tData[tFileNumber]["FullPath"] # => /path/to/your/upload/jpg.jpg
+tData[tFileNumber]["RawName"] # => mypic
+tData[tFileNumber]["OrigName"] # => mypic.jpg
+tData[tFileNumber]["ClientName"] # => mypic.jpg
+tData[tFileNumber]["FileExt"] # => .jpg
+tData[tFileNumber]["FileSize"] # => 22.2
+tData[tFileNumber]["IsImage"] # => TRUE
+tData[tFileNumber]["ImageWidth"] # => 800
+tData[tFileNumber]["ImageHeight"] # => 600
+tData[tFileNumber]["ImageType"] # => jpeg
+tData[tFileNumber]["ImageSizeStr"] # => height="600" width="800"
 </code></pre>
 
 <h2>Explanation</h2>

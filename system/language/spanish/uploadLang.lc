@@ -18,6 +18,7 @@ put "El archivo enviado ya existe en el servidor." into gLang["upload_bad_filena
 put "Parece que no se puede escribir en el directorio de destino." into gLang["upload_not_writable"]
 put "La subida ha fallado." into gLang["upload_failed"]
 put "La dirección de la imagen (temp) no es correcta." into gLang["upload_invalid_path"]
+put "El número de archivos subidos supera el máximo permitido en la configuración." into gLang["upload_max_files_exceeded"]
 
 
 --| END OF uploadLang.lc

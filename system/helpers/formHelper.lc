@@ -428,23 +428,28 @@ end rigFormMultiselect
 --| FUNCTION rigFormDropDown
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 29-07-09
---| Last Mod: 22-01-12
+--| Last Mod: 26-07-16
 --| Requires: --
 --|
 --| Summary: Drop-Down menu.
 --| 
---| Format:  rigFormDropDown(param1, param2, param3, param4)
+--| Format:  rigFormDropDown(param1, param2[, param3][, param4][, param5])
 --|
---| Parameters: string <pName>, array <pOptions>, mixed <pSelected>, string <pExtra>
+--| Parameters: string <pName>, array <pOptions>, mixed <pSelected> (optional), string <pExtra> (optional), 
+--| 						string <pSortType> (optional) can be "asctext", "desctext", "ascnum" or "descnum"
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigFormDropDown pName pOptions pSelected pExtra
+function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	put pOptions into tOptions
 	put pSelected into tSelected
+	
+  if (pSortType is empty) or (pSortType is not among the items of "ascnum,descnum,asctext,desctext") then
+    put "asctext" into pSortType
+  end if
 
 	if (tSelected is not an array) and (tSelected is not empty) then
 		put tSelected into tSelected[1]
@@ -477,13 +482,19 @@ function rigFormDropDown pName pOptions pSelected pExtra
 	put tSelected into tSelectedAsElementsList
 	combine tSelectedAsElementsList using comma
 	
-	repeat for each key tKey in tOptions
+  get the keys of tOptions
+  rigSort it, pSortType
+	
+  repeat for each line tKey in it
 		put tOptions[tKey] into tVal
 
 		if tVal is an array then
+        put the keys of tVal into tValKeys   
+        rigSort tValKeys, pSortType
+				
 			put "<optgroup label=" & quote & tKey & quote & ">" & return after tForm
 
-			repeat for each key tOptgroupKey in tVal
+       repeat for each line tOptgroupKey in tValKeys
 				if comma is not in tOptgroupKey then
 						
 					if tOptgroupKey is among the items of tSelectedAsElementsList then
