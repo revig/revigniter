@@ -291,9 +291,9 @@ end rigImplode
 --| FUNCTION rigElementsList
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 09-07-09
---| Last Mod: 21-03-14
+--| Last Mod: 11-08-16
 --| Requires: --
 --|
 --| Summary: Returns a list of array elements, each on a seperate line.
@@ -306,11 +306,15 @@ end rigImplode
 ----------------------------------------------------------------------*/
 
 function rigElementsList pArray
-    repeat for each element thisElement in pArray
-        put thisElement & return after tElementsList
-    end repeat
-    delete char -1 of tElementsList
-    return tElementsList
+   repeat for each element thisElement in pArray
+      if thisElement is an array then
+         put rigElementsList(thisElement) & return after tElementsList
+      else
+         put thisElement & return after tElementsList
+      end if
+   end repeat
+   delete char -1 of tElementsList
+   return tElementsList
 end rigElementsList
 
 
