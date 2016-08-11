@@ -91,7 +91,11 @@
 
 <p>Make sure to put all your handler names in your controller as a comma separated list into the global 
 variable <samp>gControllerHandlers</samp>, otherwise you get a <kbd>"Page Not Found"</kbd> error.<br />
-See the comments in the sample files in the "controllers" folder.</p>
+See the comments in the sample files in the <dfn>application/controllers</dfn> folder.</p>
+
+<h2>Error Logging</h2>
+
+<p>If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>system/logs</dfn> folder is writable.</p>
 
 <h2>Search-Engine Friendly URLs</h2>
 
@@ -102,6 +106,7 @@ On-Rev hosting service.<br />
 As a first step, open your <dfn>application/config/config.lc</dfn> file and look for the <kbd>URI Protocol</kbd>
 information. It will recommend that you try a couple alternate settings.  If it still doesn't work you may try to use 
 query string based URLs by setting <samp>gConfig["enableQueryStrings"]</samp> in the <dfn>config.lc</dfn> file to TRUE.</p>
+
 
 <h2>gData Variables</h2>
 

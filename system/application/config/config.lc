@@ -209,6 +209,8 @@ end if
 #	3 = Informational Messages
 #	4 = All Messages
 #
+# Please make sure that your logs folder (by default this is system/logs/) is writable.
+#
 # For a live site you'll usually only enable Errors (1) to be logged otherwise
 # your log files will fill up very fast.
 #
@@ -224,6 +226,8 @@ end if
 #
 # Leave this BLANK unless you would like to set something other than the default
 # system/logs/ folder.  Use a full server path with trailing slash.
+#
+# Please make sure that your logs folder is writable.
 #
 ##
 
