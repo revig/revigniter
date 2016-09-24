@@ -88,14 +88,14 @@
 
 <h1>Galleria Plugin</h1>
 
-<p>The Galleria Plugin file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery framework made by <a href="http://galleria.io/" target="_blank">Aino http://galleria.io/</a>. The plugin comes in two flavors. In it's first form the plugin generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the plugin generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.4.2.</em></p>
+<p>The Galleria Plugin file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery framework made by <a href="https://galleria.io/" target="_blank">worse is better https://galleria.io/</a>. The plugin comes in two flavors. In it's first form the plugin generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the plugin generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.4.7.</em></p>
 
 
 <h2>Requirements</h2>
 
 <ul>
 	<li>JQuery JavaScript file or a reference to the Google Apis CDN (recommended).</li>
-	<li>The Galleria Javascript file or a reference to the Galleria CDN at <a href="http://t.co/Ni7SVsSO26"  target="_blank">http://t.co/Ni7SVsSO26</a> (recommended).</li>
+	<li>The Galleria Javascript file or a reference to the Galleria CDN at <a href="https://cdnjs.com/libraries/galleria"  target="_blank">cdnjs https://cdnjs.com/libraries/galleria</a> (recommended).</li>
 	<li>Galleria theme files (JavaScript and CSS).</li>
 	<li>A folder containing at least your gallery images. Optionally include (in case you use static image meta data) a text file (the meta data file) containing an image file name or a video URL  or an iFrame URL, optional captions (title and description), an optional image link, optional layer data and an optional reference to the original IMG element for each image you provide. Furthermore you may append a file name (a file name prepended with a root relative path for dynamically generated data respectively) for each video or iFrame your gallery supplies.   <strong>Note:</strong> This folder must be writable. See <a href="http://galleria.io/docs/references/data/" target="_blank">Using Image Data http://galleria.io/docs/references/data/</a> for further information regarding image data properties.</li>
 	<li>Optionally you can include in your images folder a folder for thumbnails called "thumb" and a folder for fullscreen mode images called "big". <strong>Note:</strong> If you need to show your own thumbnails for videos or iFrames the thumbnails folder is mandatory.</li>
@@ -152,7 +152,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 </code></pre>
 
 
-<p>Keep in mind that, if you provide a data file, the only mandatory property is the image file name, video URL or iFrame Url respectively. See <a href="http://galleria.io/docs/references/data/" target="_blank">Using Image Data http://galleria.io/docs/references/data/</a> for further information regarding image data properties.</p>
+<p>Keep in mind that, if you provide a data file, the only mandatory property is the image file name, video URL or iFrame Url respectively. See <a href="http://docs.galleria.io/article/134-using-image-data/" target="_blank">Using Image Data http://docs.galleria.io/article/134-using-image-data/</a> for further information regarding image data properties.</p>
 
 <p class="important"><strong>Note:</strong> Using static meta data gallery images are sorted alphabetically. Videos and iFrames are sorted according to the order determined in your meta data file.</p>
 
@@ -184,7 +184,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <ul>
 	<li>The first parameter is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
-	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://galleria.io/docs/1.2/options/" target="_blank">List of Options http://galleria.io/docs/1.2/options/</a>. The default key value pair is "height" and 420.</li>
+	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://docs.galleria.io/category/28-option-list/" target="_blank">List of Options http://docs.galleria.io/category/28-option-list/</a>. The default key value pair is "height" and 420.</li>
 	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
 	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
 	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
@@ -199,7 +199,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <ul>
 	<li>The first parameter is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
-	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://galleria.io/docs/1.2/options/" target="_blank">List of Options http://galleria.io/docs/1.2/options/</a>. The default key value pair is "height" and 420.</li>
+	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://docs.galleria.io/category/28-option-list/" target="_blank">List of Options http://docs.galleria.io/category/28-option-list/</a>. The default key value pair is "height" and 420.</li>
 	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
 	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
 	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
