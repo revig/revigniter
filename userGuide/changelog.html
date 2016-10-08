@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version192">Version 1.9.2</a></li>
 <li><a href="#version191">Version 1.9.1</a></li>
 <li><a href="#version19">Version 1.9.0</a></li>
 <li><a href="#version183">Version 1.8.3</a></li>
@@ -193,13 +194,28 @@
 </ul>
 
 
+<h2><a name="version192">&nbsp;</a>Version 1.9.2</h2>
+<p>Release Date: 2016-10-08</p>
+
+
+<p>
+<ul>
+	<li><strong>Changed:</strong> Added recursion to <dfn>system/helpers/arrayHelper.lc</dfn> -> rigElementsList() to support multidimensional arrays.</li>
+	<li><strong>Changed:</strong> Now union is used to merge arrays in <dfn>system/helpers/arrayHelper.lc</dfn> -> rigArrayMerge(). Actually this function exists for backward compatibility reasons and is not mentioned anymore in the User Guide as it is deprecated.</li>
+	<li><strong>Changed:</strong> Revised the <a href="http://revigniter.com/userGuide/installation/troubleshooting.html">troubleshooting section</a> of the User Guide. Added info regarding error logs and access permissions for system/logs. Added info regarding cookies not being sent.</li>
+	<li><strong>Fixed:</strong> CSRF protection in <dfn>system/libraries/Input.lc</dfn> -> rigCSRFverify.</li>
+	<li><strong>Fixed:</strong> Updated links to the new home of Galleria in chapter <a href="http://revigniter.com/userGuide/plugins/galleria_plugin.html">"Galleria Plugin"</a> of the User Guide.</li>
+</ul>
+</p>
+
+
 <h2><a name="version191">&nbsp;</a>Version 1.9.1</h2>
 <p>Release Date: 2016-08-07</p>
 
 
 <p>
 <ul>
-	<li><stron>Added:</stron> The upload library now supports uploading multiple files. Complemented the User Guide accordingly. Please read about uploading directories (multiple files) in chapter <a href="http://revigniter.com/userGuide/libraries/file_uploading.html">"File Uploading Library"</a>.</li>
+	<li><strong>Added:</strong> The upload library now supports uploading multiple files. Complemented the User Guide accordingly. Please read about uploading directories (multiple files) in chapter <a href="http://revigniter.com/userGuide/libraries/file_uploading.html">"File Uploading Library"</a>.</li>
 	<li><strong>Added:</strong> sort option to system/helpers/formHelper.lc -> rigFormDropDown() and a sort handler to system/revigniter/Common.lc. Complemented the User Guide accordingly. Please read about sorting drop-down field options in chapter <a href="http://revigniter.com/userGuide/helpers/form_helper.html">"Form Helper"</a>.</li>
 	<li><strong>Changed:</strong> Removed errorsList.txt, the scriptExecutionErrors is now used to get the errors list of the currently running server engine. So, the list is always up to date and handling execution errors is faster.</li>
 </ul>
