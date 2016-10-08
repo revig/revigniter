@@ -386,10 +386,11 @@ end _rigCSRFsetHash
 --| COMMAND rigCSRFverify
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 15-07-2012
---| Last Mod: --
---| Requires: rigCSRFsetCookie, rigCSRFshowError, _rigCSRFsetHash
+--| Version:  1.1
+--| Created: 2012-07-15
+--| Last Mod: 2016-09-10
+--| Requires: rigCSRFsetCookie, rigVarPost(), rigVarCookie(), rigCSRFshowError,
+--| 					_rigInputSetCookie, _rigCSRFsetHash, rigLogMessage
 --|
 --| Summary: Verify Cross Site Request Forgery protection.
 --| 
@@ -416,6 +417,7 @@ command rigCSRFverify
 	end if
 	
 	# DO THE TOKENS MATCH?
+	put base64Decode(urlDecode(tCSRFcookie)) into tCSRFcookie
 	if tCSRFtoken <> tCSRFcookie then
 		rigCSRFshowError
 	end if

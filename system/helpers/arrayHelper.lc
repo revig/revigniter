@@ -291,9 +291,9 @@ end rigImplode
 --| FUNCTION rigElementsList
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 09-07-09
---| Last Mod: 21-03-14
+--| Last Mod: 11-08-16
 --| Requires: --
 --|
 --| Summary: Returns a list of array elements, each on a seperate line.
@@ -306,11 +306,15 @@ end rigImplode
 ----------------------------------------------------------------------*/
 
 function rigElementsList pArray
-    repeat for each element thisElement in pArray
-        put thisElement & return after tElementsList
-    end repeat
-    delete char -1 of tElementsList
-    return tElementsList
+   repeat for each element thisElement in pArray
+      if thisElement is an array then
+         put rigElementsList(thisElement) & return after tElementsList
+      else
+         put thisElement & return after tElementsList
+      end if
+   end repeat
+   delete char -1 of tElementsList
+   return tElementsList
 end rigElementsList
 
 
@@ -323,63 +327,25 @@ end rigElementsList
 --| FUNCTION rigArrayMerge
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 30-07-09
---| Last Mod: 21-03-14
+--| Last Mod: 11-08-16
 --| Requires: --
 --|
---| Summary: Merge two one dimnensional arrays.
+--| Summary: Merge two arrays creating a new array without modifying the source arrays.
+--| 				Actually this function exists for backward compatibility reasons and is not
+--| 				mentioned anymore in the User Guide as it is deprecated. 
 --| 
---| Format:  rigArrayMerge(param1, param2, param3, param4)
+--| Format:  rigArrayMerge(param1, param2)
 --|
---| Parameters: array <pArrayA>, array <pArrayB>, char <pFirstDelim>, char <pSecondDelim>
+--| Parameters: array <pArrayA>, array <pArrayB>
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigArrayMerge pArrayA pArrayB pFirstDelim pSecondDelim
-    	put pArrayA into tArrayToReturn
-    	put pArrayB into tArrayToAppend
-    
-    	if pFirstDelim is empty then
-        	put return into tFirstDelim
-    	else
-        	put pFirstDelim into tFirstDelim
-    	end if
-    
-    	if pSecondDelim is empty then
-        	put comma into tSecondDelim
-    	else
-        	put pSecondDelim into tSecondDelim
-    	end if
-    
-    	# MERGE LISTS
-    	if tArrayToReturn is an array then
-        	combine tArrayToReturn using tFirstDelim and tSecondDelim
-    	else
-        	put empty into tArrayToReturn
-    	end if
-    
-    	if tArrayToAppend is an array then
-        	combine tArrayToAppend using tFirstDelim and tSecondDelim
-    	else
-        	put empty into tArrayToAppend
-    	end if
-    
-    	if tArrayToReturn is not empty then
-        	if tArrayToAppend is not empty then
-            	put tFirstDelim & tArrayToAppend after tArrayToReturn
-        	end if
-    	else
-        	if tArrayToAppend is not empty then
-            		put tArrayToAppend into tArrayToReturn
-        	end if
-    	end if
-     
-    	#BUILD ARRAY AGAIN
-    	split tArrayToReturn using tFirstDelim and tSecondDelim
-     
-    	return tArrayToReturn
+function rigArrayMerge pArrayA pArrayB
+	union pArrayA with pArrayB
+	return pArrayA
 end rigArrayMerge
 
 
