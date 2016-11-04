@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Email Helper : revIgniter User Guide</title>
+		<title>Upgrading from 1.9.3 to 1.9.4 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Email Helper</li>
+			 		 	<li class="active">Upgrading from 1.9.3 to 1.9.4</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,38 +85,34 @@
 	
 <div id="content">
 
+<h1>Upgrading from 1.9.3 to 1.9.4</h1>
 
-<h1>Email Helper</h1>
 
-<p>The Email Helper provides some assistive handlers for working with Email. For a more robust email solution, see revIgniter's <a href="../libraries/email.html">Email Library</a>.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
-<h2>Loading this Helper</h2>
 
-<p>This helper is loaded using the following code:</p>
-<p><pre><code class="lang-livecodeserver">rigLoadHelper "email"</code></pre></p>
 
-<p>The following handlers are available:</p>
+<h2>Step 1: Update your revIgniter files</h2>
 
-<h3>rigValidEmail("<var>email</var>")</h3>
+<p>Replace this file in your "system/libraries" folder with the new version:</p>
 
-<p>Checks if an email is a correctly formatted email. Note, that this doesn't actually prove the email will recieve mail, simply that it is a validly formed address.</p>
-<p>It returns TRUE/FALSE</p>
+<ul>
+	<li><dfn>Output.lc</dfn></li>
+</ul>
 
-<pre><code>rigLoadHelper "email"
 
-if rigValidEmail("email@somesite.com") is TRUE then
-	put "email is valid" into gData["emailCheck"]
-else
-	put "email is not valid" into gData["emailCheck"]
-end if</code></pre>
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
 
-<h3>rigSendEmail("<var>recipient</var>", "<var>subject</var>", "<var>message</var>", "<var>cc</var>", "<var>bcc</var>")</h3>
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
 
-<p>Sends an email using Mail. For a more robust email solution, see revIgniter's <a href="../libraries/email.html">Email Library</a>.</p>
-<p>It returns TRUE/FALSE</p>
 
-<p class="important"><strong>Note:</strong>&nbsp; The sender field appears as "&lt;username@domain.com>" in default configurations. 
-	It's the account name and host name of the sending user.</p>
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
+
 
 </div>
 <!-- END CONTENT -->
@@ -127,23 +123,18 @@ end if</code></pre>
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="download_helper.html">Download Helper</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="file_helper.html">File Helper</a></p>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
+</p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2016<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
-
-<script src="../js/highlight.pack.js"></script>
- <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
- </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
