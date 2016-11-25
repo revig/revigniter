@@ -489,12 +489,12 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
       end switch
       
 			if pCacheBusterOrFallbackAsset is empty then
-  			return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & "http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote & "></script>"
+  			return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote & "></script>"
 			end if
 
 			put rigJsAssetURL(pCacheBusterOrFallbackAsset, pModule) into tAssetUrl
 
-			put "<script type='text/javascript'" & tAttribute && "src='http://ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
+			put "<script type='text/javascript'" & tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
 & "<script>window." & tObject && "|| document.write(" & quote & "<script type='text/javascript'" & tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
 			
 			return tScriptReference
