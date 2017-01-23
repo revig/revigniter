@@ -1843,9 +1843,9 @@ end _rigAuthFilteredData
 --| COMMAND rigAuthAddToGroup
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 08-02-2013
---| Last Mod: 08-02-2013
+--| Version:  1.1
+--| Created: 2013-02-08
+--| Last Mod: 2017-01-17
 --| Requires: _rigAuthCallHook(), rigSessUserdata(), rigDbInsert
 --|
 --| Summary: Add user to group.
@@ -1867,9 +1867,11 @@ command rigAuthAddToGroup pGroupID pUserID
 		put pUserID into tUserID
 	end if
 	
-	put pGroupID into tData[sAuth["join"]["groups"]]
-	put tUserID into tData[sAuth["join"]["users"]]
-	get rigDbInsert(sAuth["tables"]["usersGroups"], tData)
+	if rigAuthInGroup(pGroupID, tUserID) is false then
+		put pGroupID into tData[sAuth["join"]["groups"]]
+		put tUserID into tData[sAuth["join"]["users"]]
+		get rigDbInsert(sAuth["tables"]["usersGroups"], tData)
+	end if
 end rigAuthAddToGroup
 
 

@@ -1404,13 +1404,13 @@ end _rigTempMailPath
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCeil
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 22-09-09
---| Last Mod: 22-09-09
+--| Version:  1.1
+--| Created: 2009-09-09
+--| Last Mod: 2016-11-24
 --| Requires: --
 --|
 --| Summary: Returns the next highest integer value by rounding up if necessary.
@@ -1420,14 +1420,18 @@ end _rigTempMailPath
 --| Parameters: number <pNum>
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCeil pNum
-    if trunc(pNum) <> pNum then
-        return trunc(pNum) + 1
-    end if 
-    
-    return pNum
+   if trunc(pNum) <> pNum then
+      if pNum > 0 then
+         return trunc(pNum) + 1
+      else
+         return trunc(pNum)
+      end if
+   end if 
+   
+   return pNum
 end rigCeil
 
 
