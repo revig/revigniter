@@ -375,9 +375,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.8
---| Created: 09-07-09
---| Last Mod: 21-12-14
+--| Version:  1.9
+--| Created: 2009-07-09
+--| Last Mod: 2017-04-02
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
 --|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
 --|
@@ -572,7 +572,6 @@ function rigDbQuery pSQL pBinds
 	put rigDBresult() into tRES["resultarray"]
 
 	if sDBdriverSettings["dbdriver"] is "oci8" then
-		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
 		put rigNumToCodepoint(0) into sDBdriverSettings["cursid"] -- NULL
 		put sDBdriverSettings["limitused"] into tRES["limitused"]
