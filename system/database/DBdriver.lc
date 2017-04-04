@@ -896,9 +896,9 @@ end rigDbTransStatus
 --| FUNCTION rigCompileBinds
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 18-07-09
---| Last Mod: 15-09-14
+--| Version:  1.4
+--| Created: 2009-07-18
+--| Last Mod: 2017-04-04
 --| Requires: rigDbEscape()
 --|
 --| Summary: Compile bindings. pBinds must be a comma separated list or a numbered array.
@@ -922,7 +922,6 @@ function rigCompileBinds pSQL pBinds
 	# GET LIST OF ESCAPED BIND VALUES
 	# WE DON'T USE COMBINE TO KEEP THE CORRECT ARRAY VALUE ORDER
 	if tBinds is an array then
-		put 0 into tCounter
 		put the number of lines of the keys of tBinds into tNumOfBinds
 		repeat with i = 1 to tNumOfBinds
 			put rigDbEscape(tBinds[i]) into tBindsEscaped[i]
