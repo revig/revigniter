@@ -173,13 +173,13 @@ end _rigCompileBenchmarks
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompileQueries
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 21-01-10
---| Last Mod: 17-04-12
+--| Version:  1.2
+--| Created: 2010-01-21
+--| Last Mod: 2017-04-24
 --| Requires: rigCompileProfilerTemplate, rigFetchDBlibLoaded, rigFetchDBdriverSetting(), rigLangLangLine()
 --|
 --| Summary: Compile queries.
@@ -189,7 +189,7 @@ end _rigCompileBenchmarks
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompileQueries
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -242,7 +242,6 @@ function _rigCompileQueries
 
 	else
 		put rigFetchDBdriverSetting("querytimes") into tQueryTimes
-		set the numberFormat to 0.000000
 
 		repeat for each key tKey in tQueries
 			put tQueries[tKey] into tVal
@@ -250,7 +249,7 @@ function _rigCompileQueries
 			put tQueryTimes[tKey] into tTime
 
 			put sProfilerTemplate["queries"]["body"] into tBody
-			replace "{time}" with tTime in tBody
+			replace "{time}" with format("%1.6f", tTime) in tBody
 			replace "{val}" with tVal in tBody
 
 			put tBody after tOutput
