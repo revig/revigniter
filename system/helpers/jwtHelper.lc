@@ -71,10 +71,10 @@ end rigJWTinitHelper
 --| FUNCTION rigJWTencode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-07-08
---| Last Mod: 2016-07-08
---| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha256b64()
+--| Last Mod: 2017-06-06
+--| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha256b64(), rigJWTpurge
 --|
 --| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
 --| 
@@ -117,12 +117,10 @@ function rigJWTencode pHeader pPayload
   
   # HMAC
   put tJWTheader & "." & tJWTpayload into tJWTheaderPayload
-  replace return with "" in tJWTheaderPayload
-  replace "=" with "" in tJWTheaderPayload
+  rigJWTpurge tJWTheaderPayload
 
 	put rigHmacSha256b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
-	replace return with "" in tJWThmac
-	replace "=" with "" in tJWThmac
+	rigJWTpurge tJWThmac
 
   return tJWTheaderPayload & "." & tJWThmac
 end rigJWTencode
@@ -206,10 +204,10 @@ end rigJWTdecode
 --| FUNCTION _rigJWTVerifySig
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-07-13
---| Last Mod: 2016-07-13
---| Requires: rigLogMessage, rigHmacSha256b64()
+--| Last Mod: 2017-06-06
+--| Requires: rigLogMessage, rigHmacSha256b64(), rigJWTpurge
 --|
 --| Summary: Verify signature of token received.
 --| 
@@ -233,8 +231,7 @@ function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
 	put pHeaderEncoded & "." & pPayloadEncoded into tJWTheaderPayload
 
 	put rigHmacSha256b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
-	replace return with "" in tJWThmac
-	replace "=" with "" in tJWThmac
+	rigJWTpurge tJWThmac
 
 	return (tJWThmac is pJWThmac)
 end _rigJWTVerifySig
@@ -835,6 +832,33 @@ function rigChunkToArray pChunk
    end repeat
    return tArray
 end rigChunkToArray
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigJWTpurge
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2017-06-06
+--| Last Mod: 2017-06-06
+--| Requires: --
+--|
+--| Summary: Remove CR and "=" from JWT elements.
+--| 
+--| Format:  rigJWTpurge param1
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigJWTpurge @pStr
+  replace return with "" in pStr
+  replace "=" with "" in pStr
+end rigJWTpurge
+
 
 
 
