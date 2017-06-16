@@ -41,7 +41,7 @@ rigLogMessage "debug", "Encrypt Library Loaded"
 local sEncryptionKey, _sHashType, sCipher, sCipherKeyLength
 
 # SET INITIAL VALUES
-put "sha1" into _sHashType
+put "SHA-1" into _sHashType
 put "bf" into sCipher
 put 128 into sCipherKeyLength
 
@@ -381,13 +381,13 @@ end rigSetCipher
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetHash
 --|
 --| Author: rabit
---| Version:  2.0
---| Created: 16-10-09
---| Last Mod: 18-07-11
+--| Version:  2.1
+--| Created: 2009-10-16
+--| Last Mod: 2017-06-17
 --| Requires: --
 --|
 --| Summary: Set the hash type. 
@@ -397,18 +397,25 @@ end rigSetCipher
 --| Parameters: string <pType>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetHash pType
-	if pType is empty then
-		put "sha1" into tType
+	if (pType is empty) or (pType is not among the items of "SHA-1,SHA-224,SHA-256,SHA-384,SHA-512,SHA3-224,SHA3-256,SHA3-384,SHA3-512") then
+		# DEFAULT HASH TYPE -- used for backwards compatibility
+		put "SHA-1" into tType
 	else
 		put pType into tType
 	end if
 	
-	if (tType is not "sha1") and (tType is not "md5") then
-		put "sha1" into _sHashType
+	if (item 1 of the version < 9) then
+		if (tType is not "SHA-1") and (tType is not "md5") then
+			put "SHA-1" into _sHashType
+		else
+			put tType into _sHashType
+		end if
+	
 	else
+		# SERVER VERSION 9_0_0_dp_7 AND UP
 		put tType into _sHashType
 	end if
 end rigSetHash
@@ -420,13 +427,13 @@ end rigSetHash
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHash
 --|
 --| Author: rabit
---| Version:  2.0
---| Created: 16-10-09
---| Last Mod: 18-07-11
+--| Version:  2.1
+--| Created: 2009-10-16
+--| Last Mod: 2017-06-17
 --| Requires: rigHexDigest()
 --|
 --| Summary: Hash encode a string. 
@@ -436,14 +443,20 @@ end rigSetHash
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHash pStr
-	if _sHashType is "sha1" then
-		put sha1Digest(pStr) into tHash
-	else
+	if (item 1 of the version < 9) then
+		if _sHashType is "SHA-1" then
+			put sha1Digest(pStr) into tHash
+		else
 
-		put rigHexDigest(pStr) into tHash
+			put rigHexDigest(pStr) into tHash
+		end if
+	
+	else
+		# SERVER VERSION 9_0_0_dp_7 AND UP
+		put messageDigest(pStr, _sHashType) into tHash
 	end if
 
 	return tHash
