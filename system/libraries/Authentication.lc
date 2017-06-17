@@ -1439,10 +1439,10 @@ end _rigAuthLoginRememberedUser
 --| FUNCTION rigAuthEncryptPassword
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 31-12-2012
---| Last Mod: 31-12-2012
---| Requires: rigEncode()
+--| Version:  1.1
+--| Created: 2012-12-31
+--| Last Mod: 2017-06-18
+--| Requires: _rigAuthSetHash, rigEncode()
 --|
 --| Summary: Encrypts the password to be stored in the database.
 --| 
@@ -1458,6 +1458,8 @@ function rigAuthEncryptPassword pPassword
 		return FALSE
 	end if
 	
+	_rigAuthSetHash
+
 	# CHECK WHICH ENCRYPTION KEY SHOULD BE USED
 	# AND ENCRYPT THE PASSWORD
 	if sAuth["useAuthEncryptionKey"] is TRUE then
@@ -1476,10 +1478,10 @@ end rigAuthEncryptPassword
 --| FUNCTION rigAuthDecryptPassword
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 20-02-2013
---| Last Mod: 20-02-2013
---| Requires: --
+--| Version:  1.1
+--| Created: 2013-02-20
+--| Last Mod: 2017-06-18
+--| Requires: _rigAuthSetHash, rigDecode()
 --|
 --| Summary: Decrypts the password currently stored in the database.
 --| 
@@ -1494,7 +1496,9 @@ function rigAuthDecryptPassword pPassword
 	if pPassword is empty then
 		return FALSE
 	end if
-	
+
+	_rigAuthSetHash
+
 	# CHECK WHICH ENCRYPTION KEY SHOULD BE USED
 	# AND ENCRYPT THE PASSWORD
 	if sAuth["useAuthEncryptionKey"] is TRUE then
@@ -1514,11 +1518,11 @@ end rigAuthDecryptPassword
 --| FUNCTION rigAuthValidatePassword
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 29-12-2012
---| Last Mod: 29-12-2012
+--| Version:  1.1
+--| Created: 2012-12-29
+--| Last Mod: 2017-06-18
 --| Requires: _rigAuthCallHook(), rigDbSelect, rigDbWhere, rigDbLimit, rigDbGet(),
---|           rigDbRow(), rigSetCipher, rigDecode()
+--|           rigDbRow(), _rigAuthSetHash, rigSetCipher, rigDecode()
 --|
 --| Summary: Validate password against entry in Users table.
 --| 
@@ -1547,7 +1551,9 @@ function rigAuthValidatePassword pID pPassword
 	
 	put rigDbRow(1) into tRow
 	put tRow["password"] into tPasswordDBencrypted
-	
+
+	_rigAuthSetHash
+
 	# SET THE CIPHER AND THE KEY LENGTH
 	rigSetCipher sAuth["cipher"], sAuth["keyLength"]
 	
@@ -3074,6 +3080,30 @@ end _rigAuthRunHook
 
 
 
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigAuthSetHash
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2017-06-18
+--| Last Mod: 2017-06-18
+--| Requires: rigSetHash (see Encrypt.lc)
+--|
+--| Summary: Set hash type to be used by the encryption library.
+--| 
+--| Format:  _rigAuthSetHash
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigAuthSetHash
+	if sAuth["hashType"] <> "" then
+		rigSetHash sAuth["hashType"]
+	end if
+end _rigAuthSetHash
 
 
 
