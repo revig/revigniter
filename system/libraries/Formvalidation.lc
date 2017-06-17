@@ -2286,33 +2286,6 @@ end rigHtmlSpecialChars
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigUrlDecodeStr
---|
---| Author: rabit
---| Version:  1.0
---| Created: 11-08-09
---| Last Mod: 11-08-09
---| Requires: --
---|
---| Summary: rigDecode a URL.
---| 
---| Format: rigUrlDecodeStr param1
---|
---| Parameters: string <pStr>
---|
---| Return: string
-----------------------------------------------------------------------
-
-command rigUrlDecodeStr pStr
-	return urlDecode(pStr)
-end rigUrlDecodeStr
-
-
-
-
-
-
 /*----------------------------------------------------------------------
 --| COMMAND rigAddValidationGrp
 --|
