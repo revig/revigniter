@@ -820,7 +820,7 @@ end rigFilteredFilesWithPaths
 --| Version:  1.2
 --| Created:  09-07-09
 --| Last Mod: 21-03-14
---| Requires:  rigFilteredFiles(), rigFilteredFolders(), rigURLDecode()
+--| Requires:  rigFilteredFiles(), rigFilteredFolders()
 --|
 --| Summary: Returns a list of files in a given folder, using recursion to include files in subfolders if desired.
 --| 
