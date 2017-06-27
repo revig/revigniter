@@ -542,9 +542,9 @@ end _rigValidateModuleRequest
 --| COMMAND _rigParseRoutes
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 19-06-09
---| Last Mod: 08-12-15
+--| Version:  1.4
+--| Created: 2009-06-19
+--| Last Mod: 2017-06-27
 --| Requires: _rigSetRequest
 --|
 --| Summary:  This handler matches any routes that may exist in
@@ -594,6 +594,16 @@ command _rigParseRoutes
   end repeat
 
   # LOOP THROUGH THE ROUTE ARRAY LOOKING FOR WILD-CARDS
+	put empty into tReplacement1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	put empty into tReplacement2
+	put empty into tReplacement3
+	put empty into tReplacement4
+	put empty into tReplacement5
+	put empty into tReplacement6
+	put empty into tReplacement7
+	put empty into tReplacement8
+	put empty into tReplacement9
+	put empty into tReplacement10
   repeat for each item keyNum in tRoutesKeys
     if (keyNum is an integer) and (keyNum > 1) then
       repeat for each line tKey in the keys of  tRoutes[keyNum]
@@ -609,7 +619,7 @@ command _rigParseRoutes
         if matchChunk(tUri, tRegEx) then
           # DO WE HAVE A BACK-REFERENCE?
           if ("$" is in tRouteString) and ("(" is in tKey) then
-            get matchtext(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
+            get matchText(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
             tReplacement4,tReplacement5,tReplacement6,tReplacement7,tReplacement8,tReplacement9,tReplacement10)
               
             if "$1" is in tRouteString then

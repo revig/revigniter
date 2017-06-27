@@ -781,9 +781,9 @@ end rigHtmlSpecialChars
 --| FUNCTION rigTrim
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 30-07-09
---| Last Mod: 22-12-14
+--| Version:  1.5
+--| Created: 2009-07-30
+--| Last Mod: 2017-06-27
 --| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Trim whitespace at the start and at the end of a string.
@@ -845,7 +845,7 @@ function rigTrim pStr pCharsList
             end if
             
             put "(^" & tChar & "+)|(" & tChar & "+$)" into tRegEx
-            put matchtext(tStrToReturn,tRegExWS) into tCharsToDeleteFound
+            put matchText(tStrToReturn,tRegEx) into tCharsToDeleteFound
             if tCharsToDeleteFound is TRUE then
                exit repeat
             end if

@@ -306,13 +306,13 @@ end rigClearMail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailFrom
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 15-08-09
---| Last Mod: 20-09-09
+--| Version:  1.2
+--| Created: 2009-08-15
+--| Last Mod: 2017-06-27
 --| Requires: _rigStrToArray(), rigValidateEmail(), rigAddCslashes(), _rigPrepQencoding(), _rigSetHeader
 --|
 --| Summary: Set From.
@@ -322,11 +322,12 @@ end rigClearMail
 --| Parameters: string <pFrom>, string <pName>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailFrom pFrom, pName
 	put "\<(.*)\>" into tRegEx
-	get matchtext(pFrom,tRegEx,tFoundTextVar)
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	get matchText(pFrom,tRegEx,tFoundTextVar)
 
     	if it is TRUE then
        	put tFoundTextVar into tFrom
@@ -344,7 +345,7 @@ command rigMailFrom pFrom, pName
 		# ONLY USE Q ENCODING IF THERE ARE CHARACTERS THAT WOULD REQUIRE IT
 		 # OCTAL VALUES ARE USED HERE (128 - 255 AS DECIMAL VALUES)
         	put "[\200-\377]" into tRegEx
-		get matchtext(pName,tRegEx)
+		get matchText(pName,tRegEx)
 		if it is not TRUE then
 			# ADD SLASHES FOR NON-PRINTING CHARACTERS, SLASHES, AND DOUBLE QUOTES, AND SURROUND IT IN DOUBLE QUOTES
 			# OCTAL VALUES ARE USED HERE (0 - 31 AND 127 AS DECIMAL VALUES)
@@ -368,13 +369,13 @@ end rigMailFrom
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigReplyTo
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 16-08-09
---| Last Mod: 16-08-09
+--| Version:  1.1
+--| Created: 2009-08-16
+--| Last Mod: 2017-06-27
 --| Requires: _rigStrToArray(), rigValidateEmail(), _rigSetHeader
 --|
 --| Summary: Set reply-to.
@@ -384,13 +385,14 @@ end rigMailFrom
 --| Parameters: string <pReplyto>, string <pName>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigReplyTo pReplyto pName
 	put pName into tName
 
 	put "\<(.*)\>" into tRegEx
-	get matchtext(pReplyto,tRegEx,tFoundTextVar)
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	get matchText(pReplyto,tRegEx,tFoundTextVar)
 
     	if it is TRUE then
        	put tFoundTextVar into tReplyto
@@ -1308,13 +1310,13 @@ end rigMailValidEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCleanEmail
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 16-08-09
---| Last Mod: 16-08-09
+--| Version:  1.1
+--| Created: 2009-08-16
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Clean extended email address: Joe Smith <joe@smith.com>.
@@ -1324,13 +1326,14 @@ end rigMailValidEmail
 --| Parameters: mixed <pEmail>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCleanEmail pEmail
 	put "\<(.*)\>" into tRegEx
-
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	
 	if pEmail is not an array then
-		get matchtext(pEmail,tRegEx,tFoundTextVar)
+		get matchText(pEmail,tRegEx,tFoundTextVar)
 
     		if it is TRUE then
 			return tFoundTextVar
@@ -1342,7 +1345,7 @@ function rigCleanEmail pEmail
 	put 0 into tCounter
 	repeat for each element tAddy in pEmail
 		add 1 to tCounter
-		get matchtext(tAddy,tRegEx,tFoundTextVar)
+		get matchText(tAddy,tRegEx,tFoundTextVar)
 
     		if it is TRUE then
 			put tFoundTextVar into tCleanEmail[tCounter]
@@ -1360,13 +1363,13 @@ end rigCleanEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetAltMessage
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 17-08-09
---| Last Mod: 17-08-09
+--| Version:  1.1
+--| Created: 2009-08-17
+--| Last Mod: 2017-06-27
 --| Requires: rigWord_wrap(), rigStripHTML(), rigTrim()
 --|
 --| Summary: Build alternative plain text message.
@@ -1381,7 +1384,7 @@ end rigCleanEmail
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigGetAltMessage
 	if sAltMessage is not empty then
@@ -1389,6 +1392,7 @@ function _rigGetAltMessage
 	end if
 
 	put "(?i)\<body.*?\>(.*)\<\/body\>" into tRegEx
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	get matchText(_sBody,tRegEx,tFoundTextVar)
 	if it is TRUE then
 		put tFoundTextVar into tBody
@@ -1429,9 +1433,9 @@ end _rigGetAltMessage
 --| FUNCTION rigWord_wrap
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 17-08-09
---| Last Mod: 22-12-14
+--| Version:  1.5
+--| Created: 2009-08-17
+--| Last Mod: 2017-06-27
 --| Requires: rigPregReplace(), rigNumToCodepoint(), rigWordWrap(), rigUnwrappedWrapMarkersString()
 --|
 --| Summary: Word wrap.
@@ -1471,50 +1475,51 @@ function rigWord_wrap pStr pCharLim
 	# STRIP THE ENTIRE CHUNK AND REPLACE IT WITH A MARKER.
 	put tStr into tStrToCheck
     
-    	put "(?s)(\{unwrap\}.+?\{/unwrap\})" into tRegEx
+	put "(?s)(\{unwrap\}.+?\{/unwrap\})" into tRegEx
     
-    	put "" into tStrMarked
+	put "" into tStrMarked
     
-    	put TRUE into tMatchFound
-    	put 0 into tCounter
+	put TRUE into tMatchFound
+	put 0 into tCounter
     
-    	repeat until tMatchFound is FALSE
-       	get matchtext(tStrToCheck,tRegEx,tFoundStr)
+	put empty into tFoundStr -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	repeat until tMatchFound is FALSE
+		get matchText(tStrToCheck,tRegEx,tFoundStr)
         
-        	if it is TRUE then
-            		add 1 to tCounter
+		if it is TRUE then
+			add 1 to tCounter
              
-            		put the length of tFoundStr into tFoundStrLength
-            		put offset(tFoundStr,tStrToCheck) into tStrOffset
-            		put tStrOffset + tFoundStrLength into tSearchStartNum
-            		put the length of tStrToCheck into tStrLength
+			put the length of tFoundStr into tFoundStrLength
+			put offset(tFoundStr,tStrToCheck) into tStrOffset
+			put tStrOffset + tFoundStrLength into tSearchStartNum
+			put the length of tStrToCheck into tStrLength
              
-            		# THE PART OF THE STRING WITH THE FIRST MATCH
-            		put char tStrOffset to (tStrOffset + (tFoundStrLength - 1)) of tStrToCheck into tStrFragment
+			# THE PART OF THE STRING WITH THE FIRST MATCH
+			put char tStrOffset to (tStrOffset + (tFoundStrLength - 1)) of tStrToCheck into tStrFragment
              
-            		# REPLACE STRING
-            		replace tFoundStr with "{{unwrapped" & tCounter & "}}" in tStrFragment
+			# REPLACE STRING
+			replace tFoundStr with "{{unwrapped" & tCounter & "}}" in tStrFragment
             
-            		# ADD FOUND STRING TO ARRAY
-            		put tFoundStr into tUnwrap[tCounter]
+			# ADD FOUND STRING TO ARRAY
+			put tFoundStr into tUnwrap[tCounter]
              
-            		# ADD MARK TO THE STRING
-            		put (char 1 to (tStrOffset -1) of tStrToCheck) & tStrFragment after tStrMarked
+			# ADD MARK TO THE STRING
+			put (char 1 to (tStrOffset -1) of tStrToCheck) & tStrFragment after tStrMarked
              
-            		put char tSearchStartNum to tStrLength of tStrToCheck into tStrToCheck
+			put char tSearchStartNum to tStrLength of tStrToCheck into tStrToCheck
              
-        	else
-            		# NO MATCH FOUND
-            		if tStrMarked is "" then
-                		put tStr into tStrMarked
-            		else
-                		# ADD THE REMAINING PART TO THE STRING TO RETURN
-                		put tStrToCheck after tStrMarked
-            		end if
+		else
+			# NO MATCH FOUND
+			if tStrMarked is "" then
+				put tStr into tStrMarked
+			else
+				# ADD THE REMAINING PART TO THE STRING TO RETURN
+				put tStrToCheck after tStrMarked
+			end if
              
-            		put FALSE into tMatchFound
-        	end if
-    	end repeat
+			put FALSE into tMatchFound
+		end if
+	end repeat
 
 	put tStrMarked into tStr
 
@@ -1524,47 +1529,47 @@ function rigWord_wrap pStr pCharLim
 	put rigWordWrap(tStr, tCharLim, LF, FALSE) into tStr
 
 	# SPLIT THE STRING INTO INDIVIDUAL LINES OF TEXT AND CYCLE THROUGH THEM
-	 put "" into tOutput
+	put "" into tOutput
 
     
-    	repeat for each line thisLine in tStr
+	repeat for each line thisLine in tStr
 		# IS THE LINE WITHIN THE ALLOWED CHARACTER COUNT?
 		# IF SO WE'LL JOIN IT TO THE OUTPUT AND CONTINUE
-        	if (the length of thisLine) <= tCharLim then
-            		put thisLine & sMailNewline after tOutput
-            		next repeat
-        	end if
+		if (the length of thisLine) <= tCharLim then
+			put thisLine & sMailNewline after tOutput
+			next repeat
+		end if
         
-        	put "" into tTemp
+		put "" into tTemp
         
-        	repeat until (the length of thisLine) <= tCharLim
-             		# IF THE OVER-LENGTH WORD IS A URL WE WON'T WRAP IT
-            		put "\[url.+\]|://|wwww." into tRegEx
-            		get matchtext(thisLine,tRegEx)
-            		if it is TRUE then
-                		exit repeat
-            		end if
+		repeat until (the length of thisLine) <= tCharLim
+			# IF THE OVER-LENGTH WORD IS A URL WE WON'T WRAP IT
+			put "\[url.+\]|://|wwww." into tRegEx
+			get matchText(thisLine,tRegEx)
+			if it is TRUE then
+				exit repeat
+			end if
             
 			# TRIM THE WORD DOWN
-            		put char 1 to (tCharLim -1) of thisLine after tTemp
-            		put char tCharLim to (the length of thisLine) of thisLine into thisLine
-        	end repeat
+			put char 1 to (tCharLim -1) of thisLine after tTemp
+			put char tCharLim to (the length of thisLine) of thisLine into thisLine
+		end repeat
         
 		# IF $TEMP CONTAINS DATA IT MEANS WE HAD TO SPLIT UP AN OVER-LENGTH
 		# WORD INTO SMALLER CHUNKS SO WE'LL ADD IT BACK TO OUR CURRENT LINE
-        	if tTemp <> "" then
-            		put tTemp & sMailNewline & thisLine after tOutput
-        	else
-            		put thisLine after tOutput
-        	end if
+		if tTemp <> "" then
+			put tTemp & sMailNewline & thisLine after tOutput
+		else
+			put thisLine after tOutput
+		end if
         
-        	put sMailNewline after tOutput
+		put sMailNewline after tOutput
 	end repeat
 
 	# PUT OUR MARKERS BACK
 	if tUnwrap is an array then
 		# UNWRAP MARKERS
-        	put rigUnwrappedWrapMarkersString(tOutput) into tOutput
+		put rigUnwrappedWrapMarkersString(tOutput) into tOutput
 
 		repeat for each key tKey in tUnwrap
 			put tUnwrap[tKey] into tVal
@@ -2100,9 +2105,9 @@ end _rigPrepQuotedPrintable
 --| FUNCTION _rigPrepQencoding
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 16-08-09
---| Last Mod: 22-12-14
+--| Version:  1.2
+--| Created: 2009-08-16
+--| Last Mod: 2017-06-27
 --| Requires: rigNumToCodepoint(), rigCodepointToNum()
 --|
 --| Summary: Performs "Q Encoding" on a string for use in email headers.  It's related
@@ -2176,35 +2181,36 @@ function _rigPrepQencoding pStr pFrom
 	 
 	# WRAP EACH LINE WITH THE SHEBANG, CHARSET, AND TRANSFER ENCODING
 	# THE PRECEDING SPACE ON SUCCESSIVE LINES IS REQUIRED FOR HEADER "FOLDING"
-	 put "(?m)^(.*)$" into tRegEx
-    
-    	put the number of lines of tStr into tLineNums
-    	put 0 into tCounter
-    	if tLineNums > 1 then
-        	add 1 to tCounter
-        	repeat for each line thisLine in tStr
-            		get matchtext(thisLine,tRegEx,tFoundTextVar)
+	put "(?m)^(.*)$" into tRegEx
+  
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	put the number of lines of tStr into tLineNums
+	put 0 into tCounter
+	if tLineNums > 1 then
+		add 1 to tCounter
+		repeat for each line thisLine in tStr
+			get matchText(thisLine,tRegEx,tFoundTextVar)
              
-            		if it is TRUE then
-                		put " =?" & "utf-8" & "?Q?" & tFoundTextVar & "?=" after tModStr
+			if it is TRUE then
+				put " =?" & "utf-8" & "?Q?" & tFoundTextVar & "?=" after tModStr
 			else
 				put thisLine after tModStr
-            		end if
+			end if
             
-            		if tCounter < tLineNums then
-                		put return after tModStr
-            		end if
-        	end repeat
+			if tCounter < tLineNums then
+				put return after tModStr
+			end if
+		end repeat
         
-    	else
+	else
         
-        	get matchtext(tStr,tRegEx,tFoundTextVar)
-        	if it is TRUE then
-            		put " =?" & "utf-8" & "?Q?" & tFoundTextVar & "?=" into tModStr
+		get matchText(tStr,tRegEx,tFoundTextVar)
+		if it is TRUE then
+			put " =?" & "utf-8" & "?Q?" & tFoundTextVar & "?=" into tModStr
 		else
 			put tStr into tModStr
-        	end if
-    	end if
+		end if
+	end if
 
 	return tModStr
 end _rigPrepQencoding

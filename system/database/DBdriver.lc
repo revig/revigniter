@@ -375,9 +375,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.8
---| Created: 09-07-09
---| Last Mod: 21-12-14
+--| Version:  1.10
+--| Created: 2009-07-09
+--| Last Mod: 2017-06-27
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
 --|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
 --|
@@ -419,9 +419,11 @@ function rigDbQuery pSQL pBinds
 	if ((sDBdriverSettings["dbprefix"]) <> "" and (sDBdriverSettings["swappre"] <> "")) and (sDBdriverSettings["dbprefix"] <> sDBdriverSettings["swappre"]) then
 		put TRUE into tStrFound
 		
+		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put empty into tFoundVar2
 		repeat until tStrFound is not TRUE
         		put "(\W)" & sDBdriverSettings["swappre"] & "(\S+?)" into tRegEx
-        		get matchtext(tSQL,tRegEx, tFoundVar1, tFoundVar2)
+        		get matchText(tSQL,tRegEx, tFoundVar1, tFoundVar2)
         
         		if it is TRUE then
             			put tFoundVar1 & sDBdriverSettings["swappre"] & tFoundVar2 into tStrToSwap
@@ -572,7 +574,6 @@ function rigDbQuery pSQL pBinds
 	put rigDBresult() into tRES["resultarray"]
 
 	if sDBdriverSettings["dbdriver"] is "oci8" then
-		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
 		put rigNumToCodepoint(0) into sDBdriverSettings["cursid"] -- NULL
 		put sDBdriverSettings["limitused"] into tRES["limitused"]
@@ -897,9 +898,9 @@ end rigDbTransStatus
 --| FUNCTION rigCompileBinds
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 18-07-09
---| Last Mod: 15-09-14
+--| Version:  1.4
+--| Created: 2009-07-18
+--| Last Mod: 2017-04-04
 --| Requires: rigDbEscape()
 --|
 --| Summary: Compile bindings. pBinds must be a comma separated list or a numbered array.
@@ -923,7 +924,6 @@ function rigCompileBinds pSQL pBinds
 	# GET LIST OF ESCAPED BIND VALUES
 	# WE DON'T USE COMBINE TO KEEP THE CORRECT ARRAY VALUE ORDER
 	if tBinds is an array then
-		put 0 into tCounter
 		put the number of lines of the keys of tBinds into tNumOfBinds
 		repeat with i = 1 to tNumOfBinds
 			put rigDbEscape(tBinds[i]) into tBindsEscaped[i]
@@ -951,13 +951,13 @@ end rigCompileBinds
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigIsWriteType
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 20-07-09
---| Last Mod: 20-07-09
+--| Version:  1.1
+--| Created: 2009-07-20
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Determines if a query is a "write" type.
@@ -967,12 +967,12 @@ end rigCompileBinds
 --| Parameters: string <pSQL> the sql statement
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigIsWriteType pSQL
 	put "(?i)^\s*" & quote & "?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD DATA|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s+" into tRegEx
-    
-	get matchtext(pSQL,tRegEx,tFoundString)
+  
+	get matchText(pSQL,tRegEx)
 
 	return it
 end rigIsWriteType

@@ -488,9 +488,9 @@ end rigDbFrom
 --| COMMAND rigDbJoin
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 24-09-09
---| Last Mod: 09-08-15
+--| Version:  1.4
+--| Created: 2009-09-24
+--| Last Mod: 2017-06-27
 --| Requires: rigTrim(), _rigTrackAliases(), _rigProtectIdentifiers(),
 --|            _rigDbJoinConditionsArray(), _rigEscapeIdentifiers()
 --|
@@ -532,10 +532,13 @@ command rigDbJoin pTable pCond pType pEscape
   # SPLIT MULTIPLE CONDITIONS
   # REGEX TO CHECK FOR MULTIPLE CONDITIONS
   put "(?i)(\sAND\s|\sOR\s)" into tRegEx
-  get matchtext(tCond,tRegEx)
+  get matchText(tCond,tRegEx)
   # REGEX TO STRIP APART SINGLE CONDITIONS
   put "([\[\]\w\.'-]+)(\s*[^\" & quote & "\[`'\w]+\s*)(.+)" into tRegEx
 
+ 	put empty into tMatch1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+ 	put empty into tMatch2
+ 	put empty into tMatch3
   if (it is true) and (tEscape is true) then
     # STORE MULTIPLE CONDITIONS IN AN ARRAY
     put _rigDbJoinConditionsArray(tCond) into tCondA
@@ -544,7 +547,7 @@ command rigDbJoin pTable pCond pType pEscape
     repeat the number of lines in the keys of tCondA
       add 1 to tCounter
       if tCondA[tCounter]["op"] <> empty then
-        if matchtext(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
+        if matchText(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
           put _rigProtectIdentifiers(tMatch1) into tMatch1
           put _rigProtectIdentifiers(tMatch3) into tMatch3
 
@@ -554,7 +557,7 @@ command rigDbJoin pTable pCond pType pEscape
         end if
 
       else
-        if matchtext(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
+        if matchText(tCondA[tCounter]["cond"],tRegEx,tMatch1, tMatch2, tMatch3) is true then
           put _rigProtectIdentifiers(tMatch1) into tMatch1
           put _rigProtectIdentifiers(tMatch3) into tMatch3
 
@@ -570,7 +573,7 @@ command rigDbJoin pTable pCond pType pEscape
 
   # SINGLE CONDITION
   # STRIP APART THE CONDITION AND PROTECT THE IDENTIFIERS
-  else if (matchtext(tCond,tRegEx,tMatch1, tMatch2, tMatch3) is true) and (tEscape is true) then
+  else if (matchText(tCond,tRegEx,tMatch1, tMatch2, tMatch3) is true) and (tEscape is true) then
     put _rigProtectIdentifiers(tMatch1) into tMatch1
     put _rigProtectIdentifiers(tMatch3) into tMatch3
 

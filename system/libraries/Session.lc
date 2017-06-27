@@ -53,6 +53,7 @@ put "" into sSession["cookie_path"]
 put "" into sSession["cookie_domain"]
 put FALSE into sSession["cookie_secure"]
 put 300 into sSession["sess_time_to_update"]
+put "" into sSession["sess_hash_type"]
 put "" into sSession["encryption_key"]
 put "flash" into sSession["flashdata_key"]
 put "temp" into sSession["tempdata_key"]
@@ -68,9 +69,9 @@ put "" into sSession["userdata"]
 --| COMMAND rigRunInitialSessionConfig
 --|
 --| Author: rabit
---| Version:  1.5
---| Created: 12-10-09
---| Last Mod: 30-09-15
+--| Version:  1.6
+--| Created: 2009-10-12
+--| Last Mod: 2017-06-27
 --| Requires: rigNumToCodepoint(), rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigUcwords(),
 --|            _rigGetTime(), _rigFlashdataSweep, _rigFlashdataMark, _rigSessGC, rigLogMessage
 --|
@@ -93,7 +94,7 @@ command rigRunInitialSessionConfig pParams
 
 	# SET ALL THE SESSION PREFERENCES, WHICH CAN EITHER BE SET
 	# MANUALLY VIA THE pParams ARRAY ABOVE OR VIA THE CONFIG FILE
-	put "sess_encrypt_cookie,sess_driver,sess_save_location,sess_expiration,sess_expire_on_close,sess_match_ip,sess_match_useragent,sess_cookie_name,cookie_path,cookie_domain,cookie_secure,sess_time_to_update,cookie_prefix,encryption_key" into tSettingNames
+	put "sess_encrypt_cookie,sess_driver,sess_save_location,sess_expiration,sess_expire_on_close,sess_match_ip,sess_match_useragent,sess_cookie_name,cookie_path,cookie_domain,cookie_secure,sess_time_to_update,cookie_prefix,encryption_key,sess_hash_type" into tSettingNames
 	
 	repeat for each item thisItem in tSettingNames
 		if pParams is an array then
@@ -173,10 +174,10 @@ end rigRunInitialSessionConfig
 --| FUNCTION rigSessRead
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 12-10-09
---| Last Mod: 30-09-15
---| Requires: rigVarCookie(), rigLogMessage, rigDecode(), rigSessDestroy, _rigUnserializeSess(),
+--| Version:  1.4
+--| Created: 2009-10-12
+--| Last Mod: 2017-06-27
+--| Requires: rigVarCookie(), rigLogMessage, rigSetHash, rigDecode(), rigSessDestroy, _rigUnserializeSess(),
 --|            rigIpAddress(), rigTrim(), rigGetSessData()
 --|
 --| Summary: Fetch the current session data if it exists.
@@ -201,6 +202,7 @@ function rigSessRead
 	# DECRYPT THE COOKIE DATA
 	if sSession["sess_encrypt_cookie"] is TRUE then
     put base64Decode(urlDecode(tSession)) into tSession
+		rigSetHash sSession["sess_hash_type"]
 	  put rigDecode(tSession) into tSession
 	else
     # ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE Md5 HASH
@@ -1227,10 +1229,10 @@ end _rigGetTime
 --| COMMAND _rigSetCookie
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 14-10-09
---| Last Mod: 02-01-13
---| Requires: _rigSerializeSess(), rigEncode(), rigHexDigest(), _rigInputSetCookie
+--| Version:  1.4
+--| Created: 2009-10-14
+--| Last Mod: 2017-06-27
+--| Requires: _rigSerializeSess(), rigSetHash, rigEncode(), rigHexDigest(), _rigInputSetCookie
 --|
 --| Summary: Write the session cookie.
 --| 
@@ -1252,6 +1254,7 @@ command _rigSetCookie pCookieData
 	put _rigSerializeSess(tCookieData) into tCookieData
 
 	if sSession["sess_encrypt_cookie"] is TRUE then
+		rigSetHash sSession["sess_hash_type"]
 		put rigEncode(tCookieData) into tCookieData
 	else
 		# IF ENCRYPTION IS NOT USED, WE PROVIDE AN Md5 HASH TO PREVENT USERSIDE TAMPERING

@@ -540,9 +540,9 @@ end rigTrackbackConvertAscii
 --| FUNCTION rigTrackbackProcess
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 23-05-2015
---| Last Mod: 23-05-2015
+--| Version:  1.1
+--| Created: 2015-05-23
+--| Last Mod: 2017-06-27
 --| Requires: _rigParseURL(), rigTrackbackSetError, rigTrackbackGetID(), rigTrim(), rigTrackbackSetError
 --|
 --| Summary: Process trackback. Opens a socket connection and passes the data
@@ -611,6 +611,7 @@ function rigTrackbackProcess pURL pData
   if "<error>0</error>" is not in tResponse then
     put "An unknown error was encountered" into tMessage
     
+		put empty into theMessage -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     if matchText(tResponse, "(?is)<message>(.*?)<\/message>", theMessage) then
       put rigTrim(theMessage) into tMessage
     end if

@@ -1342,9 +1342,9 @@ end rigSanitizeFilename
 --| FUNCTION rigXssClean
 --|
 --| Author: rabit
---| Version:  1.6
---| Created: 23-05-09
---| Last Mod: 07-05-15
+--| Version:  1.7
+--| Created: 2009-05-23
+--| Last Mod: 2017-06-27
 --| Requires: rigNumToCodepoint(), rigRemoveInvisibleCharacters(), _rigConvertAttribute, _rigHtmlEntityDecode, _rigCompactExplodedWords
 --|                   _rigJsLinkRemoval, _rigJsImgRemoval, _rigSanitizeNaughtyHtml, rigXssHash(), rigLogMessage
 --|
@@ -1412,15 +1412,17 @@ function rigXssClean pString pImage pType
 	put rigNumToCodepoint(1) into tSplitChar
 
 	# REPLACE & WITH LINEFEED, BUT LEAVE CHARACTER ENTITIES
+  put empty into tFoundStr1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+  put empty into tFoundStr2
 	repeat for each item thisItem in tStringToClean
-		get matchtext("&" & thisItem,"(?i)\&([a-z\_0-9]+)\=([a-z\_0-9]+)",foundString1,foundString2)
+		get matchText("&" & thisItem,"(?i)\&([a-z\_0-9]+)\=([a-z\_0-9]+)",tFoundStr1,tFoundStr2)
 		if it is TRUE then
 			put TRUE into tGetVarsFound
 
 			if tTempStr is not empty and char -1 of tTempStr is not tSplitChar then
 				put tSplitChar after tTempStr
 			end if
-			put foundString1 & "=" & foundString2 & tSplitChar after tTempStr
+			put tFoundStr1 & "=" & tFoundStr2 & tSplitChar after tTempStr
 		else
 			if char -1 of tTempStr is tSplitChar then
 				delete char -1 of tTempStr
@@ -1457,12 +1459,12 @@ function rigXssClean pString pImage pType
 	##
 	if tGetVarsFound is TRUE then
 
-		put empty into foundString1
-		put empty into foundString2
+		put empty into tFoundStr1
+		put empty into tFoundStr2
 		repeat for each item thisItem in tStringToClean
-			get matchtext("&" & thisItem,"((?i)&\#?[0-9a-z]{2,})([\x00-\x20])*;?",foundString1,foundString2)
+			get matchText("&" & thisItem,"((?i)&\#?[0-9a-z]{2,})([\x00-\x20])*;?",tFoundStr1,tFoundStr2)
 			if it is TRUE then
-				put foundString1 & ";" & foundString2 after tStringToCleanValidated
+				put tFoundStr1 & ";" & tFoundStr2 after tStringToCleanValidated
 			end if
 		end repeat
     
@@ -1478,13 +1480,13 @@ function rigXssClean pString pImage pType
 	#
 	##
 	if tGetVarsFound is TRUE then
-		put empty into foundString1
-		put empty into foundString2
+		put empty into tFoundStr1
+		put empty into tFoundStr2
 		put empty into tStringToCleanValidated
 		repeat for each item thisItem in tStringToClean
-			get matchtext("&" & thisItem,"(&\#x?)((?i)[0-9A-F]+);?",foundString1,foundString2)
+			get matchText("&" & thisItem,"(&\#x?)((?i)[0-9A-F]+);?",tFoundStr1,tFoundStr2)
 			if it is TRUE then
-				put foundString1 & foundString2 & ";" after tStringToCleanValidated
+				put tFoundStr1 & tFoundStr2 & ";" after tStringToCleanValidated
 			end if
 		end repeat
 
@@ -1520,9 +1522,12 @@ function rigXssClean pString pImage pType
 	# THESE ARE THE ONES THAT WILL POSE SECURITY PROBLEMS.
 	#
 	##
-	-- get matchtext(tStringToClean,"(?i)[a-z]+=([\'\"]).*?([\'\"])")
-	-- get matchtext(tStringToClean,"(?i)[a-z]+=([\'\"])(.*?)([\'\"])", tFoundStr1, tFoundStr2, tFoundStr3)
-	get matchtext(tStringToClean,"(?i)[a-z]+=([\'" & rigNumToCodepoint(2) & "])(.*?)([\'" & rigNumToCodepoint(2) & "])", tFoundStr1, tFoundStr2, tFoundStr3)
+  put empty into tFoundStr1
+  put empty into tFoundStr2
+  put empty into tFoundStr3
+	-- get matchText(tStringToClean,"(?i)[a-z]+=([\'\"]).*?([\'\"])")
+	-- get matchText(tStringToClean,"(?i)[a-z]+=([\'\"])(.*?)([\'\"])", tFoundStr1, tFoundStr2, tFoundStr3)
+	get matchText(tStringToClean,"(?i)[a-z]+=([\'" & rigNumToCodepoint(2) & "])(.*?)([\'" & rigNumToCodepoint(2) & "])", tFoundStr1, tFoundStr2, tFoundStr3)
 	if it is TRUE then
 		-- put _rigConvertAttribute(tStringToClean) into tStringToClean
 		 put _rigConvertAttribute(tFoundStr2) into tStringPartConverted
@@ -1536,8 +1541,9 @@ function rigXssClean pString pImage pType
         	put tStringToCleanP1 & tStringPartConverted & tStringToCleanP3 into tStringToClean
 	end if
 	
-	--get matchtext(tStringToClean,"(?i)(<\w+.*?)(?=>|<|$)",tStringToDecode)
-	get matchtext(tStringToClean,"(?i)<\w+.*?(?=>|<|$)",tStringToDecode)
+  put empty into tStringToDecode -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	--get matchText(tStringToClean,"(?i)(<\w+.*?)(?=>|<|$)",tStringToDecode)
+	get matchText(tStringToClean,"(?i)<\w+.*?(?=>|<|$)",tStringToDecode)
 	put _rigHtmlEntityDecode(tStringToDecode) into tStringToDecode
 
 	if tStringToDecode is not empty then
@@ -1605,7 +1611,8 @@ function rigXssClean pString pImage pType
 	split tWords by comma
     
 	put tStringToClean into tCheckExploded
-    
+  
+  put empty into tFoundStr
 	repeat for each key tKey in tWords
 		put empty into tTemp
 		repeat for each char thisChar in tWords[tKey]
@@ -1615,9 +1622,9 @@ function rigXssClean pString pImage pType
         
 		put "(?i)(" & tTemp & ")(\W)" into tRegEx
 
-		get matchtext(tCheckExploded,tRegEx,tFoundString)
+		get matchText(tCheckExploded,tRegEx,tFoundStr)
 		if it is TRUE then
-			replace tFoundString with _rigCompactExplodedWords(tFoundString) in tCheckExploded
+			replace tFoundStr with _rigCompactExplodedWords(tFoundStr) in tCheckExploded
 		end if
 	end repeat
 
@@ -1632,23 +1639,24 @@ function rigXssClean pString pImage pType
 		put tStringToClean into tOriginal
 
 		# LINKS
-		 if matchtext(tStringToClean,"(?i)<a") is true then
+		 if matchText(tStringToClean,"(?i)<a") is true then
 			put tStringToClean into tTemp
 			put tStringToClean into tLinkCheckStr
 			put "(?i)<a\s+([^>]*?)(>|$)" into tRegEx
          
 			put TRUE into tMatchFound
-         
+        
+       put empty into tFoundStr
 			repeat until tMatchFound is FALSE
-				get matchtext(tLinkCheckStr,tRegEx,tFoundString1)
+				get matchText(tLinkCheckStr,tRegEx,tFoundStr)
 				if it is TRUE then
-					put the length of tFoundString1 into tFoundStrLength
-					put offset(tFoundString1,tLinkCheckStr) into tStrOffset
+					put the length of tFoundStr into tFoundStrLength
+					put offset(tFoundStr,tLinkCheckStr) into tStrOffset
 					put tStrOffset + tFoundStrLength into tSearchStartNum
 					put the length of tLinkCheckStr into tStrLength
 					put char tSearchStartNum to tStrLength of tLinkCheckStr into tLinkCheckStr
                  
-					replace tFoundString1 with _rigJsLinkRemoval(tFoundString1) in tTemp
+					replace tFoundStr with _rigJsLinkRemoval(tFoundStr) in tTemp
 					put tTemp into tStringToClean
 				else
 					put FALSE into tMatchFound
@@ -1657,23 +1665,24 @@ function rigXssClean pString pImage pType
 		end if
 
 		# IMGS
-		 if matchtext(tStringToClean,"(?i)<img") is true then
+		 if matchText(tStringToClean,"(?i)<img") is true then
 			put tStringToClean into tTemp
 			put tStringToClean into tLinkCheckStr
 			put "(?i)<img\s+([^>]*?)(\s?/?>|$)" into tRegEx
              
 			put TRUE into tMatchFound
-             
+       
+       put empty into tFoundStr 
 			repeat until tMatchFound is FALSE
-				get matchtext(tLinkCheckStr,tRegEx,tFoundString1)
+				get matchText(tLinkCheckStr,tRegEx,tFoundStr)
 				if it is TRUE then
-					put the length of tFoundString1 into tFoundStrLength
-					put offset(tFoundString1,tLinkCheckStr) into tStrOffset
+					put the length of tFoundStr into tFoundStrLength
+					put offset(tFoundStr,tLinkCheckStr) into tStrOffset
 					put tStrOffset + tFoundStrLength into tSearchStartNum
 					put the length of tLinkCheckStr into tStrLength
 					put char tSearchStartNum to tStrLength of tLinkCheckStr into tLinkCheckStr
                      
-					replace tFoundString1 with _rigJsImgRemoval(tFoundString1) in tTemp
+					replace tFoundStr with _rigJsImgRemoval(tFoundStr) in tTemp
                     		put tTemp into tStringToClean
 				else
 					put FALSE into tMatchFound
@@ -1682,7 +1691,7 @@ function rigXssClean pString pImage pType
 		 end if
 
 		#SCRIPT
-		if matchtext(tStringToClean,"(?i)script") is true or matchtext(tStringToClean,"(?i)xss") is true then
+		if matchText(tStringToClean,"(?i)script") is true or matchText(tStringToClean,"(?i)xss") is true then
 			put replacetext(tStringToClean,"(?i)<(/*)(script|xss)(.*?)\>","[removed]") into tStringToClean
 		end if
 
@@ -1696,15 +1705,19 @@ function rigXssClean pString pImage pType
 	# BUT IT'S UNLIKELY TO BE A PROBLEM.
 	#
 	##
-	get matchtext(tStringToClean,"(?i)<([^><]+?)([^a-z_\-]on\w*|xmlns)(\s*=\s*[^><]*)([><]*)",tFoundString1,tFoundString2,tFoundString3,tFoundString4)
+  put empty into tFoundStr1
+  put empty into tFoundStr2
+  put empty into tFoundStr3
+  put empty into tFoundStr4
+	get matchText(tStringToClean,"(?i)<([^><]+?)([^a-z_\-]on\w*|xmlns)(\s*=\s*[^><]*)([><]*)",tFoundStr1,tFoundStr2,tFoundStr3,tFoundStr4)
     
 	if it is TRUE then
 		put empty into tStrPart1
 		put empty into tStrPart4
         
 		put the length of tStringToClean into tLength
-		put offset(tFoundString1,tStringToClean) into tStrOffsetStart
-		put offset(tFoundString4,tStringToClean) into tStrOffsetEnd
+		put offset(tFoundStr1,tStringToClean) into tStrOffsetStart
+		put offset(tFoundStr4,tStringToClean) into tStrOffsetEnd
 
 		if tStrOffsetStart > 1 then
 			put char 1 to (tStrOffsetStart -1) of tStringToClean into tStrPart1
@@ -1713,7 +1726,7 @@ function rigXssClean pString pImage pType
 		if tLength > tStrOffsetEnd then
 			put char (tStrOffsetEnd + 1) to tLength of tStringToClean into tStrPart4
 		end if
-		put tStrPart1 & tFoundString1 & tFoundString4 & tStrPart4 into tStringToClean
+		put tStrPart1 & tFoundStr1 & tFoundStr4 & tStrPart4 into tStringToClean
 	end if
 
 	##
@@ -1734,12 +1747,17 @@ function rigXssClean pString pImage pType
 	put tStringToClean into tCheckNaughtyStr
      
 	put TRUE into tMatchFound
-     
+  
+  put empty into tFoundStr1
+  put empty into tFoundStr2
+  put empty into tFoundStr3
+  put empty into tFoundStr4
+  put empty into tFoundStr5
 	repeat until tMatchFound is FALSE
-		get matchtext(tCheckNaughtyStr,tRegEx,tFoundString1,tFoundString2,tFoundString3,tFoundString4,tFoundString5)
+		get matchText(tCheckNaughtyStr,tRegEx,tFoundStr1,tFoundStr2,tFoundStr3,tFoundStr4,tFoundStr5)
         
 		if it is TRUE then
-			put tFoundString1 & tFoundString2 & tFoundString3 & tFoundString4 & tFoundString5 into tFullFoundString
+			put tFoundStr1 & tFoundStr2 & tFoundStr3 & tFoundStr4 & tFoundStr5 into tFullFoundString
              
 			put the length of tFullFoundString into tFoundStrLength
 			put offset(tFullFoundString,tCheckNaughtyStr) into tStrOffset
@@ -1773,10 +1791,13 @@ function rigXssClean pString pImage pType
 	put "(alert|cmd|passthru|eval|exec|expression|system|fopen|fsockopen|file|rigFile_get_contents|rigReadFile|unlink)(\s*)\((.*?)\)" into tNaughty
 	
 	 put tStringToClean into tTemp
-    
-	get matchtext(tTemp,tNaughty,tFoundString1,tFoundString2,tFoundString3)
+  
+  put empty into tFoundStr1
+  put empty into tFoundStr2
+  put empty into tFoundStr3
+	get matchText(tTemp,tNaughty,tFoundStr1,tFoundStr2,tFoundStr3)
 	if it is TRUE then
-		put tFoundString1 & tFoundString2 & "&#40;" & tFoundString3 & "&#41;" into tTemp
+		put tFoundStr1 & tFoundStr2 & "&#40;" & tFoundStr3 & "&#41;" into tTemp
 		put tTemp into tStringToClean
 	end if
 
@@ -2121,9 +2142,9 @@ end _rigConvertAttribute
 --| FUNCTION _rigHtmlEntityDecode
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 23-06-09
---| Last Mod: 20-04-15
+--| Version:  1.4
+--| Created: 2009-06-23
+--| Last Mod: 2017-06-27
 --| Requires: rigFetchConfigItem(), rigNumToCodepoint(), rigTextDecode(), rigLogMessage
 --|
 --| Summary: Converts character entities.
@@ -2157,8 +2178,9 @@ function _rigHtmlEntityDecode pStr pCharset
   end if
     
   # NUMERIC CHARACTER ENTITIES (DECIMAL)
+	put empty into tFoundNum -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
   repeat for each item thisItem in tStringToDecode
-    get matchtext(thisItem,"&#([0-9]{2,4})",tFoundNum)
+    get matchText(thisItem,"&#([0-9]{2,4})",tFoundNum)
     if it is TRUE then
       replace ("&#" & tFoundNum) with rigNumToCodepoint(tFoundNum) in thisItem
       put thisItem after tDecodedStringDeci
@@ -2169,8 +2191,9 @@ function _rigHtmlEntityDecode pStr pCharset
   end repeat
     
   # NUMERIC CHARACTER ENTITIES (HEXADECIMAL)
+	put empty into tFoundNum
   repeat for each item thisItem in tDecodedStringDeci
-    get matchtext(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
+    get matchText(thisItem,"(?i)&#x(0*[0-9a-f]{2,5})",tFoundNum)
     if it is TRUE then
       put baseconvert(tFoundNum,16,10) into tNumConverted
       replace ("&#x" & tFoundNum) with rigNumToCodepoint(tNumConverted) in thisItem
@@ -2208,13 +2231,13 @@ end _rigHtmlEntityDecode
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigFilterAttributes
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 24-06-09
---| Last Mod: 24-06-09
+--| Version:  1.1
+--| Created: 2009-06-24
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Filters tag attributes for consistency and safety
@@ -2224,17 +2247,20 @@ end _rigHtmlEntityDecode
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigFilterAttributes pStr
     put pStr into tStr
     
     put "(?i)\s*[a-z\-]+\s*=\s*(\042|\047)([^\\1]*?)(\042|\047)" into tRegEx
     
-    get matchtext(tStr,tRegEx,tFoundString1,tFoundString2,tFoundString3)
+	  put empty into tFoundStr1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put empty into tFoundStr2
+		put empty into tFoundStr3
+    get matchText(tStr,tRegEx,tFoundStr1,tFoundStr2,tFoundStr3)
     if it is TRUE then
-        put replacetext(tFoundString2,"/\*.*?\*/","") into tFilteredFoundStr
-        replace tFoundString2 with tFilteredFoundStr in tStr
+        put replacetext(tFoundStr2,"/\*.*?\*/","") into tFilteredFoundStr
+        replace tFoundStr2 with tFilteredFoundStr in tStr
     end if
     
     if "href" is in tStr then
@@ -2254,9 +2280,9 @@ end _rigFilterAttributes
 --| FUNCTION rigStripImgTags
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 02-08-09
---| Last Mod: 21-12-14
+--| Version:  1.3
+--| Created: 2009-08-02
+--| Last Mod: 2017-06-27
 --| Requires: rigNumToCodepoint()
 --|
 --| Summary: Strip image tags.
@@ -2281,18 +2307,20 @@ function rigStripImgTags pStr
 
 	put "<img\s+.*?src\s*=\s*[" & rigNumToCodepoint(2) & "'](.+?)[" & rigNumToCodepoint(2) & "'].*?\>" into tRegEx
 
-	get matchtext(tStr,tRegEx,foundTextVar)
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	get matchText(tStr,tRegEx,tFoundTextVar)
     
 	if it is TRUE then
-		put foundTextVar into tStr
+		put tFoundTextVar into tStr
 	end if
 
 	put "<img\s+.*?src\s*=\s*(.+?).*?\>" into tRegEx
-    
-	get matchtext(tStr,tRegEx,foundTextVar)
+  
+	put empty into tFoundTextVar
+	get matchText(tStr,tRegEx,tFoundTextVar)
     
 	if it is TRUE then
-		put foundTextVar into tStrippedStr
+		put tFoundTextVar into tStrippedStr
 	else
 		put tStr into tStrippedStr
 	end if

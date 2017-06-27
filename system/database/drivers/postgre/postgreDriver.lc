@@ -1062,13 +1062,13 @@ end rigFetchDriverSpecificSetting
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSqlDateTimeToIntDate
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 09-10-09
---| Last Mod: 09-10-09
+--| Version:  1.1
+--| Created: 2009-10-09
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Convert SQL datetime format to Internet date format (RFC 2822).
@@ -1078,12 +1078,16 @@ end rigFetchDriverSpecificSetting
 --| Parameters: string <pDateTime>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSqlDateTimeToIntDate pDateTime
 	put "([0-9]+)-([0-9]+)-([0-9]+)\s([0-9]+\:[0-9]+\:[0-9]+)" into tRegEx
-             
-	get matchtext(pDateTime,tRegEx,tY,tM,tD,tT)
+  
+	put empty into tY -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7        
+	put empty into tM
+	put empty into tD
+	put empty into tT       
+	get matchText(pDateTime,tRegEx,tY,tM,tD,tT)
              
 	put tM & "/" & tD & "/" & tY && tT into tDateTime
 

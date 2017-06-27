@@ -96,13 +96,13 @@ end rigRunInitialProfilerConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompileBenchmarks
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 21-01-10
---| Last Mod: 21-01-10
+--| Version:  1.1
+--| Created: 2010-01-21
+--| Last Mod: 2017-06-27
 --| Requires: rigCompileProfilerTemplate, rigFetchMarkers(), rigElapsedTime(), rigLangLangLine()
 --|
 --| Summary: This function cycles through the entire array of mark points and
@@ -115,7 +115,7 @@ end rigRunInitialProfilerConfig
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompileBenchmarks
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -126,6 +126,7 @@ function _rigCompileBenchmarks
 
 	put "(?i)(.+?)_end" into tRegEx
 	
+	put empty into tMatch -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	repeat for each key tKey in tMarkers
 		put tMarkers[tKey] into tVal
 
@@ -173,13 +174,13 @@ end _rigCompileBenchmarks
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompileQueries
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 21-01-10
---| Last Mod: 17-04-12
+--| Version:  1.2
+--| Created: 2010-01-21
+--| Last Mod: 2017-04-24
 --| Requires: rigCompileProfilerTemplate, rigFetchDBlibLoaded, rigFetchDBdriverSetting(), rigLangLangLine()
 --|
 --| Summary: Compile queries.
@@ -189,7 +190,7 @@ end _rigCompileBenchmarks
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompileQueries
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -216,7 +217,7 @@ function _rigCompileQueries
 		return tOutput
 	end if
 
-	# THERE IS A DATABASE CONNECTION, SO BUILD THE PROFILE TABEL
+	# THERE IS A DATABASE CONNECTION, SO BUILD THE PROFILE TABLE
 	put return & return into tOutput
 
 	# DO THE FOLLOWING FOR EACH CONNECTED DATABASE
@@ -242,7 +243,6 @@ function _rigCompileQueries
 
 	else
 		put rigFetchDBdriverSetting("querytimes") into tQueryTimes
-		set the numberFormat to 0.000000
 
 		repeat for each key tKey in tQueries
 			put tQueries[tKey] into tVal
@@ -250,7 +250,7 @@ function _rigCompileQueries
 			put tQueryTimes[tKey] into tTime
 
 			put sProfilerTemplate["queries"]["body"] into tBody
-			replace "{time}" with tTime in tBody
+			replace "{time}" with format("%1.6f", tTime) in tBody
 			replace "{val}" with tVal in tBody
 
 			put tBody after tOutput
