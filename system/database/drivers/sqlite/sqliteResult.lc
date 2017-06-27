@@ -433,56 +433,6 @@ end _rigDataSeek
 
 
 
-/*----------------------------------------------------------------------
---| COMMAND _rigFetchAssoc
---|
---| Author: Trevor DeVore
---| Version:  1.1
---| Created: 17-07-09
---| Last Mod: 02-10-09
---| Requires: --
---|
---| Summary: Returns the result set as an associative array.
---| 
---| Format: _rigFetchAssoc
---|
---| Parameters: integer <pRecordSetID>, reference array <@pRefArray>
---|
---| Return: string
-----------------------------------------------------------------------*/
-
-command _rigFetchAssoc pRecordSetID, @pRefArray
-	 put revDatabaseColumnNames(pRecordSetID) into tFieldNames
-
-	if tFieldNames begins with "revdberr," then 
-		put item 2 to -1 of tFieldNames into tError 
-	end if 
-    
-	if tError is "" then 
-		put 0 into tCounter
-		repeat until revQueryIsAtEnd(pRecordSetID) 
-			add 1 to tCounter
-             	
-			put 0 into tFieldCounter
-
-			repeat for each item theField in tFieldNames
-				add 1 to tFieldCounter
-				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][theField]
-				put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter] 
-				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter & "," & theField] 
-			end repeat 
-             
-			revMoveToNextRecord pRecordSetID 
-		end repeat 
-	end if 
-     
-	return tError
-end _rigFetchAssoc
-
-
-
-
-
 
 
 /*----------------------------------------------------------------------
