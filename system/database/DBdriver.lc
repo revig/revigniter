@@ -375,9 +375,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.9
+--| Version:  1.10
 --| Created: 2009-07-09
---| Last Mod: 2017-04-02
+--| Last Mod: 2017-06-27
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
 --|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
 --|
@@ -419,9 +419,11 @@ function rigDbQuery pSQL pBinds
 	if ((sDBdriverSettings["dbprefix"]) <> "" and (sDBdriverSettings["swappre"] <> "")) and (sDBdriverSettings["dbprefix"] <> sDBdriverSettings["swappre"]) then
 		put TRUE into tStrFound
 		
+		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put empty into tFoundVar2
 		repeat until tStrFound is not TRUE
         		put "(\W)" & sDBdriverSettings["swappre"] & "(\S+?)" into tRegEx
-        		get matchtext(tSQL,tRegEx, tFoundVar1, tFoundVar2)
+        		get matchText(tSQL,tRegEx, tFoundVar1, tFoundVar2)
         
         		if it is TRUE then
             			put tFoundVar1 & sDBdriverSettings["swappre"] & tFoundVar2 into tStrToSwap
@@ -949,13 +951,13 @@ end rigCompileBinds
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigIsWriteType
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 20-07-09
---| Last Mod: 20-07-09
+--| Version:  1.1
+--| Created: 2009-07-20
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Determines if a query is a "write" type.
@@ -965,12 +967,12 @@ end rigCompileBinds
 --| Parameters: string <pSQL> the sql statement
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigIsWriteType pSQL
 	put "(?i)^\s*" & quote & "?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD DATA|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s+" into tRegEx
-    
-	get matchtext(pSQL,tRegEx,tFoundString)
+  
+	get matchText(pSQL,tRegEx)
 
 	return it
 end rigIsWriteType

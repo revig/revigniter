@@ -159,13 +159,13 @@ end rigSendEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCleanMailAddress
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 18-09-09
---| Last Mod: 18-09-09
+--| Version:  1.1
+--| Created: 2009-09-18
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Clean extended email address: Joe Smith <joe@smith.com>.
@@ -175,11 +175,12 @@ end rigSendEmail
 --| Parameters: string <pEmail>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCleanMailAddress pEmail
 	put "\<(.*)\>" into tRegEx
-	get matchtext(pEmail,tRegEx,tFoundTextVar)
+	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	get matchText(pEmail,tRegEx,tFoundTextVar)
 
     	if it is TRUE then
 		return tFoundTextVar

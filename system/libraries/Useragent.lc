@@ -277,14 +277,14 @@ end _rigSetPlatform
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSetBrowser
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 07-10-09
---| Last Mod: 07-10-09
---| Requires: --
+--| Version:  1.1
+--| Created: 2009-10-07
+--| Last Mod: 2017-06-27
+--| Requires: rigPregQuote(), _rigSetMobile()
 --|
 --| Summary: Set the browser.
 --| 
@@ -293,16 +293,17 @@ end _rigSetPlatform
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigSetBrowser
 	if sAgentBrowsers is an array then
 
-	repeat with i = 1 to (item 2 of the extents of sAgentBrowsers)
-		put line 1 in the keys of sAgentBrowsers[i] into tKey
-		put sAgentBrowsers[i][tKey] into tVal
+		put empty into tMatch1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		repeat with i = 1 to (item 2 of the extents of sAgentBrowsers)
+			put line 1 in the keys of sAgentBrowsers[i] into tKey
+			put sAgentBrowsers[i][tKey] into tVal
 
-		-- repeat for each key tKey in sAgentBrowsers
+			-- repeat for each key tKey in sAgentBrowsers
 			--put sAgentBrowsers[tKey] into tVal
 
 			put rigPregQuote(tKey) into tPregQuotedStr
@@ -313,12 +314,12 @@ function _rigSetBrowser
 				put TRUE into sAgentIsBrowser
 
 				if "Safari" is in sAgentAgent then
-                			put offset("Safari/",sAgentAgent) into tSafariOffset
-                			put char (tSafariOffset + 7) to (the number of chars in sAgentAgent) of sAgentAgent into sAgentVersion
-            			else
+					put offset("Safari/",sAgentAgent) into tSafariOffset
+					put char (tSafariOffset + 7) to (the number of chars in sAgentAgent) of sAgentAgent into sAgentVersion
+				else
                  
-                			put tMatch1 into sAgentVersion
-            			end if
+					put tMatch1 into sAgentVersion
+				end if
 
 				put tVal into sAgentBrowser
 				get _rigSetMobile()

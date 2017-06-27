@@ -960,9 +960,9 @@ end rigLoadstacks
 --| FUNCTION _rigLoad
 --|
 --| Author: rabit
---| Version:  1.5
---| Created: 19-06-09
---| Last Mod: 02-02-15
+--| Version:  1.6
+--| Created: 2009-06-19
+--| Last Mod: 2017-06-27
 --| Requires: rigShowError, rigLogMessage, rigAppendOutput
 --|
 --| Summary: This function is used to load views and files.
@@ -991,7 +991,8 @@ function _rigLoad pDataArray
 
 	# SET THE PATH TO THE REQUESTED FILE
 	if tRiPath is "" then
-		put matchtext(tRiView,".+(\.[^\.\/].+)$",tExtension) into tExtFound
+		put empty into tExtension -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put matchText(tRiView,".+(\.[^\.\/].+)$",tExtension) into tExtFound
 		if tExtFound is TRUE then
 			put tRiView into tRiFile
 		else

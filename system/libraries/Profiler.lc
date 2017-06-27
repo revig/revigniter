@@ -96,13 +96,13 @@ end rigRunInitialProfilerConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCompileBenchmarks
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 21-01-10
---| Last Mod: 21-01-10
+--| Version:  1.1
+--| Created: 2010-01-21
+--| Last Mod: 2017-06-27
 --| Requires: rigCompileProfilerTemplate, rigFetchMarkers(), rigElapsedTime(), rigLangLangLine()
 --|
 --| Summary: This function cycles through the entire array of mark points and
@@ -115,7 +115,7 @@ end rigRunInitialProfilerConfig
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCompileBenchmarks
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
@@ -126,6 +126,7 @@ function _rigCompileBenchmarks
 
 	put "(?i)(.+?)_end" into tRegEx
 	
+	put empty into tMatch -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	repeat for each key tKey in tMarkers
 		put tMarkers[tKey] into tVal
 

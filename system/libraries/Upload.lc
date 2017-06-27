@@ -526,9 +526,9 @@ end rigDoUpload
 --| COMMAND _rigProcessUpload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-08-03
---| Last Mod: 2016-08-03
+--| Last Mod: 2017-06-27
 --| Requires: rigSetUploadError, rigMaxFilesNumReached(), _rigFileMimeType, _rigPrepFilename(),
 --|					rigGetExtension(), rigIsAllowedFileType(), rigIsAllowedFileSize(),
 --|					rigIsAllowedDimensions(), rigCleanFilename(), rigLimitFilenameLength(),
@@ -579,6 +579,7 @@ command _rigProcessUpload pFiles pItemNum pMultiUpload
 	_rigFileMimeType pFiles[pItemNum]
 
   put "^(.+?);.*$" into tRegex
+	put empty into tType -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
   if matchText(pFiles[pItemNum]["type"], tRegex, tType) is TRUE then
 	  put tType into sFileType
   end if
@@ -1558,9 +1559,9 @@ end rigSetImageProperties
 --| COMMAND _rigFileMimeType
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 30-01-2015
---| Last Mod: --
+--| Version:  1.1
+--| Created: 2015-01-30
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Detects the (actual) MIME type of the uploaded file, if possible.
@@ -1581,7 +1582,8 @@ command _rigFileMimeType pFile
   # IS MORE SECURE THAN DEPENDING ON THE VALUE OF $_FILES[tField]["type"]
   if the platform <> "Win32" then
     put shell("file --brief --mime" && pFile["filename"] && "2>&1") into tMime
-      
+    
+		put empty into tCharset -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     get matchText(tMime,tRegexp,sFileType,tCharset)
     if it is TRUE then
       exit _rigFileMimeType

@@ -240,9 +240,9 @@ end _rigDbExecute
 --| FUNCTION _rigPrepQuery
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 19-07-09
---| Last Mod: 05-01-12
+--| Version:  1.2
+--| Created: 2009-07-19
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Prep the query. If needed, each database adapter can prep the query string.
@@ -261,9 +261,10 @@ function _rigPrepQuery pSQL
 	if sDeleteHack is TRUE then
 		 put "(?i)^\s*DELETE\s+FROM\s+(\S+)\s*" into tRegEx
     
-		get matchtext(tStr,tRegEx,tFoundString)
+		put empty into tFoundStr -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		get matchText(tStr,tRegEx,tFoundStr)
 		if it is TRUE then
-			put "DELETE FROM" && tFoundString && "WHERE 1=1" into tSQL
+			put "DELETE FROM" && tFoundStr && "WHERE 1=1" into tSQL
 		end if
 	end if
 
@@ -1051,9 +1052,9 @@ end rigFetchDriverSpecificSetting
 --| FUNCTION rigSqlDateTimeToIntDate
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 09-10-09
---| Last Mod: 09-10-09
+--| Version:  1.1
+--| Created: 2009-10-09
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Convert SQL datetime format to Internet date format (RFC 2822).
@@ -1067,8 +1068,12 @@ end rigFetchDriverSpecificSetting
 
 function rigSqlDateTimeToIntDate pDateTime
 	put "([0-9]+)-([0-9]+)-([0-9]+)\s([0-9]+\:[0-9]+\:[0-9]+)" into tRegEx
-             
-	get matchtext(pDateTime,tRegEx,tY,tM,tD,tT)
+  
+	put empty into tY -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7        
+	put empty into tM
+	put empty into tD
+	put empty into tT
+	get matchText(pDateTime,tRegEx,tY,tM,tD,tT)
              
 	put tM & "/" & tD & "/" & tY && tT into tDateTime
 

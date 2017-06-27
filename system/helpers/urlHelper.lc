@@ -879,9 +879,9 @@ end _rigParseAttributes
 --| FUNCTION rigURLstripSpace
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 11-05-2015
---| Last Mod: 11-05-2015
+--| Version:  1.1
+--| Created: 2015-05-11
+--| Last Mod: 2017-06-27
 --| Requires: --
 --|
 --| Summary: Remove or replace whitespace in URLs.
@@ -900,6 +900,7 @@ function rigURLstripSpace pURL pSeparator
     put replacetext(pURL,tRegExWS,empty) into tCleanURL
       
     # GET DOMAIN, DON'T APPLY SEPARATORS TO DOMAIN
+	  put empty into tTopLevel -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     get matchText(tCleanURL,"(\.[a-zA-Z\s]*/)",tTopLevel)
     put (offset(tTopLevel, tCleanURL)) + (the number of chars of tTopLevel) into tTopLevelOffset
     put char 1 to tTopLevelOffset of tCleanURL into tDomain
