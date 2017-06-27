@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -169,6 +169,8 @@
 <td class="td"><strong>sAuthenticationConf["join"]["groups"]</strong></td><td class="td">groupId</td><td class="td">None</td><td class="td">Group table column you want to join WITH.</td>
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["cipher"]</strong></td><td class="td">bf</td><td class="td">See LiveCode's cipherNames() function.</td><td class="td">Cipher used to encrypt passwords (see revIgniter's <a href="encryption.html">Encryption Library</a>).</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["hashType"]</strong></td><td class="td"></td><td class="td">SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384, SHA3-512. Note: All types but SHA-1 require LC server 9.0.0 dp 7 or higher.</td><td class="td">Hash type to be used by the encryption library (see revIgniter's <a href="encryption.html">Encryption Library</a>). The default value is empty which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please chose a more secure flavor.</td>
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["keyLength"]</strong></td><td class="td">128</td><td class="td">See LiveCode's cipherNames() function.</td><td class="td">Key length used to encrypt passwords (see revIgniter's <a href="encryption.html">Encryption Library</a>).</td>
 </tr><tr>

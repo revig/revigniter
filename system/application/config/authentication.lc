@@ -64,7 +64,7 @@ put "groupId" into sAuthenticationConf["join"]["groups"]
 # Hash type to be used by the encryption library. Possible values are
 # SHA-1,SHA-224,SHA-256,SHA-384,SHA-512,SHA3-224,SHA3-256,SHA3-384 and SHA3-512.
 # The default value is empty which means SHA-1 will be used. This is for
-# backwards compatibility. If you use server version 9 or higher please
+# backwards compatibility. If you use server version 9.0.0 dp 7 or higher please
 # chose a more secure flavor.
 #
 # Cipher (algorithm) and associated key length used to encrypt passwords.

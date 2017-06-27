@@ -279,6 +279,10 @@ end if
 #  ISPs dynamically change the IP, so if you want a non-expiring session you will likely set this to FALSE.
 # 'sess_match_useragent'	= Whether to match the User Agent when reading the session data.
 # 'sess_time_to_update' 	= How many seconds between revIgniter refreshing Session Information.
+# 'sess_hash_type' 	       = The hash type to be used by the encryption library for session cookie encryption. Possible values are
+# SHA-1,SHA-224,SHA-256,SHA-384,SHA-512,SHA3-224,SHA3-256,SHA3-384 and SHA3-512. The default value is empty
+# which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please
+# chose a more secure flavor.
 #
 ##
 
@@ -291,6 +295,7 @@ end if
 	put FALSE into gConfig["sess_match_ip"]
 	put TRUE into gConfig["sess_match_useragent"]
 	put 300 into gConfig["sess_time_to_update"]
+	put "" into gConfig["sess_hash_type"]
 
 
 

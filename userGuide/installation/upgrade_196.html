@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Upgrading from 1.3.24b to 1.3.25b : revIgniter User Guide</title>
+		<title>Upgrading from 1.9.5 to 1.9.6 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Upgrading from 1.3.24b to 1.3.25b</li>
+			 		 	<li class="active">Upgrading from 1.9.5 to 1.9.6</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,27 +85,94 @@
 	
 <div id="content">
 
-<h1>Upgrading from 1.3.24b to 1.3.25b</h1>
+<h1>Upgrading from 1.9.5 to 1.9.6</h1>
 
-<p>Before performing an update you should take your site offline by replacing the index.irev file with a static one.</p>
+
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
 
 <h2>Step 1: Update your revIgniter files</h2>
 
 
-<p>Replace this file in your "system/libraries" folder with the new version:</p>
+<p>Make a copy of these configuration files in your "system/application/config" folder and replace these files with the new versions:</p>
 
 <ul>
-<li><dfn>URI.irev</dfn></li>
+	<li><dfn>authentication.lc</dfn></li>
+	<li><dfn>config.lc</dfn></li>
+	<li>Replace the default settings in these files with your settings saved before.</li>
 </ul>
 
 
-<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+<p>Replace this file in your "system/database/drivers/mysql" folder with the new version:</p>
 
 <ul>
-<li><dfn>RevIgniter.irev</dfn></li>
+	<li><dfn>mysqlDriver.lc</dfn></li>
 </ul>
+
+
+<p>Replace this file in your "system/database/drivers/postgre" folder with the new version:</p>
+
+<ul>
+	<li><dfn>postgreDriver.lc</dfn></li>
+</ul>
+
+
+<p>Replace this file in your "system/database/drivers/sqlite" folder with the new version:</p>
+
+<ul>
+	<li><dfn>sqliteDriver.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/database" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>DBdriver.lc</dfn></li>
+	<li><dfn>DBactiveRec.lc</dfn></li>
+	<li><dfn>DBresult.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/helpers" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>jwtHelper.lc</dfn></li>
+	<li><dfn>fileHelper.lc</dfn></li>
+	<li><dfn>emailHelper.lc</dfn></li>
+	<li><dfn>urlHelper.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Profiler.lc</dfn></li>
+	<li><dfn>Encrypt.lc</dfn></li>
+	<li><dfn>Formvalidation.lc</dfn></li>
+	<li><dfn>Authentication.lc</dfn></li>
+	<li><dfn>Calendar.lc</dfn></li>
+	<li><dfn>Config.lc</dfn></li>
+	<li><dfn>Email.lc</dfn></li>
+	<li><dfn>Input.lc</dfn></li>
+	<li><dfn>Jquery.lc</dfn></li>
+	<li><dfn>Loader.lc</dfn></li>
+	<li><dfn>Output.lc</dfn></li>
+	<li><dfn>Router.lc</dfn></li>
+	<li><dfn>Trackback.lc</dfn></li>
+	<li><dfn>Upload.lc</dfn></li>
+	<li><dfn>Useragent.lc</dfn></li>
+	<li><dfn>Session.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/revigniter" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Common.lc</dfn></li>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
 
 
 <h2>Step 2: Update your user guide</h2>
