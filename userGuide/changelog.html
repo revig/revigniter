@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version196">Version 1.9.6</a></li>
 <li><a href="#version195">Version 1.9.5</a></li>
 <li><a href="#version194">Version 1.9.4</a></li>
 <li><a href="#version193">Version 1.9.3</a></li>
@@ -198,8 +199,32 @@
 
 
 
+<h2><a name="version196">&nbsp;</a>Version 1.9.6</h2>
+<p>Release Date: 2017-06-27</p>
+
+
+<p>
+<ul>
+	<li><strong>Added:</strong> Hash type preference to <dfn>system/application/config/authentication.lc</dfn>.</li>
+	<li><strong>Added:</strong> Instructions to the User Guide for handler rigSetHash of the encryption library.</li>
+	<li><strong>Changed:</strong> Minor tweaks in <dfn>system/helpers/jwtHelper.lc</dfn> -> rigJWTencode() and _rigJWTverifySig().</li>
+	<li><strong>Changed:</strong> <dfn>system/libraries/Encrypt.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7.</li>
+	<li><strong>Changed:</strong> <dfn>system/libraries/Authentication.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7. Added a key “hashType” to the sAuthentification Array in <dfn>system/application/config/authentication.lc</dfn>.</li>
+	<li><strong>Changed:</strong> Adjusted matchText() calls to requirements of LC version &gt; 8.1.4 and LC version &gt; 9.0.0dp7. Since LC version 8.1.5 and 9.0.0 dp 7 variables in the “foundTextVarsList” must be declared before calling the matchText() function. Affected files: DBactiveRec.lc, DBdriver.lc, mysqlDriver.lc, postgreDriver.lc, sqliteDriver.lc, emailHelper.lc, fileHelper.lc, urlHelper.lc, Calendar.lc, Config,lc, Email.lc, Formvalidation.lc, Input.lc, Jquery.lc, Loader.lc, Output.lc, Profile.lc, Router.lc, Trackback.lc, Upload.lc and Useragent.lc.</li>
+	<li><strong>Changed:</strong> Moved handler _rigFetchAssoc from DB drivers to <dfn>system/database/DBresult.lc</dfn> -> _rigFetchResultArray, thanks Bob.</li>
+	<li><strong>Changed:</strong> <dfn>system/libraries/Session.lc</dfn> and <dfn>system/application/config/config.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7.</li>
+	<li><strong>Fixed:</strong> Redundant line of code in <dfn>system/Database/DBdriver.lc</dfn> -> rigDBquery() and rigCompileBinds().</li>
+	<li><strong>Fixed:</strong> Description of function rigListFiles() in <dfn>system/helpers/fileHelper.lc</dfn>.</li>
+	<li><strong>Fixed:</strong> Removed unused handler rigUrlDecodeStr in <dfn>system/libraries/Formvalidation.lc</dfn>.</li>
+	<li><strong>Fixed:</strong> Upper and lower case of file name “myForm.lc” in chapter “Form Validation” of the User Guide.</li>
+	<li><strong>Fixed:</strong> Regular expression used to remove unwanted characters in <dfn>system/revigniter/Commen.lc</dfn> -> rigTrim().</li>	
+</ul>
+</p>
+
+
+
 <h2><a name="version195">&nbsp;</a>Version 1.9.5</h2>
-<p>Release Date: 2017-23-01</p>
+<p>Release Date: 2017-01-23</p>
 
 
 <p>
