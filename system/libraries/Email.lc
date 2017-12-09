@@ -2223,10 +2223,11 @@ end _rigPrepQencoding
 --| FUNCTION rigMailSend
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 23-08-09
---| Last Mod: 03-05-15
---| Requires: _rigSetErrorMessage, _rigBuildHeaders, rigBatchBccSend(), _rigBuildMessage, _rigSpoolEmail()
+--| Last Mod: 09-12-17
+--| Requires: rigReplyTo, _rigSetErrorMessage, _rigBuildHeaders, rigBatchBccSend(),
+--|            _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Send email.
 --| 
@@ -2274,9 +2275,8 @@ function rigMailSend
 
 	if it is not TRUE then
 		return FALSE
-	else
-		return TRUE
 	end if
+	return TRUE
 end rigMailSend
 
 
