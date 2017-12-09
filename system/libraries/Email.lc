@@ -62,7 +62,7 @@ put FALSE into sValidate									-- TRUE/FALSE.  Enables email validation
 put "3" into sPriority											-- Default priority (1 - 5)
 -- put "\n" into sMailNewline
 -- put "\n" into sCrlf
-put LF into sMailNewline										-- Default newline.  CRLF or LF (Use CRLF to comply with RFC 822)
+put LF into sMailNewline										-- Default newline.  CRLF or LF or numToChar(13) / numToCodepoint(13) (Use CRLF to comply with RFC 822)
 put LF into sCrlf													-- The RFC 2045 compliant CRLF for quoted-printable is numberToChar(13) & numberToChar(10).  Apparently some servers,
 																					-- even on the receiving end think they need to muck with CRLFs, so using LF, while
 																					-- distasteful, is the only thing that seems to work for all environments.
