@@ -139,7 +139,7 @@ put FALSE into sAuthenticationConf["enableAuthenticationHooks"]
 # 'sendEmails' = Send emails using revIgniters Email.lc library. False means: Return identity,
 # user id, email address and activation code. 
 # 'emailConfig' = Use 'file' if you want emails to be sent using revIgniter's default
-# configuration or a config file. Use an array to manually set your email configuration.
+# configuration or, if present, an email config file. Use an array to manually set your email configuration.
 #
 ##
 
