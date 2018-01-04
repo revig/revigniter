@@ -597,17 +597,19 @@ end rigLoadPlugins
 --| COMMAND rigLoadExtension
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2016-07-10
---| Last Mod: 2016-07-10
---| Requires: _rigLoadExtension, rigShowError, rigLogMessage
+--| Last Mod: 2018-01-04
+--| Requires: _rigLoadExtension, rigShowError, rigLogMessage, _rigPrepareExtensionsArray,
+--|           _rigExtensionsArrayToList()
 --|
 --| Summary: This function loads the specified LiveCode Builder extension (library).
 --| 
 --| Format:  rigLoadExtension param1[, param2]
 --|
---| Parameters: mixed <pExtensions> extension names as array or a comma separated list,
---|               string <pModule> the module name (optional)
+--| Parameters: mixed <pExtensions> extension names (and optional resource paths relative to
+--|               the extension folder) as array or a comma separated list, string <pModule>
+--|               the module name (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -629,6 +631,8 @@ command rigLoadExtension pExtensions pModule
       put tExtensions into tExtensions[1]
     end if
   end if
+	
+  _rigPrepareExtensionsArray tExtensions
 
   put empty into tModulePath
   put empty into tFolderPrefix
@@ -641,34 +645,36 @@ command rigLoadExtension pExtensions pModule
   end if
 
   repeat for each element tExtension in tExtensions
-    put toLower(tExtension) into tExtension
+    put toLower(tExtension["extension"]) & tExtension["resourcePath"] into tExtensionsItem
 
     if sRiExtensions is an array then
-      put sRiExtensions into tTempExtensions
-      combine tTempExtensions using comma
+      put _rigExtensionsArrayToList(sRiExtensions) into tTempExtensions
       # IS EXTENSION ALREADY LOADED?
-     if (itemOffset((tFolderPrefix & tExtension), tTempExtensions) > 0) or (itemOffset(tExtension, tTempExtensions) > 0) then
+     if (itemOffset((tFolderPrefix & tExtensionsItem), tTempExtensions) > 0) or (itemOffset(tExtensionsItem, tTempExtensions) > 0) then
         exit rigLoadExtension
       end if
     end if
 
-    put gAPPPATH & tModulePath & "extensions/" & tExtension & "/module.lcm" into tExtExtension
-    put gBASEPATH & "extensions/" & tExtension & "/module.lcm" into tSysExtension
+    put gAPPPATH & tModulePath & "extensions/" & tExtension["extension"] & "/module.lcm" into tExtExtension
+    put gBASEPATH & "extensions/" & tExtension["extension"] & "/module.lcm" into tSysExtension
 
     # CHECK IF THIS FILE IS IN THE APP-FOLDER
     if there is a file tExtExtension then
-      _rigLoadExtension tExtExtension
+      put gAPPPATH & tModulePath & "extensions/" & tExtension["extension"] & tExtension["resourcePath"] into tResourcePath
+      _rigLoadExtension tExtExtension, tResourcePath
 
     else if there is a file tSysExtension then
-      _rigLoadExtension tSysExtension
+      put gBASEPATH & "extensions/" & tExtension["extension"] & tExtension["resourcePath"] into tResourcePath
+      _rigLoadExtension tSysExtension, tResourcePath
 			
     else
-      rigShowError "Unable to load the requested file:" && tFolderPrefix & "extensions/" & tExtension & "/module.lcm"
+      rigShowError "Unable to load the requested file:" && tFolderPrefix & "extensions/" & tExtension["extension"] & "/module.lcm"
     end if
 
     put the number of lines in the keys of sRiExtensions into tNumExtensions
     put tNumExtensions + 1 into tNewExtensionKey
-    put tFolderPrefix & tExtension into sRiExtensions[tNewExtensionKey]
+    put tFolderPrefix & tExtension["extension"] into sRiExtensions[tNewExtensionKey]["extension"]
+    put tFolderPrefix & tExtension["resourcePath"] into sRiExtensions[tNewExtensionKey]["resourcePath"]
 
     rigLogMessage "debug", "Extension loaded: " & tExtension
   end repeat
@@ -702,6 +708,75 @@ command rigLoadExtensions pExtensions pModule
 	rigLoadExtension pExtensions, pModule
 end rigLoadExtensions
 
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigPrepareExtensionsArray
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-01-04
+--| Last Mod: 2018-01-04
+--| Requires: --
+--|
+--| Summary: Prepare array including extensions folder names and resource paths.
+--| 
+--| Format:  _rigPrepareExtensionsArray param1
+--|
+--| Parameters: array <pExtensions>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command _rigPrepareExtensionsArray @pExtensions
+  set the itemDel to "/"
+  
+  repeat for each key tKey in pExtensions
+    if "/" is in pExtensions[tKey] then
+      put pExtensions[tKey] into tArrayDataAtIndex
+      put item 1 of tArrayDataAtIndex into pExtensions[tKey]["extension"]
+      put "/" & item 2 to -1 of tArrayDataAtIndex into pExtensions[tKey]["resourcePath"]
+    else
+      put pExtensions[tKey] into pExtensions[tKey]["extension"]
+      put empty into pExtensions[tKey][resourcePath]
+    end if
+  end repeat
+end _rigPrepareExtensionsArray
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigExtensionsArrayToList
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-01-04
+--| Last Mod: 2018-01-04
+--| Requires: --
+--|
+--| Summary: Convert extensions array to a comma delimited list.
+--| 
+--| Format:  _rigExtensionsArrayToList(param1)
+--|
+--| Parameters: array <pExtensions>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function _rigExtensionsArrayToList pExtensions
+   repeat for each element tExtension in pExtensions
+      put tExtension["extension"] & tExtension["resourcePath"] & comma after tExtensionsList
+   end repeat
+   
+   delete char -1 of tExtensionsList
+   
+   return tExtensionsList 
+end _rigExtensionsArrayToList
 
 
 
