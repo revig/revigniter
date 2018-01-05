@@ -26,6 +26,9 @@ For the license terms see [LICENSE.txt](LICENSE.txt) / [NOTICE.txt](NOTICE.txt) 
 
 See the [guidelines for contributing to revIgniter](CONTRIBUTING.md).
 
+### Community
+
+To join the discussion relating to using revIgniter subscribe and review archives from [this page](http://lists.livecodejournal.com/listinfo.cgi/revigniter-livecodejournal.com).
 	
 
 ### Meta
