@@ -109,11 +109,13 @@ directory.  If the directory does not exist or the specified extension is not lo
 
 <p>Where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in <dfn>application/extensions</dfn> or in <dfn>system/extensions</dfn>. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name all delimited by a period.</p>
 
-<p>For example, to load the LiveCode <dfn>JSON</dfn> extension, which needs to be extracted from the main LiveCode distribution and should be located in <dfn>application/extensions/</dfn>, you will do this:</p>
+<p>For example, to load the LiveCode <dfn>JSON</dfn> extension, which can be extracted from the main LiveCode distribution and should be located in <dfn>application/extensions/</dfn>, you will do this:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadExtension "<var>com.livecode.library.json</var>"</code></pre>
 
+<p>If you need to specify a resource path for the extesnion you can do so by appending a path to the extension folder name relative to the folder like:</p>
 
+<pre><code class="lang-livecodeserver">rigLoadExtension "<var>com.foo.library.name/resource/path</var>"</code></pre>
 
 <p>An extension can be loaded anywhere within your <a href="../general/controllers.html">controller</a> handlers,
 as long as you load it before you use it.</p>
@@ -125,7 +127,7 @@ as long as you load it before you use it.</p>
 
 <p>If you need to load more than one extension you can specify them in a comma separated list, like this:</p>
 
-<pre><code>put "<var>com.livecode.library.json,com.myDomain.library.myExtension1,com.myDomain.library.myExtension2</var>" into <samp>tExtensions</samp>
+<pre><code>put "<var>com.livecode.library.json,com.myDomain.library.myExtension1/support,com.myDomain.library.myExtension2</var>" into <samp>tExtensions</samp>
 rigLoadExtension tExtensions
 </code></pre>
 
