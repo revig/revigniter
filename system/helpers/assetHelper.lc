@@ -374,9 +374,9 @@ end rigImageAsset
 --| FUNCTION rigJsAssetURL
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 06-10-09
---| Last Mod: 11-07-10
+--| Version:  1.2
+--| Created: 2009-10-06
+--| Last Mod: 2018-01-25
 --| Requires: rigOtherAssetURL()
 --|
 --| Summary: Helps generate JavaScript asset locations.
@@ -391,7 +391,14 @@ end rigImageAsset
 ----------------------------------------------------------------------
 
 function rigJsAssetURL pAsset pModule pCacheBuster
-	return rigOtherAssetURL(pAsset, sJavascriptFolder, pModule, pCacheBuster)
+	put rigOtherAssetURL(pAsset, sJavascriptFolder, pModule, pCacheBuster) into tURL
+	
+	if char 1 to 4 of tURL is "http" then
+		set the itemDel to "/"
+		put "//" & item 3 to -1 of tURL into tURL
+	end if
+	
+	return tURL
 end rigJsAssetURL
 
 
@@ -406,9 +413,9 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.5
---| Created: 06-10-09
---| Last Mod: 21-06-15
+--| Version:  1.6
+--| Created: 2009-10-06
+--| Last Mod: 2018-01-25
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
@@ -489,13 +496,13 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
       end switch
       
 			if pCacheBusterOrFallbackAsset is empty then
-  			return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote & "></script>"
+  			return "<script" && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
 			end if
 
 			put rigJsAssetURL(pCacheBusterOrFallbackAsset, pModule) into tAssetUrl
 
-			put "<script type='text/javascript'" & tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
-& "<script>window." & tObject && "|| document.write(" & quote & "<script type='text/javascript'" & tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
+						put "<script" && tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
+			& "<script>window." & tObject && "|| document.write(" & quote & "<script" && tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
 			
 			return tScriptReference
 		end if
