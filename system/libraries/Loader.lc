@@ -1123,9 +1123,9 @@ end _rigLoad
 --| COMMAND _rigLoadLibrary
 --|
 --| Author: rabit
---| Version:  1.6
---| Created: 07-07-09
---| Last Mod: 08-12-15
+--| Version:  1.7
+--| Created: 2009-07-07
+--| Last Mod: 2018-02-22
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitLibrary
 --|
 --| Summary: This handler loads the requested library.
@@ -1214,7 +1214,7 @@ command _rigLoadLibrary pLibrary pParams pModule
 
 				put FALSE into tLibInArray
 				repeat for each element thisElement in sRiLoadedFiles
-					if thisElement is tLib then
+					if (thisElement is tBaseLib) or (thisElement is tSubLib) then
 						put TRUE into tLibInArray
 						exit repeat
 					end if
@@ -1229,10 +1229,14 @@ command _rigLoadLibrary pLibrary pParams pModule
 
 			require tBaseLib
 			require tSubLib
+			# ADD BOTH LIBRARY PATHS TO THE sRiLoadedFiles ARRAY
+			add 1 to tLoadedFilesKeyNum
+			put tBaseLib into sRiLoadedFiles[tLoadedFilesKeyNum]
 			add 1 to tLoadedFilesKeyNum
 			put tSubLib into sRiLoadedFiles[tLoadedFilesKeyNum]
 		
-			_rigRiInitLibrary tLib, tPrefix, pParams, pModule
+      # WE LEAVE THE PREFIX PARAMETER EMPTY BECAUSE WE SOLELY STORE BASE LIBRARIES IN THE sRiLibs ARRAY
+      _rigRiInitLibrary tLib, "", pParams, pModule
 			exit _rigLoadLibrary
 
 		end if -- if there is a file tSubLib then
