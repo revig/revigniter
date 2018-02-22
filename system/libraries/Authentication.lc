@@ -1518,9 +1518,9 @@ end rigAuthDecryptPassword
 --| FUNCTION rigAuthValidatePassword
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2012-12-29
---| Last Mod: 2017-06-18
+--| Last Mod: 2018-02-21
 --| Requires: _rigAuthCallHook(), rigDbSelect, rigDbWhere, rigDbLimit, rigDbGet(),
 --|           rigDbRow(), _rigAuthSetHash, rigSetCipher, rigDecode()
 --|
@@ -1566,6 +1566,7 @@ function rigAuthValidatePassword pID pPassword
 	end if
 	
 	# COMPARE PASSWORDS
+	set the caseSensitive to true
 	if tPasswordDB is pPassword then
 		return TRUE
 	end if
