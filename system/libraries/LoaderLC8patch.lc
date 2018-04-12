@@ -14,7 +14,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2016, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -41,23 +41,27 @@ end if
 --| COMMAND _rigLoadExtension
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-07-17
---| Last Mod: 2016-07-17
+--| Last Mod: 2018-01-04
 --| Requires: rigLogMessage
 --|
 --| Summary: Load a LiveCode Builder (library) extension.
 --| 
---| Format:  _rigLoadExtension param1
+--| Format:  _rigLoadExtension param1[, param2]
 --|
---| Parameters: string <pExtension> the path to the extension
+--| Parameters: string <pExtension> extension path, string <pResourcePath> (optional) resource path
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigLoadExtension pExtension
+command _rigLoadExtension pExtension pResourcePath
   try
-    load extension from file pExtension
+    if pResourcePath is empty then
+      load extension from file pExtension
+    else
+      load extension from file pExtension with resource path pResourcePath
+    end if
   catch err
     rigLogMessage "debug", "Unable to load the requested file:" && pExtension && ". Error:" && err
   end try

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.6</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.7</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version197">Version 1.9.7</a></li>
 <li><a href="#version196">Version 1.9.6</a></li>
 <li><a href="#version195">Version 1.9.5</a></li>
 <li><a href="#version194">Version 1.9.4</a></li>
@@ -199,6 +200,29 @@
 
 
 
+<h2><a name="version197">&nbsp;</a>Version 1.9.7</h2>
+<p>Release Date: 2018-04-12</p>
+
+
+<p>
+	<ul>
+		<li><strong>Added:</strong> Contributing guidelines Markdown file</li>
+		<li><strong>Added:</strong> Pull request and issue templates</li>
+		<li><strong>Added:</strong> Markdown documentation template. See <a href="docStyle/index.html">userGuide/docStyle/index.html</a></li>
+		<li><strong>Added:</strong> Info to the User Guide regarding the new Markdown documentation template. See <a href="docStyle/index.html">userGuide/docStyle/index.html</a></li>
+		<li><strong>Changed:</strong> Removed html and type tags from JS asset locations in <dfn>system/helpers/assetHelper.lc</dfn> -> rigJsAssetURL() and rigJsAsset()</li>
+		<li><strong>Changed:</strong> Added info regarding broken socket callback messages to the User Guide. See section <a href="installation/troubleshooting.html">Troubleshooting</a> of the User Guide</li>
+		<li><strong>Changed:</strong> <dfn>system/libraries/Loader.lc</dfn> and <dfn>system/libraries/LoaderLC8patch.lc</dfn>. An extension resource path can now be specified by appending a path (relative to the extensions folder path) to the extension folder name. See section <a href="general/extensions.html">Extensions</a> of the User Guide</li>
+		<li><strong>Changed:</strong> Adjusted User Guide info regarding loading extensions</li>
+		<li><strong>Fixed:</strong> Issue which affected custom libraries in <dfn>system/libraries/Loader.lc</dfn> -> _rigLoadLibrary</li>
+		<li><strong>Fixed:</strong> Made comparing form fields case sensitive in <dfn>libraries/Formvalidation.lc</dfn> -> rigMatchesR</li>
+		<li><strong>Fixed:</strong> Made password validation case sensitive in <dfn>libraries/Authentication.lc</dfn> -> rigAuthValidatePassword()</li>
+		<li><strong>Fixed:</strong> Documentation bug in chapter "Authentication" of the User Guide</li>
+	</ul>
+</p>
+
+
+
 <h2><a name="version196">&nbsp;</a>Version 1.9.6</h2>
 <p>Release Date: 2017-06-27</p>
 
@@ -210,14 +234,14 @@
 	<li><strong>Changed:</strong> Minor tweaks in <dfn>system/helpers/jwtHelper.lc</dfn> -> rigJWTencode() and _rigJWTverifySig().</li>
 	<li><strong>Changed:</strong> <dfn>system/libraries/Encrypt.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7.</li>
 	<li><strong>Changed:</strong> <dfn>system/libraries/Authentication.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7. Added a key “hashType” to the sAuthentification Array in <dfn>system/application/config/authentication.lc</dfn>.</li>
-	<li><strong>Changed:</strong> Adjusted matchText() calls to requirements of LC version &gt; 8.1.4 and LC version &gt; 9.0.0dp7. Since LC version 8.1.5 and 9.0.0 dp 7 variables in the “foundTextVarsList” must be declared before calling the matchText() function. Affected files: DBactiveRec.lc, DBdriver.lc, mysqlDriver.lc, postgreDriver.lc, sqliteDriver.lc, emailHelper.lc, fileHelper.lc, urlHelper.lc, Calendar.lc, Config,lc, Email.lc, Formvalidation.lc, Input.lc, Jquery.lc, Loader.lc, Output.lc, Profile.lc, Router.lc, Trackback.lc, Upload.lc and Useragent.lc.</li>
+	<li><strong>Changed:</strong> Adjusted matchText() calls to requirements of LC version &gt; 8.1.4 and LC version &gt; 9.0.0dp7. Since LC version 8.1.5 and 9.0.0 dp 7 variables in the “foundTextVarsList” must be declared before calling the matchText() function. Affected files: DBactiveRec.lc, DBdriver.lc, mysqlDriver.lc, postgreDriver.lc, sqliteDriver.lc, emailHelper.lc, fileHelper.lc, urlHelper.lc, Calendar.lc, Config.lc, Email.lc, Formvalidation.lc, Input.lc, Jquery.lc, Loader.lc, Output.lc, Profile.lc, Router.lc, Trackback.lc, Upload.lc and Useragent.lc.</li>
 	<li><strong>Changed:</strong> Moved handler _rigFetchAssoc from DB drivers to <dfn>system/database/DBresult.lc</dfn> -> _rigFetchResultArray, thanks Bob.</li>
 	<li><strong>Changed:</strong> <dfn>system/libraries/Session.lc</dfn> and <dfn>system/application/config/config.lc</dfn>, implemented new digest types introduced in server 9.0.0 DP7.</li>
 	<li><strong>Fixed:</strong> Redundant line of code in <dfn>system/Database/DBdriver.lc</dfn> -> rigDBquery() and rigCompileBinds().</li>
 	<li><strong>Fixed:</strong> Description of function rigListFiles() in <dfn>system/helpers/fileHelper.lc</dfn>.</li>
 	<li><strong>Fixed:</strong> Removed unused handler rigUrlDecodeStr in <dfn>system/libraries/Formvalidation.lc</dfn>.</li>
 	<li><strong>Fixed:</strong> Upper and lower case of file name “myForm.lc” in chapter “Form Validation” of the User Guide.</li>
-	<li><strong>Fixed:</strong> Regular expression used to remove unwanted characters in <dfn>system/revigniter/Commen.lc</dfn> -> rigTrim().</li>	
+	<li><strong>Fixed:</strong> Regular expression used to remove unwanted characters in <dfn>system/revigniter/Common.lc</dfn> -> rigTrim().</li>	
 </ul>
 </p>
 
@@ -283,7 +307,7 @@
 <p>
 <ul>
 	<li><strong>Added:</strong> The upload library now supports uploading multiple files. Complemented the User Guide accordingly. Please read about uploading directories (multiple files) in chapter <a href="http://revigniter.com/userGuide/libraries/file_uploading.html">"File Uploading Library"</a>.</li>
-	<li><strong>Added:</strong> sort option to system/helpers/formHelper.lc -> rigFormDropDown() and a sort handler to system/revigniter/Common.lc. Complemented the User Guide accordingly. Please read about sorting drop-down field options in chapter <a href="http://revigniter.com/userGuide/helpers/form_helper.html">"Form Helper"</a>.</li>
+	<li><strong>Added:</strong> sort option to <dfn>system/helpers/formHelper.lc</dfn> -> rigFormDropDown() and a sort handler to <dfn>system/revigniter/Common.lc</dfn>. Complemented the User Guide accordingly. Please read about sorting drop-down field options in chapter <a href="http://revigniter.com/userGuide/helpers/form_helper.html">"Form Helper"</a>.</li>
 	<li><strong>Changed:</strong> Removed errorsList.txt, the scriptExecutionErrors is now used to get the errors list of the currently running server engine. So, the list is always up to date and handling execution errors is faster.</li>
 </ul>
 </p>
@@ -1791,7 +1815,7 @@ Previous Topic:&nbsp;&nbsp;<a href="license.html">License</a>
 <a href="index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="./general/credits.html">Credits</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2017<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2018<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 

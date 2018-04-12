@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.6</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.7</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -212,7 +212,7 @@
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["sendEmails"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Send emails using revIgniters Email.lc library. False means: The library returns identity, user id, email address and activation code.</td>
 </tr><tr>
-<td class="td"><strong>sAuthenticationConf["emailConfig"]</strong></td><td class="td">mailtype: html, protocol: sendmail</td><td class="td">file or revIgniter's <a href="email.html">Email Library prefs</a></td><td class="td">Use "file" if you want emails to be sent using revIgniter's default configuration or a config file. Use an array to manually set your email configuration.</td>
+<td class="td"><strong>sAuthenticationConf["emailConfig"]</strong></td><td class="td">mailtype: html, protocol: sendmail</td><td class="td">file or revIgniter's <a href="email.html">Email Library prefs</a></td><td class="td">Use "file" if you want emails to be sent using revIgniter's default configuration or, if present, an email config file. Use an array to manually set your email configuration.</td>
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["pathToEmailTemplates"]</strong></td><td class="td"></td><td class="td">None</td><td class="td">	Path to your authentication mail templates relative to system/application/views/. Leave this BLANK unless you would like to set something other than the default emailTemplates/ folder.</td>
 </tr><tr>
@@ -260,7 +260,7 @@
 
 <pre><code class="lang-livecodeserver">put FALSE into tRemember
 # CHECK IF THERE IS A POST VARIABLE remember
-put rigVarPost("remember") into tPostRemember
+put rigVarPost("remember[]") into tPostRemember
 if tPostRemember &lt;> FALSE then
 	# CHECK VALUE
 	if tPostRemember[1] is 1 then
@@ -1252,7 +1252,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 	<li><strong>authPostRegister</strong><br />
 		Called after registering a user.</li>
 	<li><strong>authUpdateLastLogin</strong><br />
-		Called before updating the las login time.</li>
+		Called before updating the last login time.</li>
 	<li><strong>authPreRememberUser</strong><br />
 		Called before turning on auto login.</li>
 	<li><strong>authPostRememberUser</strong><br />
@@ -2116,7 +2116,7 @@ end createUser
   # REMEMBER ME CHECK BOX
   put FALSE into tRemember
   # CHECK IF THERE IS A POST VARIABLE remember
-  put rigVarPost("remember") into tPostRemember
+  put rigVarPost("remember[]") into tPostRemember
   if tPostRemember &lt;> FALSE then
    # CHECK VALUE
    if tPostRemember[1] is 1 then
@@ -3552,7 +3552,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2017<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2018<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
 
