@@ -134,9 +134,9 @@ end rigMdate
 --| FUNCTION rigTranslatedDateItem
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 04-05-2010
---| Last Mod: 21-03-2014
+--| Version:  1.2
+--| Created: 2010-05-04
+--| Last Mod: 2018-04-23
 --| Requires: rigLangLoadLang(), rigLangLangLine(), rigDayOfYear()
 --|
 --| Summary: Translates MySQL date codes.
@@ -295,6 +295,11 @@ function rigTranslatedDateItem pItem, pTime
 		case "%Y"
 			put item 1 of sDateItems into tTranslatedItem
 		break
+    # OFFSET TO UTC (hh:mm)
+    case "%Q"
+      put item 6 of sInternetDate into tTranslatedItem
+      put char 1 to -3 of tTranslatedItem & ":" & char -2 to -1 of tTranslatedItem into tTranslatedItem
+    break
 		# LITERAL '%'
 		case "%%"
 			put "%" into tTranslatedItem
@@ -512,9 +517,9 @@ end rigWeekOfYear
 --| FUNCTION rigStandardDate
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 06-05-2010
---| Last Mod: 18-09-2011
+--| Version:  1.2
+--| Created: 2010-05-06
+--| Last Mod: 2018-04-24
 --| Requires: rigMdate()
 --|
 --| Summary: Returns a date formatted according to the submitted standard.
@@ -541,6 +546,7 @@ function rigStandardDate pFormat pTime
 	put "%W, %d-%M-%y %H:%i:%s UTC" into tFormatArray["DATE_RFC850"]
 	put "%a, %d %M %y %H:%i:%s %O" into tFormatArray["DATE_RFC1036"]
 	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RFC1123"]
+	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RFC2822"]
 	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RSS"]
 	put "%Y-%m-%dT%H:%i:%s%Q" into tFormatArray["DATE_W3C"]
 
