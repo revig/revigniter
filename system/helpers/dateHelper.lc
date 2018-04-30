@@ -540,14 +540,14 @@ function rigStandardDate pFormat pTime
 
 	# BUILD ARRAY OF STANDARD FORMATS
 	put "%Y-%m-%dT%H:%i:%s%Q" into tFormatArray["DATE_ATOM"]
-	put "%W, %d-%M-%y %H:%i:%s UTC" into tFormatArray["DATE_COOKIE"]
+	put "%W, %d-%b-%y %H:%i:%s UTC" into tFormatArray["DATE_COOKIE"]
 	put "%Y-%m-%dT%H:%i:%s%O" into tFormatArray["DATE_ISO8601"]
-	put "%a, %d %M %y %H:%i:%s %O" into tFormatArray["DATE_RFC822"]
-	put "%W, %d-%M-%y %H:%i:%s UTC" into tFormatArray["DATE_RFC850"]
-	put "%a, %d %M %y %H:%i:%s %O" into tFormatArray["DATE_RFC1036"]
-	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RFC1123"]
-	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RFC2822"]
-	put "%a, %d %M %Y %H:%i:%s %O" into tFormatArray["DATE_RSS"]
+	put "%a, %d %b %y %H:%i:%s %O" into tFormatArray["DATE_RFC822"]
+	put "%W, %d-%b-%y %H:%i:%s UTC" into tFormatArray["DATE_RFC850"]
+	put "%a, %d %b %y %H:%i:%s %O" into tFormatArray["DATE_RFC1036"]
+	put "%a, %d %b %Y %H:%i:%s %O" into tFormatArray["DATE_RFC1123"]
+	put "%a, %d %b %Y %H:%i:%s %O" into tFormatArray["DATE_RFC2822"]
+	put "%a, %d %b %Y %H:%i:%s %O" into tFormatArray["DATE_RSS"]
 	put "%Y-%m-%dT%H:%i:%s%Q" into tFormatArray["DATE_W3C"]
 
 	if tFormatArray[tFormat] is empty then
