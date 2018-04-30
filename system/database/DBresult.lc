@@ -58,21 +58,21 @@ put empty into sDBresult["fieldNumbers"]
 --| FUNCTION rigDBresult
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-09-29
---| Last Mod: 2017-06-27
+--| Last Mod: 2018-04-30
 --| Requires: rigFetchDBdriverSetting(), _rigDataSeek(), _rigFetchResultArray, rigListFields(), rigLogMessage
 --|
 --| Summary: Query result as array.
 --| 
---| Format:  rigDBresult()
+--| Format:  rigDBresult(param1)
 --|
---| Parameters: --
+--| Parameters: bool <pChangeFieldNamesListDelimiter>
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigDBresult
+function rigDBresult pChangeFieldNamesListDelimiter
 	if sDBresult["resultarray"] is an array then
 		return sDBresult["resultarray"]
 	end if
@@ -93,7 +93,7 @@ function rigDBresult
 	--if tCacheOn is not TRUE then
 		get _rigDataSeek(tResultID, 0)
 		put empty into tTemp
-		_rigFetchResultArray tResultID, tTemp
+		_rigFetchResultArray tResultID, tTemp, pChangeFieldNamesListDelimiter
 		put the result into tError
 		put tTemp into sDBresult["resultarray"]
 
@@ -573,29 +573,36 @@ end rigFieldNumbers
 --| COMMAND _rigFetchResultArray
 --|
 --| Author: Trevor DeVore
---| Version:  1.2
+--| Modification: rabit
+--| Version:  1.3
 --| Created: 2009-07-17
---| Last Mod: 2017-06-27
+--| Last Mod: 2018-04-30
 --| Requires: --
 --|
 --| Summary: Returns the result set as a numeric array. May be this will be changed
---|            to return optionally an associative array in a future version.
+--|            to return optionally an associative array in a future version. This will break the feedjson module!
 --| 
 --| Format: _rigFetchResultArray param1, param2
 --|
---| Parameters: integer <pRecordSetID>, reference array <@pRefArray>
+--| Parameters: integer <pRecordSetID>, reference array <@pRefArray>, bool <pChangeFieldNamesListDelimiter>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-command _rigFetchResultArray pRecordSetID, @pRefArray
+command _rigFetchResultArray pRecordSetID, @pRefArray, pChangeFieldNamesListDelimiter
 	 put revDatabaseColumnNames(pRecordSetID) into tFieldNames
 
 	if tFieldNames begins with "revdberr," then 
 		put item 2 to -1 of tFieldNames into tError 
 	end if 
     
-	if tError is "" then 
+	if tError is "" then
+    # "SELECT IF" and "SELECT GREATEST" QUERIES USE COMMAS TO SEPARATE VALUES TO BE COMPARED
+    # FIELD NAMES LISTS USE COMMAS TOO, SO CHANGE THE ITEM DELIMITER
+    if pChangeFieldNamesListDelimiter is TRUE then
+      set the itemDelimiter to rigNumToCodepoint(0)
+    end if
+		
 		put 0 into tCounter
 		repeat until revQueryIsAtEnd(pRecordSetID) 
 			add 1 to tCounter
