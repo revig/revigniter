@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Security : revIgniter User Guide</title>
+		<title>Upgrading from 1.9.7 to 1.9.8 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Security</li>
+			 		 	<li class="active">Upgrading from 1.9.7 to 1.9.8</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,87 +85,42 @@
 	
 <div id="content">
 
-<h1>Security</h1>
-
-<p>This page describes some "best practices" regarding web security, and details
-revIgniter's internal security features.</p>
+<h1>Upgrading from 1.9.7 to 1.9.8</h1>
 
 
-<h2>URI Security</h2>
-
-<p>revIgniter is fairly restrictive regarding which characters it allows in your URI strings in order to help
-minimize the possibility that malicious data can be passed to your application.  URIs may only contain the following:
-</p>
-
-<ul>
-<li>Alpha-numeric text</li>
-<li>Tilde: ~ </li>
-<li>Period: .</li>
-<li>Colon: :</li>
-<li>Underscore: _</li>
-<li>Dash: -</li>
-</ul>
-
-<h2>GET Data</h2>
-
-<p>GET data is simply disallowed by revIgniter since the system utilizes URI segments rather than traditional URL query strings (unless
-you have the query string option enabled in your config file).  The global GET
-array is set to <strong>empty</strong> by the Input library during system initialization.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
-<h1>Best Practices</h1>
 
-<p>Before accepting any data into your application, whether it be POST data from a form submission, COOKIE data, URI data,
-XML-RPC data, or even data from the SERVER array, you are encouraged to practice this three step approach:</p>
+<h2>Step 1: Update your revIgniter files</h2>
 
-<ol>
-<li>Filter the data as if it were tainted.</li>
-<li>Validate the data to ensure it conforms to the correct  type, length, size, etc. (sometimes this step can replace step one)</li>
-<li>Escape the data before submitting it into your database.</li>
-</ol>
 
-<p>revIgniter provides the following handlers to assist in this process:</p>
+<p>Replace these files in your "system/database" folder with the new versions:</p>
 
 <ul>
-
-<li><h2>XSS Filtering</h2>
-
-<p>revIgniter comes with a Cross Site Scripting filter.  This filter looks for commonly
-used techniques to embed malicious Javascript into your data, or other types of code that attempt to hijack cookies
-or do other malicious things. The XSS Filter is described <a href="../libraries/input.html">here</a>.
-</p>
-</li>
-
-
-<li><h2>CSRF Protection</h2>
-
-<p>Enable revIgniter's cross-site request forgery (CSRF) protection if you are accepting user data. CSRF protection is described <a href="../libraries/input.html">here</a>.
-</p>
-</li>
-
-
-<li><h2>Filename Sanitation</h2>
-
-<p>revIgniter comes with a function to <a href="../libraries/input.html">sanitize filenames</a> from user input.
-</p>
-</li>
-
-
-<li><h2>Validate the data</h2>
-
-<p>revIgniter has a <a href="../libraries/form_validation.html">Form Validation Library</a> that assists you in validating, filtering, and prepping
-your data.</p>
-</li>
-
-<li><h2>Escape all data before database insertion</h2>
-
-<p>Never insert information into your database without escaping it. Please see the section that discusses
-<a href="../database/queries.html">queries</a> for more information.</p>
-
-</li>
-
+	<li><dfn>DBdriver.lc</dfn></li>
+	<li><dfn>DBresult.lc</dfn></li>
 </ul>
 
+
+<p>Replace this file in your "system/helpers" folder with the new version:</p>
+
+<ul>
+	<li><dfn>dateHelper.lc</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/revigniter" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Common.lc</dfn></li>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
 
 
 
@@ -178,10 +133,11 @@ your data.</p>
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="managing_apps.html">Managing Applications</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
-<a href="../index.html">User Guide Home</a>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2018<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
