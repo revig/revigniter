@@ -375,9 +375,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.10
+--| Version:  1.11
 --| Created: 2009-07-09
---| Last Mod: 2017-06-27
+--| Last Mod: 2018-04-30
 --| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
 --|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
 --|
@@ -571,7 +571,14 @@ function rigDbQuery pSQL pBinds
 	put sDBdriverSettings["resultid"] into tRES["resultid"]
 	# CLEAR RESULT ARRAY
 	rigDbResetResultValue "resultarray"
-	put rigDBresult() into tRES["resultarray"]
+	
+  # CHECK IF IT IS A "SELECT IF" OR A "SELECT GREATEST" QUERY
+  put FALSE into tChangeFieldNamesListDelimiter
+  if ("SELECT GREATEST" is in tSQL) or ("SELECT IF" is in tSQL) then
+    put TRUE into tChangeFieldNamesListDelimiter
+  end if
+	
+	put rigDBresult(tChangeFieldNamesListDelimiter) into tRES["resultarray"]
 
 	if sDBdriverSettings["dbdriver"] is "oci8" then
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
