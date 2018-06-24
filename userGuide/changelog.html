@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version198">Version 1.9.8</a></li>
 <li><a href="#version197">Version 1.9.7</a></li>
 <li><a href="#version196">Version 1.9.6</a></li>
 <li><a href="#version195">Version 1.9.5</a></li>
@@ -197,6 +198,20 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+<h2><a name="version198">&nbsp;</a>Version 1.9.8</h2>
+<p>Release Date: 2018-06-24</p>
+
+<p>
+	<ul>
+		<li><strong>Changed:</strong> Modified DB handlers system/database/DBresult.lc -> rigDBresult(), _rigFetchResultArray() and system/database/DBdriver.lc -> rigDBquery() so that "SELECT IF" and “SELECT GREATEST” queries work as expected as long as you don’t use rigDBrow() to retrieve result data. Use something like tQueryResult["resultarray"][1][1] instead. Actually this is a fix for an issue of LiveCode’s built in database handlers.</li>
+		<li><strong>Fixed:</strong> Formatting of dates in system/helpers/dateHelper.lc -> rigTranslateDateItem(), added format RFC2822.</li>
+		<li><strong>Fixed:</strong> Date formats in chapter “Date Helper” of the User Guide.</li>
+		<li><strong>Fixed:</strong> Bug in system/revigniter/Common.lc -> rigStripHTML().</li>
+		<li><strong>Fixed:</strong> Documentation bug regarding sockets. Write to socket does not work on Mac OS X, Linux is not affected by LC server bug 15514.</li>
+	</ul>
+</p>
 
 
 
