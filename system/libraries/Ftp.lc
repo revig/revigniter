@@ -57,23 +57,27 @@ put "" into sFtpA["callbackError"]
 put "" into sFtpA["statusMsg"]
 put FALSE into sFtpA["debug"]
 put "" into sFtpA["debugMsg"]
-put 100 into sFtpA["initWait"]
+put 100 into sFtpA["initWait"]                     -- Milliseconds to wait after initializing the tsNet external
 put "" into sFtpA["transferType"]
 put TRUE into sFtpA["displayErrors"]
 put TRUE into sFtpA["noErrors"]
+put FALSE into sFtpA["setFilePermissions"]
+put empty into sFtpA["filePermissions"]
+put 0700 into sFtpA["settings"]["defaultPermissions"]
+put empty into sFtpA["remotePath"]
 
 put "" into sFtpA["settings"]["hostname"]        -- Can be a hostname or an IP address
 put "anonymous" into sFtpA["settings"]["username"]
 put "" into sFtpA["settings"]["password"]
 put FALSE into sFtpA["settings"]["use_ssl"]
-put TRUE into sFtpA["settings"]["no_reuse"]
+put FALSE into sFtpA["settings"]["no_reuse"]
 
 put "" into sFtpA["settings"]["ssh_passphrase"]
 put "" into sFtpA["settings"]["ssh_host_public_key"]
 put "" into sFtpA["settings"]["ssh_private_key"]
 
 
-put "hostname,username,password,use_ssl,no_reuse" into sFtpSettingsItems
+put "hostname,username,password,use_ssl,no_reuse,ssh_passphrase,ssh_host_public_key,ssh_private_key" into sFtpSettingsItems
 
 
 
@@ -282,15 +286,15 @@ function rigFtpPrintDebugger pWhichMsg
     case "status"
       replace return with "<br>" in sFtpA["statusMsg"]
       return "<p>" & sFtpA["statusMsg"] & "</p>"
-    
+  
     case "debug"
       replace return with "<br>" in sFtpA["debugMsg"]
       return "<p>" & sFtpA["debugMsg"] & "</p>"
-    
+  
     default
       replace return with "<br>" in sFtpA["statusMsg"]
       replace return with "<br>" in sFtpA["debugMsg"]
-    
+  
       return "<h3>Status Information</h3>" & return & "<p>" & sFtpA["statusMsg"] & "</p>" & return \
       & "<h3>Debug information</h3>" & return & "<p>" & sFtpA["debugMsg"] & "</p>"
   end switch
@@ -403,12 +407,12 @@ end rigFtpListFiles
 --| Format:  rigFtpUpload param1, param2[, param3][, param4]
 --|
 --| Parameters: mixed <pLocalPath>, string <pRemotePath>, bool <pData> (optional),
---|               bool <pCreateMissingDirs> (optional), 
+--|               bool <pCreateMissingDirs> (optional), integer <pPermissions> file permissions (optional, octal)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs
+command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs pPermissions
   if (pData is empty) or (pData is not a boolean) then
     put FALSE into pData
   end if
@@ -434,7 +438,7 @@ command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs
   if (pCreateMissingDirs is empty) or (pCreateMissingDirs is not a boolean) then
     put FALSE into pCreateMissingDirs
   end if
-  
+	  
   put sFtpA["connID"] into tConnID
   
   # THIS IS ALREADY DONE IN rigFTPmirror
@@ -447,6 +451,11 @@ command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs
     put sFtpA["flavor"] & "://" & sFtpA["settings"]["hostname"] into sFtpA["request"][tConnID]
   end if
   #
+	
+	if (pPermissions <> empty) and (pPermissions is a integer) then
+		put pPermissions into sFtpA["filePermissions"]
+		put pRemotePath into sFtpA["remotePath"]
+	end if
   
   # RESET RESULT DATA OF PREVIOUS REQUESTS
   put "" into sFtpA["transferResult"]
@@ -1192,20 +1201,24 @@ end rigFtpCreateFolder
 --| Summary: Set file / folder permissions.
 --|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
 --| 
---| Format:  rigFtpSetPermissions param1, param2
+--| Format:  rigFtpSetPermissions param1, param2[, param3]
 --|
---| Parameters: string <pPath>, integer (octal) <pPermissions>
+--| Parameters: string <pPath>, integer (octal) <pPermissions>, bool <pTransferPrepared> (internal)
 --|
 --| Return: boolean
 ----------------------------------------------------------------------*/
 
-command rigFtpSetPermissions pPath pPermissions
+command rigFtpSetPermissions pPath pPermissions pTransferPrepared
   replace "\" with "/" in pPath
   put rigTrim(pPath, "/") into pPath
   
-  if (pPermissions <> empty) or (pPermissions is not an integer) then
-    put "0700" into pPermissions  
+  if pPermissions is not an integer then
+    put sFtpA["settings"]["defaultPermissions"] into pPermissions  
   end if
+	
+	if pTransferPrepared <> TRUE then
+		_rigFtpPrepareTransfer
+	end if
   
   if sFtpA["flavor"] is "sftp" then
     put "chmod" && pPermissions && pPath into tCommandsList
@@ -1237,7 +1250,7 @@ end rigFtpSetPermissions
 --|
 --| Parameters: string <pPath>
 --|
---| Return: string
+--| Return: boolean
 ----------------------------------------------------------------------*/
 
 command rigFtpChangeDir pPath
@@ -1283,7 +1296,12 @@ command _rigFtpDoRawCommands pCommandslist
   put word 1 of pCommandslist into tCommand
   
   # RESET RESULT DATA OF PREVIOUS REQUESTS
-  put "" into sFtpA["transferResult"]
+	if sFtpA["setFilePermissions"] <> TRUE then
+  	put "" into sFtpA["transferResult"]
+	else
+		# KEEP TRANSFER RESULT OF UPLOAD
+		put FALSE into sFtpA["setFilePermissions"]
+	end if
   
   put sFtpA["connID"] into tConnID
   put sFtpA["flavor"] & "://" & sFtpA["settings"]["hostname"] into sFtpA["request"][tConnID]
@@ -1495,26 +1513,35 @@ command _rigFtpTransferComplete pNumBytes pStatus pResult pConnID pAllTransfersD
     rigFtpClose pConnID
   end if
   
-  if sFtpA["callbackError"] is empty then 
-    # IF NO ERROR OCCURRED STORE THE RESULTS OF THE TRANSFERS
-    repeat for each key tKey in sFtpA["response"]
-       put sFtpA["response"][tKey] & cr after tResults
-    end repeat
+	if sFtpA["callbackError"] is empty then 
+		# IF NO ERROR OCCURRED STORE THE RESULTS OF THE TRANSFERS
+		repeat for each key tKey in sFtpA["response"]
+			put sFtpA["response"][tKey] & cr after tResults
+		end repeat
     
-    # RESULT ITEMS DELIMITER
-    put numToCodepoint(0) after tResults
+		# RESULT ITEMS DELIMITER
+		put numToCodepoint(0) after tResults
     
-    if pNumBytes <> empty then
-      put "Transfer complete. Transfered" && pNumBytes && "bytes." & cr after tResults
-    end if
+		if pNumBytes <> empty then
+			put "Transfer complete. Transfered" && pNumBytes && "bytes." & cr after tResults
+		end if
     
-    if pStatus <> empty then
-      put "Status:" && pStatus && "Result:" && pResult & cr after tResults
-    end if
+		if pStatus <> empty then
+			put "Status:" && pStatus && "Result:" && pResult & cr after tResults
+		end if
     
-    put tResults into sFtpA["transferResult"]
-    
-  else
+		put tResults after sFtpA["transferResult"]
+		
+		# CHECK IF PERMISSIONS SHOULD BE SET FOR UPLOADED FILES
+		if sFtpA["filePermissions"] <> empty then
+			put sFtpA["filePermissions"] into tPermissions
+			put empty into sFtpA["filePermissions"]
+			put TRUE into sFtpA["setFilePermissions"]
+			rigFtpSetPermissions sFtpA["remotePath"], tPermissions, TRUE
+		end if -- if sFtpA["filePermissions"] <> empty
+		#
+		
+	else
     rigLogMessage "error", sFtpA["callbackError"] 
   end if -- if sFtpA["callbackError"] is empty
   
