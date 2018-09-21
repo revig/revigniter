@@ -315,7 +315,7 @@ end rigFtpPrintDebugger
 --|            _rigFtpTransferComplete
 --|
 --| Summary: Get directory listing.
---|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
+--|            Note: Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.
 --| 
 --| Format:  rigFtpListFiles [param1][, param2][, param3]
 --|
@@ -402,7 +402,7 @@ end rigFtpListFiles
 --|            _rigFtpTransferComplete
 --|
 --| Summary: Upload a file to the server.
---|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
+--|            Note: Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.
 --| 
 --| Format:  rigFtpUpload param1, param2[, param3][, param4]
 --|
@@ -829,7 +829,7 @@ end rigFtpDownload
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpDoRawCommands
 --|
 --| Summary: Rename or move a file.
---|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
+--|            Note: Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.
 --| 
 --| Format:  rigFtpRenameMove param1, param2[, param3]
 --|
@@ -895,7 +895,7 @@ end rigFtpRenameMove
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpDoRawCommands
 --|
 --| Summary: Delete a file.
---|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
+--|            Note: Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.
 --| 
 --| Format:  rigFtpDeleteFile param1[, param2]
 --|
@@ -940,7 +940,7 @@ end rigFtpDeleteFile
 --| Last Mod: 2017-09-11
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpDeleteFilesFolders
 --|
---| Summary: Delete a folder and / or subfolders.
+--| Summary: Delete a folder and / or sub-folders.
 --|            Note: SFTP using public key authentication needs LC Business Edition.
 --| 
 --| Format:  rigFtpDeleteFolder param1[, param2][, param3]
@@ -1142,7 +1142,7 @@ end _rigFtpDeleteFilesFolders
 --| Last Mod: 2017-09-12
 --| Requires: rigTrim(), _rigFtpDoRawCommands
 --|
---| Summary: Create a directory on the server. Result is empty on success.
+--| Summary: Create a directory on the server.
 --|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
 --| 
 --| Format:  rigFtpCreateFolder param1[, param2]
@@ -1199,7 +1199,7 @@ end rigFtpCreateFolder
 --| Requires: rigTrim(), _rigFtpDoRawCommands
 --|
 --| Summary: Set file / folder permissions.
---|            Note: Asynchronous SFTP and SFTP using public key authentication needs LC Business Edition.
+--|            Note: Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.
 --| 
 --| Format:  rigFtpSetPermissions param1, param2[, param3]
 --|
