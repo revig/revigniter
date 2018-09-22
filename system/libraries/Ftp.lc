@@ -1637,18 +1637,30 @@ end _rigFtpDebugCallback
 --|
 --| Parameters: string <pConnID>
 --|
---| Return: empty
+--| Return: boolean
 ----------------------------------------------------------------------*/
 
 command rigFtpClose pConnID
-  tsNetCloseConn pConnID
+	if pConnID is empty then
+		put sFtpA["connID"] into tConnID
+	else
+		put pConnID into tConnID
+	end if
+	
+  tsNetCloseConn tConnID
   
   put the result into tResult
+	
+	if tResult is empty then
+		return TRUE
+	end if
   
   if char 1 to 9 of tResult is "tsneterr:" then
     rigLogMessage "error", "Unable to remove the connection from memory." && tResult   
     rigFtpError "ftp_unable_to_close"
   end if
+	
+	return FALSE
 end rigFtpClose
 
 
