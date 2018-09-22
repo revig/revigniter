@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>FTP Library : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.8</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">FTP Library</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container">
+		
+<div id="content">
+
+
+<h1 id="toc_0">FTP Library</h1>
+
+<p>revIgniter&#39;s FTP Library permits to:</p>
+
+<ul>
+<li>get directory listings</li>
+<li>transfer files to a remote server</li>
+<li>download files from a remote server</li>
+<li>move, rename and delete remote files / folders</li>
+<li>create a directory on a remote server</li>
+<li>set file / folder permissions remotely</li>
+<li>recreate an entire local directory remotely using a &quot;mirroring&quot; handler</li>
+</ul>
+
+<p class="important"><strong>Note:</strong> This library requires the <kbd>tsNet</kbd> LiveCode external. Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.</p>
+
+<p class="important"><strong>Note:</strong> Asynchronous requests are currently (up to LC server version 9.0.1) not working, presumably this is due to <a href="http://quality.livecode.com/show_bug.cgi?id=18961">LC server bug 18961.</a></p>
+
+<h2 id="toc_1">Initializing the Library</h2>
+
+<p>The FTP Library is initialized in your controller like most other libraries in revIgniter using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code>rigLoaderLoadLibrary "Ftp"
+</code></pre>
+
+<h2 id="toc_2">Setting FTP Preferences</h2>
+
+<h3 id="toc_3">Setting Preferences Manually</h3>
+
+<p>Preferences are set by passing an array of preference values to the ftp <dfn>rigInitializeFTP</dfn> handler. Following an example of how you might set ftp preferences:</p>
+
+<pre><code>put "ftp.example.com/" into tFtpConfA["hostname"]
+put "me" into tFtpConfA["username"]
+put "myPassword" into tFtpConfA["password"]
+put TRUE into tFtpConfA["asyncRequest"]
+
+rigInitializeFTP tFtpConfA</code></pre>
+
+<p class="important"><strong>Note:</strong> Many preferences have default values that will be used if you do not set them.</p>
+
+<h3 id="toc_4">Setting Preferences in a Config File</h3>
+
+<p>If you prefer not to set preferences using the above method, you can instead store them in a config file.
+Simply create a new file called <var>ftp.lc</var> and  add the <var>Config</var> array in that file.
+At the end of the file write: <dfn>rigRunInitialFtpConfig yourArrayVariableName</dfn>. Then save the file
+at <var>config/ftp.lc</var> and it will be used automatically. You will NOT need to use the <dfn>rigInitializeFTP</dfn>
+handler if you save your preferences in a config file. Example:</p>
+
+<pre><code>local sFtpConfA
+
+put "ftp.example.com/" into sFtpConfA["hostname"]
+put "me" into sFtpConfA["username"]
+put "myPassword" into sFtpConfA["password"]
+put TRUE into sFtpConfA["asyncRequest"]
+
+rigRunInitialFtpConfig sFtpConfA</code></pre>
+
+<h2 id="toc_5">Preferences</h2>
+
+<p>The following preferences are available. The default value indicates what will be used if you do not specify that preference.</p>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>hostname</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">FTP hostname, can be a hostname or an IP address (usually something like: ftp.example.com)</td>
+</tr>
+<tr>
+<td class="td"><strong>username</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">FTP username</td>
+</tr>
+<tr>
+<td class="td"><strong>password</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">FTP password</td>
+</tr>
+<tr>
+<td class="td"><strong>port</strong></td>
+<td class="td">21</td>
+<td class="td">Any valid port number</td>
+<td class="td">FTP server port number</td>
+</tr>
+<tr>
+<td class="td"><strong>mode</strong></td>
+<td class="td">passive</td>
+<td class="td">passive, active</td>
+<td class="td">FTP mode to be used</td>
+</tr>
+<tr>
+<td class="td"><strong>debug</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Whether to enable debugging to display status and error messages</td>
+</tr>
+<tr>
+<td class="td"><strong>asyncRequest</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Whether to send asynchronous FTP requests</td>
+</tr>
+<tr>
+<td class="td"><strong>displayErrors</strong></td>
+<td class="td">true</td>
+<td class="td">false, true</td>
+<td class="td">Whether to display logged error messages, if this is set to true the debug setting is ignored</td>
+</tr>
+<tr>
+<td class="td"><strong>flavor</strong></td>
+<td class="td">ftp</td>
+<td class="td">ftp, sftp, ftps</td>
+<td class="td">Which protocol to use</td>
+</tr>
+<tr>
+<td class="td"><strong>use_ssl</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Whether to connect using Transport Layer Security (TLS) for FTPS (explicit) connections</td>
+</tr>
+<tr>
+<td class="td"><strong>verifySSL</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Whether to enable SSL peer certificate verification</td>
+</tr>
+<tr>
+<td class="td"><strong>no_reuse</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Specify whether the connection to the server should be disconnected and not left open for any future connections</td>
+</tr>
+<tr>
+<td class="td"><strong>ssh_passphrase</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">(LC Business Edition only) Passphrase for any included private key</td>
+</tr>
+<tr>
+<td class="td"><strong>ssh_host_public_key</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">(LC Business Edition only) The 128 bit MD5 checksum of the remote host&#39;s public key</td>
+</tr>
+<tr>
+<td class="td"><strong>ssh_private_key</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">(LC Business Edition only) The private key file (including full system path) to be used in SFTP transfers</td>
+</tr>
+</table>
+</div>
+
+<h2 id="toc_6">Usage Examples</h2>
+
+<p>The following example shows how to upload a local file to the FTP server. The file permissions are set to 755.</p>
+
+<pre><code>rigLoaderLoadLibrary "Ftp"
+
+put "ftp.example.com/" into tFtpConfA["hostname"]
+put "me" into tFtpConfA["username"]
+put "myPassword" into tFtpConfA["password"]
+
+rigInitializeFTP tFtpConfA
+
+put "/path/to/local/file.pdf" into tLocPath
+put "remotefolder/remotefile.pdf" into tRemPath
+
+rigFtpUpload tLocPath, tRemPath, FALSE, TRUE, 0755
+
+put the result into gData["responseData"]</code></pre>
+
+<p>This example shows how to retrieve a list of files from the server.</p>
+
+<pre><code>rigLoaderLoadLibrary "Ftp"
+
+put "ftp.example.com/" into tFtpConfA["hostname"]
+put "me" into tFtpConfA["username"]
+put "myPassword" into tFtpConfA["password"]
+
+rigInitializeFTP tFtpConfA
+
+rigFtpListFiles "remote/path"
+
+put the result into gData["responseData"]</code></pre>
+
+<p>This example shows how to mirror a local directory on the server.</p>
+
+<pre><code>rigLoaderLoadLibrary "Ftp"
+
+put "ftp.example.com/" into tFtpConfA["hostname"]
+put "me" into tFtpConfA["username"]
+put "myPassword" into tFtpConfA["password"]
+
+rigInitializeFTP tFtpConfA
+
+put "/local/directory" into tLocPath
+put "remote/mirroredDirectory" into tRemPath
+
+rigFtpMirror tLocPath, tRemPath
+
+put the result into gData["responseData"]</code></pre>
+
+<h2 id="toc_7">Handler Reference</h2>
+
+<h3 id="toc_8">rigFtpPrintDebugger( <var>pWhichMsg</var> )</h3>
+
+<p>Get FTP debug messages. Don't forget to set the <kbd>debug</kbd> preference to TRUE.</p>
+
+<p><em>Parameters</em><br>
+<strong>pWhichMsg:</strong> You can optionally choose between &quot;status&quot; and &quot;debug&quot;, if you leave this parameter blank you get both types of messages</p>
+
+<p>Example:</p>
+
+<pre><code>put rigFtpPrintDebugger() into gData["debugData"]
+</code></pre>  
+
+<p>Add the following to your view file:</p>
+
+<pre><code>[[gData["debugData"] ]]
+</code></pre>  
+
+<h3 id="toc_9">rigFtpUpload <var>pLocalPath</var>, <var>pRemotePath</var>, <var>pData</var>, <var>pCreateMissingDirs</var>, <var>pPermissions</var></h3>
+
+<p>Uploads a file to a FTP server. You must at least supply the local path and the remote path.</p>
+
+<p><em>Parameters</em><br>
+<strong>pLocalPath:</strong> The path to your local file<br>
+<strong>pRemotePath:</strong> The path to the file on your server<br>
+<strong>pData:</strong> A boolean to specify that you intend to upload data like for example a string instead of a file. This parameter is optional, the default value is FALSE<br>
+<strong>pCreateMissingDirs:</strong> An optional boolean to tell the handler that the remote path includes directories which are missing and thus need to be created prior to uploading, the default value is FALSE<br>
+<strong>pPermissions:</strong> This optional parameter should be an octal number and is used to set permissions, the default value is 0700</p>
+
+<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+
+<p>Example:</p>
+
+<pre><code>put TRUE into tData
+put "some data to upload as text" into tLocPath
+put "remote/path/dat.txt" into tRemPath
+
+rigFtpUpload tLocPath, tRemPath, tData
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_10">rigFtpDownload <var>pRemotePath</var>, <var>pLocalPath</var></h3>
+
+<p>Downloads a file from a remote server to the local server. You must supply the remote path and the local path.</p>
+
+<p><em>Parameters</em><br>
+<strong>pRemotePath:</strong> The path to the file on your server<br>
+<strong>pLocalPath:</strong> Local file path</p>
+
+<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+
+<p>Example:</p>
+
+<pre><code>put "remote/path/remoteFile.pdf" into tRemPath
+put "local/path/local.pdf" into tLocPath
+
+rigFtpDownload tRemPath, tLocPath
+
+put the result into gData["responseData"]</code></pre>
+
+<p class="important"><strong>Note:</strong> <dfn>rigFtpDownload</dfn> using SFTP needs LC Business Edition.</p>
+
+<h3 id="toc_11">rigFtpRenameMove <var>pOldFile</var>, <var>pNewFile</var>, <var>pMissingDirs</var></h3>
+
+<p>Permits you to rename or move a file. Supply the source file name/path and the new file name/path.</p>
+
+<p><em>Parameters</em><br>
+<strong>pOldFile:</strong> Old file name/path<br>
+<strong>pNewFile:</strong> New file name/path<br>
+<strong>pMissingDirs:</strong> An optional boolean to tell the handler that the new path includes directories which are missing and thus need to be created, the default value is FALSE</p>
+
+<p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
+
+<p>Example:</p>
+
+<pre><code>put "old/path/oldFileName.pdf" into tOldFilePath
+put "new/directory/newFileName.pdf" into tNewFilePath
+
+rigFtpRenameMove tOldFilePath, tNewFilePath, TRUE
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_12">rigFtpDeleteFile <var>pPath</var></h3>
+
+<p>Lets you delete a file. Supply the source path with the file name.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The file path</p>
+
+<p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/file.pdf" into tFilePath
+
+rigFtpDeleteFile tFilePath
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_13">rigFtpDeleteFolder <var>pPath</var>, <var>pRecursive</var>, <var>pPurgeOnly</var></h3>
+
+<p>Lets you delete a folder and / or sub-folders and everything a folder contains. Supply at least the source path to the directory.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The folder path<br>
+<strong>pRecursive:</strong> This optional boolean specifies if the folder should be deleted recursively (including all sub-folders), the default value is FALSE<br>
+<strong>pPurgeOnly:</strong> Use this optional boolean to specifiy that folders should be purged only and not deleted, the default value is FALSE</p>
+
+<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/folder" into tFolder
+
+rigFtpDeleteFolder tFolder, ,TRUE
+
+put the result into gData["responseData"]</code></pre>
+
+<p class="important"><strong>Note:</strong> SFTP using public key authentication needs LC Business Edition.</p>
+
+<p class="important"><strong>Note:</strong> Be very careful with this handler, make absolutely sure your folder path is correct. Try to verify that your path is correct using the <dfn>rigFtpListFiles</dfn> handler.</p>
+
+<h3 id="toc_14">rigFtpListFiles <var>pPath</var>, <var>pSimpleList</var></h3>
+
+<p>Permits you to retrieve a directory listing. You must supply the path to the desired directory.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The folder path<br>
+<strong>pSimpleList:</strong> This optional boolean lets you enable &quot;simple&quot; directory listings over FTP and SFTP, the default value is FALSE</p>
+
+<p>This handler returns as result either FALSE in case of failure, otherwise on success the files list.</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/folder" into tFolderPath
+
+rigFtpListFiles tFolderPath
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_15">rigFtpMirror <var>pLocalPath</var>, <var>pRemotePath</var></h3>
+
+<p>Recursively reads a local folder including files and sub-folders and creates a mirror on the remote server. You must supply a source path and a destination path.</p>
+
+<p><em>Parameters</em><br>
+<strong>pLocalPath:</strong> The local path<br>
+<strong>pRemotePath:</strong> The remote path</p>
+
+<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/localFolder" into tLocalFolder
+put "path/to/remoteFolder" into tRemoteFolder
+
+rigFtpMirror tLocalFolder, tRemoteFolder
+
+put the result into gData["responseData"]</code></pre>
+
+<p class="important"><strong>Note:</strong> <dfn>rigFtpMirror</dfn> using SFTP needs LC Business Edition.</p>
+
+<h3 id="toc_16">rigFtpCreateFolder <var>pPath</var>, <var>pPermissions</var></h3>
+
+<p>Lets you create a directory on a remote server. Supply the path ending in the folder name you wish to create. Optionally permissions can be set by passing an octal number in the second parameter.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The path to the directory to create<br>
+<strong>pPermissions:</strong> The folder permissions (octal), this parameter is optional</p>
+
+<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/newFolder" into tNewFolder
+put 0755 into tPermissions
+
+rigFtpCreateFolder tNewFolder, tPermissions
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_17">rigFtpSetPermissions <var>pPath</var>, <var>pPermissions</var></h3>
+
+<p>Permits you to set file / folder permissions. Supply the path to the file / folder you wish to alter permissions on.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The path to alter permissions for<br>
+<strong>pPermissions:</strong> The file / folder permissions (octal)</p>
+
+<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/file.pdf" into tFilePath
+put 0755 into tPermissions
+
+rigFtpSetPermissions tFilePath, tPermissions
+
+put the result into gData["responseData"]</code></pre>
+
+<h3 id="toc_18">rigFtpChangeDir <var>pPath</var></h3>
+
+<p>Changes the current working directory to the specified path, FTP and FTPS only.</p>
+
+<p><em>Parameters</em><br>
+<strong>pPath:</strong> The directory path</p>
+
+<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+
+<p>Example:</p>
+
+<pre><code>put "path/to/folder" into tFolderPath
+
+rigFtpChangeDir tFolderPath
+
+put the result into gData["responseData"]</code></pre>  
+
+<h3 id="toc_19">rigFtpClose</h3>
+
+<p>Lets you remove the current connection from memory. The handler returns as result either FALSE in case of failure or TRUE on success.</p>
+
+<p>Example:</p>
+
+<pre><code>rigFtpClose
+
+put the result into gData["responseData"]</code></pre>  
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp; <a href="form_validation.html">Form Validation Library</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="table.html">HTML Table Library</a></p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2018<span class="separator"> :: </span>dimensionB Bitter u. Bitter GmbH</p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+</body>
+</html>

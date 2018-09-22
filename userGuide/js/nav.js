@@ -78,6 +78,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'libraries/encryption.html">Encryption Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/file_uploading.html">File Uploading Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/form_validation.html">Form Validation Library</a></li>' +
+			'<li class="item"><a href="'+base+'libraries/ftp.html">FTP Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/table.html">HTML Table Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/image_lib.html">Image Manipulation Library</a></li>' +
 			'<li class="item"><a href="'+base+'libraries/input.html">Input and Security Library</a></li>' +
