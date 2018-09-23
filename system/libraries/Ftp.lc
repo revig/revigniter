@@ -282,21 +282,26 @@ end rigFtpError
 ----------------------------------------------------------------------*/
 
 function rigFtpPrintDebugger pWhichMsg
+	put "<h3>Versions</h3>" & cr & \
+	"<p>LC Server:" && the version && the editionType & "</p>" & cr & \
+	"<p>tsNet:" && tsNetVersion() & "</p>" & cr & \
+	"<p>revIgniter:" && RIVERSION & "</p>" into tVersions
+	
   switch pWhichMsg
     case "status"
       replace return with "<br>" in sFtpA["statusMsg"]
-      return "<p>" & sFtpA["statusMsg"] & "</p>"
+      return "<p>" & sFtpA["statusMsg"] & "</p>" & cr & tVersions
   
     case "debug"
       replace return with "<br>" in sFtpA["debugMsg"]
-      return "<p>" & sFtpA["debugMsg"] & "</p>"
+      return "<p>" & sFtpA["debugMsg"] & "</p>" & cr & tVersions
   
     default
       replace return with "<br>" in sFtpA["statusMsg"]
       replace return with "<br>" in sFtpA["debugMsg"]
   
-      return "<h3>Status Information</h3>" & return & "<p>" & sFtpA["statusMsg"] & "</p>" & return \
-      & "<h3>Debug information</h3>" & return & "<p>" & sFtpA["debugMsg"] & "</p>"
+      return "<h3>Status Information</h3>" & cr & "<p>" & sFtpA["statusMsg"] & "</p>" & cr \
+      & "<h3>Debug information</h3>" & cr & "<p>" & sFtpA["debugMsg"] & "</p>" & cr & tVersions
   end switch
 end rigFtpPrintDebugger
 
