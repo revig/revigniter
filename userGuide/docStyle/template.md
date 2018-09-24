@@ -27,7 +27,7 @@ put "bar" into tArray["bat"]
 
 Use tables where appropriate for long lists of preferences.  
 
-Preference | Default&nbsp;Value | Options | Description |
+| Preference | Default&nbsp;Value | Options | Description |
 | ---- | :-- | :-- | :-- |
 | **foo** | Foo | None | Description of foo. |
 | **bar** | Bar | bat, bag, or bak | Description of bar. |
@@ -35,7 +35,7 @@ Preference | Default&nbsp;Value | Options | Description |
 
 ## Handler Reference
 
-### rigFooFunction(<var>tParam1</var>, <var>tParam2</var>, <var>tParam3</var>)</h3>
+### rigFooFunction(<var>tParam1</var>, <var>tParam2</var>, <var>tParam3</var>)
 
 Description
 
