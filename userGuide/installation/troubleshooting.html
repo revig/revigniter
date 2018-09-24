@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.9.8</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -133,15 +133,7 @@ put "&lt;/ul>" after tToDo
 return tToDo ?>
 </code></pre>
 
-<h2>Lion and Mountain Lion</h2>
 
-<p>There is a bug (9869) in LiveCode Server confirmed by RunRev. LiveCode Server <kbd>versions 4.6.3 up to 5.0.2</kbd> have two incorrect path environment variables on Lion and Mountain Lion. These variables are:
-<ul>
-	<li>$_SERVER["PATH_TRANSLATED"]</li>
-	<li>$_SERVER["PATH_INFO"]</li>
-</ul>
-As revIgniter is heavily dependent on path variables this means that there is no way to run revIgniter using the said OS / server versions.<br />Note: This issue is fixed in LiveCode Server release: 6.0.0-rc-1.	
-</p>
 
 <h2>Email Library</h2>
 
@@ -153,6 +145,11 @@ As revIgniter is heavily dependent on path variables this means that there is no
 
 <p>As of server version 7.0.6-rc-1 the Trackback library does not work on Linux because the write to socket command is still not working in the Linux server engine. On Mac OS X Trackback should work as expected since server version 7.0.1.<br><kbd>Update</kbd>: Sockets work in Linux server engine since version 7.1.0 RC 1 too. This means you can use the Trackback library on Linux.<br><kbd>Update</kbd>: This issue reappeared with LC server version 9.0.0 on Mac OS X.</p>
 <p>See <a href="https://quality.livecode.com/show_bug.cgi?id=15514">LC server bug (15514)</a></p>
+
+
+<h2>FTP Library</h2>
+
+<p>Asynchronous requests are currently (up to LC server version 9.0.1) not working, presumably this is due to a bug in tsNet, <a href="http://quality.livecode.com/show_bug.cgi?id=18961">see bug 18961.</a></p>
 
 
 

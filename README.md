@@ -33,9 +33,9 @@ To join the discussion relating to using revIgniter subscribe and review archive
 
 ### Meta
 
-- Version: 1.9.8
-- Web Site: http://revigniter.com/
-- User Guide: http://revigniter.com/userGuide/index.html
+- Version: 1.10.0
+- Web Site: https://revigniter.com/
+- User Guide: https://revigniter.com/userGuide/index.html
 - Author:  [Ralf Bitter](mailto:rabit@revigniter.com)
 
 
