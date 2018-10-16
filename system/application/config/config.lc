@@ -288,7 +288,7 @@ end if
 
 	put "ri_session" into gConfig["sess_cookie_name"]
 	put 129600 into gConfig["sess_expiration"]
-	put FALSE into gConfig["sess_expire_on_close"]
+	put TRUE into gConfig["sess_expire_on_close"]
 	put FALSE into gConfig["sess_encrypt_cookie"]
 	put "" into gConfig["sess_driver"]
 	put "" into gConfig["sess_save_location"]
