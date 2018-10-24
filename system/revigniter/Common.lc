@@ -48,7 +48,7 @@ end if
 # DECLARE INCLUDED LIBRARIES ARRAY VARIABLE
 # DECLARE MAIN CONFIGURATION  ARRAY VARIABLE
 # DECLARE ERRORS LIST VARIABLE
-	local sLoadedLibs, sMainConf
+	local sLoadedLibs, sMainConf, sNonce
 
 
 /*----------------------------------------------------------------------
