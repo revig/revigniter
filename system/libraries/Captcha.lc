@@ -406,21 +406,27 @@ end rigGetCaptchaNum
 --| FUNCTION rigCaptchaStyle
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Version:  1.1
+--| Created: 2009-10-19
+--| Last Mod: 2018-10-24
 --| Requires: --
 --|
 --| Summary: Get captcha style tags.
 --| 
---| Format:  rigCaptchaStyle()
+--| Format:  rigCaptchaStyle([param1])
 --|
---| Parameters: --
+--| Parameters: string <pNonce> used by CSP headers (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigCaptchaStyle
+function rigCaptchaStyle pNonce
+  if pNonce <> empty then
+    put sCaptchaStyle into tCaptchaStyle
+    replace char 1 to 6 of tCaptchaStyle with "<style nonce=" & quote & pNonce & quote in tCaptchaStyle
+    return tCaptchaStyle
+  end if
+  
 	return sCaptchaStyle
 end rigCaptchaStyle
 
