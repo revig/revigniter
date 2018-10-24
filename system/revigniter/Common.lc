@@ -2033,6 +2033,36 @@ end rigUniqid
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigNonce
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-10-24
+--| Last Mod: 2018-10-24
+--| Requires: rigHexDigest(), rigUniqid()
+--|
+--| Summary: Generate a random string unique for each request
+--|            as used by Content-Security-Policy response headers.
+--| 
+--| Format:  rigNonce()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigNonce
+  if sNonce is empty then
+    put rigHexDigest(rigUniqid()) into sNonce
+  end if
+
+  return sNonce
+end rigNonce
+
+
+
+
 
 /*----------------------------------------------------------------------
 --| FUNCTION rigMasterNow
