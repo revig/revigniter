@@ -105,7 +105,7 @@ The captcha library provides a means to generate two flavors of captchas. In it'
 <pre><code>9e883aabcdd63ba74d48eabdae0b2a28</code></pre>
 
 <p>Displayed captcha:</p>
-<div>
+<div id="captcha">
 <span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><br /><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><br /><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><br /><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><br /><span class="w">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="w">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><span class="b">&nbsp;&nbsp;</span><br />
 </div>
 
@@ -161,7 +161,7 @@ put rigCaptcha() into gData["captcha"]
 # GET CAPTCHA CSS 
 put rigCaptchaStyle() into gData["captchaStyle"] 
  
-#GET CAPTCHA HASH 
+# GET CAPTCHA HASH 
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
 
@@ -208,16 +208,16 @@ end if
 # CALLBACK HANDLER 
  
 command captchaFailed pStr 
-# pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG 
-if pStr = "true" then 
-	# SHOW CAPTCHA ERROR 
-	put "Wrong input in field %s." into tCaptchaError 
-	rigSetMessage "captchaFailed", tCaptchaError 
-	# RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED 
-	return FALSE 
-else 
-	return TRUE 
-end if 
+	# pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG 
+	if pStr = "true" then 
+		# SHOW CAPTCHA ERROR 
+		put "Wrong input in field %s." into tCaptchaError 
+		rigSetMessage "captchaFailed", tCaptchaError 
+		# RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED 
+		return FALSE 
+	else 
+		return TRUE 
+	end if 
 end captchaFailed
 </code></pre>
 
@@ -276,15 +276,26 @@ rigInitCaptcha tConfig</code></pre>
 <p>Call this function first in case you want to get a none breaking spaces captcha:</p>
 <pre><code>put rigCaptcha() into gData["captcha"]</code></pre>
 
-<h3>rigCaptchaMathProblem(pNumberOfOperators)</h3>
+<h3>rigCaptchaMathProblem(<var>pNumberOfOperators</var>)</h3>
 <p>Call this function first in case you want to get a random math problem captcha:</p>
 <pre><code>put rigCaptchaMathProblem() into gData["captcha"]</code></pre>
 
 <p>The parameter defines the number of operators used to generate a math problem. Leave empty to set the number of operators to four (+,-,/,*), enter "2" to set the number of operators to two (+,-).</p>
 
-<h3>rigCaptchaStyle()</h3>
+<h3>rigCaptchaStyle(<var>pNonce</var>)</h3>
 <p>Get captcha style tags to be placed in the header of the view file:</p>
 <pre><code>put rigCaptchaStyle() into gData["captchaStyle"]</code></pre>
+<p>Use the optional parameter to add a nonce (as used by Content Security Policy headers) to the style tags. Example:</p>
+<pre><code>put rigNonce() into tNonce
+put "'nonce-" & tNonce & "'" into tSrcNonce
+put rigCaptchaStyle(tNonce) into gData["captchaStyle"]
+
+# THEN GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
+put "Content-Security-Policy" into tCspMetaA["name"]
+put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
+put "equiv" into tCspMetaA["type"]
+put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
+</code></pre>
 
 <h3>rigGetCaptchaHash()</h3>
 <p>Get hash from captcha number and a key. You may store this string in a hidden form field:</p>
@@ -294,14 +305,14 @@ rigInitCaptcha tConfig</code></pre>
 <p>Get number the captcha is built with / get the result of a math problem:</p>
 <pre><code>put rigGetCaptchaNum() into gData["captchaNum"]</code></pre>
 
-<h3>rigValidCaptchaUserInput(pCaptchaInput, pHiddenFieldValue)</h3>
+<h3>rigValidCaptchaUserInput(<var>pCaptchaInput</var>, <var>pHiddenFieldValue</var>)</h3>
 <p>Validate captcha user input. The first parameter is the posted captcha user input and the second is the captcha hash retrieved from an hidden field. The function returns TRUE or FALSE.</p>
 <pre><code>if rigValidCaptchaUserInput(tInput, tHiddenField) is TRUE then 
 	-- your code here 
 end if
 </code></pre>
 
-<h3>rigInitCaptcha pConfigArray</h3>
+<h3>rigInitCaptcha <var>pConfigArray</var></h3>
 <p>Used to set initial values whenever the library is loaded. The parameter is an array of captcha settings described above:</p>
 <pre><code class="lang-livecodeserver">rigInitCaptcha tConfig</code></pre>
 
