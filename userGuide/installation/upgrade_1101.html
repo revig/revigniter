@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Upgrading from 1.5.10b to 1.5.11b : revIgniter User Guide</title>
+		<title>Upgrading from 1.10.0 to 1.10.1 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Upgrading from 1.5.10b to 1.5.11b</li>
+			 		 	<li class="active">Upgrading from 1.10.0 to 1.10.1</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,86 +85,39 @@
 	
 <div id="content">
 
-<h1>Upgrading from 1.5.10b to 1.5.11b</h1>
+<h1>Upgrading from 1.10.0 to 1.10.1</h1>
 
 
-<p>Before performing an update you should take your site offline by replacing the index.irev file with a static one.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
 
 <h2>Step 1: Update your revIgniter files</h2>
 
 
-<p>Replace this file in your "system/application/config" folder with the new version:</p>
-
-<ul>
-	<li><dfn>mimes.lc</dfn></li>
-</ul>
-
-
 <p>Replace these files in your "system/libraries" folder with the new versions:</p>
 
 <ul>
+	<li><dfn>Captcha.lc</dfn></li>
 	<li><dfn>Input.lc</dfn></li>
-	<li><dfn>Formvalidation.lc</dfn></li>
-	<li><dfn>Session.lc</dfn></li>
+	<li><dfn>Output.lc</dfn></li>
 </ul>
 
 
 <p>Replace this file in your "system/helpers" folder with the new version:</p>
 
 <ul>
-	<li><dfn>formHelper.lc</dfn></li>
-</ul>
-
-<p>Replace this file in your "system/plugins" folder with the new version:</p>
-
-<ul>
-	<li><dfn>galleriaPi.lc</dfn></li>
+	<li><dfn>stringHelper.lc</dfn></li>
 </ul>
 
 
-<p>Replace this file in your "system/language/english" folder with the new version:</p>
+<p>Replace these files in your "system/revigniter" folder with the new versions:</p>
 
 <ul>
-	<li><dfn>formvalidationLang.lc</dfn></li>
-</ul>
-
-
-<p>Replace this file in your "system/language/french" folder with the new version:</p>
-
-<ul>
-	<li><dfn>formvalidationLang.lc</dfn></li>
-</ul>
-
-
-<p>Replace this file in your "system/language/german" folder with the new version:</p>
-
-<ul>
-	<li><dfn>formvalidationLang.lc</dfn></li>
-</ul>
-
-
-<p>Replace this file in your "system/language/spanish" folder with the new version:</p>
-
-<ul>
-	<li><dfn>formvalidationLang.lc</dfn></li>
-</ul>
-
-
-<p>Make a copy of the configuration file in your "system/application/config" folder and replace this file with the new version:</p>
-
-<ul>
-	<li><dfn>config.lc</dfn></li>
-	<li>Replace the default settings in this file with your settings saved before.</li>
-</ul>
-
-
-<p>Replace this file in your "system/revigniter" folder with the new version:</p>
-
-<ul>
+	<li><dfn>Common.lc</dfn></li>
 	<li><dfn>RevIgniter.lc</dfn></li>
 </ul>
+
 
 
 <h2>Step 2: Update your user guide</h2>

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1101">Version 1.10.1</a></li>
 <li><a href="#version1100">Version 1.10.0</a></li>
 <li><a href="#version198">Version 1.9.8</a></li>
 <li><a href="#version197">Version 1.9.7</a></li>
@@ -201,6 +202,23 @@
 </ul>
 
 
+<h2><a name="version1101">&nbsp;</a>Version 1.10.1</h2>
+<p>Release Date: 2018-10-29</p>
+
+<p>
+	<ul>
+		<li><strong>Added:</strong> Function to generate a nonce as used by CSP (Content Security Policy) headers. See <dfn>system/revigniter/Common.lc</dfn> -> rigNonce().</li>
+		<li><strong>Added:</strong> Info regarding the new parameter "pNonce" for rigCaptchaStyle() in User Guide, see <a href="libraries/captcha.html">Captcha Library</a>.</li>
+		<li><strong>Added:</strong> Info regarding function rigNonce() to the User Guide, see <a href="general/common_handlers.html">Captcha Library</a>.</li>
+		<li><strong>Changed:</strong> Added optional nonce to captcha style tags in <dfn>system/libraries/Captcha.lc</dfn> -> rigCaptchaStyle().</li>
+		<li><strong>Changed:</strong> Added LC built-in function uuid() to <dfn>system/revigniter/Common.lc</dfn> -> rigUniqid() as an option to generate a unique identifier.</li>
+		<li><strong>Changed:</strong> Modified code to generate an UUID in <dfn>system/libraries/Input.lc</dfn> -> _rigCSRFsetHash and in <dfn>system/helpers/stringHelper.lc</dfn> -> rigRandomString().</li>
+		<li><strong>Changed:</strong> Set the default value for sess_expire_on_close in <dfn>system/application/config/config.lc</dfn> to TRUE.</li>
+		<li><strong>Fixed:</strong> Bug in <dfn>system/libraries/Output.lc</dfn> -> _rigDisplay caused authentication auto-login to fail.</li>
+	</ul>
+</p>
+
+
 <h2><a name="version1100">&nbsp;</a>Version 1.10.0</h2>
 <p>Release Date: 2018-09-24</p>
 
@@ -218,10 +236,10 @@
 
 <p>
 	<ul>
-		<li><strong>Changed:</strong> Modified DB handlers system/database/DBresult.lc -> rigDBresult(), _rigFetchResultArray() and system/database/DBdriver.lc -> rigDBquery() so that "SELECT IF" and “SELECT GREATEST” queries work as expected as long as you don’t use rigDBrow() to retrieve result data. Use something like tQueryResult["resultarray"][1][1] instead. Actually this is a fix for an issue of LiveCode’s built in database handlers.</li>
-		<li><strong>Fixed:</strong> Formatting of dates in system/helpers/dateHelper.lc -> rigTranslateDateItem(), added format RFC2822.</li>
+		<li><strong>Changed:</strong> Modified DB handlers <dfn>system/database/DBresult.lc</dfn> -> rigDBresult(), _rigFetchResultArray() and <dfn>system/database/DBdriver.lc</dfn> -> rigDBquery() so that "SELECT IF" and “SELECT GREATEST” queries work as expected as long as you don’t use rigDBrow() to retrieve result data. Use something like tQueryResult["resultarray"][1][1] instead. Actually this is a fix for an issue of LiveCode’s built in database handlers.</li>
+		<li><strong>Fixed:</strong> Formatting of dates in <dfn>system/helpers/dateHelper.lc</dfn> -> rigTranslateDateItem(), added format RFC2822.</li>
 		<li><strong>Fixed:</strong> Date formats in chapter “Date Helper” of the User Guide.</li>
-		<li><strong>Fixed:</strong> Bug in system/revigniter/Common.lc -> rigStripHTML().</li>
+		<li><strong>Fixed:</strong> Bug in <dfn>system/revigniter/Common.lc</dfn> -> rigStripHTML().</li>
 		<li><strong>Fixed:</strong> Documentation bug regarding sockets. Write to socket does not work on Mac OS X, Linux is not affected by LC server bug 15514.</li>
 	</ul>
 </p>
