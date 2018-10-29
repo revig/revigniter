@@ -48,7 +48,7 @@ end if
 # DECLARE INCLUDED LIBRARIES ARRAY VARIABLE
 # DECLARE MAIN CONFIGURATION  ARRAY VARIABLE
 # DECLARE ERRORS LIST VARIABLE
-	local sLoadedLibs, sMainConf
+	local sLoadedLibs, sMainConf, sNonce
 
 
 /*----------------------------------------------------------------------
@@ -1994,9 +1994,9 @@ end rigRawURLdecode
 --| FUNCTION rigUniqid
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 04-09-2011
---| Last Mod: 04-09-2011
+--| Version:  1.1
+--| Created: 2011-09-04
+--| Last Mod: 2018-10-24
 --| Requires: --
 --|
 --| Summary: Build a unique identifier.
@@ -2009,13 +2009,56 @@ end rigRawURLdecode
 ----------------------------------------------------------------------*/
 
 function rigUniqid pLength
-	repeat pLength
-  	put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
-  end repeat
-
-	return tUniqueid
+  if pLength <> empty then
+	  repeat pLength
+  	  put any char of "-1234567890abcdefghijklmnopqrstuvwxyz" after tUUID
+    end repeat
+    
+    return tUUID
+  end if
+  
+	# CHECK SERVER VERSION - USE THE LIVECODE uuid() FUNCTION IF VERSION >= 6.1
+	set the itemDel to "."
+	if (item 1 of the version > 6) or ((item 1 of the version = 6) and (item 2 of the version >= 1)) then
+      put uuid() into tUUID
+   else
+	# USE A SHELL CALL FOR SERVER VERSIONS PRIOR TO 6.1
+		put shell("uuidgen") into tUUID
+	end if
+  
+	return tUUID
 end rigUniqid
 
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigNonce
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-10-24
+--| Last Mod: 2018-10-24
+--| Requires: rigHexDigest(), rigUniqid()
+--|
+--| Summary: Generate a random string unique for each request
+--|            as used by Content-Security-Policy response headers.
+--| 
+--| Format:  rigNonce()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigNonce
+  if sNonce is empty then
+    put rigHexDigest(rigUniqid()) into sNonce
+  end if
+
+  return sNonce
+end rigNonce
 
 
 

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -270,6 +270,9 @@ end if
 
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 </code></pre>
+
+
+<p class="important"><strong>Note:</strong> For security reasons think about setting gConfig["sess_expire_on_close"] in system/application/config/config.lc to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the pRemember parameter is not set to TRUE.</p>
 
 
 <h3>rigAuthLogout</h3>

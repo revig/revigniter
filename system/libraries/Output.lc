@@ -258,17 +258,17 @@ end rigOutputCache
 --| COMMAND _rigDisplay
 --|
 --| Author: rabit
---| Version:  2.6
+--| Version:  2.7
 --| Created: 2009-06-19
---| Last Mod: 2016-11-03
+--| Last Mod: 2018-10-16
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
---|           Loader library: sFinalOutput
+--|           	 Loader library: sFinalOutput
 --|
---|           This handler sends the finalized output data to the browser along
---|           with any server headers and profile data.  It also stops the
---|           benchmark timer so the page rendering speed  can be shown.
+--|           	 This handler sends the finalized output data to the browser along
+--|           	 with any server headers and profile data. It also stops the
+--|           	 benchmark timer so the page rendering speed can be shown.
 --| 
 --| Format:  _rigDisplay param1, param2
 --|
@@ -301,50 +301,67 @@ command _rigDisplay pOutput, pCached
 	# ARE THERE ANY SERVER HEADERS TO SEND?
 	if sHeaders is an array then
 		if (the number of lines in the keys of sHeaders) > 0 then
+      # AUTH COOKIES CONTROL VARIABLES
+			put FALSE into tIsAuthCookie
+			put FALSE into tLastCookieHeaderWasAuthCookie
 			
 			# CSRF CONTROL VARIABLES
 			put FALSE into tIsCSRFcookie
 			put FALSE into tLastCookieHeaderWasCSRFcookie
+			
 			put 0 into tCookieHeadersSet
 
 			repeat for each key tKey in sHeaders
-				-- put new header sHeaders[tKey]
 				 repeat for each key tHeader in sHeaders[tKey]
 					 
 					 if word 1 of tHeader is "Content-Type:" then
 						 put TRUE into tContentHeaderSet
 					 end if
 
-					# CHECK IF HEADER CONTAINS A CSRF COOKIE
-					if rigFetchConfigItem("csrf_protection") is TRUE then
-						if char 1 to 10 of tHeader is "Set-Cookie" then
-							add 1 to tCookieHeadersSet
-							set the itemDel to "="
-							-- rigLogMessage "debug", "item 1 of tHeader:" && item 1 of tHeader
-							if rigFetchConfigItem("csrf_cookie_name") is in item 1 of tHeader then
-								-- put TRUE into tLastCookieHeaderWasCSRFcookie
-								put TRUE into tIsCSRFcookie
-							end if
-						end if
-					end if
+           # CHECK IF HEADER CONTAINS AN AUTHENTICATION  COOKIE
+           set the itemDel to "="
+           if char 1 to 10 of tHeader is "Set-Cookie" then
+             add 1 to tCookieHeadersSet
+             
+             if ("rememberCode" is in item 1 of tHeader) or ("identity" is in item 1 of tHeader) then
+               put TRUE into tIsAuthCookie
+             end if
+             
+             # CHECK IF HEADER CONTAINS A CSRF COOKIE
+             if rigFetchConfigItem("csrf_protection") is TRUE then
+               if rigFetchConfigItem("csrf_cookie_name") is in item 1 of tHeader then
+                 put TRUE into tIsCSRFcookie
+               end if
+             end if
+           end if -- if char 1 to 10 of tHeader is "Set-Cookie"
 
 					if sHeaders[tKey][tHeader] is FALSE then
 						# DON'T REPLACE HEADER
 						put new header tHeader
 						
+            # SET THE APPROPRIATE VALUES FOR THE AUTHENTICATION COOKIE CONTROL VARIABLES
+						if tIsAuthCookie is TRUE then
+                put TRUE into tDoNotReplaceLastCookie
+							put FALSE into tIsAuthCookie
+						end if
+						
 						# SET THE APPROPRIATE VALUES FOR THE CSRF COOKIE CONTROL VARIABLES
 						if tIsCSRFcookie is TRUE then
-							put TRUE into tLastCookieHeaderWasCSRFcookie
+							put TRUE into tDoNotReplaceLastCookie
 							put FALSE into tIsCSRFcookie
 						end if
 						
 						
 					else
 						# REPLACE HEADER BUT DON'T REPLACE CSRF COOKIE
-						if (tCookieHeadersSet > 1) and (tIsCSRFcookie is FALSE)  and (tLastCookieHeaderWasCSRFcookie is TRUE) then
+              if tCookieHeadersSet > 1 \
+                and tDoNotReplaceLastCookie is TRUE \
+                and tIsCSRFcookie is FALSE \
+                and tIsAuthCookie is FALSE then
+								
 							# RESET CONTROL VARIABLES
 							put 0 into tCookieHeadersSet
-							put FALSE into tLastCookieHeaderWasCSRFcookie
+              	put FALSE into tDoNotReplaceLastCookie
 							
 							# SET NEW HEADER
 							put new header tHeader
@@ -352,11 +369,12 @@ command _rigDisplay pOutput, pCached
 							# REPLACE HEADER
 							put header tHeader
 							
-							# SET THE APPROPRIATE VALUES FOR THE CSRF COOKIE CONTROL VARIABLES
-							if tIsCSRFcookie is TRUE then
-								put TRUE into tLastCookieHeaderWasCSRFcookie
-								put FALSE into tIsCSRFcookie
-							end if
+              	# SET THE APPROPRIATE VALUES FOR THE AUTHENTICATION COOKIE CONTROL VARIABLES
+                if tIsAuthCookie is TRUE or tIsCSRFcookie is TRUE then
+                  put TRUE into tDoNotReplaceLastCookie
+                  put FALSE into tIsAuthCookie
+                  put FALSE into tIsCSRFcookie
+  						end if
 							
 						end if
 

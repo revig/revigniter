@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -113,6 +113,29 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 
 <p><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">See here</a> for a full list of headers.</p>
 
+<h3>rigNonce()</h3>
+
+<p>Generates a random string unique for each request as used by Content-Security-Policy response headers.
+<br>Example:</p>
+
+<pre><code>put "'nonce-" & rigNonce() & "'" into tSrcNonce
+# GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
+put "Content-Security-Policy" into tCspMetaA["name"]
+put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
+put "equiv" into tCspMetaA["type"]
+put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
+</code></pre>
+
+<p>Add csp nonce to your view file.</p>
+<pre><code>[[gData["cspTag"] ]] -- see above
+
+&lt;style nonce="&lt;? return rigNonce() ?>" type="text/css">
+body {
+ ...
+}
+...
+&lt;/style>
+</code></pre>
 
 
 </div>
