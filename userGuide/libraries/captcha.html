@@ -43,7 +43,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -284,13 +284,17 @@ rigInitCaptcha tConfig</code></pre>
 
 <h3>rigCaptchaStyle(<var>pNonce</var>)</h3>
 <p>Get captcha style tags to be placed in the header of the view file:</p>
+
 <pre><code>put rigCaptchaStyle() into gData["captchaStyle"]</code></pre>
+
 <p>Use the optional parameter to add a nonce (as used by Content Security Policy headers) to the style tags. Example:</p>
+
 <pre><code>put rigNonce() into tNonce
 put "'nonce-" & tNonce & "'" into tSrcNonce
 put rigCaptchaStyle(tNonce) into gData["captchaStyle"]
 
 # THEN GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
+rigLoadHelper "html"
 put "Content-Security-Policy" into tCspMetaA["name"]
 put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
