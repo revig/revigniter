@@ -47,7 +47,7 @@ put "</p>" into sErrorSuffix
 put FALSE into sSafeFormData
 put "requiredR,matchesR,minLengthR,maxLengthR,exactLengthR,greaterThanR,lessThanR,alphaR,alphaNumericR,alphaDashR,alphaAccentR,alphaNumericAccentR,AlphaDashAccentR,numericR,isNumericR,integerR,decimalR,isNaturalR,isNaturalNoZeroR,validEmailR,validEmailsR,validIpR,validBase64R" into sRuleNames
 
-put "trim,md5,sha1,prepForForm,prepURL,xssClean,stripImageTags,encodeRevTags,htmlSpecialChars,urlDecodeStr" into sPrepMethods
+put "trim,md5,sha1,sha3,prepForForm,prepURL,xssClean,stripImageTags,encodeRevTags,htmlSpecialChars,urlDecodeStr" into sPrepMethods
 
 put FALSE into sConfigLoaded
 
@@ -2060,7 +2060,7 @@ end rigMd5
 --| Last Mod: 06-09-2012
 --| Requires: --
 --|
---| Summary: Returns a base64 encoded SHA-1 digest of a block of data
+--| Summary: Returns a base64 encoded SHA-1 digest of a block of data.
 --| 
 --| Format:  rigSha1 param1
 --|
@@ -2073,6 +2073,37 @@ command rigSha1 pStr
 	return base64Encode(sha1Digest(pStr))
 end rigSha1
 
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigSha3
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-11-02
+--| Last Mod: 2018-11-02
+--| Requires: --
+--|
+--| Summary: Returns a base64 encoded SHA3-384 digest of a block of data.
+--| 
+--| Format:  rigSha3 param1
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+command rigSha3 pStr
+  set the itemdel to "."
+  
+  # FALLBACK
+	if (item 1 of the version < 9) then
+    return base64Encode(sha1Digest(pStr))
+  end if
+  
+  return base64Encode(messageDigest(pStr, "SHA3-384"))
+end rigSha3
 
 
 
