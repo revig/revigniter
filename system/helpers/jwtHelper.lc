@@ -71,10 +71,10 @@ end rigJWTinitHelper
 --| FUNCTION rigJWTencode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2016-07-08
---| Last Mod: 2017-06-06
---| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha256b64(), rigJWTpurge
+--| Last Mod: 2018-11-02
+--| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha2b64(), rigJWTpurge
 --|
 --| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
 --| 
@@ -88,7 +88,13 @@ end rigJWTinitHelper
 function rigJWTencode pHeader pPayload
   # HEADER
   if pHeader is empty then
-    put "HS256" into tJWTheaderDataA["alg"]
+		set the itemDel to "."
+	
+		if item 1 of the version < 9 then
+			put "HS256" into tJWTheaderDataA["alg"]
+		else
+			put "HS512" into tJWTheaderDataA["alg"]
+		end if
     put "JWT"into tJWTheaderDataA["typ"]
   else
     if pHeader is not an array then
@@ -119,7 +125,7 @@ function rigJWTencode pHeader pPayload
   put tJWTheader & "." & tJWTpayload into tJWTheaderPayload
   rigJWTpurge tJWTheaderPayload
 
-	put rigHmacSha256b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
+	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
 	rigJWTpurge tJWThmac
 
   return tJWTheaderPayload & "." & tJWThmac
@@ -204,10 +210,10 @@ end rigJWTdecode
 --| FUNCTION _rigJWTVerifySig
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2016-07-13
---| Last Mod: 2017-06-06
---| Requires: rigLogMessage, rigHmacSha256b64(), rigJWTpurge
+--| Last Mod: 2018-11-02
+--| Requires: rigLogMessage, rigHmacSha2b64(), rigJWTpurge
 --|
 --| Summary: Verify signature of token received.
 --| 
@@ -230,7 +236,7 @@ function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
 	
 	put pHeaderEncoded & "." & pPayloadEncoded into tJWTheaderPayload
 
-	put rigHmacSha256b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
+	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
 	rigJWTpurge tJWThmac
 
 	return (tJWThmac is pJWThmac)
@@ -279,26 +285,26 @@ end rigJWTgenerateSecret
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigHmacSha256b64
+--| FUNCTION rigHmacSha2b64
 --|
 --| Author: Mark Smith
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2009-09-09
+--| Last Mod: 2018-11-02
 --| Requires: rigHmacSha2()
 --|
 --| Summary: Return signature using a header concatenated with a payload and a secret.
 --| 
---| Format:  rigHmacSha256b64(param1, param2)
+--| Format:  rigHmacSha2b64(param1, param2)
 --|
 --| Parameters: string <pMsg>, string <pKey>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigHmacSha256b64 pMsg, pKey
+function rigHmacSha2b64 pMsg, pKey
   return base64encode(rigHmacSha2(pMsg, pKey, 256))
-end rigHmacSha256b64
+end rigHmacSha2b64
 
 
 
@@ -346,11 +352,12 @@ end rigHmacSha2
 --| FUNCTION rigsHa2
 --|
 --| Author: Marc Smith
---| Version:  1.0
+--| Modification: rabit
+--| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2009-09-09
+--| Last Mod: 2018-11-02
 --| Requires: rigJWTSetInput, rigInitSha256consts, initSha224vars, rigInitSha256vars, rigNextChunk(),
---|             rigProcessChunkSha256
+--|            rigProcessChunkSha256
 --|
 --| Summary: Used by rigHmacSha2 to encode a string using a secret.
 --| 
@@ -362,15 +369,18 @@ end rigHmacSha2
 ----------------------------------------------------------------------*/
 
 function rigsHa2 pInput, pIsFile, pNumBits
+	set the itemDel to "."
+	
+	if item 1 of the version < 9 then
    rigJWTSetInput pInput, pIsFile
-   
+
    rigInitSha256consts
    if pNumBits = 224 then
       initSha224vars
    else
       rigInitSha256vars
    end if
-   
+
    repeat
       put rigNextChunk() into tChunk
       if tChunk is not empty then
@@ -379,12 +389,16 @@ function rigsHa2 pInput, pIsFile, pNumBits
          exit repeat
       end if
    end repeat
-   
+
    if pNumBits = 224 then
        return binaryencode("M7", sH0,sH1,sH2,sH3,sH4,sH5,sH6)
    else
       return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7)
    end if
+	 
+	end if -- if item 1 of the version < 9
+ 
+	return messageDigest(pInput, "SHA-512")
 end rigsHa2
 
 
