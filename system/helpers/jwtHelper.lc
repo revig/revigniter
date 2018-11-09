@@ -355,8 +355,8 @@ end rigHmacSha2
 --| Modification: rabit
 --| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2018-11-02
---| Requires: rigJWTSetInput, rigInitSha256consts, initSha224vars, rigInitSha256vars, rigNextChunk(),
+--| Last Mod: 2018-11-09
+--| Requires: rigJWTSetInput, rigInitSha256consts, rigInitSha256vars, rigNextChunk(),
 --|            rigProcessChunkSha256
 --|
 --| Summary: Used by rigHmacSha2 to encode a string using a secret.
@@ -372,30 +372,21 @@ function rigsHa2 pInput, pIsFile, pNumBits
 	set the itemDel to "."
 	
 	if item 1 of the version < 9 then
-   rigJWTSetInput pInput, pIsFile
+		rigJWTSetInput pInput, pIsFile
 
-   rigInitSha256consts
-   if pNumBits = 224 then
-      initSha224vars
-   else
-      rigInitSha256vars
-   end if
+		rigInitSha256consts
+		rigInitSha256vars
 
-   repeat
-      put rigNextChunk() into tChunk
-      if tChunk is not empty then
-         rigProcessChunkSha256 tChunk
-      else
-         exit repeat
-      end if
-   end repeat
+		repeat
+			put rigNextChunk() into tChunk
+			if tChunk is not empty then
+				rigProcessChunkSha256 tChunk
+			else
+				exit repeat
+			end if
+		end repeat
 
-   if pNumBits = 224 then
-       return binaryencode("M7", sH0,sH1,sH2,sH3,sH4,sH5,sH6)
-   else
-      return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7)
-   end if
-	 
+		return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7) 
 	end if -- if item 1 of the version < 9
  
 	return messageDigest(pInput, "SHA-512")
