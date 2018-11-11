@@ -73,19 +73,23 @@ end rigJWTinitHelper
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2016-07-08
---| Last Mod: 2018-11-02
+--| Last Mod: 2018-11-09
 --| Requires: _rigStrToArray(), rigJWTgenerateSecret(), rigHmacSha2b64(), rigJWTpurge
 --|
 --| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
 --| 
---| Format:  rigJWTencode([param1,] param2)
+--| Format:  rigJWTencode([param1,] param2[, param3])
 --|
---| Parameters: mixed <pHeader> (optional), mixed <pPayload>
+--| Parameters: mixed <pHeader> (optional), mixed <pPayload>, integer <pNumBits> the number
+--| 						of bits of the hash function (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJWTencode pHeader pPayload
+function rigJWTencode pHeader pPayload pNumBits
+	# CHECK VALUE FOR NUMBER OF BITS
+	_rigJWTTypeNum pNumBits
+	
   # HEADER
   if pHeader is empty then
 		set the itemDel to "."
@@ -93,7 +97,7 @@ function rigJWTencode pHeader pPayload
 		if item 1 of the version < 9 then
 			put "HS256" into tJWTheaderDataA["alg"]
 		else
-			put "HS512" into tJWTheaderDataA["alg"]
+			put "HS" & pNumBits into tJWTheaderDataA["alg"]
 		end if
     put "JWT"into tJWTheaderDataA["typ"]
   else
@@ -125,7 +129,7 @@ function rigJWTencode pHeader pPayload
   put tJWTheader & "." & tJWTpayload into tJWTheaderPayload
   rigJWTpurge tJWTheaderPayload
 
-	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
+	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits) into tJWThmac
 	rigJWTpurge tJWThmac
 
   return tJWTheaderPayload & "." & tJWThmac
@@ -140,21 +144,24 @@ end rigJWTencode
 --| FUNCTION rigJWTdecode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-07-09
---| Last Mod: 2016-07-09
+--| Last Mod: 2018-11-09
 --| Requires: rigGetHTTPheader(), _rigJWTVerifySig(), rigLogMessage
 --|
 --| Summary: Decode and validate a JSON Web Token.
 --| 
---| Format:  rigJWTdecode([param1])
+--| Format:  rigJWTdecode([param1][, param2])
 --|
---| Parameters: string <pToken> (optional)
+--| Parameters: string <pToken> (optional), integer <pNumBits> the number of bits of the hash function (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigJWTdecode pToken
+function rigJWTdecode pToken pNumBits
+	# CHECK VALUE FOR NUMBER OF BITS
+	_rigJWTTypeNum pNumBits
+	
 	# GET TOKEN
 	if pToken is empty then
 		# HEADER DATA
@@ -174,7 +181,7 @@ function rigJWTdecode pToken
 	if (pToken <> empty) and (the number of items of pToken is 3) then
   
 		# CHECK INTEGRITY OF TOKEN
-		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac) into tJWTDecodedA["valid"]
+		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, pNumBits) into tJWTDecodedA["valid"]
 		#
  
 		put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
@@ -212,19 +219,20 @@ end rigJWTdecode
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2016-07-13
---| Last Mod: 2018-11-02
+--| Last Mod: 2018-11-09
 --| Requires: rigLogMessage, rigHmacSha2b64(), rigJWTpurge
 --|
 --| Summary: Verify signature of token received.
 --| 
---| Format:  _rigJWTVerifySig(param1, param2)
+--| Format:  _rigJWTVerifySig(param1, param2, param3, param4)
 --|
---| Parameters: string <pHeaderEncoded>, string <pPayloadEncoded>, string <pJWThmac>
+--| Parameters: string <pHeaderEncoded>, string <pPayloadEncoded>, string <pJWThmac>,
+--| 						integer <pNumBits> the number of bits of the hash function
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
+function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac pNumBits
   put gAPPPATH & "config/jwt.lc" into tSecretFile
   if there is a file tSecretFile then
     put url ("binfile:" & tSecretFile) into tJWTsecret
@@ -236,7 +244,7 @@ function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac
 	
 	put pHeaderEncoded & "." & pPayloadEncoded into tJWTheaderPayload
 
-	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret) into tJWThmac
+	put rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits) into tJWThmac
 	rigJWTpurge tJWThmac
 
 	return (tJWThmac is pJWThmac)
@@ -288,22 +296,23 @@ end rigJWTgenerateSecret
 --| FUNCTION rigHmacSha2b64
 --|
 --| Author: Mark Smith
+--| Modification: rabit
 --| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2018-11-02
+--| Last Mod: 2018-11-11
 --| Requires: rigHmacSha2()
 --|
 --| Summary: Return signature using a header concatenated with a payload and a secret.
 --| 
---| Format:  rigHmacSha2b64(param1, param2)
+--| Format:  rigHmacSha2b64(param1, param2, param3)
 --|
---| Parameters: string <pMsg>, string <pKey>
+--| Parameters: string <pMsg>, string <pKey>, integer <pNumBits> the number of bits of the hash function
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigHmacSha2b64 pMsg, pKey
-  return base64encode(rigHmacSha2(pMsg, pKey, 256))
+function rigHmacSha2b64 pMsg pKey pNumBits
+  return base64encode(rigHmacSha2(pMsg, pKey, pNumBits))
 end rigHmacSha2b64
 
 
@@ -315,23 +324,33 @@ end rigHmacSha2b64
 --| FUNCTION rigHmacSha2
 --|
 --| Author: Mark Smith
---| Version:  1.0
+--| Modification: rabit
+--| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2009-09-09
+--| Last Mod: 2018-11-11
 --| Requires: rigsHa2()
 --|
 --| Summary: Encode string using a secret.
 --| 
 --| Format:  rigHmacSha2(param1, param2, param3)
 --|
---| Parameters: string <pMsg>, string <pKey>, integer <pNumBits>
+--| Parameters: string <pMsg>, string <pKey>, integer <pNumBits> the number of bits of the hash function
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigHmacSha2 pMsg, pKey, pNumBits
-  if length(pKey) > 64 then put rigsHa2(pKey,,pNumBits) into pKey
-  repeat 64 - length(pKey)
+	if pNumBits > 256 then
+		put 128 into tBlockSize
+	else
+		put 64 into tBlockSize
+	end if
+		 
+  if length(pKey) > tBlockSize then
+		put rigsHa2(pKey,,pNumBits) into pKey
+	end if
+	
+  repeat tBlockSize - length(pKey)
     put null after pKey
   end repeat
   
@@ -339,7 +358,7 @@ function rigHmacSha2 pMsg, pKey, pNumBits
     put numtobyte(bytetonum(b) bitXor 54) after ipad
     put numtobyte(bytetonum(b) bitXor 92) after opad
   end repeat
-  
+
   return rigsHa2(opad & rigsHa2(ipad & pMsg,,pNumBits),,pNumBits)
 end rigHmacSha2
 
@@ -363,7 +382,7 @@ end rigHmacSha2
 --| 
 --| Format:  rigsHa2(param1, param2, param3)
 --|
---| Parameters: string <pInput>, bool <pIsFile>, integer <NumBits>
+--| Parameters: string <pInput>, bool <pIsFile>, integer <NumBits> the number of bits of the hash function
 --|
 --| Return: binary string
 ----------------------------------------------------------------------*/
@@ -388,6 +407,12 @@ function rigsHa2 pInput, pIsFile, pNumBits
 
 		return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7) 
 	end if -- if item 1 of the version < 9
+ 
+	set the itemDel to ","
+	if pNumBits is among the items of "256,384,512" then
+		put "SHA-" & pNumBits into tDigestType
+		return messageDigest(pInput, tDigestType)
+	end if -- if pNumBits is among the items of "256,384,512"
  
 	return messageDigest(pInput, "SHA-512")
 end rigsHa2
@@ -863,6 +888,47 @@ command rigJWTpurge @pStr
   replace return with "" in pStr
   replace "=" with "" in pStr
 end rigJWTpurge
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigJWTTypeNum
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-11-09
+--| Last Mod: 2018-11-09
+--| Requires: --
+--|
+--| Summary: Check number of bits of the hash function.
+--| 
+--| Format:  _rigJWTTypeNum param1
+--|
+--| Parameters: mixed <pNumBits>
+--|
+--| Return: integer
+----------------------------------------------------------------------*/
+
+command _rigJWTTypeNum @pNumBits
+	if pNumBits is not a number then
+		if item 1 of the version < 9 then
+			put 256 into pNumBits
+		else
+			put 512 into pNumBits
+		end if
+	else
+		if pNumBits is not among the items of "256,384,512" then
+			if item 1 of the version < 9 then
+				put 256 into pNumBits
+			else
+				put 512 into pNumBits
+			end if
+		end if -- if pNumBits is among the items of "256,384,512"
+	end if -- if pNumBits is not a number
+end _rigJWTTypeNum
+
 
 
 
