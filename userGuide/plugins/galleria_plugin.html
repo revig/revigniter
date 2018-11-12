@@ -88,7 +88,7 @@
 
 <h1>Galleria Plugin</h1>
 
-<p>The Galleria Plugin file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery framework made by <a href="https://galleria.io/" target="_blank">worse is better https://galleria.io/</a>. The plugin comes in two flavors. In it's first form the plugin generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the plugin generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.4.7.</em></p>
+<p>The Galleria Plugin file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery framework made by <a href="https://galleria.io/" target="_blank">worse is better https://galleria.io/</a>. The plugin comes in two flavors. In it's first form the plugin generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the plugin generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.5.7.</em></p>
 
 
 <h2>Requirements</h2>
@@ -178,9 +178,9 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <br />
 
-<p>The functions:</p>
+<h2>Handler Reference</h2>
 
-<h3>rigGalleriaData(<var>tGalleryPath</var>, <var>tOptions</var>, <var>tContainerID</var>, <var>tDataVariableName</var>, <var>tCacheBuster</var>, <var>tReplaceDataFile</var>, <var>tReturnReference</var>)</h3>
+<h3>rigGalleriaData(<var>pGalleryPath</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pReplaceDataFile</var>, <var>pReturnReference</var>)</h3>
 
 <ul>
 	<li>The first parameter is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
@@ -195,7 +195,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 	<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
 
 
-<h3>rigDynamicGalleriaData(<var>tMetaData</var>, <var>tOptions</var>, <var>tContainerID</var>, <var>tDataVariableName</var>, <var>tCacheBuster</var>)</h3>
+<h3>rigDynamicGalleriaData(<var>pMetaData</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>)</h3>
 
 <ul>
 	<li>The first parameter is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
