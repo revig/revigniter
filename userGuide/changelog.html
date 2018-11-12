@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1102">Version 1.10.2</a></li>
 <li><a href="#version1101">Version 1.10.1</a></li>
 <li><a href="#version1100">Version 1.10.0</a></li>
 <li><a href="#version198">Version 1.9.8</a></li>
@@ -200,6 +201,20 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+
+<h2><a name="version1102">&nbsp;</a>Version 1.10.2</h2>
+<p>Release Date: 2018-11-12</p>
+
+<p>
+	<ul>
+		<li><strong>Added:</strong> Digest types “SHA-384” and “SHA-512” to the JWT helper. Complemented the User Guide accordingly.</li>
+		<li><strong>Added:</strong> SHA3 prepping handler to form validation in <dfn>system/libraries/Formvalidation.lc</dfn> -> rigSha3. Complemented the User Guide accordingly.</li>
+		<li><strong>Fixed:</strong> Incorrect status code sent on routing to a custom 404 error page. See <dfn>system/librariesRouter.lc</dfn> -> _rigValidateRequest.</li>
+		<li><strong>Fixed:</strong> Version check used incorrect item delimiter in <dfn>system/libraries/Encrypt.lc</dfn> -> rigSetHash and rigHash().</li>
+	</ul>
+</p>
 
 
 <h2><a name="version1101">&nbsp;</a>Version 1.10.1</h2>
