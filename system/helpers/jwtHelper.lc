@@ -78,7 +78,7 @@ end rigJWTinitHelper
 --|
 --| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
 --| 
---| Format:  rigJWTencode([param1,] param2[, param3])
+--| Format:  rigJWTencode([param1], param2[, param3])
 --|
 --| Parameters: mixed <pHeader> (optional), mixed <pPayload>, integer <pNumBits> the number
 --| 						of bits of the hash function (optional)
