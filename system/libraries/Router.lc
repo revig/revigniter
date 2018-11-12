@@ -324,9 +324,9 @@ end _rigSetRequest
 --| FUNCTION _rigValidateRequest
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 19-06-09
---| Last Mod: 23-12-15
+--| Version:  1.5
+--| Created: 2009-06-19
+--| Last Mod: 2018-11-01
 --| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler, _rigValidateModuleRequest()
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
@@ -371,6 +371,8 @@ function _rigValidateRequest pSegmentsArray
 
 					rigSetDirectory "controllers"
 					rigLogMessage "error", "404 Page Not Found -->" && tSegments[1]
+					
+					rigSetStatusHeader "404"
 					
 					return t404ErrorSegments
 				else
@@ -431,6 +433,8 @@ function _rigValidateRequest pSegmentsArray
 		put TRUE into sModuleMainController
 		#
 		rigLogMessage "error", "404 Page Not Found -->" && pSegmentsArray[1]
+		
+		rigSetStatusHeader "404"
 		
 		return t404ErrorSegments
   end if

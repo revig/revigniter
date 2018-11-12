@@ -385,9 +385,9 @@ end rigSetCipher
 --| COMMAND rigSetHash
 --|
 --| Author: rabit
---| Version:  2.1
+--| Version:  2.2
 --| Created: 2009-10-16
---| Last Mod: 2017-06-17
+--| Last Mod: 2018-11-02
 --| Requires: --
 --|
 --| Summary: Set the hash type. 
@@ -406,6 +406,8 @@ command rigSetHash pType
 	else
 		put pType into tType
 	end if
+	
+	set the itemdel to "."
 	
 	if (item 1 of the version < 9) then
 		if (tType is not "SHA-1") and (tType is not "md5") then
@@ -431,9 +433,9 @@ end rigSetHash
 --| FUNCTION rigHash
 --|
 --| Author: rabit
---| Version:  2.1
+--| Version:  2.2
 --| Created: 2009-10-16
---| Last Mod: 2017-06-17
+--| Last Mod: 2018-11-02
 --| Requires: rigHexDigest()
 --|
 --| Summary: Hash encode a string. 
@@ -446,6 +448,8 @@ end rigSetHash
 ----------------------------------------------------------------------*/
 
 function rigHash pStr
+	set the itemdel to "."
+	
 	if (item 1 of the version < 9) then
 		if _sHashType is "SHA-1" then
 			put sha1Digest(pStr) into tHash
