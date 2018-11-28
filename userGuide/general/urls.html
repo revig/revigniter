@@ -133,7 +133,7 @@ contain handlers that make it easy to work with your URI data.  In addition, you
 </code></pre>
 
 <p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, css and js is treated as
-a request for your index.lc file.</p>
+a request for your index.lc file. If you use this method to remove the page, set the Index File variable in your <dfn>application/config/config.lc</dfn> file so that it is blank.</p>
 
 <p>If your default controller is not loaded when the URI contains no data please read about URIs in your <dfn>application/config/config.lc</dfn> file and choose another protocol to retrieve the URI string.</p>
 
