@@ -39,7 +39,7 @@ rigLogMessage "debug", "Hooks Library Loaded"
 # DECLARE VARIABLES
 global gHooks
 
-local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers
+local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers, sHooksfiles
 
 
 
