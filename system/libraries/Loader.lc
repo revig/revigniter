@@ -717,9 +717,9 @@ end rigLoadExtensions
 --| COMMAND _rigPrepareExtensionsArray
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2018-01-04
---| Last Mod: 2018-01-04
+--| Last Mod: 2018-12-14
 --| Requires: --
 --|
 --| Summary: Prepare array including extensions folder names and resource paths.
@@ -741,7 +741,7 @@ command _rigPrepareExtensionsArray @pExtensions
       put "/" & item 2 to -1 of tArrayDataAtIndex into pExtensions[tKey]["resourcePath"]
     else
       put pExtensions[tKey] into pExtensions[tKey]["extension"]
-      put empty into pExtensions[tKey][resourcePath]
+      put empty into pExtensions[tKey]["resourcePath"]
     end if
   end repeat
 end _rigPrepareExtensionsArray
