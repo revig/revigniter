@@ -705,7 +705,7 @@ end rigDefaultCalTemplate
 --| Summary: Harvests the data within the template {pseudo-variables}
 --|                    used to display the calendar.
 --| 
---| Format:  parseCalTemplate()
+--| Format: rigParseCalTemplate
 --|
 --| Parameters: --
 --|
