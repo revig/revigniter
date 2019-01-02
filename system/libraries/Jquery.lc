@@ -688,9 +688,9 @@ end rigJQprompt
 --| FUNCTION rigJQpromptR
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 14-04-2010
---| Last Mod: 14-04-2010
+--| Version:  1.1
+--| Created: 2010-04-14
+--| Last Mod: 2019-01-02
 --| Requires: --
 --|
 --| Summary: Return prompt box statement.
@@ -706,7 +706,7 @@ function rigJQpromptR  pVarName pPrompt pDefault pGlobal
 	if pDefault is "" then
 		put "" into tDefault
 	else
-		put "," && pDeafult into tDefault
+		put "," && pDefault into tDefault
 	end if
 	
 	if pGlobal is empty then
