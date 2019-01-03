@@ -33,7 +33,7 @@ To join the discussion relating to using revIgniter subscribe and review archive
 
 ### Meta
 
-- Version: 1.10.2
+- Version: 1.10.3
 - Web Site: https://revigniter.com/
 - User Guide: https://revigniter.com/userGuide/index.html
 - Author:  [Ralf Bitter](mailto:rabit@revigniter.com)
