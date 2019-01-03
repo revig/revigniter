@@ -1010,14 +1010,14 @@ end rigValidateUploadPath
 --| FUNCTION _rigPrepFilename
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 03-09-2011
---| Last Mod: 09-09-2011
+--| Version:  1.3
+--| Created: 2011-09-03
+--| Last Mod: 2018-12-27
 --| Requires: --
 --|
 --| Summary: Prep filename.
---| 				 Prevents possible script execution from Apache's handling of files multiple
---| 				 extensions http://httpd.apache.org/docs/1.3/mod/mod_mime.html#multipleext
+--| 				  Prevents possible script execution from Apache's handling of files multiple
+--| 				  extensions http://httpd.apache.org/docs/1.3/mod/mod_mime.html#multipleext
 --| 
 --| Format:  _rigPrepFilename(param1)
 --|
@@ -1033,7 +1033,7 @@ function _rigPrepFilename pFilename
 	
 	put pFilename into tParts
 	set the itemDel to "."
-	put item -1 of tParts into tExt
+	put item -1 of tParts into tExtension
 	put item 1 of tParts into tFilename
 	
 	put item 2 to -2 of tParts into tParts
@@ -1049,7 +1049,7 @@ function _rigPrepFilename pFilename
 			put tFilename & "." & thisItem into tFilename
 	end repeat
 	
-	put tFilename & "." & tExt into tFilename
+	put tFilename & "." & tExtension into tFilename
 	
 	return tFilename
 	
@@ -1134,9 +1134,9 @@ end rigGetExtension
 --| FUNCTION rigIsAllowedFileType
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 03-09-2011
---| Last Mod: 21-03-2014
+--| Version:  1.3
+--| Created: 2011-09-03
+--| Last Mod: 2018-12-27
 --| Requires: rigSetUploadError, rigGetImageSize(), rigUploadMimesTypes()
 --|
 --| Summary: Verify that the filetype is allowed.
@@ -1168,18 +1168,18 @@ function rigIsAllowedFileType pIgnoreMime
 	put sAllowedTypes into tAllowedTypes
 	combine tAllowedTypes using ","
 	
-	put toLower(sFileExt) into tExt
-	if char 1 of tExt is "." then
-		put char 2 to -1 of tExt into tExt
+	put toLower(sFileExt) into tExtension
+	if char 1 of tExtension is "." then
+		put char 2 to -1 of tExtension into tExtension
 	end if
 	
-	if tExt is not among the items of tAllowedTypes then
+	if tExtension is not among the items of tAllowedTypes then
 		return FALSE
 	end if
 	
 	# IMAGES GET SOME ADDITIONAL CHECKS
 	put "gif,jpg,jpeg,png,jpe" into tImageTypes
-	if tExt is among the items of tImageTypes then
+	if tExtension is among the items of tImageTypes then
 		if rigGetImageSize(sFileTemp) is not an array then
 			return FALSE
 		end if
@@ -1190,7 +1190,7 @@ function rigIsAllowedFileType pIgnoreMime
 		return TRUE
 	end if
 	
-	put rigUploadMimesTypes(tExt) into tMime
+	put rigUploadMimesTypes(tExtension) into tMime
 	
 	if tMime is sFileType then
 		return TRUE
@@ -1209,9 +1209,9 @@ end rigIsAllowedFileType
 --| FUNCTION rigGetImageSize
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 03-09-11
---| Last Mod: 13-02-14
+--| Version:  1.2
+--| Created: 2011-11-03
+--| Last Mod: 2018-12-27
 --| Requires: rigSetUploadError, rigFileSize()
 --|
 --| Summary: A helper function that gets info about an image file.
@@ -1241,7 +1241,7 @@ function rigGetImageSize pFilepath
   put the width of last image into tVals
   put "," & the height of last image after tVals
   put "," & toUpper(the paintCompression of last image) after tVals
-  put "," & rigFileSize(tPath) after tVals
+  put "," & rigFileSize(tFilepath) after tVals
   delete last image
    
   # GET MIME TYPE
@@ -1416,9 +1416,9 @@ end rigCleanFilename
 --| FUNCTION rigLimitFilenameLength
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 03-09-2011
---| Last Mod: 21-03-2014
+--| Version:  1.2
+--| Created: 2011-09-03
+--| Last Mod: 2018-12-27
 --| Requires: --
 --|
 --| Summary: Limit the File Name Length.
@@ -1435,15 +1435,15 @@ function rigLimitFilenameLength pFilename pLength
 		return pFilename
 	end if
 	
-	put "" into tExt
+	put "" into tExtension
 	if "." is in pFilename then
 		set the itemDel to "."
-		put "." & (item -1 of pFilename) into tExt
-		put the length of tExt into tExtLength
+		put "." & (item -1 of pFilename) into tExtension
+		put the length of tExtension into tExtLength
 		put char 1 to ((the length of pFilename) - (tExtLength +1)) of pFilename into pFilename
 	end if
 	
-	put (char 1 to (pLength - (the length of tExt)) of pFilename) & tExt into tTruncName
+	put (char 1 to (pLength - (the length of tExtension)) of pFilename) & tExtension into tTruncName
 	
 	return tTruncName
 end rigLimitFilenameLength

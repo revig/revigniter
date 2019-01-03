@@ -709,9 +709,9 @@ end _rigResetPostArray
 --| COMMAND _rigFormValidExecute
 --|
 --| Author: rabit
---| Version:  1.10
+--| Version:  1.11
 --| Created: 2009-07-30
---| Last Mod: 2017-06-27
+--| Last Mod: 2018-12-20
 --| Requires: _rigFormValidExecute, rigLangLangLine(), _rigTranslateFieldname(), rigNumToCodepoint(),
 --|           _rigExceptionHandler(), rigLogException
 --|
@@ -758,8 +758,8 @@ command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 
 		put "(callback_\w+)" into tRegEx
     
-			put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
-    		put matchText(tStr,tRegEx,tFoundTextVar) into tTextFound
+		put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put matchText(tRules,tRegEx,tFoundTextVar) into tTextFound
 		if tTextFound is TRUE then
 			put TRUE into tCallback
 			put empty into tRules
@@ -924,7 +924,7 @@ command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 
 			# VALIDATE
 			#
-			do rig & tRule && quote & tPostdataTemp & quote & "," & tParam
+			do "rig" & tRule && quote & tPostdataTemp & quote & "," & tParam
 			put the result into tResult
 			#
 			

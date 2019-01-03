@@ -313,9 +313,9 @@ end rigFtpPrintDebugger
 --| COMMAND rigFtpListFiles
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-10-13
---| Last Mod: 2016-10-13
+--| Last Mod: 2018-12-21
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -372,7 +372,7 @@ command rigFtpListFiles pPath pSimpleList pTransferPrepared
 
   else
     # ASYNCHRONOUS REQUEST
-    put tsNetGet(tConnID, sFtpA["request"][tConnID], tEmptyHeaderVar, _rigFtpCallback, sFtpA["settings"]) into tError
+    put tsNetGet(tConnID, sFtpA["request"][tConnID], tEmptyHeaderVar, "_rigFtpCallback", sFtpA["settings"]) into tError
     if tError <> empty then
       _rigFtpCheckResult tError, "tsNetGet", "ftp_unable_to_list", TRUE
     end if
@@ -400,9 +400,9 @@ end rigFtpListFiles
 --| COMMAND rigFtpUpload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-12-14
---| Last Mod: 2016-12-14
+--| Last Mod: 2018-12-21
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -509,10 +509,10 @@ command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs pPermission
     # ASYNCHRONOUS REQUEST
     if pData is FALSE then
       # FILE
-      put tsNetUploadFile(tConnID, pLocalPath, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, _rigFtpCallback, sFtpA["settings"]) into tResult
+      put tsNetUploadFile(tConnID, pLocalPath, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, "_rigFtpCallback", sFtpA["settings"]) into tResult
     else -- if pData is FALSE
       # DATA
-      put tsNetUpload(tConnID, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, _rigFtpCallback, pLocalPath, sFtpA["settings"]) into tResult
+      put tsNetUpload(tConnID, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, "_rigFtpCallback", pLocalPath, sFtpA["settings"]) into tResult
     end if -- if pData is FALSE
 		
     if tResult <> empty then
@@ -759,9 +759,9 @@ end _rigFtpCreateAllMissingDirs
 --| COMMAND rigFtpDownload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-12-15
---| Last Mod: 2016-12-15
+--| Last Mod: 2018-12-21
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -806,7 +806,7 @@ command rigFtpDownload pRemotePath pLocalPath
 
   else -- if sFtpA["asyncRequest"] is FALSE
     # ASYNCHRONOUS REQUEST
-    put tsNetGetFile(tConnID, pLocalPath, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, _rigFtpCallback, sFtpA["settings"]) into tResult
+    put tsNetGetFile(tConnID, pLocalPath, sFtpA["request"][tConnID] & "/" & pRemotePath, tEmptyHeaderVar, "_rigFtpCallback", sFtpA["settings"]) into tResult
     _rigFtpCheckResult tResult, "tsNetGetFile", "ftp_unable_to_download"
 
   end if -- if sFtpA["asyncRequest"] is FALSE
@@ -1281,9 +1281,9 @@ end rigFtpChangeDir
 --| COMMAND _rigFtpDoRawCommands
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2017-09-12
---| Last Mod: 2017-09-12
+--| Last Mod: 2018-12-21
 --| Requires: _rigFtpCheckResult, _rigFtpTransferComplete
 --|
 --| Summary: Execute raw FTP commands.
@@ -1349,7 +1349,7 @@ command _rigFtpDoRawCommands pCommandslist
      
   else -- if sFtpA["asyncRequest"] is FALSE
 		# ASYNCHRONOUS REQUEST
-		put tsNetSendCmd(tConnID, sFtpA["request"][tConnID], pCommandsList, _rigFtpCallback, sFtpA["settings"]) into tResult
+		put tsNetSendCmd(tConnID, sFtpA["request"][tConnID], pCommandsList, "_rigFtpCallback", sFtpA["settings"]) into tResult
 		_rigFtpCheckResult tResult, "tsNetSendCmd", tErrorLangKey
   end if -- if sFtpA["asyncRequest"] is FALSE
 end _rigFtpDoRawCommands
@@ -1402,9 +1402,9 @@ end _rigFtpCheckResult
 --| COMMAND _rigFtpPrepareTransfer
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-12-14
---| Last Mod: 2016-12-14
+--| Last Mod: 2018-12-21
 --| Requires: --
 --|
 --| Summary: Initiate preparatory measures.
@@ -1418,8 +1418,8 @@ end _rigFtpCheckResult
 
 command _rigFtpPrepareTransfer
   if sFtpA["debug"] is TRUE then
-    tsNetSetDebugCallback _rigFtpDebugCallback
-    tsNetSetStatusCallBack _rigFtpStatusCallback
+    tsNetSetDebugCallback "_rigFtpDebugCallback"
+    tsNetSetStatusCallBack "_rigFtpStatusCallback"
   end if
 
 -- 	if (sFtpA["secure"] is TRUE) and (sFtpA["flavor"] <> "sftp") then
