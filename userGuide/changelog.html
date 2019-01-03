@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version1103">Version 1.10.3</a></li>
 <li><a href="#version1102">Version 1.10.2</a></li>
 <li><a href="#version1101">Version 1.10.1</a></li>
 <li><a href="#version1100">Version 1.10.0</a></li>
@@ -203,6 +204,25 @@
 </ul>
 
 
+<h2><a name="version1103">&nbsp;</a>Version 1.10.3</h2>
+<p>Release Date: 2019-01-04</p>
+
+<p>
+	<ul>
+		<li><strong>Fixed:</strong> Typo “pDeafult” in <dfn>system/libraries/Jquery.lc</dfn> -> rigJQpromptR().</li>
+		<li><strong>Fixed:</strong> Added missing header to error page in <dfn>system/database/DBdriver.lc</dfn> -> rigDbDisplayError.</li>
+		<li><strong>Fixed:</strong> Issues in <dfn>system/libraries/Email.lc</dfn> -> _rigSendSmtpCommand, _rigDataFromSmtpSocket and rigUnwrappedWrapMarkersString.</li>
+		<li><strong>Fixed:</strong> Missing quotation marks in <dfn>system/libraries/Formvalidation.lc</dfn> -> _rigFormValidExecute.</li>
+		<li><strong>Fixed:</strong> Missing quotation marks in <dfn>system/libraries/FTP.lc</dfn> -> rigFtpLisFiles, rigFtpUpload, rigFtpDownload, rigFtpDoRawCommands and _rigFtpPrepareTransfer.</li>
+		<li><strong>Fixed:</strong> Added “sHooksfiles” to local variables in <dfn>system/libraries/Hooks.lc</dfn>.</li>
+		<li><strong>Fixed:</strong> Missing quotation marks in <dfn>system/libraries/Loader.lc</dfn> -> _rigPrepareExtensionsArray.</li>
+		<li><strong>Fixed:</strong> Ambiguous variable names (tExt) in <dfn>system/libraries/Upload.lc</dfn> -> _rigPrepFilename(), rigIsAllowedFileType(), rigGetImageSize() and rigLimitFilenameLength().</li>
+		<li><strong>Fixed:</strong> List of reserved names in the User Guide.</li>
+	</ul>
+</p>
+
+
+
 
 <h2><a name="version1102">&nbsp;</a>Version 1.10.2</h2>
 <p>Release Date: 2018-11-12</p>
@@ -211,7 +231,7 @@
 	<ul>
 		<li><strong>Added:</strong> Digest types “SHA-384” and “SHA-512” to the JWT helper. Complemented the User Guide accordingly.</li>
 		<li><strong>Added:</strong> SHA3 prepping handler to form validation in <dfn>system/libraries/Formvalidation.lc</dfn> -> rigSha3. Complemented the User Guide accordingly.</li>
-		<li><strong>Fixed:</strong> Incorrect status code sent on routing to a custom 404 error page. See <dfn>system/librariesRouter.lc</dfn> -> _rigValidateRequest.</li>
+		<li><strong>Fixed:</strong> Incorrect status code sent on routing to a custom 404 error page. See <dfn>system/libraries/Router.lc</dfn> -> _rigValidateRequest.</li>
 		<li><strong>Fixed:</strong> Version check used incorrect item delimiter in <dfn>system/libraries/Encrypt.lc</dfn> -> rigSetHash and rigHash().</li>
 	</ul>
 </p>
