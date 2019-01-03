@@ -136,7 +136,7 @@ end rigRunInitialCaptchaConfig
 
 command rigInitCaptcha pParams
 	# SET ALL THE SESSION PREFERENCES, WHICH CAN EITHER BE SET
-	# MANUALLY VIA THE $PARAMS ARRAY ABOVE OR VIA THE CONFIG FILE
+	# MANUALLY VIA THE pParams ARRAY ABOVE OR VIA THE CONFIG FILE
 	put "captchaLength,captchaColor,captchaBckgndColor,captchaHashKey" into tSettingNames
 
 	repeat for each item thisItem in tSettingNames
