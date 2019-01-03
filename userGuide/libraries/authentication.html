@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.2</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1339,65 +1339,24 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 put gBASEPATH into gBASEPATH
 
 if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
+  put "No direct script access allowed."
+  exit to top
 end if
 
 
-
-/*----------------------------------------------------------------------
---| COMMAND rigLogAdminLogin
---|
---| Author: rabit
---| Version:  1.0
---| Created: 22-02-2013
---| Last Mod: 22-02-2013
---| Requires: rigLogMessage
---|
---| Summary: Log admin login.
---| 
---| Format:  rigLogAdminLogin	
---|
---| Parameters: --
---|
---| Return: empty
-----------------------------------------------------------------------*/
-
 command rigLogAdminLogin
-	# sAuthUser IS A VARIABLE DECLARED IN THE AUTHENTICATION LIBRARY
-	if sAuthUser["username"] is "admin" then
-		rigLogMessage "info", "Admin logged in."
-	end if
+  # sAuthUser IS A VARIABLE DECLARED IN THE AUTHENTICATION LIBRARY
+  if sAuthUser["username"] is "admin" then
+    rigLogMessage "info", "Admin logged in."
+  end if
 end rigLogAdminLogin
 
 
-
-
-
-/*----------------------------------------------------------------------
---| COMMAND rigLogAdminLogout
---|
---| Author: rabit
---| Version:  1.0
---| Created: 22-02-2013
---| Last Mod: 22-02-2013
---| Requires: rigSessUserdata(), rigLogMessage
---|
---| Summary: Log admin logout.
---| 
---| Format:  rigLogAdminLogout	
---|
---| Parameters: --
---|
---| Return: empty
-----------------------------------------------------------------------*/
-
 command rigLogAdminLogout
-		if rigSessUserdata("username") is "admin" then
-			rigLogMessage "info", "Admin logged out."
-		end if
+  if rigSessUserdata("username") is "admin" then
+    rigLogMessage "info", "Admin logged out."
+  end if
 end rigLogAdminLogout
-
 
 
 
