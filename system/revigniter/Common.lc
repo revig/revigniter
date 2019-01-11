@@ -1408,12 +1408,14 @@ end _rigTempMailPath
 --| FUNCTION rigCeil
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2009-09-09
---| Last Mod: 2016-11-24
+--| Last Mod: 2019-01-11
 --| Requires: --
 --|
 --| Summary: Returns the next highest integer value by rounding up if necessary.
+--|            This function is deprecated since revIgniter version 2 as this version
+--|            requires LC server ≥ 8 and the ceiling function was introduced in LC 7.1.
 --| 
 --| Format:  rigCeil(param1)
 --|
@@ -1423,15 +1425,16 @@ end _rigTempMailPath
 ----------------------------------------------------------------------*/
 
 function rigCeil pNum
-   if trunc(pNum) <> pNum then
-      if pNum > 0 then
-         return trunc(pNum) + 1
-      else
-         return trunc(pNum)
-      end if
-   end if 
-   
-   return pNum
+  -- if trunc(pNum) <> pNum then
+  --   if pNum > 0 then
+  --     return trunc(pNum) + 1
+  --   else
+  --     return trunc(pNum)
+  --   end if
+  -- end if
+  --
+  -- return pNum
+  return ceil(pNum)
 end rigCeil
 
 
