@@ -74,7 +74,7 @@ put "groupId" into sAuthenticationConf["join"]["groups"]
 #
 # Set the authentication encryption key here. In order to be cryptographically
 # secure it needs to be as random as possible.
-# If you prefere to use revIgniter's universal key as set in config.lc,
+# If you prefer to use revIgniter's universal key as set in config.lc,
 # set sAuthenticationConf["useAuthEncryptionKey"] to false.
 #
 ##
