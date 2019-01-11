@@ -27,12 +27,13 @@ end if
 #
 # 1. Libraries
 # 2. Stacks
-# 3. Helper files
-# 4. Plugins
-# 5. Extensions (LiveCode Builder libraries)
-# 6. Custom config files
-# 7. Language files
-# 8. Models
+# 3. Database
+# 4. Helper files
+# 5. Plugins
+# 6. Extensions (LiveCode Builder libraries)
+# 7. Custom config files
+# 8. Language files
+# 9. Models
 #
 ##
 
@@ -42,7 +43,7 @@ local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoPlugins, sAutoCustConfigs, 
 
 ##
 # -------------------------------------------------------------------
-#  Auto-load Libraries
+#  Auto-load Libraries / Database
 # -------------------------------------------------------------------
 # These are the libraries located in the system/libraries folder
 # or in your system/application/libraries folder.
