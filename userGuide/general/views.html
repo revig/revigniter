@@ -101,6 +101,7 @@ you should do so before continuing.</p>
 
 <p>Using your text editor, create a file called <dfn>blogview.lc</dfn>, and put this in it:</p>
 
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 		&lt;title>My Blog&lt;/title>
@@ -110,6 +111,7 @@ you should do so before continuing.</p>
 	&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p>Then save the file in your <dfn>application/views/</dfn> folder.</p>
 
@@ -125,7 +127,7 @@ you should do so before continuing.</p>
 <p>Now, open the controller file you made earlier called <dfn>blog.lc</dfn>, and replace the put statement with the view loading function:</p>
 
 
-
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -135,7 +137,7 @@ command index
 	get rigLoadView("blogview")
 end index
 </code></pre>
-
+</div>
 
 
 <p>If you visit the your site using the URL you did earlier you should see your new view.  The URL was similar to this:</p>
@@ -144,6 +146,9 @@ end index
 
 <h2>Loading multiple views</h2>
 <p>revIgniter will intelligently handle  multiple calls to rigLoadView() from within a controller.  If more than one call happens they will be appended together. For example, you may wish to have a header view, a menu view, a content view, and a footer view. That might look something like this:</p>
+
+
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -157,6 +162,7 @@ command index
 	get rigLoadView("footer")
 end index
 </code></pre>
+</div>
 	
 	
 <p>In the example above, we are using &quot;dynamically added data&quot;, which you will see below.</p>
@@ -180,6 +186,7 @@ get rigLoadView("blogview")
 
 <p>Let's try it with your controller file.  Open it and add this code:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -191,11 +198,13 @@ command index
 	get rigLoadView("blogview")
 end index
 </code></pre>
+</div>
 
 
 <p>Now open your view file and change the text to variables that correspond to the array keys in your data enclosed in double square brackets:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 		&lt;title>[[gData["title"] ]]&lt;/title>
@@ -205,6 +214,7 @@ end index
 	&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p><strong>Note:</strong> Like in the example above, add a space between the right array bracket and the merge brackets. Load the page at the URL you've been using and you should see the variables replaced.</p>
 
@@ -217,6 +227,7 @@ pull data from your database it will typically be in the form of a multi-dimensi
 <p>Here's a simple example. Add this to your controller:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -230,11 +241,13 @@ command index
 	get rigLoadView("blogview")
 end index
 </code></pre>
+</div>
 
 
 <p>Now open your view file and create a loop:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 		&lt;title>[[gData["title"] ]]&lt;/title>
@@ -252,12 +265,14 @@ end index
 	&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
 Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?rev" in view files because all views and nested views are merged (into the final output data).</p>
 
 <p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
 
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 		&lt;title>[[gData["title"] ]]&lt;/title>
@@ -270,6 +285,7 @@ Keep in mind, that this is the only way to include LiveCode in your view files. 
 	&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <h2>Returning Views as Data</h2>
 
@@ -288,6 +304,8 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 
 <p>nestedviewsHeader.lc, the header view:</p>
 
+
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 	&lt;html>
 		&lt;head>
@@ -295,9 +313,13 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 		&lt;/head>
 		&lt;body>
 </code></pre>
+</div>
+
 
 <p>nestedviewsContent.lc, the content view:</p>
 
+
+<div class="codeSample">
 <pre><code>&lt;h1>Welcome to revIgniter!&lt;/h1>
 	
 &lt;p>The page you are looking at is being generated dynamically by revIgniter.&lt;/p>
@@ -310,24 +332,30 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 	
 &lt;p>If you are exploring revIgniter for the very first time, you should start by reading the &lt;a href="userGuide/">User Guide&lt;/a>.&lt;/p>
 </code></pre>
+</div>
 
 <p>nestedviewsFooter.lc, the footer view:</p>
 
+<div class="codeSample">
 <pre><code>	&lt;p>&lt;br />Page rendered in {{g_ElapsedTime_}} seconds&lt;/p>
 	&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p>Now we need one view which acts as the main view, the view all the other views are nested in. We name it nestedviewsMain.lc:</p>
 
+<div class="codeSample">
 <pre><code>&lt;? put rigLoadView("nestedviewsHeader", TRUE) into tHeader
 put rigLoadView("nestedviewsContent", TRUE) into tContent
 put rigLoadView("nestedviewsFooter", TRUE) into tFooter
 return tHeader && tContent && tFooter ?>
 </code></pre>
+</div>
 
 <p>Then, in the controller, we solely load the main view file to send a complete web page to the browser like in the following example:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 put "welcome,index" into gControllerHandlers
@@ -353,6 +381,7 @@ end index
 --| Location: ./system/application/controllers/welcome.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 <p>Of course, this way, nested views can be embedded within other views within other views etc., if you like.</p>
 
@@ -386,6 +415,8 @@ Next Topic:&nbsp;&nbsp;<a href="models.html">Models</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

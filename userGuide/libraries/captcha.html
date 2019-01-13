@@ -135,6 +135,7 @@ The captcha library provides a means to generate two flavors of captchas. In it'
 <p>Here is a simple example showing how to create a captcha (composed of none breaking spaces) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
@@ -143,6 +144,7 @@ put rigCaptcha() into gData["captcha"]
 # GET CAPTCHA CSS 
 put rigCaptchaStyle() into gData["captchaStyle"]
 </code></pre>
+</div>
 
 
 <p><strong>Note:</strong> Place the <dfn>gData["captchaStyle"]</dfn> variable to be merged in the header of your view file. 
@@ -153,6 +155,7 @@ which is built from the captcha number and a key stored in your <kbd>application
 Then you have to compare the posted data of the hidden field with a hash of the posted number. 
 To retrieve the hash of the displayed captcha your code would look like this:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
@@ -164,15 +167,18 @@ put rigCaptchaStyle() into gData["captchaStyle"]
 # GET CAPTCHA HASH 
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
+</div>
 
 
 
 <p>Here is an example for captcha user input validation:</p>
 
+<div class="codeSample">
 <pre><code>if rigValidCaptchaUserInput(rigVarPost("inputField"), rigVarPost("hiddenHashField")) is TRUE then 
 	get rigLoadView("formSuccess") 
 end if
 </code></pre>
+</div>
 
 <p>Where <dfn>rigVarPost("inputField")</dfn> is the posted captcha user input and <dfn>rigVarPost("hiddenHashField")</dfn> is the captcha hash.</p>
 
@@ -180,6 +186,7 @@ end if
 
 <p>Here is an example:</p>
 
+<div class="codeSample">
 <pre><code># VALIDATION RULES (in your validation config file in system/application/config/validation.lc) 
  
 put "hiddenMonitorField" into sValidationConf["idOfYourForm"][1]["field"] 
@@ -220,6 +227,7 @@ command captchaFailed pStr
 	end if 
 end captchaFailed
 </code></pre>
+</div>
 
 
 <h2>Example (random math problem)</h2>
@@ -227,6 +235,7 @@ end captchaFailed
 <p>Here is a simple example showing how to create a captcha (displaying a math problem) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA MATH PROBLEM 
@@ -235,6 +244,7 @@ put rigCaptchaMathProblem() into gData["captcha"]
 #GET CAPTCHA HASH 
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
+</div>
 
 <p>In order to prevent automated software from posting to your site you need to store a hash of the math problem result 
 which is built from the result number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field. 
@@ -260,6 +270,7 @@ Then you have to compare the posted data of the hidden field with a hash of the 
 <p>Preferences are set by passing an array of preference values to the captcha <dfn>rigInitCaptcha</dfn> handler.  Here is an example of 
 how you might set preferences:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 put 6 into tConfig["captchaLength"] 
@@ -267,6 +278,7 @@ put "#FFFFFF" into tConfig["captchaBckgndColor"]
 put "#646464" into tConfig["captchaColor"] 
  
 rigInitCaptcha tConfig</code></pre>
+</div>
 
 <p><strong>Note:</strong> To change your secret key change the corresponding entry in the config file. Don't set it manually like other preferences shown above.</p>
 
@@ -289,6 +301,7 @@ rigInitCaptcha tConfig</code></pre>
 
 <p>Use the optional parameter to add a nonce (as used by Content Security Policy headers) to the style tags. Example:</p>
 
+<div class="codeSample">
 <pre><code>put rigNonce() into tNonce
 put "'nonce-" & tNonce & "'" into tSrcNonce
 put rigCaptchaStyle(tNonce) into gData["captchaStyle"]
@@ -300,6 +313,7 @@ put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
 put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 </code></pre>
+</div>
 
 <h3>rigGetCaptchaHash()</h3>
 <p>Get hash from captcha number and a key. You may store this string in a hidden form field:</p>
@@ -355,6 +369,8 @@ Next Topic:&nbsp;&nbsp;<a href="config.html">Config Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -102,16 +102,20 @@ template, allowing 100% control over every aspect of its design. In addition, yo
 
 <p>Here is a very simple example showing how you can display a calendar:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Calendar" 
  
 put rigCalGenerate() into gData["calendar"]</code></pre>
+</div>
 
 <p>The above code will generate a calendar for the current month/year based on your server time.
 To show a calendar for a specific month and year you will pass this information to the calendar generating function:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Calendar" 
  
 put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code></pre>
+</div>
 
 <p>The above code will generate a calendar showing the month of June in 2006.  The first parameter specifies the year, the second parameter specifies the month.</p>
 
@@ -121,6 +125,7 @@ put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code><
 you wish to populate and the array value contains the data.  The array is passed to the third parameter of the calendar
 generating function.  Consider this example:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Calendar" 
  
 put "http://example.com/news/article/2006/03/" into tCalData["3"] 
@@ -129,6 +134,7 @@ put "http://example.com/news/article/2006/13/" into tCalData["13"]
 put "http://example.com/news/article/2006/26/" into tCalData["26"] 
  
 put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>, <var>tCalData</var>) into gData["calendar"]</code></pre>
+</div>
 
 <p>Using the above example, day numbers 3, 7, 13, and 26 will become links pointing to the URLs you've provided.</p>
 
@@ -143,6 +149,7 @@ how data passed to your cells is handled so you can pass different types of info
 array of preferences in the second parameter of the loading handler. Here is an example:</p>
 
 
+<div class="codeSample">
 <pre><code>
 put "monday" into tPrefs["startDay"] 
 put "long" into tPrefs["monthType"] 
@@ -152,6 +159,7 @@ rigLoaderLoadLibrary "Calendar", tPrefs
  
 put rigCalGenerate() into gData["calendar"]
 </code></pre>
+</div>
 
 <p>The above code would start the calendar on monday, use the "long" month heading, and the "short" day names.  More information
 regarding preferences below.</p>
@@ -191,6 +199,7 @@ regarding preferences below.</p>
 code similar to this example:</p>
 
 
+<div class="codeSample">
 <pre><code>put TRUE into tPrefs["showNextPrev"] 
 put "http://example.com/index.lc/calendar/show/" into tPrefs["nextPrevUrl"] 
  
@@ -198,6 +207,7 @@ rigLoaderLoadLibrary "Calendar", tPrefs
  
 put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>) into gData["calendar"]
 </code></pre>
+</div>
 
 <p>You'll notice a few things about the above example:</p>
 
@@ -215,6 +225,7 @@ put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>)
 calendar will be placed within a pair of pseudo-variables as shown here:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put <dfn>"{table_open}</dfn><var>&lt;table border='0' cellpadding='4' cellspacing='0'></var><dfn>{/table_open}"</dfn> && \ 
 \ 
 <dfn>"{heading_row_start}</dfn><var>&lt;tr></var><dfn>{/heading_row_start}"</dfn> && \ 
@@ -248,6 +259,7 @@ calendar will be placed within a pair of pseudo-variables as shown here:</p>
 rigLoaderLoadLibrary "Calendar", tPrefs 
  
 put rigCalGenerate() into gData["calendar"]</code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> Don't use quotes in your template. Use apostrophes as shown in the example above. These apostrophes will be converted to quotes while processing the template.</p>
@@ -283,6 +295,8 @@ Next Topic:&nbsp;&nbsp;<a href="captcha.html">Captcha Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -103,7 +103,7 @@
 <p>The first parameter is a numbered array of site links preferable stored in a custom config file in your <dfn>application/config/</dfn> folder. The second parameter indicates the current page. The third parameter defines the link separator. The fourth parameter is used to define the div and paragraph id/class selector.</p>
 
 
-
+<div class="codeSample">
 <pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
 put "copyright" into tFooterlinks[1]["copyright 2009 yourname.com"]
 put "home" into tFooterlinks[2]["Home"]
@@ -114,6 +114,7 @@ put "imprint" into tFooterlinks[4]["Imprint"]
 # THE STATEMENT IN YOUR CONTROLLER
 put rigSiteLinks(tFooterlinks, "Contact", " :: ", "footer") into gData["footerLinks"]
 </code></pre>
+</div>
 
 
 <p><strong>Note:</strong> The elements (values) of the links array are URI segments and the keys are the names displayed.</p>
@@ -137,6 +138,7 @@ to each URI and you need to use different numbers of nonbreaking spaces as names
 
 <p>Here is an example:</p>
 
+<div class="codeSample">
 <pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
 put "copyright,IDselectorCopyright" into tFooterlinks[1]["&amp;nbsp;"]
 put "home,IDselectorHome" into tFooterlinks[2]["&amp;nbsp;&amp;nbsp;"]
@@ -147,6 +149,7 @@ put "imprint,IDselectorImprint" into tFooterlinks[4]["&amp;nbsp;&amp;nbsp;&amp;n
 # THE STATEMENT IN YOUR CONTROLLER
 put rigSiteLinks(tFooterlinks, "&amp;nbsp;&amp;nbsp;&amp;nbsp;", " :: ", "footer") into gData["footerLinks"]
 </code></pre>
+</div>
 
 <p>The output looks like this:</p>
 
@@ -190,6 +193,8 @@ Previous Topic:&nbsp;&nbsp;<a href="../plugins/queryvalues_plugin.html">QueryVal
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -126,6 +126,7 @@ end if
 
 <p>Usage example:</p>
 
+<div class="codeSample">
 <pre><code>put rigDbFieldData("tablename") into tFields
 
 repeat for each key tKey in tFields
@@ -136,6 +137,7 @@ repeat for each key tKey in tFields
 	put tFields[tKey]["primarykey"] & "&lt;br />" after tFieldsData
 end repeat
 </code></pre>
+</div>
 
 
 <p>The following data is available from this function if supported by your database:</p>
@@ -179,6 +181,8 @@ Next Topic:&nbsp;&nbsp;<a href="caching.html">Query Caching</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

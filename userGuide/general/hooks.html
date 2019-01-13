@@ -105,6 +105,7 @@ your own scripts in some other location.
 
 <p>Hooks are defined in the <dfn>application/config/hooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
 
+<div class="codeSample">
 <pre><code>	put "MyHandler" into gHooks["preController"]["handler"]
 	put "MyScript.lc" into gHooks["preController"]["filename"]
 	put "hooks" into gHooks["preController"]["filepath"]
@@ -112,6 +113,7 @@ your own scripts in some other location.
 	put "wine" into gHooks["preController"]["params"][2]
 	put "snacks" into gHooks["preController"]["params"][3]
 </code></pre>
+</div>
 
 <p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
 use.  In the above example the hook point is <kbd>preController</kbd>. A list of hook points is found below.
@@ -129,6 +131,7 @@ The following items should be defined in your associative hook array:</p>
 
 <p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
 
+<div class="codeSample">
 <pre><code>	put "MyHandler" into gHooks["preController"][1]["handler"]
 	put "MyScript.lc" into gHooks["preController"][1]["filename"]
 	put "hooks" into gHooks["preController"][1]["filepath"]
@@ -143,6 +146,7 @@ The following items should be defined in your associative hook array:</p>
 	put "yellow" into gHooks["preController"][2]["params"][2]
 	put "blue" into gHooks["preController"][2]["params"][3]
 </code></pre>
+</div>
 
 <p>This permits you to have the same hook point with multiple scripts.  The order you define your array will be the execution order.</p>
 
@@ -177,7 +181,8 @@ The following items should be defined in your associative hook array:</p>
 	<p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
 	
 	<p>First you need a script which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks</dfn> for your convenience:</p>
-	
+
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -235,15 +240,18 @@ end rigMinifyOutput
 --| Location:  ./system/application/hooks/overrideOutput.lc
 ----------------------------------------------------------------------	
 </code></pre>
+</div>
 
 <p>The next step is to add the following lines to your hooks.lc file in <dfn>system/application/config</dfn>:</p>
 
 
+<div class="codeSample">
 <pre><code># MINIFY OUTPUT
 put "rigMinifyOutput" into gHooks["displayOverride"]["handler"]
 put "overrideOutput.lc" into gHooks["displayOverride"]["filename"]
 put "hooks" into gHooks["displayOverride"]["filepath"]
 </code></pre>
+</div>
 	
 
 <p>Now enable hooks in <dfn>system/application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
@@ -280,6 +288,8 @@ Next Topic:&nbsp;&nbsp;<a href="autoloader.html">Auto-loading Resources</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

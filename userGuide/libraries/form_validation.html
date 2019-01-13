@@ -185,7 +185,7 @@ Form validation, while simple to create, is generally very messy and tedious to 
 <p>Create a form called <dfn>myForm.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp>
 folder:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;/html>
 	&lt;head>
 		&lt;title>My Form&lt;/title>
@@ -215,7 +215,7 @@ folder:</p>
 	&lt;/body>
 &lt;/html>
 </code></pre>
-
+</div>
 
 
 
@@ -226,7 +226,7 @@ folder:</p>
 <p>Create a form called <dfn>formSuccess.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp>
 folder:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 		&lt;title>My Form&lt;/title>
@@ -240,7 +240,7 @@ folder:</p>
 	&lt;/body>
 &lt;/html>
 </code></pre>
-
+</div>
 
 
 <a name="thecontroller"></a>
@@ -250,6 +250,7 @@ folder:</p>
 folder:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -279,7 +280,7 @@ command index
 end index
 
 </code></pre>
-
+</div>
 
 <h2>Try it!</h2>
 
@@ -346,14 +347,17 @@ at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn
 
 <p><br />Here is an example. In your <dfn>controller</dfn> (form.lc), add this code just below the validation initialization function:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR"
 rigSetRules "password", "Password", "requiredR"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR"
 </code></pre>
+</div>
 
 <p>Your controller should now look like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -388,6 +392,7 @@ command index
 end index
 
 </code></pre>
+</div>
 
 <p>Note: The last character ("R") in rules indicate, that it is a rule and helps to avoid name conflicts.</p>
 
@@ -406,6 +411,7 @@ there is an error.  We'll get to that shortly.</p>
 <p>Before moving on, it should be noted that the rule setting function can be passed an array if you prefer to set all your rules in one action.
 If you use this approach you must name your array keys as indicated:</p>
 
+<div class="codeSample">
 <pre><code>put "username" into tConfig[1]["field"]
 put "Username" into tConfig[1]["label"]
 put "requiredR" into tConfig[1]["rules"]
@@ -424,7 +430,7 @@ put "requiredR" into tConfig[4]["rules"]
 
 rigSetRules tConfig
 </code></pre>
-
+</div>
 
 
 
@@ -435,11 +441,13 @@ rigSetRules tConfig
 
 <p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of rule setting function, like this:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR|minLengthR[5]|maxLengthR[12]"
 rigSetRules "password", "Password", "requiredR|matchesR[passconf]"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR|validEmailR"
 </code></pre>
+</div>
 
 <p>The above code sets the following rules:</p>
 
@@ -460,11 +468,13 @@ There are numerous rules available which you can read about in the validation re
 <p>In addition to the validation functions like the ones we used above, you can also prep your data in various ways.
 For example, you can set up rules like this:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "<kbd>trim</kbd>|requiredR|minLengthR[5]|maxLengthR[12]|<kbd>xssClean</kbd>"
 rigSetRules "password", "Password", "<kbd>trim</kbd>|requiredR|matchesR[passconf]|<kbd>md5</kbd>"
 rigSetRules "passconf", "Password Confirmation", "<kbd>trim</kbd>|requiredR"
 rigSetRules "email", "Email", "<kbd>trim</kbd>|requiredR|validEmailR"
 </code></pre>
+</div>
 
 
 <p>In the above example, we are "trimming" the fields, converting the password to md5, and running the username through
@@ -486,6 +496,7 @@ that permit you to do this. The one you will use most commonly is:</p>
 
 <p>Complement your <dfn>form.lc</dfn> controller as shown:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -527,11 +538,12 @@ command index
 end index
 
 </code></pre>
+</div>
 
 <p>Open your <dfn>myForm.lc</dfn> view file and update the <strong>value</strong> in each field using the corresponding expression to be merged:</p>
 
 
-
+<div class="codeSample">
 <pre><code>&lt;head>
 &lt;title>My Form&lt;/title>
 &lt;/head>
@@ -560,6 +572,7 @@ end index
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p><dfn>Now reload your page and submit the form so that it triggers an error.  Your form fields should now be re-populated</dfn></p>
@@ -592,7 +605,7 @@ create a callback handler that does that.  Let's create a example of this.</p>
 
 <p>Then add a new handler called <dfn>userNameCheck</dfn> to your controller.  Here's how your controller should now look:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -643,6 +656,7 @@ command userNameCheck pStr
 	end if
 end userNameCheck
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Don't forget to add the "userNameCheck" handler name to the list in the gControllerHandlers variable
 at the top of the controller file.</p>
@@ -746,15 +760,18 @@ individually.</p>
 
 <p>Try it! Change your controller so that it looks like this:</p>
 
+<div class="codeSample">
 <pre><code>put rigFormError("username") into gData["nameError"]
 put rigFormError("password") into gData["pwError"]
 put rigFormError("passconf") into gData["pwConfError"]
 put rigFormError("email") into gData["emailError"]
 </code></pre>
+</div>
 
 
 <p>Change your form so that it looks like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;h5>Username&lt;/h5>
 [[gData["nameError"] ]]
 &lt;input type="text" name="username" value="[[gData["name"] ]]" size="50" />
@@ -771,6 +788,7 @@ put rigFormError("email") into gData["emailError"]
 [[gData["emailError"] ]]
 &lt;input type="text" name="email" value="[[gData["mail"] ]]" size="50" />
 </code></pre>
+</div>
 
 
 <p>If there are no errors, nothing will be shown.  If there is an error, the message will appear.</p>
@@ -799,6 +817,7 @@ you can manually call each set as needed.</p>
 <p>To store your validation rules, simply create a file named <kbd>validation.lc</kbd> in your <dfn>application/config/</dfn> folder.
 In that file you will place an array with your rules. As shown earlier, the validation array will have this prototype:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -827,6 +846,7 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+</div>
 
 
 <p><dfn>Your validation rule file will be loaded automatically and used when you call the rigFormValidRun() function.</dfn></p>
@@ -837,6 +857,7 @@ end fetchValidationConf
 <p><br />There is an alternative to generate the rules array in a config file. It significantly reduces the required amount of code. Using this approach the example above would read like:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -855,6 +876,7 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+</div>
 
 
 
@@ -864,7 +886,7 @@ end fetchValidationConf
 We've arbitrarily called these two rules "signup" and "email".  You can name your rules anything you want:</p>
 
 
-
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -910,11 +932,13 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+</div>
 
 
 <p><br />Similar to the simple array example above there is an alternative to generate rules organized into "sets" too. Here is an example using the rules above:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -940,20 +964,21 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
-
+</div>
 
 
 <h2>Calling a Specific Rule Group</h2>
 
 <p>In order to call a specific group you will pass its name to the <kbd>rigFormValidRun()</kbd> function.  For example, to call the <kbd>signup</kbd> rule you will do this:</p>
 
+<div class="codeSample">
 <pre><code>if rigFormValidRun("<kbd>signup</kbd>") is FALSE then
 	get rigLoadView("myForm")
 else
 	get rigLoadView("formSuccess")
 end if
 </code></pre>
-
+</div>
 
 
 <h2>Associating a Controller Handler with a Rule Group</h2>
@@ -961,6 +986,7 @@ end if
 <p>An alternate (and more automatic) method of calling a rule group is to name it according to the controller controller/handler you intend to use it with.  For example, let's say you
 have a controller named <kbd>member</kbd> and a handler named <kbd>signup</kbd>.  Here's what your controller might look like:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -989,11 +1015,13 @@ command <kbd>signup</kbd>
 	end if
 end <kbd>signup</kbd>
 </code></pre>
+</div>
 
 
 <p>In your validation config file, you will name your rule group <kbd>member/signup</kbd>:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -1022,12 +1050,14 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+</div>
 
 <p><dfn>When a rule group is named identically to a controller/handler it will be used automatically when the rigFormValidRun() function is invoked from that controller/handler.</dfn></p>
 
 <p><br />Similar to examples above you can reduce the amount of required code using the following approach:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 
@@ -1047,6 +1077,7 @@ function fetchValidationConf
 	return sConfig
 end fetchValidationConf
 </code></pre>
+</div>
 
 
 <p>&nbsp;</p>
@@ -1546,6 +1577,9 @@ Next Topic:&nbsp;&nbsp;<a href="ftp.html">FTP Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -120,6 +120,8 @@ they are initialized.</p>
 
 <p>Libraries should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
 
+
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -144,6 +146,7 @@ command someHandler
 
 end someHandler
 </code></pre>
+</div>
 
 
 <h2>Using Your Library</h2>
@@ -173,6 +176,7 @@ rigLoaderLoadLibrary "Somelibrary", <kbd>tParams</kbd>
 
 <p>If you use this feature you must set up your library to expect data:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -192,6 +196,7 @@ command rigRunInitialYourlibConfig pParams
 	--Do something with pParams.
 end rigRunInitialYourlibConfig
 </code></pre>
+</div>
 
 
 <p class="important">You can also pass parameters stored in a config file. Simply create a config file named identically to the library <kbd>file name</kbd>
@@ -259,6 +264,7 @@ Name it "Qrtpdflib.lc".<br />
 Replace "&lt;?rev" at the top of the script with:
 </p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -267,22 +273,27 @@ if gBASEPATH is "gBASEPATH" then
 	exit to top
 end if
 </code></pre>
+</div>
 
 <p>
 Insert the following lines right after the license notes:
 </p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># LOGGING
 rigLogMessage "debug", "Qrtpdflib Library Loaded"
 </code></pre>
+</div>
 
 
 <p>Insert the following lines right before it says "--> library handlers":</p>
 
+<div class="codeSample">
 <pre><code>command rigRunInitialQrtpdflibConfig pConfig
 	qrtPDF_ResetAll
 end rigRunInitialQrtpdflibConfig	
 </code></pre>
+</div>
 
 <p>The parameter is optional and is used to change settings upon loading the library like: rigLoaderLoadLibrary "Qrtpdflib", mySettingsArray<br />
 	<br />
@@ -348,6 +359,8 @@ Next Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Librar
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

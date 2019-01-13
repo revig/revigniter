@@ -156,6 +156,7 @@ put "SELECT id FROM table WHERE column LIKE '%"  & rigEscapeLikeStr(tSearch) & "
 
 <p>Bindings enable you to simplify your query syntax by letting the system put the queries together for you. Consider the following example:</p>
 
+<div class="codeSample">
 <pre><code>put "SELECT * FROM some_table WHERE id = <var>:1</var> AND status = <var>:2</var> AND author = <var>:3</var>" into tSQL
 
 put 3 into tArray[1]
@@ -164,6 +165,7 @@ put "Rick" into tArray[3]
 
 get rigDbQuery(tSQL, tArray)
 </code></pre>
+</div>
 
 <p>The sequential numbers prepended by a colon in the query are automatically replaced with the values in the array in the second parameter of the rigDbQuery function. You can use a comma separated list too, instead of an array.</p>
 <p class="important">The secondary benefit of using binds is that the values are automatically escaped, producing safer queries.  You don't have to remember to manually escape data; revIgniter does it automatically for you.</p>
@@ -200,6 +202,8 @@ Next Topic:&nbsp;&nbsp;<a href="results.html">Query Results</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -98,7 +98,8 @@
 	<p>This function returns the query result data as an array.
 	
 	Typically you'll use this in a loop, like this:</p>
-	
+
+<div class="codeSample">
 <pre><code>get rigDbQuery("YOUR QUERY")
 	
 put rigDBresult() into tResult
@@ -110,10 +111,12 @@ repeat for each key tKey in tResult
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
+</div>
 	
 	<p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep 
 the order of the result values, you need to add an incrementer:</p>
 
+<div class="codeSample">
 <pre><code>get rigDbQuery("YOUR QUERY")
 	
 put rigDBresult() into tResult
@@ -128,10 +131,12 @@ repeat for each key tKey in tResult
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
+</div>
 	
 	
 	<p>You may fetch the values for each row by column name like in the following example:</p>
-	
+
+<div class="codeSample">
 <pre><code>get rigDbQuery("YOUR QUERY")
 	
 put rigDBresult() into tResult
@@ -147,10 +152,12 @@ repeat for each key tKey in tResult
 	put tRow["body"] & return after tResultData
 end repeat
 </code></pre>
+</div>
 	
 
 	<p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
-	
+
+<div class="codeSample">
 <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
 	
 # CHECK IF THE QUERY RESULT HAS DATA
@@ -169,10 +176,13 @@ if tQuery["numrows"] > 0 then
 	end repeat
 end if
 </code></pre>
+</div>
 	
 	<h3>yourQuery["resultarray"]</h3>
 	
 	<p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
+
+<div class="codeSample">
 <pre><code>
 put rigDbQuery("YOUR QUERY") into tQuery
 	
@@ -184,6 +194,7 @@ repeat for each key tKey in tQuery["resultarray"]
 	put tRow[7] & return after tResultData
 end repeat
 </code></pre>
+</div>
 	
 	
 	<h3>yourQuery["fieldnames"]</h3>
@@ -194,7 +205,8 @@ end repeat
 	<h3><a name="fieldnumbers">&nbsp;</a>yourQuery["fieldnumbers"]</h3>
 	
 	<p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
-	
+
+<div class="codeSample">
 	<pre><code>
 	put rigDbQuery("YOUR QUERY") into tQuery
 	
@@ -206,12 +218,15 @@ end repeat
 		put tRow[tQuery["fieldnumbers"]["body"]] & return after tResultData
 	end repeat
 	</code></pre>
+</div>
 
 
 	<h3>rigDbRow()</h3>
 	
 	<p>This function returns a single result row as an array.  If your query has more than one row, it returns only the first row.
 	The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
+
+<div class="codeSample">
 <pre><code>
 put rigDbQuery("YOUR QUERY") into tQuery
 	
@@ -224,6 +239,7 @@ if tQuery["numrows"] > 0 then
 	put tRow["body"] & return after tResultData
 end if
 </code></pre>
+</div>
 	
 	<p>If you want a specific row returned you can submit the row number as a digit in the first parameter:</p>
 	
@@ -298,6 +314,8 @@ Next Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Handlers</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

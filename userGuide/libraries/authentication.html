@@ -257,7 +257,7 @@
 
 <p>Example:</p>
 
-
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put FALSE into tRemember
 # CHECK IF THERE IS A POST VARIABLE remember
 put rigVarPost("remember[]") into tPostRemember
@@ -270,6 +270,7 @@ end if
 
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> For security reasons think about setting gConfig["sess_expire_on_close"] in system/application/config/config.lc to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the pRemember parameter is not set to TRUE.</p>
@@ -282,6 +283,7 @@ get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>command logout
 	# LOG USER OUT
 	rigAuthLogout
@@ -295,6 +297,7 @@ get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 	rigRedirect "/auth/login"
 end logout
 </code></pre>
+</div>
 
 
 
@@ -311,6 +314,7 @@ end logout
 <p>This function returns a user ID if the user was successfully created, otherwise it returns FALSE.</p>
 
 
+<div class="codeSample">
 <pre><code># GET ACCOUNT DATA
 if $_POST is an array then
 	put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
@@ -328,6 +332,7 @@ put 3 into tGroups["2"]
 
 put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> The default URI used for activating a new user is "auth/activate". This means you should provide a controller called "auth" including a handler called "activate" to process user activation. To specify your own URI segments you need to set the fourth parameter using the array key "activationLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
@@ -348,6 +353,7 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET USER ID
 put rigFetchSegment(3) into tID
 
@@ -363,7 +369,7 @@ if $_POST is an array then
 	get rigAuthUpdate(tID, tData)
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -378,6 +384,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tID
 
@@ -386,6 +393,7 @@ if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
 	put rigAuthDeleteUser(tID) into tDeleted
 end if
 </code></pre>
+</div>
 
 
 
@@ -400,6 +408,7 @@ end if
 <p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case sAuthenticationConf["sendEmails"] is set to FALSE.</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
 put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
 
@@ -415,6 +424,7 @@ else
 	rigRedirect "auth/forgotPassword"
 end if
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> The default URI used to process forgotten password requests is "auth/resetPassword". This means you should provide a controller called "auth" including a handler called "resetPassword". To specify your own URI segments you need to set the second parameter using the array key "passwordResetLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
@@ -430,12 +440,13 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN
 if rigAuthLoggedIn() is FALSE then
 	rigRedirect "/auth/login"
 end if
 </code></pre>
-
+</div>
 
 
 <h3>rigAuthIsAdmin( <var>pID</var> )</h3>
@@ -450,12 +461,14 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CHECK THE USER LEVEL
 if rigAuthIsAdmin() is FALSE then
 	# REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
 	rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 <h3>rigAuthInGroup( <var>pGroup</var>, <var>pID</var> )</h3>
@@ -471,6 +484,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># SINGLE GROUP (BY NAME)
 put "other" into tGroup
 if rigAuthInGroup(tGroup) then
@@ -509,6 +523,7 @@ if rigAuthInGroup(tGroups) then
 	rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 
@@ -523,6 +538,7 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET POST DATA
 if $_POST is an array then
 	put rigVarPOST("username") into tUsername
@@ -542,6 +558,7 @@ if rigAuthUsernameCheck(tUsername) is FALSE then
 	put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 end if
 </code></pre>
+</div>
 
 
 
@@ -556,6 +573,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET POST DATA
 if $_POST is an array then
 	put rigVarPOST("username") into tUsername
@@ -575,6 +593,7 @@ if rigAuthUsernameCheck(tEmail) is FALSE then
 	put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 end if
 </code></pre>
+</div>
 
 
 
@@ -589,6 +608,7 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET USER DATA
 put rigAuthUser(tID) into tQueryResult
 if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
@@ -603,6 +623,7 @@ if (tData["identity"] is tUser["username"]) or (tData["identity"] is tUser["emai
 	get rigAuthUpdate(tUser["id"], tData)
 end if
 </code></pre>
+</div>
 
 
 <h3>rigAuthIsMaxLoginAttemptsExceeded( <var>pIdentity</var> )</h3>
@@ -615,6 +636,7 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "rabit@revigniter.com" into tIdentity
 
 if rigAuthIsMaxLoginAttemptsExceeded(tIdentity) is TRUE then
@@ -622,6 +644,7 @@ if rigAuthIsMaxLoginAttemptsExceeded(tIdentity) is TRUE then
 	rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 
@@ -635,10 +658,12 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "rabit@revigniter.com" into tIdentity
 
 put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 </code></pre>
+</div>
 
 
 
@@ -670,6 +695,7 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER DATA
 put rigAuthUser() into tQueryResult
 if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
@@ -682,6 +708,7 @@ end if
 # tUser["rememberCode"], tUser["createdOn"], tUser["lastLogin"], tUser["active"],
 # tUser["firstName"], tUser["lastName"], tUser["company"], tUser["phone"]
 </code></pre>
+</div>
 
 
 
@@ -695,6 +722,7 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET ALL ADMINS
 put rigAuthUsers(1) into tAdmins
 
@@ -717,6 +745,7 @@ repeat for each key tRecord in tAdmins
 	put tRowData & "&lt;br />" & return after tResultData
 end repeat
 </code></pre>
+</div>
 
 
 <h3>rigAuthGroup( <var>pID</var> )</h3>
@@ -730,6 +759,7 @@ end repeat
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET MEMBERS GROUP
 put rigAuthGroup(2) into tGroup
 
@@ -743,6 +773,7 @@ put "Group Name:" && tGroupRow[2] & ", " after tRowData
 put "Group Description:" && tGroupRow[3] & ", " after tRowData
 delete char -2  to -1 of tRowData
 </code></pre>
+</div>
 
 
 
@@ -755,6 +786,7 @@ delete char -2  to -1 of tRowData
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET GROUPS
 put rigAuthGroups() into tGroups
 
@@ -777,7 +809,7 @@ repeat for each key tRecord in tGroups
 	put tRowData & "&lt;br />" & return after tResultData
 end repeat
 </code></pre>
-
+</div>
 
 
 
@@ -792,6 +824,7 @@ end repeat
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET ALL GROUPS THE ADMIN IS A MEMBER OF
 put rigAuthUserGroups(1) into tUserGroups
 
@@ -814,6 +847,7 @@ if char -1 of tResultData is "," then
 	delete char -1 of tResultData
 end if
 </code></pre>
+</div>
 
 
 
@@ -827,6 +861,7 @@ end if
 	<p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tUserID
 
@@ -841,7 +876,7 @@ if $_POST is an array then
 	end if
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -857,6 +892,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># PASS AN ARRAY OF GROUP ID's AND A USER ID
 put 2 into tGroups[1]
 put 5 into tGroups[2]
@@ -869,6 +905,7 @@ get rigAuthRemoveFromGroup(tGroupID, tUserID)
 # PASS AN EMPTY GROUP ID TO REMOVE THE USER FROM ALL GROUPS
 get rigAuthRemoveFromGroup(, tUserID)
 </code></pre>
+</div>
 
 
 
@@ -885,6 +922,7 @@ get rigAuthRemoveFromGroup(, tUserID)
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
 if tRegistration &lt;> FALSE then		
 	put rigAuthMessages() into tMessages
@@ -892,7 +930,7 @@ if tRegistration &lt;> FALSE then
 	rigRedirect "/auth"
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -906,6 +944,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
 if tRegistration &lt;> FALSE then
 	rigAuthSetMessageDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
@@ -915,6 +954,7 @@ if tRegistration &lt;> FALSE then
 	rigRedirect "/auth"
 end if
 </code></pre>
+</div>
 
 
 
@@ -928,6 +968,7 @@ end if
 <p>This function returns authentication errors as a string.</p>
 
 
+<div class="codeSample">
 <pre><code>get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
@@ -937,6 +978,7 @@ if it is FALSE then
 	rigRedirect "auth/login"
 end if
 </code></pre>
+</div>
 
 
 
@@ -950,6 +992,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>rigAuthSetErrorDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
 	
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
@@ -961,6 +1004,7 @@ if it is FALSE then
 	rigRedirect "auth/login"
 end if
 </code></pre>
+</div>
 
 
 
@@ -975,6 +1019,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET MIN / MAX PASSWORD LENGTH
 put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
 put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
@@ -987,6 +1032,7 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 # GET THE NAME OF THE USERS TABLE
 put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 </code></pre>
+</div>
 
 
 
@@ -1003,6 +1049,7 @@ put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET USER ID AND ACTIVATION CODE
 put rigFetchSegment(3) into tID
 put rigFetchSegment(4) into tCode
@@ -1016,6 +1063,7 @@ else if rigAuthIsAdmin() is TRUE then
 	put rigAuthActivate(tID) into tActivation
 end if		
 </code></pre>
+</div>
 
 
 
@@ -1030,11 +1078,12 @@ end if
 <p>Example:</p>
 
 
-
+<div class="codeSample">
 <pre><code>if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
 	put rigAuthDeactivate(tID) into tDeactivated
 end if
 </code></pre>
+</div>
 
 
 
@@ -1049,6 +1098,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigFetchSegment(3) into tForgottenPasswordCode
 
 if tForgottenPasswordCode is FALSE then
@@ -1057,6 +1107,7 @@ end if
 
 put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 </code></pre>
+</div>
 
 
 
@@ -1072,11 +1123,13 @@ put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>if tUser["id"] &lt;> rigVarPOST("hiddenUserID") then
 	get rigAuthClearForgottenPasswordCode(tForgottenPasswordCode)
 	rigLogMessage "error", "This reset password form post did not pass the security check.", TRUE
 end if
 </code></pre>
+</div>
 
 
 
@@ -1092,12 +1145,14 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># RESET THE PASSWORD
 put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
 put tUser[tIdentityCol] into tIdentity
 
 put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 </code></pre>
+</div>
 
 
 
@@ -1116,12 +1171,13 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
 put rigSessUserdata(tIdentityCol) into tIdentity
 
 put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newPassword")) into tChange
 </code></pre>
-
+</div>
 
 
 
@@ -1150,6 +1206,7 @@ put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newP
 <p>Authentication hooks are defined in the <dfn>application/config/authenticationHooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
 
 
+<div class="codeSample">
 <pre><code># IN THIS CASE THE HOOK POINT IS RIGHT BEFORE UPDATING USER DATA
 put "myHandler" into sAuthenticationHooks["authPreUpdateUser"]["handler"]
 put "myScript.lc" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
@@ -1158,6 +1215,7 @@ put "beer" into sAuthenticationHooks["authPreUpdateUser"]["params"][1]
 put "wine" into sAuthenticationHooks["authPreUpdateUser"]["params"][2]
 put "snacks" into sAuthenticationHooks["authPreUpdateUser"]["params"][3]
 </code></pre>
+</div>
 
 <p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
 use.  In the above example the hook point is <kbd>authPreUpdateUser</kbd>. A list of hook points is found below.
@@ -1178,6 +1236,8 @@ The following items should be defined in your associative hook array:</p>
 
 <p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
 
+
+<div class="codeSample">
 <pre><code>put "myHandler" into sAuthenticationHooks["authPreUpdateUser"][1]["handler"]
 put "myScript.lc" into sAuthenticationHooks["authPreUpdateUser"][1]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"][1]["filepath"]
@@ -1192,6 +1252,8 @@ put "red" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][1]
 put "yellow" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][2]
 put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 </code></pre>
+</div>
+
 
 <p>This permits you to have the same hook point with multiple scripts.  The order you define your array will be the execution order.</p>
 
@@ -1335,6 +1397,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 <p>Create a hooks file called authLog.lc. In it, place the code below and save it to your system/application/hooks/authenticationHooks/ folder.</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -1364,12 +1427,14 @@ end rigLogAdminLogout
 --| Location:  ./system/application/hooks/authenticationHooks/authLog.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
 <p>The next step is to add the following lines to your authenticationHooks.lc file in <dfn>system/application/config</dfn>:</p>
 
 
+<div class="codeSample">
 <pre><code>put "rigLogAdminLogin" into sAuthenticationHooks["authPostLoginSuccessful"]["handler"]
 put "authLog.lc" into sAuthenticationHooks["authPostLoginSuccessful"]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPostLoginSuccessful"]["filepath"]
@@ -1379,6 +1444,7 @@ put "rigLogAdminLogout" into sAuthenticationHooks["authLogout"]["handler"]
 put "authLog.lc" into sAuthenticationHooks["authLogout"]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepath"]
 </code></pre>
+</div>
 
 
 
@@ -1402,6 +1468,7 @@ put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepat
 <p><strong>The MySQL version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for groups
 # ------------------------------------------------------------
 
@@ -1451,10 +1518,10 @@ CREATE TABLE `users` (
   `username` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
   `password` tinytext character set utf8 collate utf8_unicode_ci NOT NULL,
   `email` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
-  `activationCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
-  `forgottenPasswordCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
+  `activationCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
+  `forgottenPasswordCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
   `forgottenPasswordTime` int(11) unsigned NOT NULL default '0',
-  `rememberCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
+  `rememberCode` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
   `createdOn` int(11) unsigned NOT NULL,
   `lastLogin` int(11) unsigned default NULL,
   `active` tinyint(1) unsigned default NULL,
@@ -1467,7 +1534,7 @@ CREATE TABLE `users` (
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 LOCK TABLES `users` WRITE;
@@ -1477,6 +1544,21 @@ INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`,
 `rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
 `lastName`, `company`, `phone`)
 VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
+
+UNLOCK TABLES;
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+LOCK TABLES `users` WRITE;
+
+INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
+`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
+`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
+`lastName`, `company`, `phone`)
+VALUES (1,'127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
 'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
 
 UNLOCK TABLES;
@@ -1508,11 +1590,13 @@ VALUES
 
 UNLOCK TABLES;
 </code></pre>
+</div>
 
 
 <p><strong>The PostgreSQL version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for users
 # ------------------------------------------------------------
 
@@ -1522,10 +1606,10 @@ CREATE TABLE "users" (
     "username" varchar(100) NOT NULL,
     "password" text NOT NULL,
     "email" varchar(100) NOT NULL,
-    "activationCode" varchar(40),
-    "forgottenPasswordCode" varchar(40),
+    "activationCode" varchar(70),
+    "forgottenPasswordCode" varchar(70),
     "forgottenPasswordTime" int,
-    "rememberCode" varchar(40),
+    "rememberCode" varchar(50),
     "createdOn" int NOT NULL,
     "lastLogin" int,
     "active" int4,
@@ -1580,7 +1664,7 @@ UNION SELECT
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 INSERT INTO "users" ("ipAddress", username, password, email, 
@@ -1588,6 +1672,18 @@ INSERT INTO "users" ("ipAddress", username, password, email,
 "rememberCode", "createdOn", "lastLogin", active, "firstName", 
 "lastName", company, phone) VALUES 
 ('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
+'Admin','Istrator','ADMIN','0');
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+INSERT INTO "users" ("ipAddress", username, password, email, 
+"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
+"rememberCode", "createdOn", "lastLogin", active, "firstName", 
+"lastName", company, phone) VALUES 
+('127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
 'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
 'Admin','Istrator','ADMIN','0');
 
@@ -1615,11 +1711,13 @@ CREATE TABLE "login_attempts" (
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
 </code></pre>
+</div>
 
 
 <p><strong>The SQLite version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for users
 # ------------------------------------------------------------
 
@@ -1629,10 +1727,10 @@ CREATE TABLE "users" (
 	 "username" TEXT(100,0) NOT NULL,
 	 "password" TEXT NOT NULL,
 	 "email" TEXT(100,0) NOT NULL,
-	 "activationCode" TEXT(40,0) DEFAULT NULL,
-	 "forgottenPasswordCode" TEXT(40,0) DEFAULT NULL,
+	 "activationCode" TEXT(70,0) DEFAULT NULL,
+	 "forgottenPasswordCode" TEXT(70,0) DEFAULT NULL,
 	 "forgottenPasswordTime" INTEGER(11,0) NOT NULL DEFAULT 0,
-	 "rememberCode" TEXT(40,0) DEFAULT NULL,
+	 "rememberCode" TEXT(50,0) DEFAULT NULL,
 	 "createdOn" INTEGER(11,0) NOT NULL,
 	 "lastLogin" INTEGER(11,0) DEFAULT NULL,
 	 "active" INTEGER(1,0) DEFAULT NULL,
@@ -1679,12 +1777,24 @@ COMMIT;
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 BEGIN;
 INSERT INTO "users" VALUES 
 (1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
+'Admin', 'Istrator', 'ADMIN', 0);
+COMMIT;
+
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==', 
 'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
 'Admin', 'Istrator', 'ADMIN', 0);
 COMMIT;
@@ -1711,6 +1821,7 @@ CREATE TABLE "login_attempts" (
 	 "time" INTEGER(11,0) DEFAULT NULL
 );
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> As of server version 7.0.6-rc-1 connecting to a SQLite database on Linux returns an error because revOpenDatabase() using SQLite is still not working in the Linux server engine. On Mac OS X connecting to SQLite should work as expected.</p>
@@ -1796,6 +1907,7 @@ CREATE TABLE "login_attempts" (
 
 <p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your system/application/controllers/ folder.</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 put "auth,index,login,logout,createUser,activate,deactivate,forgotPassword" & \
@@ -1905,11 +2017,13 @@ command index
  end if
 end index
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the following code which is needed to create new user data.</p>
 
+<div class="codeSample">
 <pre><code>command createUser
  put "Auth Test Create User" into gData["pageTitle"]
 
@@ -2043,11 +2157,13 @@ end index
  get rigLoadView("auth/createUserMainView")
 end createUser
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the login handler.</p>
 
+<div class="codeSample">
 <pre><code>command login
  put "Auth Test Login" into gData["pageTitle"]
 
@@ -2134,11 +2250,13 @@ end createUser
  end if -- if rigFormValidRun("auth/login") is TRUE then
 end login
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Of course there is a logout handler.</p>
 
+<div class="codeSample">
 <pre><code>command logout
  # LOG USER OUT
  rigAuthLogout
@@ -2150,11 +2268,13 @@ end login
  rigRedirect "/auth/login"
 end logout
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the following user activation handler.</p>
 
+<div class="codeSample">
 <pre><code>command activate
  # GET USER ID AND ACTIVATION CODE
  put rigFetchSegment(3) into tID
@@ -2185,11 +2305,13 @@ end logout
  end if	
 end activate
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the user deactivation handler.</p>
 
+<div class="codeSample">
 <pre><code>command deactivate
  put "Auth Test Deactivate" into gData["pageTitle"]
 
@@ -2274,11 +2396,13 @@ end activate
  end if
 end deactivate
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the "forgotPassword" handler.</p>
 
+<div class="codeSample">
 <pre><code>command forgotPassword
  put "Auth Test Forgot Password" into gData["pageTitle"]
 
@@ -2342,11 +2466,13 @@ end deactivate
  get rigLoadView("auth/forgotPasswordMainView")
 end forgotPassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add code which is used to reset passwords in case a user forgot the password or sent a change password request.</p>
 
+<div class="codeSample">
 <pre><code>command resetPassword
  put "Auth Test Reset Password" into gData["pageTitle"]
 
@@ -2457,12 +2583,14 @@ end forgotPassword
 
 end resetPassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 
 <p>Add a handler which is used to change passwords.</p>
 
+<div class="codeSample">
 <pre><code>command changePassword
  put "Auth Test Change Password" into gData["pageTitle"]
 
@@ -2564,11 +2692,13 @@ end resetPassword
  end if -- if rigFormValidRun("auth/resetPassword") is TRUE then
 end changePassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add a handler which is used to edit user data.</p>
 
+<div class="codeSample">
 <pre><code>command editUser
  put "Auth Test Edit User" into gData["pageTitle"]
 
@@ -2702,11 +2832,13 @@ end changePassword
 
 end editUser
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Now add the last handler which is needed to delete user data.</p>
 
+<div class="codeSample">
 <pre><code>command deleteUser
  put "Auth Test Delete User" into gData["pageTitle"]
 
@@ -2801,6 +2933,7 @@ end deleteUser
 --| Location: ./system/application/controllers/auth.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
@@ -2816,6 +2949,7 @@ end deleteUser
 <p>The rules to validate authentication. Create a file called validation.lc. In it, place the code below and save it to your system/application/config/ folder.</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -2962,6 +3096,7 @@ end fetchValidationConf
 --| Location: ./system/application/config/validation.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
@@ -2978,6 +3113,7 @@ end fetchValidationConf
 <p>We use multiple views nested in a parent view file. The header view, name it "headerView.lc", is included in all parent views (one fits all):</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
 &lt;head>
@@ -2988,12 +3124,14 @@ end fetchValidationConf
 
 &lt;/head>
 </code></pre>
+</div>
 
 
 
 <p>The view which represents the admin page called "authView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="adminPage">
@@ -3018,23 +3156,27 @@ end fetchValidationConf
 &lt;/body>
 &lt;/html>	
 </code></pre>
+</div>
 
 
 <p>The parent view of the admin page called "authMainView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/authView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The view used to change a password. It is called "changePasswordView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="changePassword">
@@ -3070,22 +3212,26 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>"changePasswordMainView.lc", the parent view of the view above:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/changePasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "createUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="createUser">
@@ -3127,22 +3273,26 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>The parent view "createUserMainView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/createUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "deactivateUserView.lc" view:</p>
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="deactivate">
@@ -3171,17 +3321,20 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "deactivateUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deactivateUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
@@ -3189,6 +3342,7 @@ return tHeader && tContent
 <p>The "deleteUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="delete">
@@ -3217,23 +3371,27 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "deleteUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deleteUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "editUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 &lt;div id="container" class="editUser">
@@ -3275,22 +3433,26 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "editUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/editUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "forgotPasswordView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="forgotPassword">
@@ -3320,21 +3482,25 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>The parent view "forgotPasswordMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/forgotPasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "loginView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="login">
@@ -3366,23 +3532,27 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "loginMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/loginView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "resetPasswordView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 	&lt;div id="container" class="resetPassword">
@@ -3417,17 +3587,20 @@ return tHeader && tContent
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "resetPasswordMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/resetPasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
@@ -3442,6 +3615,7 @@ return tHeader && tContent
 <p>Create a CSS file called authentication.css, in it place the following code and save it to your assets/css/ folder:</p>
 
 
+<div class="codeSample">
 <pre><code>body {
 	margin: 40px;
 	padding: 0;
@@ -3483,6 +3657,7 @@ button a {
 	text-decoration: none;
 }
 </code></pre>
+</div>
 
 <h2>Try it!</h2>
 
@@ -3529,6 +3704,8 @@ Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

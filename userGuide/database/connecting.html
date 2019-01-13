@@ -132,6 +132,7 @@ Examples:</p>
 
 <p>To connect manually to a desired database you can pass an array of values:</p>
 
+<div class="codeSample">
 <pre><code>put "localhost" into tConfig["hostname"]
 put "myusername" into tConfig["username"]
 put "mypassword" into tConfig["password"]
@@ -146,20 +147,25 @@ put "utf8" into tConfig["charset"]
 put "utf8_general_ci" into tConfig["dbcollat"]
 
 get rigLoadDatabase(<samp>tConfig</samp>);</code></pre>
+</div>
 
 <p>For information on each of these values please see the <a href="configuration.html">configuration page</a>.</p>
 
 <p>Or you can submit your database values as a Data Source Name. DSNs must have this prototype:</p>
 
+<div class="codeSample">
 <pre><code>put "'dbdriver://username:password@hostname/database'" into tDSN
 
 get rigLoadDatabase(<samp>tDSN</samp>)</code></pre>
+</div>
 
 <p>To override default config values when connecting with a DSN string, add the config variables as a query string.</p>
 
-<pre><code>put "'dbdriver://username:password@hostname/database?char_set=utf8&amp;dbcollat=utf8_general_ci&amp;cache_on=true&amp;cachedir=/path/to/cache'" into tDSN
+<div class="codeSample">
+<pre><code>put "'dbdriver://username:password@hostname/database?char_set=utf8&amp;dbcollat=utf8_general_ci&amp;cache_on=true'" into tDSN
 
 get rigLoadDatabase(<samp>tDSN</samp>)</code></pre>
+</div>
 
 <h2>Connecting to Multiple Databases</h2>
 
@@ -199,6 +205,8 @@ Next Topic:&nbsp;&nbsp;<a href="queries.html">Queries</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

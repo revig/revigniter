@@ -115,6 +115,7 @@
 <p>Here is a basic example demonstrating how you might send email.  Note:  This example assumes you are sending the email from one of your
 <a href="../general/controllers.html">controllers</a>.</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Email"
 
 rigMailFrom "your@example.com", "Your Name"	
@@ -128,7 +129,7 @@ rigMailMessage "Testing the email library."
 put rigMailSend() into tMailResult
 
 put rigPrintMailDebugger() into gData["mailDebug"]</code></pre>
-
+</div>
 
 
 
@@ -139,12 +140,14 @@ as described here, or automatically via preferences stored in your config file, 
 
 <p>Preferences are set by passing an array of preference values to the email <dfn>rigInitializeMail</dfn> handler.  Here is an example of how you might set some preferences:</p>
 
+<div class="codeSample">
 <pre><code>put "sendmail" into tConfig["protocol"]
 put "/usr/sbin/sendmail" into tConfig["mailpath"]
 put "iso-8859-1" into tConfig["charset"]
 put TRUE into tConfig["wordwrap"]
 
 rigInitializeMail tConfig</code></pre>
+</div>
 
 <p><strong>Note:</strong> Most of the preferences have default values that will be used if you do not set them.</p
 
@@ -155,6 +158,7 @@ Simply create a new file called <var>email.lc</var>,  add the <var>Config</var>
 array in that file. At the end of the file write: <dfn>rigRunInitialEmailConfig yourArrayVariableName</dfn>. Then save the file at <var>config/email.lc</var> and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializeMail</dfn> handler if you save your preferences in a config file. Example:</p>
 
+<div class="codeSample">
 <pre><code>local sEmailConf
 
 put "sendmail" into sEmailConf["protocol"]
@@ -163,6 +167,7 @@ put "iso-8859-1" into sEmailConf["charset"]
 put TRUE into sEmailConf["wordwrap"]
 
 rigRunInitialEmailConfig sEmailConf</code></pre>
+</div>
 
 
 <h2>Email Preferences</h2>
@@ -263,7 +268,7 @@ rigMailTo tList</code></pre>
 <p>Sets the email message body:</p>
 <pre><code class="lang-livecodeserver">rigMailMessage "<var>This is my message</var>"</code></pre>
 
-<h3>rigSet_sAltMessage</h3>
+<h3>rigSet_altMessage / rigSet_sAltMessage</h3>
 <p>Sets the alternative email message body:</p>
 <pre><code class="lang-livecodeserver">rigSet_sAltMessage "<var>This is the alternative message</var>"</code></pre>
 
@@ -368,6 +373,8 @@ Next Topic:&nbsp;&nbsp;<a href="encryption.html">Encryption Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

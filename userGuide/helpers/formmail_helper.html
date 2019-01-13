@@ -113,6 +113,7 @@
 
 <p>Let's say your template looks like this:</p>
 
+<div class="codeSample">
 <pre><code>Dear <#firstName> <#lastName>,
 
 thanks for your message regarding <#subject>.
@@ -125,10 +126,12 @@ Rev Igniter
 <p>
 Company
 </p></code></pre>
+</div>
 
 
 <p>Then your code would look like this:</p>
 
+<div class="codeSample">
 <pre><code>put "John" into tFormMailArray["firstName"]
 put "Doe" into tFormMailArray["lastName"]
 put "revIgniter" into tFormMailArray["subject"]
@@ -138,6 +141,7 @@ put "assets/modules/contact/emailText/contactConfirmationMail.txt" into tMailTex
 get rigFormMail(tMailText, tFormMailArray)
 put rigFormMailReplace() into tResponse
 </code></pre>
+</div>
 
 
 </div>
@@ -169,6 +173,8 @@ Next Topic:&nbsp;&nbsp;<a href="html_helper.html">HTML Helper</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

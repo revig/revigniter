@@ -111,6 +111,7 @@ and build the table using the table structure below.</p>
 
 	<p>The stylesheet:</p>
 
+<div class="codeSample">
 <pre><code>body {
 	font: 12pt "Lucida Grande", Lucida, Verdana, Geneva, sans-serif;
 }
@@ -273,9 +274,11 @@ a:hover {
 	margin-top: 80px;
 }
 </code></pre>
+</div>
 
 	<p>The table:</p>
 
+<div class="codeSample">
 <pre><code>CREATE TABLE `chat` (
 	`id` int(7) NOT NULL auto_increment,
 	`user` varchar(255) NOT NULL,
@@ -284,6 +287,8 @@ a:hover {
 	PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 </code></pre>
+</div>
+
 
 
 <h2>Controller</h2>
@@ -292,6 +297,7 @@ a:hover {
 
 <p>We start with the basic prototype for a controller script:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -314,6 +320,7 @@ end index
 --| Location: ./system/application/controllers/chat.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 <p>Save this script as "chat.lc" in <samp>system/application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
@@ -352,6 +359,7 @@ rigLoaderLoadLibrary "Jquery", tJquerySettings
 
 <p>Your chat handler should now look like this:</p>
 
+<div class="codeSample">
 <pre><code>command chat
 	put "1.7.2" into tJquerySettings["jqueryCurrentVersion"]
 	rigLoaderLoadLibrary "Jquery", tJquerySettings
@@ -367,12 +375,14 @@ rigLoaderLoadLibrary "Jquery", tJquerySettings
 	put "revIgniter Chat Application Tutorial" into gData["pageTitle"]
 end chat
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Mind the version number of jQuery. The jQuery library is not compatible with newer versions of jQuery. Actually it is tested against version 1.4.2 but this sample application works with version 1.7.2 too.</p>
 
 <p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. With this handler we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
 
 
+<div class="codeSample">
 <pre><code>if rigSessUserdata("name") &lt;> FALSE then
 	put rigSessUserdata("name") into gData["user"]
 	put FALSE into tLogin
@@ -387,6 +397,7 @@ else
 	end if
 end if
 </code></pre>
+</div>
 
 <p>If there is an item "name" in the session data we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p> 
 <p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of rigVarPost() to "TRUE". </p>
@@ -405,6 +416,7 @@ end if
 
 <p>Now add the following code (mind line breaks) to the <dfn>index</dfn> handler:</p>
 
+<div class="codeSample">
 <pre><code>if tLogin is FALSE then
 	# USER SENT A NAME
 	rigJQopen
@@ -443,6 +455,7 @@ end if
 
 end if
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
 
@@ -466,6 +479,7 @@ get rigLoadView("chatfooter")
 
 <p>Your <dfn>index</dfn> handler should now look like this:</p>
 
+<div class="codeSample">
 <pre><code>command index
 	if rigSessUserdata("name") &lt;> FALSE then
 		put rigSessUserdata("name") into gData["user"]
@@ -524,11 +538,13 @@ get rigLoadView("chatfooter")
 	get rigLoadView("chatfooter")
 end index
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
 
 <p>Now we need a handler, which adds new messages to the database. It takes the POST data, checks if the message is not empty and, along with the session data, hands it over to the model, which is responsible for database related tasks. Add the following handler to the controller script:</p>
 
+<div class="codeSample">
 <pre><code>command addmsg
 	put rigSessUserdata("name") into tName
 	put rigVarPost("userinput") into tMsg
@@ -538,6 +554,7 @@ end index
 	end if
 end addmsg
 </code></pre>
+</div>
 
 <p>You may notice that the name of the model handler <dfn>_addMsg</dfn> has an underscore as the name prefix. This is to hide certain handlers from public access. These handlers will not be served via a URL request.</p>
 
@@ -545,12 +562,14 @@ end addmsg
 
 <p>The next handler to add to the controller script gets the data from the model, stores it in the global variable <var>gData</var> and loads the view chatlist.lc, which consists of the messages list only:</p>
 
+<div class="codeSample">
 <pre><code>command view 
 	put getMsgData() into gData["msgList"]
 
 	get rigLoadView("chatlist")
 end view
 </code></pre>
+</div>
 
 <p>Of course, later we need to make sure that the model contains a <dfn>getMsgData</dfn> function.</p>
 
@@ -558,6 +577,7 @@ end view
 
 <p>The last handler is used to end the chat session. If there is a user name, it sends the user name and a "User has left ..." message to the model to add this data to the database. Then it destroys the session data as it is not needed anymore and loads the appropriate view files to display the login page again. Add the following code to the controller:</p>
 
+<div class="codeSample">
 <pre><code>command logout
 	put rigSessUserdata("name") into tName
 	if tName &lt;> FALSE then
@@ -572,6 +592,7 @@ end view
 	get rigLoadView("chatfooter")
 end logout
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Add the handler name "logout" to the global variable gControllerHandlers.</p>
 
@@ -581,6 +602,7 @@ end logout
 
 <p>We start with the basic prototype of a model script:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -594,6 +616,7 @@ end if
 --| Location:  ./system/application/models/chatmodel.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 <p>As specified in the <dfn>chat</dfn> handler of the controller script, name this file "chatmodel.lc" and save it in <samp>system/application/models</samp>.</p>
 
@@ -648,6 +671,7 @@ end getMsgData
 
 <p>Your <dfn>getMsgData</dfn> function should now look like this: </p>
 
+<div class="codeSample">
 <pre><code>function getMsgData
 	rigDbOrderBy "id", "ASC"
 	put rigDbGet("chat") into tQueryResult
@@ -676,10 +700,12 @@ end getMsgData
 	return FALSE
 end getMsgData
 </code></pre>
+</div>
 
 
 <p>Add the following code to complete the model script:</p>
 
+<div class="codeSample">
 <pre><code>command _addMsg pName pMsg
 	put pName into tData["user"]
 	put pMsg into tData["msg"]
@@ -687,6 +713,7 @@ end getMsgData
 	get rigDbInsert("chat", tData)
 end _addMsg
 </code></pre>
+</div>
 
 <p>This handler is called by the controller. It puts a new message along with the user name and the current time into  an array and inserts this data into the "chat" table.<br />Now, that's all about the model script and all that is left to do is to build the view files.</p>
 
@@ -741,6 +768,7 @@ end _addMsg
 
 <p>Your chatheader.lc script should now look like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
 &lt;head>
@@ -759,9 +787,11 @@ end _addMsg
 &lt;body>
 	&lt;div class="page_margins">
 </code></pre>
+</div>
 
 <p>There is not much to say about the footer. Just save the following code as "chatfooter.lc" in <samp>system/application/views</samp>:</p>
 
+<div class="codeSample">
 <pre><code>	&lt;div id="footer">
 		&lt;hr />
 		&lt;p>revIgniter Chat Application Tutorial&lt;/p>
@@ -771,10 +801,12 @@ end _addMsg
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p>There is nothing special with the content of the Login page either. So, save the following code in <samp>system/application/views</samp> as "chatlogin.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;div id="login">
 	&lt;p>Please enter your name.&lt;/p>
 	&lt;form action="http://example.com/chat/" method="post">
@@ -785,6 +817,7 @@ end _addMsg
 	&lt;/form>
 &lt;/div>
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Don't forget to replace the action attribute with the proper URL.</p>
 
@@ -829,6 +862,7 @@ end _addMsg
 <p>Your chatcontent view should now look like this:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;div id="chat">
 	&lt;div id="chatheader">
 		&lt;p id="username">Welcome, &lt;b>[[gData["user"] ]]&lt;/b>&lt;/p>
@@ -847,15 +881,18 @@ end _addMsg
 	&lt;/div>
 &lt;/div>
 </code></pre>
+</div>
 
 
 <p>As mentioned earlier, the jQuery script contains a function, which loads the messages list. This is done by sending a request to chat/view. Then the <dfn>view</dfn> handler puts the messages list into the <var>gData</var> variable and loads the chatlist view, which is used by the Ajax request to replace the HTML code inside the div with the id "chatbody".</p> <p> This view consists of the following three lines of code, which you should save as "chatlist.lc" in <samp>system/application/views</samp>:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;ul>
 	[[gData["msgList"] ]]
 &lt;/ul>
 </code></pre>
+</div>
 
 <p>That's it, your chat application should work as expected.</p>
 
@@ -895,6 +932,8 @@ end _addMsg
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -106,6 +106,7 @@ read the individual pages describing each method.</p>
 
 <h2>Standard Query With Multiple Results</h2>
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("SELECT name, title, email FROM myTable") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
@@ -115,6 +116,7 @@ repeat with i = 1 to tQuery["numrows"]
 	put tRowData["email"] & return after tResultData
 end repeat
 </code></pre>
+</div>
 
 <p>The above <dfn>rigDbQuery()</dfn> function returns an array.</p>
 
@@ -123,6 +125,7 @@ end repeat
 <p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test for a result first:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
 
 # CHECK IF THE QUERY RESULT HAS DATA
@@ -136,26 +139,31 @@ if tQuery["numrows"] > 0 then
 	end repeat
 end if
 </code></pre>
+</div>
 
 
 
 <h2>Standard Query With Single Result</h2>
 
+<div class="codeSample">
 <pre><code>get rigDbQuery("SELECT name FROM myTable LIMIT 1")
 
 put rigDbRow(1) into tRow
 put tRow["name"] into tName
 </code></pre>
+</div>
 
 
 <h2>Standard Insert</h2>
 
+<div class="codeSample">
 <pre><code>put "INSERT INTO mytable (title, name) VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
 
 get rigDbQuery(tSQL)
 
 put rigDbAffectedRows() into tAffectedRows
 </code></pre>
+</div>
 
 <p>The function rigDbAffectedRows() returns an integer or a boolean.</p>
 
@@ -164,6 +172,7 @@ put rigDbAffectedRows() into tAffectedRows
 
 <p>The <a href="active_record.html">Active Record Pattern</a> gives you a simplified means of retrieving data:</p>
 
+<div class="codeSample">
 <pre><code>put rigDbGet("tableName") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
@@ -171,6 +180,7 @@ repeat with i = 1 to tQuery["numrows"]
 	put tRowData["title"] & comma after tTitles
 end repeat
 </code></pre>
+</div>
 
 <p>The above <dfn>rigDbGet()</dfn> function retrieves all the results from the supplied table.
 The <a href="active_record.html">Active Record</a> library contains a full compliment of handlers
@@ -179,6 +189,7 @@ for working with data.</p>
 
 <h2>Active Record Insert</h2>
 
+<div class="codeSample">
 <pre><code>put tTitle into tData["title"]
 put tName into tData["name"]
 put tDate into tData["date"]
@@ -187,7 +198,7 @@ get rigDbInsert("mytable", tData)
 
 -- Produces: "INSERT INTO mytable (title, name, date) VALUES ('" & tTitle & "', '" & tName & "', '" & tData & "')"
 </code></pre>
-
+</div>
 
 
 
@@ -221,6 +232,8 @@ Next Topic:&nbsp;&nbsp;<a href="configuration.html">Database Configuration</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

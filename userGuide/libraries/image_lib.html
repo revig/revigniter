@@ -125,6 +125,7 @@ using the <dfn>rigLoadStack</dfn> handler:</p>
 identical. You will set some preferences corresponding to the action you intend to perform, then
 call one of four available processing functions.  For example, to create an image thumbnail you'll do this:</p>
 
+<div class="codeSample">
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put TRUE into tConfig["createThumb"]
 put TRUE into tConfig["maintainRatio"]
@@ -135,6 +136,7 @@ rigLoaderLoadLibrary "Image", tConfig
 -- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageResize() into gData["imageOutput"]</code></pre>
+</div>
 
 <p>The above code tells the <dfn>imageResize</dfn> function to look for an image called <em>mypic.jpg</em>
 located in the <dfn>sourceImage</dfn> folder, then create a thumbnail that is 75 X 50 pixels. The path to the source image is 
@@ -153,6 +155,7 @@ folder containing the image files must have write permissions.</p>
 is saved, which is used as the source for an image tag in your view file.
 For example, to watermark an image without storing the image you'll do this:</p>
 
+<div class="codeSample">
 <pre><code>put "overlay" into tConfig["WMtype"]
 put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put "path/to/watermarkImage/wmarkImg.png" into tConfig["WMoverlaypath"]
@@ -166,6 +169,7 @@ rigLoaderLoadLibrary "Image", tConfig
 -- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageWatermark() into gData["imageOutput"]</code></pre>
+</div>
 
 <p>The above code tells the <dfn>imageWatermark</dfn> function to use an image overlay as watermark, to look for an image called <em>mypic.jpg</em>
 located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark 
@@ -180,6 +184,7 @@ of the controllers directory. In the example above the file dynOverlay is locate
 
 <p>Use the returned value in your view file like in the following example:</p>
 
+<div class="codeSample">
 <pre><code>&lt;html>
 	&lt;head>
 	&lt;/head>
@@ -188,6 +193,7 @@ of the controllers directory. In the example above the file dynOverlay is locate
 		[[gData["imageOutput"] ]]
 	&lt;/body>
 &lt;/html></code></pre>
+</div>
 
 
 <h2>Processing Functions</h2>
@@ -208,12 +214,14 @@ error message using this function:</p>
 
 <p>A good practice is to use the processing function conditionally, showing an error upon failure, like this:</p>
 
+<div class="codeSample">
 <pre><code>put rigImageResize() into tImageOutput
 if tImageOutput is FALSE then
 	put rigDisplayImgErrors() into gData["imageOutput"]
 else
 	put tImageOutput into gData["imageOutput"]
 end if</code></pre>
+</div>
 
 <p>Note:  You can optionally specify the HTML formatting to be applied to the errors, by submitting the opening/closing
 tags in the function, like this:</p>
@@ -457,6 +465,7 @@ put "40" into tConfig["Yaxis"]</code></pre>
 
 <p>Here's an example showing how you might crop an image using percentages:</p>
 
+<div class="codeSample">
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put "North" into tConfig["cropAlignment"]
 put "50%" into tConfig["Xaxis"]
@@ -471,6 +480,7 @@ if tImageOutput is FALSE then
 else
 	put tImageOutput into gData["imageOutput"]
 end if</code></pre>
+</div>
 
 
 <p>Note: Without a visual interface it is difficult to crop images, so this function is not very useful
@@ -494,6 +504,7 @@ unless you intend to build such an interface.</p>
 
 <p>Here's an example showing how you might rotate an image:</p>
 
+<div class="codeSample">
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put "hor" into tConfig["rotationAngle"]
 
@@ -506,7 +517,7 @@ if tImageOutput is FALSE then
 else
 	put tImageOutput into gData["imageOutput"]
 end if</code></pre>
-
+</div>
 
 
 <h3>rigImgClear</h3>
@@ -564,6 +575,7 @@ containing your watermark over the source image.</li>
 involves setting the preferences corresponding to the action you intend to perform, then
 calling the watermark function.  Here is an example:</p>
 
+<div class="codeSample">
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
 put "text" into tConfig["WMtype"]
 put "Copyright 2014 - John Doe" into tConfig["WMtext"]
@@ -578,6 +590,7 @@ rigLoaderLoadLibrary "Image", tConfig
 -- rigLoadStack "Image", tConfig -- respectively
 
 put rigImageWatermark() into tImageOutput</code></pre>
+</div>
 
 
 <p>The above example will use a 18 pixel font to create the text "Copyright 2014 - John Doe".  The watermark
@@ -799,6 +812,8 @@ Next Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

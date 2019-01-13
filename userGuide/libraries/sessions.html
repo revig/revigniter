@@ -303,6 +303,7 @@ be updated, they can only be generated when a new session is created.</p>
 <p>In order to store sessions in a database, you must first create a database table for this purpose.  Here is the basic
 prototype required by the Session Library.<br />MySQL version:</p>
 
+<div class="codeSample">
 <pre><code>CREATE TABLE IF NOT EXISTS `ri_sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',
   `ip_address` varchar(45) NOT NULL DEFAULT '0',
@@ -312,9 +313,11 @@ prototype required by the Session Library.<br />MySQL version:</p>
   PRIMARY KEY (`session_id`)
 );
 </code></pre>
+</div>
 
 <p>PostgreSQL version:</p>
 
+<div class="codeSample">
 <pre><code>CREATE TABLE ri_sessions (
 	session_id varchar(40) DEFAULT 0 NOT NULL,
 	ip_address varchar(45) DEFAULT 0 NOT NULL,
@@ -325,9 +328,11 @@ prototype required by the Session Library.<br />MySQL version:</p>
 	CONSTRAINT check_last_activity CHECK(last_activity >= 0)
 );
 </code></pre>
+</div>
 
 <p>SQLite version:</p>
 
+<div class="codeSample">
 <pre><code>CREATE TABLE "main"."ri_sessions" (
 	"session_id" text(40) NOT NULL DEFAULT '0',
 	"ip_address" text(45) NOT NULL DEFAULT '0',
@@ -337,6 +342,7 @@ prototype required by the Session Library.<br />MySQL version:</p>
 	PRIMARY KEY("session_id")
 );
 </code></pre>
+</div>
 
 <p><strong>Note:</strong> By default the table is called <dfn>ri_sessions</dfn>, but you can name it anything you want
 as long as you update the <kbd>application/config/config.lc</kbd> file so that it contains the name you have chosen.
@@ -499,6 +505,8 @@ Next Topic:&nbsp;&nbsp;<a href="trackback.html">Trackback Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -123,7 +123,7 @@
 
 <p>Let's create a simple controller so you can see it in action.  Using your text editor, create a file called <dfn>blog.lc</dfn>, and put the following code in it:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -133,6 +133,7 @@ command index
 	put "Hello World!"
 end index
 </code></pre>
+</div>
 
 
 <p>Then save the file to your <dfn>application/controllers/</dfn> folder.</p>
@@ -157,6 +158,7 @@ end index
 <p>Let's try it.  Add a new handler to your controller:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -170,6 +172,7 @@ command comments
 	put "Look at this!"
 end comments
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Important:</strong>&nbsp; Don't forget to add the name of your new handler to the comma separated list of the variable gControllerHandlers.</p>
@@ -193,6 +196,7 @@ end comments
 
 <p>The function rigFetchSegment(3) will return "sandals" and rigFetchSegment(4) will return "123" (URI segments 3 and 4):</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -202,6 +206,7 @@ command shoes
 	put rigFetchSegment(3) && rigFetchSegment(4)
 end shoes
 </code></pre>
+</div>
 
 <p class="important"><strong>Important:</strong>&nbsp; If you are using the <a href="routing.html">URI Routing</a> feature, the re-routed segments
 must be retrieved using the rigFetchRsegment() function.</p>
@@ -331,6 +336,7 @@ See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 <p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, plugins, models, a database etc.
 Let's say your controller is called "blog.lc", then your code would look like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -352,6 +358,7 @@ end index
 --| Location: ./system/application/controllers/blog.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 <h2>That's it!</h2>
@@ -389,6 +396,8 @@ Next Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

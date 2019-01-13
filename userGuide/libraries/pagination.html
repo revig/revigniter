@@ -106,6 +106,7 @@
 
 <p>Here is a simple example showing how to create pagination in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Pagination"
 # PAGINATION CONFIGURATION
 put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
@@ -117,6 +118,7 @@ rigInitializePagination tConfig
 
 # GET PAGINATION HTML LINKS
 put rigCreatePaginationLinks() into gData["pagination"]</code></pre>
+</div>
 
 <h3>Notes:</h3>
 
@@ -141,6 +143,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 <p>As explained above, to build the pagination HTML links the library needs to be provided with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now the important part: The third segment is a number, the page number calculated by the library which should be evaluated by your pagination handler as shown below:</p>
 
 
+<div class="codeSample">
 <pre><code>command page
 	# LET'S ASSUME YOU RETRIEVE YOUR DATA FROM A SQL DATABASE
 	# USING ACTIVE RECORD FEATURES
@@ -195,6 +198,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 	get rigLoadView("testView")
 end page
 </code></pre>
+</div>
 
 <p>Now all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"] ]] and the edited data retrieved from your database like [[gData["paginationData"] ]].</p>
 
@@ -203,17 +207,21 @@ end page
 
 <p>If you like to make the pagination work with XMLHTTP requests you just need to set the AJAX flag to true before initializing the library</p>
 
+<div class="codeSample">
 <pre><code>put TRUE into tConfig["ajax"]</code></pre>
+</div>
 
 
 <p>and add the following two lines of code right after calling the rigCreatePaginationLinks function like:</p>
 
+<div class="codeSample">
 <pre><code># SEND JSON DATA TO BE PROCESSED BY AJAX PAGINATION SCRIPT TO BROWSER
 rigAjaxPagination gData["paginationData"], gData["paginationLinks"]
   
 # GET AJAX PAGINATION SCRIPT
 put rigAjaxPaginationCode() into gData["ajaxCode"]
 </code></pre>
+</div>
 
 
 <h3>Notes:</h3>
@@ -224,9 +232,11 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 	<li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
 </ul>
 
+<div class="codeSample">
 <pre><code>put "myPaginationLinksID" into tConfig["linksElementID"]
 put "myPaginationDataID" into tConfig["dataElementID"]
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> revIgniter's AJAX pagination is not compatible with Internet Explorer 7 and below.</p>
@@ -242,6 +252,7 @@ will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save 
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>local sConfig
 
 put "http://example.com/index.lc/test/page/" into sConfig["baseUrl"]
@@ -257,11 +268,12 @@ put "&lt;/div>" into sConfig["fullTagClose"]
 # THIS LINE IS MANDATORY
 rigRunInitialPaginationConfig sConfig
 </code></pre>
+</div>
 
 
 <h2>Customizing the Pagination</h2>
 
-<p>The following tables list of all the preferences you can pass to the initialization handler to tailor the display.</p>
+<p>The following tables list all of the preferences you can pass to the initialization handler to tailor the display.</p>
 
 
 <div class="table">
@@ -271,6 +283,12 @@ rigRunInitialPaginationConfig sConfig
 <th>Default&nbsp;Value</th>
 <th>Options</th>
 <th>Description</th>
+</tr><tr>
+<td class="td"><strong>sConfig["baseUrl"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The full URL to the controller/handler containing your pagination. See examples above.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["totalRows"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The number representing the total rows in the result set you are creating pagination for. Typically this number will be the total rows that your database query returned.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["perPage"]</strong></td><td class="td">10</td><td class="td">None</td><td class="td">The number of items you intend to show per page.</td>
 </tr><tr>
 <td class="td"><strong>sConfig["uriSegment"]</strong></td><td class="td">3</td><td class="td">None</td><td class="td">The pagination function automatically determines which segment of your URI contains the page number. If you need something different you can specify it.</td>
 </tr><tr>
@@ -496,6 +514,8 @@ Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

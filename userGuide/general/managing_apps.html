@@ -189,6 +189,7 @@ calls the desired application.  The index.lc file can be named anything you want
 <p>To exclude <kbd>index.lc</kbd> and <kbd>bar.lc</kbd> from your URLs you need to modify the mod_rewrite rules explained in <a href="urls.html">revIgniter URLs</a> like this:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteBase /
@@ -202,6 +203,7 @@ RewriteRule ^bar/?$ bar.lc?/ [L]
 RewriteRule ^(bar)/(.*)$ bar.lc?/$2 [L]
 &lt;/IfModule>
 </code></pre>
+</div>
 
 
 
@@ -250,6 +252,8 @@ Next Topic:&nbsp;&nbsp;<a href="security.html">Security</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

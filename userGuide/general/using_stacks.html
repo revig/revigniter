@@ -114,6 +114,7 @@
 
 <p>Stack script:</p>
 
+<div class="codeSample">
 <pre><code># LOGGING
 on libraryStack
 	rigLogMessage "debug", "Stack" &amp;&amp; the short name of me &amp;&amp; "Loaded"
@@ -132,11 +133,14 @@ command rigRunInitial<kbd>&lt;StacknameWithoutExtension></kbd>StackConfig pConfi
 	end if
 end rigRunInitial<kbd>&lt;StacknameWithoutExtension></kbd>StackConfig
 </code></pre>
+</div>
 
 <p>Replace "&lt;StacknameWithoutExtension>" with the file name of your stack. Don't use the stack name.</p>
 
 <p>Card script:</p>
 
+
+<div class="codeSample">
 <pre><code># LOGGING
 on openStack
 	if the environment &lt;> "development" then
@@ -144,6 +148,7 @@ on openStack
 	end if
 end openStack
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong>&nbsp; If you use LiveCode version 5.5 or later up to 6.0 you need to save your stack files in <kbd>legacy format</kbd> (2.7).</p>
 
@@ -238,15 +243,18 @@ to load the example above, which extends the Nativestack stack, you will use:</p
 <p>Step 2: Prepare a copy of the qrtpdflib.livecode stack. This involves the following:<br />
 Insert the lines below right after the license notes: </p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># LOGGING
 on libraryStack
 	rigLogMessage "debug", "Stack" &amp;&amp; the short name of me &amp;&amp; "Loaded";
 end libraryStack
 </code></pre>
+</div>
 
 
 <p>Insert the following lines right before it says "-> library handlers": </p>
 
+<div class="codeSample">
 <pre><code># RUN INITIAL CONFIGURATION PROCEDURES.
 command rigRunInitialqrtpdflibStackConfig pConfig
 	qrtPDF_ResetAll ------------------------------- this is a Quartam command!!!!!
@@ -262,6 +270,7 @@ command rigRunInitialqrtpdflibStackConfig pConfig
 	end if
 end rigRunInitialqrtpdflibStackConfig
 </code></pre>
+</div>
 
 <p>The parameter is optional. It is used to dynamically pass data to your stack on initialization.<br />
 Comment out the libraryStack handler.<br />
@@ -271,6 +280,7 @@ Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as
 
 <p>Add the following code to the card script: </p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># LOGGING
 on openStack
 	if the environment &lt;&gt; "development" then
@@ -278,6 +288,7 @@ on openStack
 	end if
 end openStack
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Now, this is important, in case you use LiveCode version 5.5 or later up to 6.0 save your modified qrtpdflib.livecode stack in <kbd>legacy format</kbd> (2.7). </p>
 
@@ -320,6 +331,8 @@ Next Topic:&nbsp;&nbsp;<a href="hooks.html">Hooks - Extending the Core</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

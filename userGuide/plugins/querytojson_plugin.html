@@ -104,7 +104,7 @@
 	of the database table. Example:</p>
 
 
-
+<div class="codeSample">
 <pre><code># MODEL DATABASE QUERY
 put mymodelFetchAllData("recipe") into tQuery
 put tQuery["resultarray"] into tResult
@@ -113,6 +113,7 @@ put tQuery["fieldnames"] into tFieldNames
 # CONVERT ARRAY TO JSON
 put rigQueryToJSON(tResult, tFieldNames) into gData["jsonData"]
 </code></pre>
+</div>
 
 <p>Conversion example:</p>
 
@@ -151,8 +152,9 @@ put rigQueryToJSON(tResult, tFieldNames) into gData["jsonData"]
 
 
 <p>To reference the JSON object use the term "queryToJSON". To reference individual items of the JSON records use the table field names.
-	If the "fieldnames" parameter is empty, item names are "field1", "field2", "field3" ... etc. Example:</p>
+	If the "fieldnames" parameter is empty, item names are "field1", "field2", "field3" ... etc. Example using the Jquery library:</p>
 
+<div class="codeSample">
 <pre><code>rigJQopen
 rigJQeventOpen "'#go'", "'click'"
 put "getjsontest/getjsondata" into tAjax["url"]
@@ -171,6 +173,7 @@ rigJQclose
 
 put the result into gData["JQscript"]
 </code></pre>
+</div>
 
 
 <p>In the example above we perform an Ajax request. We store the retrieved data in a variable called "jsObj" and reference the
@@ -211,6 +214,8 @@ Next Topic:&nbsp;&nbsp;<a href="../plugins/queryvalues_plugin.html">QueryValues 
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

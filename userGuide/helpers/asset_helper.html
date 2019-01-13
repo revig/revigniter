@@ -158,16 +158,20 @@ which determines if asset file names should include the timestamp of last modifi
 
 <p>Let's say this is an abstract of your CSS file.</p>
 
+<div class="codeSample">
 <pre><code>#mastHead {
 	height:480px;
 	width:312px;
 	background-image: url('[[gData["mastheadImg"] ]]');
 }
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong>&nbsp; File name prototype for your raw CSS file to be processed is filename.css.lc (mind the suffixes).</p>
 
 <p>This is an abstract of your controller.</p>
+
+<div class="codeSample">
 <pre><code>-- define your variables, in this case store an image URL in gData
 put rigImgAssetURL("masthead.jpg") into gData["mastheadImg"]
 
@@ -177,6 +181,7 @@ put "screen" into tAttrib["media"]
 -- preprocess your raw CSS file and get the CSS asset location html code to be stored in gData
 put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 </code></pre>
+</div>
 
 <p>Assumed the raw CSS file is called myCSS.css.lc, then the name of the generated CSS file sent to the browser is myCSS.css</p>
 
@@ -193,6 +198,7 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 
 <p>This is an abstract of your view.</p>
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
 	&lt;head>
@@ -205,6 +211,7 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 	&lt;/head>
 	&lt;body>
 </code></pre>
+</div>
 
 <h3>rigImgAssetURL(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
@@ -290,6 +297,7 @@ which determines if asset file names should include the timestamp of last modifi
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 put "manifestexample,index" into gControllerHandlers
@@ -328,11 +336,14 @@ end index
 --| Location: ./system/application/controllers/manifestexample.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 <p>Now declare the manifest file in the HTML of your view file using the manifest attribute:</p>
 
+<div class="codeSample">
 <pre><code>&lt;html manifest="[[gData["manifestFile"] ]].manifest">
 </code></pre>
+</div>
 
 
 </div>
@@ -365,6 +376,8 @@ Next Topic:&nbsp;&nbsp;<a href="cookie_helper.html">Cookie Helper</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

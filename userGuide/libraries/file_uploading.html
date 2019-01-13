@@ -114,6 +114,7 @@ preferences, restricting the type and size of the files.</p>
 folder:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
   &lt;head>
@@ -139,6 +140,7 @@ folder:</p>
   &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p>You'll notice we have a <var>gData["formOpen"]</var> variable which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
 creates the proper syntax for you.  You'll also notice we have a <var>gData["uploadError"]</var> variable.  This is so we can show error messages in the event
@@ -150,6 +152,7 @@ the user does something wrong.</p>
 <p>Using a text editor, create a form called <dfn>uploadSuccessView.lc</dfn>.
 In it, place this code and save it to your <samp>applications/views/</samp> folder:</p>
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
   &lt;head>
@@ -175,6 +178,7 @@ In it, place this code and save it to your <samp>applications/views/</samp> fold
   &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <h2>The Controller</h2>
@@ -182,7 +186,7 @@ In it, place this code and save it to your <samp>applications/views/</samp> fold
 <p>Using a text editor, create a controller called <dfn>upload.lc</dfn>.  In it, place this code and save it to your <samp>applications/controllers/</samp>
 folder:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 put "doUpload,buildForm,upload,index" into gControllerHandlers
@@ -246,6 +250,7 @@ end doUpload
 --| Location: ./system/application/controllers/upload.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 <h2>The Upload Folder</h2>
@@ -277,6 +282,7 @@ controller is correct it should work.</p>
 
 <p>Following modifications of the sample code above needed to upload multiple files:<br>The controller needs a new <dfn>buildForm</dfn> handler and an additional line of code to check for upload errors in the <dfn>doUpload</dfn> handler. If you like you can set a limit for the maximum number of files allowed to be uploaded as shown below.</p>
 
+<div class="codeSample">
 <pre><code>command buildForm
   put rigFormOpenMultiPart("upload/doUpload") into gData["formOpen"]
 
@@ -322,12 +328,14 @@ command doUpload
   end if
 end doUpload
 </code></pre>
+</div>
 
 <p>Note: The name of the input field needs brackets as suffix.</p>
 
 
 <p>The repeat loop of the success page needs to be adjusted like:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">[[gData["uploadError"] ]]
 		
 &lt;h3>File(s) successfully uploaded:&lt;/h3>
@@ -348,6 +356,7 @@ end doUpload
    return tUploadData ?>
 
 </code></pre>
+</div>
 
 <p>Note: There is an additional section for upload errors.</p>
 
@@ -369,6 +378,7 @@ end doUpload
 <p>Similar to other libraries, you'll control what is allowed to be uploaded based on your preferences. In the controller you
 built above you set the following preferences:</p>
 
+<div class="codeSample">
 <pre><code>put "./uploads/" into tConfig["UploadPath"]
 put "gif|jpg|png" into tConfig["AllowedTypes"]
 put 100 into tConfig["MaxSize"]
@@ -380,6 +390,7 @@ rigLoaderLoadLibrary "Upload", tConfig
 # Alternately you can set preferences by calling the rigInitializeUpload command. Useful if you auto-load the library:
 rigInitializeUpload tConfig
 </code></pre>
+</div>
 
 <p>The above preferences should be fairly self-explanatory.  Below is a table describing all available preferences.</p>
 
@@ -398,14 +409,14 @@ rigInitializeUpload tConfig
 </tr>
 
 <tr>
-<td class="td"><strong>UploadPath</strong></td>
+<td class="td"><strong>uploadPath</strong></td>
 <td class="td">None</td>
 <td class="td">None</td>
 <td class="td">The path to the folder where the upload should be placed.  The folder must be writable and the path must be relative to the root of your revIgniter installation.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>AllowedTypes</strong></td>
+<td class="td"><strong>allowedTypes</strong></td>
 <td class="td">None</td>
 <td class="td">None</td>
 <td class="td">The mime types corresponding to the types of files you allow to be uploaded.  Usually the file extension can be used as the mime type.  Separate multiple types with a pipe. Use a wildcard "*" to allow all types.</td>
@@ -413,7 +424,7 @@ rigInitializeUpload tConfig
 
 
 <tr>
-<td class="td"><strong>FileName</strong></td>
+<td class="td"><strong>fileName</strong></td>
 <td class="td">None</td>
 <td class="td">Desired file name</td>
 <td class="td">
@@ -422,7 +433,7 @@ rigInitializeUpload tConfig
 </tr>
 
 <tr>
-<td class="td"><strong>Overwrite</strong></td>
+<td class="td"><strong>overwrite</strong></td>
 <td class="td">FALSE</td>
 <td class="td">TRUE/FALSE</td>
 <td class="td">If set to true, if a file with the same name as the one you are uploading exists, it will be overwritten. If set to false, a number will be appended to the filename if another with the same name exists.</td>
@@ -430,52 +441,59 @@ rigInitializeUpload tConfig
 
 
 <tr>
-<td class="td"><strong>MaxSize</strong></td>
+<td class="td"><strong>maxSize</strong></td>
 <td class="td">0</td>
 <td class="td">None</td>
 <td class="td">The maximum size (in kilobytes) that the file can be. Set to zero for no limit.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>MaxWidth</strong></td>
+<td class="td"><strong>maxWidth</strong></td>
 <td class="td">0</td>
 <td class="td">None</td>
 <td class="td">The maximum width (in pixels) that the file can be. Set to zero for no limit.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>MaxHeight</strong></td>
+<td class="td"><strong>maxHeight</strong></td>
 <td class="td">0</td>
 <td class="td">None</td>
 <td class="td">The maximum height (in pixels) that the file can be. Set to zero for no limit.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>MaxFilename</strong></td>
+<td class="td"><strong>maxFilename</strong></td>
 <td class="td">0</td>
 <td class="td">None</td>
 <td class="td">The maximum length that a file name can be. Set to zero for no limit.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>EncryptName</strong></td>
+<td class="td"><strong>encryptName</strong></td>
 <td class="td">FALSE</td>
 <td class="td">TRUE/FALSE</td>
 <td class="td">If set to TRUE the file name will be converted to a random encrypted string. This can be useful if you would like the file saved with a name that can not be discerned by the person uploading it.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>RemoveSpaces</strong></td>
+<td class="td"><strong>removeSpaces</strong></td>
 <td class="td">TRUE</td>
 <td class="td">TRUE/FALSE</td>
 <td class="td">If set to TRUE, any spaces in the file name will be converted to underscores. This is recommended.</td>
 </tr>
 
 <tr>
-<td class="td"><strong>MaxUploadFiles</strong></td>
+<td class="td"><strong>maxUploadFiles</strong></td>
 <td class="td">0</td>
 <td class="td">None</td>
 <td class="td">The maximum number of files allowed to be uploaded. Set to zero for no limit.</td>
+</tr>
+
+<tr>
+<td class="td"><strong>xssClean</strong></td>
+<td class="td">FALSE</td>
+<td class="td">TRUE/FALSE</td>
+<td class="td">Enables the XSS flag so that the file that was uploaded will be run through the XSS filter.</td>
 </tr>
 </table>
 </div>
@@ -487,6 +505,7 @@ Simply create a new file called <var>upload.lc</var>,  add the <var>Config</var>
 array in that file. At the end of the file write: <dfn>rigRunInitialUploadConfig yourArrayVariableName</dfn>. Then save the file at <var>config/upload.lc</var> and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializeUpload</dfn> command if you save your preferences in a config file. Example:</p>
 
+<div class="codeSample">
 <pre><code>local sUploadConf
 
 put "./uploads/" into sUploadConf["UploadPath"]
@@ -497,6 +516,7 @@ put 768 into sUploadConf["MaxHeight"]
 put 5 into sUploadConf["MaxUploadFiles"]
 
 rigRunInitialUploadConfig sUploadConf</code></pre>
+</div>
 
 
 <h2>Handler Reference</h2>
@@ -650,6 +670,8 @@ Next Topic:&nbsp;&nbsp;<a href="form_validation.html">Form Validation Library</a
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

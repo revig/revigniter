@@ -118,6 +118,7 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 <p>Generates a random string unique for each request as used by Content-Security-Policy response headers.
 <br>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "'nonce-" & rigNonce() & "'" into tSrcNonce
 # GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
 put "Content-Security-Policy" into tCspMetaA["name"]
@@ -125,8 +126,11 @@ put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
 put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 </code></pre>
+</div>
 
 <p>Add csp nonce to your view file.</p>
+
+<div class="codeSample">
 <pre><code>[[gData["cspTag"] ]] -- see above
 
 &lt;style nonce="&lt;? return rigNonce() ?>" type="text/css">
@@ -136,6 +140,7 @@ body {
 ...
 &lt;/style>
 </code></pre>
+</div>
 
 
 </div>
@@ -167,6 +172,8 @@ Next Topic:&nbsp;&nbsp;<a href="scaffolding.html">Scaffolding</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

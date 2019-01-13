@@ -168,6 +168,7 @@ rigLoaderLoadLibrary "Jquery", tJquerySettings
 
 <p>To begin, build the table using the table structure below and insert the corresponding data. We use MySQL here as database platform.</p>
 
+<div class="codeSample">
 <pre><code>CREATE TABLE IF NOT EXISTS `people` (
 	`id` int(11) unsigned NOT NULL auto_increment,
 	`name` varchar(64) default NULL,
@@ -180,18 +181,19 @@ INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
 (1, 'Ben Montini', 27, 'ben@montini.com'),
 (2, 'James Johnson', 31, 'james@thejohnsons.com'),
 (3, 'Michael Jordan', 52, 'michael@basketballstars.com'),
-(4, 'Tony Blair', 57, 'ex-priminister@theuk.com'),
+(4, 'Theresa May', 57, 'ex-priminister@theuk.com'),
 (5, 'Jonathan Edwards', 44, 'triple@jump.com'),
 (6, 'Tim Cook', 52, 'tim@apple.com'),
 (7, 'Bill Gates', 55, 'bill@microsoft.com'),
 (8, 'Big Bird', 34, 'bigbird@thestreet.com'),
 (9, 'Ben Saim', 22, 'ben.saim@saim.com'),
-(10, 'Barack Obama', 49, 'barack@theusa.com'),
+(10, 'Donald Trump', 49, 'trump@theusa.com'),
 (11, 'David Brent', 54, 'david@funny.com'),
 (12, 'Graeme Gooch', 66, 'bat@thecricketball.com'),
 (13, 'Steven Spielberg', 64, 'me@moviemaking.com'),
 (14, 'Ralf Bitter', 99, 'rabit@revigniter.com');
 </code></pre>
+</div>
 
 <p>Now let's create the irev files.</p>
 
@@ -201,6 +203,7 @@ INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
 <p>We start with the basic prototype for a controller script. Create a controller called <dfn>ajax.lc</dfn>. In it, place the code below and save it to your <samp>system/application/controllers/</samp> folder. Of course, you may remove the comments.</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -223,16 +226,19 @@ end index
 --| Location: ./system/application/controllers/ajax.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 <p>Now, to load required libraries, helpers and models, insert this code into the <dfn>ajax</dfn> handler.<br />First, we load the "Jquery" library. If you don't change the default setting using the second parameter, your code will link to the latest version of jQuery on jquery.com and you don't need to store a copy of jQuery on your host, though, as mentioned above, this is not recommended in a runtime environment. <br />We load the Table library as we want to display the data in the form of a table.<br />Of course, we load the database and we need a model, which we call "ajaxmodel". </p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Jquery"
 rigLoaderLoadLibrary "Table"
 get rigLoadDatabase()
 rigLoadModel "ajaxmodel"
 </code></pre>
+</div>
 
 
 
@@ -240,58 +246,79 @@ rigLoadModel "ajaxmodel"
 
 <p>Let's build the <dfn>index</dfn> handler. Insert the following statement, which stores the page title in <var>gData</var>. </p>
 
+<div class="codeSample">
 <pre><code>put "revIgniter Ajax Tutorial" into gData["pageTitle"]
 </code></pre>
+</div>
 
 <p>Now to the important part, the statements, which build the jQuery script. We want the script to handle key-up events in the input field. It should post the text, the user has typed, and replace HTML code with data returned by the controller.<br />Add this statement to tell the jQuery library to start writing the jQuery script:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQopen
 </code></pre>
+</div>
 
 <p>Add this statement to tell the library to start writing an event function, which is triggered by key-up events in an input field with the id named "filter".</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQeventOpen "'#filter'", "'keyup'"
 </code></pre>
+</div>
 
 <p>Add the following statement, which posts the text (value) of the input field as "search_term" to the controller and it's <dfn>datafilter</dfn> handler, and replaces the HTML code inside the "#results" div with the returned data. Note: Here we use a getter, which returns the jQuery syntax to get the value of the input field.</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
 </code></pre>
+</div>
 
 <p>Tell the library to end writing the event function by adding this statement:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQeventClose
 </code></pre>
+</div>
 
 <p>Add this statement to close the jQuery script:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQclose
 </code></pre>
+</div>
 
 <p>To store the script in the <var>gData</var> variable add the following line:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put the result into gData["JQscript"]
 </code></pre>
+</div>
 
 <p>The next statement calls the model function to retrieve the data from the database: </p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put peopleData() into tQuery
 </code></pre>
+</div>
 
 <p>To build the HTML table add this statement:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">buildTable tQuery
 </code></pre>
+</div>
 
 <p>Finally load the view file, which we call "ajaxView":</p>
 
+<div class="codeSample">
 <pre><code>get rigLoadView("ajaxView")
 </code></pre>
+</div>
 
 
 <p>We need two handlers more. One, which retrieves the filtered data from the model, and one which stores the corresponding HTML table in the <var>gData</var> variable.</p>
 <p>Insert the code below right after the index handler.This handler is called by the jQuery script. It checks if there is POST data, that is to say if key "search_term" has a value. Then it gets the filtered data from the model, calls the <dfn>buildTable</dfn> controller handler if the query returned data, and finally loads the view "filteredView".</p>
 
+<div class="codeSample">
 <pre><code>command datafilter
 	put rigVarPost("search_term", TRUE) into tSearchTerm
 	if (tSearchTerm &lt;> FALSE) then
@@ -305,6 +332,7 @@ rigLoadModel "ajaxmodel"
 	get rigLoadView("filteredView")
 end datafilter
 </code></pre>
+</div>
 
 <p>Note: revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of rigVarPost() to "TRUE". </p>
 
@@ -312,17 +340,20 @@ end datafilter
 
 <p>Insert the handler, which stores the HTML table code in the <var>gData</var> variable by processing the database data, after the <dfn>datafilter</dfn> handler to complete the controller.</p>
 
+<div class="codeSample">
 <pre><code>command buildTable pQueryResult
 	put pQueryResult["resultarray"] into tResult
 	rigSetTableHeading pQueryResult["fieldnames"], TRUE
 	put rigGenerateTable(tResult) into gData["peopleTable"]
 end buildTable
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Don't forget to add the handler name "buildTable" to the global variable gControllerHandlers at the top of the page.</p>
 
 <p>The code of your controller should now look like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 put "ajax,index,datafilter,buildTable" into gControllerHandlers
@@ -372,6 +403,7 @@ end buildTable
 --| Location: ./system/application/controllers/ajax.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 <a name="ajaxview"></a>
@@ -379,6 +411,7 @@ end buildTable
 
 <p>Create a view called <dfn>ajaxView.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp> folder:</p>
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 				"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
@@ -406,6 +439,7 @@ end buildTable
 		&lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 <p>Note: <dfn>rigJQuerySource()</dfn> is a Jquery library function, which returns a html string linking to jQuery.</p>
 
@@ -415,8 +449,10 @@ end buildTable
 
 <p>Create the view called <dfn>filteredView.lc</dfn>, which is loaded by the <dfn>datafilter</dfn> handler. In it, place just this expression and save it to your <samp>system/application/views/</samp> folder: </p>
 
+<div class="codeSample">
 <pre><code>[[gData["peopleTable"] ]]
 </code></pre>
+</div>
 
 
 <a name="model"></a>
@@ -424,6 +460,7 @@ end buildTable
 
 <p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <samp>system/application/models/</samp> folder:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 function peopleData pSearchTerm
@@ -437,6 +474,7 @@ function peopleData pSearchTerm
 	return FALSE
 end peopleData
 </code></pre>
+</div>
 
 
 <p>That's it, filtering the list should work as expected.</p>
@@ -574,16 +612,19 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 
 <p>This tells the library to start writing statements registering behaviors to take effect when the user interacts with the browser. Example:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQeventOpen "'#logout'", "'click'"
 	rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
 	rigJQcondition "logout==true", "window.location = 'logout';"
 rigJQeventClose
 </code></pre>
+</div>
 
 <p>The first parameter specifies a selector, the second a JavaScript event. The optional third parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional fourth parameter contains data passed to the function. The optional fifth parameter is a function to execute each time the event is triggered. The optional sixth parameter contains additional function arguments.</p>
 
 <p>Here is another example demonstrating the use of additional function arguments:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQeventOpen "'#customObject'", "'myCustomEvent'", , , , "myName, myValue"
 	rigJQset "this", "text", "myName + ', hi there!'"
 rigJQeventClose
@@ -593,6 +634,7 @@ rigJQeventOpen "'#clickObject'", "'click'"
 	rigJQeventClose
 rigJQeventClose
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Don't use "bind" as event in a rigJQeventOpen handler. jQuery event objects need to be referenced as "event".</p>
 
@@ -635,6 +677,7 @@ rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", ,
 
 <p>Permits you to perform a custom animation of a set of CSS properties on various events. Example:</p>
 
+<div class="codeSample">
 <pre><code>put "'20%'" into tAnimProps["width"]
 put "0.4" into tAnimProps["opacity"]
 put "'0.6in'" into tAnimProps["marginLeft"]
@@ -642,6 +685,7 @@ put "'3em'" into tAnimProps["fontSize"]
 put "'10px'" into tAnimProps["borderWidth"]
 rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 </code></pre>
+</div>
 
 <p>The first parameter specifies an object, which triggers the event, the second determines the object the animation is applied to. The third parameter specifies the event and the fourth the CSS properties to be animated. Put these into an array. The optional fifth parameter sets the animation duration, this can be an integer, a string or an array. The optional sixth parameter contains a string indicating which easing function to use for the animation. The optional seventh parameter contains a function to call once the animation is complete.</p>
 
@@ -663,6 +707,7 @@ rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 
 <p>Permits you to perform an asynchronous HTTP (Ajax) request. Example:</p>
 
+<div class="codeSample">
 <pre><code>put "ajax/datafilter" into tAjax["url"]
 put "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'") into tAjax["data"]
 put rigJQsetR("'#results'", "html", "data") into tAjax["success"]
@@ -671,6 +716,7 @@ rigJQeventOpen "'#filter'", "'keyup'"
 	rigJQajax tAjax
 rigJQeventClose
 </code></pre>
+</div>
 
 <p>The first parameter is an array of jQuery.ajax settings. If you just want to configure the default Ajax request, set the optional second parameter, a boolean, to TRUE.</p>
 
@@ -684,10 +730,12 @@ rigJQeventClose
 
 <p>Permits you to load data from the server and, depending on the request type, place the returned HTML into the matched element without a browser page refresh. Example:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQeventOpen "'#filter'", "'keyup'"
 	rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
 rigJQeventClose
 </code></pre>
+</div>
 
 <p>The first parameter specifies the type of request, possible values are: "get", "post", "load" and "getJSON". The optional second parameter is a string containing the URI to which the request is sent. The optional third parameter can be a map (JavaScript object), i.e. a Key/Value pair like "key: value", or string that is sent to the server with the request. The optional fourth parameter contains a callback function that is executed when the request completes. Use the terms "data", "textStatus" and "XMLHttpRequest" to reference the arguments of the callback if needed. The optional fifth parameter specifies the type of data that you're expecting back from the server. Available types are: "xml", "html", "script", "json", "jsonp" and "text". The optional sixth parameter specifies the element to place the returned HTML into. This parameter is only relevant, if the request type is "load".</p>
 
@@ -695,10 +743,12 @@ rigJQeventClose
 
 <p>Here is another example, which demonstrates the use of a callback:</p>
 
+<div class="codeSample">
 <pre><code>put rigJQsetR("'#msg'", "html", "data") &amp; return into tCallback
 put rigJQalertR("'The data has been loaded'") after tCallback
 rigJQxhRequest "post", "myController", "limit: 25", tCallback
 </code></pre>
+</div>
 
 
 <h3>rigJQxhRequestR(<var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var>)</h3>
@@ -822,6 +872,8 @@ Next Topic:&nbsp;&nbsp;<a href="language.html">Language Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

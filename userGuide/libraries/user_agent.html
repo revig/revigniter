@@ -108,6 +108,7 @@ various user agent arrays if needed.</p>
 a web browser, a mobile device, or a robot.  It will also gather the platform information if it is available.</p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Useragent"
 
 if rigIsMobile() is TRUE then
@@ -122,6 +123,7 @@ end if
 
 put tAgent &amp; "&lt;br />" &amp; rigAgentPlatform() into gData["agentInfo"] -- Platform info (Windows, Linux, Mac, etc.)
 </code></pre>
+</div>
 
 
 <h2>Handler Reference</h2>
@@ -194,7 +196,7 @@ since some browsers do not provide language info, and even among those that do, 
 end if</code></pre>
 
 <p class="important"><strong>Note:</strong> This function is not typically very reliable
-since some browsers do not provide character-set info, and even among those that do, it is not always accurate. The On-Rev server is currently not supporting the $_Server variable HTTP_ACCEPT_CHARSET, so this function returns FALSE on this server.</p>
+since some browsers do not provide character-set info, and even among those that do, it is not always accurate. <a href="https://livecode.com/hosting/server/">LiveCode Hosting</a> is currently not supporting the $_Server variable HTTP_ACCEPT_CHARSET, so this function returns FALSE on this server.</p>
 
 
 
@@ -228,6 +230,8 @@ Next Topic:&nbsp;&nbsp;<a href="../helpers/array_helper.html">Array Helper</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

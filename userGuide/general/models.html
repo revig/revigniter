@@ -108,6 +108,7 @@ you use revIgniter to manage a blog.  You might have a model script that contain
 retrieve your blog data. Here is an example of what such a model script might look like:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -146,7 +147,7 @@ command updateEntry
 	return it
 end updateEntry
 </code></pre>
-
+</div>
 
 
 <p>Note: The handlers in the above example use the <a href="../database/active_record.html">Active Record</a> database handlers.</p>
@@ -159,6 +160,7 @@ want this type of organization.</p>
 <p>The basic prototype for a model script is this:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 put gBASEPATH into gBASEPATH
 
@@ -167,6 +169,7 @@ if gBASEPATH is "gBASEPATH" then
 	exit to top
 end if
 </code></pre>
+</div>
 
 <p>
 <strong>Note:</strong> This is not mandatory! This is just for security reasons.
@@ -188,6 +191,7 @@ you have a model located at <dfn>application/models/blog/queries.lc</dfn> you'll
 
 <p>Here is an example of a controller, that loads a model, then serves a view:</p>
 
+<div class="codeSample">
 <pre><code>&lt;?rev
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
@@ -200,6 +204,7 @@ command blog
 	get rigLoadView("blog")
 end blog
 </code></pre>
+</div>
 
 
 <h2><a name="auto_load_model" id="auto_load_model"></a>Auto-loading Models</h2>
@@ -222,6 +227,7 @@ and connectivity settings, as defined in your database config file will be used:
 <li>You can manually pass database connectivity settings via the second parameter:
 
 
+<div class="codeSample">
 <pre><code>put "localhost" into tConfig["hostname"]
 put "myusername" into tConfig["username"]
 put "mypassword" into tConfig["password"]
@@ -231,7 +237,7 @@ put "" into tConfig["dbprefix"]
 put FALSE into tConfig["pconnect"]
 put TRUE into tConfig["db_debug"]
 
-rigLoadModel "<var>Model_name</var>", <kbd>tConfig</kbd></code></pre></li>
+rigLoadModel "<var>Model_name</var>", <kbd>tConfig</kbd></code></pre></div></li>
 </ul>
 
 
@@ -266,6 +272,8 @@ Next Topic:&nbsp;&nbsp;<a href="helpers.html">Helpers</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>
