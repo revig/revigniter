@@ -96,6 +96,7 @@ The config file is located at:</p>
 
 <p>The config settings are stored in a multi-dimensional array with this prototype:</p>
 
+<div class="codeSample">
 <pre><code>put "localhost" into sDB["default"]["hostname"]
 put "root" into sDB["default"]["username"]
 put "" into sDB["default"]["password"]
@@ -110,13 +111,36 @@ put "" into sDB["default"]["cachedir"]
 put "utf8" into sDB["default"]["charset"]
 put "utf8_general_ci" into sDB["default"]["dbcollat"]
 put TRUE into sDB["default"]["cacheautodel"]
+
+# SQLite DRIVER ONLY
+put "" into sDB["default"]["options"]
+
+# MYSQL AND THE POSTGRES DRIVER
+# DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
+-- put 3306 into sDB["default"]["port"]
+
+# MYSQL DRIVER ONLY
+put FALSE into sDB["default"]["useSSL"]
+
+# THE FOLLOWING THREE VARIABLES ARE PART OF ENGINE CHANGES 4.6.4
+# BE AWARE THAT THESE ARE NOT TESTED
+# MYSQL DRIVER ONLY
+put "" into sDB["default"]["dbSocket"]
+
+# MYSQL DRIVER ONLY
+put 20 into sDB["default"]["dbTimeout"]
+
+# MYSQL DRIVER ONLY
+put FALSE into sDB["default"]["dbAutoReconnect"]
 </code></pre>
+</div>
 
 <p>The reason we use a multi-dimensional array rather than a more simple one is to permit you to optionally store
 multiple sets of connection values.  If, for example,  you run multiple environments (development, production, test, etc.)
 under a single installation, you can set up a connection group for each, then switch between groups as needed.
 For example, to set up a "test" environment you would do this:</p>
 
+<div class="codeSample">
 <pre><code>put "localhost" into sDB["test"]["hostname"]
 put "root" into sDB["test"]["username"]
 put "" into sDB["test"]["password"]
@@ -131,10 +155,32 @@ put "" into sDB["test"]["cachedir"]
 put "utf8" into sDB["test"]["charset"]
 put "utf8_general_ci" into sDB["test"]["dbcollat"]
 put TRUE into sDB["test"]["cacheautodel"]
+
+# SQLite DRIVER ONLY
+put "" into sDB["test"]["options"]
+
+# MYSQL AND THE POSTGRES DRIVER
+# DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
+-- put 3306 into sDB["test"]["port"]
+
+# MYSQL DRIVER ONLY
+put FALSE into sDB["test"]["useSSL"]
+
+# THE FOLLOWING THREE VARIABLES ARE PART OF ENGINE CHANGES 4.6.4
+# BE AWARE THAT THESE ARE NOT TESTED
+# MYSQL DRIVER ONLY
+put "" into sDB["test"]["dbSocket"]
+
+# MYSQL DRIVER ONLY
+put 20 into sDB["test"]["dbTimeout"]
+
+# MYSQL DRIVER ONLY
+put FALSE into sDB["test"]["dbAutoReconnect"]
 </code></pre>
+</div>
 
 
-<p>Then, to globally tell the system to use that group you would set this variable located in the config file:</p>
+<p>Then, in your controller, to globally tell the system to use that group you would set this variable located in the config file:</p>
 
 <pre><code>put "test" into sActiveGroup</code></pre>
 
@@ -235,6 +281,8 @@ Next Topic:&nbsp;&nbsp;<a href="connecting.html">Connecting to your Database</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>
