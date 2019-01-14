@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Upload"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,37 +23,105 @@ end if
 # @subpackage	Libraries
 # @category		Uploads
 # @author			rabit@revigniter.com
-# @link				http://revigniter.com/userGuide/libraries/file_uploading.html
+# @link				https://revigniter.com/userGuide/libraries/file_uploading.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# LOGGING
-rigLogMessage "debug", "Upload Library Loaded"
 
-# DECLARE VARIABLES
-local sMaxSize, sMaxWidth, sMaxHeight, sMaxFilename, sAllowedTypes, sFileTemp, sFileName, sOrigName, sFileType, sFileSize, sFileExt
-local sUploadPath, sOverwrite, sEncryptName, sIsImage, sImageWidth, sImageHeight, sImageType, sImageSizeStr, sErrorMsg, sMimes
-local sRemoveSpaces, sXssClean, sTempPrefix, sClientName, sFileNameOverride, sValidSetHandlers, sUplaodDataA, sUploadErrorsNum
-local sMaxUploadFiles, sMaxUploadFilesExceeded
 
-# SET INITIAL VALUES
-put 0 into sMaxSize
-put 0 into sMaxWidth
-put 0 into sMaxHeight
-put 0 into sMaxFilename
-put 0 into sMaxUploadFiles
-put FALSE into sOverwrite
-put FALSE into sEncryptName
-put FALSE into sIsImage
-put TRUE into sRemoveSpaces
-put FALSE into sXssClean
-put "temp_file_" into sTempPrefix
+global gRigA
+
+local sFileTemp, sOrigName, sFileType, sFileSize, sFileExt
+local sImageWidth, sImageHeight, sImageType, sImageSizeStr, sErrorMsg, sMimes
+local sClientName, sFileNameOverride, sValidSetHandlers, sUplaodDataA, sUploadErrorsNum
+local sMaxUploadFilesExceeded, sStackInUse, sInitialVarKeys, sUploadA -- array keys are: maxSize, maxWidth, maxHeight, maxFilename, maxUploadFiles,
+                                                                                -- overwrite, encryptName, isImage, removeSpaces, xssClean, tempPrefix, fileName,
+                                                                                -- allowedTypes, uploadPath, fileName, overwrite, encryptName, removeSpaces
 
 
 
-put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,rigSet_sMaxHeight,rigSet_sMaxFilename,rigSet_sMaxUploadFiles,rigSet_sXssClean" into sValidSetHandlers
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-26
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Upload Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put 0 into sUploadA["maxSize"]
+  put 0 into sUploadA["maxWidth"]
+  put 0 into sUploadA["maxHeight"]
+  put 0 into sUploadA["maxFilename"]
+  put 0 into sUploadA["maxUploadFiles"]
+  put FALSE into sUploadA["overwrite"]
+  put FALSE into sUploadA["encryptName"]
+  put FALSE into sUploadA["isImage"]
+  put TRUE into sUploadA["removeSpaces"]
+  put FALSE into sUploadA["xssClean"]
+  put "temp_file_" into sUploadA["tempPrefix"]
+  put "_rigSet_uploadPath,_rigSet_allowedTypes,_rigSet_maxSize,_rigSet_maxWidth,_rigSet_maxHeight,_rigSet_maxFilename,_rigSet_maxUploadFiles,_rigSet_xssClean" into sValidSetHandlers
+  
+  put "fileName,overwrite,encryptName,removeSpaces" into sInitialVarKeys
+end _rigSetDefaultValues
 
 
 
@@ -72,7 +134,7 @@ put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,ri
 --| Version:  1.1
 --| Created: 30-08-2011
 --| Last Mod: 22-12-2014
---| Requires: rigNumToCodepoint(), rigInitializeUpload
+--| Requires: _rigInitializeUpload
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -84,16 +146,18 @@ put "rigSet_sUploadPath,rigSet_sAllowedTypes,rigSet_sMaxSize,rigSet_sMaxWidth,ri
 ----------------------------------------------------------------------*/
 
 command rigRunInitialUploadConfig pConfig
+  local tConfig
+  
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split tConfig using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
 	if tConfig is an array then
-		rigInitializeUpload tConfig
+		_rigInitializeUpload tConfig
 	end if	
 end rigRunInitialUploadConfig
 
@@ -102,35 +166,37 @@ end rigRunInitialUploadConfig
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigInitializeUpload
+--| COMMAND _rigInitializeUpload
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 30-08-2011
 --| Last Mod: 30-08-2011
---| Requires: rigSetInitialUploadValue
+--| Requires: _rigSetInitialUploadValue
 --|
 --| Summary: Initialize preferences.
 --| 
---| Format:  rigInitializeUpload param1
+--| Format:  _rigInitializeUpload param1
 --|
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigInitializeUpload pConfig
+private command _rigInitializeUpload pConfig
+  local tKey, tVal, tHandler
+  
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
 
 			## SET VARIABLE WITH NAME TKEY
 			# 
-			put "rigSet_s" & tKey into tHandler
+			put "_rigSet_" & tKey into tHandler
 			if tHandler is among the items of sValidSetHandlers then
 				do tHandler && quote & tVal & quote
 			else
-				rigSetInitialUploadValue tKey, tVal
+				_rigSetInitialUploadValue tKey, tVal
 			end if		
 	
 		end repeat
@@ -138,9 +204,9 @@ command rigInitializeUpload pConfig
 		# IF A FileName WAS PROVIDED IN pConfig, USE IT INSTEAD OF
 		# THE USER INPUT SUPPLIED FILE NAME FOR ALL UPLOADS UNTIL
 		# INITIALIZED AGAIN
-		put sFileName into sFileNameOverride
+		put sUploadA["fileName"] into sFileNameOverride
 	end if
-end rigInitializeUpload
+end _rigInitializeUpload
 
 
 
@@ -148,47 +214,35 @@ end rigInitializeUpload
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetInitialUploadValue
+--| COMMAND _rigSetInitialUploadValue
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 31-08-2011
---| Last Mod: 13-02-2014
+--| Version:  1.2
+--| Created: 2011-08-31
+--| Last Mod: 2019-01-07
 --| Requires: --
 --|
 --| Summary: Set initial values.
 --| 
---| Format:  rigSetInitialUploadValue param1, param2
+--| Format:  _rigSetInitialUploadValue param1, param2
 --|
---| Parameters: string <pVarName>, mixed <pValue>
+--| Parameters: string <pKey>, mixed <pValue>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetInitialUploadValue pVarName pValue
-	put "s" & pVarName into tVarName
-
-	switch tVarName
-		case "sFileName"
-        		put pValue into sFileName
-		break
-		case "sOverwrite"
-        		put pValue into sOverwrite
-		break
-		case "sEncryptName"
-        		put pValue into sEncryptName
-		break
-		case "sRemoveSpaces"
-        		put pValue into sRemoveSpaces
-  end switch
-end rigSetInitialUploadValue
+private command _rigSetInitialUploadValue pKey pValue
+  if pKey is among the items of sInitialVarKeys then
+    put pValue into sUploadA[pKey]
+  end if
+end _rigSetInitialUploadValue
 
 
 
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sUploadPath
+--| COMMAND _rigSet_uploadPath
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -198,17 +252,17 @@ end rigSetInitialUploadValue
 --|
 --| Summary: Set upload path.
 --| 
---| Format:  rigSet_sUploadPath param1
+--| Format:  _rigSet_uploadPath param1
 --|
 --| Parameters: string <pPath>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sUploadPath pPath
+private command _rigSet_uploadPath pPath
 	# MAKE SURE IT HAS A TRAILING SLASH
-	put rigTrim(pPath, ".,/") & "/" into sUploadPath
-end rigSet_sUploadPath
+	put rigTrim(pPath, ".,/") & "/" into sUploadA["uploadPath"]
+end _rigSet_uploadPath
 
 
 
@@ -216,7 +270,7 @@ end rigSet_sUploadPath
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sAllowedTypes
+--| COMMAND _rigSet_allowedTypes
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -226,22 +280,22 @@ end rigSet_sUploadPath
 --|
 --| Summary: Set allowed file types.
 --| 
---| Format:  rigSet_sAllowedTypes param1
+--| Format: _rigSet_allowedTypes param1
 --|
 --| Parameters: string <pTypes>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sAllowedTypes pTypes
+private command _rigSet_allowedTypes pTypes
 	if (pTypes is not an array) and (pTypes is "*") then
-		put "*" into sAllowedTypes
-		exit rigSet_sAllowedTypes
+		put "*" into sUploadA["allowedTypes"]
+		exit _rigSet_allowedTypes
 	end if
 	
 	split pTypes by "|"
-	put pTypes into sAllowedTypes
-end rigSet_sAllowedTypes
+	put pTypes into sUploadA["allowedTypes"]
+end _rigSet_allowedTypes
 
 
 
@@ -249,7 +303,7 @@ end rigSet_sAllowedTypes
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMaxSize
+--| COMMAND _rigSet_maxSize
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -259,22 +313,22 @@ end rigSet_sAllowedTypes
 --|
 --| Summary: Set maximum file size.
 --| 
---| Format:  rigSet_sMaxSize param1
+--| Format:  _rigSet_maxSize param1
 --|
 --| Parameters: integer<pN>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMaxSize pN
+private command _rigSet_maxSize pN
 	if pN is an integer then
 		if pN < 0 then
-			put 0 into sMaxSize
+			put 0 into sUploadA["maxSize"]
 		else
-			put pN into sMaxSize
+			put pN into sUploadA["maxSize"]
 		end if
 	end if
-end rigSet_sMaxSize
+end _rigSet_maxSize
 
 
 
@@ -282,7 +336,7 @@ end rigSet_sMaxSize
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMaxWidth
+--| COMMAND _rigSet_maxWidth
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -292,22 +346,22 @@ end rigSet_sMaxSize
 --|
 --| Summary: Set maximum image width.
 --| 
---| Format:  rigSet_sMaxWidth param1
+--| Format:  _rigSet_maxWidth param1
 --|
 --| Parameters: integer<pN>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMaxWidth pN
+private command _rigSet_maxWidth pN
 	if pN is an integer then
 		if pN < 0 then
-			put 0 into sMaxWidth
+			put 0 into sUploadA["maxWidth"]
 		else
-			put pN into sMaxWidth
+			put pN into sUploadA["maxWidth"]
 		end if
 	end if
-end rigSet_sMaxWidth
+end _rigSet_maxWidth
 
 
 
@@ -315,7 +369,7 @@ end rigSet_sMaxWidth
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMaxHeight
+--| COMMAND _rigSet_maxHeight
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -325,29 +379,29 @@ end rigSet_sMaxWidth
 --|
 --| Summary: Set maximum image height.
 --| 
---| Format:  rigSet_sMaxHeight param1
+--| Format:  _rigSet_maxHeight param1
 --|
 --| Parameters: integer<pN>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMaxHeight pN
+private command _rigSet_maxHeight pN
 	if pN is an integer then
 		if pN < 0 then
-			put 0 into sMaxHeight
+			put 0 into sUploadA["maxHeight"]
 		else
-			put pN into sMaxHeight
+			put pN into sUploadA["maxHeight"]
 		end if
 	end if
-end rigSet_sMaxHeight
+end _rigSet_maxHeight
 
 
 
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMaxUploadFiles
+--| COMMAND _rigSet_maxUploadFiles
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -357,22 +411,22 @@ end rigSet_sMaxHeight
 --|
 --| Summary: Set maximum number of files allowed to upload.
 --| 
---| Format:  rigSet_sMaxUploadFiles param1
+--| Format:  _rigSet_maxUploadFiles param1
 --|
 --| Parameters: integer <pN>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMaxUploadFiles pN
+private command _rigSet_maxUploadFiles pN
 	if pN is an integer then
 		if pN < 0 then
-			put 0 into sMaxUploadFiles
+			put 0 into sUploadA["maxUploadFiles"]
 		else
-			put pN into sMaxUploadFiles
+			put pN into sUploadA["maxUploadFiles"]
 		end if
 	end if
-end rigSet_sMaxUploadFiles
+end _rigSet_maxUploadFiles
 
 
 
@@ -380,7 +434,7 @@ end rigSet_sMaxUploadFiles
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMaxFilename
+--| COMMAND _rigSet_maxFilename
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -390,22 +444,22 @@ end rigSet_sMaxUploadFiles
 --|
 --| Summary: Set Maximum File Name Length
 --| 
---| Format:  rigSet_sMaxFilename param1
+--| Format:  _rigSet_maxFilename param1
 --|
 --| Parameters: integer<pN>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMaxFilename pN
+private command _rigSet_maxFilename pN
 	if pN is an integer then
 		if pN < 0 then
-			put 0 into sMaxFilename
+			put 0 into sUploadA["maxFilename"]
 		else
-			put pN into sMaxFilename
+			put pN into sUploadA["maxFilename"]
 		end if
 	end if
-end rigSet_sMaxFilename
+end _rigSet_maxFilename
 
 
 
@@ -413,7 +467,7 @@ end rigSet_sMaxFilename
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sXssClean
+--| COMMAND _rigSet_xssClean
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -426,19 +480,19 @@ end rigSet_sMaxFilename
 --| Enables the XSS flag so that the file that
 --| was uploaded will be run through the XSS filter.
 --| 
---| Format:  rigSet_sXssClean param1
+--| Format: _rigSet_xssClean param1
 --|
 --| Parameters: bool<pFlag>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sXssClean pFlag	
+private command _rigSet_xssClean pFlag	
 	if pFlag <> TRUE then
 		put FALSE into pFlag
 	end if
-	put pFlag into sXssClean
-end rigSet_sXssClean
+	put pFlag into sUploadA["xssClean"]
+end _rigSet_xssClean
 
 
 
@@ -452,7 +506,7 @@ end rigSet_sXssClean
 --| Version:  2.0
 --| Created: 01-09-2011
 --| Last Mod: 03-08-2016
---| Requires: rigSetUploadError, rigValidateUploadPath(),rigSort, _rigProcessUpload
+--| Requires: _rigSetUploadError, _rigValidateUploadPath(),rigSort, _rigProcessUpload
 --|
 --| Summary: Perform file upload(s).
 --| 
@@ -464,6 +518,8 @@ end rigSet_sXssClean
 ----------------------------------------------------------------------*/
 
 command rigDoUpload pField
+  local tField, tFilesDataKeys, tKey, tFiles
+  
 	if pField is empty then
 		put "userfile" into tField
 	else
@@ -472,13 +528,13 @@ command rigDoUpload pField
   
 	# IF $_FILES[tField] IS NOT AN ARRAY THERE IS NO REASON TO CONTINUE
 	if $_FILES[tField] is not an array then
-		rigSetUploadError "upload_no_file_selected"
+		_rigSetUploadError "upload_no_file_selected"
 		return FALSE
 	end if
 	
 	# IS THE UPLOAD PATH VALID?
-	if rigValidateUploadPath() is FALSE then
-		# ERRORS WILL ALREADY BE SET BY rigValidateUploadPath() SO JUST RETURN FALSE
+	if _rigValidateUploadPath() is FALSE then
+		# ERRORS WILL ALREADY BE SET BY _rigValidateUploadPath() SO JUST RETURN FALSE
 		return FALSE
 	end if
   
@@ -529,10 +585,10 @@ end rigDoUpload
 --| Version:  1.1
 --| Created: 2016-08-03
 --| Last Mod: 2017-06-27
---| Requires: rigSetUploadError, rigMaxFilesNumReached(), _rigFileMimeType, _rigPrepFilename(),
---|					rigGetExtension(), rigIsAllowedFileType(), rigIsAllowedFileSize(),
---|					rigIsAllowedDimensions(), rigCleanFilename(), rigLimitFilenameLength(),
---|					rigPregReplace() (in Common), rigSetFilename(), rigDoXSSclean, rigSetImageProperties, rigUploadData()
+--| Requires: _rigSetUploadError, _rigMaxFilesNumReached(), _rigFileMimeType, _rigPrepFilename(),
+--|					_rigGetExtension(), _rigIsAllowedFileType(), _rigIsAllowedFileSize(),
+--|					_rigIsAllowedDimensions(), _rigCleanFilename(), _rigLimitFilenameLength(),
+--|					rigPregReplace() (in Common), _rigSetFilename(), _rigDoXSSclean, _rigSetImageProperties, rigUploadData()
 --|
 --| Summary: Process the uploaded files.
 --| 
@@ -544,30 +600,32 @@ end rigDoUpload
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command _rigProcessUpload pFiles pItemNum pMultiUpload
+private command _rigProcessUpload pFiles pItemNum pMultiUpload
+  local tRegex, tType, tResult, tPath
+  
 	if pFiles[pItemNum]["error"] is not empty then
 		switch pFiles[pItemNum]["error"]
 			case "upload stopped"
-				rigSetUploadError "upload_file_partial"
+				_rigSetUploadError "upload_file_partial"
 			break
 			case "upload failed"
-				rigSetUploadError "upload_failed"
+				_rigSetUploadError "upload_failed"
 			break
 			case "no upload folder"
-				rigSetUploadError "upload_no_temp_directory"
+				_rigSetUploadError "upload_no_temp_directory"
 			break
 			case "i/o error"
-				rigSetUploadError "upload_unable_to_write_file"
+				_rigSetUploadError "upload_unable_to_write_file"
 			break
 			default
-			rigSetUploadError "upload_no_file_selected"
+			_rigSetUploadError "upload_no_file_selected"
 		end switch
 		return FALSE
 	end if
   
   # CHECK IF THE MAXIMUM NUMBER OF ALLOWED UPLOADS IS REACHED
-  if rigMaxFilesNumReached(pItemNum) is TRUE then
-    rigSetUploadError "upload_max_files_exceeded"
+  if _rigMaxFilesNumReached(pItemNum) is TRUE then
+    _rigSetUploadError "upload_max_files_exceeded"
     put TRUE into sMaxUploadFilesExceeded
     return FALSE
   end if
@@ -579,30 +637,30 @@ command _rigProcessUpload pFiles pItemNum pMultiUpload
 	_rigFileMimeType pFiles[pItemNum]
 
   put "^(.+?);.*$" into tRegex
-	put empty into tType -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	put empty into tType -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
   if matchText(pFiles[pItemNum]["type"], tRegex, tType) is TRUE then
 	  put tType into sFileType
   end if
   replace "\" with "" in sFileType
   put toLower(rigTrim(sFileType, quote)) into sFileType
 	
-	put _rigPrepFilename(pFiles[pItemNum]["name"]) into sFileName  
-	put rigGetExtension(sFileName) into sFileExt
-	put sFileName into sClientName
+	put _rigPrepFilename(pFiles[pItemNum]["name"]) into sUploadA["fileName"]  
+	put _rigGetExtension(sUploadA["fileName"]) into sFileExt
+	put sUploadA["fileName"] into sClientName
 	
 	# IS THE FILE TYPE ALLOWED TO BE UPLOADED?
-	if rigIsAllowedFileType() is FALSE then
-		rigSetUploadError "upload_invalid_filetype"
+	if _rigIsAllowedFileType() is FALSE then
+		_rigSetUploadError "upload_invalid_filetype"
 		return FALSE
 	end if
 	
 	# IF WE'RE OVERRIDING, LET'S NOW MAKE SURE THE NEW NAME AND TYPE IS ALLOWED
 	if sFileNameOverride is not empty then
-		put _rigPrepFilename(sFileNameOverride) into sFileName
-		put rigGetExtension(sFileName) into sFileExt
+		put _rigPrepFilename(sFileNameOverride) into sUploadA["fileName"]
+		put _rigGetExtension(sUploadA["fileName"]) into sFileExt
 		
-		if rigIsAllowedFileType() is not TRUE then
-			rigSetUploadError "upload_invalid_filetype"
+		if _rigIsAllowedFileType() is not TRUE then
+			_rigSetUploadError "upload_invalid_filetype"
 			return FALSE
 		end if
 	end if
@@ -613,49 +671,49 @@ command _rigProcessUpload pFiles pItemNum pMultiUpload
 	end if
 	
 	# IS THE FILE SIZE WITHIN THE ALLOWED MAXIMUM?
-	if rigIsAllowedFileSize() is not TRUE then
-		rigSetUploadError "upload_invalid_filesize"
+	if _rigIsAllowedFileSize() is not TRUE then
+		_rigSetUploadError "upload_invalid_filesize"
 		return FALSE
 	end if
 	
 	# ARE THE IMAGE DIMENSIONS WITHIN THE ALLOWED SIZE?
-	if rigIsAllowedDimensions() is not TRUE then
-		rigSetUploadError "upload_invalid_dimensions"
+	if _rigIsAllowedDimensions() is not TRUE then
+		_rigSetUploadError "upload_invalid_dimensions"
 		return FALSE
 	end if
 	
 	# SANITIZE THE FILE NAME FOR SECURITY
-	put rigCleanFilename(sFileName) into sFileName
+	put _rigCleanFilename(sUploadA["fileName"]) into sUploadA["fileName"]
 	
 	# TRUNCATE THE FILE NAME IF IT'S TOO LONG
-	if sMaxFilename > 0 then
-		put rigLimitFilenameLength(sFileName, sMaxFilename) into sFileName
+	if sUploadA["maxFilename"] > 0 then
+		put _rigLimitFilenameLength(sUploadA["fileName"], sUploadA["maxFilename"]) into sUploadA["fileName"]
 	end if
 	
 	# REMOVE WHITE SPACES IN THE NAME
-	if sRemoveSpaces is TRUE then
+	if sUploadA["removeSpaces"] is TRUE then
 		put "(\s+)" into tRegEx
-		put rigPregReplace(sFileName, tRegEx, , "_") into sFileName
+		put rigPregReplace(sUploadA["fileName"], tRegEx, , "_") into sUploadA["fileName"]
 	end if
 	
 	# VALIDATE THE FILE NAME
 	# THIS FUNCTION APPENDS AN NUMBER ONTO THE END OF
 	# THE FILE IF ONE WITH THE SAME NAME ALREADY EXISTS.
 	# IF IT RETURNS FALSE THERE WAS A PROBLEM.
-	put sFileName into sOrigName
-	if sOverwrite is FALSE then
-		put rigSetFilename(sUploadPath, sFileName) into sFileName
+	put sUploadA["fileName"] into sOrigName
+	if sUploadA["overwrite"] is FALSE then
+		put _rigSetFilename(sUploadA["uploadPath"], sUploadA["fileName"]) into sUploadA["fileName"]
 	
-		if sFileName IS FALSE then
+		if sUploadA["fileName"] IS FALSE then
 			return FALSE
 		end if
 	end if
 
 	# MOVE THE FILE TO THE FINAL DESTINATION
-	put URL format("binfile:%s", sFileTemp) into URL format("binfile:%s", (sUploadPath & sFileName))
+	put URL format("binfile:%s", sFileTemp) into URL format("binfile:%s", (sUploadA["uploadPath"] & sUploadA["fileName"]))
 	put the result into tResult
 	if tResult is not empty then
-		rigSetUploadError "upload_destination_error"
+		_rigSetUploadError "upload_destination_error"
 		return FALSE
 	end if
 	
@@ -663,16 +721,16 @@ command _rigProcessUpload pFiles pItemNum pMultiUpload
 	# THIS HELPS PREVENT MALICIOUS CODE FROM BEING
 	# EMBEDDED WITHIN A FILE.  SCRIPTS CAN EASILY
 	# BE DISGUISED AS IMAGES OR OTHER FILE TYPES.
-	if sXssClean is TRUE then
-		rigDoXSSclean
+	if sUploadA["xssClean"] is TRUE then
+		_rigDoXSSclean
 	end if
 	
 	# SET THE FINALIZED IMAGE DIMENSIONS
 	# THIS SETS THE IMAGE WIDTH/HEIGHT (ASSUMING THE
 	# FILE WAS AN IMAGE).  WE USE THIS INFORMATION
 	# IN THE "DATA" FUNCTION.
-	put sUploadPath & sFileName into tPath
-	rigSetImageProperties tPath
+	put sUploadA["uploadPath"] & sUploadA["fileName"] into tPath
+	_rigSetImageProperties tPath
 	
   if pMultiUpload is TRUE then
     put rigUploadData(TRUE) into sUplaodDataA[pItemNum]
@@ -689,28 +747,30 @@ end _rigProcessUpload
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigSetFilename
+--| FUNCTION _rigSetFilename
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 31-08-2011
 --| Last Mod: 31-08-2011
---| Requires: rigHexDigest() (in Common), rigSetUploadError
+--| Requires: rigHexDigest() (in Common), _rigSetUploadError
 --|
 --| Summary: Set the file name.
---| 				 This function takes a filename/path as input and looks for the
---| 				 existence of a file with the same name. If found, it will append a
---| 				 number to the end of the filename to avoid overwriting a pre-existing file.
+--| 				  This function takes a filename/path as input and looks for the
+--| 				  existence of a file with the same name. If found, it will append a
+--| 				  number to the end of the filename to avoid overwriting a pre-existing file.
 --| 
---| Format:  rigSetFilename(param1, param2)
+--| Format: _rigSetFilename(param1, param2)
 --|
 --| Parameters: string <pPath>, string <pFileName>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigSetFilename pPath pFileName
-	if sEncryptName is TRUE then
+private function _rigSetFilename pPath pFileName
+  local tFilename, tNewFilename, tNum
+  
+	if sUploadA["encryptName"] is TRUE then
 		put rigHexDigest(rigUniqid(25)) & sFileExt into tFilename
 	else
 		put pFileName into tFilename
@@ -733,13 +793,13 @@ function rigSetFilename pPath pFileName
 	end repeat
 
 	if tNewFilename is "" then
-		rigSetUploadError "upload_bad_filename"
+		_rigSetUploadError "upload_bad_filename"
 		return FALSE
 	else
 		return tNewFilename
 	end if
 	
-end rigSetFilename
+end _rigSetFilename
 
 
 
@@ -765,6 +825,8 @@ end rigSetFilename
 ----------------------------------------------------------------------*/
 
 function rigDisplayUploadErrors pOpen pClose
+  local tOpen, tClose, tKey, tVal, tErrorStr
+  
 	if pOpen is empty then
 		put "<p>" into tOpen
 	else
@@ -797,7 +859,7 @@ end rigDisplayUploadErrors
 --| Version:  1.1
 --| Created: 01-09-2011
 --| Last Mod: 03-08-2016
---| Requires: rigIsImage()
+--| Requires: _rigIsImage()
 --|
 --| Summary: Finalized data array.
 --|
@@ -812,12 +874,14 @@ end rigDisplayUploadErrors
 ----------------------------------------------------------------------*/
 
 function rigUploadData pLibInternalCall
-	put sFileName into tData["FileName"]
+  local tData, tFileName
+  
+	put sUploadA["fileName"] into tData["FileName"]
 	put sFileType into tData["FileType"]
-	put sUploadPath into tData["FilePath"]
-	put sUploadPath & sFileName into tData["FullPath"]
+	put sUploadA["uploadPath"] into tData["FilePath"]
+	put sUploadA["uploadPath"] & sUploadA["fileName"] into tData["FullPath"]
 	
-	put sFileName into tFileName
+	put sUploadA["fileName"] into tFileName
 	replace sFileExt with "" in tFileName
 	
 	put tFileName into tData["RawName"]
@@ -825,7 +889,7 @@ function rigUploadData pLibInternalCall
 	put sClientName into tData["ClientName"]
 	put sFileExt into tData["FileExt"]
 	put sFileSize into tData["FileSize"]
-	put rigIsImage() into tData["IsImage"]
+	put _rigIsImage() into tData["IsImage"]
 	put sImageWidth into tData["ImageWidth"]
 	put sImageHeight into tData["ImageHeight"]
 	put sImageType into tData["ImageType"]
@@ -844,7 +908,7 @@ end rigUploadData
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigIsImage
+--| FUNCTION _rigIsImage
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -854,14 +918,16 @@ end rigUploadData
 --|
 --| Summary: Validate the image.
 --| 
---| Format:  rigIsImage()
+--| Format: _rigIsImage()
 --|
 --| Parameters: --
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigIsImage 
+private function _rigIsImage 
+  local tPNGmimes, tJPGmimes, tImgMimes
+  
 	# IE WILL SOMETIMES RETURN ODD MIME-TYPES DURING UPLOAD, SO HERE WE
 	# JUST STANDARDIZE ALL JPEGS OR PNGS TO THE SAME FILE TYPE.
 	put "image/x-png,image/png" into tPNGmimes
@@ -882,7 +948,7 @@ function rigIsImage
 	end if
 	
 	return FALSE
-end rigIsImage
+end _rigIsImage
 
 
 
@@ -890,7 +956,7 @@ end rigIsImage
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetUploadError
+--| COMMAND _rigSetUploadError
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -900,14 +966,16 @@ end rigIsImage
 --|
 --| Summary: Set an error message.
 --| 
---| Format:  rigSetUploadError param1
+--| Format:  _rigSetUploadError param1
 --|
 --| Parameters: string<pMsg>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetUploadError pMsg
+private command _rigSetUploadError pMsg
+  local tKey, tVal, tLangLine, tMsg, tNumErrors, tNewErrorKey
+  
 	get rigLangLoadLang("upload")
 	
 	if pMsg is an array then
@@ -951,56 +1019,58 @@ command rigSetUploadError pMsg
 		rigLogMessage "error", tMsg
 	end if
 	
-end rigSetUploadError
+end _rigSetUploadError
 
 
 
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigValidateUploadPath
+--| FUNCTION _rigValidateUploadPath
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 02-09-2011
 --| Last Mod: 02-09-2011
---| Requires: rigSetUploadError 
+--| Requires: _rigSetUploadError 
 --|
 --| Summary: Validate Upload Path. Verifies that it is a
---|					 valid upload path with proper permissions.
+--|					valid upload path with proper permissions.
 --|
---| Format:  rigValidateUploadPath()
+--| Format: _rigValidateUploadPath()
 --|
 --| Parameters: --
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigValidateUploadPath 
-	if sUploadPath is empty then
-		rigSetUploadError "upload_no_filepath"
+private function _rigValidateUploadPath
+  local tRoot, tUploadPath
+  
+	if sUploadA["uploadPath"] is empty then
+		_rigSetUploadError "upload_no_filepath"
 		return FALSE
 	end if
 	
 	# BUILD PATH TO UPLOAD FOLDER
 	set the itemDel to "/"
-	put (item 1 to -2 of gBASEPATH) & "/" into tRoot	
-	put tRoot & sUploadPath into tUploadPath
+	put (item 1 to -2 of gRigA["BASEPATH"]) & "/" into tRoot	
+	put tRoot & sUploadA["uploadPath"] into tUploadPath
 	
 	if there is not a folder tUploadPath then
-		rigSetUploadError "upload_no_filepath"
+		_rigSetUploadError "upload_no_filepath"
 		return FALSE
 	end if
 	
 	if rigCanWriteFileTo(tUploadPath) is FALSE then
-		rigSetUploadError "upload_not_writable"
+		_rigSetUploadError "upload_not_writable"
 		return FALSE
 	end if
 	
-	put tUploadPath into sUploadPath
+	put tUploadPath into sUploadA["uploadPath"]
 	
 	return TRUE
-end rigValidateUploadPath
+end _rigValidateUploadPath
 
 
 
@@ -1013,7 +1083,7 @@ end rigValidateUploadPath
 --| Version:  1.3
 --| Created: 2011-09-03
 --| Last Mod: 2018-12-27
---| Requires: --
+--| Requires: _rigUploadMimesTypes()
 --|
 --| Summary: Prep filename.
 --| 				  Prevents possible script execution from Apache's handling of files multiple
@@ -1026,8 +1096,10 @@ end rigValidateUploadPath
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigPrepFilename pFilename
-	if ("." is not in pFilename) or (sAllowedTypes is "*") then
+private function _rigPrepFilename pFilename
+  local tParts, tExtension, tFilename, tAllowedTypes
+  
+	if ("." is not in pFilename) or (sUploadA["allowedTypes"] is "*") then
 		return pFilename
 	end if
 	
@@ -1038,12 +1110,12 @@ function _rigPrepFilename pFilename
 	
 	put item 2 to -2 of tParts into tParts
 	
-	put sAllowedTypes into tAllowedTypes
+	put sUploadA["allowedTypes"] into tAllowedTypes
 	combine tAllowedTypes using comma
 	
 	repeat for each item thisItem in tParts
 		put toLower(thisItem) into thisItem
-		if (thisItem is not among the items of tAllowedTypes) or (rigUploadMimesTypes(thisItem) is FALSE) then
+		if (thisItem is not among the items of tAllowedTypes) or (_rigUploadMimesTypes(thisItem) is FALSE) then
 			put tFilename & "." & thisItem & "_" into tFilename
 		end if
 			put tFilename & "." & thisItem into tFilename
@@ -1060,28 +1132,30 @@ end _rigPrepFilename
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigUploadMimesTypes
+--| FUNCTION _rigUploadMimesTypes
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 03-09-2011
 --| Last Mod: 03-02-2014
---| Requires: rigFetchAllMimeTypes()
+--| Requires: _rigRequire, rigFetchAllMimeTypes()
 --|
 --| Summary: List of mime types.
---| 				 This is a list of mime types.  We use it to validate
---| 				 the "allowed types" set by the developer.
+--| 				  This is a list of mime types.  We use it to validate
+--| 			 	  the "allowed types" set by the developer.
 --| 
---| Format:  rigUploadMimesTypes(param1)
+--| Format: _rigUploadMimesTypes(param1)
 --|
 --| Parameters: string<pMime>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigUploadMimesTypes pMime
+private function _rigUploadMimesTypes pMime
+  local tArrayLvels
+  
 	if sMimes is not an array then
-		require gAPPPATH & "config/mimes" & gEXT
+		_rigRequire gRigA["APPPATH"] & "config/mimes" & gRigA["EXT"]
 		put rigFetchAllMimeTypes() into sMimes
 	end if
 	
@@ -1096,14 +1170,14 @@ function rigUploadMimesTypes pMime
 	else
 		return sMimes[pMime]
 	end if
-end rigUploadMimesTypes
+end _rigUploadMimesTypes
 
 
 
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigGetExtension
+--| FUNCTION _rigGetExtension
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1113,17 +1187,17 @@ end rigUploadMimesTypes
 --|
 --| Summary: Extract the file extension.
 --| 
---| Format:  rigGetExtension(param1)
+--| Format:  _rigGetExtension(param1)
 --|
 --| Parameters: string<pFilename>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigGetExtension pFilename
+private function _rigGetExtension pFilename
 	set the itemDel to "."
 	return "." & item -1 of pFilename
-end rigGetExtension
+end _rigGetExtension
 
 
 
@@ -1131,30 +1205,32 @@ end rigGetExtension
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigIsAllowedFileType
+--| FUNCTION _rigIsAllowedFileType
 --|
 --| Author: rabit
 --| Version:  1.3
 --| Created: 2011-09-03
 --| Last Mod: 2018-12-27
---| Requires: rigSetUploadError, rigGetImageSize(), rigUploadMimesTypes()
+--| Requires: _rigSetUploadError, _rigGetImageSize(), _rigUploadMimesTypes()
 --|
 --| Summary: Verify that the filetype is allowed.
 --| 
---| Format:  rigIsAllowedFileType(param1)
+--| Format: _rigIsAllowedFileType(param1)
 --|
 --| Parameters: bool<pIgnoreMime>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigIsAllowedFileType pIgnoreMime
-	if sAllowedTypes is "*" then
+private function _rigIsAllowedFileType pIgnoreMime
+  local tIgnoreMime, tAllowedTypes, tImageTypes, tExtension, tMime
+  
+	if sUploadA["allowedTypes"] is "*" then
 		return TRUE
 	end if
 	
-	if (sAllowedTypes is not an array) or (sAllowedTypes[1] is empty) then
-		rigSetUploadError "upload_no_file_types"
+	if (sUploadA["allowedTypes"] is not an array) or (sUploadA["allowedTypes"][1] is empty) then
+		_rigSetUploadError "upload_no_file_types"
 		return FALSE
 	end if
 	
@@ -1165,7 +1241,7 @@ function rigIsAllowedFileType pIgnoreMime
 	end if
 	
 	
-	put sAllowedTypes into tAllowedTypes
+	put sUploadA["allowedTypes"] into tAllowedTypes
 	combine tAllowedTypes using ","
 	
 	put toLower(sFileExt) into tExtension
@@ -1180,7 +1256,7 @@ function rigIsAllowedFileType pIgnoreMime
 	# IMAGES GET SOME ADDITIONAL CHECKS
 	put "gif,jpg,jpeg,png,jpe" into tImageTypes
 	if tExtension is among the items of tImageTypes then
-		if rigGetImageSize(sFileTemp) is not an array then
+		if _rigGetImageSize(sFileTemp) is not an array then
 			return FALSE
 		end if
 		
@@ -1190,7 +1266,7 @@ function rigIsAllowedFileType pIgnoreMime
 		return TRUE
 	end if
 	
-	put rigUploadMimesTypes(tExtension) into tMime
+	put _rigUploadMimesTypes(tExtension) into tMime
 	
 	if tMime is sFileType then
 		return TRUE
@@ -1198,7 +1274,7 @@ function rigIsAllowedFileType pIgnoreMime
 	
 	return FALSE
 	
-end rigIsAllowedFileType
+end _rigIsAllowedFileType
 
 
 
@@ -1206,24 +1282,26 @@ end rigIsAllowedFileType
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigGetImageSize
+--| FUNCTION _rigGetImageSize
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2011-11-03
 --| Last Mod: 2018-12-27
---| Requires: rigSetUploadError, rigFileSize()
+--| Requires: _rigSetUploadError, rigFileSize()
 --|
 --| Summary: A helper function that gets info about an image file.
 --| 
---| Format:  rigGetImageSize(param1)
+--| Format: _rigGetImageSize(param1)
 --|
 --| Parameters: string <pFilepath>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigGetImageSize pFilepath
+private function _rigGetImageSize pFilepath
+  local tFilepath, tVals, tMime, tTypes, tV
+  
   if pFilepath is empty then
     put sFileTemp into tFilepath
   else
@@ -1232,7 +1310,7 @@ function rigGetImageSize pFilepath
 
   if there is a file tFilepath then
   else
-    rigSetUploadError "upload_invalid_path"  
+    _rigSetUploadError "upload_invalid_path"  
     return FALSE
   end if
    
@@ -1268,14 +1346,14 @@ function rigGetImageSize pFilepath
   else
     return FALSE
   end if
-end rigGetImageSize
+end _rigGetImageSize
 
 
 
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigMaxFilesNumReached
+--| FUNCTION _rigMaxFilesNumReached
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1285,20 +1363,20 @@ end rigGetImageSize
 --|
 --| Summary: Verify that the number of files uploaded doesn't excel the allowed maximum.
 --| 
---| Format:  rigMaxFilesNumReached(param1)
+--| Format: _rigMaxFilesNumReached(param1)
 --|
 --| Parameters: integer <pFileNum>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigMaxFilesNumReached pFileNum
-	if (sMaxUploadFiles <> 0) and (pFileNum > sMaxUploadFiles) then
+private function _rigMaxFilesNumReached pFileNum
+	if (sUploadA["maxUploadFiles"] <> 0) and (pFileNum > sUploadA["maxUploadFiles"]) then
 		return TRUE
 	else
 		return FALSE
 	end if
-end rigMaxFilesNumReached
+end _rigMaxFilesNumReached
 
 
 
@@ -1306,7 +1384,7 @@ end rigMaxFilesNumReached
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigIsAllowedFileSize
+--| FUNCTION _rigIsAllowedFileSize
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1316,21 +1394,21 @@ end rigMaxFilesNumReached
 --|
 --| Summary: Verify that the file is within the allowed size.
 --| 
---| Format:  rigIsAllowedFileSize()
+--| Format: _rigIsAllowedFileSize()
 --|
 --| Parameters: --
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigIsAllowedFileSize
-	if (sMaxSize <> 0) and (sFileSize > sMaxSize) then
+private function _rigIsAllowedFileSize
+	if (sUploadA["maxSize"] <> 0) and (sFileSize > sUploadA["maxSize"]) then
 		return FALSE
 	else
 		return TRUE
 	end if
 	
-end rigIsAllowedFileSize
+end _rigIsAllowedFileSize
 
 
 
@@ -1338,41 +1416,43 @@ end rigIsAllowedFileSize
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigIsAllowedDimensions
+--| FUNCTION _rigIsAllowedDimensions
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 03-09-2011
 --| Last Mod: 03-09-2011
---| Requires: rigIsImage(), rigGetImageSize()
+--| Requires: _rigIsImage(), _rigGetImageSize()
 --|
 --| Summary: Verify that the image is within the allowed width/height.
 --| 
---| Format:  rigIsAllowedDimensions()
+--| Format:  _rigIsAllowedDimensions()
 --|
 --| Parameters: --
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigIsAllowedDimensions
-	if rigIsImage() is not TRUE then
+private function _rigIsAllowedDimensions
+  local tImgProps
+  
+	if _rigIsImage() is not TRUE then
 		return TRUE
 	end if
 	
-	put rigGetImageSize(sFileTemp) into tImgProps
+	put _rigGetImageSize(sFileTemp) into tImgProps
 	
-	if (sMaxWidth > 0) and (tImgProps["width"] > sMaxWidth) then
+	if (sUploadA["maxWidth"] > 0) and (tImgProps["width"] > sUploadA["maxWidth"]) then
 		return FALSE
 	end if
 	
-	if (sMaxHeight > 0) and (tImgProps["height"] > sMaxHeight) then
+	if (sUploadA["maxHeight"] > 0) and (tImgProps["height"] > sUploadA["maxHeight"]) then
 		return FALSE
 	end if
 	
 	return TRUE
 	
-end rigIsAllowedDimensions
+end _rigIsAllowedDimensions
 
 
 
@@ -1380,7 +1460,7 @@ end rigIsAllowedDimensions
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigCleanFilename
+--| FUNCTION _rigCleanFilename
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1390,14 +1470,16 @@ end rigIsAllowedDimensions
 --|
 --| Summary: Remove special characters, encoded and double encoded.
 --| 
---| Format:  rigCleanFilename(pFilename)
+--| Format: _rigCleanFilename(pFilename)
 --|
 --| Parameters: string<pFilename>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigCleanFilename pFilename
+private function _rigCleanFilename pFilename
+  local tBad
+  
 	# CHARS <,>,(,),&,$,?,;,= URL ENCODED 
 	put "<!--,-->,',<,>," & quote & ",&,$,=,;,?,/,%20,%22,%3c,%253c,%3e,%0e,%28,%29,%2528,%26,%24,%3f,%3b,%3d" into tBad
 	
@@ -1406,14 +1488,14 @@ function rigCleanFilename pFilename
 	end repeat
 	
 	return rigStripSlashes(pFilename)
-end rigCleanFilename
+end _rigCleanFilename
 
 
 
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigLimitFilenameLength
+--| FUNCTION _rigLimitFilenameLength
 --|
 --| Author: rabit
 --| Version:  1.2
@@ -1423,14 +1505,16 @@ end rigCleanFilename
 --|
 --| Summary: Limit the File Name Length.
 --| 
---| Format:  rigLimitFilenameLength(params1, param2)
+--| Format:  _rigLimitFilenameLength(params1, param2)
 --|
 --| Parameters: string<pFilename>, integer<pLength>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigLimitFilenameLength pFilename pLength
+private function _rigLimitFilenameLength pFilename pLength
+  local tExtension, tExtLength, tTruncName
+  
 	if (the length of pFilename) < pLength then
 		return pFilename
 	end if
@@ -1446,7 +1530,7 @@ function rigLimitFilenameLength pFilename pLength
 	put (char 1 to (pLength - (the length of tExtension)) of pFilename) & tExtension into tTruncName
 	
 	return tTruncName
-end rigLimitFilenameLength
+end _rigLimitFilenameLength
 
 
 
@@ -1454,7 +1538,7 @@ end rigLimitFilenameLength
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigDoXSSclean
+--| COMMAND _rigDoXSSclean
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1463,18 +1547,20 @@ end rigLimitFilenameLength
 --| Requires: rigFileSize(), rigXssClean() (in Input)
 --|
 --| Summary: Runs the file through the XSS clean function.
---|					 This prevents people from embedding malicious code in their files.
---|					 Be careful, this might negatively affect certain files in unexpected ways.
+--|					This prevents people from embedding malicious code in their files.
+--|					Be careful, this might negatively affect certain files in unexpected ways.
 --| 
---| Format:  rigDoXSSclean	
+--| Format:  _rigDoXSSclean	
 --|
 --| Parameters: --
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigDoXSSclean
-	put sUploadPath & sFileName into tFile
+command _rigDoXSSclean
+  local tFile, tFileSize, tData
+  
+	put sUploadA["uploadPath"] & sUploadA["fileName"] into tFile
 	
 	put rigFileSize(tFile) into tFileSize
 	if (tFileSize is FALSE) or (tFileSize is 0) then
@@ -1501,36 +1587,38 @@ command rigDoXSSclean
 	
 	close file tFile
 	
-end rigDoXSSclean
+end _rigDoXSSclean
 
 
 
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetImageProperties
+--| COMMAND _rigSetImageProperties
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 04-09-2011
 --| Last Mod: 04-09-2011
---| Requires: rigIsImage(), rigGetImageSize()
+--| Requires: _rigIsImage(), _rigGetImageSize()
 --|
 --| Summary: Set Image Properties.
 --| 
---| Format:  rigSetImageProperties param1
+--| Format: _rigSetImageProperties param1
 --|
 --| Parameters: string <pPath>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetImageProperties pPath
-	if rigIsImage() is FALSE then
-		exit rigSetImageProperties
+private command _rigSetImageProperties pPath
+  local tImgProps, tTypes
+  
+	if _rigIsImage() is FALSE then
+		exit _rigSetImageProperties
 	end if
 
-	put rigGetImageSize(pPath) into tImgProps
+	put _rigGetImageSize(pPath) into tImgProps
 	
 	if tImgProps is an array then
 		put "gif,jpeg,png" into tTypes
@@ -1549,7 +1637,7 @@ command rigSetImageProperties pPath
 		put "height=" & quote & sImageHeight & quote && "width=" & quote & sImageWidth & quote into sImageSizeStr
 	end if
 	
-end rigSetImageProperties
+end _rigSetImageProperties
 
 
 
@@ -1574,7 +1662,9 @@ end rigSetImageProperties
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigFileMimeType pFile
+private command _rigFileMimeType pFile
+  local tRegexp, tMime, tCharset
+  
   # EXPRESSION TO VALIDATE THE MIME INFO STRING (e.g. image/jpeg; charset=binary)
   put "^([a-z\-]+\/[a-z0-9\-\.\+]+)(;\s.+)?$" into tRegexp
    
@@ -1583,7 +1673,7 @@ command _rigFileMimeType pFile
   if the platform <> "Win32" then
     put shell("file --brief --mime" && pFile["filename"] && "2>&1") into tMime
     
-		put empty into tCharset -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	  put empty into tCharset -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
     get matchText(tMime,tRegexp,sFileType,tCharset)
     if it is TRUE then
       exit _rigFileMimeType
@@ -1597,8 +1687,77 @@ end _rigFileMimeType
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigUploadGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get upload array variable value.
+--| 
+--| Format:  rigUploadGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigUploadGet pWhat
+  if pWhat is among the keys of sUploadA then
+    return sUploadA[pWhat]
+  end if
+   
+  return empty
+end rigUploadGet
 
 
---| END OF Upload.lc
---| Location:  ./system/libraries/Upload.lc
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigUploadSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for upload variables.
+--| 
+--| Format:  rigUploadSet param1, param2
+--|
+--| Parameters: string <pKey> sUploadA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigUploadSet pKey pVal
+  local tHandler
+  
+  if pKey is among the keys of sUploadA then
+    
+    put "_rigSet_" & pKey into tHandler
+    if tHandler is among the items of sValidSetHandlers then
+      do tHandler && quote & pVal & quote
+    else
+      if pKey is among the items of sInitialVarKeys then
+        put pVal into sUploadA[pKey]
+      end if
+    end if -- if tHandler is among the items of sValidSetHandlers
+    
+  end if -- if pKey is among the keys of sUploadA
+end rigUploadSet
+
+
+
+
+
+
+
+
+--| END OF Upload.livecodescript
+--| Location:  ./system/libraries/Upload.livecodescript
 ----------------------------------------------------------------------
