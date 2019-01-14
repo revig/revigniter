@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Ftp"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package      revIgniter
 # @author       rabit@revigniter.com
-# @copyright    Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license      http://revigniter.com/userGuide/license.html
-# @link		      http://revigniter.com
+# @copyright    Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license      https://revigniter.com/userGuide/license.html
+# @link		      https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,56 +22,122 @@ end if
 # @subpackage   Libraries
 # @category      Libraries
 # @author		     rabit@revigniter.com
-# @link		       http://revigniter.com/userGuide/libraries/ftp.html
+# @link		       https://revigniter.com/userGuide/libraries/ftp.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-#LOGGING
-rigLogMessage "debug", "FTP Library Loaded"
+
+global gRigA
+
+local sFtpA, sFtpSettingsItems, sStackInUse
 
 
-local sFtpA
 
 
-# SET INITIAL VALUES
-put empty into sFtpA["tsNetEdition"]
-put "ftp" into sFtpA["flavor"]
-put 21 into sFtpA["port"]
-put "passive" into sFtpA["mode"]
-put "rigFtp" into sFtpA["connID"]
-put FALSE into sFtpA["asyncRequest"]
--- put TRUE into sFtpA["secure"]
-put FALSE into sFtpA["verifySSL"]
-put "" into sFtpA["request"]
-put "" into sFtpA["response"]
-put "" into sFtpA["transferResult"]
-put "" into sFtpA["callbackError"]
-put "" into sFtpA["statusMsg"]
-put FALSE into sFtpA["debug"]
-put "" into sFtpA["debugMsg"]
-put 100 into sFtpA["initWait"]                     -- Milliseconds to wait after initializing the tsNet external
-put "" into sFtpA["transferType"]
-put TRUE into sFtpA["displayErrors"]
-put TRUE into sFtpA["noErrors"]
-put FALSE into sFtpA["setFilePermissions"]
-put empty into sFtpA["filePermissions"]
-put 0700 into sFtpA["settings"]["defaultPermissions"]
-put empty into sFtpA["remotePath"]
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-21
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
 
-put "" into sFtpA["settings"]["hostname"]        -- Can be a hostname or an IP address
-put "anonymous" into sFtpA["settings"]["username"]
-put "" into sFtpA["settings"]["password"]
-put FALSE into sFtpA["settings"]["use_ssl"]
-put FALSE into sFtpA["settings"]["no_reuse"]
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
 
-put "" into sFtpA["settings"]["ssh_passphrase"]
-put "" into sFtpA["settings"]["ssh_host_public_key"]
-put "" into sFtpA["settings"]["ssh_private_key"]
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "FTP Library Loaded"
+      end if
+    
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
-put "hostname,username,password,use_ssl,no_reuse,ssh_passphrase,ssh_host_public_key,ssh_private_key" into sFtpSettingsItems
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put empty into sFtpA["tsNetEdition"]
+  put "ftp" into sFtpA["flavor"]
+  put 21 into sFtpA["port"]
+  put "passive" into sFtpA["mode"]
+  put "rigFtp" into sFtpA["connID"]
+  put FALSE into sFtpA["asyncRequest"]
+  -- put TRUE into sFtpA["secure"]
+  put FALSE into sFtpA["verifySSL"]
+  put "" into sFtpA["request"]
+  put "" into sFtpA["response"]
+  put "" into sFtpA["transferResult"]
+  put "" into sFtpA["callbackError"]
+  put "" into sFtpA["statusMsg"]
+  put FALSE into sFtpA["debug"]
+  put "" into sFtpA["debugMsg"]
+  put 100 into sFtpA["initWait"]                     -- Milliseconds to wait after initializing the tsNet external
+  put "" into sFtpA["transferType"]
+  put TRUE into sFtpA["displayErrors"]
+  put TRUE into sFtpA["noErrors"]
+  put FALSE into sFtpA["setFilePermissions"]
+  put empty into sFtpA["filePermissions"]
+  put 0700 into sFtpA["settings"]["defaultPermissions"]
+  put empty into sFtpA["remotePath"]
+
+  put "" into sFtpA["settings"]["hostname"]        -- Can be a hostname or an IP address
+  put "anonymous" into sFtpA["settings"]["username"]
+  put "" into sFtpA["settings"]["password"]
+  put FALSE into sFtpA["settings"]["use_ssl"]
+  put FALSE into sFtpA["settings"]["no_reuse"]
+
+  put "" into sFtpA["settings"]["ssh_passphrase"]
+  put "" into sFtpA["settings"]["ssh_host_public_key"]
+  put "" into sFtpA["settings"]["ssh_private_key"]
+
+  put "hostname,username,password,use_ssl,no_reuse,ssh_passphrase,ssh_host_public_key,ssh_private_key" into sFtpSettingsItems
+end _rigSetDefaultValues
+
+
 
 
 
@@ -101,9 +161,11 @@ put "hostname,username,password,use_ssl,no_reuse,ssh_passphrase,ssh_host_public_
 ----------------------------------------------------------------------*/
 
 command rigRunInitialFtpConfig pConfig
+  local tTsNetEdition, tRegEx
+  
   if pConfig is not an array then
     if pConfig is not empty then
-      split pConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+      split pConfig using numToCodepoint(1) and numToCodepoint(2)
     end if
   end if
 
@@ -125,8 +187,8 @@ command rigRunInitialFtpConfig pConfig
     
     # PREP THE HOSTNAME
     put rigTrim(sFtpA["settings"]["hostname"], "/") into sFtpA["settings"]["hostname"]
-    put ".+?://" into tReg
-    put replacetext(sFtpA["settings"]["hostname"], tReg, "") into sFtpA["settings"]["hostname"]
+    put ".+?://" into tRegEx
+    put replacetext(sFtpA["settings"]["hostname"], tRegEx, "") into sFtpA["settings"]["hostname"]
   end if
 end rigRunInitialFtpConfig
 
@@ -153,6 +215,8 @@ end rigRunInitialFtpConfig
 ----------------------------------------------------------------------*/
 
 command rigInitializeFTP pConfig
+  local tKey, tVal, tTsNetInitResult, tHost
+  
   if pConfig is an array then
     repeat for each key tKey in pConfig
 
@@ -194,9 +258,9 @@ end rigInitializeFTP
 --| COMMAND rigSetInitialFtpValue
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-08-18
---| Last Mod: 2016-08-18
+--| Last Mod: 2019-01-06
 --| Requires: --
 --|
 --| Summary: Set initial values.
@@ -209,11 +273,7 @@ end rigInitializeFTP
 ----------------------------------------------------------------------*/
 
 command rigSetInitialFtpValue pVarName pValue
-  if pVarName is among the items of sFtpSettingsItems then
-    put pValue into sFtpA["settings"][pVarName]
-  else
-    put pValue into sFtpA[pVarName]
-  end if
+  rigFtpSet pVarName, pValue
 end rigSetInitialFtpValue
 
 
@@ -240,6 +300,8 @@ end rigSetInitialFtpValue
 ----------------------------------------------------------------------*/
 
 command rigFtpError pLine
+  local tShowErrorPage, tErrorMessage
+  
   if (sFtpA["displayErrors"] is empty) or (sFtpA["displayErrors"] is not a boolean) then
     put FALSE into tShowErrorPage
   else
@@ -282,10 +344,12 @@ end rigFtpError
 ----------------------------------------------------------------------*/
 
 function rigFtpPrintDebugger pWhichMsg
+  local tVersions
+  
 	put "<h3>Versions</h3>" & cr & \
 	"<p>LC Server:" && the version && the editionType & "</p>" & cr & \
 	"<p>tsNet:" && tsNetVersion() & "</p>" & cr & \
-	"<p>revIgniter:" && RIVERSION & "</p>" into tVersions
+	"<p>revIgniter:" && rigVersion() & "</p>" into tVersions
 	
   switch pWhichMsg
     case "status"
@@ -313,9 +377,9 @@ end rigFtpPrintDebugger
 --| COMMAND rigFtpListFiles
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 2016-10-13
---| Last Mod: 2018-12-21
+--| Last Mod: 2016-10-13
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -330,6 +394,9 @@ end rigFtpPrintDebugger
 ----------------------------------------------------------------------*/
 
 command rigFtpListFiles pPath pSimpleList pTransferPrepared
+  local tConnID, tEmptyHeaderVar, tResultHeaders, tResult, tBytes, tResponse
+  local tError
+  
 	if pPath <> empty then
 		replace "\" with "/" in pPath
 		put rigTrim(pPath, "/") into pPath
@@ -400,9 +467,9 @@ end rigFtpListFiles
 --| COMMAND rigFtpUpload
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 2016-12-14
---| Last Mod: 2018-12-21
+--| Last Mod: 2016-12-14
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -418,6 +485,9 @@ end rigFtpListFiles
 ----------------------------------------------------------------------*/
 
 command rigFtpUpload pLocalPath pRemotePath pData pCreateMissingDirs pPermissions
+  local tExitWithError, tConnID, tEmptyHeaderVar, tOutHeaders, tStatusCode, tBytes
+  local tResult, tHandler
+  
   if (pData is empty) or (pData is not a boolean) then
     put FALSE into pData
   end if
@@ -540,10 +610,10 @@ end rigFtpUpload
 --| COMMAND rigFtpMirror
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2017-09-18
---| Last Mod: 2017-09-18
---| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpMirrorFilesFolders
+--| Last Mod: 2019-01-12
+--| Requires: rigTrim(), rigIsAbsolutePath(), _rigFtpPrepareTransfer, _rigFtpMirrorFilesFolders
 --|
 --| Summary: Recursively reads local folder including sub-folders and creates a mirror on the remote server.
 --|            Note: SFTP needs LC Business Edition.
@@ -556,6 +626,19 @@ end rigFtpUpload
 ----------------------------------------------------------------------*/
 
 command rigFtpMirror pLocalPath pRemotePath
+  local tConnID
+  
+  # PREPARE pLocalPath
+  # USE ABSOLUTE PATH
+  replace "\" with "/" in pLocalPath
+  put rigTrim(pLocalPath, "/") into pLocalPath
+  if not rigIsAbsolutePath(pLocalPath) then
+    put the defaultfolder & "/" & pLocalPath into pLocalPath
+  else
+    put "/" & pLocalPath into pLocalPath
+  end if
+  
+  # PREPARE pRemotePath
   replace "\" with "/" in pRemotePath
   put rigTrim(pRemotePath, "/") into pRemotePath
   
@@ -590,9 +673,9 @@ end rigFtpMirror
 --| COMMAND _rigFtpMirrorFilesFolders
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2017-09-18
---| Last Mod: 2017-09-18
+--| Last Mod: 2019-01-12
 --| Requires: _rigFtpCreateAllMissingDirs, rigFtpUpload
 --|
 --| Summary: Uploads multiple files and / or folders.
@@ -605,6 +688,10 @@ end rigFtpMirror
 ----------------------------------------------------------------------*/
 
 command _rigFtpMirrorFilesFolders pLocalPath pRemotePath
+  local tNumUploadsToProcess, tID, tIDsuffix, tFolders
+  local tSubPath, tCurrentFolder, tCurrentRemoteFolder, tNumUploadsToProcesss
+  local tFilePath, tRemoteFilePath
+  
   # CREATE MISSING DIRECTORIES
   # AUTOMATIC CREATION OF MISSING DIRECTORIES SEEMS
   # NOT TO WORK RELIABLE WITH ASYNCHRONOUS REQUESTS!!!!
@@ -618,8 +705,6 @@ command _rigFtpMirrorFilesFolders pLocalPath pRemotePath
     tsNetSetStatusCallBack ""
   end if
   #
-
-  put the defaultFolder into tPrevDefaultFolder
 
   if sFtpA["asyncRequest"] then
     put 0 into sFtpA["numUploadsToProcess"]
@@ -645,9 +730,7 @@ command _rigFtpMirrorFilesFolders pLocalPath pRemotePath
       put pRemotePath into tCurrentRemoteFolder
     end if
 
-    set the defaultFolder to pLocalPath & tSubPath
-
-    repeat for each line tFolder in the folders
+    repeat for each line tFolder in folders(tCurrentFolder)
       if char 1 of tFolder is "." then
         next repeat
       end if
@@ -655,7 +738,7 @@ command _rigFtpMirrorFilesFolders pLocalPath pRemotePath
       put tSubPath & "/" & tFolder & return before tFolders
     end repeat
 
-    repeat for each line tFile in the files
+    repeat for each line tFile in files(tCurrentFolder)
       if tFile <> ".DS_Store" then
         # CREATE NEW CONNECTION ID, COUNT NUMBER OF FILES TO BE UPLOADED
         # AND UPLOAD FILE
@@ -677,8 +760,6 @@ command _rigFtpMirrorFilesFolders pLocalPath pRemotePath
   if sFtpA["asyncRequest"] is TRUE then
     put tNumUploadsToProcesss into sFtpA["numUploadsToProcess"]
   end if
-
-  set the defaultFolder to tPrevDefaultFolder
 end _rigFtpMirrorFilesFolders
 
 
@@ -690,9 +771,9 @@ end _rigFtpMirrorFilesFolders
 --| COMMAND _rigFtpCreateAllMissingDirs
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2017-09-19
---| Last Mod: 2017-09-19
+--| Last Mod: 2019-01-12
 --| Requires: _rigFtpDoRawCommands
 --|
 --| Summary: Recursively reads all sub-folders of a local folder and creates a mirror on the remote server.
@@ -707,12 +788,13 @@ end _rigFtpMirrorFilesFolders
 ----------------------------------------------------------------------*/
 
 command _rigFtpCreateAllMissingDirs pLocalPath pRemotePath
+  local tCommand, tFolders, tSubPath
+  local tCurrentFolder
+  
   # AUTOMATIC CREATION OF MISSING DIRECTORIES SEEMS
-  # NOT TO WORK RELIABLE WITH ASYNCHRONOUS REQUESTS.
+  # NOT TO WORK RELIABLY WITH ASYNCHRONOUS REQUESTS.
   # SO, BEFORE UPLOADING A DIRECTORY CREATE ALL THOSE
   # MISSING DIRECTORIES ON THE REMOTE SERVER
-
-  put the defaultFolder into tPrevDefaultFolder
 
   # CREATE ROOT FOLDER
   if pRemotePath <> empty then
@@ -732,9 +814,7 @@ command _rigFtpCreateAllMissingDirs pLocalPath pRemotePath
       put pLocalPath into tCurrentFolder
     end if
 
-    set the defaultFolder to pLocalPath & tSubPath
-
-    repeat for each line tFolder in the folders
+    repeat for each line tFolder in folders(tCurrentFolder)
       if char 1 of tFolder is "." then
         next repeat
       end if
@@ -745,8 +825,6 @@ command _rigFtpCreateAllMissingDirs pLocalPath pRemotePath
       _rigFtpDoRawCommands tCommand
     end repeat
   end repeat
-
-  set the defaultFolder to tPrevDefaultFolder
 end _rigFtpCreateAllMissingDirs
 
 
@@ -759,9 +837,9 @@ end _rigFtpCreateAllMissingDirs
 --| COMMAND rigFtpDownload
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 2016-12-15
---| Last Mod: 2018-12-21
+--| Last Mod: 2016-12-15
 --| Requires: rigTrim(), _rigFtpPrepareTransfer, _rigFtpCheckResult,
 --|            _rigFtpTransferComplete
 --|
@@ -776,6 +854,9 @@ end _rigFtpCreateAllMissingDirs
 ----------------------------------------------------------------------*/
 
 command rigFtpDownload pRemotePath pLocalPath
+  local tConnID, tEmptyHeaderVar, tStatus, tResult, tOutHeaders
+  local tBytes
+  
   replace "\" with "/" in pRemotePath
   put rigTrim(pRemotePath, "/") into pRemotePath
   
@@ -844,6 +925,8 @@ end rigFtpDownload
 ----------------------------------------------------------------------*/
 
 command rigFtpRenameMove pOldFile pNewFile pMissingDirs
+  local tMissingDir, tCommandsList
+  
   if (pMissingDirs is empty) or (pMissingDirs is not a boolean) then
     put FALSE into pMissingDirs
   end if
@@ -910,6 +993,8 @@ end rigFtpRenameMove
 ----------------------------------------------------------------------*/
 
 command rigFtpDeleteFile pPath
+  local tCommandsList
+  
   replace "\" with "/" in pPath
   put rigTrim(pPath, "/") into pPath
 
@@ -957,6 +1042,8 @@ end rigFtpDeleteFile
 ----------------------------------------------------------------------*/
 
 command rigFtpDeleteFolder pPath pRecursive pPurgeOnly
+  local tNoReuse, tAsyncRequest
+  
   # THIS COMMAND IS IMPLEMENTED AS SYNCHRONOUS REQUEST ONLY!!!!!!!!!!!!!!!!
   # THE INITIAL CONNECTION NEEDS TO BE REUSED
   put sFtpA["settings"]["no_reuse"] into tNoReuse
@@ -1005,6 +1092,10 @@ end rigFtpDeleteFolder
 ----------------------------------------------------------------------*/
 
 command _rigFtpDeleteFilesFolders pPath pRecursive pPurgeOnly
+  local tDele, tRmd, tList, tSubList, tFolders, tSubPath, tCurrentFolder
+  local tDirectoryListing, tDirectories, tFiles, tFilePath, tDelFilesCommands
+  local tNumFolders, tDelFoldersCommands
+  
   if (pRecursive is empty) or (pRecursive is not a boolean) then
     put FALSE into pRecursive
   end if
@@ -1158,6 +1249,8 @@ end _rigFtpDeleteFilesFolders
 ----------------------------------------------------------------------*/
 
 command rigFtpCreateFolder pPath pPermissions
+  local tCommandsList
+  
   replace "\" with "/" in pPath
   put rigTrim(pPath, "/") into pPath
   
@@ -1214,6 +1307,8 @@ end rigFtpCreateFolder
 ----------------------------------------------------------------------*/
 
 command rigFtpSetPermissions pPath pPermissions pTransferPrepared
+  local tCommandsList
+  
   replace "\" with "/" in pPath
   put rigTrim(pPath, "/") into pPath
   
@@ -1259,6 +1354,8 @@ end rigFtpSetPermissions
 ----------------------------------------------------------------------*/
 
 command rigFtpChangeDir pPath
+  local tCommandsList
+  
   replace "\" with "/" in pPath
   put rigTrim(pPath, "/") into pPath
   
@@ -1281,9 +1378,9 @@ end rigFtpChangeDir
 --| COMMAND _rigFtpDoRawCommands
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 2017-09-12
---| Last Mod: 2018-12-21
+--| Last Mod: 2017-09-12
 --| Requires: _rigFtpCheckResult, _rigFtpTransferComplete
 --|
 --| Summary: Execute raw FTP commands.
@@ -1298,6 +1395,8 @@ end rigFtpChangeDir
 ----------------------------------------------------------------------*/
 
 command _rigFtpDoRawCommands pCommandslist
+  local tCommand, tConnID, tErrorLangKey, tStatus, tBytes, tResult
+  
   put word 1 of pCommandslist into tCommand
   
   # RESET RESULT DATA OF PREVIOUS REQUESTS
@@ -1402,9 +1501,9 @@ end _rigFtpCheckResult
 --| COMMAND _rigFtpPrepareTransfer
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.0
 --| Created: 2016-12-14
---| Last Mod: 2018-12-21
+--| Last Mod: 2016-12-14
 --| Requires: --
 --|
 --| Summary: Initiate preparatory measures.
@@ -1459,6 +1558,8 @@ end _rigFtpPrepareTransfer
 ----------------------------------------------------------------------*/
 
 command _rigFtpCallback pConnID pStatus pNumBytes pResult
+  local tError, tData, tAllTransfersDone
+  
   if pResult is not 0 then
     put tsNetRetrError(pConnID) into tError
     put "Error:" && tError && "while retrieving data for entry" && pConnID & return after sFtpA["callbackError"]
@@ -1514,6 +1615,8 @@ end _rigFtpCallback
 ----------------------------------------------------------------------*/
 
 command _rigFtpTransferComplete pNumBytes pStatus pResult pConnID pAllTransfersDone
+  local tKey, tResults, tPermissions
+  
   if pConnID <> empty then
     rigFtpClose pConnID
   end if
@@ -1646,6 +1749,8 @@ end _rigFtpDebugCallback
 ----------------------------------------------------------------------*/
 
 command rigFtpClose pConnID
+  local tConnID, tResult
+  
 	if pConnID is empty then
 		put sFtpA["connID"] into tConnID
 	else
@@ -1672,8 +1777,70 @@ end rigFtpClose
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigFtpGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-02
+--| Last Mod: 2019-01-02
+--| Requires: --
+--|
+--| Summary: Get ftp array variable value.
+--| 
+--| Format:  rigFtpGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigFtpGet pWhat
+  if pWhat is among the items of sFtpSettingsItems then
+    return sFtpA["settings"][pWhat]
+  else
+    return sFtpA[pWhat]
+  end if
+   
+  return empty
+end rigFtpGet
 
 
---| END OF Ftp.lc
---| Location:  ./system/libraries/Ftp.lc
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigFtpSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-02
+--| Last Mod: 2019-01-02
+--| Requires: --
+--|
+--| Summary: Setter for ftp variables.
+--| 
+--| Format:  rigFtpSet param1, param2
+--|
+--| Parameters: string <pKey> sFtpA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigFtpSet pKey pVal
+  if pKey is among the items of sFtpSettingsItems then
+    put pVal into sFtpA["settings"][pKey]
+  else
+    put pVal into sFtpA[pKey]
+  end if
+end rigFtpSet
+
+
+
+
+
+
+
+
+--| END OF Ftp.livecodescript
+--| Location:  ./system/libraries/Ftp.livecodescript
 ----------------------------------------------------------------------
