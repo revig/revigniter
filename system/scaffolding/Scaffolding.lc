@@ -1,22 +1,16 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Scaffolding"
 
 ##
 # RevIgniter
 #
-# A web development framework for Revolution
+# A web development framework for LiveCode
 # modeled on CodeIgniter.
 #
 # @package		revIgniter
-# @author		  rabit@softwaregestaltung.de
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.softwaregestaltung.de/userGuide/license.html
-# @link		    http://revigniter.softwaregestaltung.de
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,19 +23,51 @@ end if
 # @package		RevIgniter
 # @subpackage	Libraries
 # @category	  Scaffolding
-# @author		  rabit@softwaregestaltung.de
-# @link		    http://revigniter.softwaregestaltung.de/userGuide/libraries/uri.html
+# @author		  rabit@revigniter.com
+# @link		    https://revigniter.com/userGuide/libraries/uri.html
 ##
 
 
 
 
-# DECLARE VARIABLES
+global gRigA, gControllerHandlers, gData
+
 local sScaffCurrentTable, sScaffBaseURL, sScaffBaseURI, sScaffLang
 
 
-# PUT SCAFFOLDING HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
-put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigScaffView,rigScaffDelete,rigScaffDoDelete" into gControllerHandlers
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-11
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    # PUT SCAFFOLDING HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+    put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigScaffView,rigScaffDelete,rigScaffDoDelete" into gControllerHandlers
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -55,7 +81,7 @@ put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigSc
 --| Created: 25-01-10
 --| Last Mod: 05-08-12
 --| Requires: rigLoaderLoadLibrary, rigDbCacheOff(), _rigSetViewPath, rigSiteURL(), rigFetchSegment(), 
---|                  rigSystemURL(), rigLoadScaffoldingLanguage(), rigLoadHelper, rigLogMessage
+--|            rigSystemURL(), rigLoadScaffoldingLanguage(), rigLoadHelper, rigLogMessage
 --|
 --| Summary: Run initial procedures.
 --| 
@@ -67,6 +93,8 @@ put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigSc
 ----------------------------------------------------------------------*/
 
 command rigScaffolding pDBtable
+  local tSiteURL, tIndexPage, tHelpers
+  
 	get rigLoadDatabase("", FALSE, TRUE)
 
 	rigLoaderLoadLibrary "Pagination"
@@ -82,14 +110,14 @@ command rigScaffolding pDBtable
 	# SET THE PATH TO THE "VIEW" FILES
 	# WE'LL MANUALLY OVERRIDE THE "VIEW" PATH SO THAT
 	# THE rigLoadView FUNCTION KNOWS WHERE TO LOOK.
-	_rigSetViewPath gBASEPATH & "scaffolding/views/"
+	_rigSetViewPath gRigA["BASEPATH"] & "scaffolding/views/"
 
 	# CHECK IF mod_rewrite IS USED TO REMOVE THE INDEX PAGE
 	put rigSiteURL() into tSiteURL
 	put FALSE into tIndexPage
 	
 	set the itemDel to "."
-	if ("." & item -1 of tSiteURL) is gEXT then
+	if ("." & item -1 of tSiteURL) is gRigA["EXT"] then
 		put TRUE into tIndexPage
 	end if
 
@@ -106,8 +134,8 @@ command rigScaffolding pDBtable
 	put sScaffBaseURI into gData["baseURI"]
 	put sScaffBaseURL into gData["baseURL"]
 	put sScaffCurrentTable into gData["title"]
-	put RIVERSION into gData["riVersion"]
-	put RISTATE into gData["state"]
+	put rigVersion() into gData["riVersion"]
+	put rigVersion("state") into gData["state"]
 
 	# LOAD THE LANGUAGE FILE AND CREATE VARIABLES
 	put rigLoadScaffoldingLanguage("scaffolding", "", TRUE) into sScaffLang
@@ -129,7 +157,7 @@ end rigScaffolding
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigScaffAdd
 --|
 --| Author: rabit
@@ -139,16 +167,18 @@ end rigScaffolding
 --| Requires: rigLangLangLine(), rigDbFieldData(), rigAnchor(), rigLoadView()
 --|
 --| Summary: "Add" page, shows a form representing the currently selected DB
---|                     so that data can be inserted. Show the HTML "add" page.
+--|             so that data can be inserted. Show the HTML "add" page.
 --| 
 --| Format:  rigScaffAdd 
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigScaffAdd
+  local tViewAnchorA, tViewLangLine, tAddAnchorA, tAddLangLine
+  
 	# SET GLOBALS
 	if rigLangLangLine("scaff_add") is empty then
 		put "Add Data" into gData["pageTitle"]
@@ -159,16 +189,16 @@ command rigScaffAdd
 	put sScaffBaseURI & "/rigScaffInsert" into gData["action"]
 
 	# BUILD VIEW ANCHOR
-	put sScaffBaseURI into tViewAnchor[1]
-	put "rigScaffView" into tViewAnchor[2]
+	put sScaffBaseURI into tViewAnchorA[1]
+	put "rigScaffView" into tViewAnchorA[2]
 	put "&lt; " & rigLangLangLine("scaff_view_all") into tViewLangLine
-	put rigAnchor(tViewAnchor, tViewLangLine) into gData["viewAnchor"]
+	put rigAnchor(tViewAnchorA, tViewLangLine) into gData["viewAnchor"]
 
 	# BUILD ADD ANCHOR
-	put sScaffBaseURI into tAddAnchor[1]
-	put "rigScaffAdd" into tAddAnchor[2]
+	put sScaffBaseURI into tAddAnchorA[1]
+	put "rigScaffAdd" into tAddAnchorA[2]
 	put rigLangLangLine("scaff_create_record") into tAddLangLine
-	put rigAnchor(tAddAnchor, tAddLangLine) into gData["addAnchor"]
+	put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
 
 	# LOAD VIEW FILES
 	get rigLoadView("header")
@@ -183,7 +213,7 @@ end rigScaffAdd
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigScaffInsert
 --|
 --| Author: rabit
@@ -199,7 +229,7 @@ end rigScaffAdd
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigScaffInsert
 	if rigDbInsert(sScaffCurrentTable, $_POST) is FALSE then
@@ -229,7 +259,7 @@ end rigScaffInsert
 --|                   rigLangLangLine(), rigCreatePaginationLinks()
 --|
 --| Summary: "View" page, shows a table containing the data in the currently
---|                     selected DB. Shows the HTML "view" page.
+--|             selected DB. Shows the HTML "view" page.
 --| 
 --| Format:  rigScaffView 
 --|
@@ -239,6 +269,10 @@ end rigScaffInsert
 ----------------------------------------------------------------------*/
 
 command rigScaffView
+  local tTotalRows, tAddAnchorA, tAddLangLine, tPerPage, tOffset, tQuery
+  local tFields, tPrimary, tConfigA, tViewAnchorA, tViewLangLine
+  local tEditLangLine, tDeleteLangLine, tCounter, tKey, tRowA, tField
+  
 	# FETCH THE TOTAL NUMBER OF DB ROWS
 	put rigDbCountAllResults(sScaffCurrentTable) into tTotalRows
 
@@ -250,10 +284,10 @@ command rigScaffView
 		end if
 		
 		# BUILD ADD ANCHOR
-		put sScaffBaseURI into tAddAnchor[1]
-		put "rigScaffAdd" into tAddAnchor[2]
+		put sScaffBaseURI into tAddAnchorA[1]
+		put "rigScaffAdd" into tAddAnchorA[2]
 		put rigLangLangLine("scaff_create_record") into tAddLangLine
-		put rigAnchor(tAddAnchor, tAddLangLine) into gData["addAnchor"]
+		put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
 		
 		get rigLoadView("header")
 		get rigLoadView("nodata")
@@ -278,14 +312,14 @@ command rigScaffView
 	put tFields[1] into tPrimary
 
 	# PAGINATION!
-	put sScaffBaseURL & "/rigScaffView" into tConfig["baseUrl"]
-	put tTotalRows into tConfig["totalRows"]
-	put tPerPage into tConfig["perPage"]
-	put 4 into tConfig["uriSegment"]
-	put "<p>" into tConfig["fullTagOpen"]
-	put "</p>" into tConfig["fullTagClose"]
+	put sScaffBaseURL & "/rigScaffView" into tConfigA["baseUrl"]
+	put tTotalRows into tConfigA["totalRows"]
+	put tPerPage into tConfigA["perPage"]
+	put 4 into tConfigA["uriSegment"]
+	put "<p>" into tConfigA["fullTagOpen"]
+	put "</p>" into tConfigA["fullTagClose"]
 
-	rigInitializePagination tConfig
+	rigInitializePagination tConfigA
 	
 	# SET GLOBALS
 	if rigLangLangLine("scaff_view") is empty then
@@ -299,24 +333,24 @@ command rigScaffView
 	put rigCreatePaginationLinks() into gData["paginate"]
 
 	# BUILD VIEW ANCHOR
-	put sScaffBaseURI into tViewAnchor[1]
-	put "rigScaffView" into tViewAnchor[2]
+	put sScaffBaseURI into tViewAnchorA[1]
+	put "rigScaffView" into tViewAnchorA[2]
 	put rigLangLangLine("scaff_view_records") into tViewLangLine
-	put rigAnchor(tViewAnchor, tViewLangLine) into gData["viewAnchor"]
+	put rigAnchor(tViewAnchorA, tViewLangLine) into gData["viewAnchor"]
 
 	# BUILD ADD ANCHOR
-	put sScaffBaseURI into tAddAnchor[1]
-	put "rigScaffAdd" into tAddAnchor[2]
+	put sScaffBaseURI into tAddAnchorA[1]
+	put "rigScaffAdd" into tAddAnchorA[2]
 	put rigLangLangLine("scaff_create_record") into tAddLangLine
-	put rigAnchor(tAddAnchor, tAddLangLine) into gData["addAnchor"]
+	put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
 
 	# BUILD EDIT ANCHOR
-	put sScaffBaseURI into gData[editAnchor][1]
-	put "rigScaffEdit" into gData[editAnchor][2]
+	put sScaffBaseURI into gData["editAnchor"][1]
+	put "rigScaffEdit" into gData["editAnchor"][2]
 
 	# BUILD DELET ANCHOR
-	put sScaffBaseURI into gData[deleteAnchor][1]
-	put "rigScaffDelete" into gData[deleteAnchor][2]
+	put sScaffBaseURI into gData["deleteAnchor"][1]
+	put "rigScaffDelete" into gData["deleteAnchor"][2]
 
 	put tQuery["resultarray"] into gData["queryResult"]
 	
@@ -329,17 +363,17 @@ command rigScaffView
 	repeat for each key tKey in gData["queryResult"]
 		add 1 to tCounter
 
-		put gData["queryResult"][tCounter] into tRow
-		put tRow[1] into gData[editAnchor][3]
-		put tRow[1] into gData[deleteAnchor][3]
-		put "<tr>" & return & "<td>&nbsp;" & rigAnchor(gData[editAnchor], tEditLangLine) & "&nbsp;</td>" & return after gData["tableContent"]
-		put "<td>" & rigAnchor(gData[deleteAnchor], tDeleteLangLine) & "</td>" & return after gData["tableContent"]
+		put gData["queryResult"][tCounter] into tRowA
+		put tRowA[1] into gData["editAnchor"][3]
+		put tRowA[1] into gData["deleteAnchor"][3]
+		put "<tr>" & return & "<td>&nbsp;" & rigAnchor(gData["editAnchor"], tEditLangLine) & "&nbsp;</td>" & return after gData["tableContent"]
+		put "<td>" & rigAnchor(gData["deleteAnchor"], tDeleteLangLine) & "</td>" & return after gData["tableContent"]
 
 		put 0 into tField
 
 		repeat for each key tKey in gData["fields"]
 			add 1 to tField
-			put "<td>" & rigFormPrep(tRow[tField]) & "</td>" & return after gData["tableContent"]
+			put "<td>" & rigFormPrep(tRowA[tField]) & "</td>" & return after gData["tableContent"]
 		end repeat
 
 		put "</tr>" & return after gData["tableContent"]
@@ -359,7 +393,7 @@ end rigScaffView
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigScaffEdit
 --|
 --| Author: rabit
@@ -369,16 +403,19 @@ end rigScaffView
 --| Requires: rigFetchSegment(), rigPrimary(), rigDbGetWhere(), rigLangLangLine(), rigDbFieldData(), rigAnchor(), rigLoadView()
 --|
 --| Summary: "Edit" page, shows a form representing the currently selected DB
---|                     so that data can be edited. Show the HTML "add" page.
+--|             so that data can be edited. Show the HTML "add" page.
 --| 
 --| Format:  rigScaffEdit 
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigScaffEdit
+  local tID, tPrimary, tArray, tQuery, tViewAnchorA, tViewLangLine
+  local tAddAnchorA, tAddLangLine
+  
 	put rigFetchSegment(4) into tID
 	if tID is FALSE then
 		rigScaffView
@@ -403,16 +440,16 @@ command rigScaffEdit
 	put sScaffBaseURI & "/rigScaffUpdate/" & tID into gData["action"]
 
 	# BUILD VIEW ANCHOR
-	put sScaffBaseURI into tViewAnchor[1]
-	put "rigScaffView" into tViewAnchor[2]
+	put sScaffBaseURI into tViewAnchorA[1]
+	put "rigScaffView" into tViewAnchorA[2]
 	put "&lt; " & rigLangLangLine("scaff_view_all") into tViewLangLine
-	put rigAnchor(tViewAnchor, tViewLangLine) into gData["viewAnchor"]
+	put rigAnchor(tViewAnchorA, tViewLangLine) into gData["viewAnchor"]
 
 	# BUILD ADD ANCHOR
-	put sScaffBaseURI into tAddAnchor[1]
-	put "rigScaffAdd" into tAddAnchor[2]
+	put sScaffBaseURI into tAddAnchorA[1]
+	put "rigScaffAdd" into tAddAnchorA[2]
 	put rigLangLangLine("scaff_create_record") into tAddLangLine
-	put rigAnchor(tAddAnchor, tAddLangLine) into gData["addAnchor"]
+	put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
 
 	# LOAD VIEW FILES
 	get rigLoadView("header")
@@ -448,6 +485,8 @@ end rigScaffEdit
 ----------------------------------------------------------------------
 
 command rigScaffUpdate
+  local tPrimary, tID, tArray
+  
 	# FETCH THE PRIMARY KEY
 	put rigPrimary(sScaffCurrentTable) into tPrimary
 
@@ -488,6 +527,10 @@ end rigScaffUpdate
 ----------------------------------------------------------------------*/
 
 command rigScaffDelete
+  local tID, tPrimary, tMessage, tAnswerNo, tNoArray, tAnswerYes
+  local tYesArray, tViewAnchorA, tViewLangLine, tAddAnchorA
+  local tAddLangLine
+  
 	put rigFetchSegment(4) into tID
 	
 	# FETCH THE PRIMARY KEY
@@ -530,16 +573,16 @@ command rigScaffDelete
 	put rigAnchor(tYesArray, tAnswerYes) into gData["yes"]
 
 	# BUILD VIEW ANCHOR
-	put sScaffBaseURI into tViewAnchor[1]
-	put "rigScaffView" into tViewAnchor[2]
+	put sScaffBaseURI into tViewAnchorA[1]
+	put "rigScaffView" into tViewAnchorA[2]
 	put "&lt; " & rigLangLangLine("scaff_view_all") into tViewLangLine
-	put rigAnchor(tViewAnchor, tViewLangLine) into gData["viewAnchor"]
+	put rigAnchor(tViewAnchorA, tViewLangLine) into gData["viewAnchor"]
 
 	# BUILD ADD ANCHOR
-	put sScaffBaseURI into tAddAnchor[1]
-	put "rigScaffAdd" into tAddAnchor[2]
+	put sScaffBaseURI into tAddAnchorA[1]
+	put "rigScaffAdd" into tAddAnchorA[2]
 	put rigLangLangLine("scaff_create_record") into tAddLangLine
-	put rigAnchor(tAddAnchor, tAddLangLine) into gData["addAnchor"]
+	put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
 
 	# LOAD VIEW FILES
 	get rigLoadView("header")
@@ -576,6 +619,8 @@ end rigScaffDelete
 ----------------------------------------------------------------------*/
 
 command rigScaffDoDelete
+  local tID, tPrimary, tURIarrayA, tSiteURL
+  
 	put rigFetchSegment(4) into tID
 
 	# FETCH THE PRIMARY KEY
@@ -585,9 +630,9 @@ command rigScaffDoDelete
 	rigDbWhere tPrimary, tID
 	get rigDbDelete(sScaffCurrentTable)
 
-	put sScaffBaseURI into tURIarray[1]
-	put "rigScaffView" into tURIarray[2]
-	put rigSiteURL(tURIarray) into tSiteURL
+	put sScaffBaseURI into tURIarrayA[1]
+	put "rigScaffView" into tURIarrayA[2]
+	put rigSiteURL(tURIarrayA) into tSiteURL
 
 	rigRedirect tSiteURL
 end rigScaffDoDelete
@@ -599,9 +644,6 @@ end rigScaffDoDelete
 
 
 
-
-
-
---| END OF Scaffolding.lc
---| Location:  ./system/scaffolding/Scaffolding.lc
+--| END OF Scaffolding.livecodescript
+--| Location:  ./system/scaffolding/Scaffolding.livecodescript
 ----------------------------------------------------------------------
