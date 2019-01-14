@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "assetHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,7 +23,7 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/assetHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/assetHelper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -37,21 +31,59 @@ end if
 
 
 
-# DECLARE VARIABLES
-local sImageFolder, sJavascriptFolder, sCSSfolder, sCacheBusterList
+global gRigA
 
-
-put "img" into sImageFolder
-put "js" into sJavascriptFolder
-put "css" into sCSSfolder
+local sImageFolder, sJavascriptFolder, sCSSfolder, sCacheBusterList, sStackInUse
 
 
 
 
 
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-19
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
 
-----------------------------------------------------------------------
---| FUNCTION rigOtherAssetURL
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # SET INITIAL VALUES
+      put "img" into sImageFolder
+      put "js" into sJavascriptFolder
+      put "css" into sCSSfolder
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigOtherAssetURL
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -59,19 +91,22 @@ put "css" into sCSSfolder
 --| Last Mod: 11-07-10
 --| Requires: rigFetchConfigItem(), _rigCbName()
 --|
---| Summary: General Asset Helper - Helps generate links to asset files of any sort. Asset type should
---|                    be the name of the folder they are stored in.
+--| Summary: General Asset Helper - Helps generate links to asset files of any sort.
+--|            Asset type should be the name of the folder they are stored in.
 --| 
---| Format:  rigOtherAssetURL(param1, param2, param3, param4)
+--| Format:  _rigOtherAssetURL(param1, param2, param3, param4)
 --|
---| Parameters: string <pAsset> the name of the file or asset, string <pType> the asset type (name of folder)
---|             string <pModule> optional module name
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--| Parameters: string <pAsset> the name of the file or asset, string <pType> the asset type (name of folder),
+--|               string <pModule> optional module name,
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigOtherAssetURL pAsset pType pModule pCacheBuster
+private function _rigOtherAssetURL pAsset pType pModule pCacheBuster
+  local tCacheBuster, tModulesPath, tBaseURL, tAssetsLoc, tDoCacheBusting
+  local tTempAssetsLoc, tAsset
+  
 	if pCacheBuster <> "" then
 		put pCacheBuster into tCacheBuster
 	else
@@ -114,7 +149,7 @@ function rigOtherAssetURL pAsset pType pModule pCacheBuster
 	put pType & "/" & tAsset after tAssetsLoc
 
 	return tAssetsLoc
-end rigOtherAssetURL
+end _rigOtherAssetURL
 
 
 
@@ -124,7 +159,7 @@ end rigOtherAssetURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigParseAssetHTML
 --|
 --| Author: rabit
@@ -140,9 +175,11 @@ end rigOtherAssetURL
 --| Parameters: array <pAttributes> attributes to be parsed
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigParseAssetHTML pAttributes
+private function _rigParseAssetHTML pAttributes
+  local tKey, tVal, tAttributeStr
+  
 	if pAttributes is an array then
 		repeat for each key tKey in pAttributes
 			put pAttributes[tKey] into tVal
@@ -159,44 +196,44 @@ end _rigParseAssetHTML
 
 
 
-----------------------------------------------------------------------
---| FUNCTION rigCssAssetURL
+/*----------------------------------------------------------------------
+--| FUNCTION _rigCssAssetURL
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 06-10-09
 --| Last Mod: 11-07-10
---| Requires: rigOtherAssetURL()
+--| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate CSS asset locations.
 --| 
---| Format:  rigCssAssetURL(param1, param2)
+--| Format:  _rigCssAssetURL(param1, param2)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, string <pModule> optional module name
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigCssAssetURL pAsset pModule pCacheBuster
-	return rigOtherAssetURL(pAsset, sCSSfolder, pModule, pCacheBuster)
-end rigCssAssetURL
-
-
+private function _rigCssAssetURL pAsset pModule pCacheBuster
+	return _rigOtherAssetURL(pAsset, sCSSfolder, pModule, pCacheBuster)
+end _rigCssAssetURL
 
 
 
 
 
 
-----------------------------------------------------------------------
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigCssAsset
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 06-10-09
 --| Last Mod: 11-07-10
---| Requires: _rigParseAssetHTML(), rigCssAssetURL()
+--| Requires: _rigParseAssetHTML(), _rigCssAssetURL()
 --|
 --| Summary: Generate css asset location html code.
 --| 
@@ -207,11 +244,13 @@ end rigCssAssetURL
 --|             bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCssAsset pAsset pAttributes pModule pCacheBuster
+  local tAttributeStr, tAssetUrl
+  
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
-	put rigCssAssetURL(pAsset, pModule, pCacheBuster) into tAssetUrl
+	put _rigCssAssetURL(pAsset, pModule, pCacheBuster) into tAssetUrl
 
 	return "<link href=" & quote & tAssetUrl & quote && "rel=" & quote & "stylesheet" & quote && "type=" & quote & "text/css" & quote && tAttributeStr && "/>"
 end rigCssAsset
@@ -228,21 +267,24 @@ end rigCssAsset
 --| Version:  1.2
 --| Created: 09-06-2011
 --| Last Mod: 02-02-2015
---| Requires: _rigParseAssetHTML(), rigFetchConfigItem, rigLogMessage, rigCssAssetURL
+--| Requires: _rigParseAssetHTML(), rigFetchConfigItem, rigLogMessage, _rigCssAssetURL
 --|
 --| Summary: Simple CSS preprocessor which dynamically generates CSS files using the
---|          gData array variable and a raw css file. File name prototype: <filename>.css.lc
+--|            gData array variable and a raw css file. File name prototype: <filename>.css.lc
 --| 
 --| Format:  rigDynamicCssAsset(param1, param2, param3, param4)
 --|
 --| Parameters: string <pRawCSS> the name of the raw css file to be processed, 
---|             array <pAttributes> optional extra attributes, string <pModule> optional module name
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--|               array <pAttributes> optional extra attributes, string <pModule> optional module name
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
+  local tAttributeStr, tCurrentItemDel, tCSS, tModulesPath, tBasePath
+  local tAssetsLoc, tRawCssPath, tCssPath, tCSSdata, tAssetUrl
+  
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
 	
 	# SET NAME OF CSS FILE TO BE GENERATED
@@ -258,7 +300,7 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
 		put "" into tModulesPath
 	end if
 	
-	put item 1 to -2 of gBASEPATH into tBasePath
+	put item 1 to -2 of gRigA["BASEPATH"] into tBasePath
 	put rigFetchConfigItem("assetsLocation") into tAssetsLoc
 
 	if tAssetsLoc is empty then
@@ -296,7 +338,7 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
 		rigLogMessage "error", "Raw CSS file" && quote & tRawCssPath & quote && "missing!"
 	end if
 	
-	put rigCssAssetURL(tCSS, pModule, pCacheBuster) into tAssetUrl
+	put _rigCssAssetURL(tCSS, pModule, pCacheBuster) into tAssetUrl
 
 	return "<link href=" & quote & tAssetUrl & quote && "rel=" & quote & "stylesheet" & quote && "type=" & quote & "text/css" & quote && tAttributeStr && "/>"
 end rigDynamicCssAsset
@@ -306,27 +348,27 @@ end rigDynamicCssAsset
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigImgAssetURL
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 06-10-09
 --| Last Mod: 11-07-10
---| Requires: rigOtherAssetURL()
+--| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate image asset locations.
 --| 
 --| Format:  rigImgAssetURL(param1, param2, param3)
 --|
---| Parameters: string <pAsset> the name of the file or asset, string <pModule> optional module name
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--| Parameters: string <pAsset> the name of the file or asset, string <pModule> optional module name,
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigImgAssetURL pAsset pModule pCacheBuster
-	return rigOtherAssetURL(pAsset, sImageFolder, pModule, pCacheBuster)
+	return _rigOtherAssetURL(pAsset, sImageFolder, pModule, pCacheBuster)
 end rigImgAssetURL
 
 
@@ -336,7 +378,7 @@ end rigImgAssetURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigImageAsset
 --|
 --| Author: rabit
@@ -350,13 +392,15 @@ end rigImgAssetURL
 --| Format:  rigImageAsset(param1, param2, param3, param4)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, array <pAttributes> optional extra attributes
---|             string <pModule> optional module name,
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--|               string <pModule> optional module name,
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigImageAsset pAsset pAttributes pModule pCacheBuster
+  local tAttributeStr, tAssetUrl
+  
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
 	put rigImgAssetURL(pAsset, pModule, pCacheBuster) into tAssetUrl
 
@@ -370,28 +414,30 @@ end rigImageAsset
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigJsAssetURL
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2009-10-06
 --| Last Mod: 2018-01-25
---| Requires: rigOtherAssetURL()
+--| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate JavaScript asset locations.
 --| 
 --| Format:  rigJsAssetURL(param1, param2, param3)
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
---|             string <pModule> optional module name
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--|               string <pModule> optional module name
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigJsAssetURL pAsset pModule pCacheBuster
-	put rigOtherAssetURL(pAsset, sJavascriptFolder, pModule, pCacheBuster) into tURL
+  local tURL
+  
+	put _rigOtherAssetURL(pAsset, sJavascriptFolder, pModule, pCacheBuster) into tURL
 	
 	if char 1 to 4 of tURL is "http" then
 		set the itemDel to "/"
@@ -419,23 +465,26 @@ end rigJsAssetURL
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
---|          the Google Apis CDN to serve an open-source JavaScript library you
---|          can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
---|          Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
---|          For a list of available libraries see:
---|          http://code.google.com/apis/libraries/devguide.html
+--|            the Google Apis CDN to serve an open-source JavaScript library you
+--|            can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
+--|            Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
+--|            For a list of available libraries see:
+--|            http://code.google.com/apis/libraries/devguide.html
 --| 
 --| Format:  rigJsAsset(param1, param2, param3)
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
---|             string <pModule> optional module name,
---|             bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names (optional) / 
---|					fallback asset in case a request to jsGoogleapis is not possible (optional), string <pAttribute> async and / or defer attribute (optional)
+--|               string <pModule> optional module name,
+--|               bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names
+--|              (optional) / fallback asset in case a request to jsGoogleapis is not possible (optional),
+--|					  string <pAttribute> async and / or defer attribute (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
+  local tAttribute, tAssetUrl, tLib, tVersion, tLibName, tObject, tScriptReference
+  
 	put empty into tAttribute
 	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
 		put " " & pAttribute into tAttribute
@@ -515,7 +564,7 @@ end rigJsAsset
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAddFavicon
 --|
 --| Author: rabit
@@ -529,12 +578,15 @@ end rigJsAsset
 --| Format:  rigAddFavicon(param1, param2)
 --|
 --| Parameters: string <pModule> optional module name,
---|             bool <pCacheBuster> compose cache buster file names (optional)
+--|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAddFavicon pModule pCacheBuster
+  local tCacheBuster, tAsset, tBase, tAssetsLoc, tModulesPath, tDoCacheBusting
+  local tTempAssetsLoc
+  
 	if pCacheBuster <> "" then
 		put pCacheBuster into tCacheBuster
 	else
@@ -587,14 +639,14 @@ end rigAddFavicon
 --| FUNCTION _rigCbName
 --|
 --| Author: rabit
---| Version:  1.2
---| Created:  11-07-2010
---| Last Mod: 07-10-2011
+--| Version:  1.3
+--| Created:  2010-07-11
+--| Last Mod: 2019-01-12
 --| Requires: --
 --|
 --| Summary: Includes the modification time with the name of a given file
---|          <name>-cb<lastModified>.<suffix>
---|          Note: A mod_rewrite RewriteRule is needed to redirect to the original file!
+--|            <name>-cb<lastModified>.<suffix>
+--|            Note: A mod_rewrite RewriteRule is needed to redirect to the original file!
 --| 
 --| Format:  _rigCbName(param1, param2, param3)
 --|
@@ -603,10 +655,13 @@ end rigAddFavicon
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigCbName pAsset pType pAssetsLoc
+private function _rigCbName pAsset pType pAssetsLoc
+  local tRootPath, tAssetFilter, tAssetPath, tFolder, tFileList, tInfo
+  local tLastMod, tAssetName, tAssetSuffix, tAssetCB
+  
 	# GET SERVER PATH TO THE ROOT DIRECTORY
 	set the itemDelimiter to "/"
-	put (item 1 to -2 of gBASEPATH) & "/" into tRootPath
+	put (item 1 to -2 of gRigA["BASEPATH"]) & "/" into tRootPath
 
 	# CHECK IF FILE IS NESTED IN FOLDERS
 	put "" into tAssetFilter
@@ -620,9 +675,7 @@ function _rigCbName pAsset pType pAssetsLoc
 	put tRootPath & pAssetsLoc & "/" & pType & "/" & tAssetPath into tFolder
 	
 	# GET FILE LIST OF FOLDER
-	put the directory into tOldFolder
-	set the directory to tFolder
-	put urldecode(the detailed files) into tFileList
+  put urldecode(files(tFolder, "detailed")) into tFileList
 
 	# GET FILE INFORMATION
 	if tAssetFilter <> "" then
@@ -636,8 +689,6 @@ function _rigCbName pAsset pType pAssetsLoc
 
 	# GET TIME OF LAST MODIFICATION
 	put item 5 of tInfo into tLastMod
-
-	set the directory to tOldFolder
 
 	set the itemDelimiter to "."
 
@@ -664,22 +715,32 @@ end _rigCbName
 --| Created: 05-10-2011
 --| Last Mod: 21-03-2014
 --| Requires: rigTrim() (in Common.lc), rigLoadHelper, rigGetFileNames(),
---|					  rigWriteFile(), rigHexDigest() (in Common.lc), rigGetFileInfo()
+--|					rigWriteFile(), rigHexDigest() (in Common.lc), rigGetFileInfo()
 --|
 --| Summary: Write a manifest file used to store resources in the HTML5 application cache.
 --| 
 --| Format:  rigWriteManifest param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pResourcesDir> root relative path to resources to be cached,
---| 						string <pManifestName> name of manifest file, bool <pUseAbsoluteURI>
---| 						whether to write absolute URIs (optional), mixed <pResourcesOnlineOnly> the NETWORK
---| 						section (optional), array <pFallbackResources> the FALLBACK section (optional),
---| 						string <pDirToIgnore> the directory containing files to be excluded from caching (optional)
+--| 						 string <pManifestName> name of manifest file, bool <pUseAbsoluteURI>
+--| 						 whether to write absolute URIs (optional), mixed <pResourcesOnlineOnly> the NETWORK
+--| 						 section (optional), array <pFallbackResources> the FALLBACK section (optional),
+--| 						 string <pDirToIgnore> the directory containing files to be excluded from caching (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
 command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesOnlineOnly pFallbackResources pDirToIgnore
+  local tResourcesDir, tDirToIgnore, tUseAbsoluteURI, tKey, tResourcesOnlineOnly
+  local tFallbackResources, tFallbackOnlineResourcesList, tPathTranslated
+  local tDoCacheBusting, tURLbase, tFileNamesArray, tDirNameOffset
+  local tManifest, tNETWORKitems, tCurrentVal, tFile, tAbsoulteFilePath
+  local tInfoArray, tLastMod, tAsset, tIsFallbackOnlineResource
+  local tAssetName, tAssetSuffix, tAssetCB, tAddToCacheList, tOfflineResource
+  local tOnlineResource, tOnlineAsset, tOnlineResourceInfoArray, tOnlineAssetLastMod
+  local tOnlineAssetName, tOnlineAssetSuffix, tOnlineAssetCB, tModDates
+  local tProcessedFallbackItems, tNetworkWildcardSet
+  
 	# PREPARE PARAMETER VALUES
 	put rigTrim(pResourcesDir, "/") into tResourcesDir
 	put rigTrim(pDirToIgnore, "/") into tDirToIgnore
@@ -733,6 +794,7 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 	# START BUILDING MANIFEST
 	put "CACHE MANIFEST" & return into tManifest
 	put "" into tNETWORKitems
+  put "" into tNetworkWildcardSet
 
 	repeat for each key tKey in tFileNamesArray
 		put tFileNamesArray[tKey] into tCurrentVal
@@ -885,7 +947,6 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 		end if
 	end repeat
 	
-	
 	# COMPLEMENT FALLBACK LIST
 	if pFallbackResources is an array then
 		if tProcessedFallbackItems is not empty then
@@ -948,6 +1009,6 @@ end rigWriteManifest
 
 
 
---| END OF assetHelper.lc
---| Location:  ./system/helpers/assetHelper.lc
+--| END OF assetHelper.livecodescript
+--| Location:  ./system/helpers/assetHelper.livecodescript
 ----------------------------------------------------------------------
