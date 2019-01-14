@@ -1,4 +1,4 @@
-<?rev
+<?lc
 # THE variablenames FUNCTION OUTSIDE HANDLERS RETURNS NOTHING, YIELDS A SERVER ERROR IN revIgniter.
 
 -- if "gBASEPATH" is not among the items of line 4 of the variablenames then
@@ -7,9 +7,7 @@
 # HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gBASEPATH IS TREATED AS A LOCAL VARIABLE
 # CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gBASEPATH IS 2.
 
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
+if gRigA is not an array then
 	put "No direct script access allowed."
 	exit to top
 end if
