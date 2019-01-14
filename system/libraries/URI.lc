@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "URI"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,25 +24,64 @@ end if
 # @subpackage	Libraries
 # @category	  URI
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/uri.html
+# @link		    https://revigniter.com/userGuide/libraries/uri.html
 ##
 
-# LOGGING
-rigLogMessage "debug", "URI Library Loaded"
-
-# DECLARE VARIABLES
-global gSegments, gRSegments
-
-local sUriString, sKeyVal
 
 
-rigLoadLibrary "Config"
+
+global gRigA, gConfig
+
+local sUriString, sKeyVal, sStackInUse
 
 
 
 
 
-----------------------------------------------------------------------
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-06
+ --| Last Mod: --
+ --| Requires: rigLogMessage, rigLoadLibrary
+ --|
+ --| Summary:  Run security check, set initial values and load Config library.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then 
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "URI Library Loaded"
+      end if
+      
+      rigLoadLibrary "Config"
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION _rigFetchUriString
 --|
 --| Author: rabit
@@ -64,9 +97,11 @@ rigLoadLibrary "Config"
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigFetchUriString
+  local tUriString, tPath, tUri
+  
 	if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO" then
 		# IF THE URL HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
 		# BUILD THE URI STRING FROM THE ZERO INDEX OF THE $_GET ARRAY.
@@ -110,7 +145,7 @@ function _rigFetchUriString
 			put $_SERVER["PATH_INFO"] into tPath
 			# TRIM SLASHES
 			put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
-			if tPath <> "" and tPath <> ("/" & gSELF) then
+			if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
 				put tPath into sUriString
 
 				# NEEDED IF REVIGNITER IS PLACED IN A SUBFOLDER OF ROOT
@@ -147,7 +182,7 @@ function _rigFetchUriString
 			put $_SERVER["ORIG_PATH_INFO"] into tPath
 			# TRIM SLASHES
 			put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
-			if tPath <> "" and tPath <> ("/" & gSELF) then
+			if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
 				replace $_SERVER["SCRIPT_NAME"] with "" in tPath
 				put tPath into sUriString
 
@@ -202,7 +237,7 @@ end _rigFetchUriString
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigParseRequestUri
 --|
 --| Author: rabit
@@ -222,9 +257,11 @@ end _rigFetchUriString
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigParseRequestUri
+  local tRequestUri, tFcpath, tParsedUri, tCount, i
+  
 	if $_SERVER["REQUEST_URI"] is empty then
 		return ""
 	end if
@@ -235,11 +272,11 @@ function rigParseRequestUri
 		put char 2 to -1 of tRequestUri into tRequestUri
 	end if
 
-	if tRequestUri is "" or tRequestUri is gSELF then
+	if tRequestUri is "" or tRequestUri is gRigA["SELF"] then
 		return ""
 	end if
 
-	put gFCPATH into tFcpath
+	put gRigA["FCPATH"] into tFcpath
 	if tRequestUri contains "?" then
 		put tFcpath & "?" into tFcpath
 	end if
@@ -292,6 +329,9 @@ end rigParseRequestUri
 ----------------------------------------------------------------------*/
 
 function rigUriAdjusted pURIstring
+  local tURIstring, tBaseURL, tRegEx, tMatchStart, tMatchEnd, tBytesToRemoveFromURI
+  local tIndexPage
+  
 	put pURIstring into tURIstring
 
 	# GET BASE URL
@@ -324,7 +364,7 @@ function rigUriAdjusted pURIstring
 	# GET NAME OF INDEX PAGE
 	put rigFetchConfigItem("indexPage") into tIndexPage
 	if tIndexPage is empty then
-		put "index" & gEXT into tIndexPage
+		put "index" & gRigA["EXT"] into tIndexPage
 	end if
 
 	if (tURIstring is "/" & tIndexPage) or (tURIstring is "/" & tIndexPage & "/") then
@@ -361,6 +401,8 @@ end rigUriAdjusted
 ----------------------------------------------------------------------*/
 
 function _rigFilterUri pStr
+  local tBad, tGood, i, tStr
+  
 	if pStr <> "" and rigFetchConfigItem("permittedUriChars") <> "" and rigFetchConfigItem("enableQueryStrings") is FALSE then
 		if matchchunk(pStr, "(?i)^[" & rigFetchConfigItem("permittedUriChars") & "]+$") is FALSE then
 			# CHARS NOT PERMITTED FOUND
@@ -383,7 +425,7 @@ end _rigFilterUri
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigRemoveUrlSuffix
 --|
 --| Author: rabit
@@ -399,9 +441,11 @@ end _rigFilterUri
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command _rigRemoveUrlSuffix
+  local tCharCount
+  
 	if rigFetchConfigItem("urlSuffix") <> "" then
 		 if matchchunk(sUriString, (rigFetchConfigItem("urlSuffix") & "$")) then
          		put the number of chars of rigFetchConfigItem("urlSuffix") into tCharCount
@@ -423,7 +467,7 @@ end _rigRemoveUrlSuffix
 --| Requires: rigTrim(), _rigFilterUri(), rigUriString()
 --|
 --| Summary:  Explode the URI Segments. The individual segments will
---|                     be stored in the gSegments array.
+--|             be stored in the gRigA["segments"] array.
 --| 
 --| Format:  _rigExplodeSegments
 --|
@@ -433,7 +477,9 @@ end _rigRemoveUrlSuffix
 ----------------------------------------------------------------------*/
 
 command _rigExplodeSegments
-	put the number of lines in the keys of gSegments into tNumKeys
+  local tNumKeys, tTempStr, tTempStr1, tTempStr2
+  
+	put the number of lines in the keys of gRigA["segments"] into tNumKeys
 	
 	# SEGMENT BASED URLs
 	if gConfig["enableQueryStrings"] is not TRUE then
@@ -452,7 +498,7 @@ command _rigExplodeSegments
 			put _rigFilterUri(tTempStr) into tTempStr
 			if tTempStr <> "" then
 				add 1 to tNumKeys
-				put tTempStr into gSegments[tNumKeys]
+				put tTempStr into gRigA["segments"][tNumKeys]
 			end if
 		end repeat
 
@@ -483,7 +529,7 @@ command _rigExplodeSegments
 
 		if tTempStr <> "" then
 			add 1 to tNumKeys
-			put tTempStr into gSegments[tNumKeys]
+			put tTempStr into gRigA["segments"][tNumKeys]
 		end if
 	end repeat
 end _rigExplodeSegments
@@ -491,7 +537,7 @@ end _rigExplodeSegments
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchSegment
 --|
 --| Author: rabit
@@ -507,9 +553,11 @@ end _rigExplodeSegments
 --| Parameters: integer <pSegmentNum>, string <pNoResult>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchSegment pSegmentNum pNoResult
+  local tNoResult, tURIstring, tKeyVal, tVal
+  
 	if pNoResult is "" then
 		put FALSE into tNoResult
 	else
@@ -518,9 +566,9 @@ function rigFetchSegment pSegmentNum pNoResult
 
 	if gConfig["enableQueryStrings"] is not TRUE then
 		# SEGMENT BASED URLs
-		--if gSegments[pSegmentNum] is not empty then
-		if pSegmentNum is among the keys of gSegments then
-			return gSegments[pSegmentNum]
+		--if gRigA["segments"][pSegmentNum] is not empty then
+		if pSegmentNum is among the keys of gRigA["segments"] then
+			return gRigA["segments"][pSegmentNum]
 		else
 			return tNoResult
 		end if
@@ -548,7 +596,7 @@ end rigFetchSegment
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchRsegment
 --|
 --| Author: rabit
@@ -566,9 +614,11 @@ end rigFetchSegment
 --| Parameters: integer <pSegmentNum>, string <pNoResult>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchRsegment pSegmentNum pNoResult
+  local tNoResult, tURIstring, tKeyVal, tVal
+  
 	if pNoResult is "" then
 		put FALSE into tNoResult
 	else
@@ -577,8 +627,8 @@ function rigFetchRsegment pSegmentNum pNoResult
 
 	if gConfig["enableQueryStrings"] is not TRUE then
 		# SEGMENT BASED URLs
-		if gRSegments[pSegmentNum] is not empty then
-			return gRSegments[pSegmentNum]
+		if gRigA["rSegments"][pSegmentNum] is not empty then
+			return gRigA["rSegments"][pSegmentNum]
 		else
 			return tNoResult
 		end if
@@ -639,6 +689,8 @@ end rigFetchRsegment
 ----------------------------------------------------------------------*/
 
 function rigUriToAssoc pN pDefault
+  local tN
+  
 	if pN is empty then
 		put 3 into tN
 	else
@@ -675,6 +727,8 @@ end rigUriToAssoc
 ----------------------------------------------------------------------*/
 
 function rigRuriToAssoc pN pDefault
+  local tN
+  
 	if pN is empty then
 		put 3 into tN
 	else
@@ -710,7 +764,10 @@ end rigRuriToAssoc
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigUriToAssoc pN pDefault pWhich
+private function _rigUriToAssoc pN pDefault pWhich
+  local tN, tWhich, tTotalSegments, tSegmentArray, tVal, tRetval, tSegmNum, tK
+  local tSlicedArray, tIncr, tI, tLastVal, tKeyValPair
+  
 	if pN is empty then
 		put 3 into tN
 	else
@@ -843,7 +900,7 @@ end _rigUriToAssoc
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAssocToURI
 --|
 --| Author: rabit
@@ -859,9 +916,11 @@ end _rigUriToAssoc
 --| Parameters: array <pArray> an associative array of key/values
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAssocToURI pArray
+  local tVal, tKey, tURI
+  
 	repeat for each key tKey in pArray
          	put pArray[tKey] into tVal
          
@@ -887,7 +946,7 @@ end rigAssocToURI
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSlashSegment
 --|
 --| Author: rabit
@@ -903,9 +962,11 @@ end rigAssocToURI
 --| Parameters: integer <pN>, string <pWhere>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSlashSegment pN pWhere
+  local tWhere
+  
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -922,7 +983,7 @@ end rigSlashSegment
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSlashRsegment
 --|
 --| Author: rabit
@@ -938,9 +999,11 @@ end rigSlashSegment
 --| Parameters: integer <pN>, string <pWhere>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSlashRsegment pN pWhere
+  local tWhere
+  
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -957,7 +1020,7 @@ end rigSlashRsegment
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSlashSegment
 --|
 --| Author: rabit
@@ -973,9 +1036,11 @@ end rigSlashRsegment
 --| Parameters: integer <pN>, string <pWhere>, string <pWhich>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigSlashSegment pN pWhere pWhich
+private function _rigSlashSegment pN pWhere pWhich
+  local tWhere, tWhich, tTrailing, tLeading, tSegment
+  
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -1017,7 +1082,7 @@ end _rigSlashSegment
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSegmentArray
 --|
 --| Author: rabit
@@ -1033,10 +1098,10 @@ end _rigSlashSegment
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSegmentArray
-	return gSegments
+	return gRigA["segments"]
 end rigSegmentArray
 
 
@@ -1046,7 +1111,7 @@ end rigSegmentArray
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigRSegmentArray
 --|
 --| Author: rabit
@@ -1062,10 +1127,10 @@ end rigSegmentArray
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigRSegmentArray
-	return gRSegments
+	return gRigA["rSegments"]
 end rigRSegmentArray
 
 
@@ -1074,7 +1139,7 @@ end rigRSegmentArray
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigTotalSegments
 --|
 --| Author: rabit
@@ -1090,10 +1155,10 @@ end rigRSegmentArray
 --| Parameters: --
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigTotalSegments
-	return the number of lines in the keys of gSegments
+	return the number of lines in the keys of gRigA["segments"]
 end rigTotalSegments
 
 
@@ -1102,7 +1167,7 @@ end rigTotalSegments
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigTotalRsegments
 --|
 --| Author: rabit
@@ -1118,10 +1183,10 @@ end rigTotalSegments
 --| Parameters: --
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigTotalRsegments
-	return the number of lines in the keys of gRSegments
+	return the number of lines in the keys of gRigA["rSegments"]
 end rigTotalRsegments
 
 
@@ -1130,7 +1195,7 @@ end rigTotalRsegments
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigUriString
 --|
 --| Author: rabit
@@ -1146,7 +1211,7 @@ end rigTotalRsegments
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigUriString
 	if sUriString is empty then
@@ -1162,7 +1227,7 @@ end rigUriString
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigRuriString
 --|
 --| Author: rabit
@@ -1178,9 +1243,11 @@ end rigUriString
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigRuriString
+  local tRsegments
+  
 	put rigRSegmentArray() into tRsegments
 	combine tRsegments using "/"
 
@@ -1194,6 +1261,6 @@ end rigRuriString
 
 
 
---| END OF URI.lc
---| Location:  ./system/libraries/URI.lc
+--| END OF URI.livecodescript
+--| Location:  ./system/libraries/URI.livecodescript
 ----------------------------------------------------------------------

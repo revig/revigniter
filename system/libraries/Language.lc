@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Language"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,19 +23,55 @@ end if
 # @subpackage	Libraries
 # @category	  Language
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/language.html
+# @link		    https://revigniter.com/userGuide/libraries/language.html
 ##
 
 
-# LOGGING
-rigLogMessage "debug", "Language Library Loaded"
 
 
-# DECLARE LANGUAGE VARIABLE
-global gLang
+global gRigA, gLang
 
-# DECLARE LANGUAGE FILE IS LOADED ARRAY VARIABLE
-local sLangIsLoaded
+local sLangIsLoaded, sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-11
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Language Library Loaded"
+      end if
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
 
@@ -70,6 +100,10 @@ local sLangIsLoaded
 ----------------------------------------------------------------------*/
 
 function rigLangLoadLang pLangFiles pIdiom pModule pReturn
+  local tLangIsLoadedKeyNum, tLangFiles, tModulePath, tFilePrefix
+  local tLangFile, tLangFileIsInArray, tDefaultLang, tIdiom, tExtLang
+  local tSysLang
+  
 	if sLangIsLoaded is an array then
 		put the number of lines in the keys of sLangIsLoaded into tLangIsLoadedKeyNum
 	else
@@ -86,7 +120,7 @@ function rigLangLoadLang pLangFiles pIdiom pModule pReturn
   
   # CHECK IF WE ARE DEALING WITH A REQUEST OF A MODULE
   if pModule <> empty then
-    # GET PATH TO models FOLDER OF MODULE RELATIVE TO gAPPPATH
+    # GET PATH TO models FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
     put "modules/" & pModule & "/" into tModulePath
     put pModule & "/" into tFilePrefix
   end if
@@ -94,7 +128,7 @@ function rigLangLoadLang pLangFiles pIdiom pModule pReturn
   repeat for each element tLangFile in tLangFiles
     put toLower(tLangFile) into tLangFile
     replace "Lang" with "" in tLangFile
-    replace gEXT with "" in tLangFile
+    replace gRigA["EXT"] with "" in tLangFile
     put tLangFile & "Lang" into tLangFile
 
     # IS THE LANG FILE ALREADY LOADED
@@ -123,14 +157,14 @@ function rigLangLoadLang pLangFiles pIdiom pModule pReturn
       put pIdiom into tIdiom
     end if
 
-    put gAPPPATH & tModulePath & "language/" & tIdiom & "/" & tLangFile & gEXT into tExtLang
-    put gBASEPATH & "language/" & tIdiom & "/" & tLangFile & gEXT into tSysLang
+    put gRigA["APPPATH"] & tModulePath & "language/" & tIdiom & "/" & tLangFile & gRigA["EXT"] into tExtLang
+    put gRigA["BASEPATH"] & "language/" & tIdiom & "/" & tLangFile & gRigA["EXT"] into tSysLang
 
     # DETERMINE WHERE THE LANGUAGE FILE IS AND LOAD IT
     if there is a file tExtLang then
-      require tExtLang
+      _rigRequire tExtLang
     else if there is a file tSysLang then
-      require tSysLang
+      _rigRequire tSysLang
     else
       rigShowError "Unable to load the requested language file: language/" & tIdiom & "/" & tLangFile
     end if
@@ -159,7 +193,7 @@ end rigLangLoadLang
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigLangLangLine
 --|
 --| Author: rabit
@@ -175,9 +209,11 @@ end rigLangLoadLang
 --| Parameters: string <pLine> the language line
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigLangLangLine pLine
+  local tLine
+  
 	if pLine is empty or gLang[pLine] is empty then
 		put FALSE into tLine
 		return tLine
@@ -193,6 +229,6 @@ end rigLangLangLine
 
 
 
---| END OF Language.lc
---| Location:  ./system/libraries/Language.lc
+--| END OF Language.livecodescript
+--| Location:  ./system/libraries/Language.livecodescript
 ----------------------------------------------------------------------

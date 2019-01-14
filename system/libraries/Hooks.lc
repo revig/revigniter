@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Hooks"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,16 +24,59 @@ end if
 # @subpackage	Libraries
 # @category	  Libraries
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/encryption.html
+# @link		    https://revigniter.com/userGuide/libraries/encryption.html
 ##
 
-#LOGGING
-rigLogMessage "debug", "Hooks Library Loaded"
 
-# DECLARE VARIABLES
-global gHooks
 
-local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers, sHooksfiles
+
+
+global gRigA, gHooksA
+
+local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers, sStackInUse, sHooksfiles
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-08
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigInitHooksPrefs
+ --|
+ --| Summary:  Run security check and initial routines.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Hooks Library Loaded"
+      end if
+   
+      # CALL INITIAL HANDLERS
+      _rigInitHooksPrefs
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
 
@@ -65,24 +102,24 @@ local sHooksEnabled, sInProgress, sLoadedHooks, sHooksHandlers, sHooksfiles
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigInitHooksPrefs
-	rigLoadLibrary "Config"
+private command _rigInitHooksPrefs
+  start using stack (gRigA["BASEPATH"] & "libraries/Config.livecodescript")
 	# IF HOOKS ARE NOT ENABLED IN THE CONFIG FILE
 	# THERE IS NOTHING ELSE TO DO
 	if rigFetchConfigItem("enableHooks") is FALSE then
 		exit _rigInitHooksPrefs
 	end if
-	
+
 	# GRAB THE "HOOKS" DEFINITION FILE.
 	# IF THERE ARE NO HOOKS, WE'RE DONE.
 
 	try
-		require gAPPPATH & "config/hooks" & gEXT
+    _rigRequire gRigA["APPPATH"] & "config/hooks" & gRigA["EXT"]
 	catch err
-		rigLogMessage "error", "An error occured while trying to include configuration file:" && "hooks" & gEXT
+    rigLogMessage "error", "An error occured while trying to include configuration file:" && "hooks" & gRigA["EXT"]
 	end try
 
-	if gHooks is not an array then
+	if gHooksA is not an array then
 		exit _rigInitHooksPrefs
 	end if
 
@@ -93,7 +130,7 @@ end _rigInitHooksPrefs
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCallHook
 --|
 --| Author: rabit
@@ -109,24 +146,26 @@ end _rigInitHooksPrefs
 --| Parameters: string <pWhich>the hook name
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCallHook pWhich
-	if sHooksEnabled is not TRUE or (gHooks is empty and gHooks is not an array) then
+  local tHookResultTemp, tHookResult
+
+	if sHooksEnabled is not TRUE or (gHooksA is empty and gHooksA is not an array) then
 		return FALSE
 	end if
 
 	put "" into tHookResultTemp
 	
-	if gHooks[pWhich][1] is an array then
-		repeat for each key tKey in gHooks[pWhich]
-			put _rigRunHook(gHooks[pWhich][tKey]) into tHookResult
+	if gHooksA[pWhich][1] is an array then
+		repeat for each key tKey in gHooksA[pWhich]
+			put _rigRunHook(gHooksA[pWhich][tKey]) into tHookResult
 			if tHookResult is FALSE then
 				put FALSE into tHookResultTemp
 			end if
 		end repeat
 	else
-		put _rigRunHook(gHooks[pWhich]) into tHookResult
+		put _rigRunHook(gHooksA[pWhich]) into tHookResult
 	end if
 
 	if tHookResultTemp is not empty then
@@ -157,7 +196,9 @@ end _rigCallHook
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigRunHook pData
+private function _rigRunHook pData
+  local tFilename, tFilepath, tLib, tHandler, tParams, tIsFunction
+
 	if pData is not an array then
 		return FALSE
 	end if 
@@ -177,7 +218,7 @@ function _rigRunHook pData
 
 	put pData["filename"] into tFilename
 
-	put gAPPPATH & pData["filepath"] & "/" & pData["filename"] into tFilepath
+	put gRigA["APPPATH"] & pData["filepath"] & "/" & pData["filename"] into tFilepath
 
 	if there is a file tFilepath then
 	else
@@ -213,7 +254,7 @@ function _rigRunHook pData
 		if itemOffset(tLib, sLoadedHooks) is 0 then
 
 			if itemOffset(tFilename, sHooksfiles) is 0 then
-				require tFilepath
+         start using stack tFilepath
 
 				if sHooksfiles is empty then
 					put tFilename into sHooksfiles
@@ -232,9 +273,8 @@ function _rigRunHook pData
 	else
 		if itemOffset(tHandler, sHooksHandlers) is 0 then
 
-
 			if itemOffset(tFilename, sHooksfiles) is 0 then
-				require tFilepath
+         start using stack tFilepath
 
 				if sHooksfiles is empty then
 					put tFilename into sHooksfiles
@@ -242,7 +282,6 @@ function _rigRunHook pData
 					put comma & tFilename after sHooksfiles
 				end if
 			end if
-
 
 			if sHooksHandlers is empty then
 				put tHandler into sHooksHandlers
@@ -273,9 +312,10 @@ function _rigRunHook pData
 end _rigRunHook
 
 
-# CALL INITIAL HANDLERS
-_rigInitHooksPrefs
 
---| END OF Hooks.lc
---| Location:  ./system/libraries/Hooks.lc
+
+
+
+--| END OF Hooks.livecodescript
+--| Location:  ./system/libraries/Hooks.livecodescript
 ----------------------------------------------------------------------

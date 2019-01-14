@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Config"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,16 +24,58 @@ end if
 # @subpackage	Libraries
 # @category	  Libraries
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/config.html
+# @link		    https://revigniter.com/userGuide/libraries/config.html
 ##
 
 
-# LOGGING
-rigLogMessage "debug", "Config Library Loaded"
 
-# DECLARE CONFIGURATION FILE IS LOADED ARRAY VARIABLE
-local sConfigIsLoaded
 
+global gRigA, gConfig
+
+local sConfigIsLoaded, sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-11-30
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _setBaseURL
+ --|
+ --| Summary:  Run security check and initial routines.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Config Library Loaded"
+      end if
+   
+      # CALL INITIAL HANDLERS
+      _setBaseURL
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
 
@@ -63,7 +99,9 @@ local sConfigIsLoaded
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _setBaseURL
+private command _setBaseURL
+  local tHTTPhost, tHTTPs, tRequestURI, tBaseURL, tQueryString, tQueryOffset
+  
 	if rigFetchConfigItem("baseUrl") is empty then
 
 		put $_SERVER["HTTP_HOST"] into tHTTPhost
@@ -124,6 +162,9 @@ end _setBaseURL
 ----------------------------------------------------------------------*/
 
 function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
+  local tConfigIsLoadedKeyNum, tConfigFileName, tIsInConfigArray, tModulePath, tFilepath
+  local tCurrentConfigItemNum, tNewConfigItemNum, tSectionArray
+  
 	if sConfigIsLoaded is an array then
 		put the number of lines in the keys of sConfigIsLoaded into tConfigIsLoadedKeyNum
 	else
@@ -148,10 +189,10 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
     # REMOVE SUFFIX
     if pModule is empty then
       put pConfigFile into tConfigFileName
-      replace gEXT with "" in tConfigFileName     
+      replace ".livecodescript" with "" in tConfigFileName     
     else
       put pModule & "/" & pConfigFile into tConfigFileName
-      replace gEXT with "" in tConfigFileName
+      replace ".livecodescript" with "" in tConfigFileName
     end if
   end if -- if pConfigFile is empty then
 
@@ -170,20 +211,21 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 
   # CHECK IF WE ARE DEALING WITH A CONFIG FILE OF A MODULE
   if pModule <> empty then
-    # GET PATH TO config FOLDER OF MODULE RELATIVE TO gAPPPATH
+    # GET PATH TO config FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
     put "modules/" & pModule & "/" into tModulePath
   end if
 
 	# CHECK IF FILE EXISTS
   set the itemDel to "/"
-	put gAPPPATH & tModulePath & "config/" & item -1 of tConfigFileName & gEXT into tFilepath
+	-- put gRigA["APPPATH"] & tModulePath & "config/" & item -1 of tConfigFileName & ".livecodescript" into tFilepath
+  put gRigA["APPPATH"] & tModulePath & "config/" & item -1 of tConfigFileName & gRigA["EXT"] into tFilepath
   
 	if there is a file tFilepath then
 	else
 		if pFailGracefully is TRUE then
 			return FALSE
 		else
-			rigShowError "The configuration file" && item -1 of tConfigFileName & gEXT && "does not exist."
+			rigShowError "The configuration file" && item -1 of tConfigFileName & ".livecodescript" && "does not exist."
 		end if
 	end if
 
@@ -191,11 +233,13 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
     if pModule <> empty then
       put the number of lines in the keys of gConfig[pModule] into tCurrentConfigItemNum
-      require tFilepath
+      -- start using stack tFilepath
+      _rigRequire tFilepath
       put the number of lines in the keys of gConfig[pModule] into tNewConfigItemNum
     else
       put the number of lines in the keys of gConfig into tCurrentConfigItemNum
-      require tFilepath
+      -- start using stack tFilepath
+      _rigRequire tFilepath
       put the number of lines in the keys of gConfig into tNewConfigItemNum
     end if
   
@@ -203,13 +247,14 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && item -1 of tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & ".livecodescript" && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 
 	else -- ARRAY IS USED TO AVOID NAME COLLISIONS
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
-		require tFilepath
+    -- start using stack tFilepath
+    _rigRequire tFilepath
     
     if pModule <> empty then
       put gConfig[pModule] into tSectionArray
@@ -221,7 +266,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && item -1 of tConfigFileName & gEXT && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & ".livecodescript" && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 	end if
@@ -231,9 +276,9 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   put tConfigFileName into sConfigIsLoaded[tConfigIsLoadedKeyNum]
 
   if pModule <> empty then
-    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & gEXT
+    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & ".livecodescript"
   else
-    rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & gEXT
+    rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & ".livecodescript"
   end if
   
 	return TRUE
@@ -246,7 +291,7 @@ end rigLoadConfigFile
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchConfigItem
 --|
 --| Author: rabit
@@ -262,9 +307,11 @@ end rigLoadConfigFile
 --| Parameters: string <pItem> the config item name, string <pIndex> the index name
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchConfigItem pItem pIndex
+  local tPref
+  
 	if pIndex is empty then
 		if pItem is not among the keys of gConfig then
 			return FALSE
@@ -292,7 +339,7 @@ end rigFetchConfigItem
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSlashItem
 --|
 --| Author: rabit
@@ -308,9 +355,11 @@ end rigFetchConfigItem
 --| Parameters: string <pItem> the config item name
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSlashItem pItem
+  local tPref
+  
 	put rigFetchConfigItem(pItem) into tPref
 
 	if tPref is FALSE then
@@ -337,7 +386,7 @@ end rigSlashItem
 --| Version:  1.6
 --| Created: 2009-07-28
 --| Last Mod: 2017-06-27
---| Requires: rigSlashItem(), rigFetchConfigItem(), rigNumToCodepoint()
+--| Requires: rigSlashItem(), rigFetchConfigItem()
 --|
 --| Summary: Site URL
 --| 
@@ -349,6 +398,9 @@ end rigSlashItem
 ----------------------------------------------------------------------*/
 
 function rigSiteURL pURI
+  local tURI, tStandardURLs, tConfigValue, tSuffix, tRegEx, tFoundString, tC, tM
+  local tQueryString, tCurrentKeyNum, tSegment, tKeyNotUsed, tKey, tPrefix
+  
   put pURI into tURI
   if tURI is an array then
     combine tURI using "/"
@@ -369,7 +421,7 @@ function rigSiteURL pURI
         
     put "^/*(.+?)/*$" into tRegEx
     
-	  put empty into tFoundString -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7  
+	  put empty into tFoundString -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7  
     if matchText(tURI,tRegEx,tFoundString) is TRUE then
       put tFoundString into tURI
     end if
@@ -407,7 +459,7 @@ function rigSiteURL pURI
               put FALSE into tKeyNotUsed
                     
               repeat until tKeyNotUsed is TRUE
-                put rigNumToCodepoint(tCurrentKeyNum) into tKey
+                put numToCodepoint(tCurrentKeyNum) into tKey
                 if (tKey is not tC) and (tKey is not tM) then
                   put TRUE into tKeyNotUsed
                 else
@@ -447,7 +499,7 @@ end rigSiteURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigSystemURL
 --|
 --| Author: rabit
@@ -463,12 +515,12 @@ end rigSiteURL
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigSystemURL
 	set the itemDel to "/"
 
-	return (item -1 of gBASEPATH) & "/"
+	return (item -1 of gRigA["BASEPATH"]) & "/"
 end rigSystemURL
 
 
@@ -509,13 +561,6 @@ end rigSetConfigItem
 
 
 
-# CALL INITIAL HANDLERS
-_setBaseURL
-
-
-
-
-
---| END OF Config.lc
---| Location:  ./system/libraries/Config.lc
+--| END OF Config.livecodescript
+--| Location:  ./system/libraries/Config.livecodescript
 ----------------------------------------------------------------------

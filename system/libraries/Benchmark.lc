@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Benchmark"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -31,25 +25,57 @@ end if
 # @subpackage	Libraries
 # @category	  Libraries
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/benchmark.html
+# @link		    https://revigniter.com/userGuide/libraries/benchmark.html
 ##
 
 
-# DECLARE ELAPSED TIME VARIABLE
-global g_ElapsedTime_
+
+global gRigA, gMarkerA, g_ElapsedTime_
 
 # DECLARE MEMORY USAGE VARIABLE (CURRENTLY NOT USED)
 -- global g_MemoryUsage_
 
-# DECLARE MARKER ARRAY VARIABLE
-local sMarker 
+local sStackInUse
 
 
 
 
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-06
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then 
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
-----------------------------------------------------------------------
+
+
+/*----------------------------------------------------------------------
 --| COMMAND rigTimeMark
 --|
 --| Author: rabit
@@ -66,10 +92,10 @@ local sMarker
 --| Parameters: string <pName>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigTimeMark pName
-	put the long seconds into sMarker[pName]
+	put the long seconds into gMarkerA[pName]
 end rigTimeMark
 
 
@@ -77,7 +103,7 @@ end rigTimeMark
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigElapsedTime
 --|
 --| Author: rabit
@@ -97,19 +123,21 @@ end rigTimeMark
 --| Parameters: string <pPoint1>, string <pPoint2>, integer <pDecimals>
 --|
 --| Return: float
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigElapsedTime pPoint1 pPoint2 pDecimals
+  local tDecimals, tPoint1Time, tPoint2Time, tElapsedSeconds
+  
 	if pPoint1 is empty then
 		return "[[g_ElapsedTime_]]"
 	end if
 
-	if sMarker[pPoint1] is empty then
+	if gMarkerA[pPoint1] is empty then
 		return ""
 	end if
 
-	if sMarker[pPoint2] is empty then
-		put the long seconds into sMarker[pPoint2]
+	if gMarkerA[pPoint2] is empty then
+		put the long seconds into gMarkerA[pPoint2]
 	end if
 
 	if pDecimals is not empty then
@@ -118,8 +146,8 @@ function rigElapsedTime pPoint1 pPoint2 pDecimals
 		put 6 into tDecimals
 	end if
 
-	put sMarker[pPoint1] into tPoint1Time
-	put sMarker[pPoint2] into tPoint2Time
+	put gMarkerA[pPoint1] into tPoint1Time
+	put gMarkerA[pPoint2] into tPoint2Time
 
 	put (tPoint2Time - tPoint1Time) into tElapsedSeconds
 	put format("%." & tDecimals & "f", tElapsedSeconds) into tElapsedSeconds
@@ -136,7 +164,7 @@ end rigElapsedTime
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMemoryUsage
 --|
 --| Author: rabit
@@ -155,7 +183,7 @@ end rigElapsedTime
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 -- function rigMemoryUsage
 	-- put TRUE into g_MemoryUsage_
@@ -164,7 +192,7 @@ end rigElapsedTime
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchMarkers
 --|
 --| Author: rabit
@@ -173,17 +201,17 @@ end rigElapsedTime
 --| Last Mod: 21-01-10
 --| Requires: --
 --|
---| Summary: Get the sMarker array.
+--| Summary: Get the gMarkerA array.
 --| 
 --| Format:  rigFetchMarkers()
 --|
 --| Parameters: --
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchMarkers
-	return sMarker
+	return gMarkerA
 end rigFetchMarkers
 
 
@@ -193,6 +221,6 @@ end rigFetchMarkers
 
 
 
---| END OF Benchmark.lc
---| Location:  ./system/libraries/Benchmark.lc
+--| END OF Benchmark.livecodescript
+--| Location:  ./system/libraries/Benchmark.livecodescript
 ----------------------------------------------------------------------

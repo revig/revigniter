@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Jquery"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,30 +23,97 @@ end if
 # @subpackage	Libraries
 # @category		jQuery
 # @author			rabit@revigniter.com
-# @link				http://revigniter.com/userGuide/libraries/jquery.html
+# @link				https://revigniter.com/userGuide/libraries/jquery.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# LOGGING
-rigLogMessage "debug", "jQuery Library Loaded"
 
+global gRigA
 
-# DECLARE VARIABLES
-local sUseJQremotely, sJqueryCurrentVersion, sJqueryPath, sJqueryScript, sCloseEventStatements
-local sCurrentAnimSelector, sCurrentAnimTarget
-
-# DEFAULT VALUES
-put TRUE into sUseJQremotely
-put "assets/js/jquery.js" into sJqueryPath
-
-# SHOULD NOT BE CHANGED BY USER
-put TRUE into sCloseEventStatements
+local sUseJQremotely, sJqueryCurrentVersion, sJqueryPath, sJqueryScript, sValidJquerySetMethods
+local sCloseEventStatements, sCurrentAnimSelector, sCurrentAnimTarget, sStackInUse
 
 
 
-put "" into sValidJquerySetMethods
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2019-01-02
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "jQuery Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put TRUE into sUseJQremotely
+  put "assets/js/jquery.js" into sJqueryPath
+
+  # SHOULD NOT BE CHANGED BY USER
+  put TRUE into sCloseEventStatements
+
+  put "" into sValidJquerySetMethods
+end _rigSetDefaultValues
+
+
 
 
 
@@ -64,7 +125,7 @@ put "" into sValidJquerySetMethods
 --| Version:  1.1
 --| Created: 22-01-10
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigInitializeJquery
+--| Requires: rigNumToCodepoint(), _rigInitializeJquery
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -76,6 +137,8 @@ put "" into sValidJquerySetMethods
 ----------------------------------------------------------------------*/
 
 command rigRunInitialJqueryConfig pConfig
+  local tConfig
+  
 	put pConfig into tConfig
 
 	if tConfig is not an array then
@@ -85,7 +148,7 @@ command rigRunInitialJqueryConfig pConfig
 	end if
 
 	if tConfig is an array then
-		rigInitializeJquery tConfig
+		_rigInitializeJquery tConfig
 	end if
 end rigRunInitialJqueryConfig
 
@@ -98,24 +161,26 @@ end rigRunInitialJqueryConfig
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigInitializeJquery
+--| COMMAND _rigInitializeJquery
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 22-02-10
 --| Last Mod: 22-02-10
---| Requires: rigSetInitialJqueryValue
+--| Requires: _rigSetInitialJqueryValue
 --|
 --| Summary: Initialize preferences.
 --| 
---| Format:  rigInitializeJquery param1
+--| Format: _rigInitializeJquery param1
 --|
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigInitializeJquery pConfig
+private command _rigInitializeJquery pConfig
+  local tKey, tVal, tMethod
+  
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
@@ -126,12 +191,12 @@ command rigInitializeJquery pConfig
 			if tMethod is among the items of sValidJquerySetMethods then
 				do tMethod && tVal
 			else
-				rigSetInitialJqueryValue tKey, tVal
+				_rigSetInitialJqueryValue tKey, tVal
 			end if
 		end repeat
 
 	end if
-end rigInitializeJquery
+end _rigInitializeJquery
 
 
 
@@ -141,7 +206,7 @@ end rigInitializeJquery
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetInitialJqueryValue
+--| COMMAND _rigSetInitialJqueryValue
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -151,14 +216,16 @@ end rigInitializeJquery
 --|
 --| Summary: Set initial values.
 --| 
---| Format:  rigSetInitialJqueryValue param1, param2
+--| Format: _rigSetInitialJqueryValue param1, param2
 --|
 --| Parameters: string <pVarName>, mixed <pValue>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetInitialJqueryValue pVarName pValue
+private command _rigSetInitialJqueryValue pVarName pValue
+  local tVarName
+  
 	put "s" & pVarName into tVarName
 
 	switch tVarName
@@ -172,7 +239,7 @@ command rigSetInitialJqueryValue pVarName pValue
 			put pValue into sJqueryCurrentVersion
 		break
 	end switch
-end rigSetInitialJqueryValue
+end _rigSetInitialJqueryValue
 
 
 
@@ -201,6 +268,8 @@ end rigSetInitialJqueryValue
 ----------------------------------------------------------------------*/
 
 function rigJQuerySource
+  local tJqueryPath, tSiteURL
+  
 	if sUseJQremotely is not TRUE then
 		if char 1 of sJqueryPath is "/" then
 			put char 2 to (the number of chars of sJqueryPath) of sJqueryPath into tJqueryPath
@@ -239,7 +308,7 @@ end rigJQuerySource
 --| Version:  1.0
 --| Created: 07-03-10
 --| Last Mod: 07-03-10
---| Requires: --
+--| Requires: _rigJsScriptOpen(), _rigJQreadyOpen
 --|
 --| Summary: Start building jQuery script.
 --| 
@@ -251,7 +320,7 @@ end rigJQuerySource
 ----------------------------------------------------------------------*/
 
 command rigJQopen
-	put rigJsScriptOpen() & rigJQreadyOpen() into sJqueryScript
+	put _rigJsScriptOpen() & _rigJQreadyOpen() into sJqueryScript
 end rigJQopen
 
 
@@ -267,7 +336,7 @@ end rigJQopen
 --| Version:  1.0
 --| Created: 07-03-10
 --| Last Mod: 07-03-10
---| Requires: --
+--| Requires: _rigJQreadyClose(), _rigJsScriptClose
 --|
 --| Summary: Close jQuery script.
 --| 
@@ -279,7 +348,7 @@ end rigJQopen
 ----------------------------------------------------------------------*/
 
 command rigJQclose
-	put rigJQreadyClose() & rigJsScriptClose() after sJqueryScript
+	put _rigJQreadyClose() & _rigJsScriptClose() after sJqueryScript
 	
 	return sJqueryScript
 end rigJQclose
@@ -292,7 +361,7 @@ end rigJQclose
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigJsScriptOpen
+--| FUNCTION _rigJsScriptOpen
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -302,16 +371,16 @@ end rigJQclose
 --|
 --| Summary: Return javascript open tag.
 --| 
---| Format:  rigJsScriptOpen()
+--| Format: _rigJsScriptOpen()
 --|
 --| Parameters: --
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJsScriptOpen
+private function _rigJsScriptOpen
 	return "<script type=" & quote & "text/javascript" & quote & ">" & return
-end rigJsScriptOpen
+end _rigJsScriptOpen
 
 
 
@@ -319,7 +388,7 @@ end rigJsScriptOpen
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigJsScriptClose
+--| FUNCTION _rigJsScriptClose
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -329,16 +398,16 @@ end rigJsScriptOpen
 --|
 --| Summary: Return javascript close tag.
 --| 
---| Format:  rigJsScriptClose()
+--| Format: _rigJsScriptClose()
 --|
 --| Parameters: --
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJsScriptClose
+private function _rigJsScriptClose
 	return "</script>" & return
-end rigJsScriptClose
+end _rigJsScriptClose
 
 
 
@@ -348,7 +417,7 @@ end rigJsScriptClose
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigJQreadyOpen
+--| FUNCTION _rigJQreadyOpen
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -358,18 +427,18 @@ end rigJsScriptClose
 --|
 --| Summary: Return JQ document ready statement open.
 --| 
---| Format:  rigJQreadyOpen()
+--| Format: _rigJQreadyOpen()
 --|
 --| Parameters: --
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJQreadyOpen
+private function _rigJQreadyOpen
 	-- return "$(document).ready(function(){" & return
 	# ALTERNATIVE
 	return "$(function() {" & return
-end rigJQreadyOpen
+end _rigJQreadyOpen
 
 
 
@@ -377,7 +446,7 @@ end rigJQreadyOpen
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigJQreadyClose
+--| FUNCTION _rigJQreadyClose
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -387,16 +456,16 @@ end rigJQreadyOpen
 --|
 --| Summary: Return JQ document ready statement close.
 --| 
---| Format:  rigJQreadyClose()
+--| Format: _rigJQreadyClose()
 --|
 --| Parameters: --
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJQreadyClose
+function _rigJQreadyClose
 	return "});" & return
-end rigJQreadyClose
+end _rigJQreadyClose
 
 
 
@@ -419,13 +488,16 @@ end rigJQreadyClose
 --| Format:  rigJQajaxForm param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pSubmitBtn>, comma delimited selectors list <pFields>, string <pPostURI>,
---|             bool <pPreventDefault> optional, string <pDataToLoadURI> optional,
---|             string <pDataContainer> optional
+--|               bool <pPreventDefault> optional, string <pDataToLoadURI> optional,
+--|               string <pDataContainer> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
 command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI pDataContainer
+  local tPostURI, tPreventDefault, tDataToLoadURI, tFieldName, tCounter
+  local tField, tRegEx, tMatch1, tPostKeyValuePairs, tValuesReset
+  
 	# PREPARE pPostURI
 	put rigTrim(pPostURI, "'") into tPostURI
 	put rigTrim(tPostURI, "/") into tPostURI
@@ -447,12 +519,12 @@ command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI
 	put "$(" & pSubmitBtn & ").click(function(event) {" & return after sJqueryScript
 
 	# GET FORM KEY VALUE PAIRS
-	put empty into tFieldName -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	put empty into tFieldName -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
 	put 1 into tCounter
 	repeat for each item tField in pFields
 		put "var fld" & tCounter && "= $(" & tField & ").val();" & return after sJqueryScript
 		put "'(#|\.)?(.+)'" into tRegEx
-		get matchText(tField, tRegEx, match1, tFieldName)
+		get matchText(tField, tRegEx, tMatch1, tFieldName)
 		put tFieldName & ":" && "fld" & tCounter & comma after tPostKeyValuePairs
 		put "$(" & tField & ").val('');" & return after tValuesReset
 		add 1 to tCounter
@@ -505,6 +577,8 @@ end rigJQajaxForm
 ----------------------------------------------------------------------*/
 
 command rigJQeventAlert pSelector pEvent pAlert pPreventDefault pEventData
+  local tEventData
+  
 	if pEventData <> "" then
 		put " {" & pEventData & "}," into tEventData
 	else
@@ -632,6 +706,8 @@ end rigJQconfirm
 ----------------------------------------------------------------------*/
 
 function rigJQconfirmR  pVarName pString pGlobal
+  local tGlobal, tScript
+  
 	if pGlobal is empty then
 		put FALSE into tGlobal
 	else
@@ -688,9 +764,9 @@ end rigJQprompt
 --| FUNCTION rigJQpromptR
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 2010-04-14
---| Last Mod: 2019-01-02
+--| Version:  1.0
+--| Created: 14-04-2010
+--| Last Mod: 14-04-2010
 --| Requires: --
 --|
 --| Summary: Return prompt box statement.
@@ -703,6 +779,8 @@ end rigJQprompt
 ----------------------------------------------------------------------*/
 
 function rigJQpromptR  pVarName pPrompt pDefault pGlobal
+  local tDefault, tGlobal, tScript
+  
 	if pDefault is "" then
 		put "" into tDefault
 	else
@@ -747,7 +825,7 @@ end rigJQpromptR
 --| Format:  rigJQset param1, param2, param3, param4, param5
 --|
 --| Parameters: string <pSelector>, string <pMethod>, string <pPropertyvalues>, bool <pFunction> optional
---|             bool <pToggleClassSwitch> optional
+--|               bool <pToggleClassSwitch> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -783,6 +861,9 @@ end rigJQset
 ----------------------------------------------------------------------*/
 
 function rigJQsetR pSelector pMethod pPropertyvalues pFunction pToggleClassSwitch
+  local tMethod, tFunction, tToggleClassSwitch, tPropertyvalues, tKey, tVal
+  local tAttributeName, tAttributeValueFunction, tScript
+  
 	# PREPARE pMethod
 	put rigTrim(pMethod, "'") into tMethod
 	
@@ -868,6 +949,8 @@ end rigJQsetR
 ----------------------------------------------------------------------*/
 
 function rigJQgetR pSelector pMethod pGetterProp
+  local tMethod, tGetterProp
+  
 	# PREPARE pMethod
 	put rigTrim(pMethod, "'") into tMethod
 	
@@ -900,100 +983,102 @@ end rigJQgetR
 --| Version:  1.0
 --| Created: 06-04-2010
 --| Last Mod: 06-04-2010
---| Requires: --
+--| Requires: _rigJQdelegateLiveOneToggleUnbind, _rigJQdieUndelegate, _rigJQhover, _rigJQtriggerTriggerhandler
 --|
 --| Summary: Event open statement.
 --| 
 --| Format:  rigJQeventOpen param1, param2, param3, param4, param5
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData> optional, 
---|             string <pEventObject> optional, string <pFunctionArguments> a comma delimited list of
---|             params to add to the function, optional
+--|               string <pEventObject> optional, string <pFunctionArguments> a comma delimited list of
+--|               params to add to the function, optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
 command rigJQeventOpen pSelector pEvent pPreventDefault pEventData pEventObject pFunctionArguments
+  local tEventData, tFunctionArguments
+  
 	# CHECK IF EVENT IS ONE OF THOSE, WHICH HAVE A DEDICATED LIBRARY HANDLER
 	switch pEvent
 		case "delegate"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "delegate", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "delegate", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "'delegate'"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "delegate", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "delegate", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "die"
-			rigJQdieUndelegate pSelector, "die", pPreventDefault, pEventData, pEventObject
+			_rigJQdieUndelegate pSelector, "die", pPreventDefault, pEventData, pEventObject
 			exit rigJQeventOpen
 		break
 		case "'die'"
-			rigJQdieUndelegate pSelector, "die", pPreventDefault, pEventData, pEventObject
+			_rigJQdieUndelegate pSelector, "die", pPreventDefault, pEventData, pEventObject
 			exit rigJQeventOpen
 		break
 		case "hover"
-			rigJQhover pSelector, "hover", pPreventDefault, pEventData
+			_rigJQhover pSelector, "hover", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "'hover'"
-			rigJQhover pSelector, "hover", pPreventDefault, pEventData
+			_rigJQhover pSelector, "hover", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "live"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "live", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "live", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "'live'"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "live", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "live", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "one"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "one", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "one", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "'one'"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "one", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "one", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "toggle"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "toggle", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "toggle", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "'toggle'"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "toggle", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "toggle", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "trigger"
-			rigJQtriggerTriggerhandler pSelector, "trigger", pPreventDefault, pEventData
+			_rigJQtriggerTriggerhandler pSelector, "trigger", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "'trigger'"
-			rigJQtriggerTriggerhandler pSelector, "trigger", pPreventDefault, pEventData
+			_rigJQtriggerTriggerhandler pSelector, "trigger", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "triggerHandler"
-			rigJQtriggerTriggerhandler pSelector, "triggerHandler", pPreventDefault, pEventData
+			_rigJQtriggerTriggerhandler pSelector, "triggerHandler", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "'triggerHandler'"
-			rigJQtriggerTriggerhandler pSelector, "triggerHandler", pPreventDefault, pEventData
+			_rigJQtriggerTriggerhandler pSelector, "triggerHandler", pPreventDefault, pEventData
 			exit rigJQeventOpen
 		break
 		case "unbind"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "unbind", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "unbind", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "'unbind'"
-			rigJQdelegateLiveOneToggleUnbind pSelector, "unbind", pPreventDefault, pEventData, pEventObject, pFunctionArguments
+			_rigJQdelegateLiveOneToggleUnbind pSelector, "unbind", pPreventDefault, pEventData, pEventObject, pFunctionArguments
 			exit rigJQeventOpen
 		break
 		case "undelegate"
-			rigJQdieUndelegate pSelector, "undelegate", pPreventDefault, pEventData, pEventObject
+			_rigJQdieUndelegate pSelector, "undelegate", pPreventDefault, pEventData, pEventObject
 			exit rigJQeventOpen
 		break
 		case "'undelegate'"
-			rigJQdieUndelegate pSelector, "undelegate", pPreventDefault, pEventData, pEventObject
+			_rigJQdieUndelegate pSelector, "undelegate", pPreventDefault, pEventData, pEventObject
 			exit rigJQeventOpen
 		break
 	end switch
@@ -1070,7 +1155,7 @@ end rigJQeventClose
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigJQdelegateLiveOneToggleUnbind
+--| COMMAND _rigJQdelegateLiveOneToggleUnbind
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1079,31 +1164,33 @@ end rigJQeventClose
 --| Requires: --
 --|
 --| Summary: Delegate: Write statement to attach a handler to one or more events
---|          for all elements that match the selector, now or in the future,
---|          based on a specific set of root elements.
+--|            for all elements that match the selector, now or in the future,
+--|            based on a specific set of root elements.
 --|
---|          Live: Write statement to attach a handler to the event for
---|          all elements which match the current selector,
---|          now or in the future.
+--|            Live: Write statement to attach a handler to the event for
+--|            all elements which match the current selector,
+--|            now or in the future.
 --|
---|					 One: Write statement to attach a handler to an event for the elements.
---|          The handler is executed at most once per element.
+--|				  One: Write statement to attach a handler to an event for the elements.
+--|            The handler is executed at most once per element.
 --|
---|          Toggle: Write statement to bind two or more handlers to the matched
---|          elements, to be executed on alternate clicks.
+--|            Toggle: Write statement to bind two or more handlers to the matched
+--|            elements, to be executed on alternate clicks.
 --|
---|          Unbind: Write statement to remove a previously-attached event handler
---|          from the elements.
+--|            Unbind: Write statement to remove a previously-attached event handler
+--|            from the elements.
 --|
---| Format:  rigJQdelegateLiveOneToggleUnbind param1, param2, param3, param4, param5
+--| Format:  _rigJQdelegateLiveOneToggleUnbind param1, param2, param3, param4, param5
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData> optional,
---|             string <pEventObject> optional, string <pFunctionArguments> params to add to the function, optional
+--|               string <pEventObject> optional, string <pFunctionArguments> params to add to the function, optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigJQdelegateLiveOneToggleUnbind pSelector pEvent pPreventDefault pEventData pEventObject pFunctionArguments
+private command _rigJQdelegateLiveOneToggleUnbind pSelector pEvent pPreventDefault pEventData pEventObject pFunctionArguments
+  local tEventData, tFunctionArguments
+  
 	# PREPARE EVENT DATA
 	if pEventData <> "" then
 		put pEventData & "," into tEventData
@@ -1130,7 +1217,7 @@ command rigJQdelegateLiveOneToggleUnbind pSelector pEvent pPreventDefault pEvent
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
 	end if
-end rigJQdelegateLiveOneToggleUnbind
+end _rigJQdelegateLiveOneToggleUnbind
 
 
 
@@ -1140,7 +1227,7 @@ end rigJQdelegateLiveOneToggleUnbind
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigJQdieUndelegate
+--| COMMAND _rigJQdieUndelegate
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1149,21 +1236,21 @@ end rigJQdelegateLiveOneToggleUnbind
 --| Requires: --
 --|
 --| Summary: Write statement to emove an event handler previously attached
---|          using .live() from the elements.
+--|            using .live() from the elements.
 --|
---|          Undelegate: Write statement to remove a handler from the
---|          event for all elements which match the current selector,
---|          now or in the future, based upon a specific set of root elements.
+--|            Undelegate: Write statement to remove a handler from the
+--|            event for all elements which match the current selector,
+--|            now or in the future, based upon a specific set of root elements.
 --| 
---| Format:  rigJQdieUndelegate param1, param2, param3, param4
+--| Format:  _rigJQdieUndelegate param1, param2, param3, param4
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional,
---|             string <pEventData> optional, string <pEventObject> optional
+--|               string <pEventData> optional, string <pEventObject> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigJQdieUndelegate pSelector pEvent pPreventDefault pEventData pEventObject
+private command _rigJQdieUndelegate pSelector pEvent pPreventDefault pEventData pEventObject
 	if pEventObject is empty then
 		put "$(" & pSelector & ")." & pEvent & "(" & pEventData & ");" & return after sJqueryScript
 	else
@@ -1177,7 +1264,7 @@ command rigJQdieUndelegate pSelector pEvent pPreventDefault pEventData pEventObj
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
 	end if
-end rigJQdieUndelegate
+end _rigJQdieUndelegate
 
 
 
@@ -1186,7 +1273,7 @@ end rigJQdieUndelegate
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigJQhover
+--| COMMAND _rigJQhover
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1195,17 +1282,17 @@ end rigJQdieUndelegate
 --| Requires: --
 --|
 --| Summary: Write statement to bind two handlers to the matched
---|          elements, to be executed when the mouse pointer enters
---|          and leaves the elements.
+--|            elements, to be executed when the mouse pointer enters
+--|            and leaves the elements.
 --| 
---| Format:  rigJQhover param1, param2, param3
+--| Format:  _rigJQhover param1, param2, param3
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigJQhover pSelector pEvent pPreventDefault pEventData
+private command _rigJQhover pSelector pEvent pPreventDefault pEventData
 	put "$(" & pSelector & ")." & pEvent & "(" & pEventData & ");" & return after sJqueryScript
 	
 	# IGNORE THE NEXT rigJQeventClose COMMAND
@@ -1215,7 +1302,7 @@ command rigJQhover pSelector pEvent pPreventDefault pEventData
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
 	end if
-end rigJQhover
+end _rigJQhover
 
 
 
@@ -1224,7 +1311,7 @@ end rigJQhover
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigJQtriggerTriggerhandler
+--| COMMAND _rigJQtriggerTriggerhandler
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -1233,19 +1320,21 @@ end rigJQhover
 --| Requires: --
 --|
 --| Summary: Trigger: Write statement to execute all handlers and behaviors
---|          attached to the matched elements for the given event type.
+--|            attached to the matched elements for the given event type.
 --|
---|          TriggerHandler: Write statement to execute all handlers attached
---|          to an element for an event.
+--|            TriggerHandler: Write statement to execute all handlers attached
+--|            to an element for an event.
 --|
---| Format:  rigJQtriggerTriggerhandler param1, param2, param3
+--| Format:  _rigJQtriggerTriggerhandler param1, param2, param3
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEventData
+private command _rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEventData
+  local tEventData
+  
 	# PREPARE EVENT DATA
 		if comma is in pEventData then
 			put (item 1 of pEventData) & ", [" into tEventData
@@ -1267,7 +1356,7 @@ command rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEventData
 		if pPreventDefault is TRUE then
 	     		put "event.preventDefault();" & return after sJqueryScript
 		end if
-end rigJQtriggerTriggerhandler
+end _rigJQtriggerTriggerhandler
 
 
 
@@ -1291,7 +1380,7 @@ end rigJQtriggerTriggerhandler
 --| Format:  rigJQeventEffect param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pSelector>, string <pTarget>, string <pEvent>, string <pEffect>, string <pParameter> optional,
---|             bool <pPreventDefault> optional, string <pCallback> optional
+--|               bool <pPreventDefault> optional, string <pCallback> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -1332,7 +1421,7 @@ end rigJQeventEffect
 --| Format:  rigJQeffect param1 param2 param3 param 4
 --|
 --| Parameters: string <pSelector>, string <pEffect>, mixed <pDuration> optional,
---|             string <pCallback> optional
+--|               string <pCallback> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -1363,32 +1452,34 @@ end rigJQeffect
 --| Format:  rigJQeffectR(param1, param2, param3, param4)
 --|
 --| Parameters: string <pSelector>, string <pEffect>, mixed <pEffectData> optional,
---|             string <pCallback> optional
+--|               string <pCallback> optional
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJQeffectR pSelector pEffect pEffectData pCallback
-	# GET EFFECT DURATION
-	if pEffectData is empty then
-		put "" into tEffectData
-	else
-		put pEffectData into tEffectData
-	end if
+  local tEffectData, tScript
+  
+  # GET EFFECT DURATION
+  if pEffectData is empty then
+    put "" into tEffectData
+  else
+    put pEffectData into tEffectData
+  end if
 
-	# ADD EFFECT CALLBACK FUNCTION
-	if pCallback is empty then
-			put "$(" & pSelector & ")." & pEffect & "(" & tEffectData & ");" into tScript
-	else
-		if tEffectData <> "" then
-			put tEffectData & "," into tEffectData
-		end if
-			put "$(" & pSelector & ")." & pEffect & "(" & tEffectData && "function(event) {" & return & \
-					pCallback & return & \
-					"});" into tScript
-	end if
+  # ADD EFFECT CALLBACK FUNCTION
+  if pCallback is empty then
+    put "$(" & pSelector & ")." & pEffect & "(" & tEffectData & ");" into tScript
+  else
+    if tEffectData <> "" then
+      put tEffectData & "," into tEffectData
+    end if
+    put "$(" & pSelector & ")." & pEffect & "(" & tEffectData && "function(event) {" & return & \
+    pCallback & return & \
+    "});" into tScript
+  end if
 
-	return tScript
+  return tScript
 end rigJQeffectR
 
 
@@ -1407,12 +1498,12 @@ end rigJQeffectR
 --| Requires: rigJQanimateR()
 --|
 --| Summary: Write statements to perform a custom animation of a set of CSS properties
---|          on various events.
+--|            on various events.
 --| 
 --| Format:  rigJQeventAnim param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pSelector>, string <pTarget>, string <pEvent>, array <pProperties>, 
---|             mixed <pDuration> optional, string <pEasing> optional, string <pCallback> optional
+--|               mixed <pDuration> optional, string <pEasing> optional, string <pCallback> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -1456,9 +1547,9 @@ end rigJQeventAnim
 --| Format:  rigJQanimate param1, param2, param3, param4, param5
 --|
 --| Parameters: string<pSelector>, mixed <pProperties> if you don't use an array use the
---|             following form: "key1: value1, key2: value2, . . ." , mixed <pDuration> integer
---|             or string or array, optional,
---|             string <pEasing> optional, string <pCallback> optional
+--|               following form: "key1: value1, key2: value2, . . ." , mixed <pDuration> integer
+--|               or string or array, optional,
+--|               string <pEasing> optional, string <pCallback> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -1488,14 +1579,16 @@ end rigJQanimate
 --| Format:  rigJQanimateR(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string<pSelector>, mixed <pProperties> if you don't use an array use the
---|             following form: "key1: value1, key2: value2, . . ." , mixed <pDuration> integer
---|             or string or array, optional,
---|             string <pEasing> optional, string <pCallback> optional
+--|               following form: "key1: value1, key2: value2, . . ." , mixed <pDuration> integer
+--|               or string or array, optional,
+--|               string <pEasing> optional, string <pCallback> optional
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
+  local tDuration, tKey, tVal, tEasing, tScript
+  
 	# PREPARE DURATION
 
 	# DURATION AS KEY VALUE PAIRS
@@ -1572,7 +1665,7 @@ end rigJQanimateR
 --| Requires: rigJQajaxR()
 --|
 --| Summary: Write statement to perform an asynchronous HTTP (Ajax) request.
---|          Write statement for ajax options.
+--|            Write statement for ajax options.
 --| 
 --| Format:  rigJQajax param1, param2
 --|
@@ -1610,6 +1703,8 @@ end rigJQajax
 ----------------------------------------------------------------------*/
 
 function rigJQajaxR pAjaxOptions pSetUpOnly
+  local tSetUpOnly, tScript, tKey, tVal
+  
 	if pSetUpOnly is "" then
 		put FALSE into tSetUpOnly
 	else
@@ -1684,9 +1779,9 @@ end rigJQajaxR
 --| Format:  rigJQxhRequest param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pType> possible values: get post load getJSON,
---|             string <pURL> optional, map or string <pData> optional,
---|             string <pCallback> optional, string <pDataType> optional,
---|             string <pSelector> optional for all types but "load"
+--|               string <pURL> optional, map or string <pData> optional,
+--|               string <pCallback> optional, string <pDataType> optional,
+--|               string <pSelector> optional for all types but "load"
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -1716,14 +1811,16 @@ end rigJQxhRequest
 --| Format:  rigJQxhRequestR(param1, param2, param3, param4, param5, param6)
 --|
 --| Parameters: string <pType> possible values: get post load getJSON,
---|             string <pURL> optional, map or string <pData> optional,
---|             string <pCallback> optional, string <pDataType> optional,
---|             string <pSelector> optional for all types but "load"
+--|               string <pURL> optional, map or string <pData> optional,
+--|               string <pCallback> optional, string <pDataType> optional,
+--|               string <pSelector> optional for all types but "load"
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJQxhRequestR pType pURL pData pCallback pDataType pSelector
+  local tURL, tData, tDataType, tScript
+  
 	# GET URL
 	put rigTrim(pURL, "/") into tURL
 	put "'" & rigSiteURL(tURL) & "'" into tURL
@@ -1795,12 +1892,14 @@ end rigJQxhRequestR
 --| Format:  rigJQcallFunction param1, param2
 --|
 --| Parameters: string <pSelector> use a comma delimited list if you want
---|             to deal with more than one element, string <pFunctionName>, string <pFuntionArguments> optional
+--|               to deal with more than one element, string <pFunctionName>, string <pFuntionArguments> optional
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
 command rigJQcallFunction pSelector pFunctionName pFuntionArguments
+  local tScript
+  
 	if pSelector <> "" then
 		put "$(" into tScript
 
@@ -1932,6 +2031,8 @@ end rigJQcondition
 ----------------------------------------------------------------------*/
 
 function rigJQconditionR pCondition pIfAction pElseAction
+  local tScript
+  
 	if pElseAction is "" then
 		put "if (" & pCondition & ") {" & return & \
 			pIfAction & return & \
@@ -1998,7 +2099,7 @@ end rigJQcb
 --| Format:  rigJQeachOpen param1, param2, param3
 --|
 --| Parameters: string <pSelector>, string <pCollection>, string <pCallback>
---|             use eather pSelector or pCollection
+--|               use eather pSelector or pCollection
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -2027,12 +2128,14 @@ end rigJQeachOpen
 --| Format:  rigJQeachOpenR(param1, param2, param3)
 --|
 --| Parameters: string <pSelector>, string <pCollection>, string <pCallback>
---|             use eather pSelector or pCollection
+--|               use eather pSelector or pCollection
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJQeachOpenR pSelector pCollection pCallback
+  local tCollection, tScript
+  
 	if pSelector is empty then
 		# ITERATE OVER BOTH OBJECTS AND ARRAYS
 	if ":" is in pCollection then
@@ -2158,13 +2261,15 @@ end rigJQvar
 --| Format:  rigJQvarR(param1)
 --|
 --| Parameters: mixed <pVars> use the following form: put "name,value;" into tVarsArray[n]
---|             where n is an integer starting with 1, you can set variables one at a time
---|             with the following form: rigJQvar "name,value;"
+--|               where n is an integer starting with 1, you can set variables one at a time
+--|               with the following form: rigJQvar "name,value;"
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigJQvarR pVars
+  local tVars, tNumVars, tVal, tScript
+  
 	put pVars into tVars
 	if tVars is an array then
 		put the number of lines in the keys of tVars into tNumVars
@@ -2272,6 +2377,6 @@ end rigJQcloseStatementR
 
 
 
---| END OF Jquery.lc
---| Location:  ./system/libraries/Jquery.lc
+--| END OF Jquery.livecodescript
+--| Location:  ./system/libraries/Jquery.livecodescript
 ----------------------------------------------------------------------

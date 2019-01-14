@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Exceptions"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,12 +23,50 @@ end if
 # @subpackage	Libraries
 # @category	  Exceptions
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/general/controllers.html
+# @link		    https://revigniter.com/userGuide/general/controllers.html
 ##
 
 
-# DECLARE VARIABLES
 
+
+global gRigA
+
+local sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-11
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
 
@@ -60,8 +92,10 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigLogException pErrorData pDisplayError pFile pHandler
+  local tFile, tHandler, tErrorData
+  
 	if pFile is empty then
-		put gController into tFile
+		put gRigA["controller"] into tFile
 	else
 		put pFile into tFile
 	end if
@@ -82,7 +116,7 @@ end rigLogException
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigShow404Page
 --|
 --| Author: rabit
@@ -98,9 +132,11 @@ end rigLogException
 --| Parameters: mixed <pPage>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigShow404Page pPage
+  local tPage, tHeading, tMessage
+  
 	if pPage is an array then
 		put pPage["page"] into tPage
 	else
@@ -143,7 +179,10 @@ end rigShow404Page
 ----------------------------------------------------------------------*/
 
 function rigShowErrorPage pHeading pMessage pTemplate pStatusCode
-	put pHeading into gErrorData["heading"]
+  local tMessage, tTemplate, tStatusCode, tErrorMsg, tErrorFilePath
+  local tBuffer, tOutput
+  
+	put pHeading into gRigA["errorData"]["heading"]
 	put pMessage into tMessage
 
 	if pTemplate is empty then
@@ -170,9 +209,9 @@ function rigShowErrorPage pHeading pMessage pTemplate pStatusCode
     put "<p>" & tMessage & "</p>" into tErrorMsg
   end if
 
-  put tErrorMsg into gErrorData["message"]
+  put tErrorMsg into gRigA["errorData"]["message"]
 
-  put gAPPPATH & "errors/" & tTemplate & gEXT into tErrorFilePath
+  put gRigA["APPPATH"] & "errors/" & tTemplate & gRigA["EXT"] into tErrorFilePath
   put URL format("binfile:%s", tErrorFilePath) into tBuffer
   
   if the result <> empty then
@@ -192,8 +231,6 @@ end rigShowErrorPage
 
 
 
-
-
---| END OF Exception.lc
---| Location:  ./system/libraries/Exception.lc
+--| END OF Exceptions.livecodescript
+--| Location:  ./system/libraries/Exceptions.livecodescript
 ----------------------------------------------------------------------
