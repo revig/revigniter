@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Captcha"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -33,56 +27,118 @@ end if
 # @subpackage	Libraries
 # @category	  Libraries
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/captcha.html
+# @link		    https://revigniter.com/userGuide/libraries/captcha.html
 ##
 
 
+global gRigA
 
-# LOGGING
-rigLogMessage "debug", "Captcha Library Loaded"
-
-
-# DECLARE VARIABLES
-local sCaptchaPrefs, sNum, sBits, sBitmasks, sMatrix, sNumberMatrix, sCaptchaStyle, sMathRandomLimit
-
-
-# SET INITIAL VALUES
-put 0 into sNum
-put 4 into sCaptchaPrefs["captchaLength"]
-put "#000000" into sCaptchaPrefs["captchaColor"]
-put "#FFFFFF" into sCaptchaPrefs["captchaBckgndColor"]
-put "" into sCaptchaPrefs["captchaHashKey"]
-
-put 10 into sMathRandomLimit				-- used by rigCaptchaMathProblem
+local sCaptchaA, sNum, sBits, sBitmasks, sMatrix, sNumberMatrix
+local sCaptchaStyle, sMathRandomLimit, sStackInUse
 
 
 
-# 15 BITS FOR A MATRIX OF 5 ROWS AND 3 COLUMNS
-put "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384" into sBits
-split sBits using comma
-
-# FOLLOWING THE CALCULATED BITMASKS FOR DIGITS 0 TO 9 IN DECIMAL NOTATION
-put "31599,18740,29607,31143,18921,31183,31695,18855,31727,31215" into sBitmasks
-split sBitmasks using comma
 
 
-# BUILD DIGIT MATRIX PROTOTYPE
-# w MEANS: ASSIGN CAPTCHA BACKGROUND COLOR TO SPECIFIED CELLS
-put "w" into sMatrix[1][1]
-put "w" into sMatrix[1][2]
-put "w" into sMatrix[1][3]
-put "w" into sMatrix[2][1]
-put "w" into sMatrix[2][2]
-put "w" into sMatrix[2][3]
-put "w" into sMatrix[3][1]
-put "w" into sMatrix[3][2]
-put "w" into sMatrix[3][3]
-put "w" into sMatrix[4][1]
-put "w" into sMatrix[4][2]
-put "w" into sMatrix[4][3]
-put "w" into sMatrix[5][1]
-put "w" into sMatrix[5][2]
-put "w" into sMatrix[5][3]
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-21
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Captcha Library Loaded"
+      end if
+    
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put 0 into sNum
+  put 4 into sCaptchaA["captchaLength"]
+  put "#000000" into sCaptchaA["captchaColor"]
+  put "#FFFFFF" into sCaptchaA["captchaBckgndColor"]
+  put "" into sCaptchaA["captchaHashKey"]
+
+  put 10 into sMathRandomLimit				-- used by rigCaptchaMathProblem
+
+  # 15 BITS FOR A MATRIX OF 5 ROWS AND 3 COLUMNS
+  put "1,2,4,8,16,32,64,128,256,512,1024,2048,4096,8192,16384" into sBits
+  split sBits using comma
+
+  # FOLLOWING THE CALCULATED BITMASKS FOR DIGITS 0 TO 9 IN DECIMAL NOTATION
+  put "31599,18740,29607,31143,18921,31183,31695,18855,31727,31215" into sBitmasks
+  split sBitmasks using comma
+
+  # BUILD DIGIT MATRIX PROTOTYPE
+  # w MEANS: ASSIGN CAPTCHA BACKGROUND COLOR TO SPECIFIED CELLS
+  put "w" into sMatrix[1][1]
+  put "w" into sMatrix[1][2]
+  put "w" into sMatrix[1][3]
+  put "w" into sMatrix[2][1]
+  put "w" into sMatrix[2][2]
+  put "w" into sMatrix[2][3]
+  put "w" into sMatrix[3][1]
+  put "w" into sMatrix[3][2]
+  put "w" into sMatrix[3][3]
+  put "w" into sMatrix[4][1]
+  put "w" into sMatrix[4][2]
+  put "w" into sMatrix[4][3]
+  put "w" into sMatrix[5][1]
+  put "w" into sMatrix[5][2]
+  put "w" into sMatrix[5][3]
+end _rigSetDefaultValues
+
 
 
 
@@ -135,20 +191,22 @@ end rigRunInitialCaptchaConfig
 ----------------------------------------------------------------------*/
 
 command rigInitCaptcha pParams
+  local tSettingNames
+  
 	# SET ALL THE SESSION PREFERENCES, WHICH CAN EITHER BE SET
 	# MANUALLY VIA THE pParams ARRAY ABOVE OR VIA THE CONFIG FILE
 	put "captchaLength,captchaColor,captchaBckgndColor,captchaHashKey" into tSettingNames
 
 	repeat for each item thisItem in tSettingNames
 		if pParams[thisItem] is empty then
-			put rigFetchConfigItem(thisItem) into sCaptchaPrefs[thisItem]
+			put rigFetchConfigItem(thisItem) into sCaptchaA[thisItem]
     		else
-			put pParams[thisItem] into sCaptchaPrefs[thisItem]
+			put pParams[thisItem] into sCaptchaA[thisItem]
     		end if
 	end repeat
 
-	put "<style type=" & quote & "text/css" & quote & "> " & return & ".b { color: black; background-color: " & sCaptchaPrefs["captchaColor"] & "; }" & return & \
-	".w { color: white; background-color: " & sCaptchaPrefs["captchaBckgndColor"] & "; }" & return & "</style>" into sCaptchaStyle
+	put "<style type=" & quote & "text/css" & quote & "> " & return & ".b { color: black; background-color: " & sCaptchaA["captchaColor"] & "; }" & return & \
+	".w { color: white; background-color: " & sCaptchaA["captchaBckgndColor"] & "; }" & return & "</style>" into sCaptchaStyle
 end rigInitCaptcha
 
 
@@ -166,15 +224,15 @@ end rigInitCaptcha
 --| Version:  1.1
 --| Created: 19-10-09
 --| Last Mod: 07-05-11
---| Requires: rigRandomCaptchaNum(), setCaptchaNumberMatrix, rigCaptchaCode()
+--| Requires: _rigRandomCaptchaNum(), _rigSetCaptchaNumberMatrix, rigCaptchaCode()
 --|
 --| Summary: Call this function to get a captcha.
 --| 
 --| Format:  rigCaptcha(param1, param2)
 --|
 --| Parameters: integer <pDigit> use this parameter if you prefer to generate
---|             the captcha number yourself, boolean <pReturnCaptchaCode> in case you don't
---|             intend to display the captcha code set this parameter to FALSE
+--|               the captcha number yourself, boolean <pReturnCaptchaCode> in case you don't
+--|               intend to display the captcha code set this parameter to FALSE
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
@@ -185,12 +243,12 @@ function rigCaptcha pDigit pReturnCaptchaCode
 		put pDigit into sNum
 	else
 		# GET RANDOM NUMBER
-		put rigRandomCaptchaNum() into sNum
+		put _rigRandomCaptchaNum() into sNum
 	end if
 
 	if (pReturnCaptchaCode is empty) or (pReturnCaptchaCode is TRUE) then
 		# BUILD MATRIX OF NUMBER
-		rigSetCaptchaNumberMatrix sNum
+		_rigSetCaptchaNumberMatrix sNum
 	
 		# RETURN CAPTCHA HTML DATA
 		return rigCaptchaCode()
@@ -222,6 +280,9 @@ end rigCaptcha
 ----------------------------------------------------------------------*/
 
 function rigCaptchaMathProblem pNumOperators
+  local tOperand1, tOperand2, tNum1, tNum2, tOperatorID, tDividend
+  local tMathstring, tResult
+  
 	# BUILD RANDOM EXCERCISE
 	put random(sMathRandomLimit) into tOperand1
 	put random(sMathRandomLimit) into tOperand2
@@ -271,7 +332,7 @@ end rigCaptchaMathProblem
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetCaptchaMatrix
+--| COMMAND _rigSetCaptchaMatrix
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -281,14 +342,16 @@ end rigCaptchaMathProblem
 --|
 --| Summary: Build captcha matrix (array) for a digit.
 --| 
---| Format:  rigSetCaptchaMatrix param1
+--| Format:  _rigSetCaptchaMatrix param1
 --|
 --| Parameters: integer <pDigit>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetCaptchaMatrix pDigit
+private command _rigSetCaptchaMatrix pDigit
+  local tArrayItem, tBitmask, tBitsCount, tBitsset, tDigitKey
+  
 	if pDigit is an integer then
 		if (pDigit >= 0) and (pDigit <= 9) then
 			put pDigit + 1 into tArrayItem
@@ -330,7 +393,7 @@ command rigSetCaptchaMatrix pDigit
 			end if
 		end repeat
 	end repeat	
-end rigSetCaptchaMatrix
+end _rigSetCaptchaMatrix
 
 
 
@@ -339,32 +402,32 @@ end rigSetCaptchaMatrix
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetCaptchaNumberMatrix
+--| COMMAND _rigSetCaptchaNumberMatrix
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 19-10-09
 --| Last Mod: 21-03-14
---| Requires: rigSetCaptchaMatrix
+--| Requires: _rigSetCaptchaMatrix
 --|
 --| Summary: Build captcha matrix (array) for a number.
 --| 
---| Format:  rigSetCaptchaNumberMatrix param1
+--| Format:  _rigSetCaptchaNumberMatrix param1
 --|
 --| Parameters: integer <pNum>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetCaptchaNumberMatrix pNum
+private command _rigSetCaptchaNumberMatrix pNum
 	if pNum is not empty then
 		put pNum into sNum
 	end if
 
 	repeat for each char tDigit in sNum
-		rigSetCaptchaMatrix tDigit
+		_rigSetCaptchaMatrix tDigit
 	end repeat
-end rigSetCaptchaNumberMatrix
+end _rigSetCaptchaNumberMatrix
 
 
 
@@ -421,6 +484,8 @@ end rigGetCaptchaNum
 ----------------------------------------------------------------------*/
 
 function rigCaptchaStyle pNonce
+  local tCaptchaStyle
+  
   if pNonce <> empty then
     put sCaptchaStyle into tCaptchaStyle
     replace char 1 to 6 of tCaptchaStyle with "<style nonce=" & quote & pNonce & quote in tCaptchaStyle
@@ -457,9 +522,11 @@ end rigCaptchaStyle
 ----------------------------------------------------------------------*/
 
 function rigCaptchaCode
+  local tNumRows, tNumDigits, tRow, tDigit, tCell, tVal, tCaptcha
+  
 	put the number of lines in the keys of sNumberMatrix[1] into tNumRows
 
-	put sCaptchaPrefs["captchaLength"] into tNumDigits
+	put sCaptchaA["captchaLength"] into tNumDigits
     
 	# SET BACKGROUND COLOR OF NUMBER CELLS ROW BY ROW 
 	repeat with tRow = 1 to tNumRows
@@ -491,7 +558,7 @@ end rigCaptchaCode
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigRandomCaptchaNum
+--| FUNCTION _rigRandomCaptchaNum
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -501,31 +568,33 @@ end rigCaptchaCode
 --|
 --| Summary: Build random captcha number.
 --| 
---| Format:  rigRandomCaptchaNum(param1)
+--| Format:  _rigRandomCaptchaNum(param1)
 --|
 --| Parameters: integer <pNumberLength>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigRandomCaptchaNum pNumberLength
-    	if (pNumberLength is empty) or (pNumberLength is not an integer) then
-        	put sCaptchaPrefs["captchaLength"] into tNumberLength
-    	else
-        	put pNumberLength into tNumberLength
-    	end if
+private function _rigRandomCaptchaNum pNumberLength
+  local tNumberLength, tUpperLimit, tLowerLimit
+  
+  if (pNumberLength is empty) or (pNumberLength is not an integer) then
+    put sCaptchaA["captchaLength"] into tNumberLength
+  else
+    put pNumberLength into tNumberLength
+  end if
     
-    	put "" into sNum
+  put "" into sNum
 
-    	repeat tNumberLength
-        	put 9 into tUpperLimit
-        	put 0 into tLowerLimit
+  repeat tNumberLength
+    put 9 into tUpperLimit
+    put 0 into tLowerLimit
         
-        	put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after sNum
-    	end repeat
+    put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after sNum
+  end repeat
     
-    	return sNum
-end rigRandomCaptchaNum
+  return sNum
+end _rigRandomCaptchaNum
 
 
 
@@ -539,12 +608,12 @@ end rigRandomCaptchaNum
 --|
 --| Author: rabit
 --| Version:  1.0
---| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Created: 2009-10-19
+--| Last Mod: 2009-10-19
 --| Requires: rigGetCaptchaNum(), rigHexDigest()
 --|
 --| Summary: Build hash from captcha number and a key.
---|                    You may store this string in a hidden form field.
+--|            You may store this string in a hidden form field.
 --| 
 --| Format:  rigGetCaptchaHash()
 --|
@@ -554,7 +623,9 @@ end rigRandomCaptchaNum
 ----------------------------------------------------------------------*/
 
 function rigGetCaptchaHash
-	put rigGetCaptchaNum() & sCaptchaPrefs["captchaHashKey"] into tCaptchaString
+  local tCaptchaString
+  
+	put rigGetCaptchaNum() & sCaptchaA["captchaHashKey"] into tCaptchaString
 	return rigHexDigest(tCaptchaString)
 end rigGetCaptchaHash
 
@@ -571,8 +642,8 @@ end rigGetCaptchaHash
 --|
 --| Author: rabit
 --| Version:  1.0
---| Created: 19-10-09
---| Last Mod: 19-10-09
+--| Created: 2009-10-19
+--| Last Mod: 2009-10-19
 --| Requires: rigHexDigest()
 --|
 --| Summary: Validate captcha user input.
@@ -585,16 +656,18 @@ end rigGetCaptchaHash
 ----------------------------------------------------------------------*/
 
 function rigValidCaptchaUserInput pInput pHash
-	if pInput is an integer then
-		put pInput & sCaptchaPrefs["captchaHashKey"] into tCaptchaInput
-		put rigHexDigest(tCaptchaInput) into tCaptchaInputHash
+  local tCaptchaInput, tCaptchaInputHash
+  
+  if pInput is an integer then
+    put pInput & sCaptchaA["captchaHashKey"] into tCaptchaInput
+    put rigHexDigest(tCaptchaInput) into tCaptchaInputHash
 
-		if tCaptchaInputHash is pHash then
-			return TRUE
-		end if
-	end if
+    if tCaptchaInputHash is pHash then
+      return TRUE
+    end if
+  end if
 
-	return FALSE
+  return FALSE
 end rigValidCaptchaUserInput
 
 
@@ -602,11 +675,67 @@ end rigValidCaptchaUserInput
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigCaptchaGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-02
+--| Last Mod: 2019-01-02
+--| Requires: --
+--|
+--| Summary: Get captcha array variable value.
+--| 
+--| Format:  rigCaptchaGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigCaptchaGet pWhat
+  if pWhat is among the keys of sCaptchaA then
+    return sCaptchaA[pWhat]
+  end if
+   
+  return empty
+end rigCaptchaGet
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigCaptchaSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-02
+--| Last Mod: 2019-01-02
+--| Requires: --
+--|
+--| Summary: Setter for captcha variables.
+--| 
+--| Format:  rigCaptchaSet param1, param2
+--|
+--| Parameters: string <pKey> sCaptchaA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigCaptchaSet pKey pVal
+  if pKey is among the keys of sCaptchaA then
+    put pVal into sCaptchaA[pKey]
+  end if
+end rigCaptchaSet
 
 
 
 
 
---| END OF Captcha.lc
---| Location:  ./system/libraries/Captcha.lc
+
+
+
+
+--| END OF Captcha.livecodescript
+--| Location:  ./system/libraries/Captcha.livecodescript
 ----------------------------------------------------------------------
