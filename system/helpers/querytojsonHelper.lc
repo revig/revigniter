@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "querytojsonHelper"
 
 ##
 # revIgniter
@@ -14,24 +8,61 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
 
 ##
-# RevIgniter Query Result to JSON Plugin
+# RevIgniter Query Result to JSON Helper
 #
-# @package		revIgniter
-# @subpackage	Plugins
-# @category	  Plugins
-# @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/plugins/querytojson_plugin.html
+# @package       revIgniter
+# @subpackage   Helpers
+# @category      Helpers
+# @author        rabit@revigniter.com
+# @link           https://revigniter.com/userGuide/helpers/querytojsonHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+
+global gRigA
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-27
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
 
 
 
@@ -55,6 +86,10 @@ end if
 ----------------------------------------------------------------------*/
 
 function rigQueryToJSON pResult pFieldnames
+  local tResult, tConsecutive, tArrayInfo, tNumbered, tCounter
+  local tResultData, tRow, tRowData, tRowConsecutive
+  local tRowArrayInfo, tRowNumbered, tRowCounter
+  
 	if pResult is not an array then
 		return FALSE
 	else
@@ -137,6 +172,6 @@ end rigQueryToJSON
 
 
 
---| END OF querytojsonPi.lc
---| Location:  ./system/plugins/querytojsonPi.lc
+--| END OF querytojsonHelper.livecodescript
+--| Location:  ./system/helpers/querytojsonHelper.livecodescript
 ----------------------------------------------------------------------

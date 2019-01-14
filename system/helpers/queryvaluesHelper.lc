@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "queryvaluesHelper"
 
 ##
 # revIgniter
@@ -14,24 +8,61 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
 
 ##
-# RevIgniter Query Key Value Pairs Plugin
+# RevIgniter Query Key Value Pairs Helper
 #
-# @package		revIgniter
-# @subpackage	Plugins
-# @category	  Plugins
-# @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/plugins/queryvalues_plugin.html
+# @package		  revIgniter
+# @subpackage  Helpers
+# @category     Helpers
+# @author		    rabit@revigniter.com
+# @link		      https://revigniter.com/userGuide/helpers/queryvaluesHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+
+global gRigA
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-27
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
 
 
 
@@ -50,12 +81,16 @@ end if
 --| Format:  rigQueryValues(param1, param2, param3, param4)
 --|
 --| Parameters: array <pResult> the query result, string <pKeyValueDelim> key value delimiter,
---|                       string <pRecordDelim> record delimiter, array <pFieldnames> the table field names
+--|               string <pRecordDelim> record delimiter, array <pFieldnames> the table field names
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigQueryValues pResult pKeyValueDelim pRecordDelim pFieldnames
+  local tResult, tKeyValueDelim, tRecordDelim, tArrayInfo, tConsecutive
+  local tNumbered, tCounter, tRow, tRowData, tRowConsecutive
+  local tRowArrayInfo, tRowNumbered, tRowCounter, tResultData
+  
 	if pResult is not an array then
 		return FALSE
 	else
@@ -153,6 +188,6 @@ end rigQueryValues
 
 
 
---| END OF queryValuesPi.lc
---| Location:  ./system/plugins/queryValuesPi.lc
+--| END OF queryvaluesHelper.livecodescript
+--| Location:  ./system/helpers/queryvaluesHelper.livecodescript
 ----------------------------------------------------------------------

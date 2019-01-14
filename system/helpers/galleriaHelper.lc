@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "galleriaHelper"
 
 ##
 # revIgniter
@@ -14,24 +8,60 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
 
 ##
-# RevIgniter Galleria Plugin
+# RevIgniter Galleria Helper
 #
-# @package		revIgniter
-# @subpackage	Plugins
-# @category	  Plugins
-# @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/plugins/galleria_plugin.html
+# @package      revIgniter
+# @subpackage  Helpers
+# @category     Helpers
+# @author       rabit@revigniter.com
+# @link          https://revigniter.com/userGuide/helpers/galleriaHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+
+global gRigA
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-27
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -47,7 +77,7 @@ end if
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
 --| Summary: Write Galleria image and initialization data, return a reference to it or the data itself.
---| 				 The Galleria version currently supported is 1.2.7, see http://galleria.io/.
+--| 				  The Galleria version currently supported is 1.5.7, see https://galleria.io/.
 --| 
 --| Format:  rigGalleriaData(param1, param2, param3, param4, param5, param6)
 --|
@@ -65,6 +95,17 @@ end if
 ----------------------------------------------------------------------*/
 
 function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pCacheBuster pReplaceDataFile pReturnReference
+  local tGalleriaParams, tGalleryPath, tOptions, tContainerID
+  local tDataVariableName, tCacheBuster, tReplaceDataFile
+  local tReturnReference, tPathTranslated, tDoCacheBusting
+  local tURLbase, tFileNamesArray, tFileNamesList, tJSONfile
+  local tCurrentVal, tJSONfileContent, tCbJSONfile, tCreationDate
+  local tJSONurl, tThumbNamesArray, tBigNamesArray, tMetaDataFile
+  local tMetaData, tGalleriaData, tCurrentImagePath, tCurrentImage
+  local tCurrentImageName, tCurrentImageSuffix, tInfoArray, tLastMod
+  local tCurrentImageCB, tThumb, tThumbURL, tImageURL, tBig, tBigURL
+  local tCurrentMetaLineNum, tGalleriaDataOptions
+  
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pGalleryPath is an array then
 		put pGalleryPath into tGalleriaParams
@@ -379,7 +420,7 @@ end rigGalleriaData
 --| 					rigGetFileInfo()
 --|
 --| Summary: Return Galleria initialisation code and JSON data based on dynamically generated meta data.
---| 				 The Galleria version currently supported is 1.2.7, see http://galleria.io/.
+--| 				  The Galleria version currently supported is 1.2.7, see http://galleria.io/.
 --| 
 --| Format:  rigDynamicGalleriaData(param1, param2, param3, param4, param5, param6)
 --|
@@ -393,6 +434,13 @@ end rigGalleriaData
 ----------------------------------------------------------------------*/
 
 function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableName pCacheBuster
+  local tGalleriaParams, tOptions, tContainerID, tDataVariableName
+  local tCacheBuster, tPathTranslated, tDoCacheBusting, tURLbase
+  local tGalleriaData, tCurrentImagePath, tGalleryPath, tThumbNamesArray
+  local tBigNamesArray, tCurrentImage, tCurrentImageName, tCurrentImageSuffix
+  local tInfoArray, tLastMod, tCurrentImageCB, tThumb, tThumbURL, tImageURL
+  local tBig, tBigURL, tGalleriaDataOptions
+  
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pMetaData is an array then
 		put pMetaData into tGalleriaParams
@@ -626,6 +674,8 @@ end rigDynamicGalleriaData
 ----------------------------------------------------------------------*/
 
 function rigGalleriaItemData pDatastring
+  local tTitle, tGalleriaData, tDescription, tLink, tLayer, tOriginal
+  
 	set the itemDel to tab
 	
 	# TITLE
@@ -686,6 +736,8 @@ end rigGalleriaItemData
 ----------------------------------------------------------------------*/
 
 function rigGalleriaOptions pOptions
+  local tKey, tVal, tGalleriaDataOptions
+  
 	repeat for each key tKey in pOptions
 		put pOptions[tKey] into tVal
 		put return & tKey & ":" && tVal & "," after tGalleriaDataOptions
@@ -721,6 +773,10 @@ end rigGalleriaOptions
 ----------------------------------------------------------------------*/
 
 function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPath pDynamicData
+  local tImageDataExists, tLineCount, tItemType, tCurrentDataSection
+  local tSectionStartLineNum, tOffsetLineNum, tTotalOffsetLines, tTempGalleriaData
+  local tItemThumb, tThumbURL
+  
 	# CHECK IF THERE IS IMAGE DATA OR IF THE DATA IS DYNAMICALLY GENERATED
 	if (the number of lines of pGalleriaData > 3) or (pDynamicData is TRUE) then
 		put TRUE into tImageDataExists
@@ -846,6 +902,6 @@ end rigGalleriaDataEscape
 
 
 
---| END OF galleriaPi.lc
---| Location:  ./system/plugins/galleriaPi.lc
+--| END OF galleriaHelper.livecodescript
+--| Location:  ./system/helpers/galleriaHelper.livecodescript
 ----------------------------------------------------------------------

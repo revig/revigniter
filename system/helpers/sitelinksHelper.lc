@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "sitelinksHelper"
 
 ##
 # revIgniter
@@ -14,24 +8,61 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
 
 ##
-# revIgniter Site Links Plugin
+# revIgniter Site Links Helper
 #
 # @package			revIgniter
-# @subpackage	Plugins
-# @category	  	Plugins
+# @subpackage	Helpers
+# @category	  	Helpers
 # @author		  	rabit@revigniter.com
-# @link		    		http://revigniter.com/userGuide/plugins/sitelinks_plugin.html
+# @link		    		https://revigniter.com/userGuide/helpers/sitelinksHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+
+global gRigA
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-27
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
 
 
 
@@ -50,14 +81,17 @@ end if
 --| Format:  rigSiteLinks(param1, param2, param3, param4, param5)
 --|
 --| Parameters: array <pLinks> links to be parsed, prototype: put "URIsegment" into tLinksArray[integer][linkText],
---|             alternative prototype: put "URIsegment,IDselector" into tLinksArray[integer][linkText]
---|             string <pCurrentPage> name of current page, string <pSep> separator,
---|             string <pDivSel> the div id selector, string <pPsel> the paragraph class selector (optional)
+--|               alternative prototype: put "URIsegment,IDselector" into tLinksArray[integer][linkText]
+--|               string <pCurrentPage> name of current page, string <pSep> separator,
+--|               string <pDivSel> the div id selector, string <pPsel> the paragraph class selector (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigSiteLinks pLinks pCurrentPage pSep pDivSel pPsel
+  local tSep, tPsel, tArrayCount, tLinksCode, tLink, tLinkURI
+  local tAddID, tLinkID
+  
 	if pSep is empty then
 		put " - " into tSep
 	else
@@ -141,6 +175,6 @@ end rigSiteLinks
 
 
 
---| END OF sitelinksPi.lc
---| Location:  ./system/plugins/sitelinksPi.lc
+--| END OF sitelinksHelper.livecodescript
+--| Location:  ./system/helpers/sitelinksHelper.livecodescript
 ----------------------------------------------------------------------
