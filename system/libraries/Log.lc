@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Log"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,40 +22,104 @@ end if
 # @subpackage	Libraries
 # @category	  Logging
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/general/errors.html
+# @link		    https://revigniter.com/userGuide/general/errors.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# DECLARE VARIABLES
-local sLogLevels, sLogPath, sLogEnabled, sLogThreshold
 
-put 1 into sLogLevels["ERROR"]
-put 2 into sLogLevels["DEBUG"]
-put 3 into sLogLevels["INFO"]
-put 4 into sLogLevels["ALL"]
+global gRigA, gConfig
 
-# GET LOG PATH
-if gConfig["logPath"] is not empty then
-	put gConfig["logPath"] into sLogPath
-else
-	put gBASEPATH & "logs/" into sLogPath
-end if
-
-if there is a folder sLogPath then
-	put TRUE into sLogEnabled
-else
-	put FALSE into sLogEnabled
-end if
-
-if gConfig["logThreshold"] is an integer then
-	put gConfig["logThreshold"] into sLogThreshold
-else
-	put 1 into sLogThreshold
-end if
+local sLogA, sStackInUse
 
 
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-10
+ --| Last Mod: --
+ --| Requires: _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+    # SET INITIAL VALUES
+    _rigSetDefaultValues
+    #
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put 1 into sLogA["logLevels"]["ERROR"]
+  put 2 into sLogA["logLevels"]["DEBUG"]
+  put 3 into sLogA["logLevels"]["INFO"]
+  put 4 into sLogA["logLevels"]["ALL"]
+
+  # GET LOG PATH
+  if gConfig["logPath"] is not empty then
+  	put gConfig["logPath"] into sLogA["logPath"]
+  else
+  	put gRigA["BASEPATH"] & "logs/" into sLogA["logPath"]
+  end if
+
+  if there is a folder sLogA["logPath"] then
+  	put TRUE into sLogA["logEnabled"]
+  else
+  	put FALSE into sLogA["logEnabled"]
+  end if
+
+  if gConfig["logThreshold"] is an integer then
+  	put gConfig["logThreshold"] into sLogA["logThreshold"]
+  else
+  	put 1 into sLogA["logThreshold"]
+  end if
+end _rigSetDefaultValues
 
 
 
@@ -86,11 +144,15 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigWriteLog pLevel, pMessage, pDisplayError
-  if sLogEnabled is FALSE then exit rigWriteLog
+  local tLevel, tTimeZone, tOldTZ, tIntDate, tShortDate, tMonth, tDay
+  local tCurrentLogFile, tLogFilePath, tCurrentLog, tSegmentOne
+  local tSegmentTwo, tURI, tHeading
+  
+  if sLogA["logEnabled"] is FALSE then exit rigWriteLog
     
   put toUpper(pLevel) into tLevel
 
-  if sLogLevels[tLevel] > sLogThreshold then
+  if sLogA["logLevels"][tLevel] > sLogA["logThreshold"] then
     exit rigWriteLog
   end if
 
@@ -139,7 +201,7 @@ command rigWriteLog pLevel, pMessage, pDisplayError
   
     put "log-20" & (item 3 of tShortDate) & "-" & tMonth & "-" & tDay & ".txt" into tCurrentLogFile
 
-    put sLogPath & tCurrentLogFile into tLogFilePath
+    put sLogA["logPath"] & tCurrentLogFile into tLogFilePath
     if there is a file tLogFilePath then
       put URL ("binfile:" & tLogFilePath) into tCurrentLog
         
@@ -192,6 +254,65 @@ end rigWriteLog
 
 
 
---| END OF Log.lc
---| Location:  ./system/libraries/Log.lc
+/*----------------------------------------------------------------------
+--| FUNCTION rigLogGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get log array variable value.
+--| 
+--| Format: rigLogGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigLogGet pWhat
+  if pWhat is among the keys of sLogA then
+    return sLogA[pWhat]
+  end if
+   
+  return empty
+end rigLogGet
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigLogSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for log variables.
+--| 
+--| Format: rigLogSet param1, param2
+--|
+--| Parameters: string <pKey> sLogA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigLogSet pKey pVal
+  if pKey is among the keys of sLogA then
+    put pVal into sLogA[pKey]
+  end if
+end rigLogSet
+
+
+
+
+
+
+
+--| END OF Log.livecodescript
+--| Location:  ./system/libraries/Log.livecodescript
 ----------------------------------------------------------------------
