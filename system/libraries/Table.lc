@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Table"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,25 +24,93 @@ end if
 # @subpackage	Libraries
 # @category	  HTML Tables
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/uri.html
+# @link		    https://revigniter.com/userGuide/libraries/uri.html
 ##
 
 
-# LOGGING
-rigLogMessage "debug", "Table Library Loaded"
 
 
-# DECLARE VARIABLES
-local sRows, sHeading, sAutoHeading, sCaption, sTemplate, sNewline, sEmptyCells
+global gRigA
 
-put TRUE into sAutoHeading
-put return into sNewline
+local sStackInUse, sTableA -- array keys are: rows, heading, autoHeading, caption, template, newline, emptyCells
 
 
 
 
 
-----------------------------------------------------------------------
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-20
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Table Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put TRUE into sTableA["autoHeading"]
+  put return into sTableA["newline"]
+end _rigSetDefaultValues
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| COMMAND rigRunInitialTableConfig
 --|
 --| Author: rabit
@@ -64,7 +126,7 @@ put return into sNewline
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRunInitialTableConfig pConfig
 
@@ -76,7 +138,7 @@ end rigRunInitialTableConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetTableTemplate
 --|
 --| Author: rabit
@@ -92,14 +154,14 @@ end rigRunInitialTableConfig
 --| Parameters: array <pTemplate>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetTableTemplate pTemplate
 	if pTemplate is not an array then
 		exit rigSetTableTemplate
 	end if
 
-	put pTemplate into sTemplate
+	put pTemplate into sTableA["template"]
 end rigSetTableTemplate
 
 
@@ -107,7 +169,7 @@ end rigSetTableTemplate
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetTableHeading
 --|
 --| Author: rabit
@@ -117,25 +179,25 @@ end rigSetTableTemplate
 --| Requires: --
 --|
 --| Summary: Set the table heading.
---|                    Can be passed as an array or a string of comma separated params.
+--|            Can be passed as an array or a string of comma separated params.
 --| 
 --| Format:  rigSetTableHeading param1, param2
 --|
 --| Parameters: mixed <pHeading>, bool <pFirstUpper> uppercase first char of heading words
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetTableHeading pHeading pFirstUpper
-	put pHeading into sHeading
+	put pHeading into sTableA["heading"]
 
-	if sHeading is not an array then
-		split sHeading using comma
+	if sTableA["heading"] is not an array then
+		split sTableA["heading"] using comma
 	end if
 	
 	if pFirstUpper is TRUE then
-		repeat for each key tKey in sHeading
-			put rigUcwords(sHeading[tKey]) into sHeading[tKey]
+		repeat for each key tKey in sTableA["heading"]
+			put rigUcwords(sTableA["heading"][tKey]) into sTableA["heading"][tKey]
 		end repeat
 	end if
 end rigSetTableHeading
@@ -146,7 +208,7 @@ end rigSetTableHeading
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMakeTableColumns
 --|
 --| Author: rabit
@@ -155,19 +217,22 @@ end rigSetTableHeading
 --| Last Mod: 22-07-09
 --| Requires: rigArraySplice()
 --|
---| Summary: Set columns.  Takes a one-dimensional array as input and creates
---|                    a multi-dimensional array with a depth equal to the number of
---|                    columns.  This allows a single array with many elements to  be
---|                    displayed in a table that has a fixed column count.
+--| Summary: Set columns. Takes a one-dimensional array as input and creates
+--|            a multi-dimensional array with a depth equal to the number of
+--|            columns.  This allows a single array with many elements to  be
+--|            displayed in a table that has a fixed column count.
 --| 
 --| Format:  rigMakeTableColumns(param1, param2, param3)
 --|
 --| Parameters: array <pArray>, integer <pColLimit>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigMakeTableColumns pArray pColLimit
+  local tArray, tColLimit, tKeysNum, tCounter, tOffset
+  local tTempArray, tTempKeysNum, tKeyNum, tNewArray
+  
 	if pArray is not an array then
 		return FALSE
 	else
@@ -182,7 +247,7 @@ function rigMakeTableColumns pArray pColLimit
 
 	# TURN OFF THE AUTO-HEADING FEATURE SINCE IT'S DOUBTFUL WE 
 	# WILL WANT HEADINGS FROM A ONE-DIMENSIONAL ARRAY
-	put FALSE into sAutoHeading
+	put FALSE into sTableA["autoHeading"]
 
 	if tColLimit = 0 then
 		return tArray
@@ -227,7 +292,7 @@ end rigMakeTableColumns
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetEmptyCellVal
 --|
 --| Author: rabit
@@ -243,7 +308,7 @@ end rigMakeTableColumns
 --| Parameters: string <pValue>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetEmptyCellVal pValue
 /*
@@ -253,10 +318,10 @@ command rigSetEmptyCellVal pValue
 			add 1 to tCounter
 			put thisItem into tEmptyCells[tCounter]
 		end repeat
-		put tEmptyCells into sEmptyCells
+		put tEmptyCells into sTableA["emptyCells"]
 	else
 */
-		put pValue into sEmptyCells
+		put pValue into sTableA["emptyCells"]
 	--end if
 end rigSetEmptyCellVal
 
@@ -265,7 +330,7 @@ end rigSetEmptyCellVal
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigAddTableRow
 --|
 --| Author: rabit
@@ -275,27 +340,29 @@ end rigSetEmptyCellVal
 --| Requires: --
 --|
 --| Summary: Add a table row.
---|                    Can be passed as an array or a string of comma separated params.
+--|            Can be passed as an array or a string of comma separated params.
 --| 
 --| Format:  rigAddTableRow param1
 --|
 --| Parameters: mixed <pRow>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigAddTableRow pRow
+  local tRow, tKeyNum
+  
 	put pRow into tRow
 
 	if tRow is not an array then
 		split tRow using comma
 	end if
 
-	if sRows is an array then
-		put (the number of lines in the keys of sRows + 1) into tKeyNum
-		put tRow into sRows[tKeyNum]
+	if sTableA["rows"] is an array then
+		put (the number of lines in the keys of sTableA["rows"] + 1) into tKeyNum
+		put tRow into sTableA["rows"][tKeyNum]
 	else
-		put tRow into sRows[1]
+		put tRow into sTableA["rows"][1]
 	end if
 end rigAddTableRow
 
@@ -305,7 +372,7 @@ end rigAddTableRow
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetTableCaption
 --|
 --| Author: rabit
@@ -321,10 +388,10 @@ end rigAddTableRow
 --| Parameters: string <pCaption>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetTableCaption pCaption
-	put pCaption into sCaption
+	put pCaption into sTableA["caption"]
 end rigSetTableCaption
 
 
@@ -340,7 +407,7 @@ end rigSetTableCaption
 --| Version:  1.2
 --| Created: 22-07-09
 --| Last Mod: 04-08-12
---| Requires: _rigSetTableData, rigCompileTableTemplate, rigIsNumberedArray()
+--| Requires: _rigSetTableData, _rigCompileTableTemplate, rigIsNumberedArray()
 --|
 --| Summary: Generate the table.
 --| 
@@ -352,11 +419,16 @@ end rigSetTableCaption
 ----------------------------------------------------------------------*/
 
 function rigGenerateTable pTableData
+  local tSetHeading, tOut, tHeadingNumberedConsecutive, tHeadingArrayInfo
+  local tHeadingNumbered, tKey, tCounter, tConsecutive, tArrayInfo
+  local tNumbered, tName, tTemplateKey, tRowNumberedConsecutive
+  local tRowArrayInfo, tRowNumbered, tRowCounter
+  
 	if pTableData is not an array then
 		return FALSE
 	end if
 
-	if (sHeading is not an array) and (sAutoHeading is FALSE) then
+	if (sTableA["heading"] is not an array) and (sTableA["autoHeading"] is FALSE) then
 		put FALSE into tSetHeading
 	else
 		put TRUE into tSetHeading
@@ -364,33 +436,33 @@ function rigGenerateTable pTableData
 	_rigSetTableData pTableData, tSetHeading
 	
 
-	# IS THERE ANYTHING TO DISPLAY?  NO?  SMITE THEM!
-	if (sHeading is not an array) and (sRows is not an array) then
+	# IS THERE ANYTHING TO DISPLAY? NO? SMITE THEM!
+	if (sTableA["heading"] is not an array) and (sTableA["rows"] is not an array) then
 		return "Undefined table data"
 	end if
 
 	# COMPILE AND VALIDATE THE TEMPLATE DATA
-	rigCompileTableTemplate
+	_rigCompileTableTemplate
 	
 	# BUILD THE TABLE!
-	put sTemplate["tableOpen"] into tOut
-	put tOut & sNewline into tOut
+	put sTableA["template"]["tableOpen"] into tOut
+	put tOut & sTableA["newline"] into tOut
 
 	# ADD ANY CAPTION HERE
-	if sCaption is not empty then
-		put tOut & sNewline into tOut
-		put tOut & "<caption>" & sCaption & "</caption>" into tOut
-		put tOut & sNewline into tOut
+	if sTableA["caption"] is not empty then
+		put tOut & sTableA["newline"] into tOut
+		put tOut & "<caption>" & sTableA["caption"] & "</caption>" into tOut
+		put tOut & sTableA["newline"] into tOut
 	end if
 
 	# IS THERE A TABLE HEADING TO DISPLAY?
-	if sHeading is an array then
-		put tOut & sTemplate["headingRowStart"] into tOut
-		put tOut & sNewline into tOut
+	if sTableA["heading"] is an array then
+		put tOut & sTableA["template"]["headingRowStart"] into tOut
+		put tOut & sTableA["newline"] into tOut
 
 		# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
 		put TRUE into tHeadingNumberedConsecutive
-		put rigIsNumberedArray(sHeading, tHeadingNumberedConsecutive) into tHeadingArrayInfo
+		put rigIsNumberedArray(sTableA["heading"], tHeadingNumberedConsecutive) into tHeadingArrayInfo
 
 		put item 1 of tHeadingArrayInfo into tHeadingNumbered
 		
@@ -401,27 +473,27 @@ function rigGenerateTable pTableData
 			put 1 into tCounter
 		end if
 		
-		repeat for each key tKey in sHeading
+		repeat for each key tKey in sTableA["heading"]
 			if tHeadingNumbered is TRUE then
 				put tCounter into tKey
 			end if
 
-			put tOut & sTemplate["headingCellStart"] into tOut
-			put tOut & sHeading[tKey] into tOut
-			put tOut & sTemplate["headingCellEnd"] into tOut
+			put tOut & sTableA["template"]["headingCellStart"] into tOut
+			put tOut & sTableA["heading"][tKey] into tOut
+			put tOut & sTableA["template"]["headingCellEnd"] into tOut
 			
 			add 1 to tCounter
 		end repeat
 
-		put tOut & sTemplate["headingRowEnd"] into tOut
-		put tOut & sNewline into tOut
+		put tOut & sTableA["template"]["headingRowEnd"] into tOut
+		put tOut & sTableA["newline"] into tOut
 	end if
 
 	# BUILD THE TABLE ROWS
-	if sRows is an array then
+	if sTableA["rows"] is an array then
 		# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
 		put TRUE into tConsecutive
-		put rigIsNumberedArray(sRows, tConsecutive) into tArrayInfo
+		put rigIsNumberedArray(sTableA["rows"], tConsecutive) into tArrayInfo
 
 		put item 1 of tArrayInfo into tNumbered
 
@@ -432,12 +504,12 @@ function rigGenerateTable pTableData
 			put 1 into tCounter
 		end if
 
-		repeat for each key tKey in sRows
+		repeat for each key tKey in sTableA["rows"]
 			if tNumbered is TRUE then
 				put tCounter into tKey
 			end if
 
-			if sRows[tKey] is not an array then
+			if sTableA["rows"][tKey] is not an array then
 				exit repeat
 			end if
 
@@ -450,12 +522,12 @@ function rigGenerateTable pTableData
 			end if
 
 			put "row" & tName & "Start" into tTemplateKey
-			put tOut & sTemplate[tTemplateKey] into tOut
-			put tOut & sNewline into tOut
+			put tOut & sTableA["template"][tTemplateKey] into tOut
+			put tOut & sTableA["newline"] into tOut
 
 			# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
 			put TRUE into tRowNumberedConsecutive
-			put rigIsNumberedArray(sRows, tRowNumberedConsecutive) into tRowArrayInfo
+			put rigIsNumberedArray(sTableA["rows"], tRowNumberedConsecutive) into tRowArrayInfo
 
 			put item 1 of tRowArrayInfo into tRowNumbered
 
@@ -466,38 +538,38 @@ function rigGenerateTable pTableData
 				put 1 into tRowCounter
 			end if
 
-			repeat for each key tCellKey in sRows[tKey]
+			repeat for each key tCellKey in sTableA["rows"][tKey]
 
 				if tRowNumbered is TRUE then
 					put tRowCounter into tCellKey
 				end if
 
 				put "cell" & tName & "Start" into tTemplateKey
-				put tOut & sTemplate[tTemplateKey] into tOut
+				put tOut & sTableA["template"][tTemplateKey] into tOut
 
-				if sRows[tKey][tCellKey] is empty then
-					put tOut & sEmptyCells into tOut
+				if sTableA["rows"][tKey][tCellKey] is empty then
+					put tOut & sTableA["emptyCells"] into tOut
 				else
-					put tOut & sRows[tKey][tCellKey] into tOut
+					put tOut & sTableA["rows"][tKey][tCellKey] into tOut
 				end if
 
 				put "cell" & tName & "End" into tTemplateKey
-				put tOut & sTemplate[tTemplateKey] into tOut
+				put tOut & sTableA["template"][tTemplateKey] into tOut
 
 				add 1 to tRowCounter
 
 			end repeat
 		
 			put "row" & tName & "End" into tTemplateKey
-			put tOut & sTemplate[tTemplateKey] into tOut
-			put tOut & sNewline into tOut
+			put tOut & sTableA["template"][tTemplateKey] into tOut
+			put tOut & sTableA["newline"] into tOut
 			
 			
 		end repeat
 
 	end if
 
-	put tOut & sTemplate["tableClose"] into tOut
+	put tOut & sTableA["template"]["tableClose"] into tOut
 
 	return tOut
 end rigGenerateTable
@@ -508,7 +580,7 @@ end rigGenerateTable
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigClearTableVars
 --|
 --| Author: rabit
@@ -524,12 +596,12 @@ end rigGenerateTable
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigClearTableVars
-	put empty into sRows
-	put empty into sHeading
-	put TRUE into sAutoHeading
+	put empty into sTableA["rows"]
+	put empty into sTableA["heading"]
+	put TRUE into sTableA["autoHeading"]
 end rigClearTableVars
 
 
@@ -538,7 +610,7 @@ end rigClearTableVars
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetTableData
 --|
 --| Author: rabit
@@ -554,9 +626,12 @@ end rigClearTableVars
 --| Parameters: array <pData>, bool <pSetHeading>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSetTableData pData, pSetHeading
+private command _rigSetTableData pData, pSetHeading
+  local tSetHeading, tConsecutive, tArrayInfo, tNumbered
+  local tCounter, tKey, tKeyNum
+  
 	if pSetHeading is empty then
 		put TRUE into tSetHeading
 	else
@@ -569,7 +644,7 @@ command _rigSetTableData pData, pSetHeading
 
 	# CHECK IF ARRAY IS NUMBERED CONSECUTIVELY
 	put TRUE into tConsecutive
-	put rigIsNumberedArray(sRows, tConsecutive) into tArrayInfo
+	put rigIsNumberedArray(sTableA["rows"], tConsecutive) into tArrayInfo
 
 	put item 1 of tArrayInfo into tNumbered
 
@@ -581,23 +656,23 @@ command _rigSetTableData pData, pSetHeading
 		end if
 
 		if pData[tKey] is not an array then
-			if sRows is an array then
-				put (the number of lines in the keys of sRows) + 1 into tKeyNum
-				put pData into sRows[tKeyNum]
+			if sTableA["rows"] is an array then
+				put (the number of lines in the keys of sTableA["rows"]) + 1 into tKeyNum
+				put pData into sTableA["rows"][tKeyNum]
 			else
-				put pData into sRows[1]
+				put pData into sTableA["rows"][1]
 			end if
 		end if
 	
 		# IF A HEADING HASN'T ALREADY BEEN SET WE'LL USE THE FIRST ROW OF THE ARRAY AS THE HEADING
-		if (tCounter = 1) and (the number of lines in the keys of pData > 1) and (sHeading is not an array) and (tSetHeading is TRUE) then
-			put pData[tKey] into sHeading
+		if (tCounter = 1) and (the number of lines in the keys of pData > 1) and (sTableA["heading"] is not an array) and (tSetHeading is TRUE) then
+			put pData[tKey] into sTableA["heading"]
 		else
-			if sRows is an array then
-				put (the number of lines in the keys of sRows) + 1 into tKeyNum
-				put pData[tKey] into sRows[tKeyNum]
+			if sTableA["rows"] is an array then
+				put (the number of lines in the keys of sTableA["rows"]) + 1 into tKeyNum
+				put pData[tKey] into sTableA["rows"][tKeyNum]
 			else
-				put pData[tKey] into sRows[1]
+				put pData[tKey] into sTableA["rows"][1]
 			end if
 		end if
 
@@ -610,8 +685,8 @@ end _rigSetTableData
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigCompileTableTemplate
+/*----------------------------------------------------------------------
+--| COMMAND _rigCompileTableTemplate
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -621,28 +696,30 @@ end _rigSetTableData
 --|
 --| Summary: Compile template.
 --| 
---| Format:  rigCompileTableTemplate
+--| Format:  _rigCompileTableTemplate
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigCompileTableTemplate
-	if sTemplate is not an array then
-		put _rigDefaultTableTemplate() into sTemplate
-		exit rigCompileTableTemplate
+private command _rigCompileTableTemplate
+  local tTemp, tKeys, tKey
+  
+	if sTableA["template"] is not an array then
+		put _rigDefaultTableTemplate() into sTableA["template"]
+		exit _rigCompileTableTemplate
 	end if
 
 	put _rigDefaultTableTemplate() into tTemp
 
 	put "tableOpen,headingRowStart,headingRowEnd,headingCellStart,headingCellEnd,rowStart,rowEnd,cellStart,cellEnd,rowAltStart,rowAltEnd,cellAltStart,cellAltEnd,tableClose" into tKeys
 	repeat for each item tKey in tKeys
-		if sTemplate[tKey] is empty then
-			put tTemp[tKey] into sTemplate[tKey]
+		if sTableA["template"][tKey] is empty then
+			put tTemp[tKey] into sTableA["template"][tKey]
 		end if
 	end repeat
-end rigCompileTableTemplate
+end _rigCompileTableTemplate
 
 
 
@@ -650,7 +727,7 @@ end rigCompileTableTemplate
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDefaultTableTemplate
 --|
 --| Author: rabit
@@ -666,9 +743,11 @@ end rigCompileTableTemplate
 --| Parameters: --
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigDefaultTableTemplate
+private function _rigDefaultTableTemplate
+  local tTemplate
+  
 	put "<table border=" & quote & "0" & quote && "cellpadding=" & quote & "4" & quote && "cellspacing=" & quote & "0" & quote && ">" into tTemplate["tableOpen"]
 
 	put "<tr>" into tTemplate["headingRowStart"]
@@ -696,7 +775,67 @@ end _rigDefaultTableTemplate
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigTableGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get table array variable values.
+--| 
+--| Format: rigTableGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
 
---| END OF Table.lc
---| Location:  ./system/libraries/Table.lc
+function rigTableGet pWhat
+  if pWhat is among the keys of sTableA then
+    return sTableA[pWhat]
+  end if
+   
+  return empty
+end rigTableGet
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigTableSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for table variables.
+--| 
+--| Format: rigTableSet param1, param2
+--|
+--| Parameters: string <pKey>, sTableA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigTableSet pKey pVal
+  if pKey is among the keys of sTableA then
+    put pVal into sTableA[pKey]
+  end if
+end rigTableSet
+
+
+
+
+
+
+
+
+
+--| END OF Table.livecodescript
+--| Location:  ./system/libraries/Table.livecodescript
 ----------------------------------------------------------------------
