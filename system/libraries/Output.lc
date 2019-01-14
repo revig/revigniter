@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Output"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,22 +24,85 @@ end if
 # @subpackage	Libraries
 # @category	  Output
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/output.html
+# @link		    https://revigniter.com/userGuide/libraries/output.html
 ##
 
 
-# LOGGING
-rigLogMessage "debug", "Output Library Loaded"
+
+global gRigA, gControllerHandlers, g_ElapsedTime_
+
+local sStackInUse, sOutputA -- array keys are: cacheExpiration, enableProfiler, finalOutput, headers, profilerPrefs
 
 
-# DECLARE VARIABLES
-local sFinalOutput, sHeaders, sCacheExpiration, sEnableProfiler, sProfilerPrefs
-
-# SET INITIAL VALUES
-put 0 into sCacheExpiration
-put FALSE into sEnableProfiler
 
 
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-06
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then 
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Output Library Loaded"
+      end if
+   
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put 0 into sOutputA["cacheExpiration"]
+  put FALSE into sOutputA["enableProfiler"]
+end _rigSetDefaultValues
 
 
 
@@ -69,7 +126,7 @@ put FALSE into sEnableProfiler
 ----------------------------------------------------------------------
 
 function rigGetOutput
-	return sFinalOutput
+	return sOutputA["finalOutput"]
 end rigGetOutput
 
 
@@ -98,7 +155,7 @@ end rigGetOutput
 ----------------------------------------------------------------------
 
 command rigSetOutput pOutput
-	put pOutput into sFinalOutput
+	put pOutput into sOutputA["finalOutput"]
 end rigSetOutput
 
 
@@ -127,10 +184,10 @@ end rigSetOutput
 ----------------------------------------------------------------------
 
 command rigAppendOutput pOutput
-	if sFinalOutput is "" then
-		put pOutput into sFinalOutput
+	if sOutputA["finalOutput"] is "" then
+		put pOutput into sOutputA["finalOutput"]
 	else
-		put sFinalOutput & return & pOutput into sFinalOutput
+		put sOutputA["finalOutput"] & return & pOutput into sOutputA["finalOutput"]
 	end if
 end rigAppendOutput
 
@@ -159,20 +216,22 @@ end rigAppendOutput
 ----------------------------------------------------------------------
 
 command rigSetHeader pHeader pReplace
+  local tReplace, tNumHeaders, tNewHeaderKey
+  
 	if pReplace is empty then
 		put TRUE into tReplace
 	else
 		put pReplace into tReplace
 	end if
 
-	if sHeaders is an array then
-		put the number of lines in the keys of sHeaders into tNumHeaders
+	if sOutputA["headers"] is an array then
+		put the number of lines in the keys of sOutputA["headers"] into tNumHeaders
 		put tNumHeaders + 1 into tNewHeaderKey
-		-- put pHeader into sHeaders[tNewHeaderKey]
-		put tReplace into sHeaders[tNewHeaderKey][pHeader]
+		-- put pHeader into sOutputA["headers"][tNewHeaderKey]
+		put tReplace into sOutputA["headers"][tNewHeaderKey][pHeader]
 	else
-		-- put pHeader into sHeaders[1]
-		put tReplace into sHeaders[1][pHeader]
+		-- put pHeader into sOutputA["headers"][1]
+		put tReplace into sOutputA["headers"][1][pHeader]
 	end if
 end rigSetHeader
 
@@ -201,6 +260,8 @@ end rigSetHeader
 ----------------------------------------------------------------------
 
 command rigEnableProfiler pVal pPrefs
+  local tVal
+  
 	if pVal is empty then
 		put TRUE into tVal
 	else
@@ -208,12 +269,12 @@ command rigEnableProfiler pVal pPrefs
 	end if
 	
 	if tVal is a boolean then
-		put tVal into sEnableProfiler
+		put tVal into sOutputA["enableProfiler"]
 	else
-		put TRUE into sEnableProfiler
+		put TRUE into sOutputA["enableProfiler"]
 	end if
 
-	put pPrefs into sProfilerPrefs
+	put pPrefs into sOutputA["profilerPrefs"]
 end rigEnableProfiler
 
 
@@ -242,9 +303,9 @@ end rigEnableProfiler
 
 command rigOutputCache pTime
 	if pTime is not an integer then
-		put 0 into sCacheExpiration
+		put 0 into sOutputA["cacheExpiration"]
 	else
-		put pTime into sCacheExpiration
+		put pTime into sOutputA["cacheExpiration"]
 	end if
 end rigOutputCache
 
@@ -264,7 +325,7 @@ end rigOutputCache
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
---|           	 Loader library: sFinalOutput
+--|           	 Loader library: sOutputA["finalOutput"]
 --|
 --|           	 This handler sends the finalized output data to the browser along
 --|           	 with any server headers and profile data. It also stops the
@@ -278,17 +339,21 @@ end rigOutputCache
 ----------------------------------------------------------------------*/
 
 command _rigDisplay pOutput, pCached
+  local tOutput, tElapsed, tIsAuthCookie, tLastCookieHeaderWasAuthCookie
+  local tLastCookieHeaderWasCSRFcookie, tIsCSRFcookie, tCookieHeadersSet, tContentHeaderSet
+  local tKey, tHeader, tDoNotReplaceLastCookie, tCharset, tRegEx, tDoGzip, tOutputLength
+  
 	put FALSE into tContentHeaderSet
 	
 	# SET THE OUTPUT DATA
 	if pOutput is "" then
-		put sFinalOutput into tOutput
+		put sOutputA["finalOutput"] into tOutput
 	else
 		put pOutput into tOutput
 	end if
 	
 	# DO WE NEED TO WRITE A CACHE FILE?
-	if sCacheExpiration > 0 then
+	if sOutputA["cacheExpiration"] > 0 then
 		_rigWriteCache tOutput
 	end if
 	
@@ -299,8 +364,8 @@ command _rigDisplay pOutput, pCached
 	put rigCacheVarsMerged(tOutput) into tOutput
 
 	# ARE THERE ANY SERVER HEADERS TO SEND?
-	if sHeaders is an array then
-		if (the number of lines in the keys of sHeaders) > 0 then
+	if sOutputA["headers"] is an array then
+		if (the number of lines in the keys of sOutputA["headers"]) > 0 then
       # AUTH COOKIES CONTROL VARIABLES
 			put FALSE into tIsAuthCookie
 			put FALSE into tLastCookieHeaderWasAuthCookie
@@ -311,8 +376,8 @@ command _rigDisplay pOutput, pCached
 			
 			put 0 into tCookieHeadersSet
 
-			repeat for each key tKey in sHeaders
-				 repeat for each key tHeader in sHeaders[tKey]
+			repeat for each key tKey in sOutputA["headers"]
+				 repeat for each key tHeader in sOutputA["headers"][tKey]
 					 
 					 if word 1 of tHeader is "Content-Type:" then
 						 put TRUE into tContentHeaderSet
@@ -335,7 +400,7 @@ command _rigDisplay pOutput, pCached
              end if
            end if -- if char 1 to 10 of tHeader is "Set-Cookie"
 
-					if sHeaders[tKey][tHeader] is FALSE then
+					if sOutputA["headers"][tKey][tHeader] is FALSE then
 						# DON'T REPLACE HEADER
 						put new header tHeader
 						
@@ -378,9 +443,9 @@ command _rigDisplay pOutput, pCached
 							
 						end if
 
-					end if -- if sHeaders[tKey][tHeader] is FALSE then
-        end repeat -- repeat for each key tHeader in sHeaders[tKey]
-			end repeat -- repeat for each key tKey in sHeaders
+					end if -- if sOutputA["headers"][tKey][tHeader] is FALSE then
+        end repeat -- repeat for each key tHeader in sOutputA["headers"][tKey]
+			end repeat -- repeat for each key tKey in sOutputA["headers"]
 		end if
 	end if
 
@@ -403,8 +468,8 @@ command _rigDisplay pOutput, pCached
 
 	# DO WE NEED TO GENERATE PROFILE DATA?
 	# IF SO, LOAD THE PROFILE LIBRARY.
-	if sEnableProfiler is TRUE then
-		rigLoaderLoadLibrary "Profiler", sProfilerPrefs
+	if sOutputA["enableProfiler"] is TRUE then
+		rigLoaderLoadLibrary "Profiler", sOutputA["profilerPrefs"]
 		
 		# IF THE OUTPUT DATA CONTAINS CLOSING </BODY> AND </HTML> TAGS
 		# WE WILL REMOVE THEM AND ADD THEM BACK AFTER WE INSERT THE PROFILE DATA
@@ -455,7 +520,7 @@ command _rigDisplay pOutput, pCached
 	rigLogMessage "debug", "Total execution time: " & tElapsed
 
 	# CHECK IF THERE ARE OPEN DATABASE CONNECTIONS
-	if gDatabaseID is an integer then
+	if gRigA["databaseID"] is an integer then
 		get _rigCloseDB()
 	end if
 end _rigDisplay
@@ -471,7 +536,7 @@ end _rigDisplay
 --| Version:  1.2
 --| Created: 25-07-09
 --| Last Mod: 02-02-15
---| Requires: rigFetchConfigItem(), rigLogMessage
+--| Requires: rigFetchConfigItem(), rigCanWriteFileTo(), rigHexDigest(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
 --| 
@@ -482,11 +547,14 @@ end _rigDisplay
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigWriteCache pOutput
+private command _rigWriteCache pOutput
+  local tPath, tCachePath, tUri, tFlockPath, tLockedCacheFiles, tCounter, tExpire, tDataToWrite
+  local tFoundString
+  
 	put rigFetchConfigItem("cache_path") into tPath
 
 	if tPath is empty then
-		put gBASEPATH & "cache/" into tCachePath
+		put gRigA["BASEPATH"] & "cache/" into tCachePath
 	else
 		put tPath into tCachePath
 	end if
@@ -505,7 +573,7 @@ command _rigWriteCache pOutput
   -- open file tCachePath for tCharset text write
   
 	if the result is empty then -- success!
-		put gBASEPATH & "cache/flock.txt" into tFlockPath
+		put gRigA["BASEPATH"] & "cache/flock.txt" into tFlockPath
 
 		# CHECK IF CACHE FILE IS LOCKED BY ANOTHER CONNECTION
 		if there is a file tFlockPath then
@@ -547,7 +615,7 @@ command _rigWriteCache pOutput
 		end if
 
 		# WRITE CACHE
-		put the seconds + (sCacheExpiration * 60) into tExpire
+		put the seconds + (sOutputA["cacheExpiration"] * 60) into tExpire
 		put tExpire & "TS--->" & pOutput into tDataToWrite
 		write tDataToWrite to file tCachePath
 	
@@ -591,7 +659,7 @@ end _rigWriteCache
 --| Version:  1.2
 --| Created: 2009-07-25
 --| Last Mod: 2017-06-27
---| Requires: rigFetchConfigItem(), rigLogMessage, _rigDisplay
+--| Requires: rigFetchConfigItem(), rigCanWriteFileTo(), rigHexDigest(), rigLogMessage, _rigDisplay
 --|
 --| Summary:  Update/serve a cached file.
 --| 
@@ -603,10 +671,13 @@ end _rigWriteCache
 ----------------------------------------------------------------------*/
 
 function _rigOutDisplayCache
+  local tCachePath, tUri, tFilePath, tCache, tRegEx, tCachedTime, tCachedStringOffset
+  local tCachedString, tCached
+  
 	put rigFetchConfigItem("cache_path") into tCachePath
 
 	if tCachePath is empty then
-		put gBASEPATH & "cache/" into tCachePath
+		put gRigA["BASEPATH"] & "cache/" into tCachePath
 	end if
 
 	if (there is not a folder tCachePath) or (rigCanWriteFileTo(tCachePath) is not TRUE) then
@@ -642,7 +713,7 @@ function _rigOutDisplayCache
 	--put "(\d+)TS--->(.+)" into tRegEx
 	--get matchtext(tCache,tRegEx,tCachedTime,tCachedString)
 	put "(\d+)TS--->.+" into tRegEx
-	put empty into tCachedTime -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	put empty into tCachedTime -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
 	get matchText(tCache,tRegEx,tCachedTime)
 
 	# HAS THE FILE EXPIRED? IF SO WE'LL DELETE IT.
@@ -685,6 +756,8 @@ end _rigOutDisplayCache
 ----------------------------------------------------------------------
 
 function rigCacheVarsMerged pStr
+  local tStr, tMergedStr
+  
 	put pStr into tStr
 	replace "{{" with "[[" in tStr
 	replace "}}" with "]]" in tStr
@@ -698,7 +771,66 @@ end rigCacheVarsMerged
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigOutputGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get output array variable value.
+--| 
+--| Format: rigOutputGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
 
---| END OF Output.lc
---| Location:  ./system/libraries/Output.lc
+function rigOutputGet pWhat
+  if pWhat is among the keys of sOutputA then
+    return sOutputA[pWhat]
+  end if
+   
+  return empty
+end rigOutputGet
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigOutputSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for output variables.
+--| 
+--| Format: rigOutputSet param1, param2
+--|
+--| Parameters: string <pKey> sOutputA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigOutputSet pKey pVal
+  if pKey is among the keys of sOutputA then
+    put pVal into sOutputA[pKey]
+  end if
+end rigOutputSet
+
+
+
+
+
+
+
+
+--| END OF Output.livecodescript
+--| Location:  ./system/libraries/Output.livecodescript
 ----------------------------------------------------------------------
