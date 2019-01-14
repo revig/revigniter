@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Do" into gLang["cal_su"]
 put "Lu" into gLang["cal_mo"]

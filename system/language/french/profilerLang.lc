@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "BASE DE DONNEES" into gLang["profiler_database"]
 put "CONTROLLER/HANDLER" into gLang["profiler_controller_info"]

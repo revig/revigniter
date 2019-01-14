@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "No se ha podido encontrar una variable de tipo POST llamada userfile." into gLang["upload_userfile_not_set"]
 put "El archivo subido excede el tamaño máximo permitido en la configuración." into gLang["upload_file_exceeds_limit"]

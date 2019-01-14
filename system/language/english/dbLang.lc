@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Unable to determine the database settings based on the connection string you submitted." into gLang["db_invalid_connection_str"]
 put "Unable to connect to your database server using the provided settings." into gLang["db_unable_to_connect"]

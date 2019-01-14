@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "The email validation method must be passed an array." into gLang["email_must_be_array"]
 put "Invalid email address: %s" into gLang["email_invalid_address"]

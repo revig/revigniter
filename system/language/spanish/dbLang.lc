@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "No se ha podido determinar la configuración de la base de datos basándose en la cadena proporcionada." into gLang["db_invalid_connection_str"]
 put "No se ha podido conectar al servidor de base de datos usando la configuración suministrada." into gLang["db_unable_to_connect"]

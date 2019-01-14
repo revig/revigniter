@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Year" into gLang["date_year"]
 put "Years" into gLang["date_years"]

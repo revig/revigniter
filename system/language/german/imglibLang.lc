@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Eine Quelldatei muss in den Voreinstellungen festgelegt werden." into gLang["imglib_source_image_required"]
 put "ImageMagick ist f&uuml;r diese Funktion erforderlich." into gLang["imglib_im_required"]

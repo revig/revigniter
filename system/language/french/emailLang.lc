@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "La m&eacute;thode de validation d'email n'accepte que les tableaux associatifs (array)." into gLang["email_must_be_array"]
 put "Adresse email invalide : %s" into gLang["email_invalid_address"]

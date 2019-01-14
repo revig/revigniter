@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Die Datenbankkonfiguration konnte nicht f&uuml;r die angegebene Verbindung ermittelt werden." into gLang["db_invalid_connection_str"]
 put "Mit den angegebenen Verbindungsdaten konnte keine Verbindung zur Datenbank hergestellt werden." into gLang["db_unable_to_connect"]

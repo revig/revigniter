@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Nombre del test" into gLang["ut_test_name"]
 put "Tipo de datos del test" into gLang["ut_test_datatype"]

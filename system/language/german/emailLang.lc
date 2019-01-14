@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Die E-Mail-Validierungsmethode muss als Array &uuml;bermittelt werden." into gLang["email_must_be_array"]
 put "Ung&uuml;ltige E-Mail-Adresse: %s" into gLang["email_invalid_address"]

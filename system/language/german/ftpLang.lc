@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Das Verzeichnis konnte nicht erstellt werden." into gLang["ftp_unable_to_makdir"]
 put "Es konnte nicht zu dem Verzeichnis gewechselt werden." into gLang["ftp_unable_to_changedir"]

@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 	global gEXT, gFCPATH, gSELF, gBASEPATH, gAPPPATH, gErrorData, gDatabaseID, gDocTypes, gAdvancedUnicode
 

@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "You must specify a source image in your preferences." into gLang["imglib_source_image_required"]
 put "ImageMagick is required for this feature." into gLang["imglib_im_required"]

@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 	put "Account successfully created." into gLang["accountCreationSuccess"]
 	put "Unable to create account." into gLang["accountCreationUnsuccessful"]
