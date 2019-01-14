@@ -195,5 +195,5 @@ put sAutoModels into gModuleAutoload["model"]
 
 
 --| END OF autoload.lc
---| Location: ./system/application/modules/moduleSample/config/autoload.lc
+--| Location: ./application/modules/moduleSample/config/autoload.lc
 ----------------------------------------------------------------------

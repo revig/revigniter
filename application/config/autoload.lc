@@ -194,5 +194,5 @@ put sAutoModels into gAutoload["model"]
 
 
 --| END OF autoload.lc
---| Location: ./system/application/config/autoload.lc
+--| Location: ./application/config/autoload.lc
 ----------------------------------------------------------------------

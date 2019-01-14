@@ -546,5 +546,5 @@ end if
 
 
 --| END OF config.lc
---| Location: ./system/application/config/config.lc
+--| Location: ./application/config/config.lc
 ----------------------------------------------------------------------

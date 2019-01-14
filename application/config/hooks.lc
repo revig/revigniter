@@ -34,5 +34,5 @@ end if
 
 
 --| END OF hooks.lc
---| Location: ./system/application/config/hooks.lc
+--| Location: ./application/config/hooks.lc
 ----------------------------------------------------------------------

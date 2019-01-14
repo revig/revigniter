@@ -30,5 +30,5 @@ end if
 
 
 --| END OF constants.lc
---| Location: ./system/application/config/constants.lc
+--| Location: ./application/config/constants.lc
 ----------------------------------------------------------------------

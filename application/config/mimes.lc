@@ -345,5 +345,5 @@ end rigFetchAllMimeTypes
 
 
 --| END OF mimes.lc
---| Location: ./system/application/config/mimes.lc
+--| Location: ./application/config/mimes.lc
 ----------------------------------------------------------------------

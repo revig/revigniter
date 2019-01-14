@@ -33,5 +33,5 @@ end if
 
 
 --| END OF config.lc
---| Location: ./system/application/modules/sampleModule/config/config.lc
+--| Location: ./application/modules/sampleModule/config/config.lc
 ----------------------------------------------------------------------

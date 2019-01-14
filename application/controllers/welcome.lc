@@ -33,5 +33,5 @@ end index
 
 
 --| END OF welcome.lc
---| Location: ./system/application/controllers/welcome.lc
+--| Location: ./application/controllers/welcome.lc
 ----------------------------------------------------------------------

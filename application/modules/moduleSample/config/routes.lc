@@ -80,5 +80,5 @@ put "" into gRoute["moduleSample"][1]["404Override"]
 
 
 --| END OF routes.lc
---| Location: ./system/application/modules/moduleSample/config/routes.lc
+--| Location: ./application/modules/moduleSample/config/routes.lc
 ----------------------------------------------------------------------

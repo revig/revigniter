@@ -25,5 +25,5 @@ put "<!DOCTYPE HTML PUBLIC " & quote & "-//W3C//DTD HTML 4.01 Frameset//EN" & qu
 
 
 --| END OF doctypes.lc
---| Location: ./system/application/config/doctypes.lc
+--| Location: ./application/config/doctypes.lc
 ----------------------------------------------------------------------

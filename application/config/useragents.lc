@@ -295,5 +295,5 @@ end rigDeleteAgentsVar
 
 
 --| END OF useragents.lc
---| Location: ./system/application/config/useragents.lc
+--| Location: ./application/config/useragents.lc
 ----------------------------------------------------------------------

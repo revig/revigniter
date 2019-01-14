@@ -43,5 +43,5 @@ rigSetAuthHooksConfig sAuthenticationHooks
 
 
 --| END OF authenticationHooks.lc
---| Location: ./system/application/config/authenticationHooks.lc
+--| Location: ./application/config/authenticationHooks.lc
 ----------------------------------------------------------------------

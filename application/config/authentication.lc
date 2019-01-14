@@ -260,5 +260,5 @@ rigRunInitialAuthenticationConfig sAuthenticationConf
 
 
 --| END OF authentication.lc
---| Location: ./system/application/config/authentication.lc
+--| Location: ./application/config/authentication.lc
 ----------------------------------------------------------------------
