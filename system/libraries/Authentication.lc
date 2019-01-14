@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Authentication"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,32 +24,75 @@ end if
 # @subpackage	Libraries
 # @category	  Authentication
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/authentication.html
+# @link		    https://revigniter.com/userGuide/libraries/authentication.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
 
-#LOGGING
-rigLogMessage "debug", "Authentication Library Loaded"
 
-# DECLARE VARIABLES
-local sAuth																																										--  array containing all config values, see authentication.lc
-local sAuthMessages, sAuthErrors, sActivationCode, sAuthForgottenPasswordCode									--  misc
-local sAuthHooks, sAuthHooksEnabled, sAuthHookInProgress, sAuthHooksHandlers, sAuthHooksFiles		-- "hooks" variables
+global gRigA, gData
+
+local sAuthConfigA																																					  --  array containing all config values, see authentication.lc
+local sAuthUserA                                                                                           --  user data like "username", "email" etc., see table "users"
+local sAuthMessagesA, sAuthErrorsA, sActivationCode, sAuthForgottenPasswordCode								--  misc
+local sAuthHooksA, sAuthHooksEnabled, sAuthHookInProgress, sAuthHooksHandlers, sAuthHooksFiles	-- "hooks" variables
 local sAuthSelect, sAuthWhere, sAuthLike, sAuthLimit, sAuthOffset, sAuthOrderBy, sAuthOrder			--  database related
-local sAuthQuery, sAuthFieldnames, sAuthUser
+local sAuthQuery, sAuthFieldnames, sStackInUse
 
 
 
-# AUTOMATICALLY LOAD LIBS / HELPERS / LANGUAGE FILES
-rigLoadHelper "cookie"
-rigLoaderLoadLibrary "Encrypt"
-rigLoaderLoadLibrary "Session"
-rigLoaderLoadLibrary "Email"
-get rigLoadDatabase(, TRUE, TRUE)
-get rigLangLoadLang("authentication")
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-19
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check and load additional files.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Authentication Library Loaded"
+      end if
+    
+      # AUTOMATICALLY LOAD LIBS / HELPERS / LANGUAGE FILES
+      rigLoadHelper "cookie"
+      rigLoaderLoadLibrary "Encrypt"
+      rigLoaderLoadLibrary "Session"
+      rigLoaderLoadLibrary "Email"
+      get rigLoadDatabase(, TRUE, TRUE)
+      get rigLangLoadLang("authentication")
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -68,7 +105,7 @@ get rigLangLoadLang("authentication")
 --| Version:  1.1
 --| Created: 07-09-12
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigInitializeAuthentication
+--| Requires: _rigInitializeAuthentication
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing!
 --| 
@@ -80,17 +117,19 @@ get rigLangLoadLang("authentication")
 ----------------------------------------------------------------------*/
 
 command rigRunInitialAuthenticationConfig pConfig
+  local tConfig
+  
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split tConfig using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
 	if tConfig is an array then
 
-		rigInitializeAuthentication tConfig
+		_rigInitializeAuthentication tConfig
 	end if
 end rigRunInitialAuthenticationConfig
 
@@ -99,31 +138,33 @@ end rigRunInitialAuthenticationConfig
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigInitializeAuthentication
+--| COMMAND _rigInitializeAuthentication
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 07-09-2012
 --| Last Mod: 07-09-2012
---| Requires: rigSetInitialAuthenticationValue, rigGetCookie(),
+--| Requires: _rigSetInitialAuthenticationValue, rigGetCookie(),
 --|           _rigAuthLoginRememberedUser(), rigInitializeMail, _rigAuthCallHook()
 --|
 --| Summary: Initialize preferences.
 --| 
---| Format:  rigInitializeAuthentication param1
+--| Format: _rigInitializeAuthentication param1
 --|
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigInitializeAuthentication pConfig
+private command _rigInitializeAuthentication pConfig
+  local tKey, tVal, tIdentity, tRememberCode
+  
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 
 			put pConfig[tKey] into tVal
 
-			rigSetInitialAuthenticationValue tKey, tVal
+			_rigSetInitialAuthenticationValue tKey, tVal
 
 		end repeat
 	end if
@@ -136,15 +177,15 @@ command rigInitializeAuthentication pConfig
 	end if
 	
 	# MAIL CONFIGURATION
-	if sAuth["emailConfig"] is an array then
-		rigInitializeMail sAuth["emailConfig"]
+	if sAuthConfigA["emailConfig"] is an array then
+		rigInitializeMail sAuthConfigA["emailConfig"]
 	end if
 	
 	# INITIALIZE THE AUTHENTICATION HOOKS PREFERENCES
 	_rigInitAuthHooksPrefs
 	
 	get _rigAuthCallHook("authLibraryInitialized")
-end rigInitializeAuthentication
+end _rigInitializeAuthentication
 
 
 
@@ -152,7 +193,7 @@ end rigInitializeAuthentication
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSetInitialAuthenticationValue
+--| COMMAND _rigSetInitialAuthenticationValue
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -162,45 +203,45 @@ end rigInitializeAuthentication
 --|
 --| Summary: Set initial values.
 --| 
---| Format:  rigSetInitialAuthenticationValue param1, param2
+--| Format: _rigSetInitialAuthenticationValue param1, param2
 --|
 --| Parameters: string <pVarName>, mixed <pValue>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetInitialAuthenticationValue pVarName pValue
-		switch pVarName
-		case "tables"
-			if pValue is an array then
-				put pValue into sAuth["tables"]
-			else
-				rigLogMessage "error", "Authentication tables settings must be an array!"
-			end if
+private command _rigSetInitialAuthenticationValue pVarName pValue
+  switch pVarName
+    case "tables"
+      if pValue is an array then
+        put pValue into sAuthConfigA["tables"]
+      else
+        rigLogMessage "error", "Authentication tables settings must be an array!"
+      end if
         		
-		break
-		case "join"
-			if pValue is an array then
-				put pValue into sAuth["join"]
-			else
-				rigLogMessage "error", "Authentication join settings must be an array!"
-			end if
+    break
+    case "join"
+      if pValue is an array then
+        put pValue into sAuthConfigA["join"]
+      else
+        rigLogMessage "error", "Authentication join settings must be an array!"
+      end if
         		
-		break
-		case "emailConfig"
-			if pValue is an array then
-				put pValue into sAuth["emailConfig"]
-			else
-				rigLogMessage "error", "Authentication emailConfig settings must be an array!"
-			end if
+    break
+    case "emailConfig"
+      if pValue is an array then
+        put pValue into sAuthConfigA["emailConfig"]
+      else
+        rigLogMessage "error", "Authentication emailConfig settings must be an array!"
+      end if
         		
-		break
+    break
 		
-		default
-			put pValue into sAuth[pVarName]
-   end switch
+  default
+  put pValue into sAuthConfigA[pVarName]
+end switch
 	
-end rigSetInitialAuthenticationValue
+end _rigSetInitialAuthenticationValue
 
 
 
@@ -226,6 +267,8 @@ end rigSetInitialAuthenticationValue
 ----------------------------------------------------------------------*/
 
 function rigAuthActivate pID pCode
+  local tCode, tUserA, tIdentity, tData
+  
 	get _rigAuthCallHook("authPreActivate")
 	
 	if pCode is empty then
@@ -235,14 +278,14 @@ function rigAuthActivate pID pCode
 	end if
 	
 	if tCode <> FALSE then
-		rigDBselect sAuth["identityColumn"]
+		rigDBselect sAuthConfigA["identityColumn"]
 		rigDbWhere "activationCode", pCode
 		rigDbLimit 1
-		put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+		put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 		
 		if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-			put rigDbRow() into sAuthUser
-			put sAuthUser into tUser
+			put rigDbRow() into sAuthUserA
+			put sAuthUserA into tUserA
 			
 		else
 			get _rigAuthCallHook("authPostActivate")
@@ -251,15 +294,15 @@ function rigAuthActivate pID pCode
 			return FALSE
 		end if
 		
-		put tUser[sAuth["identityColumn"]] into tIdentity 
+		put tUserA[sAuthConfigA["identityColumn"]] into tIdentity 
 		
 		put empty into tData["activationCode"]
 		put 1 into tData["active"]
 		
 		get _rigAuthCallHook("authExtraWhere")
 
- 		rigDbWhere sAuth["identityColumn"], tIdentity
-		get rigDbUpdate(sAuth["tables"]["users"], tData)
+ 		rigDbWhere sAuthConfigA["identityColumn"], tIdentity
+		get rigDbUpdate(sAuthConfigA["tables"]["users"], tData)
 		
 	else
 		put empty into tData["activationCode"]
@@ -267,7 +310,7 @@ function rigAuthActivate pID pCode
 		
 		get _rigAuthCallHook("authExtraWhere")
 		
-		get rigDbUpdate(sAuth["tables"]["users"], tData, "id =" && pID)		
+		get rigDbUpdate(sAuthConfigA["tables"]["users"], tData, "id =" && pID)		
 	end if
 	
 	if rigDbAffectedRows() is 1 then
@@ -297,7 +340,7 @@ end rigAuthActivate
 --| Created: 11-02-2013
 --| Last Mod: 11-02-2013
 --| Requires: _rigAuthCallHook(), rigAuthSetError, rigHexDigest(), rigDbWhere, rigDbUpdate()
---|           rigDbAffectedRows(), rigAuthSetMessage, rigAuthSetError
+--|            rigDbAffectedRows(), rigAuthSetMessage, rigAuthSetError
 --|
 --| Summary: Deactivate user.
 --| 
@@ -309,6 +352,8 @@ end rigAuthActivate
 ----------------------------------------------------------------------*/
 
 function rigAuthDeactivate pID
+  local tActivationData, tAffectedRows
+  
 	get _rigAuthCallHook("authDeactivate")
 	
 	if pID is empty then
@@ -325,7 +370,7 @@ function rigAuthDeactivate pID
 	get _rigAuthCallHook("authExtraWhere")
 	
 	rigDbWhere "id", pID
-	get rigDbUpdate(sAuth["tables"]["users"], tActivationData)
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tActivationData)
 	
 	put rigDbAffectedRows() into tAffectedRows
 	if tAffectedRows is 1 then
@@ -354,7 +399,7 @@ end rigAuthDeactivate
 --| Requires: _rigAuthCallHook(), rigSessUserdata()
 --|
 --| Summary: Check logged in state. Returns FALSE if
---|          session data item identity is empty.
+--|            session data item identity is empty.
 --| 
 --| Format:  rigAuthLoggedIn()
 --|
@@ -366,7 +411,7 @@ end rigAuthDeactivate
 function rigAuthLoggedIn
 	get _rigAuthCallHook("authCheckLoggedIn")
 
-	if rigSessUserdata(sAuth["identityColumn"]) is not FALSE then
+	if rigSessUserdata(sAuthConfigA["identityColumn"]) is not FALSE then
 		return TRUE
 	end if
 	
@@ -399,7 +444,7 @@ end rigAuthLoggedIn
 function rigAuthIsAdmin pID
 	get _rigAuthCallHook("authIsAdmin")
 	
-	return rigAuthInGroup(sAuth["defaultAdminGroup"], pID)
+	return rigAuthInGroup(sAuthConfigA["defaultAdminGroup"], pID)
 end rigAuthIsAdmin
 
 
@@ -425,6 +470,9 @@ end rigAuthIsAdmin
 ----------------------------------------------------------------------*/
 
 function rigAuthInGroup pGroup pID
+  local tUserGroups, tIncr, tRow, tGroupsByID, tGroupsByName, tKey, tVal
+  local tGroups
+  
 	get _rigAuthCallHook("authInGroup")
 	
 	put rigAuthUserGroups(pID) into tUserGroups
@@ -492,7 +540,7 @@ end rigAuthInGroup
 --| Last Mod: 31-12-2012
 --| Requires: --
 --|
---| Summary: Add a message to sAuthMessages.
+--| Summary: Add a message to sAuthMessagesA.
 --| 
 --| Format:  rigAuthSetMessage param1
 --|
@@ -502,8 +550,10 @@ end rigAuthInGroup
 ----------------------------------------------------------------------*/
 
 command rigAuthSetMessage pMessage
-	put (the number of lines in the keys of sAuthMessages) + 1 into tMessageNum
-	put pMessage into sAuthMessages[tMessageNum]
+  local tMessageNum
+  
+	put (the number of lines in the keys of sAuthMessagesA) + 1 into tMessageNum
+	put pMessage into sAuthMessagesA[tMessageNum]
 end rigAuthSetMessage
 
 
@@ -530,18 +580,20 @@ end rigAuthSetMessage
 ----------------------------------------------------------------------*/
 
 function rigAuthMessages pPrefix pSuffix
+  local tMessagesOut, tMessage, tLangMessage
+  
 	if pPrefix is empty then
-		put sAuth["messagePrefix"] into pPrefix
+		put sAuthConfigA["messagePrefix"] into pPrefix
 	end if
 
 	if pSuffix is empty then
-		put sAuth["messageSuffix"] into pSuffix
+		put sAuthConfigA["messageSuffix"] into pSuffix
 	end if
 	
 	put "" into tMessagesOut
 	
-	repeat for each key tKey in sAuthMessages
-		put sAuthMessages[tKey] into tMessage
+	repeat for each key tKey in sAuthMessagesA
+		put sAuthMessagesA[tKey] into tMessage
 		
 		# CHECK IF MESSAGE IS IN LANGUAGE FILE
 		put rigLangLangLine(tMessage) into tLangMessage
@@ -569,7 +621,7 @@ end rigAuthMessages
 --| Created: 12-09-2012
 --| Last Mod: 12-09-2012
 --| Requires: _rigAuthCallHook(), _rigStrToArray(), rigDbSelect, rigDbDistinct, rigDbJoin,
---|           rigDbWhereIn, rigDbWhere, rigDbOrLike, rigDbLimit, rigDbOrderBy, rigDbGet()
+--|            rigDbWhereIn, rigDbWhere, rigDbOrLike, rigDbLimit, rigDbOrderBy, rigDbGet()
 --|
 --| Summary: Get the users.
 --| 
@@ -581,6 +633,8 @@ end rigAuthMessages
 ----------------------------------------------------------------------*/
 
 function rigAuthUsers pGroupIDs
+  local tGroupsIDs, tKey, tVal
+  
 	get _rigAuthCallHook("authUsers")
 	
 	put pGroupIDs into tGroupsIDs
@@ -593,7 +647,7 @@ function rigAuthUsers pGroupIDs
 	end if
 	
 	# DEFAULT SELECTS
-	rigDbSelect "*," && sAuth["tables"]["users"] & ".id AS id," && sAuth["tables"]["users"] & ".id AS userID"
+	rigDbSelect "*," && sAuthConfigA["tables"]["users"] & ".id AS id," && sAuthConfigA["tables"]["users"] & ".id AS userID"
 	
 	# SELECTS STORED IN sAuthSelect
 	if sAuthSelect is an array then	
@@ -609,9 +663,9 @@ function rigAuthUsers pGroupIDs
 	if tGroupsIDs is an array then
 		# JOIN AND THEN RUN A rigDbWhereIn AGAINST THE GROUP IDs
 		rigDbDistinct
-		rigDbJoin sAuth["tables"]["usersGroups"], sAuth["tables"]["usersGroups"] & ".userId =" && sAuth["tables"]["users"] & ".id", "inner"
+		rigDbJoin sAuthConfigA["tables"]["usersGroups"], sAuthConfigA["tables"]["usersGroups"] & ".userId =" && sAuthConfigA["tables"]["users"] & ".id", "inner"
 		
-		rigDbWhereIn sAuth["tables"]["usersGroups"] & ".groupId", tGroupsIDs
+		rigDbWhereIn sAuthConfigA["tables"]["usersGroups"] & ".groupId", tGroupsIDs
 	end if
 	
 	get _rigAuthCallHook("authExtraWhere")
@@ -647,7 +701,7 @@ function rigAuthUsers pGroupIDs
 	end if
 	
 	# RUN THE QUERY AND RETURN THE RESULT
-	put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 	
 	if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] > 0) then
 		put sAuthQuery["fieldnames"] into sAuthFieldnames
@@ -671,8 +725,8 @@ end rigAuthUsers
 --| Version:  1.0
 --| Created: 17-02-2013
 --| Last Mod: 17-02-2013
---| Requires: _rigAuthCallHook(), rigSessUserdata(), rigDbLimit, rigAuthWhere,
---|           rigAuthUsers()
+--| Requires: _rigAuthCallHook(), rigSessUserdata(), rigDbLimit, _rigAuthWhere,
+--|            rigAuthUsers()
 --|
 --| Summary: Get a particular user.
 --| 
@@ -684,6 +738,8 @@ end rigAuthUsers
 ----------------------------------------------------------------------*/
 
 function rigAuthUser pID
+  local tID
+  
 	get _rigAuthCallHook("authUser")
 
 	# USE ID OF CURRENT USER IF pID IS EMPTY
@@ -694,7 +750,7 @@ function rigAuthUser pID
 	end if
 	
 	rigDbLimit 1
-	rigAuthWhere sAuth["tables"]["users"] & ".id", tID
+	_rigAuthWhere sAuthConfigA["tables"]["users"] & ".id", tID
 	
 	return rigAuthUsers()
 end rigAuthUser
@@ -714,7 +770,7 @@ end rigAuthUser
 --| Created: 12-09-2012
 --| Last Mod: 12-09-2012
 --| Requires: _rigAuthCallHook(), rigSessUserdata(), rigDbSelect, rigDbWhere,
---|          rigDbJoin, rigDbGet()
+--|           rigDbJoin, rigDbGet()
 --|
 --| Summary: Get groups of a specific user.
 --| 
@@ -726,6 +782,8 @@ end rigAuthUser
 ----------------------------------------------------------------------*/
 
 function rigAuthUserGroups pID
+  local tID, tQuery
+  
 	get _rigAuthCallHook("authUserGroups")
 	
 	# USE ID OF CURRENT USER IF pID IS EMPTY
@@ -735,11 +793,11 @@ function rigAuthUserGroups pID
 		put pID into tID
 	end if
 	
-	rigDbSelect sAuth["tables"]["usersGroups"] & "." & sAuth["join"]["groups"] && "as id," && sAuth["tables"]["groups"] & ".name," && sAuth["tables"]["groups"] & ".description"
-	rigDbWhere sAuth["tables"]["usersGroups"] & "." & sAuth["join"]["users"], tID
-	rigDbJoin sAuth["tables"]["groups"], sAuth["tables"]["usersGroups"] & "." & sAuth["join"]["groups"] && "=" && sAuth["tables"]["groups"] & ".id"
+	rigDbSelect sAuthConfigA["tables"]["usersGroups"] & "." & sAuthConfigA["join"]["groups"] && "as id," && sAuthConfigA["tables"]["groups"] & ".name," && sAuthConfigA["tables"]["groups"] & ".description"
+	rigDbWhere sAuthConfigA["tables"]["usersGroups"] & "." & sAuthConfigA["join"]["users"], tID
+	rigDbJoin sAuthConfigA["tables"]["groups"], sAuthConfigA["tables"]["usersGroups"] & "." & sAuthConfigA["join"]["groups"] && "=" && sAuthConfigA["tables"]["groups"] & ".id"
 	
-	put rigDbGet(sAuth["tables"]["usersGroups"]) into tQuery
+	put rigDbGet(sAuthConfigA["tables"]["usersGroups"]) into tQuery
 	
 	if tQuery <> FALSE then
 		return tQuery["resultarray"]
@@ -760,9 +818,9 @@ end rigAuthUserGroups
 --| Created: 10-10-2012
 --| Last Mod: 10-10-2012
 --| Requires: _rigAuthCallHook(), rigAuthSetError, rigDbSelect, rigDbWhere,
---|           rigDbLimit, rigDbGet(), rigDbRow(), rigAuthValidatePassword(),
---|           rigAuthUpdateLastLogin(), rigAuthSetMessage, rigAuthClearLoginAttempts(), 
---|           rigSetSessUserdata, rigAuthRememberUser(), rigAuthIncreaseLoginAttempts()
+--|            rigDbLimit, rigDbGet(), rigDbRow(), _rigAuthValidatePassword(),
+--|            _rigAuthUpdateLastLogin(), rigAuthSetMessage, rigAuthClearLoginAttempts(), 
+--|            rigSetSessUserdata, rigAuthRememberUser(), rigAuthIncreaseLoginAttempts()
 --|
 --| Summary: User login.
 --| 
@@ -774,6 +832,8 @@ end rigAuthUserGroups
 ----------------------------------------------------------------------*/
 
 function rigAuthLogin pIdentity pPassword pRemember
+  local tRemember, tUserA, tPasswordValid, tSessionData
+  
 	if pRemember is empty then
 		put FALSE into tRemember
 	else
@@ -787,45 +847,45 @@ function rigAuthLogin pIdentity pPassword pRemember
 
 	get _rigAuthCallHook("authExtraWhere")
 	
-	rigDbSelect sAuth["identityColumn"] & ", username, email, id, password, active, lastLogin"
-	rigDbWhere sAuth["identityColumn"], pIdentity
+	rigDbSelect sAuthConfigA["identityColumn"] & ", username, email, id, password, active, lastLogin"
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
 	rigDbLimit 1
-	put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 		
 	if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-		put rigDbRow(1) into sAuthUser
-		put sAuthUser into tUser
+		put rigDbRow(1) into sAuthUserA
+		put sAuthUserA into tUserA
 
 		# VALIDATE PASSWORD AGAINST ENTRY IN USERS TABLE
-		put rigAuthValidatePassword(tUser["id"], pPassword) into tPasswordValid
+		put _rigAuthValidatePassword(tUserA["id"], pPassword) into tPasswordValid
 		
 		if tPasswordValid is TRUE then
-			if tUser["active"] is 0 then
+			if tUserA["active"] is 0 then
 				
 				get _rigAuthCallHook("authPostLoginUnsuccessful")
 				rigAuthSetError "loginUnsuccessfulNotActive"
 				return FALSE
 			end if
 			
-			get rigAuthUpdateLastLogin(tUser["id"])
+			get _rigAuthUpdateLastLogin(tUserA["id"])
 			get rigAuthClearLoginAttempts(pIdentity)
 			
 			# SET SESSION DATA
-			put tUser[sAuth["identityColumn"]] into tSessionData["identity"]
-			put tUser["username"] into tSessionData["username"]
+			put tUserA[sAuthConfigA["identityColumn"]] into tSessionData["identity"]
+			put tUserA["username"] into tSessionData["username"]
 			-- put "testerchen" into tSessionData["test"] ------------------------------------------------------ OK
 			-- put "testerchen" into tSessionData["username"] ------------------------------------- OK
 			-- put "admin" into tSessionData["username"] ------------------------------------- OK
 			-- put "blabla" into tSessionData["test"] ---------------------------------- OK
 			-- put "administrator" into tSessionData["test"] ---------------------------------- failure
-			put tUser["email"] into tSessionData["email"]
-			put tUser["id"] into tSessionData["userID"]
-			put tUser["lastLogin"] into tSessionData["oldLastLogin"]
+			put tUserA["email"] into tSessionData["email"]
+			put tUserA["id"] into tSessionData["userID"]
+			put tUserA["lastLogin"] into tSessionData["oldLastLogin"]
 
 			rigSetSessUserdata tSessionData
 			
-			if (tRemember is TRUE) and (sAuth["rememberUsers"] is TRUE) then
-				get rigAuthRememberUser(tUser)
+			if (tRemember is TRUE) and (sAuthConfigA["rememberUsers"] is TRUE) then
+				get rigAuthRememberUser(tUserA)
 			end if
 					
 			get _rigAuthCallHook("authPostLogin")
@@ -859,7 +919,7 @@ end rigAuthLogin
 --| Created: 08-02-2013
 --| Last Mod: 08-02-2013
 --| Requires: _rigAuthCallHook(), rigUnsetSessUserdata, rigGetCookie(), rigDeleteCookie
---|           rigSessDestroy, rigSessCreate, rigAuthSetMessage
+--|            rigSessDestroy, rigSessCreate, rigAuthSetMessage
 --|
 --| Summary: User logout.
 --| 
@@ -871,10 +931,12 @@ end rigAuthLogin
 ----------------------------------------------------------------------*/
 
 command rigAuthLogout
+  local tSessionItems
+  
 	get _rigAuthCallHook("authLogout")
 
 	# REMOVE SESSION DATA
-	put "" into tSessionItems[sAuth["identityColumn"]]
+	put "" into tSessionItems[sAuthConfigA["identityColumn"]]
 	put "" into tSessionItems["username"]
 	put "" into tSessionItems["userID"]
 	rigUnsetSessUserdata tSessionItems
@@ -906,8 +968,8 @@ end rigAuthLogout
 --| Created: 08-02-2013
 --| Last Mod: 21-03-2014
 --| Requires: _rigAuthCallHook(), _rigAuthRegisterUser(), rigAuthSetMessage, rigAuthSetError,
---|           rigDbWhere, rigDbGet(), rigDbRow(), rigAnchor(), rigLoadView(), rigClearMail,
---|           rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend()
+--|            rigDbWhere, rigDbGet(), rigDbRow(), rigAnchor(), rigLoadView(), rigClearMail,
+--|            rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend()
 --|
 --| Summary: Register new user.
 --| 
@@ -920,9 +982,12 @@ end rigAuthLogout
 ----------------------------------------------------------------------*/
 
 function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
+  local tID, tDeactivate, tUserA, tRegData, tEmailTemplate, tAuthPathToEmailTemplates
+  local tMessage
+  
 	get _rigAuthCallHook("authPreAccountCreation")
 	
-	if sAuth["emailActivation"] is FALSE then
+	if sAuthConfigA["emailActivation"] is FALSE then
 		put _rigAuthRegisterUser(pUsername, pPassword, pEmail, pExtraData, pGroupname) into tID
 	
 		if tID <> FALSE then
@@ -940,7 +1005,7 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 		end if
 		
 		
-	else --if sAuth["emailActivation"] is FALSE then
+	else --if sAuthConfigA["emailActivation"] is FALSE then
 		put _rigAuthRegisterUser(pUsername, pPassword, pEmail, pExtraData, pGroupname) into tID
 		
 		if tID is FALSE then
@@ -960,23 +1025,23 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 		
 		# GET THE USER
 		rigDbWhere "id", tID
-		put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+		put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 
 		if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-			put rigDbRow() into sAuthUser
-			put sAuthUser into tUser
+			put rigDbRow() into sAuthUserA
+			put sAuthUserA into tUserA
 		else
 			rigAuthSetError "accountCreationUnsuccessful"
 			return FALSE
 		end if
 		
 		# REGISTRATION DATA
-		put tUser[sAuth["identityColumn"]] into tRegData["identity"]
-		put tUser["id"] into tRegData["id"]
+		put tUserA[sAuthConfigA["identityColumn"]] into tRegData["identity"]
+		put tUserA["id"] into tRegData["id"]
 		put pEmail into tRegData["email"]
 		put sActivationCode into tRegData["activationCode"]
 		
-		put tUser[sAuth["identityColumn"]] into gData["identity"]
+		put tUserA[sAuthConfigA["identityColumn"]] into gData["identity"]
 		
 		# BUILD LINK FOR ACTIVATION
 		If pExtraData["activationLink"] is empty then
@@ -987,7 +1052,7 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 		put rigAnchor(pExtraData["activationLink"] & tID & "/" & sActivationCode & "/", rigLangLangLine("activationLinkText")) into gData["activationCode"]
 		put empty into sActivationCode
 		
-		if sAuth["sendEmails"] is FALSE then
+		if sAuthConfigA["sendEmails"] is FALSE then
 			get _rigAuthCallHook("authPostAccountCreation")
 			get _rigAuthCallHook("authPostAccountCreationSuccessful")
 			get _rigAuthCallHook("authPActivationEmailSuccessful")
@@ -996,16 +1061,16 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 			return tRegData
 		else
 			# GET PATH TO EMAIL ACTIVATION TEMPLATE
-			if sAuth["pathToEmailTemplates"] is empty then
-				put "emailTemplates/" & sAuth["emailActivate"] into tEmailTemplate
+			if sAuthConfigA["pathToEmailTemplates"] is empty then
+				put "emailTemplates/" & sAuthConfigA["emailActivate"] into tEmailTemplate
 			else
-				if char -1 of sAuth["pathToEmailTemplates"] <> "/" then
-					put sAuth["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
+				if char -1 of sAuthConfigA["pathToEmailTemplates"] <> "/" then
+					put sAuthConfigA["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
 				else
-					put sAuth["pathToEmailTemplates"] into tAuthPathToEmailTemplates
+					put sAuthConfigA["pathToEmailTemplates"] into tAuthPathToEmailTemplates
 				end if
 				
-				put tAuthPathToEmailTemplates & sAuth["emailActivate"] into tEmailTemplate
+				put tAuthPathToEmailTemplates & sAuthConfigA["emailActivate"] into tEmailTemplate
 			end if			
 			
 			# MERGE EMAIL ACTIVATION TEMPLATE
@@ -1013,9 +1078,9 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 			put merge(tMessage) into tMessage
 			
 			rigClearMail
-			rigMailFrom sAuth["adminEmail"], sAuth["siteTitle"]
+			rigMailFrom sAuthConfigA["adminEmail"], sAuthConfigA["siteTitle"]
 			rigMailTo pEmail
-			rigMailSubject sAuth["siteTitle"] && "-" && rigLangLangLine("emailActivationSubject")
+			rigMailSubject sAuthConfigA["siteTitle"] && "-" && rigLangLangLine("emailActivationSubject")
 			rigMailMessage tMessage
 		
 			if rigMailSend() is TRUE then
@@ -1024,9 +1089,9 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 				get _rigAuthCallHook("authPActivationEmailSuccessful")
 				rigAuthSetMessage "activationEmailSuccessful"
 				
-				return tUser["id"]
+				return tUserA["id"]
 			end if
-		end if -- if sAuth["sendEmails"] is FALSE then
+		end if -- if sAuthConfigA["sendEmails"] is FALSE then
 		
 		get _rigAuthCallHook("authPostAccountCreation")
 		get _rigAuthCallHook("authPostAccountCreationUnsuccessful")
@@ -1034,7 +1099,7 @@ function rigAuthRegister pUsername pPassword pEmail pExtraData pGroupname
 		rigAuthSetError "activationEmailUnsuccessful"
 		
 		return FALSE
-	end if -- if sAuth["emailActivation"] is FALSE then
+	end if -- if sAuthConfigA["emailActivation"] is FALSE then
 	
 end rigAuthRegister
 
@@ -1050,8 +1115,9 @@ end rigAuthRegister
 --| Created: 08-02-2013
 --| Last Mod: 12-09-2015
 --| Requires: _rigAuthCallHook(), rigAuthEmailCheck(), rigAuthSetError, rigAuthUsernameCheck(),
---|            rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(), rigNumToCodepoint(),
---|            rigDbInsert(), rigAuthWhere, rigAuthUsers(), rigDbRow(), rigAuthAddToGroup, rigAuthGroups()
+--|            _rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(),
+--|            rigDbInsert(), _rigAuthWhere, rigAuthUsers(), rigDbRow(),
+--|            rigAuthAddToGroup, rigAuthGroups()
 --|
 --| Summary: Register new user.
 --| 
@@ -1063,22 +1129,26 @@ end rigAuthRegister
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
+private function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
+  local tOriginalUsername, tUsernameExists, tUserNumber, tData
+  local tFilteredData, tFirstDelim, tSecondDelim, tUserID, tGroupRow
+  local tGroupID
+  
 	get _rigAuthCallHook("authPreRegister")
 	
-	if (sAuth["identityColumn"] is "email") and (rigAuthEmailCheck(pEmail) is TRUE) then
+	if (sAuthConfigA["identityColumn"] is "email") and (rigAuthEmailCheck(pEmail) is TRUE) then
 		# EMAIL ALREADY USED OR INVALID
 		rigAuthSetError "accountCreationDuplicateInvalidEmail"
 		return FALSE
 		
-	else if (sAuth["identityColumn"] is "username") and (rigAuthUsernameCheck(pUsername) is TRUE) then
+	else if (sAuthConfigA["identityColumn"] is "username") and (rigAuthUsernameCheck(pUsername) is TRUE) then
 		# USERNAME ALREADY USED OR INVALID
 		rigAuthSetError "accountCreationDuplicateInvalidUsername"
 		return FALSE
 	end if
 	
 	# IF USERNAME ALREADY EXISTS ADD A NUMBER LIKE USERNAME1, USERNAME2 ETC.
-	if sAuth["identityColumn"] <> "username" then
+	if sAuthConfigA["identityColumn"] <> "username" then
 		put pUsername into tOriginalUsername
 		put TRUE into tUsernameExists
 		
@@ -1103,7 +1173,7 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	put rigIpAddress() into tData["ipAddress"]
 	put rigMasterNow() into tData["createdOn"]
 	put rigMasterNow() into tData["lastLogin"]
-	if sAuth["manualActivation"] is FALSE then
+	if sAuthConfigA["manualActivation"] is FALSE then
 		put 1 into tData["active"]
 	else
 		put 0 into tData["active"]
@@ -1111,12 +1181,12 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	
 	if pExtraData is an array then
 		# FILTER OUT DATA THAT DOESN'T HAVE A MATCHING FIELD IN THE USERS TABLE
-		put _rigAuthFilteredData(sAuth["tables"]["users"], pExtraData) into tFilteredData
+		put _rigAuthFilteredData(sAuthConfigA["tables"]["users"], pExtraData) into tFilteredData
 	
 		# MERGE FILTERED EXTRA DATA WITH tData
 		if tFilteredData is an array then
-			put rigNumToCodepoint(1) into tFirstDelim
-			put rigNumToCodepoint(2) into tSecondDelim
+			put numToCodepoint(1) into tFirstDelim
+			put numToCodepoint(2) into tSecondDelim
 			combine tData using tFirstDelim and tSecondDelim
 			combine tFilteredData using tFirstDelim and tSecondDelim
 			
@@ -1128,7 +1198,7 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 	get _rigAuthCallHook("authExtraSet")
 
 	# INSERT USER DATA AND GET ID OF LAST INSERT
-	put rigDbInsert(sAuth["tables"]["users"], tData, TRUE) into tUserID
+	put rigDbInsert(sAuthConfigA["tables"]["users"], tData, TRUE) into tUserID
 	
 	# ADD USER ID TO TABLE users_groups
 	if tUserID <> FALSE then
@@ -1139,7 +1209,7 @@ function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGroups
 		end if
 	
 		# GET ID OF DEFAULT GROUP
-		rigAuthWhere "name", sAuth["defaultGroup"]
+		_rigAuthWhere "name", sAuthConfigA["defaultGroup"]
 		put 1 into sAuthLimit
 		get rigAuthGroups()
 		if sAuthQuery <> FALSE then
@@ -1169,25 +1239,27 @@ end _rigAuthRegisterUser
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigAuthUpdateLastLogin
+--| FUNCTION _rigAuthUpdateLastLogin
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 30-12-2012
 --| Last Mod: 30-12-2012
 --| Requires: _rigAuthCallHook(), rigLoadHelper, rigMasterNow(), rigDbWhere,
---|           rigDbUpdate(), rigDbAffectedRows()
+--|            rigDbUpdate(), rigDbAffectedRows()
 --|
 --| Summary: Update date of last user login.
 --| 
---| Format:  rigAuthUpdateLastLogin(param1)
+--| Format:  _rigAuthUpdateLastLogin(param1)
 --|
 --| Parameters: integer <pID>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigAuthUpdateLastLogin pID
+private function _rigAuthUpdateLastLogin pID
+  local tData
+  
 	get _rigAuthCallHook("authUpdateLastLogin")
 	
 	get _rigAuthCallHook("authExtraWhere")
@@ -1195,14 +1267,14 @@ function rigAuthUpdateLastLogin pID
 	put rigMasterNow() into tData["lastLogin"]
 
 	rigDbWhere "id", pID
-	get rigDbUpdate(sAuth["tables"]["users"], tData)
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tData)
 	
 	if rigDbAffectedRows() <> FALSE then
 		return TRUE
 	end if
 	
 	return FALSE
-end rigAuthUpdateLastLogin
+end _rigAuthUpdateLastLogin
 
 
 
@@ -1216,7 +1288,7 @@ end rigAuthUpdateLastLogin
 --| Created: 30-12-2012
 --| Last Mod: 30-12-2012
 --| Requires: rigIpAddress(), rigLoadHelper, rigDbWhere, rigMasterNow(),
---|           rigDbOrWhere, rigDbDelete()
+--|            rigDbOrWhere, rigDbDelete()
 --|
 --| Summary: Clear entry for login attempts.
 --| 
@@ -1228,7 +1300,9 @@ end rigAuthUpdateLastLogin
 ----------------------------------------------------------------------*/
 
 function rigAuthClearLoginAttempts pIdentity pExpirePeriod
-	if sAuth["trackLoginAttempts"] is TRUE then
+  local tExpirePeriod, tIP, tArray, tTimeLessExpirePeriod
+  
+	if sAuthConfigA["trackLoginAttempts"] is TRUE then
 		if pExpirePeriod is empty then
 			put 86400 into tExpirePeriod
 		else
@@ -1244,7 +1318,7 @@ function rigAuthClearLoginAttempts pIdentity pExpirePeriod
 		put rigMasterNow() - tExpirePeriod into tTimeLessExpirePeriod
 		rigDbOrWhere "time <", tTimeLessExpirePeriod, FALSE
 		
-		if rigDbDelete(sAuth["tables"]["loginAttempts"]) <> FALSE then
+		if rigDbDelete(sAuthConfigA["tables"]["loginAttempts"]) <> FALSE then
 			return TRUE
 		end if
 	end if
@@ -1275,13 +1349,15 @@ end rigAuthClearLoginAttempts
 ----------------------------------------------------------------------*/
 
 function rigAuthIncreaseLoginAttempts pIdentity
-	if sAuth["trackLoginAttempts"] is TRUE then
+  local tData
+  
+	if sAuthConfigA["trackLoginAttempts"] is TRUE then
 	
 		put rigIpAddress() into tData["ipAddress"]
 		put pIdentity into tData["login"]
 		put rigMasterNow() into tData["time"]
 		
-		return rigDbInsert(sAuth["tables"]["loginAttempts"], tData, TRUE)
+		return rigDbInsert(sAuthConfigA["tables"]["loginAttempts"], tData, TRUE)
 	end if
 	
 	return FALSE
@@ -1296,14 +1372,14 @@ end rigAuthIncreaseLoginAttempts
 --| FUNCTION rigAuthRememberUser
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 30-12-2012
---| Last Mod: 30-12-2012
+--| Version:  1.1
+--| Created: 2012-12-30
+--| Last Mod: 2019-01-06
 --| Requires: _rigAuthCallHook(), rigDbWhere, rigDbUpdate(), rigDbAffectedRows(), rigSetCookie
 --|
 --| Summary: Remember user and enable auto-login.
 --| 
---| Format:  rigAuthRememberUser(param1)
+--| Format: rigAuthRememberUser(param1)
 --|
 --| Parameters: array <pUser>
 --|
@@ -1311,33 +1387,41 @@ end rigAuthIncreaseLoginAttempts
 ----------------------------------------------------------------------*/
 
 function rigAuthRememberUser pUser
+  local tSalt, tData, tExpire, tCookieIdentity, tCookieRemCode
+  
 	get _rigAuthCallHook("authPreRememberUser")
 	
 	if pUser is not an array then
 		return FALSE
 	end if
 	
-	put base64Encode(sha1Digest(pUser["password"])) into tSalt
-	
+	set the itemDel to "."
+  
+  if item 1 of the version < 9 then
+    put base64Encode(sha1Digest(pUser["password"])) into tSalt
+  else
+    put base64Encode(messageDigest(pUser["password"], "SHA3-256")) into tSalt
+  end if
+  	
 	put tSalt into tData["rememberCode"]
 
 	rigDbWhere "id", pUser["id"]
-	get rigDbUpdate(sAuth["tables"]["users"], tData)
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tData)
 	
 	if rigDbAffectedRows() <> FALSE then
 		# IF autoLoginExpire IS 0 SET THE EXPIRATION TWO YEARS FROM NOW
-		if sAuth["autoLoginExpire"] is 0 then
+		if sAuthConfigA["autoLoginExpire"] is 0 then
 			put (60*60*24*365*2) into tExpire
 		else
-			put sAuth["autoLoginExpire"] into tExpire
+			put sAuthConfigA["autoLoginExpire"] into tExpire
 		end if
 		
 		# SET AUTO-LOGIN COOKIES
 		put "identity" into tCookieIdentity["name"]
-		put pUser[sAuth["identityColumn"]] into tCookieIdentity["value"]
+		put pUser[sAuthConfigA["identityColumn"]] into tCookieIdentity["value"]
 		put tExpire into tCookieIdentity["expire"]
 		rigSetCookie tCookieIdentity
-		
+
 		put "rememberCode" into tCookieRemCode["name"]
 		put tSalt into tCookieRemCode["value"]
 		put tExpire into tCookieRemCode["expire"]
@@ -1366,8 +1450,8 @@ end rigAuthRememberUser
 --| Created: 02-01-2013
 --| Last Mod: 02-01-2013
 --| Requires: _rigAuthCallHook(), rigAuthIdentityCheck(), rigDbSelect, rigDbWhere, rigDbLimit,
---|           rigDbGet(), rigDbRow(), rigAuthUpdateLastLogin(), rigSetSessUserdata,
---|           rigAuthRememberUser()
+--|            rigDbGet(), rigDbRow(), _rigAuthUpdateLastLogin(), rigSetSessUserdata,
+--|            rigAuthRememberUser()
 --|
 --| Summary: Auto-login remembered user.
 --| 
@@ -1378,7 +1462,9 @@ end rigAuthRememberUser
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigAuthLoginRememberedUser pIdentity pRememberCode
+private function _rigAuthLoginRememberedUser pIdentity pRememberCode
+  local tUserA, tSessionData
+  
 	get _rigAuthCallHook("authPreLoginRememberedUser")
 
 	# CHECK FOR VALID DATA
@@ -1391,29 +1477,29 @@ function _rigAuthLoginRememberedUser pIdentity pRememberCode
 	
 	# GET THE USER
 	get _rigAuthCallHook("authExtraWhere")
-	
-	rigDbSelect sAuth["identityColumn"] & ", id, password"
-	rigDbWhere sAuth["identityColumn"], pIdentity
+
+	rigDbSelect sAuthConfigA["identityColumn"] & ", id, password"
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
 	rigDbWhere "rememberCode", pRememberCode
 	rigDbLimit 1
-	put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 		
 	# IF THE IDENTITY WAS FOUND CHECK THE USER IN	
 	if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-		put rigDbRow(1) into sAuthUser
-		put sAuthUser into tUser
+		put rigDbRow(1) into sAuthUserA
+		put sAuthUserA into tUserA
 		
-		get rigAuthUpdateLastLogin(tUser["id"])
+		get _rigAuthUpdateLastLogin(tUserA["id"])
 		
 		# SET SESSION DATA
-		put tUser[sAuth["identityColumn"]] into tSessionData[sAuth["identityColumn"]]
-		put tUser["id"] into tSessionData["userID"]
+		put tUserA[sAuthConfigA["identityColumn"]] into tSessionData[sAuthConfigA["identityColumn"]]
+		put tUserA["id"] into tSessionData["userID"]
 
 		rigSetSessUserdata tSessionData
 		
 		# EXTEND THE USERS COOKIES IF THE OPTION IS ENABLED
-		if sAuth["userExtendOnLogin"] is TRUE then
-			get rigAuthRememberUser(tUser)
+		if sAuthConfigA["userExtendOnLogin"] is TRUE then
+			get rigAuthRememberUser(tUserA)
 		end if
 		
 		get _rigAuthCallHook("authPostLoginRememberedUser")
@@ -1436,7 +1522,7 @@ end _rigAuthLoginRememberedUser
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigAuthEncryptPassword
+--| FUNCTION _rigAuthEncryptPassword
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -1446,14 +1532,14 @@ end _rigAuthLoginRememberedUser
 --|
 --| Summary: Encrypts the password to be stored in the database.
 --| 
---| Format:  rigAuthEncryptPassword(param1)
+--| Format:  _rigAuthEncryptPassword(param1)
 --|
 --| Parameters: string <pPassword>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigAuthEncryptPassword pPassword
+private function _rigAuthEncryptPassword pPassword
 	if pPassword is empty then
 		return FALSE
 	end if
@@ -1462,12 +1548,12 @@ function rigAuthEncryptPassword pPassword
 
 	# CHECK WHICH ENCRYPTION KEY SHOULD BE USED
 	# AND ENCRYPT THE PASSWORD
-	if sAuth["useAuthEncryptionKey"] is TRUE then
-		return rigEncode(pPassword, sAuth["authEncryptionKey"])
+	if sAuthConfigA["useAuthEncryptionKey"] is TRUE then
+		return rigEncode(pPassword, sAuthConfigA["authEncryptionKey"])
 	end if
 	
 	return rigEncode(pPassword)
-end rigAuthEncryptPassword
+end _rigAuthEncryptPassword
 
 
 
@@ -1475,7 +1561,7 @@ end rigAuthEncryptPassword
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigAuthDecryptPassword
+--| FUNCTION _rigAuthDecryptPassword
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -1485,14 +1571,14 @@ end rigAuthEncryptPassword
 --|
 --| Summary: Decrypts the password currently stored in the database.
 --| 
---| Format:  rigAuthDecryptPassword(param1)
+--| Format:  _rigAuthDecryptPassword(param1)
 --|
 --| Parameters: string <pPassword>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigAuthDecryptPassword pPassword
+private function _rigAuthDecryptPassword pPassword
 	if pPassword is empty then
 		return FALSE
 	end if
@@ -1501,12 +1587,12 @@ function rigAuthDecryptPassword pPassword
 
 	# CHECK WHICH ENCRYPTION KEY SHOULD BE USED
 	# AND ENCRYPT THE PASSWORD
-	if sAuth["useAuthEncryptionKey"] is TRUE then
-		return rigDecode(pPassword, sAuth["authEncryptionKey"])
+	if sAuthConfigA["useAuthEncryptionKey"] is TRUE then    
+		return rigDecode(pPassword, sAuthConfigA["authEncryptionKey"])
 	end if
 	
 	return rigDecode(pPassword)
-end rigAuthDecryptPassword
+end _rigAuthDecryptPassword
 
 
 
@@ -1515,25 +1601,27 @@ end rigAuthDecryptPassword
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigAuthValidatePassword
+--| FUNCTION _rigAuthValidatePassword
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2012-12-29
 --| Last Mod: 2018-02-21
 --| Requires: _rigAuthCallHook(), rigDbSelect, rigDbWhere, rigDbLimit, rigDbGet(),
---|           rigDbRow(), _rigAuthSetHash, rigSetCipher, rigDecode()
+--|            rigDbRow(), _rigAuthSetHash, rigSetCipher, rigDecode()
 --|
 --| Summary: Validate password against entry in Users table.
 --| 
---| Format:  rigAuthValidatePassword(param1, param2)
+--| Format:  _rigAuthValidatePassword(param1, param2)
 --|
 --| Parameters: integer <pID>, string <pPassword>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigAuthValidatePassword pID pPassword
+private function _rigAuthValidatePassword pID pPassword
+  local tQuery, tRow, tPasswordDBencrypted, tPasswordDB
+  
 	if (pID is empty) or (pPassword is empty) then
 		return FALSE
 	end if
@@ -1543,7 +1631,7 @@ function rigAuthValidatePassword pID pPassword
 	rigDbSelect "password"
 	rigDbWhere "id", pID
 	rigDbLimit 1
-	put rigDbGet(sAuth["tables"]["users"]) into tQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into tQuery
 
 	if tQuery["numrows"] <> 1 then
 		return FALSE
@@ -1555,12 +1643,12 @@ function rigAuthValidatePassword pID pPassword
 	_rigAuthSetHash
 
 	# SET THE CIPHER AND THE KEY LENGTH
-	rigSetCipher sAuth["cipher"], sAuth["keyLength"]
+	rigSetCipher sAuthConfigA["cipher"], sAuthConfigA["keyLength"]
 	
 	# CHECK WHICH ENCRYPTION KEY SHOULD BE USED
 	# AND DECRYPT THE STORED PASSWORD
-	if sAuth["useAuthEncryptionKey"] is TRUE then
-		put rigDecode(tPasswordDBencrypted, sAuth["authEncryptionKey"]) into tPasswordDB
+	if sAuthConfigA["useAuthEncryptionKey"] is TRUE then
+		put rigDecode(tPasswordDBencrypted, sAuthConfigA["authEncryptionKey"]) into tPasswordDB
 	else
 		put rigDecode(tPasswordDBencrypted) into tPasswordDB
 	end if
@@ -1572,7 +1660,7 @@ function rigAuthValidatePassword pID pPassword
 	end if
 	
 	return FALSE
-end rigAuthValidatePassword
+end _rigAuthValidatePassword
 
 
 
@@ -1599,9 +1687,11 @@ end rigAuthValidatePassword
 ----------------------------------------------------------------------*/
 
 command rigAuthSetError pError
-	put the number of lines in the keys of sAuthErrors into tErrorCount
+  local tErrorCount
+  
+	put the number of lines in the keys of sAuthErrorsA into tErrorCount
 	add 1 to tErrorCount
-	put pError into sAuthErrors[tErrorCount]
+	put pError into sAuthErrorsA[tErrorCount]
 end rigAuthSetError
 
 
@@ -1628,18 +1718,20 @@ end rigAuthSetError
 ----------------------------------------------------------------------*/
 
 function rigAuthErrors pPrefix pSuffix
+  local tErrorsOut, tError, tLangError
+  
 	if pPrefix is empty then
-		put sAuth["errorPrefix"] into pPrefix
+		put sAuthConfigA["errorPrefix"] into pPrefix
 	end if
 
 	if pSuffix is empty then
-		put sAuth["errorSuffix"] into pSuffix
+		put sAuthConfigA["errorSuffix"] into pSuffix
 	end if
 	
 	put "" into tErrorsOut
 	
-	repeat for each key tKey in sAuthErrors
-		put sAuthErrors[tKey] into tError
+	repeat for each key tKey in sAuthErrorsA
+		put sAuthErrorsA[tKey] into tError
 		
 		# CHECK IF ERROR IS IN LANGUAGE FILE
 		put rigLangLangLine(tError) into tLangError
@@ -1709,8 +1801,8 @@ function rigAuthIdentityCheck pIdentity
 		return FALSE
 	end if
 	
-	rigDbWhere sAuth["identityColumn"], pIdentity
-	if rigDbCountAllResults(sAuth["tables"]["users"]) > 0 then
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
+	if rigDbCountAllResults(sAuthConfigA["tables"]["users"]) > 0 then
 		return TRUE
 	end if
 	
@@ -1731,7 +1823,7 @@ end rigAuthIdentityCheck
 --| Requires: _rigAuthCallHook(), rigDbWhere, rigDbCountAllResults()
 --|
 --| Summary: Check if there is an entry in the DB regarding
---|          the email address provided.
+--|            the email address provided.
 --| 
 --| Format:  rigAuthEmailCheck(param1)
 --|
@@ -1750,7 +1842,7 @@ function rigAuthEmailCheck pEmail
 	get _rigAuthCallHook("authExtraWhere")
 	
 	rigDbWhere "email", pEmail
-	if rigDbCountAllResults(sAuth["tables"]["users"]) > 0 then
+	if rigDbCountAllResults(sAuthConfigA["tables"]["users"]) > 0 then
 		return TRUE
 	end if
 	
@@ -1771,7 +1863,7 @@ end rigAuthEmailCheck
 --| Requires: _rigAuthCallHook(), rigDbWhere, rigDbCountAllResults()
 --|
 --| Summary: Check if there is an entry in the DB regarding
---|          the username provided.
+--|            the username provided.
 --| 
 --| Format:  rigAuthUsernameCheck(param1)
 --|
@@ -1790,7 +1882,7 @@ function rigAuthUsernameCheck pUsername
 	get _rigAuthCallHook("authExtraWhere")
 	
 	rigDbWhere "username", pUsername
-	if rigDbCountAllResults(sAuth["tables"]["users"]) > 0 then
+	if rigDbCountAllResults(sAuthConfigA["tables"]["users"]) > 0 then
 		return TRUE
 	end if
 	
@@ -1820,7 +1912,9 @@ end rigAuthUsernameCheck
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function _rigAuthFilteredData pTable pData
+private function _rigAuthFilteredData pTable pData
+  local tFields, tDataKeysList, tKey, tFilteredData
+  
 	# GET ARRAY OF FIELD NAMES
 	put rigDbListFields(pTable) into tFields
 
@@ -1865,6 +1959,8 @@ end _rigAuthFilteredData
 ----------------------------------------------------------------------*/
 
 command rigAuthAddToGroup pGroupID pUserID
+  local tUserID, tData
+  
 	get _rigAuthCallHook("authAddToGroup")
 
 	# USE ID OF CURRENT USER IF pUserID IS EMPTY
@@ -1875,9 +1971,9 @@ command rigAuthAddToGroup pGroupID pUserID
 	end if
 	
 	if rigAuthInGroup(pGroupID, tUserID) is false then
-		put pGroupID into tData[sAuth["join"]["groups"]]
-		put tUserID into tData[sAuth["join"]["users"]]
-		get rigDbInsert(sAuth["tables"]["usersGroups"], tData)
+		put pGroupID into tData[sAuthConfigA["join"]["groups"]]
+		put tUserID into tData[sAuthConfigA["join"]["users"]]
+		get rigDbInsert(sAuthConfigA["tables"]["usersGroups"], tData)
 	end if
 end rigAuthAddToGroup
 
@@ -1886,24 +1982,26 @@ end rigAuthAddToGroup
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigAuthWhere
+--| COMMAND _rigAuthWhere
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 08-02-2013
 --| Last Mod: 22-12-2014
---| Requires: _rigAuthCallHook(), rigNumToCodepoint()
+--| Requires: _rigAuthCallHook()
 --|
 --| Summary: Add key value pairs to sAuthWhere.
 --| 
---| Format:  rigAuthWhere param1, param2
+--| Format:  _rigAuthWhere param1, param2
 --|
 --| Parameters: mixed <pWhere>, string <pValue>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigAuthWhere pWhere pValue
+private command _rigAuthWhere pWhere pValue
+  local tWhereArray, tFirstDelim, tSecondDelim
+  
 	get _rigAuthCallHook("authWhere")
 	
 	if pWhere is not an array then
@@ -1913,8 +2011,8 @@ command rigAuthWhere pWhere pValue
 	end if
 
 	if sAuthWhere is an array then
-		put rigNumToCodepoint(1) into tFirstDelim
-		put rigNumToCodepoint(2) into tSecondDelim
+		put numToCodepoint(1) into tFirstDelim
+		put numToCodepoint(2) into tSecondDelim
 		combine sAuthWhere using tFirstDelim and tSecondDelim
 		combine tWhereArray using tFirstDelim and tSecondDelim
 
@@ -1923,7 +2021,7 @@ command rigAuthWhere pWhere pValue
 	else
 		put tWhereArray into sAuthWhere
 	end if
-end rigAuthWhere
+end _rigAuthWhere
 
 
 
@@ -1978,7 +2076,7 @@ function rigAuthGroups
 	end if
 	
 	# RUN THE QUERY AND RETURN THE RESULT
-	put rigDbGet(sAuth["tables"]["groups"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["groups"]) into sAuthQuery
 	
 	if sAuthQuery <> FALSE then
 		put sAuthQuery["fieldnames"] into sAuthFieldnames
@@ -2015,7 +2113,7 @@ function rigAuthGroup pID
 	get _rigAuthCallHook("authGroup")
 	
 	if pID <> empty then
-		rigDbWhere sAuth["tables"]["groups"] & ".id", pID	
+		rigDbWhere sAuthConfigA["tables"]["groups"] & ".id", pID	
 	end if
 	
 	put 1 into sAuthLimit
@@ -2036,10 +2134,10 @@ end rigAuthGroup
 --| Version:  1.2
 --| Created: 17-02-2013
 --| Last Mod: 21-03-2014
---| Requires: _rigAuthForgottenPassword(), rigAuthWhere, rigAuthUsers(), rigDbRow(),
---|           rigAuthSetMessage, rigAnchor(), rigLoadView(), rigClearMail,
---|           rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend(),
---|           rigAuthSetError
+--| Requires: _rigAuthForgottenPassword(), _rigAuthWhere, rigAuthUsers(), rigDbRow(),
+--|            rigAuthSetMessage, rigAnchor(), rigLoadView(), rigClearMail,
+--|            rigMailFrom, rigMailTo, rigMailSubject, rigMailMessage, rigMailSend(),
+--|            rigAuthSetError
 --|
 --| Summary: User forgot password.
 --| 
@@ -2052,24 +2150,27 @@ end rigAuthGroup
 ----------------------------------------------------------------------*/
 
 function rigAuthForgottenPassword pIdentity pExtraData
+  local tQueryResultArray, tUserA, tData, tEmailTemplate, tAuthPathToEmailTemplates
+  local tMessage
+  
 	if _rigAuthForgottenPassword(pIdentity) is TRUE then
 		# GET USER INFORMATION
-		rigAuthWhere sAuth["identityColumn"], pIdentity
+		_rigAuthWhere sAuthConfigA["identityColumn"], pIdentity
 		put rigAuthUsers() into tQueryResultArray
 		
 		if tQueryResultArray <> FALSE then
-			put rigDbRow() into tUser
+			put rigDbRow() into tUserA
 			
-			put tUser[sAuth["identityColumn"]] into tData["identity"]
-			put tUser["forgottenPasswordCode"] into tData["forgottenPasswordCode"]
+			put tUserA[sAuthConfigA["identityColumn"]] into tData["identity"]
+			put tUserA["forgottenPasswordCode"] into tData["forgottenPasswordCode"]
 			
-			if sAuth["sendEmails"] is FALSE then
+			if sAuthConfigA["sendEmails"] is FALSE then
 				rigAuthSetMessage "forgotPasswordSuccessful"
 
 				return tData
 			else
 				
-				put tUser[sAuth["identityColumn"]] into gData["identity"]
+				put tUserA[sAuthConfigA["identityColumn"]] into gData["identity"]
 
 				# BUILD LINK FOR PASSWORD RESET
 				if pExtraData["passwordResetLink"] is empty then
@@ -2077,19 +2178,19 @@ function rigAuthForgottenPassword pIdentity pExtraData
 					else if char -1 of pExtraData["passwordResetLink"] <> "/" then
 						put pExtraData["passwordResetLink"] & "/" into pExtraData["passwordResetLink"]
 				end if
-				put rigAnchor(pExtraData["passwordResetLink"] & tUser["forgottenPasswordCode"] & "/", rigLangLangLine("resetPasswordLinkText")) into gData["forgottenPasswordCode"]
+				put rigAnchor(pExtraData["passwordResetLink"] & tUserA["forgottenPasswordCode"] & "/", rigLangLangLine("resetPasswordLinkText")) into gData["forgottenPasswordCode"]
 				
 				# GET PATH TO FORGOTTEN PASSWORD EMAIL TEMPLATE
-				if sAuth["pathToEmailTemplates"] is empty then
-					put "emailTemplates/" & sAuth["emailForgotPassword"] into tEmailTemplate
+				if sAuthConfigA["pathToEmailTemplates"] is empty then
+					put "emailTemplates/" & sAuthConfigA["emailForgotPassword"] into tEmailTemplate
 				else
-					if char -1 of sAuth["pathToEmailTemplates"] <> "/" then
-						put sAuth["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
+					if char -1 of sAuthConfigA["pathToEmailTemplates"] <> "/" then
+						put sAuthConfigA["pathToEmailTemplates"] & "/" into tAuthPathToEmailTemplates
 					else
-						put sAuth["pathToEmailTemplates"] into tAuthPathToEmailTemplates
+						put sAuthConfigA["pathToEmailTemplates"] into tAuthPathToEmailTemplates
 					end if
 
-					put tAuthPathToEmailTemplates & sAuth["emailForgotPassword"] into tEmailTemplate
+					put tAuthPathToEmailTemplates & sAuthConfigA["emailForgotPassword"] into tEmailTemplate
 				end if			
 
 				# MERGE FORGOTTEN PASSWORD EMAIL TEMPLATE
@@ -2098,9 +2199,9 @@ function rigAuthForgottenPassword pIdentity pExtraData
 				
 				# SEND MAIL
 				rigClearMail
-				rigMailFrom sAuth["adminEmail"], sAuth["siteTitle"]
-				rigMailTo tUser["email"]
-				rigMailSubject sAuth["siteTitle"] && "-" && rigLangLangLine("emailForgottenPasswordSubject")
+				rigMailFrom sAuthConfigA["adminEmail"], sAuthConfigA["siteTitle"]
+				rigMailTo tUserA["email"]
+				rigMailSubject sAuthConfigA["siteTitle"] && "-" && rigLangLangLine("emailForgottenPasswordSubject")
 				rigMailMessage tMessage
 
 				if rigMailSend() is TRUE then
@@ -2142,8 +2243,8 @@ end rigAuthForgottenPassword
 --| Version:  1.0
 --| Created: 17-02-2013
 --| Last Mod: 17-02-2013
---| Requires: _rigAuthCallHook(), rigAuthEncryptPassword(), rigMasterNow(),
---|          rigDbWhere, rigDbUpdate(), rigDbAffectedRows()
+--| Requires: _rigAuthCallHook(), rigHexDigest(), rigMasterNow(),
+--|            rigDbWhere, rigDbUpdate(), rigDbAffectedRows()
 --|
 --| Summary: Insert a forgotten password key.
 --| 
@@ -2154,7 +2255,9 @@ end rigAuthForgottenPassword
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigAuthForgottenPassword pIdentity
+private function _rigAuthForgottenPassword pIdentity
+  local tData
+  
 	if pIdentity is empty then
 		get _rigAuthCallHook("authPostFrogottenPassword")
 		get _rigAuthCallHook("authPostFrogottenPasswordUnsuccessful")
@@ -2169,8 +2272,8 @@ function _rigAuthForgottenPassword pIdentity
 	put sAuthForgottenPasswordCode into tData["forgottenPasswordCode"]
 	put rigMasterNow() into tData["forgottenPasswordTime"]
 	
-	rigDbWhere sAuth["identityColumn"], pIdentity
-	get rigDbUpdate(sAuth["tables"]["users"], tData)
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tData)
 	
 	if rigDbAffectedRows() is 1 then
 			get _rigAuthCallHook("authPostFrogottenPassword")
@@ -2198,8 +2301,8 @@ end _rigAuthForgottenPassword
 --| Version:  1.0
 --| Created: 17-02-2013
 --| Last Mod: 17-02-2013
---| Requires: rigAuthWhere, rigAuthUsers(), rigAuthSetError, rigDbRow(),
---|           rigMasterNow(), rigAuthClearForgottenPasswordCode()
+--| Requires: _rigAuthWhere, rigAuthUsers(), rigAuthSetError, rigDbRow(),
+--|            rigMasterNow(), rigAuthClearForgottenPasswordCode()
 --|
 --| Summary: Check the forgotten password reset code.
 --| 
@@ -2211,8 +2314,10 @@ end _rigAuthForgottenPassword
 ----------------------------------------------------------------------*/
 
 function rigAuthForgottenPasswordCheck pCode
+  local tUserA
+  
 	# GET USER DATA
-	rigAuthWhere "forgottenPasswordCode", pCode
+	_rigAuthWhere "forgottenPasswordCode", pCode
 	get rigAuthUsers()
 	
 	if sAuthQuery is FALSE then
@@ -2221,11 +2326,11 @@ function rigAuthForgottenPasswordCheck pCode
 		return FALSE
 	else
 		
-		put rigDbRow() into tUser
+		put rigDbRow() into tUserA
 			
-		if sAuth["forgotPasswordExpiration"] > 0 then
+		if sAuthConfigA["forgotPasswordExpiration"] > 0 then
 			# CHECK IF THE FORGOT PASSWORD REQUEST IS EXPIRED
-			if (rigMasterNow() - tUser["forgottenPasswordTime"]) > sAuth["forgotPasswordExpiration"] then
+			if (rigMasterNow() - tUserA["forgottenPasswordTime"]) > sAuthConfigA["forgotPasswordExpiration"] then
 				# IT HAS EXPIRED
 				get rigAuthClearForgottenPasswordCode(pCode)
 				rigAuthSetError "passwordChangeUnsuccessful"
@@ -2235,7 +2340,7 @@ function rigAuthForgottenPasswordCheck pCode
 			
 		end if
 		
-		return tUser
+		return tUserA
 	end if
 end rigAuthForgottenPasswordCheck
 
@@ -2264,17 +2369,19 @@ end rigAuthForgottenPasswordCheck
 ----------------------------------------------------------------------*/
 
 function rigAuthClearForgottenPasswordCode pCode
+  local tData
+  
 	if pCode is empty then
 		return FALSE
 	end if
 	
 	rigDbWhere "forgottenPasswordCode", pCode
-	if rigDbCountAllResults(sAuth["tables"]["users"]) > 0 then
+	if rigDbCountAllResults(sAuthConfigA["tables"]["users"]) > 0 then
 		put empty into tData["forgottenPasswordCode"]
 		put 0 into tData["forgottenPasswordTime"]
 		
 		-- rigDbWhere "forgottenPasswordCode", pCode
-		get rigDbUpdate(sAuth["tables"]["users"], tData, "forgottenPasswordCode = '" & pCode & "'")
+		get rigDbUpdate(sAuthConfigA["tables"]["users"], tData, "forgottenPasswordCode = '" & pCode & "'")
 		
 		return TRUE
 	end if
@@ -2296,8 +2403,8 @@ end rigAuthClearForgottenPasswordCode
 --| Created: 18-02-2013
 --| Last Mod: 05-03-2013
 --| Requires: _rigAuthCallHook(), rigAuthIdentityCheck(), rigDbSelect, rigDbWhere,
---|           rigDbLimit, rigDbGet(), rigDbRow(), rigAuthSetError, rigAuthEncryptPassword(),
---|           rigDbUpdate(), rigDbAffectedRows(), rigAuthSetMessage
+--|            rigDbLimit, rigDbGet(), rigDbRow(), rigAuthSetError, _rigAuthEncryptPassword(),
+--|            rigDbUpdate(), rigDbAffectedRows(), rigAuthSetMessage
 --|
 --| Summary: Replace password with a new one.
 --| 
@@ -2309,6 +2416,8 @@ end rigAuthClearForgottenPasswordCode
 ----------------------------------------------------------------------*/
 
 function rigAuthResetPassword pIdentity pNewPassword
+  local tUserA, tNewPassword, tData
+  
 	get _rigAuthCallHook("authPreChangePassword")
 	
 	if rigAuthIdentityCheck(pIdentity) is FALSE then
@@ -2321,13 +2430,13 @@ function rigAuthResetPassword pIdentity pNewPassword
 	get _rigAuthCallHook("authExtraWhere")
 	
 	rigDbSelect "id, password"
-	rigDbWhere sAuth["identityColumn"], pIdentity
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
 	rigDbLimit 1
-	put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 	
 	if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-		put rigDbRow() into sAuthUser
-		put sAuthUser into tUser
+		put rigDbRow() into sAuthUserA
+		put sAuthUserA into tUserA
 		
 	else
 		get _rigAuthCallHook("authPostChangePassword")
@@ -2338,7 +2447,7 @@ function rigAuthResetPassword pIdentity pNewPassword
 	end if
 	
 	# ENCRYPT NEW PASSWORD
-	put rigAuthEncryptPassword(pNewPassword) into tNewPassword
+	put _rigAuthEncryptPassword(pNewPassword) into tNewPassword
 	
 	# STORE THE NEW PASSWORD AND RESET THE REMEMBER CODE SO ALL REMEMBERED INSTANCES HAVE TO RE-LOGIN
 	# CLEAR THE FORGOTTEN PASSWORD CODE
@@ -2349,7 +2458,7 @@ function rigAuthResetPassword pIdentity pNewPassword
 	
 	get _rigAuthCallHook("authExtraWhere")
 	
-	get rigDbUpdate(sAuth["tables"]["users"], tData, sAuth["identityColumn"] && "= '" & pIdentity & "'")
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tData, sAuthConfigA["identityColumn"] && "= '" & pIdentity & "'")
 	
 	if rigDbAffectedRows() is 1 then
 			get _rigAuthCallHook("authPostChangePassword")
@@ -2379,8 +2488,8 @@ end rigAuthResetPassword
 --| Created: 20-02-2013
 --| Last Mod: 05-03-2013
 --| Requires: _rigAuthCallHook(), rigDbSelect, rigDbWhere, rigDbLimit, rigDbGet(),
---|           rigDbRow(), rigAuthSetError, rigAuthDecryptPassword(), rigAuthEncryptPassword(),
---|           rigDbUpdate(), rigDbAffectedRows, rigAuthSetMessage
+--|            rigDbRow(), rigAuthSetError, _rigAuthDecryptPassword(), _rigAuthEncryptPassword(),
+--|            rigDbUpdate(), rigDbAffectedRows, rigAuthSetMessage
 --|
 --| Summary: Change user password.
 --| 
@@ -2392,18 +2501,20 @@ end rigAuthResetPassword
 ----------------------------------------------------------------------*/
 
 function rigAuthChangePassword pIdentity pOldPassword pNewPassword
+  local tUserA, tDBpassword, tNewPassword, tData
+  
 	get _rigAuthCallHook("authPreChangePassword")
 	
 	get _rigAuthCallHook("authExtraWhere")
 	
 	rigDbSelect "id, password"
-	rigDbWhere sAuth["identityColumn"], pIdentity
+	rigDbWhere sAuthConfigA["identityColumn"], pIdentity
 	rigDbLimit 1
-	put rigDbGet(sAuth["tables"]["users"]) into sAuthQuery
+	put rigDbGet(sAuthConfigA["tables"]["users"]) into sAuthQuery
 	
 	if (sAuthQuery <> FALSE) and (sAuthQuery["numrows"] is 1) then
-		put rigDbRow() into sAuthUser
-		put sAuthUser into tUser
+		put rigDbRow() into sAuthUserA
+		put sAuthUserA into tUserA
 		
 	else
 		get _rigAuthCallHook("authPostChangePassword")
@@ -2412,8 +2523,8 @@ function rigAuthChangePassword pIdentity pOldPassword pNewPassword
 		return FALSE
 	end if
 	
-	put rigAuthDecryptPassword(tUser["password"]) into tDBpassword
-	put rigAuthEncryptPassword(pNewPassword) into tNewPassword
+	put _rigAuthDecryptPassword(tUserA["password"]) into tDBpassword
+	put _rigAuthEncryptPassword(pNewPassword) into tNewPassword
 	
 	# VALIDATE OLD PASSWORD
 	# DECRYPT DATABASE PASSWORD
@@ -2423,7 +2534,7 @@ function rigAuthChangePassword pIdentity pOldPassword pNewPassword
 		
 		get _rigAuthCallHook("authExtraWhere")
 		
-		get rigDbUpdate(sAuth["tables"]["users"], tData, sAuth["identityColumn"] && "= '" & pIdentity & "'")
+		get rigDbUpdate(sAuthConfigA["tables"]["users"], tData, sAuthConfigA["identityColumn"] && "= '" & pIdentity & "'")
 		
 		if rigDbAffectedRows() is 1 then
 				get _rigAuthCallHook("authPostChangePassword")
@@ -2461,9 +2572,9 @@ end rigAuthChangePassword
 --| Created: 20-02-2013
 --| Last Mod: 05-03-2013
 --| Requires: _rigAuthCallHook(), rigAuthUser(), rigDbRow(), rigTransBegin(),
---|           rigAuthIdentityCheck(), rigTransRollback, rigAuthSetError,
---|           rigAuthFilterData(), rigAuthEncryptPassword(), rigDbUpdate(),
---|           rigDbTransStatus(), rigTransCommit
+--|            rigAuthIdentityCheck(), rigTransRollback, rigAuthSetError,
+--|            rigAuthFilterData(), _rigAuthEncryptPassword(), rigDbUpdate(),
+--|            rigDbTransStatus(), rigTransCommit
 --|
 --| Summary: Update user data.
 --| 
@@ -2475,12 +2586,14 @@ end rigAuthChangePassword
 ----------------------------------------------------------------------*/
 
 function rigAuthUpdate pID pData
+  local tQueryResult, tUserA, tData
+  
 	get _rigAuthCallHook("authPreUpdateUser")
 
 	put rigAuthUser(pID) into tQueryResult
 	
 	if (tQueryResult <> FALSE) and (tQueryResult is an array) then
-		put rigDbRow() into tUser
+		put rigDbRow() into tUserA
 	else
 		get _rigAuthCallHook("authPostUpdateUser")
 		get _rigAuthCallHook("authPostUpdateUserUnsuccessful")
@@ -2491,13 +2604,13 @@ function rigAuthUpdate pID pData
 	# RUN TRANSACTIONS
 	get rigTransBegin()
 	
-	if (sAuth["identityColumn"] is among the keys of pData) and \
-		(rigAuthIdentityCheck(pData[sAuth["identityColumn"]]) is TRUE) and \
-		(tUser[sAuth["identityColumn"]] <> pData[sAuth["identityColumn"]]) then
+	if (sAuthConfigA["identityColumn"] is among the keys of pData) and \
+		(rigAuthIdentityCheck(pData[sAuthConfigA["identityColumn"]]) is TRUE) and \
+		(tUserA[sAuthConfigA["identityColumn"]] <> pData[sAuthConfigA["identityColumn"]]) then
 		
 		rigTransRollback
 		
-		rigAuthSetError "accountCreationDuplicateInvalid" & sAuth["identityColumn"]
+		rigAuthSetError "accountCreationDuplicateInvalid" & sAuthConfigA["identityColumn"]
 		get _rigAuthCallHook("authPostUpdateUser")
 		get _rigAuthCallHook("authPostUpdateUserUnsuccessful")
 		rigAuthSetError "updateUnsuccessful"
@@ -2505,13 +2618,13 @@ function rigAuthUpdate pID pData
 		return FALSE
 	end if
 	
-	put rigAuthFilterData(sAuth["tables"]["users"], pData) into tData
+	put rigAuthFilterData(sAuthConfigA["tables"]["users"], pData) into tData
 
 	if ("username" is among the keys of tData) or ("password" is among the keys of tData) or ("email" is among the keys of tData) then
 		if "password" is among the keys of tData then
 			if tData["password"] <> empty then
 				# ENCRYPT PASSWORD
-				put rigAuthEncryptPassword(tData["password"]) into tData["password"]
+				put _rigAuthEncryptPassword(tData["password"]) into tData["password"]
 				
 			else
 				# REMOVE VARIABLE PASSWORD SO IT DOESN'T EFFECT DATABASE ENTRY IF NO PASSWORD PASSED
@@ -2524,7 +2637,7 @@ function rigAuthUpdate pID pData
 	
 	get _rigAuthCallHook("authExtraWhere")
 
-	get rigDbUpdate(sAuth["tables"]["users"], tData, "id = '" & tUser["id"] & "'")
+	get rigDbUpdate(sAuthConfigA["tables"]["users"], tData, "id = '" & tUserA["id"] & "'")
 	
 	# CHECK TRANSACTION STATUS
 	if rigDbTransStatus() is FALSE then
@@ -2572,6 +2685,8 @@ end rigAuthUpdate
 ----------------------------------------------------------------------*/
 
 function rigAuthFilterData pTable pData
+  local tFilteredArray, tColumns, tKey
+  
 	put empty into tFilteredArray
 	
 	put rigDbListFields(pTable) into tColumns
@@ -2602,8 +2717,8 @@ end rigAuthFilterData
 --| Created: 21-02-2013
 --| Last Mod: 05-03-2013
 --| Requires: _rigAuthCallHook(), rigTransBegin(), rigDbDelete(), rigAuthRemoveFromGroup(),
---|           rigDbTransStatus(), rigTransRollback, rigAuthSetError, rigTransCommit
---|           rigAuthSetMessage
+--|            rigDbTransStatus(), rigTransRollback, rigAuthSetError, rigTransCommit
+--|            rigAuthSetMessage
 --|
 --| Summary: Delete user from database.
 --| 
@@ -2615,13 +2730,15 @@ end rigAuthFilterData
 ----------------------------------------------------------------------*/
 
 function rigAuthDeleteUser pID
+  local tGroupIDs
+  
 	get _rigAuthCallHook("authPreDeleteUser")
 	
 	# RUN TRANSACTIONS
 	get rigTransBegin()
 	
 	# DELETE USER FROM USERS TABLE
-	get rigDbDelete(sAuth["tables"]["users"], "id =" && pID)
+	get rigDbDelete(sAuthConfigA["tables"]["users"], "id =" && pID)
 	
 	# REMOVE USER FROM ALL GROUPS
 	put empty into tGroupIDs
@@ -2672,34 +2789,36 @@ end rigAuthDeleteUser
 ----------------------------------------------------------------------*/
 
 function rigAuthRemoveFromGroup pGroupIDs pUserID
-	get _rigAuthCallHook("authRemoveFromGroup")
+  local tWhereArray, tKey
+  
+  get _rigAuthCallHook("authRemoveFromGroup")
 	
-	# USER ID IS REQUIRED
-	if pUserID is empty then
-		return FALSE
-	end if
+  # USER ID IS REQUIRED
+  if pUserID is empty then
+    return FALSE
+  end if
 	
-	put pUserID into tWhereArray[sAuth["join"]["users"]]
+  put pUserID into tWhereArray[sAuthConfigA["join"]["users"]]
 	
-	if (pGroupIDs is an array) or (pGroupIDs <> empty) then
+  if (pGroupIDs is an array) or (pGroupIDs <> empty) then
 		
-		if pGroupIDs is an array then
-			repeat for each key tKey in pGroupIDs
-				put pGroupIDs[tKey] into tWhereArray[sAuth["join"]["groups"]]
-				get rigDbDelete(sAuth["tables"]["usersGroups"], tWhereArray)
-			end repeat
+    if pGroupIDs is an array then
+      repeat for each key tKey in pGroupIDs
+        put pGroupIDs[tKey] into tWhereArray[sAuthConfigA["join"]["groups"]]
+        get rigDbDelete(sAuthConfigA["tables"]["usersGroups"], tWhereArray)
+      end repeat
 			
-			return TRUE
+      return TRUE
 			
-		else
-			put pGroupIDs into tWhereArray[sAuth["join"]["groups"]]
-			return rigDbDelete(sAuth["tables"]["usersGroups"], tWhereArray)
-		end if
+    else
+      put pGroupIDs into tWhereArray[sAuthConfigA["join"]["groups"]]
+      return rigDbDelete(sAuthConfigA["tables"]["usersGroups"], tWhereArray)
+    end if
 		
-	else
-		# IF NO GROUP WAS SPECIIFIED REMOVE USER FROM ALL GROUPS
-		return rigDbDelete(sAuth["tables"]["usersGroups"], tWhereArray)
-	end if -- if (pGroupIDs is an array) or (pGroupIDs <> empty) then
+  else
+    # IF NO GROUP WAS SPECIIFIED REMOVE USER FROM ALL GROUPS
+    return rigDbDelete(sAuthConfigA["tables"]["usersGroups"], tWhereArray)
+  end if -- if (pGroupIDs is an array) or (pGroupIDs <> empty) then
 	
 end rigAuthRemoveFromGroup
 
@@ -2727,18 +2846,20 @@ end rigAuthRemoveFromGroup
 ----------------------------------------------------------------------*/
 
 function rigAuthIsMaxLoginAttemptsExceeded pIdentity
-	if sAuth["trackLoginAttempts"] is TRUE then
-		put sAuth["maxLoginAttempts"] into tMaxAttempts
+  local tMaxAttempts, tAttempts
+  
+  if sAuthConfigA["trackLoginAttempts"] is TRUE then
+    put sAuthConfigA["maxLoginAttempts"] into tMaxAttempts
 		
-		if sAuth["maxLoginAttempts"] > 0 then
-			put rigAuthGetAttemptsNum(pIdentity) into tAttempts
+    if sAuthConfigA["maxLoginAttempts"] > 0 then
+      put rigAuthGetAttemptsNum(pIdentity) into tAttempts
 			
-			return tAttempts >= tMaxAttempts
-		end if
+      return tAttempts >= tMaxAttempts
+    end if
 		
-	end if
+  end if
 	
-	return FALSE
+  return FALSE
 end rigAuthIsMaxLoginAttemptsExceeded
 
 
@@ -2766,24 +2887,26 @@ end rigAuthIsMaxLoginAttemptsExceeded
 ----------------------------------------------------------------------*/
 
 function rigAuthGetAttemptsNum pIdentity
-	if sAuth["maxLoginAttempts"] <> 0 then
+  local tIPaddress, tQuery
+  
+  if sAuthConfigA["maxLoginAttempts"] <> 0 then
 		
-		put rigIpAddress() into tIPaddress
+    put rigIpAddress() into tIPaddress
 		
-		# CREATE A COLUMN CONTAINING THE VALUE 1 FOR EACH ROW
-		rigDbSelect 1, FALSE
-		rigDbWhere "ipAddress", tIPaddress
+    # CREATE A COLUMN CONTAINING THE VALUE 1 FOR EACH ROW
+    rigDbSelect 1, FALSE
+    rigDbWhere "ipAddress", tIPaddress
 		
-		if pIdentity <> empty then
-			rigDbOrWhere "login", pIdentity
-		end if
+    if pIdentity <> empty then
+      rigDbOrWhere "login", pIdentity
+    end if
 		
-		put rigDbGet(sAuth["tables"]["loginAttempts"]) into tQuery
+    put rigDbGet(sAuthConfigA["tables"]["loginAttempts"]) into tQuery
 		
-		return tQuery["numrows"]
-	end if
+    return tQuery["numrows"]
+  end if
 	
-	return 0
+  return 0
 end rigAuthGetAttemptsNum
 
 
@@ -2810,8 +2933,8 @@ end rigAuthGetAttemptsNum
 ----------------------------------------------------------------------*/
 
 command rigAuthSetMessageDelimiters pStartDelimiter pEndDelimiter
-	put pStartDelimiter into sAuth["messagePrefix"]
-	put pEndDelimiter into sAuth["messagePrefix"]
+	put pStartDelimiter into sAuthConfigA["messagePrefix"]
+	put pEndDelimiter into sAuthConfigA["messagePrefix"]
 end rigAuthSetMessageDelimiters
 
 
@@ -2838,8 +2961,8 @@ end rigAuthSetMessageDelimiters
 ----------------------------------------------------------------------*/
 
 command rigAuthSetErrorDelimiters pStartDelimiter pEndDelimiter
-	put pStartDelimiter into sAuth["errorPrefix"]
-	put pEndDelimiter into sAuth["errorSuffix"]
+	put pStartDelimiter into sAuthConfigA["errorPrefix"]
+	put pEndDelimiter into sAuthConfigA["errorSuffix"]
 end rigAuthSetErrorDelimiters
 
 
@@ -2866,22 +2989,22 @@ end rigAuthSetErrorDelimiters
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigInitAuthHooksPrefs
+private command _rigInitAuthHooksPrefs
 	# IF AUTHENTICATION HOOKS ARE NOT ENABLED IN THE AUTHENTICATION CONFIG FILE
 	# THERE IS NOTHING ELSE TO DO
-	if sAuth["enableAuthenticationHooks"] is FALSE then
+	if sAuthConfigA["enableAuthenticationHooks"] is FALSE then
 		exit _rigInitAuthHooksPrefs
 	end if
 	
 	# GRAB THE AUTHENTICATION HOOKS DEFINITION FILE.
 	# IF THERE ARE NO HOOKS, WE'RE DONE.
 	try
-		require gAPPPATH & "config/authenticationHooks" & gEXT
+    _rigRequire gRigA["APPPATH"] & "config/authenticationHooks" & gRigA["EXT"]
 	catch err
-		rigLogMessage "error", "An error occured while trying to include configuration file:" && "authenticationHooks" & gEXT
+		rigLogMessage "error", "An error occured while trying to include configuration file:" && "authenticationHooks" & gRigA["EXT"]
 	end try
 
-	if sAuthHooks is not an array then
+	if sAuthHooksA is not an array then
 		exit _rigInitAuthHooksPrefs
 	end if
 
@@ -2913,7 +3036,7 @@ end _rigInitAuthHooksPrefs
 
 command rigSetAuthHooksConfig pConfig
 	if pConfig is an array then
-		put pConfig into sAuthHooks
+		put pConfig into sAuthHooksA
 	end if
 end rigSetAuthHooksConfig
 
@@ -2940,23 +3063,25 @@ end rigSetAuthHooksConfig
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigAuthCallHook pWhich
-	if sAuthHooksEnabled is not TRUE or (sAuthHooks is not an array) then
+private function _rigAuthCallHook pWhich
+  local tAuthHookResultTemp, tAuthHookResult
+  
+	if sAuthHooksEnabled is not TRUE or (sAuthHooksA is not an array) then
 		return FALSE
 	end if
 
 	put "" into tAuthHookResultTemp
 	
-	if sAuthHooks[pWhich][1] is an array then
-		repeat for each key tKey in sAuthHooks[pWhich]
-			put _rigAuthRunHook(sAuthHooks[pWhich][tKey]) into tAuthHookResult
+	if sAuthHooksA[pWhich][1] is an array then
+		repeat for each key tKey in sAuthHooksA[pWhich]
+			put _rigAuthRunHook(sAuthHooksA[pWhich][tKey]) into tAuthHookResult
 			if tAuthHookResult is FALSE then
 				put FALSE into tAuthHookResultTemp
 			end if
 		end repeat
 	else
 
-		put _rigAuthRunHook(sAuthHooks[pWhich]) into tAuthHookResult
+		put _rigAuthRunHook(sAuthHooksA[pWhich]) into tAuthHookResult
 	end if
 
 	if tAuthHookResultTemp is not empty then
@@ -2989,7 +3114,9 @@ end _rigAuthCallHook
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigAuthRunHook pData
+private function _rigAuthRunHook pData
+  local tFilePath, tFilename, tHandler, tParams, tIsFunction
+  
 	if pData is not an array then
 		return FALSE
 	end if 
@@ -3013,7 +3140,7 @@ function _rigAuthRunHook pData
 
 	put pData["filename"] into tFilename
 
-	put gAPPPATH & tFilePath & "/" & tFilename into tFilepath
+	put gRigA["APPPATH"] & tFilePath & "/" & tFilename into tFilepath
 
 	if there is a file tFilepath then
 	else
@@ -3041,7 +3168,7 @@ function _rigAuthRunHook pData
 
 
 		if itemOffset(tFilename, sAuthHooksFiles) is 0 then
-			require tFilepath
+			start using stack tFilepath
 
 			if sAuthHooksFiles is empty then
 				put tFilename into sAuthHooksFiles
@@ -3100,9 +3227,9 @@ end _rigAuthRunHook
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigAuthSetHash
-	if sAuth["hashType"] <> "" then
-		rigSetHash sAuth["hashType"]
+private command _rigAuthSetHash
+	if sAuthConfigA["hashType"] <> "" then
+		rigSetHash sAuthConfigA["hashType"]
 	end if
 end _rigAuthSetHash
 
@@ -3110,7 +3237,38 @@ end _rigAuthSetHash
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigAuthenticationGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2018-12-20
+--| Last Mod: 2018-12-20
+--| Requires: --
+--|
+--| Summary: Get user data like "username", "email" etc.
+--| 
+--| Format:  rigAuthenticationGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
 
---| END OF Authentication.lc
---| Location:  ./system/libraries/Authentication.lc
+function rigAuthenticationGet pWhat
+   if pWhat is among the keys of sAuthUserA then
+      return sAuthUserA[pWhat]
+   end if
+   
+   return empty
+end rigAuthenticationGet
+
+
+
+
+
+
+
+--| END OF Authentication.livecodescript
+--| Location:  ./system/libraries/Authentication.livecodescript
 ----------------------------------------------------------------------
