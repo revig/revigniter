@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Pagination"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -25,53 +19,131 @@ end if
 # revIgniter Pagination Library
 #
 #
-# @package		revIgniter
+# @package		  revIgniter
 # @subpackage	Libraries
-# @category	  Pagination
-# @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/pagination.html
+# @category	    Pagination
+# @author		    rabit@revigniter.com
+# @link		      https://revigniter.com/userGuide/libraries/pagination.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# LOGGING
-rigLogMessage "debug", "Pagination Library Loaded"
 
-# DECLARE VARIABLES
-local sPagBaseUrl							  -- The page we are linking to
-local sPagTotalRows						  -- Total number of items (database results)
-local sPagLinksElementID        -- The ID of the HTML element containing the pagination links (used for XMLHTTP requests only)
-local sPagDataElementID         -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
-local sPagAjax                  -- XMLHTTP Pagination flag
-local sPagAjaxServerTimeout     -- Delay to trigger an error while making an AJAX request (milliseconds)
-local sPagWidgetName            -- Name of Ajax pagination JavaScript object
-local sPagPerPage, sPagNumLinks, sPagCurPage, sPagFirstLink, sPagNextLink, sPagPrevLink, sPagLastLink, sPagUriSegment, sPagFullTagOpen, sPagFullTagClose
-local sPagFirstTagOpen, sPagFirstTagClose, sPagLastTagOpen, sPagLastTagClose, sPagCurTagOpen, sPagCurTagClose, sPagNextTagOpen, sPagNextTagClose
-local sPagPrevTagOpen, sPagPrevTagClose, sPagNumTagOpen, sPagNumTagClose, sPagPageQueryString, sPagQueryStringSegment
 
-put 10 into sPagPerPage					-- Max number of items you want shown per page
-put 2 into sPagNumLinks					-- Number of "digit" links to show before/after the currently viewed page
-put 0 into sPagCurPage					-- The current page being viewed
-put "&lsaquo; First" into sPagFirstLink
-put "&gt;" into sPagNextLink
-put "&lt;" into sPagPrevLink
-put "Last &raquo;" into sPagLastLink
-put 3 into sPagUriSegment
-put "&nbsp;" into sPagFirstTagClose
-put "&nbsp;" into sPagLastTagOpen
-put "&nbsp;<strong>" into sPagCurTagOpen
-put "</strong>" into sPagCurTagClose
-put "&nbsp;" into sPagNextTagOpen
-put "&nbsp;" into sPagNextTagClose
-put "&nbsp;" into sPagPrevTagOpen
-put "&nbsp;" into sPagNumTagOpen
-put FALSE into sPagPageQueryString
-put "per_page" into sPagQueryStringSegment
-put "pagination" into sPagLinksElementID
-put "paginationData" into sPagDataElementID
-put 10000 into sPagAjaxServerTimeout
-put "PaginationWidget" into sPagWidgetName
+global gRigA
+
+local sVarsNoDefaults
+local sStackInUse, sPagArrayKeys, sPaginationA -- array keys are: perPage, numLinks, curPage, firstLink, nextLink, prevLink, lastLink, uriSegment, firstTagClose,
+                                                      -- lastTagOpen, curTagOpen, curTagClose, nextTagOpen, nextTagClose, prevTagOpen, numTagOpen, pageQueryString,
+                                                      -- queryStringSegment, linksElementID, dataElementID, ajaxServerTimeout, widgetName, baseUrl, totalRows, ajax,
+                                                      -- fullTagOpen, fullTagClose, firstTagOpen, lastTagClose, prevTagClose, numTagClose
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-26
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Pagination Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  ---------------- no default values ----------------
+  -- baseUrl -- The page we are linking to
+  -- totalRows -- Total number of items (database results)
+  -- fullTagOpen
+  -- ajax -- XMLHTTP Pagination flag
+  -- fullTagClose
+  -- firstTagOpen
+  -- lastTagClose
+  -- prevTagClose
+  -- numTagClose
+  ---------------------------------------------
+  put 10 into sPaginationA["perPage"]					-- Max number of items you want shown per page
+  put 2 into sPaginationA["numLinks"]					-- Number of "digit" links to show before/after the currently viewed page
+  put 0 into sPaginationA["curPage"]					-- The current page being viewed
+  put "&lsaquo; First" into sPaginationA["firstLink"]
+  put "&gt;" into sPaginationA["nextLink"]
+  put "&lt;" into sPaginationA["prevLink"]
+  put "Last &raquo;" into sPaginationA["lastLink"]
+  put 3 into sPaginationA["uriSegment"]
+  put "&nbsp;" into sPaginationA["firstTagClose"]
+  put "&nbsp;" into sPaginationA["lastTagOpen"]
+  put "&nbsp;<strong>" into sPaginationA["curTagOpen"]
+  put "</strong>" into sPaginationA["curTagClose"]
+  put "&nbsp;" into sPaginationA["nextTagOpen"]
+  put "&nbsp;" into sPaginationA["nextTagClose"]
+  put "&nbsp;" into sPaginationA["prevTagOpen"]
+  put "&nbsp;" into sPaginationA["numTagOpen"]
+  put FALSE into sPaginationA["pageQueryString"]
+  put "per_page" into sPaginationA["queryStringSegment"]
+  put "pagination" into sPaginationA["linksElementID"]        -- The ID of the HTML element containing the pagination links (used for XMLHTTP requests only)
+  put "paginationData" into sPaginationA["dataElementID"]    -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
+  put 10000 into sPaginationA["ajaxServerTimeout"]           -- Delay to trigger an error while making an AJAX request (milliseconds)
+  put "PaginationWidget" into sPaginationA["widgetName"]    -- Name of Ajax pagination JavaScript object
+  
+  put "perPage,numLinks,curPage,firstLink,nextLink,prevLink,lastLink,uriSegment,firstTagClose,lastTagOpen,curTagOpen,curTagClose,nextTagOpen,nextTagClose,prevTagOpen,numTagOpen,pageQueryString,queryStringSegment,linksElementID,dataElementID,ajaxServerTimeout,widgetName,baseUrl,totalRows,ajax,fullTagOpen,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sPagArrayKeys
+  
+  put "baseUrl,totalRows,fullTagOpen,ajax,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sVarsNoDefaults
+end _rigSetDefaultValues
+
+
 
 
 
@@ -82,7 +154,7 @@ put "PaginationWidget" into sPagWidgetName
 --| Version:  1.2
 --| Created: 22-09-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigInitializePagination
+--| Requires: rigInitializePagination
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -94,11 +166,13 @@ put "PaginationWidget" into sPagWidgetName
 ----------------------------------------------------------------------*/
 
 command rigRunInitialPaginationConfig pConfig
+  local tConfig
+  
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split tConfig using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
@@ -133,6 +207,8 @@ end rigRunInitialPaginationConfig
 ----------------------------------------------------------------------*/
 
 command rigInitializePagination pConfig
+  local tKey, tVal
+  
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
@@ -154,117 +230,24 @@ end rigInitializePagination
 --| COMMAND rigSetInitialPaginationValue
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 22-09-09
---| Last Mod: 02-02-14
+--| Version:  1.2
+--| Created: 2009-09-22
+--| Last Mod: 2019-01-07
 --| Requires: --
 --|
 --| Summary: Set initial values.
 --| 
 --| Format:  rigSetInitialPaginationValue param1, param2
 --|
---| Parameters: string <pVarName>, mixed <pValue>
+--| Parameters: string <pKey>, mixed <pValue>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetInitialPaginationValue pVarName pValue
-	put "sPag" & pVarName into tVarName
-
-	switch tVarName
-		case "sPagBaseUrl"
-        		put pValue into sPagBaseUrl
-		break
-		case "sPagTotalRows"
-        		put pValue into sPagTotalRows
-		break
-		case "sPagPerPage"
-        		put pValue into sPagPerPage
-		break
-		case "sPagNumLinks"
-        		put pValue into sPagNumLinks
-		break
-		case "sPagCurPage"
-        		put pValue into sPagCurPage
-		break
-		case "sPagFirstLink"
-        		put pValue into sPagFirstLink
-		break
-		case "sPagNextLink"
-        		put pValue into sPagNextLink
-		break
-		case "sPagPrevLink"
-        		put pValue into sPagPrevLink
-		break
-		case "sPagLastLink"
-        		put pValue into sPagLastLink
-		break
-		case "sPagUriSegment"
-        		put pValue into sPagUriSegment
-		break
-		case "sPagFullTagOpen"
-        		put pValue into sPagFullTagOpen
-		break
-		case "sPagFullTagClose"
-        		put pValue into sPagFullTagClose
-		break
-		case "sPagFirstTagOpen"
-        		put pValue into sPagFirstTagOpen
-		break
-		case "sPagFirstTagClose"
-        		put pValue into sPagFirstTagClose
-		break
-		case "sPagLastTagOpen"
-        		put pValue into sPagLastTagOpen
-		break
-		case "sPagLastTagClose"
-        		put pValue into sPagLastTagClose
-		break
-		case "sPagCurTagOpen"
-        		put pValue into sPagCurTagOpen
-		break
-		case "sPagCurTagClose"
-        		put pValue into sPagCurTagClose
-		break
-		case "sPagNextTagOpen"
-        		put pValue into sPagNextTagOpen
-		break
-		case "sPagNextTagClose"
-        		put pValue into sPagNextTagClose
-		break
-		case "sPagPrevTagOpen"
-        		put pValue into sPagPrevTagOpen
-		break
-		case "sPagPrevTagClose"
-        		put pValue into sPagPrevTagClose
-		break
-		case "sPagNumTagOpen"
-        		put pValue into sPagNumTagOpen
-		break
-		case "sPagNumTagClose"
-        		put pValue into sPagNumTagClose
-		break
-		case "sPagPageQueryString"
-        		put pValue into sPagPageQueryString
-		break
-		case "sPagQueryStringSegment"
-        		put pValue into sPagQueryStringSegment
-		break
-    case "sPagLinksElementID"
-    		put pValue into sPagLinksElementID
-    break
-    case "sPagDataElementID"
-        put pValue into sPagDataElementID
-    break
-    case "sPagAjax"  
-      put pValue into sPagAjax
-    break
-    case "sPagAjaxServerTimeout"
-      put pValue into sPagAjaxServerTimeout
-    break
-    case "sPagWidgetName"
-      put pValue into sPagWidgetName
-    end switch
+command rigSetInitialPaginationValue pKey pValue
+  if pKey is among the items of sPagArrayKeys then
+    put pValue into sPaginationA[pKey]
+  end if
 end rigSetInitialPaginationValue
 
 
@@ -281,7 +264,7 @@ end rigSetInitialPaginationValue
 --| Version:  1.2
 --| Created: 22-09-09
 --| Last Mod: 12-04-15
---| Requires: rigCeil, rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
+--| Requires: rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
 --| 
@@ -293,13 +276,17 @@ end rigSetInitialPaginationValue
 ----------------------------------------------------------------------*/
 
 function rigCreatePaginationLinks
+  local tNumPages, tQuerySeg, tUriSeg, tUriPageNumber, tStart, tEnd
+  local tAriaLabel, tOutput, tCounter, tI, tN, tJ, tRegEx
+  local tReplacementtStrToReplaceInFoundStr, tReplacement, tStrToReplaceInFoundStr
+  
 	# IF OUR ITEM COUNT OR PER-PAGE TOTAL IS ZERO THERE IS NO NEED TO CONTINUE
-	if (sPagTotalRows = 0) or (sPagPerPage = 0) then
+	if (sPaginationA["totalRows"] = 0) or (sPaginationA["perPage"] = 0) then
 		return ""
 	end if
 
 	# CALCULATE THE TOTAL NUMBER OF PAGES
-	put rigCeil(sPagTotalRows / sPagPerPage) into tNumPages
+	put ceil(sPaginationA["totalRows"] / sPaginationA["perPage"]) into tNumPages
 
 	# IS THERE ONLY ONE PAGE? HM... NOTHING MORE TO DO HERE THEN.
 	if tNumPages = 1 then
@@ -307,103 +294,103 @@ function rigCreatePaginationLinks
 	end if
 
 	# DETERMINE THE CURRENT PAGE NUMBER.
-	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPagPageQueryString is TRUE) then
-		put rigVarGet(sPagQueryStringSegment) into tQuerySeg
+	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
+		put rigVarGet(sPaginationA["queryStringSegment"]) into tQuerySeg
 		if tQuerySeg is not 0 then
-			put tQuerySeg into sPagCurPage
+			put tQuerySeg into sPaginationA["curPage"]
 		end if
 	else
-		put rigFetchSegment(sPagUriSegment) into tUriSeg
+		put rigFetchSegment(sPaginationA["uriSegment"]) into tUriSeg
 		if tUriSeg is not 0 then
-			put tUriSeg into sPagCurPage
+			put tUriSeg into sPaginationA["curPage"]
 		end if
 	end if
 
-	if sPagNumLinks < 1 then
+	if sPaginationA["numLinks"] < 1 then
 		rigShowError "Your number of links must be a positive number."
 	end if
 
-	if sPagCurPage is not a number then
-		put 0 into sPagCurPage
+	if sPaginationA["curPage"] is not a number then
+		put 0 into sPaginationA["curPage"]
 	end if
 
 	# IS THE PAGE NUMBER BEYOND THE RESULT RANGE?
 	# IF SO WE SHOW THE LAST PAGE
-	if sPagCurPage > sPagTotalRows then
-		put (tNumPages - 1) * sPagPerPage into sPagCurPage
+	if sPaginationA["curPage"] > sPaginationA["totalRows"] then
+		put (tNumPages - 1) * sPaginationA["perPage"] into sPaginationA["curPage"]
 	end if
 
-	put sPagCurPage into tUriPageNumber
-	put trunc((sPagCurPage / sPagPerPage) + 1) into sPagCurPage
+	put sPaginationA["curPage"] into tUriPageNumber
+	put trunc((sPaginationA["curPage"] / sPaginationA["perPage"]) + 1) into sPaginationA["curPage"]
 
 	# CALCULATE THE START AND END NUMBERS. THESE DETERMINE
 	# WHICH NUMBER TO START AND END THE DIGIT LINKS WITH
-	if (sPagCurPage - sPagNumLinks) > 0 then
-		put sPagCurPage - (sPagNumLinks - 1) into tStart
+	if (sPaginationA["curPage"] - sPaginationA["numLinks"]) > 0 then
+		put sPaginationA["curPage"] - (sPaginationA["numLinks"] - 1) into tStart
 	else
 		put 1 into tStart
 	end if
 
-	if ((sPagCurPage + sPagNumLinks) < tNumPages) then
-		put sPagCurPage + sPagNumLinks into tEnd
+	if ((sPaginationA["curPage"] + sPaginationA["numLinks"]) < tNumPages) then
+		put sPaginationA["curPage"] + sPaginationA["numLinks"] into tEnd
 	else
 		put tNumPages into tEnd
 	end if
 
 	# IS PAGINATION BEING USED OVER GET OR POST?  IF GET, ADD A PER_PAGE QUERY
 	# STRING. IF POST, ADD A TRAILING SLASH TO THE BASE URL IF NEEDED
-	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPagPageQueryString is TRUE) then
-		put rigRTrim(sPagBaseUrl) & "&amp;" & sPagQueryStringSegment & "=" into sPagBaseUrl
+	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
+		put rigRTrim(sPaginationA["baseUrl"]) & "&amp;" & sPaginationA["queryStringSegment"] & "=" into sPaginationA["baseUrl"]
 	else
-		put rigRTrim(sPagBaseUrl, "/") & "/" into sPagBaseUrl
+		put rigRTrim(sPaginationA["baseUrl"], "/") & "/" into sPaginationA["baseUrl"]
 	end if
 
 	# AND HERE WE GO...
 	# RENDER THE "FIRST" LINK
-	if  sPagCurPage > (sPagNumLinks + 1) then
+	if  sPaginationA["curPage"] > (sPaginationA["numLinks"] + 1) then
 		# ARIA
-		if sPagFirstLink contains "&lsaquo;" then
+		if sPaginationA["firstLink"] contains "&lsaquo;" then
 			put "aria-label=" & quote & "First" & quote into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
-    if sPagAjax is TRUE then
-      put sPagFirstTagOpen & "<a href='" & sPagBaseUrl & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+    if sPaginationA["ajax"] is TRUE then
+      put sPaginationA["firstTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
     else
-      put sPagFirstTagOpen & "<a href=" & quote & sPagBaseUrl & quote && tAriaLabel & ">" & sPagFirstLink & "</a>" & sPagFirstTagClose into tOutput
+      put sPaginationA["firstTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & quote && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
     end if
 	end if
   #
 
 	# RENDER THE "PREVIOUS" LINK
-	if sPagCurPage <> 1 then
+	if sPaginationA["curPage"] <> 1 then
 			# ARIA
-			if sPagPrevLink contains "&lt;" then
+			if sPaginationA["prevLink"] contains "&lt;" then
 				put "aria-label=" & quote & "Previous" & quote into tAriaLabel
 			else
 				put empty into tAriaLabel
 			end if
 			#
-		put tUriPageNumber - sPagPerPage into tCounter
+		put tUriPageNumber - sPaginationA["perPage"] into tCounter
 		if tCounter = 0 then
 			put empty into tCounter
 		end if
-    if sPagAjax is TRUE then
-      put sPagPrevTagOpen & "<a href='" & sPagBaseUrl & tCounter & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+    if sPaginationA["ajax"] is TRUE then
+      put sPaginationA["prevTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tCounter & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
     else
-      put sPagPrevTagOpen & "<a href=" & quote & sPagBaseUrl & tCounter & quote && tAriaLabel & ">" & sPagPrevLink & "</a>" & sPagPrevTagClose after tOutput
+      put sPaginationA["prevTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tCounter & quote && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
     end if
 	end if
   #
 
 	# WRITE THE DIGIT LINKS
 	repeat with tLoopCounter = (tStart - 1) to tEnd
-		put (tLoopCounter * sPagPerPage) - sPagPerPage into tI
+		put (tLoopCounter * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
 
 		if tI >= 0 then
-			if sPagCurPage = tLoopCounter then
-				put sPagCurTagOpen & tLoopCounter & sPagCurTagClose after tOutput -- current page
+			if sPaginationA["curPage"] = tLoopCounter then
+				put sPaginationA["curTagOpen"] & tLoopCounter & sPaginationA["curTagClose"] after tOutput -- current page
 			else
 				if tI = 0 then
 					put empty into tN
@@ -411,10 +398,10 @@ function rigCreatePaginationLinks
 					put tI into tN
 				end if
         
-        if sPagAjax is TRUE then
-          put sPagNumTagOpen & "<a href='" & sPagBaseUrl & tN & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+        if sPaginationA["ajax"] is TRUE then
+          put sPaginationA["numTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tN & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
         else
-          put sPagNumTagOpen & "<a href=" & quote & sPagBaseUrl & tN & quote & ">" & tLoopCounter & "</a>" & sPagNumTagClose after tOutput
+          put sPaginationA["numTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tN & quote & ">" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
         end if
   
 			end if
@@ -423,37 +410,37 @@ function rigCreatePaginationLinks
   #
 
 	# RENDER THE "NEXT" LINK
-	if sPagCurPage < tNumPages then
+	if sPaginationA["curPage"] < tNumPages then
 		# ARIA
-		if sPagNextLink contains "&gt;" then
+		if sPaginationA["nextLink"] contains "&gt;" then
 			put "aria-label=" & quote & "Next" & quote into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
-		put sPagCurPage * sPagPerPage into tJ
-    if sPagAjax is TRUE then
-      put sPagNextTagOpen & "<a href='" & sPagBaseUrl & tJ & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+		put sPaginationA["curPage"] * sPaginationA["perPage"] into tJ
+    if sPaginationA["ajax"] is TRUE then
+      put sPaginationA["nextTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tJ & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
     else
-      put sPagNextTagOpen & "<a href=" & quote & sPagBaseUrl & tJ & quote && tAriaLabel & ">" & sPagNextLink & "</a>" & sPagNextTagClose after tOutput
+      put sPaginationA["nextTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tJ & quote && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
     end if
 	end if
   #
 
 	# RENDER THE "LAST" LINK
-	if (sPagCurPage + sPagNumLinks) < tNumPages then
+	if (sPaginationA["curPage"] + sPaginationA["numLinks"]) < tNumPages then
 		# ARIA
-		if sPagLastLink contains "&raquo;" then
+		if sPaginationA["lastLink"] contains "&raquo;" then
 			put "aria-label=" & quote & "Last" & quote into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
-		put (tNumPages * sPagPerPage) - sPagPerPage into tI
-    if sPagAjax is TRUE then
-      put sPagLastTagOpen & "<a href='" & sPagBaseUrl & tI & "'" && "onClick='" & sPagWidgetName & ".clickListener(event,&quot;" & sPagLinksElementID & "&quot;,&quot;" & sPagDataElementID & "&quot;)" & "'" && tAriaLabel & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+		put (tNumPages * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
+    if sPaginationA["ajax"] is TRUE then
+      put sPaginationA["lastTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tI & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
     else
-      put sPagLastTagOpen & "<a href=" & quote & sPagBaseUrl & tI & quote && tAriaLabel & ">" & sPagLastLink & "</a>" & sPagLastTagClose after tOutput
+      put sPaginationA["lastTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tI & quote && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
     end if
 	end if
   #
@@ -467,7 +454,7 @@ function rigCreatePaginationLinks
     	put rigPregReplace(tOutput, tRegEx, tStrToReplaceInFoundStr, tReplacement) into tOutput
 
 	# ADD THE WRAPPER HTML IF EXISTS
-	put sPagFullTagOpen & tOutput & sPagFullTagClose into tOutput
+	put sPaginationA["fullTagOpen"] & tOutput & sPaginationA["fullTagClose"] into tOutput
 
 	return tOutput
 end rigCreatePaginationLinks
@@ -496,6 +483,8 @@ end rigCreatePaginationLinks
 ----------------------------------------------------------------------*/
 
 command rigAjaxPagination pPaginationData pPaginationLinks
+  local tAjax, tJSONpaginationData, tElapsed
+  
   # CHECK IF PAGE REQUEST IS AN XMLHTTP REQUEST
   put (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") into tAjax
   if (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") or (rigFetchSegment(rigTotalRsegments()) is "ajaxrequest") then
@@ -552,14 +541,73 @@ end rigAjaxPagination
 ----------------------------------------------------------------------*/
 
 function rigAjaxPaginationCode
-	return "<script>var" && sPagWidgetName & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPagWidgetName & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPagAjaxServerTimeout & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPagWidgetName & ".writeData(r.responseText):" & sPagWidgetName & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPagWidgetName & ".paginationData.innerHTML=t.paginationData;" & sPagWidgetName & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
+	return "<script>var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
 end rigAjaxPaginationCode
 
 
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigPaginationGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get pagination array variable value.
+--| 
+--| Format: rigPaginationGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
 
---| END OF Pagination.lc
---| Location:  ./system/libraries/Pagination.lc
+function rigPaginationGet pWhat
+  if pWhat is among the keys of sPaginationA then
+    return sPaginationA[pWhat]
+  end if
+   
+  return empty
+end rigPaginationGet
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigPaginationSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for pagination variables.
+--| 
+--| Format: rigPaginationSet param1, param2
+--|
+--| Parameters: string <pKey> sPaginationA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigPaginationSet pKey pVal
+  if (pKey is among the keys of sPaginationA) or (pKey is among the items of sVarsNoDefaults) then
+    put pVal into sPaginationA[pKey]
+  end if
+end rigPaginationSet
+
+
+
+
+
+
+
+
+--| END OF Pagination.livecodescript
+--| Location:  ./system/libraries/Pagination.livecodescript
 ----------------------------------------------------------------------
