@@ -1,13 +1,4 @@
-<?rev
-# THE variablenames FUNCTION YIELDS A SERVER ERROR OUTSIDE HANDLERS
--- if "gBASEPATH" is not among the items of line 4 of the variablenames then
-
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Common"
 
 ##
 # revIgniter
@@ -16,10 +7,10 @@ end if
 # modeled onCodeIgniter.
 #
 # @package		revIgniter
-# @author		rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		http://revigniter.com
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,26 +20,61 @@ end if
 #
 # Loads the base scripts and executes the request.
 #
-# @package		revIgniter
-# @subpackage		revigniter
-# @category	Common Functions
-# @author		rabit@revigniter.com
-# @link		http://revigniter.com/userGuide
+# @package		  revIgniter
+# @subpackage  revigniter
+# @category	    Common Handlers
+# @author		    rabit@revigniter.com
+# @link		      https://revigniter.com/userGuide
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# DECLARE CONFIGURATION  ARRAY VARIABLE
-	global gConfig
-
-# DECLARE ROUTES ARRAY VARIABLE
-	global gRoute
+global gRigA, gConfig
 
 # DECLARE INCLUDED LIBRARIES ARRAY VARIABLE
 # DECLARE MAIN CONFIGURATION  ARRAY VARIABLE
-# DECLARE ERRORS LIST VARIABLE
-	local sLoadedLibs, sMainConf, sNonce
+local sLoadedLibs, sMainConf, sNonce, sStackInUse
+  
+  
+  
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-10
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
 
 
 /*----------------------------------------------------------------------
@@ -71,22 +97,24 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigLoadLibrary pLibName
+  local tLoadedLibs
+  
 	put sLoadedLibs into tLoadedLibs
 	combine tLoadedLibs using comma
 	set the wholematches to TRUE
+  
 	if itemOffset(pLibName, tLoadedLibs) > 0 then
 		# LIBRARY IS ALREADY LOADED
 		exit rigLoadLibrary
 	else
-		if there is a file (gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT) then
-			require gBASEPATH & "libraries/" & pLibName & gEXT
-			require gAPPPATH & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gEXT
+		if there is a file (gRigA["APPPATH"] & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & gRigA["EXT"]) then
+      start using stack (gRigA["BASEPATH"] & "libraries/" & pLibName & ".livecodescript")
+      start using stack (gRigA["BASEPATH"] & "libraries/" & rigConfigItem("sublibraryPrefix") & pLibName & ".livecodescript")
 		else
-			if there is a file (gAPPPATH & "libraries/" & pLibName & gEXT) then
-				require gAPPPATH & "libraries/" & pLibName & gEXT
-				
+			if there is a file (gRigA["APPPATH"] & "libraries/" & pLibName & gRigA["EXT"]) then
+				start using stack (gRigA["APPPATH"] & "libraries/" & pLibName & ".livecodescript")
 			else
-				require gBASEPATH & "libraries/" & pLibName & gEXT
+        start using stack (gRigA["BASEPATH"] & "libraries/" & pLibName & ".livecodescript")
 			end if
 		end if
 		rigAddToLibArray pLibName
@@ -120,17 +148,18 @@ end rigLoadLibrary
 function rigGetConfig
 	if sMainConf[1] is not an array then
 	# FIRST CALL TO rigGetConfig
-		if there is a file (gAPPPATH & "config/config" & gEXT) then
-			require gAPPPATH & "config/config" & gEXT
+		if there is a file (gRigA["APPPATH"] & "config/config" & gRigA["EXT"]) then
+      _rigRequire gRigA["APPPATH"] & "config/config" & gRigA["EXT"]
+      
 			if line 1 of the keys of gConfig is empty then
-				put "Your config file does not appear to be formatted correctly."
+				put "Your config file does not appear to be formatted correctly." & "<br>" & gRigA["APPPATH"] & "config/config" & gRigA["EXT"]
 				exit to top
 			else
 				put gConfig into sMainConf[1]
 				return gConfig
 			end if
 		else
-			put "The configuration file config" & gEXT && "does not exist."
+			put "The configuration file config" & gRigA["EXT"] && "does not exist."
 			exit to top
 		end if
 	else
@@ -144,7 +173,7 @@ end rigGetConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigIsMainConfigLoaded
 --|
 --| Author: rabit
@@ -160,7 +189,7 @@ end rigGetConfig
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigIsMainConfigLoaded
 	return sMainConf[1] is an array
@@ -171,7 +200,7 @@ end rigIsMainConfigLoaded
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigConfigItem
 --|
 --| Author: rabit
@@ -187,9 +216,11 @@ end rigIsMainConfigLoaded
 --| Parameters: string <pItem>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigConfigItem pItem
+  local tTempConfig
+  
 	if pItem is not among the keys of gConfig then
 		put rigGetConfig() into tTempConfig
 		if pItem is not among the keys of tTempConfig then
@@ -209,7 +240,7 @@ end rigConfigItem
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigShowError
 --|
 --| Author: rabit
@@ -229,9 +260,11 @@ end rigConfigItem
 --| Parameters: string <pMessage>, integer <pStatusCode>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigShowError pMessage pStatusCode
+  local tStatusCode, tHeading
+  
 	rigLoadLibrary "Exceptions"
 
 	if pStatusCode is empty then
@@ -254,7 +287,7 @@ end rigShowError
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigShow404
 --|
 --| Author: rabit
@@ -272,7 +305,7 @@ end rigShowError
 --| Parameters: mixed <pPage>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigShow404 pPage
 	rigLoadLibrary "Exceptions"
@@ -286,7 +319,7 @@ end rigShow404
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigLogMessage
 --|
 --| Author: rabit
@@ -302,9 +335,11 @@ end rigShow404
 --| Parameters: string <pLevel>, string <pMessage>, bool <pDisplayError>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigLogMessage pLevel, pMessage, pDisplayError
+  local tConfig
+  
 	put rigGetConfig() into tConfig
 	if tConfig["logThreshold"] is 0 then
 		exit rigLogMessage
@@ -318,7 +353,7 @@ end rigLogMessage
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigAddToLibArray
 --|
 --| Author: rabit
@@ -335,8 +370,10 @@ end rigLogMessage
 --| Parameters: string<pLibName>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 command rigAddToLibArray pLibName
+  local tLibCount
+  
 	put the number of lines in the keys of sLoadedLibs into tLibCount
 	add 1 to tLibCount
 	put pLibName into sLoadedLibs[tLibCount]
@@ -350,7 +387,7 @@ end rigAddToLibArray
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetStatusHeader
 --|
 --| Author: rabit
@@ -366,9 +403,11 @@ end rigAddToLibArray
 --| Parameters: int <pCode> the status code, string <pText>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetStatusHeader pCode, pText
+  local tCode, tText, tStatiA
+  
 	if pCode is empty then
 		put "200" into tCode
 	else
@@ -377,52 +416,52 @@ command rigSetStatusHeader pCode, pText
 
 	put pText into tText
 
-	put "OK" into tStati["200"]
-	put "Created" into tStati["201"]
-	put "Accepted" into tStati["202"]
-	put "Non-Authoritative Information" into tStati["203"]
-	put "No Content" into tStati["204"]
-	put "Reset Content" into tStati["205"]
-	put "Partial Content" into tStati["206"]
+	put "OK" into tStatiA["200"]
+	put "Created" into tStatiA["201"]
+	put "Accepted" into tStatiA["202"]
+	put "Non-Authoritative Information" into tStatiA["203"]
+	put "No Content" into tStatiA["204"]
+	put "Reset Content" into tStatiA["205"]
+	put "Partial Content" into tStatiA["206"]
 	
-	put "Multiple Choices" into tStati["300"]
-	put "Moved Permanently" into tStati["301"]
-	put "Found" into tStati["302"]
-	put "Not Modified" into tStati["304"]
-	put "Use Proxy" into tStati["305"]
-	put "Temporary Redirect" into tStati["307"]
+	put "Multiple Choices" into tStatiA["300"]
+	put "Moved Permanently" into tStatiA["301"]
+	put "Found" into tStatiA["302"]
+	put "Not Modified" into tStatiA["304"]
+	put "Use Proxy" into tStatiA["305"]
+	put "Temporary Redirect" into tStatiA["307"]
 	
-	put "Bad Request" into tStati["400"]
-	put "Unauthorized" into tStati["401"]
-	put "Forbidden" into tStati["403"]
-	put "Not Found" into tStati["404"]
-	put "Method Not Allowed" into tStati["405"]
-	put "Not Acceptable" into tStati["406"]
-	put "Proxy Authentication Required" into tStati["407"]
-	put "Request Timeout" into tStati["408"]
-	put "Conflict" into tStati["409"]
-	put "Gone" into tStati["410"]
-	put "Length Required" into tStati["411"]
-	put "Precondition Failed" into tStati["412"]
-	put "Request Entity Too Large" into tStati["413"]
-	put "Request-URI Too Long" into tStati["414"]
-	put "Unsupported Media Type" into tStati["415"]
-	put "Requested Range Not Satisfiable" into tStati["416"]
-	put "Expectation Failed" into tStati["417"]
+	put "Bad Request" into tStatiA["400"]
+	put "Unauthorized" into tStatiA["401"]
+	put "Forbidden" into tStatiA["403"]
+	put "Not Found" into tStatiA["404"]
+	put "Method Not Allowed" into tStatiA["405"]
+	put "Not Acceptable" into tStatiA["406"]
+	put "Proxy Authentication Required" into tStatiA["407"]
+	put "Request Timeout" into tStatiA["408"]
+	put "Conflict" into tStatiA["409"]
+	put "Gone" into tStatiA["410"]
+	put "Length Required" into tStatiA["411"]
+	put "Precondition Failed" into tStatiA["412"]
+	put "Request Entity Too Large" into tStatiA["413"]
+	put "Request-URI Too Long" into tStatiA["414"]
+	put "Unsupported Media Type" into tStatiA["415"]
+	put "Requested Range Not Satisfiable" into tStatiA["416"]
+	put "Expectation Failed" into tStatiA["417"]
 	
-	put "Internal Server Error" into tStati["500"]
-	put "Not Implemented" into tStati["501"]
-	put "Bad Gateway" into tStati["502"]
-	put "Service Unavailable" into tStati["503"]
-	put "Gateway Timeout" into tStati["504"]
-	put "HTTP Version Not Supported" into tStati["505"]
+	put "Internal Server Error" into tStatiA["500"]
+	put "Not Implemented" into tStatiA["501"]
+	put "Bad Gateway" into tStatiA["502"]
+	put "Service Unavailable" into tStatiA["503"]
+	put "Gateway Timeout" into tStatiA["504"]
+	put "HTTP Version Not Supported" into tStatiA["505"]
 
 	if tCode is not an integer then
 		rigShowError "Status codes must be numeric.", 500
 	end if
 
-	if tCode is among the keys of tStati and tText is empty then
-		put tStati[tCode] into tText
+	if tCode is among the keys of tStatiA and tText is empty then
+		put tStatiA[tCode] into tText
 	end if
 
 	if tText is empty then
@@ -462,6 +501,9 @@ end rigSetStatusHeader
 ----------------------------------------------------------------------*/
 
 function _rigExceptionHandler pContexts
+  local tContextsKeysNum, tErrorNames, tTotalErrorListLines, tLineNumToGet
+  local tErrMsg, tObject, tObjectName, tLinenr, tColumn, tProcToken, tErrorString
+  
 	rigLoadLibrary "Exceptions"
   
   split pContexts by return
@@ -526,7 +568,7 @@ end _rigExceptionHandler
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCanWriteFileTo
 --|
 --| Author: rabit
@@ -542,16 +584,18 @@ end _rigExceptionHandler
 --| Parameters: string <pLocation>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCanWriteFileTo pLocation
-    put pLocation & "/temp" & random(9999) into randomFileName
+  local tRandomFileName
+  
+    put pLocation & "/temp" & random(9999) into tRandomFileName
 	# TRY CREATING A FILE
-    open file randomFileName for write 
+    open file tRandomFileName for write 
     if the result is empty then -- success!
-        close file randomFileName
+        close file tRandomFileName
 	# GET RID OF THE TEST FILE
-        delete file randomFileName 
+        delete file tRandomFileName 
         return TRUE
     end if
      
@@ -566,31 +610,41 @@ end rigCanWriteFileTo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHexDigest
 --|
 --| Author: Dave Cragg
---| Version:  1.0
+--| Modification: rabit
+--| Version:  1.1
 --| Created:  --
---| Last Mod: 21-07-09
+--| Last Mod: 2019-01-05
 --| Requires: --
 --|
---| Summary: This will convert the 128-bit value that Rev returns to a hex format
---|                similiar to that returned by PHP and other languages.
+--| Summary: This will convert the 128-bit value that md5digest() returns, or the 256-bit
+--|            value that SHA3-256 returns to a hex format (a string with 32 / 64 characters)
+--|            similiar to that returned by PHP and other languages.
 --| 
 --| Format:  rigHexDigest(param1)
 --|
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHexDigest pStr
-    local tBinDecodeMD5str
-    
-    put md5digest(pStr) into tMD5str
-    get binarydecode("H*",tMD5str,tBinDecodeMD5str) 
-    return tBinDecodeMD5str 
+  local tDigestStr, tBinDecodetDigestStr
+
+	set the itemDel to "."
+  
+  if (item 1 of the version < 9) or (gRigA["useLegacyCode"] is TRUE) then
+    put md5digest(pStr) into tDigestStr
+  else
+    put messageDigest(pStr, "SHA3-256") into tDigestStr
+  end if
+  
+  get binarydecode("H*",tDigestStr,tBinDecodetDigestStr)
+  
+  return tBinDecodetDigestStr 
 end rigHexDigest
 
 
@@ -617,6 +671,10 @@ end rigHexDigest
 ----------------------------------------------------------------------*/
 
 function rigPregReplace pStr pRegEx pStrToReplaceInFoundStr pReplacement
+  local tStrToCheck, tStrToReplaceInFoundStr, tCallback, tReplacement
+  local tMatchFound, tStrToReturn, tStrOffset, tSearchStartNum, tFoundStr
+  local tFoundStrLength, tStrLength, tStrFragment
+  
 	put pStr into tStrToCheck
 	put pStrToReplaceInFoundStr into tStrToReplaceInFoundStr
 
@@ -690,7 +748,7 @@ end rigPregReplace
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigPregQuote
 --|
 --| Author: rabit
@@ -706,9 +764,11 @@ end rigPregReplace
 --| Parameters: string <pStr>, string <pDelimiter>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigPregQuote pStr pDelimiter
+  local tRegExChars, tQuotedStr
+  
     put "\+*?[^]$(){}=!<>|:" into tRegExChars
 	if pDelimiter is not empty then
          put pDelimiter after tRegExChars
@@ -733,7 +793,7 @@ end rigPregQuote
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlSpecialChars
 --|
 --| Author: rabit
@@ -746,12 +806,15 @@ end rigPregQuote
 --| 
 --| Format:  rigHtmlSpecialChars(param1, param2)
 --|
---| Parameters: string <pStr>, string <pQuoteStyle> is either empty to convert double quotes only or "ENT_QUOTES" to convert single and double, or "ENT_NOQUOTES"
+--| Parameters: string <pStr>, string <pQuoteStyle> is either empty to convert double quotes only or
+--|               "ENT_QUOTES" to convert single and double, or "ENT_NOQUOTES"
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlSpecialChars pStr pQuoteStyle
+  local tStr
+  
 	put pStr into tStr
     
 	replace "&" with "&amp;" in tStr
@@ -784,7 +847,7 @@ end rigHtmlSpecialChars
 --| Version:  1.5
 --| Created: 2009-07-30
 --| Last Mod: 2017-06-27
---| Requires: rigNumToCodepoint(), rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Trim whitespace at the start and at the end of a string.
 --| 
@@ -796,14 +859,17 @@ end rigHtmlSpecialChars
 ----------------------------------------------------------------------*/
 
 function rigTrim pStr pCharsList
-   put pStr into tStrToReturn
+  local tStrToReturn, tCharsToDeleteFound, tRegExWS, tSpecialChars, tStringIsClean
+  local tCounter, tRegEx, tWhiteSpaceFound
+   
+  put pStr into tStrToReturn
    
    if pCharsList is empty then
       put FALSE into tCharsToDeleteFound
    else if pCharsList is comma then
-      replace comma with rigNumToCodepoint(2) in pCharsList
+      replace comma with numToCodepoint(2) in pCharsList
    else if ",," is in pCharsList then
-      replace ",," with (rigNumToCodepoint(2) & comma) in pCharsList
+      replace ",," with (numToCodepoint(2) & comma) in pCharsList
    end if
    
    put "(^\s+)|(\s+$)" into tRegExWS
@@ -821,7 +887,7 @@ function rigTrim pStr pCharsList
       if pCharsList is not empty then
          repeat for each item tChar in pCharsList
             
-            if rigCodepointToNum(tChar) is 2 then
+            if codepointToNum(tChar) is 2 then
                put "," into tChar
             end if
             
@@ -836,7 +902,7 @@ function rigTrim pStr pCharsList
          # CHECK IF STRING IS CLEAN NOW
          repeat for each item tChar in pCharsList
             
-            if rigCodepointToNum(tChar) is 2 then
+            if codepointToNum(tChar) is 2 then
                put "," into tChar
             end if
             
@@ -874,7 +940,7 @@ end rigTrim
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigRTrim
 --|
 --| Author: rabit
@@ -890,43 +956,45 @@ end rigTrim
 --| Parameters: string <pStr>, string <pTrimChar>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigRTrim pStr pTrimChar
-    put pStr into tStrToReturn
+  local tStrToReturn, tRegExWS, tStringIsClean, tCounter, tWhiteSpaceFound
+  
+  put pStr into tStrToReturn
     
-     	if pTrimChar is empty then
-        	put "(\s+$)" into tRegExWS
-    	else
-        	if pTrimChar is not in "\/+-.<>" then
-            		put "(" & pTrimChar & "+$)" into tRegExWS
-        	else
-             		put "(\" & pTrimChar & "+$)" into tRegExWS
-        	end if
-    	end if
+  if pTrimChar is empty then
+    put "(\s+$)" into tRegExWS
+  else
+    if pTrimChar is not in "\/+-.<>" then
+      put "(" & pTrimChar & "+$)" into tRegExWS
+    else
+      put "(\" & pTrimChar & "+$)" into tRegExWS
+    end if
+  end if
     
-    put False into tStringIsClean
+  put False into tStringIsClean
     
-    put 0 into tCounter
+  put 0 into tCounter
     
-    repeat until tStringIsClean is TRUE
-        add 1 to tCounter
-        put replacetext(tStrToReturn,tRegExWS,empty) into tStrToReturn
+  repeat until tStringIsClean is TRUE
+    add 1 to tCounter
+    put replacetext(tStrToReturn,tRegExWS,empty) into tStrToReturn
 
-        # CHECK IF STRING IS CLEAN NOW
-        put matchtext(tStrToReturn,tRegExWS) into tWhiteSpaceFound
+    # CHECK IF STRING IS CLEAN NOW
+    put matchtext(tStrToReturn,tRegExWS) into tWhiteSpaceFound
         
-        if tWhiteSpaceFound is FALSE then
-            put TRUE into tStringIsClean
-        end if
+    if tWhiteSpaceFound is FALSE then
+      put TRUE into tStringIsClean
+    end if
         
-        # STOP HERE IN CASE SOMETHING WENT WRONG AND THE LOOP IS RUNNING FOR EVER
-        if tCounter > 999 then
-            put TRUE into tStringIsClean
-        end if
-    end repeat
+    # STOP HERE IN CASE SOMETHING WENT WRONG AND THE LOOP IS RUNNING FOR EVER
+    if tCounter > 999 then
+      put TRUE into tStringIsClean
+    end if
+  end repeat
     
-    return tStrToReturn
+  return tStrToReturn
 end rigRTrim
 
 
@@ -935,7 +1003,7 @@ end rigRTrim
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigStripSlashes
 --|
 --| Author: rabit
@@ -951,9 +1019,11 @@ end rigRTrim
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigStripSlashes pStr
+  local tStr
+  
 	put pStr into tStr
 
 	replace "\\" with "+++|r---b|+++" in tStr
@@ -976,10 +1046,10 @@ end rigStripSlashes
 --| Version:  1.1
 --| Created: 15-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Quote string with slashes in a C style. Keep in mind, that octal escape values are used
---|                    in parameters of this function.
+--|            in parameters of this function.
 --| 
 --| Format:  rigAddCslashes(param1, param2, param3)
 --|
@@ -989,6 +1059,8 @@ end rigStripSlashes
 ----------------------------------------------------------------------*/
 
 function rigAddCslashes pStr pCharList pItemDel
+  local tRangeValues, tFromVal, tToVal, tCharRange, tCharNum, tStrWithSlashes
+  
   if pItemDel is not empty then
     set the itemdelimiter to pItemDel
   else
@@ -1015,13 +1087,13 @@ function rigAddCslashes pStr pCharList pItemDel
                  
       else
         # CHARACTER RANGE LIKE: A..z
-        put rigCodepointToNum(tFromVal) into tFromVal
-        put rigCodepointToNum(tToVal) into tToVal
+        put codepointToNum(tFromVal) into tFromVal
+        put codepointToNum(tToVal) into tToVal
       end if
             
       if tToVal > tFromVal then
         repeat with tCurrentNum = tFromVal to tToVal
-          put rigNumToCodepoint(tCurrentNum) after tCharRange
+          put numToCodepoint(tCurrentNum) after tCharRange
         end repeat
       end if
     end if
@@ -1031,7 +1103,7 @@ function rigAddCslashes pStr pCharList pItemDel
       put char 2 to -1 of thisItem into tCharNum
       # CONVERT TO DECIMAL VALUES
       put baseconvert(tCharNum,8,10) into tCharNum
-      put rigNumToCodepoint(tCharNum) after tCharRange
+      put numToCodepoint(tCharNum) after tCharRange
     end if
         
     # SINGEL CHARACTER
@@ -1060,7 +1132,7 @@ end rigAddCslashes
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigInArray
 --|
 --| Author: rabit
@@ -1076,7 +1148,7 @@ end rigAddCslashes
 --| Parameters: array <pArray>, string <pVal>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigInArray pArray pVal
     repeat for each element thisElement in pArray
@@ -1112,14 +1184,16 @@ end rigInArray
 ----------------------------------------------------------------------*/
 
 function rigStripHTML pHTML
-    put pHTML into tStrippedText
-    put replacetext(tStrippedText,"(?si)<script.*?/script>","") into tStrippedText
-    put replacetext(tStrippedText,"(?si)<style.*?/style>","") into tStrippedText
-    put replacetext(tStrippedText,tab,"") into tStrippedText
-    put replacetext(tStrippedText,"(?sm)<.*?>","") into tStrippedText
-    put replacetext(tStrippedText,CR & "{3,}","") into tStrippedText
+  local tStrippedText
+  
+  put pHTML into tStrippedText
+  put replacetext(tStrippedText,"(?si)<script.*?/script>","") into tStrippedText
+  put replacetext(tStrippedText,"(?si)<style.*?/style>","") into tStrippedText
+  put replacetext(tStrippedText,tab,"") into tStrippedText
+  put replacetext(tStrippedText,"(?sm)<.*?>","") into tStrippedText
+  put replacetext(tStrippedText,CR & "{3,}","") into tStrippedText
 
-    return tStrippedText
+  return tStrippedText
 end rigStripHTML
 
 
@@ -1130,7 +1204,7 @@ end rigStripHTML
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigWordWrap
 --|
 --| Author: rabit
@@ -1146,9 +1220,12 @@ end rigStripHTML
 --| Parameters: string <pStr>, integer <pLength> the column width (defaults to 75), string <pBreak> defaults to LF, bool <pCut> if TRUE breaks words apart
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigWordWrap pStr pLength pBreak pCut
+  local tStr, tOverrun, tLineLength, tOverrunExeedsPlength, tWrapedStr
+  local tLineToAdd, tWord1Length, tNextLineToAdd
+  
 	if pLength is empty then
 		put 75 into pLength
 	end if
@@ -1322,7 +1399,7 @@ end rigWordWrap
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigShellEscape
 --|
 --| Author: splash21
@@ -1338,7 +1415,7 @@ end rigWordWrap
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigShellEscape pStr
     repeat for each char tChar in "\`!$" & quote
@@ -1372,6 +1449,8 @@ end rigShellEscape
 ----------------------------------------------------------------------*/
 
 function _rigTempMailPath
+  local tPreviousUmask, tTempFolderPath, tMessageId, tTempMailPath
+  
 	set the convertOctals to true
 	put the umask into tPreviousUmask
 	set the umask to "0077"
@@ -1408,14 +1487,12 @@ end _rigTempMailPath
 --| FUNCTION rigCeil
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.1
 --| Created: 2009-09-09
---| Last Mod: 2019-01-11
+--| Last Mod: 2016-11-24
 --| Requires: --
 --|
 --| Summary: Returns the next highest integer value by rounding up if necessary.
---|            This function is deprecated since revIgniter version 2 as this version
---|            requires LC server ≥ 8 and the ceiling function was introduced in LC 7.1.
 --| 
 --| Format:  rigCeil(param1)
 --|
@@ -1425,16 +1502,15 @@ end _rigTempMailPath
 ----------------------------------------------------------------------*/
 
 function rigCeil pNum
-  -- if trunc(pNum) <> pNum then
-  --   if pNum > 0 then
-  --     return trunc(pNum) + 1
-  --   else
-  --     return trunc(pNum)
-  --   end if
-  -- end if
-  --
-  -- return pNum
-  return ceil(pNum)
+   if trunc(pNum) <> pNum then
+      if pNum > 0 then
+         return trunc(pNum) + 1
+      else
+         return trunc(pNum)
+      end if
+   end if 
+   
+   return pNum
 end rigCeil
 
 
@@ -1444,7 +1520,7 @@ end rigCeil
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigNumber_format
 --|
 --| Author: rabit
@@ -1460,9 +1536,11 @@ end rigCeil
 --| Parameters: number <pNum>, integer <pDecimals>, string <pSeparator>
 --|
 --| Return: float
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigNumber_format pNum pDecimals, pSeparator
+  local tDecimals, tSeparator, tPrefix, tNum, tDecNum
+  
 	if (pDecimals is empty) or (pDecimals is not a integer) then
 		put 2 into tDecimals
 	else
@@ -1502,7 +1580,7 @@ end rigNumber_format
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigArrayReverse
 --|
 --| Author: rabit
@@ -1519,28 +1597,30 @@ end rigNumber_format
 --| Parameters: array <pArray>, char <pItemDelimiter>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigArrayReverse pArray pItemDelimiter
-     if pItemDelimiter is empty then
-         set the itemdel to "="
-    else
-         set the itemdel to pItemDelimiter
-    end if
+  local tArray, tReversedArray
+  
+  if pItemDelimiter is empty then
+    set the itemdel to "="
+  else
+    set the itemdel to pItemDelimiter
+  end if
     
-    put pArray into tArray
+  put pArray into tArray
     
-    # CONVERT ARRAY TO LIST
-    combine tArray using return and the itemdel
+  # CONVERT ARRAY TO LIST
+  combine tArray using return and the itemdel
     
-    # SORT LINES
-    sort lines of tArray descending numeric by item 1 of each
+  # SORT LINES
+  sort lines of tArray descending numeric by item 1 of each
     
-    repeat with i = 1 to (the number of lines in tArray)
-        put item 2 of line i of tArray into tReversedArray[i]
-    end repeat
+  repeat with i = 1 to (the number of lines in tArray)
+    put item 2 of line i of tArray into tReversedArray[i]
+  end repeat
     
-    return tReversedArray
+  return tReversedArray
 end rigArrayReverse
 
 
@@ -1569,6 +1649,8 @@ end rigArrayReverse
 ----------------------------------------------------------------------*/
 
 function rigFile_get_contents pFilePath
+  local tFileData
+  
   if there is a file pFilePath then
     put URL format("binfile:%s", pFilePath) into tFileData
 
@@ -1589,7 +1671,7 @@ end rigFile_get_contents
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCheckType
 --|
 --| Author: rabit
@@ -1605,7 +1687,7 @@ end rigFile_get_contents
 --| Parameters: string, integer, float, bool <pData>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCheckType pData
     if pData is not an array then
@@ -1652,23 +1734,25 @@ end rigCheckType
 ----------------------------------------------------------------------*/
 
 function rigRandomNum
-   put "" into tSessID
+  local tSessID, tCounter, tSeed, tUpperLimit, tLowerLimit
+  
+  put "" into tSessID
    
-   put 1 into tCounter
+  put 1 into tCounter
    
-   repeat while (the length of tSessID) < 32
-      put (char -8 to -1 of the millisecs) + tCounter into tSeed
-      set the randomSeed to tSeed
+  repeat while (the length of tSessID) < 32
+    put (char -8 to -1 of the millisecs) + tCounter into tSeed
+    set the randomSeed to tSeed
 
-      put 2147483647 into tUpperLimit
-      put 0 into tLowerLimit
+    put 2147483647 into tUpperLimit
+    put 0 into tLowerLimit
        
-      put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after tSessID
+    put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after tSessID
       
-      add 1 to tCounter
-   end repeat
+    add 1 to tCounter
+  end repeat
 
-   return tSessID
+  return tSessID
 end rigRandomNum
 
 
@@ -1698,8 +1782,10 @@ end rigRandomNum
 ----------------------------------------------------------------------*/
 
 function rigSubstr pString pStart pLength
-	put pStart + (pLength - 1) into tLastChar
-    	return char pStart to tLastChar of pString
+  local tLastChar
+  
+  put pStart + (pLength - 1) into tLastChar
+  return char pStart to tLastChar of pString
 end rigSubstr
 
 
@@ -1717,7 +1803,7 @@ end rigSubstr
 --| Version:  1.2
 --| Created: 16-10-09
 --| Last Mod: 23-12-14
---| Requires: rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Return part of a string as ascii values. 
 --| 
@@ -1729,14 +1815,16 @@ end rigSubstr
 ----------------------------------------------------------------------*/
 
 function rigSubstrToNum pString pStart pLength pNative
+  local tLastChar, tStr, tSubstr
+  
   put pStart + (pLength - 1) into tLastChar
   put char pStart to tLastChar of pString into tStr
      
   repeat for each char thisChar in tStr
     if pNative then
-      put rigNativeCharToNum(thisChar) after tSubstr
+      put nativeCharToNum(thisChar) after tSubstr
     else
-      put rigCodepointToNum(thisChar) after tSubstr
+      put codepointToNum(thisChar) after tSubstr
     end if
   end repeat
     
@@ -1769,6 +1857,8 @@ end rigSubstrToNum
 ----------------------------------------------------------------------*/
 
 command rigDoException pContexts pCurrentFile pCurrentHandler
+  local tDisplayError, tErrorData
+  
 	if rigConfigItem("logThreshold") > 0 then
 		put TRUE into tDisplayError
 	else
@@ -1786,7 +1876,7 @@ end rigDoException
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigIsNumberedArray
 --|
 --| Author: rabit
@@ -1802,9 +1892,12 @@ end rigDoException
 --| Parameters: array <pArray>, bool <pConsecutive> flag for checking if numbers are consecutive
 --|
 --| Return: list (bool,integer)
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigIsNumberedArray pArray pConsecutive
+  local tConsecutive, tNumbered, tArrayKeys, tControlValue
+  local tStartValue
+  
 	if pConsecutive is "" then
 		put FALSE into tConsecutive
 	else
@@ -1858,7 +1951,7 @@ end rigIsNumberedArray
 --| Version:  1.2
 --| Created: 21-01-10
 --| Last Mod: 08-01-15
---| Requires: rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Uppercase the first character of each word in a string.
 --| 
@@ -1870,14 +1963,16 @@ end rigIsNumberedArray
 ----------------------------------------------------------------------*/
 
 function rigUcwords pStr
+  local tUCstr, tCounter
+  
 	put pStr into tUCstr
    
 	put 0 into tCounter
 	repeat for each word thisWord in pStr
 		add 1 to tCounter
       
-		if ((rigCodepointToNum(char 1 of thisWord) >= 97) and (rigCodepointToNum(char 1 of thisWord) <= 122)) or \
-			((rigCodepointToNum(char 1 of thisWord) >= 135) and (rigCodepointToNum(char 1 of thisWord) <= 159)) then
+		if ((codepointToNum(char 1 of thisWord) >= 97) and (codepointToNum(char 1 of thisWord) <= 122)) or \
+			((codepointToNum(char 1 of thisWord) >= 135) and (codepointToNum(char 1 of thisWord) <= 159)) then
          
 			put toUpper(char 1 of thisWord) into char 1 of thisWord
          
@@ -1894,7 +1989,7 @@ end rigUcwords
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigNl2br
 --|
 --| Author: rabit
@@ -1910,22 +2005,24 @@ end rigUcwords
 --| Parameters: string <pStr>, bool <pIsXHTML>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigNl2br pStr pIsXHTML
-   if pIsXHTML is empty then
-      put TRUe into tIsXHTML
-   else
-      put pIsXHTML into tIsXHTML
-   end if
+  local tIsXHTML
+  
+  if pIsXHTML is empty then
+    put TRUE into tIsXHTML
+  else
+    put pIsXHTML into tIsXHTML
+  end if
     
-   if tIsXHTML is TRUe then
-      replace return with "<br />" & return in pStr
-   else
-      replace return with "<br>" & return in pStr
-   end if
+  if tIsXHTML is TRUe then
+    replace return with "<br />" & return in pStr
+  else
+    replace return with "<br>" & return in pStr
+  end if
     
-   return pStr
+  return pStr
 end rigNl2br
 
 
@@ -1970,7 +2067,7 @@ end rigGetHTTPheader
 --| Version:  1.2
 --| Created: 29-06-10
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Returns the decoded URL as string.
 --|            Does not decode plus symbols ('+') into spaces.
@@ -1983,11 +2080,13 @@ end rigGetHTTPheader
 ----------------------------------------------------------------------*/
 
 function rigRawURLdecode pStr
-   replace "+" with "-r" & rigNumToCodepoint(1) & "b-" in pStr
-   put URLDecode(pStr) into tStrDecoded
-   replace "-r" & rigNumToCodepoint(1) & "b-" with "+" in tStrDecoded
+  local tStrDecoded
+  
+  replace "+" with "-r" & numToCodepoint(1) & "b-" in pStr
+  put URLDecode(pStr) into tStrDecoded
+  replace "-r" & numToCodepoint(1) & "b-" with "+" in tStrDecoded
    
-   return tStrDecoded
+  return tStrDecoded
 end rigRawURLdecode
 
 
@@ -1997,9 +2096,9 @@ end rigRawURLdecode
 --| FUNCTION rigUniqid
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2011-09-04
---| Last Mod: 2018-10-24
+--| Last Mod: 2019-01-06
 --| Requires: --
 --|
 --| Summary: Build a unique identifier.
@@ -2012,6 +2111,8 @@ end rigRawURLdecode
 ----------------------------------------------------------------------*/
 
 function rigUniqid pLength
+  local tUUID
+  
   if pLength <> empty then
 	  repeat pLength
   	  put any char of "-1234567890abcdefghijklmnopqrstuvwxyz" after tUUID
@@ -2020,14 +2121,7 @@ function rigUniqid pLength
     return tUUID
   end if
   
-	# CHECK SERVER VERSION - USE THE LIVECODE uuid() FUNCTION IF VERSION >= 6.1
-	set the itemDel to "."
-	if (item 1 of the version > 6) or ((item 1 of the version = 6) and (item 2 of the version >= 1)) then
-      put uuid() into tUUID
-   else
-	# USE A SHELL CALL FOR SERVER VERSIONS PRIOR TO 6.1
-		put shell("uuidgen") into tUUID
-	end if
+  put uuid() into tUUID
   
 	return tUUID
 end rigUniqid
@@ -2077,8 +2171,8 @@ end rigNonce
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Returns the current time as timestamp (seconds) referenced, either
---|          to your server's local time or GMT, based on the "timeReference"
---|          setting in your config file.
+--|            to your server's local time or GMT, based on the "timeReference"
+--|            setting in your config file.
 --| 
 --| Format:  rigMasterNow()
 --|
@@ -2088,6 +2182,8 @@ end rigNonce
 ----------------------------------------------------------------------*/
 
 function rigMasterNow
+  local tNow, tGMToffset, tPrefix, tMinutesOffset, tHoursOffset, tGMToffsetSecs, tTime
+  
 	if toLower(rigFetchConfigItem("timeReference")) is "gmt" then
 		# GET THE DATETIME IN SECONDS
 		convert the internet date to seconds
@@ -2144,6 +2240,8 @@ end rigMasterNow
 ----------------------------------------------------------------------*/
 
 function _rigStrToArray pString pDelimiter pAssoc pKeepSpace
+  local tDelimiter, tStrToArray, tNumItems
+  
   # SET DELIMITER
   if pDelimiter is empty then
     put "," into tDelimiter
@@ -2214,10 +2312,10 @@ end _rigStrToArray
 --| FUNCTION rigFileSize
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 12-02-2014
---| Last Mod: 12-02-2014
---| Requires: --
+--| Version:  1.1
+--| Created: 2014-02-12
+--| Last Mod: 2019-01-12
+--| Requires: rigIsAbsolutePath()
 --|
 --| Summary: Gets the file size of a given file.
 --| 
@@ -2229,21 +2327,27 @@ end _rigStrToArray
 ----------------------------------------------------------------------*/
 
 function rigFileSize pFilePath
+  local tFolderName, tFileName, tOldFolder, tFileList, tInfo
+  
   if there is a file pFilePath then
   else
     return FALSE
   end if
-
+  
+  # USE ABSOLUTE PATH
+  put rigTrim(pFilePath, "/") into pFilePath
+  if not rigIsAbsolutePath(pFilePath, TRUE) then
+     put the defaultfolder & "/" & pFilePath into pFilePath
+  else
+     put "/" & pFilePath into pFilePath
+  end if
+  
   # GET FOLDER AND FILE NAME
   set the itemDel to "/"
   put item 1 to -2 of pFilePath & "/" into tFolderName
   put item -1 of pFilePath into tFileName
    
-  # GET DETAILED FILES LIST
-  set the itemDel to comma
-  put the directory into tOldFolder
-  set the directory to tFolderName
-  put urldecode(the detailed files) into tFileList
+  put urldecode(files(tFolderName, "detailed")) into tFileList
    
   # GET INFO FOR FILE
   filter tFileList with tFileName & "*"
@@ -2345,175 +2449,6 @@ end rigSort
 
 
 
-
-function rigQ pText
-    return quote & pText & quote
-end rigQ
-
-
-
-
-
-/*----------------------------------------------------------------------
---| 20-12-2014 rabit
---|
---| Handlers to go conform with the Unicode support of LiveCode 7 and up
-----------------------------------------------------------------------*/
-
-
-/*----------------------------------------------------------------------
---| FUNCTION rigNumToCodepoint
---|
---| Author: rabit
---| Version:  1.0
---| Created: 20-12-2014
---| Last Mod: 20-12-2014
---| Requires: --
---|
---| Summary: Converts an integer to a character / Unicode codepoint.
---| 
---| Format:  rigNumToCodepoint(param1)
---|
---| Parameters: integer <pNum>
---|
---| Return: character / codepoint
-----------------------------------------------------------------------*/
-
-function rigNumToCodepoint pNum
-  if not gAdvancedUnicode then
-    return numToChar(pNum)
-  else
-    return numToCodepoint(pNum)
-  end if
-end rigNumToCodepoint
-
-
-
-
-
-/*----------------------------------------------------------------------
---| FUNCTION rigNumToNativeChar
---|
---| Author: rabit
---| Version:  1.0
---| Created: 20-12-2014
---| Last Mod: 22-12-2014
---| Requires: --
---|
---| Summary: Converts an integer to a character.
---| 
---| Format:  rigNumToNativeChar(param1)
---|
---| Parameters: integer <pNum>
---|
---| Return: character
-----------------------------------------------------------------------*/
-
-function rigNumToNativeChar pNum
- if not gAdvancedUnicode then
-    return numToChar(pNum)
-  else
-    return numToNativeChar(pNum)
-  end if
-end rigNumToNativeChar
-
-
-
-
-
-
-/*----------------------------------------------------------------------
---| FUNCTION rigCodepointToNum
---|
---| Author: rabit
---| Version:  1.1
---| Created: 22-12-2014
---| Last Mod: 17-06-2015
---| Requires: --
---|
---| Summary: Converts a character / Unicode codepoint to an integer.
---| 
---| Format:  rigCodepointToNum(param1[, param2])
---|
---| Parameters: character / codepoint <pChar>, string <pLanguage> (optional)
---|
---| Return: integer
-----------------------------------------------------------------------*/
-
-function rigCodepointToNum pChar pLanguage
-  if not gAdvancedUnicode then
-    return charToNum(uniEncode(pChar, pLanguage))
-  else
-    return codepointToNum(pChar)
-  end if
-end rigCodepointToNum
-
-
-
-
-
-/*----------------------------------------------------------------------
---| FUNCTION rigNativeCharToNum
---|
---| Author: rabit
---| Version:  1.0
---| Created: 22-12-2014
---| Last Mod: 22-12-2014
---| Requires: --
---|
---| Summary: Converts a character to an integer.
---| 
---| Format:  rigNativeCharToNum(param1)
---|
---| Parameters: character <pChar>
---|
---| Return: integer
-----------------------------------------------------------------------*/
-
-function rigNativeCharToNum pChar
-  if not gAdvancedUnicode then
-    return charToNum(pChar)
-  else
-    return nativeCharToNum(pChar)
-  end if
-end rigNativeCharToNum
-
-
-
-
-
-
-/*----------------------------------------------------------------------
---| FUNCTION rigTextDecode
---|
---| Author: rabit
---| Version:  1.0
---| Created: 20-12-2014
---| Last Mod: 20-12-2014
---| Requires: --
---|
---| Summary: Converts a string from Unicode / binary data to text.
---| 
---| Format:  rigTextDecode(param1, param2)
---|
---| Parameters: string / binary data <pData>, string <pCharset>
---|
---| Return: text
-----------------------------------------------------------------------*/
-
-function rigTextDecode pData pCharset
-  if not gAdvancedUnicode then
-    return uniDecode(uniEncode(pData, pCharset))
-  else
-    return textDecode(pData, pCharset)
-  end if
-end rigTextDecode
-
-
-
-
-
-
 /*----------------------------------------------------------------------
 --| FUNCTION rigConvertEncoding
 --|
@@ -2533,6 +2468,8 @@ end rigTextDecode
 ----------------------------------------------------------------------*/
 
 function rigConvertEncoding pData pToEncoding pFromEncoding
+  local tEncodings
+  
   put "ASCII,ISO-8859-1,MacRoman,Native,UTF-16,UTF16,UTF-16BE,UTF-16LE,UTF-32,UTF-32BE,UTF-32LE,UTF-8,UTF8,CP1252" into tEncodings
   
   if (pToEncoding is not among the items of tEncodings) or (pFromEncoding is not among the items of tEncodings) then
@@ -2546,6 +2483,98 @@ end rigConvertEncoding
 
 
 
---| END OF common.lc
---| Location:  ./system/revigniter/Common.lc
+/*----------------------------------------------------------------------
+--| FUNCTION rigDefaultCharset
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-01
+--| Last Mod: 2019-01-01
+--| Requires: --
+--|
+--| Summary: Get character set used by default in handlers that require a character set to be provided.
+--| 
+--| Format:  rigDefaultCharset()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigDefaultCharset
+  local tCharset
+  
+  put rigFetchConfigItem("defaultCharset") into tCharset
+  
+  if tCharset is empty then
+    put "UTF-8" into tCharset
+  end if
+  
+  return tCharset
+end rigDefaultCharset
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigIsAbsolutePath
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-11
+--| Last Mod: 2019-01-11
+--| Requires: --
+--|
+--| Summary: Check if the provided path is absolute.
+--| 
+--| Format:  rigIsAbsolutePath(param1[, param2])
+--|
+--| Parameters: string <pPath>, bool <pFile> (optional)
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigIsAbsolutePath pPath pFile
+  if char 1 of pPath <> "/" then
+    put "/" & pPath into pPath
+  end if
+   
+  # CHECK IF PATH IS RELATIVE TO defaultFolder
+  if pFile is TRUE then
+    if (there is a file (the defaultFolder & pPath)) then
+      return FALSE
+    end if
+  else
+    if (there is a folder (the defaultFolder & pPath)) then
+      return FALSE
+    end if
+  end if
+   
+  if pFile is TRUE then
+    return (there is a file pPath)
+  else
+    return (there is a folder pPath)
+  end if
+end rigIsAbsolutePath
+
+
+
+
+
+
+
+function rigQ pText
+    return quote & pText & quote
+end rigQ
+
+
+
+
+
+
+
+
+--| END OF common.livecodescript
+--| Location:  ./system/revigniter/Common.livecodescript
 ----------------------------------------------------------------------
