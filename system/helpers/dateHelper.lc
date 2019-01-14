@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "dateHelper"
 
 ##
 # RevIgniter
@@ -13,10 +7,10 @@ end if
 # modeled on CodeIgniter
 #
 # @package		RevIgniter
-# @author		  rabit@softwaregestaltung.de
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.softwaregestaltung.de/userGuide/license.html
-# @link		    http://revigniter.softwaregestaltung.de
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,14 +22,56 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/date_helper.html
+# @link		    https://revigniter.com/userGuide/helpers/date_helper.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
 
-local sDateItems, sLongTime, sInternetDate
+
+
+global gRigA
+
+local sDateItems, sLongTime, sInternetDate, sStackInUse
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-25
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
 
 
 
@@ -50,8 +86,8 @@ local sDateItems, sLongTime, sInternetDate
 --| Requires: rigMasterNow()
 --|
 --| Summary: Returns the current time as timestamp (seconds) referenced, either
---|          to your server's local time or GMT, based on the "timeReference"
---|          setting in your config file.
+--|            to your server's local time or GMT, based on the "timeReference"
+--|            setting in your config file.
 --| 
 --| Format:  rigNow()
 --|
@@ -79,7 +115,7 @@ end rigNow
 --| Version:  1.1
 --| Created: 04-05-2010
 --| Last Mod: 21-03-2014
---| Requires: rigFragmentDate, rigTranslatedDateItem()
+--| Requires: _rigFragmentDate, _rigTranslatedDateItem()
 --|
 --| Summary: This functon converts date codes formatted using the MySQL style.
 --| 
@@ -91,6 +127,8 @@ end rigNow
 ----------------------------------------------------------------------*/
 
 function rigMdate pDateString, pTime
+  local tTime, tFormatedDate, tCounter, tDateStringItems
+  
 	set the caseSensitive to TRUE
 
 	if pTime is empty then
@@ -100,7 +138,7 @@ function rigMdate pDateString, pTime
 	end if
 
 	# STORE DATE FRAGMENTS IN LOCAL VARIABLES
-	rigFragmentDate tTime
+	_rigFragmentDate tTime
 
 	put pDateString into tFormatedDate
 
@@ -118,7 +156,7 @@ function rigMdate pDateString, pTime
 
 	# FORMAT DATE STRING ITERATING OVER THE DATE ITEMS LIST
 	repeat for each item thisItem in tDateStringItems
-		replace thisItem with rigTranslatedDateItem(thisItem, tTime) in tFormatedDate
+		replace thisItem with _rigTranslatedDateItem(thisItem, tTime) in tFormatedDate
 	end repeat
 
 	return tFormatedDate
@@ -131,24 +169,27 @@ end rigMdate
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigTranslatedDateItem
+--| FUNCTION _rigTranslatedDateItem
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 2010-05-04
 --| Last Mod: 2018-04-23
---| Requires: rigLangLoadLang(), rigLangLangLine(), rigDayOfYear()
+--| Requires: rigLangLoadLang(), rigLangLangLine(), rigDayOfYear(), rigWeekOfYear()
 --|
 --| Summary: Translates MySQL date codes.
 --| 
---| Format:  rigTranslatedDateItem(param1, param2)
+--| Format:  _rigTranslatedDateItem(param1, param2)
 --|
 --| Parameters: integer <pYear>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigTranslatedDateItem pItem, pTime
+private function _rigTranslatedDateItem pItem, pTime
+  local tWeekdays, tTranslatedItem, tMonthnames, tItemSuffix, tYear
+  local tMonth, tDay, tHour
+  
 	set the caseSensitive to TRUE
 	switch pItem
 		# ABBREVIATED NAME OF DAY
@@ -271,11 +312,11 @@ function rigTranslatedDateItem pItem, pTime
 		break
 		# NUMBER OF WEEK WHERE SUNDAY IS THE FIRST DAY IN WEEK 00 - 53
 		case "%U"
-			put rigWeekOfYear( , TRUE) into tTranslatedItem
+			put _rigWeekOfYear( , TRUE) into tTranslatedItem
 		break
 		# NUMBER OF WEEK WHERE MONDAY IS THE FIRST DAY IN WEEK 00 - 53
 		case "%u"
-			put rigWeekOfYear() into tTranslatedItem
+			put _rigWeekOfYear() into tTranslatedItem
 		break
 		# DAY NAME
 		case "%W"
@@ -313,7 +354,7 @@ function rigTranslatedDateItem pItem, pTime
 	end switch
 
 	return tTranslatedItem
-end rigTranslatedDateItem
+end _rigTranslatedDateItem
 
 
 
@@ -322,7 +363,7 @@ end rigTranslatedDateItem
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigFragmentDate
+--| COMMAND _rigFragmentDate
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -332,14 +373,16 @@ end rigTranslatedDateItem
 --|
 --| Summary: Store date fragments in local variables.
 --| 
---| Format:  rigFragmentDate param1
+--| Format:  _rigFragmentDate param1
 --|
 --| Parameters: integer <pTimestamp>
 --|
 --| Return: boolean
 ----------------------------------------------------------------------*/
 
-command rigFragmentDate pTimestamp
+private command _rigFragmentDate pTimestamp
+  local tTime
+  
 	# STORE DATE ITEMS
 	put pTimestamp into tTime
 	convert (tTime) from seconds to dateItems
@@ -360,7 +403,7 @@ command rigFragmentDate pTimestamp
 
 	replace "," with "" in sInternetDate
 	replace space with comma in sInternetDate
-end rigFragmentDate
+end _rigFragmentDate
 
 
 
@@ -375,7 +418,7 @@ end rigFragmentDate
 --| Version:  1.0
 --| Created: 04-05-2010
 --| Last Mod: 04-05-2010
---| Requires: rigIsLeapYear()
+--| Requires: _rigIsLeapYear()
 --|
 --| Summary: Returns the day in a given year as integer.
 --| 
@@ -387,8 +430,10 @@ end rigFragmentDate
 ----------------------------------------------------------------------*/
 
 function rigDayOfYear pYear pMonth pDay
+  local tDayNums, tNumDays
+  
 	# IS THE YEAR A LEAP YEAR
-	if rigIsLeapYear(pYear) is TRUE then
+	if _rigIsLeapYear(pYear) is TRUE then
 		put "31,29,31,30,31,30,31,31,30,31,30,31" into tDayNums
 	else
 		put "31,28,31,30,31,30,31,31,30,31,30,31" into tDayNums
@@ -414,7 +459,7 @@ end rigDayOfYear
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigIsLeapYear
+--| FUNCTION _rigIsLeapYear
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -424,20 +469,20 @@ end rigDayOfYear
 --|
 --| Summary: Checks if year is leap year.
 --| 
---| Format:  rigIsLeapYear(param1)
+--| Format:  _rigIsLeapYear(param1)
 --|
 --| Parameters: integer <pYear>
 --|
 --| Return: boolean
 ----------------------------------------------------------------------*/
 
-function rigIsLeapYear pYear
+private function _rigIsLeapYear pYear
 	if ((pYear mod 400) = 0) or (((pYear mod 4) = 0) and ((pYear mod 100) <> 0)) then
 		return TRUE
 	end if
 	
 	return FALSE
-end rigIsLeapYear
+end _rigIsLeapYear
 
 
 
@@ -447,24 +492,27 @@ end rigIsLeapYear
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigWeekOfYear
+--| FUNCTION _rigWeekOfYear
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 05-05-2010
 --| Last Mod: 05-05-2010
---| Requires: rigCeil()
+--| Requires: --
 --|
 --| Summary: This function returns the week number of a given timestamp.
 --| 
---| Format:  rigWeekOfYear(param1, param2)
+--| Format:  _rigWeekOfYear(param1, param2)
 --|
 --| Parameters: integer <pTime>, bool <pSundayFirst>
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
 
-function rigWeekOfYear pTime pSundayFirst
+private function _rigWeekOfYear pTime pSundayFirst
+  local tSundayFirst, tDateItems, tYear, tMonth, tDay, tNumberDays
+  local tDateItemsFirstOfYear, tFirstDayNum, tDaysToSubtract
+  
 	if pSundayFirst is empty then
 		put FALSE into tSundayFirst
 	else
@@ -501,11 +549,11 @@ function rigWeekOfYear pTime pSundayFirst
 			put (7 mod tFirstDayNum) + 2 into tDaysToSubtract
 		end if
 
-		return rigCeil((tNumberDays - tDaysToSubtract) / 7)
+		return ceil((tNumberDays - tDaysToSubtract) / 7)
 	end if
 
 	return "?"
-end rigWeekOfYear
+end _rigWeekOfYear
 
 
 
@@ -532,6 +580,8 @@ end rigWeekOfYear
 ----------------------------------------------------------------------*/
 
 function rigStandardDate pFormat pTime
+  local tFormat, tFormatArray
+  
 	if pFormat is empty then
 		put "DATE_RFC822" into tFormat
 	else
@@ -584,6 +634,9 @@ end rigStandardDate
 ----------------------------------------------------------------------*/
 
 function rigLocalToGMT pTime
+  local tTime, tSeconds, tInternetDate, tGMToffset, tPrefix, tMinutesOffset
+  local tHoursOffset, tGMToffsetSecs, tGMT
+  
 	if pTime is empty then
 		put the seconds into tTime
 	else
@@ -634,7 +687,7 @@ end rigLocalToGMT
 --| Requires: rigNow(), rigTimezones()
 --|
 --| Summary: Takes a timestamp (the seconds) (in GMT) as input, and returns
---|          at the local value based on the timezone and DST setting submitted.
+--|            at the local value based on the timezone and DST setting submitted.
 --| 
 --| Format:  rigGmtToLocal(param1, param2, param3)
 --|
@@ -644,6 +697,8 @@ end rigLocalToGMT
 ----------------------------------------------------------------------*/
 
 function rigGmtToLocal pTime pTimeZone pDST
+  local tTimeZone, tTime
+  
 	if pTime is empty then
 		return rigNow()
 	end if
@@ -688,6 +743,8 @@ end rigGmtToLocal
 ----------------------------------------------------------------------*/
 
 function rigMysqlTimeToSeconds pMysqlTime
+  local tMysqlTime, tYear, tMonth, tDay, tShortDate, tDateItems
+  
 	put pMysqlTime into tMysqlTime
 
 	if ("-" is in tMysqlTime) and (":" is in tMysqlTime) then
@@ -758,6 +815,8 @@ end rigMysqlTimeToSeconds
 ----------------------------------------------------------------------*/
 
 function rigTimestampToHuman pTime pShowSecs pFormat
+  local tTime, tShowSecs, tFormat, tDateItems, tLongTime, tDate
+  
 	if pTime is empty then
 		put the seconds into tTime
 	else
@@ -838,6 +897,8 @@ end rigTimestampToHuman
 ----------------------------------------------------------------------*/
 
 function rigHumanToTimestamp pDatestring
+  local tDatestring, tRegEx, tHour, tSecs, tTempDate, tDateItems
+  
 	if pDatestring is empty then
 		return FALSE
 	end if
@@ -910,7 +971,7 @@ end rigHumanToTimestamp
 --| Requires: rigLangLoadLang(), rigLangLangLine()
 --|
 --| Summary: Returns a span of seconds in this format:
---|          10 days 14 hours 36 minutes 47 seconds.
+--|            10 days 14 hours 36 minutes 47 seconds.
 --| 
 --| Format:  rigTimespan(param1, param2)
 --|
@@ -920,6 +981,9 @@ end rigHumanToTimestamp
 ----------------------------------------------------------------------*/
 
 function rigTimespan pSeconds pTime
+  local tSeconds, tTime, tSecs, tDatestring, tYears
+  local tMonths, tWeeks, tDays, tHours, tMinutes
+  
 	get rigLangLoadLang("date")
 
 	if (pSeconds is empty) or (pSeconds is not a number) then
@@ -1056,10 +1120,10 @@ end rigTimespan
 --| Version:  1.1
 --| Created: 07-05-2010
 --| Last Mod: 21-03-2014
---| Requires: rigIsLeapYear()
+--| Requires: _rigIsLeapYear()
 --|
 --| Summary: Takes a month/year as input and returns the number of days
---|          for the given month/year. Takes leap years into consideration.
+--|            for the given month/year. Takes leap years into consideration.
 --| 
 --| Format:  rigDaysInMonth(param1, param2)
 --|
@@ -1069,6 +1133,8 @@ end rigTimespan
 ----------------------------------------------------------------------*/
 
 function rigDaysInMonth pMonth pYear
+  local tMonth, tYear, tDaysInMonth
+  
 	if (pMonth is not a number) or (pMonth < 1) or (pMonth > 12) then
 	      return 0
 	   else
@@ -1082,7 +1148,7 @@ function rigDaysInMonth pMonth pYear
 	   end if
 
 	   if tMonth = 2 then
-	      if rigIsLeapYear(tYear) is TRUE then
+	      if _rigIsLeapYear(tYear) is TRUE then
 	         return 29
 	      end if
 	   end if
@@ -1118,6 +1184,8 @@ end rigDaysInMonth
 ----------------------------------------------------------------------*/
 
 function rigTimezoneMenu pDefault pClass pName
+  local tDefault, tName, tMenu, tTimeZonesList, tCounter
+  
 	get rigLangLoadLang("date")
 
 	if pDefault is "GMT" then
@@ -1175,7 +1243,7 @@ end rigTimezoneMenu
 --| Requires: --
 --|
 --| Summary: Returns a list of timezones.  This is a helper function
---|          for various other ones in this library.
+--|            for various other ones in this library.
 --| 
 --| Format:  rigTimezones(param1)
 --|
@@ -1185,6 +1253,8 @@ end rigTimezoneMenu
 ----------------------------------------------------------------------*/
 
 function rigTimezones pTimeZone
+  local tZones, tTimeZone, tCounter, tValue
+  
 	put "UM12,-12,UM11,-11,UM10,-10,UM95,-9.5,UM9,-9,UM8,-8,UM7,-7,UM6,-6,UM5,-5,UM45,-4.5,UM4,-4,UM35,-3.5,UM3,-3,UM2,-2,UM1,-1,UTC,0,UP1,+1,UP2,+2,UP3,+3,UP35,+3.5,UP4,+4,UP45,+4.5,UP5,+5,UP55,+5.5,UP575,+5.75,UP6,+6,UP65,+6.5,UP7,+7,UP8,+8,UP875,+8.75,UP9,+9,UP95,+9.5,UP10,+10,UP105,+10.5,UP11,+11,UP115,+11.5,UP12,+12,UP1275,+12.75,UP13,+13,UP14,+14" into tZones
 
 	if pTimeZone is empty then
@@ -1220,6 +1290,6 @@ end rigTimezones
 
 
 
---| END OF dateHelper.lc
---| Location:  ./system/helpers/dateHelper.lc
+--| END OF dateHelper.livecodescript
+--| Location:  ./system/helpers/dateHelper.livecodescript
 ----------------------------------------------------------------------
