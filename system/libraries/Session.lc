@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Session"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,37 +23,104 @@ end if
 # @subpackage	Libraries
 # @category		Sessions
 # @author			rabit@revigniter.com
-# @link				http://revigniter.com/userGuide/libraries/uri.html
+# @link				https://revigniter.com/userGuide/libraries/uri.html
 ##
 
 
-# LOGGING
-rigLogMessage "debug", "Session Library Loaded"
 
 
-# DECLARE VARIABLES
-local sSession, sNow
+global gRigA, gSessionA
 
-put FALSE into sSession["sess_encrypt_cookie"]
-put "" into sSession["sess_driver"]
-put "" into sSession["sess_save_location"]
-put 28800 into sSession["sess_expiration"]
-put FALSE into sSession["sess_expire_on_close"]
-put FALSE into sSession["sess_match_ip"]
-put TRUE into sSession["sess_match_useragent"]
-put "ri_session" into sSession["sess_cookie_name"]
-put "" into sSession["cookie_prefix"]
-put "" into sSession["cookie_path"]
-put "" into sSession["cookie_domain"]
-put FALSE into sSession["cookie_secure"]
-put 300 into sSession["sess_time_to_update"]
-put "" into sSession["sess_hash_type"]
-put "" into sSession["encryption_key"]
-put "flash" into sSession["flashdata_key"]
-put "temp" into sSession["tempdata_key"]
-put 5 into sSession["gc_probability"]
-put "" into sSession["userdata"]
+local sStackInUse, sSessionA -- array keys are: encryption_key, sess_hash_type, cookie_secure, sess_encrypt_cookie
 
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-13
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Session Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "" into gSessionA["sess_driver"]
+  put "" into gSessionA["sess_save_location"]
+  put 28800 into gSessionA["sess_expiration"]
+  put FALSE into gSessionA["sess_expire_on_close"]
+  put FALSE into gSessionA["sess_match_ip"]
+  put TRUE into gSessionA["sess_match_useragent"]
+  put "ri_session" into gSessionA["sess_cookie_name"]
+  put "" into gSessionA["cookie_prefix"]
+  put "" into gSessionA["cookie_path"]
+  put "" into gSessionA["cookie_domain"]
+  put 300 into gSessionA["sess_time_to_update"]
+  put "flash" into gSessionA["flashdata_key"]
+  put "temp" into gSessionA["tempdata_key"]
+  put 5 into gSessionA["gc_probability"]
+  put "" into gSessionA["userdata"]
+  
+  put FALSE into sSessionA["sess_encrypt_cookie"]
+  put FALSE into sSessionA["cookie_secure"]
+  put "" into sSessionA["sess_hash_type"]
+  put "" into sSessionA["encryption_key"]
+end _rigSetDefaultValues
 
 
 
@@ -72,7 +133,7 @@ put "" into sSession["userdata"]
 --| Version:  1.6
 --| Created: 2009-10-12
 --| Last Mod: 2017-06-27
---| Requires: rigNumToCodepoint(), rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigUcwords(),
+--| Requires: rigFetchConfigItem(), rigLoadHelper, rigLoaderLoadLibrary, rigUcwords(),
 --|            _rigGetTime(), _rigFlashdataSweep, _rigFlashdataMark, _rigSessGC, rigLogMessage
 --|
 --| Summary: The session routines are run automatically
@@ -86,9 +147,11 @@ put "" into sSession["userdata"]
 ----------------------------------------------------------------------*/
 
 command rigRunInitialSessionConfig pParams
+  local tSettingNames, tSessDriver
+  
 	if pParams is not an array then
 		if pParams is not empty then
-			split pParams using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split pParams using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
@@ -100,12 +163,12 @@ command rigRunInitialSessionConfig pParams
 		if pParams is an array then
 			if (pParams[thisItem] is not an array) and (pParams[thisItem] is empty) then
 				# pParams[thisItem] IS EMPTY
-				put rigFetchConfigItem(thisItem) into sSession[thisItem]
+				put rigFetchConfigItem(thisItem) into gSessionA[thisItem]
     		else
-				put pParams[thisItem] into sSession[thisItem]
+				put pParams[thisItem] into gSessionA[thisItem]
     		end if
 		else
-			put rigFetchConfigItem(thisItem) into sSession[thisItem]
+			put rigFetchConfigItem(thisItem) into gSessionA[thisItem]
 		end if
 	end repeat
 
@@ -113,33 +176,33 @@ command rigRunInitialSessionConfig pParams
 	rigLoadHelper "string"
 
 	# DO WE NEED ENCRYPTION? IF SO, LOAD THE ENCRYPTION LIBRARY
-	if sSession["sess_encrypt_cookie"] is TRUE then
+	if sSessionA["sess_encrypt_cookie"] is TRUE then
 		rigLoaderLoadLibrary "Encrypt"
 	end if
   
   # LOAD DRIVER
-  if sSession["sess_driver"] <> empty then
-    put rigUcwords(sSession["sess_driver"]) into tSessDriver
+  if gSessionA["sess_driver"] <> empty then
+    put rigUcwords(gSessionA["sess_driver"]) into tSessDriver
     if tSessDriver is not among the items of "Files,Database" then
       rigLogMessage "error", "Failed to load session driver. Invalid setting for sess_driver."
-      put empty into sSession["sess_driver"]
+      put empty into gSessionA["sess_driver"]
     else
-      include gBASEPATH & "libraries/sessionDrivers/session" & tSessDriver & "Driver" & gEXT
+      start using stack (gRigA["BASEPATH"] & "libraries/sessionDrivers/session" & tSessDriver & "Driver.livecodescript")
     end if
   end if
 
 	# SET THE "NOW" TIME.  CAN EITHER BE GMT OR SERVER TIME, BASED ON THE
 	# CONFIG PREFS.  WE USE THIS TO SET THE "LAST ACTIVITY" TIME
-	put _rigGetTime() into sNow
+	put _rigGetTime() into gSessionA["now"]
 
 	# SET THE SESSION LENGTH. IF THE SESSION EXPIRATION IS
 	# SET TO ZERO WE'LL SET THE EXPIRATION TWO YEARS FROM NOW
-	if sSession["sess_expiration"] = 0 then
-		put (60*60*24*365*2) into sSession["sess_expiration"]
+	if gSessionA["sess_expiration"] = 0 then
+		put (60*60*24*365*2) into gSessionA["sess_expiration"]
 	end if
 
 	# SET THE COOKIE NAME
-	put sSession["cookie_prefix"] & sSession["sess_cookie_name"] into sSession["sess_cookie_name"]
+	put gSessionA["cookie_prefix"] & gSessionA["sess_cookie_name"] into gSessionA["sess_cookie_name"]
 
 	# RUN THE SESSION ROUTINE. IF A SESSION DOESN'T EXIST WE'LL
 	# CREATE A NEW ONE.  IF IT DOES, WE'LL UPDATE IT
@@ -174,9 +237,9 @@ end rigRunInitialSessionConfig
 --| FUNCTION rigSessRead
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 2009-10-12
---| Last Mod: 2017-06-27
+--| Last Mod: 2019-01-06
 --| Requires: rigVarCookie(), rigLogMessage, rigSetHash, rigDecode(), rigSessDestroy, _rigUnserializeSess(),
 --|            rigIpAddress(), rigTrim(), rigGetSessData()
 --|
@@ -190,9 +253,11 @@ end rigRunInitialSessionConfig
 ----------------------------------------------------------------------*/
 
 function rigSessRead
-	# FETCH THE COOKIE
-	put rigVarCookie(sSession["sess_cookie_name"]) into tSession
+  local tSession, tHash, tTempStr, tIPaddress, tSessIP, tUserAgent
 
+	# FETCH THE COOKIE
+	put rigVarCookie(gSessionA["sess_cookie_name"]) into tSession
+ 
 	# NO COOKIE?  GOODBYE CRUEL WORLD!...
 	if tSession is FALSE then
 		rigLogMessage "debug", "A session cookie was not found."
@@ -200,18 +265,28 @@ function rigSessRead
 	end if
 
 	# DECRYPT THE COOKIE DATA
-	if sSession["sess_encrypt_cookie"] is TRUE then
+	if sSessionA["sess_encrypt_cookie"] is TRUE then
     put base64Decode(urlDecode(tSession)) into tSession
-		rigSetHash sSession["sess_hash_type"]
+		rigSetHash sSessionA["sess_hash_type"]
 	  put rigDecode(tSession) into tSession
 	else
-    # ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE Md5 HASH
+    # ENCRYPTION WAS NOT USED, SO WE NEED TO CHECK THE 
+    # SHA3-256 DIGEST OF THE rigHexDigest HASH FUNCTION
+    # (Md5 DIGEST IF LC SERVER VERSION < 9 IS USED)
     put base64Decode(urlDecode(tSession)) into tSession
-	  put char -32 to -1 of tSession into tHash -- get last 32 chars
-	  put char 1 to -33 of tSession into tSession
+    set the itemDel to "."
+    if (item 1 of the version < 9) or (gRigA["useLegacyCode"] is TRUE) then
+      put char -32 to -1 of tSession into tHash -- get last 32 chars
+      put char 1 to -33 of tSession into tSession
+    else
+      put char -64 to -1 of tSession into tHash -- get last 64 chars
+      put char 1 to -65 of tSession into tSession
+    end if
 
-		# DOES THE Md5 HASH MATCH? THIS IS TO PREVENT MANIPULATION OF SESSION DATA IN USERSPACE
-		put tSession & sSession["encryption_key"] into tTempStr
+    # DOES THE SHA3-256 DIGEST OF THE rigHexDigest HASH FUNCTION
+    # (Md5 DIGEST IF LC SERVER VERSION < 9 IS USED) MATCH?
+    # THIS IS TO PREVENT MANIPULATION OF SESSION DATA IN USERSPACE
+		put tSession & sSessionA["encryption_key"] into tTempStr
 		if tHash <> rigHexDigest(tTempStr) then
 			rigLogMessage "error", "The session cookie data did not match what was expected. This could be a possible hacking attempt."
 			rigSessDestroy
@@ -230,7 +305,7 @@ function rigSessRead
 	end if
 
 	# IS THE SESSION CURRENT?
-	if (tSession["last_activity"] + sSession["sess_expiration"]) < sNow then
+	if (tSession["last_activity"] + gSessionA["sess_expiration"]) < gSessionA["now"] then
 		rigSessDestroy
 		return FALSE
 	end if
@@ -239,7 +314,7 @@ function rigSessRead
 	put rigIpAddress() into tIPaddress 
 	put tSession["ip_address"] into tSessIP
   replace "___" with "." in tSessIP -- we replaced the dots with three underscores because otherwise, depending on the combination of numbers, arrayDecode of an urlDecoded ip address does not work (seems to be a LiveCode bug)
-	if (sSession["sess_match_ip"] is TRUE) and (tSessIP <> tIPaddress) then
+	if (gSessionA["sess_match_ip"] is TRUE) and (tSessIP <> tIPaddress) then
 		rigSessDestroy
 		return FALSE
 	end if
@@ -249,13 +324,13 @@ function rigSessRead
 	put char 1 to 50 of tUserAgent into tUserAgent
 	put rigTrim(tUserAgent) into tUserAgent
 	put rigTrim(tSession["user_agent"]) into tSession["user_agent"]
-	if (sSession["sess_match_useragent"] is TRUE) and (tSession["user_agent"] <> tUserAgent) then
+	if (gSessionA["sess_match_useragent"] is TRUE) and (tSession["user_agent"] <> tUserAgent) then
 		rigSessDestroy
 		return FALSE
 	end if
 
 	# IS THERE A CORRESPONDING SESSION IN THE SAVE LOCATION?
-	if sSession["sess_driver"] <> empty then
+	if gSessionA["sess_driver"] <> empty then
   	put rigGetSessData(tSession["session_id"], tSession["ip_address"], tSession["user_agent"], tSession) into tSession
   	if tSession is FALSE then
     		return FALSE
@@ -263,7 +338,7 @@ function rigSessRead
 	end if
 
 	# SESSION IS VALID!
-	put tSession into sSession["userdata"]
+	put tSession into gSessionA["userdata"]
 	delete variable tSession
 
 	return TRUE
@@ -296,14 +371,16 @@ end rigSessRead
 ----------------------------------------------------------------------*/
 
 command rigSessWrite
+  local tCustomUserdata, tCookieUserdata, tKeys
+  
 	# ARE WE SAVING CUSTOM DATA TO A FILE OR DB?  IF NOT, ALL WE DO IS UPDATE THE COOKIE
-  if sSession["sess_driver"] is empty then
+  if gSessionA["sess_driver"] is empty then
 		_rigSetCookie
 		exit rigSessWrite
 	end if
 
 	# SET THE CUSTOM USERDATA, THE SESSION DATA WE WILL SET IN A SECOND
-	put sSession["userdata"] into tCustomUserdata
+	put gSessionA["userdata"] into tCustomUserdata
 	put "" into tCookieUserdata
 
 	# BEFORE CONTINUING, WE NEED TO DETERMINE IF THERE IS ANY CUSTOM DATA TO DEAL WITH.
@@ -312,7 +389,7 @@ command rigSessWrite
 	put "session_id,ip_address,user_agent,last_activity" into tKeys
 	repeat for each item thisItem in tKeys
 		delete variable tCustomUserdata[thisItem]
-		put sSession["userdata"][thisItem] into tCookieUserdata[thisItem]
+		put gSessionA["userdata"][thisItem] into tCookieUserdata[thisItem]
 	end repeat
 
 	# DID WE FIND ANY CUSTOM DATA?  IF NOT, WE TURN THE EMPTY ARRAY INTO A STRING
@@ -328,7 +405,7 @@ command rigSessWrite
   rigUpdateSessData tCustomUserdata
 
 	# WRITE THE COOKIE.  NOTICE THAT WE MANUALLY PASS THE COOKIE DATA ARRAY TO THE
-	# _rigSetCookie COMMAND. NORMALLY THAT COMMAND WILL STORE sSession["userdata"], BUT
+	# _rigSetCookie COMMAND. NORMALLY THAT COMMAND WILL STORE gSessionA["userdata"], BUT
 	# IN THIS CASE THAT ARRAY CONTAINS CUSTOM DATA, WHICH WE DO NOT WANT IN THE COOKIE
 	_rigSetCookie tCookieUserdata
 end rigSessWrite
@@ -344,9 +421,9 @@ end rigSessWrite
 --| COMMAND rigSessCreate
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 14-10-09
---| Last Mod: 30-09-15
+--| Version:  1.4
+--| Created: 2009-10-14
+--| Last Mod: 2019-01-06
 --| Requires: rigRandomNum(), rigIpAddress(), rigHexDigest(), rigUserAgent(), rigCreateSessData, _rigSetCookie
 --|
 --| Summary: Create a new session.
@@ -359,37 +436,31 @@ end rigSessWrite
 ----------------------------------------------------------------------*/
 
 command rigSessCreate
-	put rigRandomNum() into tSessID
+  local tSessID, tIPaddress, tUUID, tUserAgent
 
+	put rigRandomNum() into tSessID
+ 
 	# TO MAKE THE SESSION ID EVEN MORE SECURE WE'LL COMBINE IT WITH THE USER'S IP
 	put rigIpAddress() into tIPaddress
 	replace "." with "___" in tIPaddress -- we replace the dots with three underscores because otherwise, depending on the combination of numbers, arrayDecode of an urlDecoded ip address does not work (seems to be a LiveCode bug)
 	put tSessID & tIPaddress into tSessID
 
 	# TURN SESSION ID INTO A HASH
-	# CHECK SERVER VERSION - USE THE LIVECODE uuid() FUNCTION IF VERSION >= 6.1
-	set the itemDel to "."
-	if (item 1 of the version > 6) or ((item 1 of the version = 6) and (item 2 of the version >= 1)) then
-      put uuid() into tUUID
-   else
-	# USE A SHELL CALL FOR SERVER VERSIONS PRIOR TO 6.1
-		put shell("uuidgen") into tUUID
-	end if
-	
-	put tSessID & tUUID into tSessID
-	put rigHexDigest(tSessID) into tSessID
+  put uuid() into tUUID
+  put tSessID & tUUID into tSessID
+  put rigHexDigest(tSessID) into tSessID
 
-	put tSessID into sSession["userdata"]["session_id"]
-	put tIPaddress into sSession["userdata"]["ip_address"]
+	put tSessID into gSessionA["userdata"]["session_id"]
+	put tIPaddress into gSessionA["userdata"]["ip_address"]
 	
 	put rigUserAgent() into tUserAgent
 	put char 1 to 50 of tUserAgent into tUserAgent
 
-	put tUserAgent into sSession["userdata"]["user_agent"]
-	put sNow into sSession["userdata"]["last_activity"]
+	put tUserAgent into gSessionA["userdata"]["user_agent"]
+	put gSessionA["now"] into gSessionA["userdata"]["last_activity"]
 
 	# SAVE THE DATA TO A FILE OR DB IF NEEDED
-  if sSession["sess_driver"] <> empty then
+  if gSessionA["sess_driver"] <> empty then
     rigCreateSessData
   end if
 
@@ -408,9 +479,9 @@ end rigSessCreate
 --| COMMAND rigSessUpdate
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 14-10-09
---| Last Mod: 30-09-15
+--| Version:  1.4
+--| Created: 2009-10-14
+--| Last Mod: 2019-01-06
 --| Requires: rigRandomNum(), rigIpAddress(), rigHexDigest(), rigUpdateCurrentSess, _rigSetCookie
 --|
 --| Summary: Update an existing session.
@@ -423,14 +494,16 @@ end rigSessCreate
 ----------------------------------------------------------------------*/
 
 command rigSessUpdate
+  local tOldSessID, tNewSessID, tIPaddress, tUUID, tCookieData
+  
 	# WE ONLY UPDATE THE SESSION EVERY FIVE MINUTES BY DEFAULT
-	if (sSession["userdata"]["last_activity"] + sSession["sess_time_to_update"]) >= sNow then
+	if (gSessionA["userdata"]["last_activity"] + gSessionA["sess_time_to_update"]) >= gSessionA["now"] then
 		exit rigSessUpdate
 	end if
 
 	# SAVE THE OLD SESSION ID SO WE KNOW WHICH
 	# DATABASE RECORD / FILE TO UPDATE IF WE NEED IT
-	put sSession["userdata"]["session_id"] into tOldSessID
+	put gSessionA["userdata"]["session_id"] into tOldSessID
 
 	put rigRandomNum() into tNewSessID
 	
@@ -440,28 +513,21 @@ command rigSessUpdate
 	put tNewSessID & tIPaddress into tNewSessID
 
 	# TURN NEW SESSION ID INTO A HASH
-	# CHECK SERVER VERSION - USE THE LIVECODE uuid() FUNCTION IF VERSION >= 6.1
-	set the itemDel to "."
-	if (item 1 of the version > 6) or ((item 1 of the version = 6) and (item 2 of the version >= 1)) then
-      put uuid() into tUUID
-   else
-	# USE A SHELL CALL FOR SERVER VERSIONS PRIOR TO 6.1
-		put shell("uuidgen") into tUUID
-	end if
+  put uuid() into tUUID
 		
 	put tNewSessID & tUUID into tNewSessID
 	put rigHexDigest(tNewSessID) into tNewSessID
 
 	# UPDATE THE SESSION DATA IN THE SESSION DATA ARRAY
-	put tNewSessID into sSession["userdata"]["session_id"]
-	put sNow into sSession["userdata"]["last_activity"]
+	put tNewSessID into gSessionA["userdata"]["session_id"]
+	put gSessionA["now"] into gSessionA["userdata"]["last_activity"]
 
 	# _rigSetCookie WILL HANDLE THIS FOR US IF WE AREN'T USING FILE OR DATABASE SESSIONS
 	# BY PUSHING ALL USERDATA TO THE COOKIE.
 	put empty into tCookieData
 
 	# UPDATE THE SESSION ID AND LAST_ACTIVITY IN FILE OR DB IF NEEDED  
-  if sSession["sess_driver"] <> empty then
+  if gSessionA["sess_driver"] <> empty then
     rigUpdateCurrentSess tOldSessID, tNewSessID
     put the result into tCookieData
   end if
@@ -496,21 +562,23 @@ end rigSessUpdate
 ----------------------------------------------------------------------*/
 
 command rigSessDestroy
+  local tExp, tArrayData
+  
 	# KILL THE SESSION FILE OR DB ROW
-  if (sSession["sess_driver"] <> empty) and (sSession["userdata"]["session_id"] is not empty) then  
+  if (gSessionA["sess_driver"] <> empty) and (gSessionA["userdata"]["session_id"] is not empty) then  
     rigDestroySessData
 	end if
 	
 	# CLEAR userdata
-	put empty into sSession["userdata"]
+	put empty into gSessionA["userdata"]
 
 	# KILL THE COOKIE
-	--put sNow - 31500000 into tExp
+	--put gSessionA["now"] - 31500000 into tExp
 	put - 31500000 into tExp
 	put "" into tArrayData[1]
 	put arrayEncode(tArrayData) into tArrayData
  
-	_rigInputSetCookie sSession["sess_cookie_name"], tArrayData, tExp, sSession["cookie_domain"], sSession["cookie_path"], "", TRUE, sSession["cookie_secure"]
+	_rigInputSetCookie gSessionA["sess_cookie_name"], tArrayData, tExp, gSessionA["cookie_domain"], gSessionA["cookie_path"], "", TRUE, sSessionA["cookie_secure"]
 end rigSessDestroy
 
 
@@ -539,8 +607,8 @@ end rigSessDestroy
 ----------------------------------------------------------------------*/
 
 function rigSessUserdata pItem
-	if pItem is among the keys of sSession["userdata"] then
-		return sSession["userdata"][pItem]
+	if pItem is among the keys of gSessionA["userdata"] then
+		return gSessionA["userdata"][pItem]
 	end if
 
 	return FALSE
@@ -572,8 +640,8 @@ end rigSessUserdata
 ----------------------------------------------------------------------*/
 
 function rigSessAllUserdata
-	if sSession["userdata"] is an array then
-		return sSession["userdata"]
+	if gSessionA["userdata"] is an array then
+		return gSessionA["userdata"]
 	end if
 
 	return FALSE
@@ -605,6 +673,8 @@ end rigSessAllUserdata
 ----------------------------------------------------------------------*/
 
 command rigSetSessUserdata pNewData pNewVal
+  local tArray, tNewData, tKey, tVal
+  
 	if pNewData is not an array then
 		put pNewVal into tArray[pNewData]
 		put tArray into tNewData
@@ -615,7 +685,7 @@ command rigSetSessUserdata pNewData pNewVal
 	repeat for each key tKey in tNewData
 		put tNewData[tKey] into tVal
 
-		put tVal into sSession["userdata"][tKey]
+		put tVal into gSessionA["userdata"][tKey]
 	end repeat
 
 	rigSessWrite
@@ -647,13 +717,16 @@ end rigSetSessUserdata
 ----------------------------------------------------------------------*/
 
 command rigUnsetSessUserdata pKey
+  local tUserData, tUserdataKeys, tRegEx, tTempDataArrayKey, tUnsetA
+  local tTempdataA, tTempDataArrayKeys, tTempDataKeyFragment
+  
   put rigSessAllUserdata() into tUserData
   put the keys of tUserData into tUserdataKeys
   
   if tUserData <> FALSE then
 	  if pKey is not an array then
       # CHECK IF IT IS TEMP DATA
-      put "^" & sSession["tempdata_key"] & ":\d+:" & pKey & "$" into tRegEx
+      put "^" & gSessionA["tempdata_key"] & ":\d+:" & pKey & "$" into tRegEx
       filter tUserdataKeys matching regex pattern tRegEx into tTempDataArrayKey
       if tTempDataArrayKey <> empty then
         put "" into tUnsetA[tTempDataArrayKey]
@@ -667,7 +740,7 @@ command rigUnsetSessUserdata pKey
       # GET ALL TEMP DATA ITEMS
       set the itemDel to ":"
       put empty into tTempdataA
-      put "^" & sSession["tempdata_key"] & ":\d+:.+$" into tRegEx
+      put "^" & gSessionA["tempdata_key"] & ":\d+:.+$" into tRegEx
       filter tUserdataKeys matching regex pattern tRegEx into tTempDataArrayKeys
       
       repeat for each line tLine in tTempDataArrayKeys
@@ -681,7 +754,7 @@ command rigUnsetSessUserdata pKey
 	  end if -- if pKey is not an array then
 
 	  repeat for each key tKey in tUnsetA
-		  delete variable sSession["userdata"][tKey]
+		  delete variable gSessionA["userdata"][tKey]
 	  end repeat
 
 	  rigSessWrite
@@ -714,6 +787,8 @@ end rigUnsetSessUserdata
 ----------------------------------------------------------------------*/
 
 command rigSetSessFlashdata pNewData pNewVal
+  local tArray, tNewData, tFlashdataKey, tVal
+  
 	if pNewData is not an array then
 		put pNewVal into tArray[pNewData]
 		put tArray into tNewData
@@ -724,7 +799,7 @@ command rigSetSessFlashdata pNewData pNewVal
 	repeat for each key tKey in tNewData
 		put tNewData[tKey] into tVal
 
-		put sSession["flashdata_key"] & ":new:" & tKey into tFlashdataKey
+		put gSessionA["flashdata_key"] & ":new:" & tKey into tFlashdataKey
 		rigSetSessUserdata tFlashdataKey, tVal
 	end repeat
 end rigSetSessFlashdata
@@ -753,6 +828,8 @@ end rigSetSessFlashdata
 ----------------------------------------------------------------------*/
 
 command rigSessMarkAsFlash pKey
+  local tUserData, tKeyExists, tKey, tVal, tFlashdataKey
+  
   put rigSessAllUserdata() into tUserData
   
   if tUserData <> FALSE then
@@ -764,8 +841,8 @@ command rigSessMarkAsFlash pKey
         if tKey is among the keys of tUserData then
           put TRUE into tKeyExists
           put pKey[tKey] into tVal
-          delete variable sSession["userdata"][tKey]
-          put sSession["flashdata_key"] & ":new:" & tKey into tFlashdataKey
+          delete variable gSessionA["userdata"][tKey]
+          put gSessionA["flashdata_key"] & ":new:" & tKey into tFlashdataKey
           rigSetSessUserdata tFlashdataKey, tVal
         end if
       end repeat
@@ -777,8 +854,8 @@ command rigSessMarkAsFlash pKey
     else
       if pKey is among the keys of tUserData then
         put tUserData[pKey] into tVal
-        delete variable sSession["userdata"][pKey]
-        put sSession["flashdata_key"] & ":new:" & pKey into tFlashdataKey
+        delete variable gSessionA["userdata"][pKey]
+        put gSessionA["flashdata_key"] & ":new:" & pKey into tFlashdataKey
         rigSetSessUserdata tFlashdataKey, tVal
       
         return TRUE
@@ -814,14 +891,16 @@ end rigSessMarkAsFlash
 ----------------------------------------------------------------------*/
 
 command rigKeepSessFlashdata pKey
+  local tOldFlashDataKey, tValue, tNewFlashDataKey
+  
 	# 'OLD' FLASHDATA GETS REMOVED.  HERE WE MARK ALL
 	# FLASHDATA AS 'NEW' TO PRESERVE IT FROM _rigFlashdataSweep
 	# NOTE THE FUNCTION WILL RETURN FALSE IF THE pKey
 	# PROVIDED CANNOT BE FOUND
-	put sSession["flashdata_key"] & ":old:" & pKey into tOldFlashDataKey
+	put gSessionA["flashdata_key"] & ":old:" & pKey into tOldFlashDataKey
 	put rigSessUserdata(tOldFlashDataKey) into tValue
 
-	put sSession["flashdata_key"] & ":new:" & pKey into tNewFlashDataKey
+	put gSessionA["flashdata_key"] & ":new:" & pKey into tNewFlashDataKey
 	rigSetSessUserdata tNewFlashDataKey, tValue
 end rigKeepSessFlashdata
 
@@ -851,8 +930,10 @@ end rigKeepSessFlashdata
 ----------------------------------------------------------------------*/
 
 function rigSessFlashdata pKey
+  local tFlashdatakey, tFlashdataA, tUserData, tKey, tVal
+  
   if pKey <> empty then
-	  put sSession["flashdata_key"] & ":old:" & pKey into tFlashdatakey
+	  put gSessionA["flashdata_key"] & ":old:" & pKey into tFlashdatakey
 	  return rigSessUserdata(tFlashdatakey)
     
   else
@@ -897,11 +978,14 @@ end rigSessFlashdata
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigFlashdataMark
+private command _rigFlashdataMark
+  local tUserData, tUserdataKeys, tRegEx, tFlashDataArrayKeys, tLine, tVal
+  local tName, tNewKey
+  
 	put rigSessAllUserdata() into tUserData
 	
   put the keys of tUserData into tUserdataKeys
-  put "^" & sSession["flashdata_key"] & ":new:.+$" into tRegEx
+  put "^" & gSessionA["flashdata_key"] & ":new:.+$" into tRegEx
   filter tUserdataKeys matching regex pattern tRegEx into tFlashDataArrayKeys
   
   set the itemDel to ":"
@@ -909,7 +993,7 @@ command _rigFlashdataMark
     put tUserData[tLine] into tVal
     
     put item 3 of tLine into tName
-    put sSession["flashdata_key"] & ":old:" & tName into tNewKey
+    put gSessionA["flashdata_key"] & ":old:" & tName into tNewKey
     rigSetSessUserdata tNewKey, tVal
     rigUnsetSessUserdata tLine
   end repeat
@@ -938,7 +1022,9 @@ end _rigFlashdataMark
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigFlashdataSweep
+private command _rigFlashdataSweep
+  local tUserData, tKey
+  
 	put rigSessAllUserdata() into tUserData
 	
 	repeat for each key tKey in tUserData
@@ -977,6 +1063,9 @@ end _rigFlashdataSweep
 ----------------------------------------------------------------------*/
 
 command rigSetSessTempdata pNewData pNewVal pTTL
+  local tArray, tNewData, tTTL, tUserData, tUserdataKeys, tRegEx
+  local tTempDataArrayKeys, tKey, tLine, tVal, tTempdataKey
+  
 	if pNewData is not an array then
 		put pNewVal into tArray[pNewData]
 		put tArray into tNewData
@@ -995,7 +1084,7 @@ command rigSetSessTempdata pNewData pNewVal pTTL
   put rigSessAllUserdata() into tUserData
   if tUserData <> FALSE then
     put the keys of tUserData into tUserdataKeys
-    put "^" & sSession["tempdata_key"] & ":\d+:.+$" into tRegEx
+    put "^" & gSessionA["tempdata_key"] & ":\d+:.+$" into tRegEx
     filter tUserdataKeys matching regex pattern tRegEx into tTempDataArrayKeys
     set the itemDel to ":"
 
@@ -1006,7 +1095,7 @@ command rigSetSessTempdata pNewData pNewVal pTTL
       if tTempDataArrayKeys <> empty then
         repeat for each line tLine in tTempDataArrayKeys
           if item 3 of tLine is tKey then
-            delete variable sSession["userdata"][tLine]
+            delete variable gSessionA["userdata"][tLine]
             exit repeat
           end if
         end repeat
@@ -1014,7 +1103,7 @@ command rigSetSessTempdata pNewData pNewVal pTTL
     
       put tNewData[tKey] into tVal
 
-      put sSession["tempdata_key"] & ":" & tTTL & ":" & tKey into tTempdataKey
+      put gSessionA["tempdata_key"] & ":" & tTTL & ":" & tKey into tTempdataKey
       rigSetSessUserdata tTempdataKey, tVal
 	  end repeat
   end if -- if tUserData <> FALSE then
@@ -1046,6 +1135,8 @@ end rigSetSessTempdata
 ----------------------------------------------------------------------*/
 
 command rigSessMarkAsTemp pKey pTTL
+  local tTTL, tUserData, tKeyExists, tKey, tVal, tTempdataKey
+  
   # SET EXPIRATION TIME IN SECONDS
   if (pTTL is empty) or (pTTL is not an integer) then
     put the seconds + 300 into tTTL
@@ -1063,9 +1154,9 @@ command rigSessMarkAsTemp pKey pTTL
       repeat for each key tKey in pKey
         if tKey is among the keys of tUserData then
           put TRUE into tKeyExists
-          put sSession["userdata"][tKey] into tVal
-          delete variable sSession["userdata"][tKey]
-          put sSession["tempdata_key"] & ":" & tTTL & ":" & tKey into tTempdataKey
+          put gSessionA["userdata"][tKey] into tVal
+          delete variable gSessionA["userdata"][tKey]
+          put gSessionA["tempdata_key"] & ":" & tTTL & ":" & tKey into tTempdataKey
           rigSetSessUserdata tTempdataKey, tVal
         end if
       end repeat
@@ -1077,8 +1168,8 @@ command rigSessMarkAsTemp pKey pTTL
     else
       if pKey is among the keys of tUserData then
         put tUserData[pKey] into tVal
-        delete variable sSession["userdata"][pKey]
-        put sSession["tempdata_key"] & ":" & tTTL & ":" & pKey into tTempdataKey
+        delete variable gSessionA["userdata"][pKey]
+        put gSessionA["tempdata_key"] & ":" & tTTL & ":" & pKey into tTempdataKey
         rigSetSessUserdata tTempdataKey, tVal
       
         return TRUE
@@ -1117,13 +1208,16 @@ end rigSessMarkAsTemp
 ----------------------------------------------------------------------*/
 
 function rigSessTempdata pKey
+  local tUserData, tUserdataKeys, tRegEx, tTempDataArrayKey, tTempdataA
+  local tTempDataArrayKeys, tLine, tVal, tKey
+  
   put rigSessAllUserdata() into tUserData
   put the keys of tUserData into tUserdataKeys
   
   if tUserData <> FALSE then
     if pKey <> empty then
       
-      put "^" & sSession["tempdata_key"] & ":\d+:" & pKey & "$" into tRegEx
+      put "^" & gSessionA["tempdata_key"] & ":\d+:" & pKey & "$" into tRegEx
       filter tUserdataKeys matching regex pattern tRegEx into tTempDataArrayKey
       return rigSessUserdata(tTempDataArrayKey)
     
@@ -1131,11 +1225,11 @@ function rigSessTempdata pKey
       # GET ALL TEMP DATA ITEMS AS ARRAY
       set the itemDel to ":"
       put empty into tTempdataA
-      put "^" & sSession["tempdata_key"] & ":\d+:.+$" into tRegEx
+      put "^" & gSessionA["tempdata_key"] & ":\d+:.+$" into tRegEx
       filter tUserdataKeys matching regex pattern tRegEx into tTempDataArrayKeys
       
       repeat for each line tLine in tTempDataArrayKeys
-        put sSession["userdata"][tLine] into tVal
+        put gSessionA["userdata"][tLine] into tVal
         put item 3 of tLine into tKey
         put tVal into tTempdataA[tKey]
       end repeat
@@ -1172,7 +1266,9 @@ end rigSessTempdata
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigTempdataSweep
+private command _rigTempdataSweep
+  local tTime, tUserData, tUserDataKeys, tTempDataArrayKeys, tLine
+  
   put the seconds into tTime
   put rigSessAllUserdata() into tUserData
   
@@ -1217,7 +1313,7 @@ end _rigTempdataSweep
 --| Return: integer
 ----------------------------------------------------------------------
 
-function _rigGetTime
+private function _rigGetTime
 	return rigMasterNow()
 end _rigGetTime
 
@@ -1243,9 +1339,11 @@ end _rigGetTime
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigSetCookie pCookieData
+private command _rigSetCookie pCookieData
+  local tCookieData, tHash, tExp
+
 	if pCookieData is not an array then
-		put sSession["userdata"] into tCookieData
+		put gSessionA["userdata"] into tCookieData
 	else
 		put pCookieData into tCookieData
 	end if
@@ -1253,24 +1351,26 @@ command _rigSetCookie pCookieData
 	# SERIALIZE THE USERDATA FOR THE COOKIE
 	put _rigSerializeSess(tCookieData) into tCookieData
 
-	if sSession["sess_encrypt_cookie"] is TRUE then
-		rigSetHash sSession["sess_hash_type"]
+	if sSessionA["sess_encrypt_cookie"] is TRUE then
+		rigSetHash sSessionA["sess_hash_type"]
 		put rigEncode(tCookieData) into tCookieData
 	else
-		# IF ENCRYPTION IS NOT USED, WE PROVIDE AN Md5 HASH TO PREVENT USERSIDE TAMPERING
-		put tCookieData & sSession["encryption_key"] into tHash
+    # IF ENCRYPTION IS NOT USED, WE PROVIDE A SHA3-256 DIGEST OF THE rigHexDigest
+    # HASH FUNCTION (Md5 DIGEST IF LC SERVER VERSION < 9 IS USED) TO PREVENT
+    # USERSIDE TAMPERING
+		put tCookieData & sSessionA["encryption_key"] into tHash
 		put rigHexDigest(tHash) into tHash
 		put tCookieData & tHash into tCookieData
 	end if
 
 	# SET THE COOKIE
-	if sSession["sess_expire_on_close"] is TRUE then
+	if gSessionA["sess_expire_on_close"] is TRUE then
 		put "" into tExp
 	else
-		put sSession["sess_expiration"] into tExp
+		put gSessionA["sess_expiration"] into tExp
 	end if
   
-	_rigInputSetCookie sSession["sess_cookie_name"], tCookieData, tExp, sSession["cookie_domain"], sSession["cookie_path"], "", TRUE, sSession["cookie_secure"]
+	_rigInputSetCookie gSessionA["sess_cookie_name"], tCookieData, tExp, gSessionA["cookie_domain"], gSessionA["cookie_path"], "", TRUE, sSessionA["cookie_secure"]
 end _rigSetCookie
 
 
@@ -1296,7 +1396,9 @@ end _rigSetCookie
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigSerializeSess pData
+private function _rigSerializeSess pData
+  local tData, tKey, tVal
+  
 	put pData into tData
 
 	if tData is an array then
@@ -1321,10 +1423,10 @@ end _rigSerializeSess
 --| FUNCTION _rigUnserializeSess
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 12-10-09
---| Last Mod: 13-01-15
---| Requires: rigStripSlashes(), rigCodepointToNum()
+--| Version:  1.4
+--| Created: 2009-10-12
+--| Last Mod: 2018-12-13
+--| Requires: rigStripSlashes()
 --|
 --| Summary: This function unserializes a data string, then converts any
 --|            temporary slash markers back to actual slashes.
@@ -1337,16 +1439,14 @@ end _rigSerializeSess
 ----------------------------------------------------------------------*/
 
 function _rigUnserializeSess pData
+  local tData, tArrayEncodedMarker, tKey, tVal
+  
   put rigStripSlashes(pData) into tData
  
   # CHECK IF TDATA IS ARRAYENCODED
-  if not gAdvancedUnicode then -- output of arrayEncode() is different since LiveCode version 7
-    put 5 into tArrayEncodedMarker
-  else
-    put 6 into tArrayEncodedMarker
-  end if
+  put 6 into tArrayEncodedMarker
 
-  if rigCodepointToNum(char 1 of tData) = tArrayEncodedMarker then
+  if codepointToNum(char 1 of tData) = tArrayEncodedMarker then
     # OK, THEN DECODE TDATA
     put arrayDecode(tData) into tData
   end if
@@ -1391,8 +1491,8 @@ end _rigUnserializeSess
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigSessGC
-  if sSession["sess_driver"] <> empty then  
+private command _rigSessGC
+  if gSessionA["sess_driver"] <> empty then  
     _rigGCexpiredSess
 	end if
 end _rigSessGC
@@ -1404,11 +1504,7 @@ end _rigSessGC
 
 
 
-# CALL INITIAL HANDLERS
---initSession
 
-
-
---| END OF Session.lc
---| Location:  ./system/libraries/Session.lc
+--| END OF Session.livecodescript
+--| Location:  ./system/libraries/Session.livecodescript
 ----------------------------------------------------------------------
