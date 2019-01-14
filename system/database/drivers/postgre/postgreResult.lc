@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "postgreResult"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,8 +22,54 @@ end if
 #
 # @category	Database
 # @author		rabit@revigniter.com
-# @link		  http://revigniter.com/userGuide/database/
+# @link		  https://revigniter.com/userGuide/database/
 ##
+
+
+
+
+
+global gRigA
+
+local sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-18
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
 
 
 
@@ -53,6 +93,8 @@ end if
 ----------------------------------------------------------------------*/
 
 function rigNumRows pResultID
+  local tResultID, tNumRows
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -94,6 +136,8 @@ end rigNumRows
 ----------------------------------------------------------------------*/
 
 function rigNumFields pResultID
+  local tResultID, tNumFields
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -115,7 +159,7 @@ end rigNumFields
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigListFields
 --|
 --| Author: rabit
@@ -131,9 +175,11 @@ end rigNumFields
 --| Parameters: integer <pResultID>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigListFields pResultID
+  local tResultID, tFieldNames
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -188,6 +234,11 @@ end rigListFields
 ----------------------------------------------------------------------*/
 
 function rigFieldData pTable
+  local tResultID, tFieldNames, tTypes, tMaxLengths, tActiveGrp, tHostname
+  local tDatabase, tUser, tPassword, tSQLQuery, tCommandStr, tSQLQueryResult
+  local tPrimaryField, tCounter, tOffset, tDefaults, tThisType, tLengthNumStart
+  local tLengthNumEnd, tFieldData
+  
 	put rigFetchDBdriverSetting("resultid") into tResultID
 	put revDatabaseColumnNames(tResultID) into tFieldNames
 	put revDatabaseColumnTypes(tResultID) into tTypes
@@ -225,7 +276,7 @@ function rigFieldData pTable
 		# WE ASSUME, THAT THE primary KEY IS THE FIRST COLUMN
 		put item 1 of line 1 of tSQLQueryResult into tPrimaryField
    
-		put 1 into tCounter -- rabit
+		put 1 into tCounter
 
 		# GET DEFAULT VALUES AND CHECK MAX LENGTH
 		repeat for each line thisLine in tSQLQueryResult
@@ -282,7 +333,7 @@ end rigFieldData
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDataSeek
 --|
 --| Author: rabit
@@ -291,18 +342,20 @@ end rigFieldData
 --| Last Mod: 12-10-09
 --| Requires: --
 --|
---| Summary: MOVES THE INTERNAL POINTER TO THE DESIRED OFFSET.  WE CALL
---|                    THIS INTERNALLY BEFORE FETCHING RESULTS TO MAKE SURE THE
---|                    RESULT SET STARTS AT ZERO.
+--| Summary: Moves the internal pointer to the desired offset.  We call
+--|            this internally before fetching results to make sure the
+--|            result set starts at zero.
 --| 
 --| Format:  _rigDataSeek(param1, param2)
 --|
 --| Parameters: integer <pRecordsetID>, integer <pN> record number
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDataSeek pRecordsetID pN
+  local tN
+  
 	if pN is empty then
 		put 1 into tN
 	else
@@ -332,8 +385,8 @@ end _rigDataSeek
 --| Requires: rigDBQuery(), rigDbRow()
 --|
 --| Summary: Returns the last automatically generated value successfully
---| 				inserted for an AUTO_INCREMENT column as a result of the most
---| 				recently executed INSERT statement.
+--| 				  inserted for an AUTO_INCREMENT column as a result of the most
+--| 				  recently executed INSERT statement.
 --| 
 --| Format:	_rigDbLastInsertID(param1)
 --|
@@ -343,6 +396,8 @@ end _rigDataSeek
 ----------------------------------------------------------------------*/
 
 function _rigDbLastInsertID pTable
+  local tQuery, tRow
+  
 	put rigDBQuery("SELECT CURRVAL(pg_get_serial_sequence('"&pTable&"', '"&rigPrimary(pTable)&"'))") into tQuery
 		if tQuery["numrows"] = 1 then
 			put rigDbRow(1) into tRow
@@ -358,6 +413,6 @@ end _rigDbLastInsertID
 
 
 
---| END OF postgreResult.lc
---| Location:  ./system/database/drivers/postgre/postgreResult.lc
+--| END OF postgreResult.livecodescript
+--| Location:  ./system/database/drivers/postgre/postgreResult.livecodescript
 ----------------------------------------------------------------------

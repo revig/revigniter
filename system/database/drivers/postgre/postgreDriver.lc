@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "postgreDriver"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -32,32 +26,98 @@ end if
 # @subpackage	Drivers
 # @category	  Database
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/database/
+# @link		    https://revigniter.com/userGuide/database/
 ##
 
 
-# DECLARE VARIABLES
-local sDBdriver, _sEscapeChar, sDeleteHack, _sCountString, _sRandomKeyword, _sLikeEscapeStr, _sLikeEscapeChr
 
 
-# SET INITIAL VALUES
-put "postgre" into sDBdriver
+global gRigA
 
-# THE CHARACTER USED FOR ESCAPING  
-put quote into _sEscapeChar
+local sDBdriver, _sEscapeChar, sDeleteHack, _sCountString, _sRandomKeyword
+local _sLikeEscapeStr, _sLikeEscapeChr, sStackInUse
 
-# CLAUSE AND CHARACTER USED FOR LIKE ESCAPE SEQUENCES
-put " ESCAPE '%s' " into _sLikeEscapeStr
-put "!" into _sLikeEscapeChr
 
-##
-# THE SYNTAX TO COUNT ROWS IS SLIGHTLY DIFFERENT ACROSS DIFFERENT
-# DATABASE ENGINES, SO THIS STRING APPEARS IN EACH DRIVER AND IS
-# USED FOR THE COUNT_ALL() AND COUNT_ALL_RESULTS() FUNCTIONS.
-##
-put "SELECT COUNT(*) AS " into _sCountString
-put " RANDOM()" into _sRandomKeyword -- database specific random keyword
 
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-18
+ --| Last Mod: --
+ --| Requires: _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "postgre" into sDBdriver
+
+  # THE CHARACTER USED FOR ESCAPING  
+  put quote into _sEscapeChar
+
+  # CLAUSE AND CHARACTER USED FOR LIKE ESCAPE SEQUENCES
+  put " ESCAPE '%s' " into _sLikeEscapeStr
+  put "!" into _sLikeEscapeChr
+
+  ##
+  # THE SYNTAX TO COUNT ROWS IS SLIGHTLY DIFFERENT ACROSS DIFFERENT
+  # DATABASE ENGINES, SO THIS STRING APPEARS IN EACH DRIVER AND IS
+  # USED FOR THE COUNT_ALL() AND COUNT_ALL_RESULTS() FUNCTIONS.
+  ##
+  put "SELECT COUNT(*) AS " into _sCountString
+  put " RANDOM()" into _sRandomKeyword -- database specific random keyword
+end _rigSetDefaultValues
 
 
 
@@ -105,7 +165,7 @@ end _rigConnectString
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
@@ -121,9 +181,11 @@ end _rigConnectString
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbConnect
+  local tPort, tHostname, tDatabase, tUsername, tPassword, tDatabaseID
+  
 	put rigFetchDBdriverSetting("port") into tPort
 	put rigFetchDBdriverSetting("hostname") into tHostname
 	put rigFetchDBdriverSetting("database") into tDatabase
@@ -157,7 +219,7 @@ end rigDbConnect
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbSetCharset
 --|
 --| Author: rabit
@@ -173,11 +235,13 @@ end rigDbConnect
 --| Parameters: string <pCharset>, string <pCollation>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbSetCharset pCharset pCollation
+  local tQuery
+  
 	put "SET NAMES '" &  rigDbEscapeString(pCharset) & "'" into tQuery
-	revExecuteSQL gDatabaseID, tQuery
+	revExecuteSQL gRigA["databaseID"], tQuery
 
 	if the result is not 0 then
 		return FALSE
@@ -190,7 +254,7 @@ end _rigDbSetCharset
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbVersion
 --|
 --| Author: rabit
@@ -206,7 +270,7 @@ end _rigDbSetCharset
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbVersion
 	return "SELECT version() AS ver"
@@ -215,7 +279,7 @@ end _rigDbVersion
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbExecute
 --|
 --| Author: rabit
@@ -231,9 +295,11 @@ end _rigDbVersion
 --| Parameters: string <pSQL> the sql statement, integer <pConnectionID>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbExecute pSQL pConnectionID
+  local tSQL, tIsWriteType, tRecordSetID, tAffectedRows
+  
 	put _rigPrepQuery(pSQL) into tSQL
 
 	put rigFetchDBdriverSetting("iswritetype") into tIsWriteType
@@ -269,7 +335,7 @@ end _rigDbExecute
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigPrepQuery
 --|
 --| Author: rabit
@@ -285,9 +351,9 @@ end _rigDbExecute
 --| Parameters: string <pSQL> the sql statement
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigPrepQuery pSQL
+private function _rigPrepQuery pSQL
 	return pSQL
 end _rigPrepQuery
 
@@ -295,7 +361,7 @@ end _rigPrepQuery
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigTransBegin
 --|
 --| Author: rabit
@@ -311,9 +377,11 @@ end _rigPrepQuery
 --| Parameters: bool <pTestMode>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigTransBegin pTestMode
+  local tVal, tResult
+  
 	if rigFetchDBdriverSetting("transenabled") is not TRUE then
 		return TRUE
 	end if
@@ -345,7 +413,7 @@ end rigTransBegin
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigTransCommit
 --|
 --| Author: rabit
@@ -361,9 +429,11 @@ end rigTransBegin
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigTransCommit
+  local tTransEnabled, tTransDepth, tResult
+  
 	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
 	if tTransEnabled is not TRUE then
 		exit rigTransCommit
@@ -385,7 +455,7 @@ end rigTransCommit
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigTransRollback
 --|
 --| Author: rabit
@@ -401,9 +471,11 @@ end rigTransCommit
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigTransRollback
+  local tTransEnabled, tTransDepth, tConnectionID
+  
 	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
 	if tTransEnabled is not TRUE then
 		exit rigTransRollback
@@ -416,11 +488,11 @@ command rigTransRollback
 	end if
 
 	# ROLLBACK USING BUILT-IN FUNCTION
-	if gDatabaseID is "" then
+	if gRigA["databaseID"] is "" then
 		put rigFetchDBdriverSetting("connid") into tConnectionID
 		get revdb_rollback(tConnectionID)
 	else
-		get revdb_rollback(gDatabaseID)
+		get revdb_rollback(gRigA["databaseID"])
 	end if
 
 	if it is not empty then
@@ -442,18 +514,21 @@ end rigTransRollback
 --| Version:  1.4
 --| Created: 18-07-09
 --| Last Mod: 06-10-15
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Escapes string.
 --| 
 --| Format:  rigEscapeStr(param1, param2)
 --|
---| Parameters: string <pStr> , bool <pLike> whether or not the string will be used in a LIKE condition
+--| Parameters: string <pStr> , bool <pLike> whether or not the string will be used
+--|               in a LIKE condition
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigEscapeStr pStr pLike
+  local tStr, tLike, tKey
+  
 	put pStr into tStr
 	if pLike is empty then
 		put FALSE into tLike
@@ -470,23 +545,23 @@ function rigEscapeStr pStr pLike
 	end if
 
 	# \ to \\
-	replace rigNumToCodepoint(92) with rigNumToCodepoint(92) & rigNumToCodepoint(92) in tStr
+	replace numToCodepoint(92) with numToCodepoint(92) & numToCodepoint(92) in tStr
 	# ' to \'
-	replace rigNumToCodepoint(39) with rigNumToCodepoint(92) & rigNumToCodepoint(39) in tStr
+	replace numToCodepoint(39) with numToCodepoint(92) & numToCodepoint(39) in tStr
 	# " to \"
-	replace rigNumToCodepoint(34) with rigNumToCodepoint(92) & rigNumToCodepoint(34) in tStr
+	replace numToCodepoint(34) with numToCodepoint(92) & numToCodepoint(34) in tStr
 	# backspace to \b
-	replace rigNumToCodepoint(8) with rigNumToCodepoint(92) & rigNumToCodepoint(98) in tStr
+	replace numToCodepoint(8) with numToCodepoint(92) & numToCodepoint(98) in tStr
 	# NULL to \0
-	replace rigNumToCodepoint(0) with rigNumToCodepoint(92) & rigNumToCodepoint(48) in tStr
+	replace numToCodepoint(0) with numToCodepoint(92) & numToCodepoint(48) in tStr
 	# Control-Z to \Z
-	replace rigNumToCodepoint(26) with rigNumToCodepoint(92) & rigNumToCodepoint(90) in tStr
+	replace numToCodepoint(26) with numToCodepoint(92) & numToCodepoint(90) in tStr
 	# newline to \n
-	replace rigNumToCodepoint(10) with rigNumToCodepoint(92) & rigNumToCodepoint(110) in tStr
+	replace numToCodepoint(10) with numToCodepoint(92) & numToCodepoint(110) in tStr
 	# carriage return to \r
-	replace rigNumToCodepoint(13) with rigNumToCodepoint(92) & rigNumToCodepoint(114) in tStr
+	replace numToCodepoint(13) with numToCodepoint(92) & numToCodepoint(114) in tStr
 	# tab to \t
-	replace rigNumToCodepoint(9) with rigNumToCodepoint(92) & rigNumToCodepoint(116) in tStr
+	replace numToCodepoint(9) with numToCodepoint(92) & numToCodepoint(116) in tStr
 
 	# ESCAPE LIKE CONDITION WILDCARDS
 	if tLike is TRUE then
@@ -504,7 +579,7 @@ end rigEscapeStr
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbCountAll
 --|
 --| Author: rabit
@@ -514,16 +589,18 @@ end rigEscapeStr
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific query string that counts all records in
---|                    the specified database.
+--|            the specified database.
 --| 
 --| Format:  rigDbCountAll(param1)
 --|
 --| Parameters: string <pTable>
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbCountAll pTable
+  local tNumrows, tTable, tSql, tQuery, tRow
+  
 	if pTable is empty then
 		return 0
 	end if
@@ -550,7 +627,7 @@ end rigDbCountAll
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbListTables
 --|
 --| Author: rabit
@@ -566,9 +643,11 @@ end rigDbCountAll
 --| Parameters: bool <pPrefixLimit>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbListTables pPrefixLimit
+  local tPrefixLimit, tSql, tPrefix, tEscape
+  
 	if pPrefixLimit is empty then
 		put FALSE into tPrefixLimit
 	else
@@ -590,7 +669,7 @@ end _rigDbListTables
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbListColumns
 --|
 --| Author: rabit
@@ -606,7 +685,7 @@ end _rigDbListTables
 --| Parameters: string <pTable>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbListColumns pTable
 	return "SELECT column_name FROM information_schema.columns WHERE table_name ='" & pTable & "'"
@@ -615,7 +694,7 @@ end _rigDbListColumns
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbFieldData
 --|
 --| Author: rabit
@@ -631,7 +710,7 @@ end _rigDbListColumns
 --| Parameters: string <pTable> the table name
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbFieldData pTable
 	return "SELECT * FROM" && pTable && "LIMIT 1"
@@ -640,7 +719,7 @@ end _rigDbFieldData
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbErrorMessage
 --|
 --| Author: rabit
@@ -656,10 +735,12 @@ end _rigDbFieldData
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbErrorMessage
-	if gDatabaseID is "" then
+  local tConnectionID
+  
+	if gRigA["databaseID"] is "" then
 		put rigFetchDBdriverSetting("connid") into tConnectionID
 		if (tConnectionID <> "") and (tConnectionID is an integer) then
 			return revDatabaseConnectResult(tConnectionID)
@@ -668,7 +749,7 @@ function rigDbErrorMessage
 		end if
 	end if
 
-	return revDatabaseConnectResult(gDatabaseID)
+	return revDatabaseConnectResult(gRigA["databaseID"])
 end rigDbErrorMessage
 
 
@@ -677,7 +758,7 @@ end rigDbErrorMessage
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigEscapeIdentifiers
 --|
 --| Author: rabit
@@ -693,9 +774,11 @@ end rigDbErrorMessage
 --| Parameters: string <pItem>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigEscapeIdentifiers pItem
+  local tKey, tReservedIdent, tStr, tRegEx
+  
 	if _sEscapeChar is "" then
 		return pItem
 	end if
@@ -728,7 +811,7 @@ end _rigEscapeIdentifiers
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigFromTables
 --|
 --| Author: rabit
@@ -738,16 +821,18 @@ end _rigEscapeIdentifiers
 --| Requires: --
 --|
 --| Summary: This function implicitly groups FROM tables so there is no confusion
---|                    about operator precedence in harmony with SQL standards.
+--|            about operator precedence in harmony with SQL standards.
 --| 
 --| Format:  _rigFromTables(param1)
 --|
 --| Parameters: type <pTables>
 --|
 --| Return: type
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigFromTables pTables
+  local tTablesArray
+  
 	if pTables is not an array then
 		put pTables into tTablesArray[1]
 	else
@@ -762,7 +847,7 @@ end _rigFromTables
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigInsert
 --|
 --| Author: rabit
@@ -775,10 +860,11 @@ end _rigFromTables
 --| 
 --| Format:  _rigInsert(param1, param2, param3)
 --|
---| Parameters: string <pTable> the table name, array <pKeys> the insert keys, array <pValues> the insert values
+--| Parameters: string <pTable> the table name, array <pKeys> the insert keys,
+--|               array <pValues> the insert values
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigInsert pTable pKeys pValues
 	combine pKeys using comma
@@ -797,19 +883,23 @@ end _rigInsert
 --| Version:  1.4
 --| Created: 28-09-09
 --| Last Mod: 21-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Generates a platform-specific update string from the supplied data.
 --| 
 --| Format:  _rigUpdate(param1, param2, param3, param4, param5)
 --|
---| Parameters: string <pTable> the table name, array <pValues> the update data, array <pWhere> the where clause
---|                       array <pOrderBy> the orderby clause, array <pLimit>the limit clause
+--| Parameters: string <pTable> the table name, array <pValues> the update data,
+--|               array <pWhere> the where clause, array <pOrderBy> the orderby clause,
+--|               array <pLimit>the limit clause
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function _rigUpdate pTable pValues pWhere pOrderBy pLimit
+  local tOrderBy, tWhere, tLimit, tKeyNum, tKey, tVal
+  local tValstr, tSql
+  
 	put pOrderBy into tOrderBy
 	put pWhere into tWhere
 	if pLimit is empty then
@@ -833,15 +923,15 @@ function _rigUpdate pTable pValues pWhere pOrderBy pLimit
 	end if
 
 	if the number of lines in the keys of tOrderBy >= 1 then
-		combine tOrderBy using rigNumToCodepoint(2)
-		replace rigNumToCodepoint(2) with ", " in tOrderBy
+		combine tOrderBy using numToCodepoint(2)
+		replace numToCodepoint(2) with ", " in tOrderBy
 		put " ORDER BY" && tOrderBy into tOrderBy
 	else
 		put "" into tOrderBy
 	end if
 
-	combine tValstr using rigNumToCodepoint(2)
-	replace rigNumToCodepoint(2) with ", " in tValstr
+	combine tValstr using numToCodepoint(2)
+	replace numToCodepoint(2) with ", " in tValstr
 
 	put "UPDATE" && pTable && "SET" && tValstr into tSql
 
@@ -860,7 +950,8 @@ end _rigUpdate
 
 
 
-----------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
 --| FUNCTION _rigTruncate
 --|
 --| Author: rabit
@@ -870,15 +961,15 @@ end _rigUpdate
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific truncate string from the supplied data
---|                   If the database does not support the truncate() command
---|                   This function maps to "DELETE FROM table".
+--|            If the database does not support the truncate() command
+--|            This function maps to "DELETE FROM table".
 --| 
 --| Format:  _rigTruncate(param1)
 --|
 --| Parameters: string <pTable> the table name
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigTruncate pTable
 	return "TRUNCATE" && pTable
@@ -894,19 +985,21 @@ end _rigTruncate
 --| Version:  1.1
 --| Created: 28-09-09
 --| Last Mod: 03-12-15
---| Requires: rigFetchDBactiveRecSetting(), rigNumToCodepoint()
+--| Requires: rigFetchDBactiveRecSetting()
 --|
 --| Summary: Generates a platform-specific delete string from the supplied data.
 --| 
 --| Format:  _rigDelete(param1, param2, param3, param4)
 --|
 --| Parameters: string <pTable> the table name, array <pWhere> the where clause, array <pLike>
---|                       array <pLimit>the limit clause
+--|               array <pLimit>the limit clause
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function _rigDelete pTable pWhere pLike pLimit
+  local tLike, tLimit, tConditions, tARwhere, tSeparator
+  
 	put pLike into tLike
 	if pLimit is empty then
 		put FALSE into tLimit
@@ -917,7 +1010,7 @@ function _rigDelete pTable pWhere pLike pLimit
 	if (the number of lines in the keys of pWhere > 0) or (the number of lines in the keys of tLike > 0) then
 		put LF & "WHERE " into tConditions
 		put rigFetchDBactiveRecSetting("where") into tARwhere
-		put rigNumToCodepoint(1) into tSeparator
+		put numToCodepoint(1) into tSeparator
 		combine tARwhere using tSeparator
 		replace tSeparator with LF in tARwhere
 		put tARwhere after tConditions
@@ -944,7 +1037,7 @@ end _rigDelete
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigLimit
 --|
 --| Author: rabit
@@ -957,12 +1050,15 @@ end _rigDelete
 --| 
 --| Format:  _rigLimit(param1, param2, param3)
 --|
---| Parameters: string <pSQL> the sql query string, integer <pLimit> the number of rows to limit the query to, integer <pOffset>
+--| Parameters: string <pSQL> the sql query string, integer <pLimit> the number of rows
+--|               to limit the query to, integer <pOffset>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigLimit pSQL pLimit pOffset
+  local tSQL
+  
 	put pSQL into tSQL
 	put  "LIMIT " & pLimit after tSQL
 
@@ -976,7 +1072,7 @@ end _rigLimit
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigDbClose
 --|
 --| Author: rabit
@@ -992,9 +1088,11 @@ end _rigLimit
 --| Parameters: integer <pConnectionID>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigDbClose pConnectionID
+  local tError
+  
 	revCloseDatabase pConnectionID
 
 	if item 1 of the result is "revdberr" then
@@ -1005,7 +1103,7 @@ function _rigDbClose pConnectionID
 	end if
 
 	# RESET VARIABLES
-	put empty into gDatabaseID
+	put empty into gRigA["databaseID"]
 	rigSetDBdriverSetting "connid", FALSE
 	rigSetDBdriverSetting "resultid", FALSE
 
@@ -1016,7 +1114,7 @@ end _rigDbClose
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchDriverSpecificSetting
 --|
 --| Author: rabit
@@ -1032,28 +1130,28 @@ end _rigDbClose
 --| Parameters: string<pSetting>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchDriverSpecificSetting pSetting
-	switch pSetting
-		case "_sEscapeChar"
-        		return _sEscapeChar
-        		break
-    		case "_sLikeEscapeStr"
-        		return _sLikeEscapeStr
-        		break
-		case "_sLikeEscapeChr"
-        		return _sLikeEscapeChr
-        		break
-		case "_sRandomKeyword"
-        		return _sRandomKeyword
-        		break
-		case "_sCountString"
-        		return _sCountString
-        		break
-    		default
-        		return ""
-    end switch
+  switch pSetting
+    case "_sEscapeChar"
+      return _sEscapeChar
+    break
+    case "_sLikeEscapeStr"
+      return _sLikeEscapeStr
+    break
+    case "_sLikeEscapeChr"
+      return _sLikeEscapeChr
+    break
+    case "_sRandomKeyword"
+      return _sRandomKeyword
+    break
+    case "_sCountString"
+      return _sCountString
+    break
+  default
+  return ""
+end switch
 end rigFetchDriverSpecificSetting
 
 
@@ -1081,9 +1179,11 @@ end rigFetchDriverSpecificSetting
 ----------------------------------------------------------------------*/
 
 function rigSqlDateTimeToIntDate pDateTime
+  local tRegEx, tY, tM, tD, tT, tDateTime, tConvertedDate
+  
 	put "([0-9]+)-([0-9]+)-([0-9]+)\s([0-9]+\:[0-9]+\:[0-9]+)" into tRegEx
   
-	put empty into tY -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7        
+	put empty into tY -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7        
 	put empty into tM
 	put empty into tD
 	put empty into tT       
@@ -1107,6 +1207,6 @@ end rigSqlDateTimeToIntDate
 
 
 
---| END OF postgreDriver.lc
---| Location:  ./system/database/drivers/postgre/postgreDriver.lc
+--| END OF postgreDriver.livecodescript
+--| Location:  ./system/database/drivers/postgre/postgreDriver.livecodescript
 ----------------------------------------------------------------------

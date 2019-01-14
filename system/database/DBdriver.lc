@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "DBdriver"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -32,62 +26,131 @@ end if
 # @subpackage	Drivers
 # @category	  Database
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/database/
+# @link		    https://revigniter.com/userGuide/database/
 ##
 
 
-# DECLARE VARIABLES
-local sDBdriverSettings, sCacheLibLoaded, sResultDriversLoaded
 
 
-# SET INITIAL VALUES
-put "" into sDBdriverSettings["username"]
-put "" into sDBdriverSettings["password"]
-put "" into sDBdriverSettings["hostname"]
-put "" into sDBdriverSettings["database"]
+global gRigA
 
-put "mysql" into sDBdriverSettings["dbdriver"]
-put "" into sDBdriverSettings["dbprefix"]
-put "utf8" into sDBdriverSettings["charset"]
-put "utf8_general_ci" into sDBdriverSettings["dbcollat"]
-put TRUE into sDBdriverSettings["autoinit"] -- Whether to automatically initialize the DB
-put "" into sDBdriverSettings["swappre"]
-put "" into sDBdriverSettings["port"]
-put FALSE into sDBdriverSettings["pconnect"]
-put FALSE into sDBdriverSettings["connid"]
-put FALSE into sDBdriverSettings["resultid"]
-put FALSE into sDBdriverSettings["dbdebug"]
-put "" into sDBdriverSettings["dbRedirectOnError"]
-put 0 into sDBdriverSettings["benchmark"]
-put 0 into sDBdriverSettings["querycount"]
-put "?" into sDBdriverSettings["bindmarker"] -- not used
-put TRUE into sDBdriverSettings["savequeries"]
-put "" into sDBdriverSettings["queries"]
-put "" into sDBdriverSettings["querytimes"]
-put "" into sDBdriverSettings["datacache"]
-put TRUE into sDBdriverSettings["transenabled"]
-put TRUE into sDBdriverSettings["transstrict"]
-put 0 into sDBdriverSettings["transdepth"]
-put TRUE into sDBdriverSettings["transstatus"]
-put FALSE into sDBdriverSettings["transfailure"]
-put FALSE into sDBdriverSettings["cacheon"]
-put "" into sDBdriverSettings["cachedir"]
-put FALSE into sDBdriverSettings["cacheautodel"]
-put TRUE into sDBdriverSettings["protectIdentifiers"]
-put "*" into sDBdriverSettings["reservedIdentifiers"][1]
-
-put FALSE into sDBdriverSettings["iswritetype"]
-put FALSE into sDBdriverSettings["affectedrows"]
-
-# THESE ARE USED WITH ORACLE
-put "" into sDBdriverSettings["stmtid"]
-put "" into sDBdriverSettings["cursid"]
-put "" into sDBdriverSettings["limitused"]
+local sDBdriverSettings, sCacheLibLoaded, sResultDriversLoaded, sStackInUse
 
 
 
 
-----------------------------------------------------------------------
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-17
+ --| Last Mod: --
+ --| Requires: _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "" into sDBdriverSettings["username"]
+  put "" into sDBdriverSettings["password"]
+  put "" into sDBdriverSettings["hostname"]
+  put "" into sDBdriverSettings["database"]
+
+  put "mysql" into sDBdriverSettings["dbdriver"]
+  put "" into sDBdriverSettings["dbprefix"]
+  put "utf8" into sDBdriverSettings["charset"]
+  put "utf8_general_ci" into sDBdriverSettings["dbcollat"]
+  put TRUE into sDBdriverSettings["autoinit"] -- Whether to automatically initialize the DB
+  put "" into sDBdriverSettings["swappre"]
+  put "" into sDBdriverSettings["port"]
+  put FALSE into sDBdriverSettings["pconnect"]
+  put FALSE into sDBdriverSettings["connid"]
+  put FALSE into sDBdriverSettings["resultid"]
+  put FALSE into sDBdriverSettings["dbdebug"]
+  put "" into sDBdriverSettings["dbRedirectOnError"]
+  put 0 into sDBdriverSettings["benchmark"]
+  put 0 into sDBdriverSettings["querycount"]
+  put "?" into sDBdriverSettings["bindmarker"] -- not used
+  put TRUE into sDBdriverSettings["savequeries"]
+  put "" into sDBdriverSettings["queries"]
+  put "" into sDBdriverSettings["querytimes"]
+  put "" into sDBdriverSettings["datacache"]
+  put TRUE into sDBdriverSettings["transenabled"]
+  put TRUE into sDBdriverSettings["transstrict"]
+  put 0 into sDBdriverSettings["transdepth"]
+  put TRUE into sDBdriverSettings["transstatus"]
+  put FALSE into sDBdriverSettings["transfailure"]
+  put FALSE into sDBdriverSettings["cacheon"]
+  put "" into sDBdriverSettings["cachedir"]
+  put FALSE into sDBdriverSettings["cacheautodel"]
+  put TRUE into sDBdriverSettings["protectIdentifiers"]
+  put "*" into sDBdriverSettings["reservedIdentifiers"][1]
+
+  put FALSE into sDBdriverSettings["iswritetype"]
+  put FALSE into sDBdriverSettings["affectedrows"]
+
+  # THESE ARE USED WITH ORACLE
+  put "" into sDBdriverSettings["stmtid"]
+  put "" into sDBdriverSettings["cursid"]
+  put "" into sDBdriverSettings["limitused"]
+end _rigSetDefaultValues
+
+
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| COMMAND rigDbDriver
 --|
 --| Author: rabit
@@ -97,14 +160,14 @@ put "" into sDBdriverSettings["limitused"]
 --| Requires: rigLogMessage
 --|
 --| Summary: Sets the library variables values. Accepts one parameter
--- |                   containing the database connection settings.
+--|            containing the database connection settings.
 --| 
 --| Format:  rigDbDriver param1
 --|
 --| Parameters: array <pParams>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbDriver pParams
 	if pParams is an array then
@@ -112,7 +175,7 @@ command rigDbDriver pParams
 			put pParams[tKey] into sDBdriverSettings[tKey]
 
 			if tKey is "connid" then
-				put pParams[tKey] into gDatabaseID
+				put pParams[tKey] into gRigA["databaseID"]
 			end if
 		end repeat
 	end if
@@ -126,7 +189,7 @@ end rigDbDriver
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchDBdriverSetting
 --|
 --| Author: rabit
@@ -142,7 +205,7 @@ end rigDbDriver
 --| Parameters: string<pSettingsKey>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchDBdriverSetting pSettingsKey
 	return sDBdriverSettings[pSettingsKey]
@@ -154,7 +217,7 @@ end rigFetchDBdriverSetting
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSetDBdriverSetting
 --|
 --| Author: rabit
@@ -170,7 +233,7 @@ end rigFetchDBdriverSetting
 --| Parameters: string <pKey>, mixed <pValue>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSetDBdriverSetting pKey pValue
 	put pValue into sDBdriverSettings[pKey]
@@ -216,7 +279,7 @@ function rigDbInitialize
 		-- currently not implemented
 	else
 		put rigDbConnect() into sDBdriverSettings["connid"]
-		put sDBdriverSettings["connid"] into gDatabaseID
+		put sDBdriverSettings["connid"] into gRigA["databaseID"]
 	end if
 
 	# NO CONNECTION RESOURCE?  THROW AN ERROR
@@ -342,6 +405,8 @@ end rigDbPlatform
 ----------------------------------------------------------------------*/
 
 function rigDbVersion
+  local tSql, tQuery
+  
 	put _rigDbVersion() into tSql
 
 	if tSql is FALSE then
@@ -378,8 +443,9 @@ end rigDbVersion
 --| Version:  1.11
 --| Created: 2009-07-09
 --| Last Mod: 2018-04-30
---| Requires: rigLogMessage, rigDbDisplayError, rigLoadRdriver, rigCompileBinds, rigSimpleQuery(), rigDbErrorMessage(), rigListFields()
---|   rigTransComplete(), rigIsWriteType(), _rigCacheInit(), rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError, rigNumToCodepoint()
+--| Requires: rigLogMessage, rigDbDisplayError, _rigLoadRdriver, rigCompileBinds, rigSimpleQuery(),
+--|            rigDbErrorMessage(), rigListFields(), rigTransComplete(), rigIsWriteType(), _rigCacheInit(),
+--|            rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError
 --|
 --| Summary: Accepts an SQL string as input and returns the result upon
 --|            successful execution of a "read" type query.  Returns boolean TRUE
@@ -395,6 +461,12 @@ end rigDbVersion
 ----------------------------------------------------------------------*/
 
 function rigDbQuery pSQL pBinds
+  local tBinds, tSQL, tStrFound, tFoundVar1, tFoundVar2, tRegEx, tStrToSwap
+  local tReplacementStr, tSQLcache, tQueriesNum, tNewQueriesNum, tTimeStart
+  local tQueryResult, tQueryTimesNum, tNewQueryTimesNum, tErrorMessage
+  local tErrorArray, tTimeEnd, tCacheInit, tRES, tChangeFieldNamesListDelimiter
+  local tCR, tSerializedResultArray
+  
 	if pBinds is not an array and pBinds is "" then
 		put FALSE into tBinds
 	else
@@ -419,7 +491,7 @@ function rigDbQuery pSQL pBinds
 	if ((sDBdriverSettings["dbprefix"]) <> "" and (sDBdriverSettings["swappre"] <> "")) and (sDBdriverSettings["dbprefix"] <> sDBdriverSettings["swappre"]) then
 		put TRUE into tStrFound
 		
-		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
 		put empty into tFoundVar2
 		repeat until tStrFound is not TRUE
         		put "(\W)" & sDBdriverSettings["swappre"] & "(\S+?)" into tRegEx
@@ -441,7 +513,7 @@ function rigDbQuery pSQL pBinds
 	if (sDBdriverSettings["cacheon"] is TRUE) and (word 1 of tSQL is "SELECT") then
 		if _rigCacheInit() is TRUE then
 			# LOAD RESULT DRIVER
-			rigLoadRdriver
+			_rigLoadRdriver
 
 			put rigReadSQLcache(tSQL) into tSQLcache
 			if tSQLcache is not FALSE then
@@ -563,7 +635,7 @@ function rigDbQuery pSQL pBinds
 	end if
 
 	# LOAD RESULT DRIVER
-	rigLoadRdriver
+	_rigLoadRdriver
 
 	# STORE THE RESULT DATA IN AN ARRAY
 	#
@@ -582,7 +654,7 @@ function rigDbQuery pSQL pBinds
 
 	if sDBdriverSettings["dbdriver"] is "oci8" then
 		put sDBdriverSettings["stmtid"] into tRES["stmtid"]
-		put rigNumToCodepoint(0) into sDBdriverSettings["cursid"] -- NULL
+		put numToCodepoint(0) into sDBdriverSettings["cursid"] -- NULL
 		put sDBdriverSettings["limitused"] into tRES["limitused"]
 		put FALSE into sDBdriverSettings["stmtid"]
 	end if
@@ -626,7 +698,7 @@ end rigDbQuery
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigLoadRdriver
+--| COMMAND _rigLoadRdriver
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -636,21 +708,21 @@ end rigDbQuery
 --|
 --| Summary: Load the result drivers.
 --| 
---| Format:  rigLoadRdriver
+--| Format:  _rigLoadRdriver
 --|
 --| Parameters: --
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigLoadRdriver
+private command _rigLoadRdriver
 	if sResultDriversLoaded is not TRUE then
-		require gBASEPATH & "database/DBresult" & gEXT
-		require gBASEPATH & "database/drivers/" & sDBdriverSettings["dbdriver"] & "/" & sDBdriverSettings["dbdriver"] & "Result" & gEXT
+		start using stack (gRigA["BASEPATH"] & "database/DBresult.livecodescript")
+		start using stack (gRigA["BASEPATH"] & "database/drivers/" & sDBdriverSettings["dbdriver"] & "/" & sDBdriverSettings["dbdriver"] & "Result.livecodescript")
 
 		put TRUE into sResultDriversLoaded
 	end if
-end rigLoadRdriver
+end _rigLoadRdriver
 
 
 
@@ -659,7 +731,7 @@ end rigLoadRdriver
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbSimpleQuery
 --|
 --| Author: rabit
@@ -669,15 +741,15 @@ end rigLoadRdriver
 --| Requires: --
 --|
 --| Summary: This is a simplified version of the rigDbQuery() function.  Internally
---|                    we only use it when running transaction commands since they do
---|                    not require all the features of the main query() function.
+--|             we only use it when running transaction commands since they do
+--|             not require all the features of the main query() function.
 --| 
 --| Format:  rigDbSimpleQuery(param1)
 --|
 --| Parameters: string <pSQL> the sql statement
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbSimpleQuery pSQL
 	if sDBdriverSettings["connid"] is FALSE then
@@ -694,7 +766,7 @@ end rigDbSimpleQuery
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbTransOff
 --|
 --| Author: rabit
@@ -710,7 +782,7 @@ end rigDbSimpleQuery
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbTransOff
 	put FALSE into sDBdriverSettings["transenabled"]
@@ -722,7 +794,7 @@ end rigDbTransOff
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbTransStrict
 --|
 --| Author: rabit
@@ -732,18 +804,20 @@ end rigDbTransOff
 --| Requires: --
 --|
 --| Summary: When strict mode is enabled, if you are running multiple groups of
---|                    transactions, if one group fails all groups will be rolled back.
---|                    If strict mode is disabled, each group is treated autonomously, meaning
---|                    a failure of one group will not affect any others.
+--|            transactions, if one group fails all groups will be rolled back.
+--|            If strict mode is disabled, each group is treated autonomously, meaning
+--|            a failure of one group will not affect any others.
 --| 
 --| Format:  rigDbTransStrict param1
 --|
 --| Parameters: bool <pMode>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbTransStrict pMode
+  local tMode
+  
 	if pMode is empty then
 		put TRUE into tMode
 	else
@@ -764,7 +838,7 @@ end rigDbTransStrict
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbTransStart
 --|
 --| Author: rabit
@@ -780,9 +854,11 @@ end rigDbTransStrict
 --| Parameters: bool <pTestMode>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbTransStart pTestMode
+  local tTestMode, tResult
+  
 	if pTestMode is empty then
 		put FALSE into tTestMode
 	else
@@ -813,7 +889,7 @@ end rigDbTransStart
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigTransComplete
 --|
 --| Author: rabit
@@ -829,7 +905,7 @@ end rigDbTransStart
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigTransComplete
 	if sDBdriverSettings["transenabled"] is not TRUE then
@@ -873,7 +949,7 @@ end rigTransComplete
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbTransStatus
 --|
 --| Author: rabit
@@ -889,7 +965,7 @@ end rigTransComplete
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbTransStatus
 	return sDBdriverSettings["transstatus"]
@@ -921,6 +997,8 @@ end rigDbTransStatus
 ----------------------------------------------------------------------*/
 
 function rigCompileBinds pSQL pBinds
+  local tSQl, tBinds, tNumOfBinds, tBindsEscaped
+  
 	if ":1" is not in pSQL then
 		return pSQL
 	end if
@@ -977,6 +1055,8 @@ end rigCompileBinds
 ----------------------------------------------------------------------*/
 
 function rigIsWriteType pSQL
+  local tRegEx
+  
 	put "(?i)^\s*" & quote & "?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD DATA|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s+" into tRegEx
   
 	get matchText(pSQL,tRegEx)
@@ -991,7 +1071,7 @@ end rigIsWriteType
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbElapsedTime
 --|
 --| Author: rabit
@@ -1007,9 +1087,11 @@ end rigIsWriteType
 --| Parameters: integer <pDecimals> the number of decimal places
 --|
 --| Return: float
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbElapsedTime pDecimals
+  local tDecimals
+  
 	if pDecimals is empty then
 		put 6 into tDecimals
 	else
@@ -1025,7 +1107,7 @@ end rigDbElapsedTime
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbTotalQueries
 --|
 --| Author: rabit
@@ -1041,7 +1123,7 @@ end rigDbElapsedTime
 --| Parameters: --
 --|
 --| Return: integer
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbTotalQueries
 	return sDBdriverSettings["querycount"]
@@ -1053,7 +1135,7 @@ end rigDbTotalQueries
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbLastQuery
 --|
 --| Author: rabit
@@ -1069,9 +1151,11 @@ end rigDbTotalQueries
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbLastQuery
+  local tKey
+  
 	put line -1 in the keys of sDBdriverSettings["queries"] into tKey
 
 	return sDBdriverSettings["queries"][tKey]
@@ -1090,7 +1174,7 @@ end rigDbLastQuery
 --| Version:  1.2
 --| Created: 18-07-09
 --| Last Mod: 21-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Escapes data based on type. Sets boolean and null types.
 --| 
@@ -1110,7 +1194,7 @@ function rigDbEscape pStr
 		end if
 	end if
 
-	if pStr is rigNumToCodepoint(0) then
+	if pStr is numToCodepoint(0) then
 		-- return "'" & "NULL" & "'"
 		return "NULL"
 	end if
@@ -1124,7 +1208,7 @@ end rigDbEscape
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigEscapeLikeStr
 --|
 --| Author: rabit
@@ -1141,7 +1225,7 @@ end rigDbEscape
 --| Parameters: string <pStr> 
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigEscapeLikeStr pStr   
     	return rigEscapeStr(pStr, TRUE)
@@ -1164,7 +1248,7 @@ end rigEscapeLikeStr
 --| Requires: rigDbListFields()
 --|
 --| Summary: Retrieves the primary key.  It assumes that the row in the first
---|                    position is the primary key.
+--|            position is the primary key.
 --| 
 --| Format:  rigPrimary(param1)
 --|
@@ -1174,6 +1258,8 @@ end rigEscapeLikeStr
 ----------------------------------------------------------------------*/
 
 function rigPrimary pTable
+  local tFields
+  
 	put rigDbListFields(pTable) into tFields
 
 	if tFields is not an array then
@@ -1210,6 +1296,9 @@ end rigPrimary
 ----------------------------------------------------------------------*/
 
 function rigDbListTables pConstrainByPrefix
+  local tConstrainByPrefix, tRetval, tGetFailed, tSql, tQuery
+  local tCounter, tKey, tRow, tK, tVal
+  
 	if pConstrainByPrefix is empty then
 		put FALSE into tConstrainByPrefix
 	else
@@ -1273,7 +1362,7 @@ end rigDbListTables
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbTableExists
 --|
 --| Author: rabit
@@ -1289,9 +1378,11 @@ end rigDbListTables
 --| Parameters: string <pTableName>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbTableExists pTableName
+  local tTableName, tTables
+  
 	put _rigProtectIdentifiers(pTableName, TRUE, FALSE, FALSE) into tTableName
 	put rigDbListTables() into tTables
 
@@ -1324,6 +1415,9 @@ end rigDbTableExists
 ----------------------------------------------------------------------*/
 
 function rigDbListFields pTable
+  local tTable, tRetval, tGetFailed, tSql, tDriver, tQuery, tCounter
+  local tKey, tRow, tVal, tK
+  
 	# IS THERE A CACHED RESULT?
 	if sDBdriverSettings["datacache"]["fieldnames"][pTable] is an array then
 		return sDBdriverSettings["datacache"]["fieldnames"][pTable]
@@ -1406,7 +1500,7 @@ end rigDbListFields
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbFieldExists
 --|
 --| Author: rabit
@@ -1422,9 +1516,11 @@ end rigDbListFields
 --| Parameters: string <pFieldName> string <pTableName>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbFieldExists pFieldName pTableName
+  local tFields
+  
 	put rigDbListFields(pTableName) into tFields
 
 	return rigInArray(tFields, pFieldName)
@@ -1457,6 +1553,8 @@ end rigDbFieldExists
 ----------------------------------------------------------------------*/
 
 function rigDbFieldData pTable
+  local tTable, tSql
+  
 	if pTable is empty then
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
@@ -1484,7 +1582,7 @@ end rigDbFieldData
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbInsertString
 --|
 --| Author: rabit
@@ -1501,9 +1599,11 @@ end rigDbFieldData
 --|                       array <pData> an associative array data of key/values
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbInsertString pTable pData
+  local tCounter, tKey, tVal, tFields, tValues, tTable
+  
 	put 0 into tCounter
 	repeat for each key tKey in pData
 		add 1 to tCounter
@@ -1525,7 +1625,7 @@ end rigDbInsertString
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbUpdateString
 --|
 --| Author: rabit
@@ -1539,12 +1639,15 @@ end rigDbInsertString
 --| Format:  rigDbUpdateString(param1, param2)
 --|
 --| Parameters: string <pTable> the table upon which the query will be performed,
---|                       array <pData> an associative array data of key/values, mixed <pWhere> the "where" statement
+--|               array <pData> an associative array data of key/values,
+--|               mixed <pWhere> the "where" statement
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbUpdateString pTable pData pWhere
+  local tKey, tVal, tK, tFields, tDest, tCounter, tPrefix, tTable
+  
 	if (pWhere is not an array) and (pWhere is empty) then
 		return FALSE
 	end if
@@ -1624,7 +1727,7 @@ end _rigHasOperator
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbCacheSetPath
 --|
 --| Author: rabit
@@ -1640,7 +1743,7 @@ end _rigHasOperator
 --| Parameters: string <pPath> the path to the cache directory
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbCacheSetPath pPath
 	put pPath into sDBdriverSettings["cachedir"]
@@ -1652,7 +1755,7 @@ end rigDbCacheSetPath
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbCacheOn
 --|
 --| Author: rabit
@@ -1668,7 +1771,7 @@ end rigDbCacheSetPath
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbCacheOn
 	put TRUE into sDBdriverSettings["cacheon"]
@@ -1683,7 +1786,7 @@ end rigDbCacheOn
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbCacheOff
 --|
 --| Author: rabit
@@ -1699,7 +1802,7 @@ end rigDbCacheOn
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbCacheOff
 	put FALSE into sDBdriverSettings["cacheon"]
@@ -1714,7 +1817,7 @@ end rigDbCacheOff
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbCacheDelete
 --|
 --| Author: rabit
@@ -1730,7 +1833,7 @@ end rigDbCacheOff
 --| Parameters: string <pSegmentOne>, string <pSegmentTwo>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbCacheDelete pSegmentOne pSegmentTwo
 	if _rigCacheInit() is FALSE then
@@ -1746,7 +1849,7 @@ end rigDbCacheDelete
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbCacheDeleteAll
 --|
 --| Author: rabit
@@ -1762,7 +1865,7 @@ end rigDbCacheDelete
 --| Parameters: string <pExclusion> file name to exclude (optional)
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbCacheDeleteAll pExclusion
 	if _rigCacheInit() is FALSE then
@@ -1796,14 +1899,14 @@ end rigDbCacheDeleteAll
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigCacheInit
+private function _rigCacheInit
 	if sCacheLibLoaded is TRUE then
 		return TRUE
 	else
 		try
-			require gBASEPATH & "database/DBcache" & gEXT
+			start using stack (gRigA["BASEPATH"] & "database/DBcache.livecodescript")
 		catch err
-			rigLogMessage "error", "An error occured while trying to include database library:" && "DBcache"
+			rigLogMessage "error", "An error occured while trying to start using database library:" && "DBcache"
 			return rigDbCacheOff()
 		end try
 	end if
@@ -1816,7 +1919,7 @@ end _rigCacheInit
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCloseDB
 --|
 --| Author: rabit
@@ -1832,14 +1935,16 @@ end _rigCacheInit
 --| Parameters: --
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigCloseDB
+  local tResult
+  
 	if sDBdriverSettings["connid"] is an integer then
 		put _rigDbClose(sDBdriverSettings["connid"]) into tResult
 	end if
 	put FALSE into sDBdriverSettings["connid"]
-	put empty into gDatabaseID
+	put empty into gRigA["databaseID"]
 
 	return tResult
 end _rigCloseDB
@@ -1861,16 +1966,18 @@ end _rigCloseDB
 --| Format:  rigDbDisplayError param1, param2, param3
 --|
 --| Parameters: string <pError> the error message, string <pSwap> any "swap" values,
---|                        bool <pNative> whether to localize the message
+--|               bool <pNative> whether to localize the message
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
 command rigDbDisplayError pError pSwap pNative
+  local tResult, tMessage, tError, tHeading
+  
 	rigLoadLibrary "Language"
 	get rigLangLoadLang("dbLang")
 
-	put rigLangLangLine("db_error_heading") into tHeading
+	put rigLangLangLine("db_error_heading") into tResult
 
 	if pNative is TRUE then
 		put pError into tMessage
@@ -1884,9 +1991,9 @@ command rigDbDisplayError pError pSwap pNative
 			put pError into tMessage
 		end if		
 	end if
-	
-	put "Database Error" into tHeading
-	
+  
+  put "Database Error" into tHeading
+
 	rigLoadLibrary "Exceptions"
 	put rigShowErrorPage(tHeading, tMessage, "errorDB")
 	exit to top
@@ -1908,7 +2015,7 @@ end rigDbDisplayError
 --| Requires: rigLoadHelper, rigRedirect
 --|
 --| Summary: Redirect to an URI of your choice in case a database error occurs.
---|          Specify the controller/handler to redirect to in your database configuration.
+--|            Specify the controller/handler to redirect to in your database configuration.
 --| 
 --| Format:  rigDbRedirectOnError
 --|
@@ -1928,7 +2035,7 @@ end rigDbRedirectOnError
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbAffectedRows
 --|
 --| Author: rabit
@@ -1944,7 +2051,7 @@ end rigDbRedirectOnError
 --| Parameters: --
 --|
 --| Return: integer or bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbAffectedRows
 	return sDBdriverSettings["affectedrows"]
@@ -1957,7 +2064,7 @@ end rigDbAffectedRows
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigProtectIdentifiers
 --|
 --| Author: rabit
@@ -1973,9 +2080,11 @@ end rigDbAffectedRows
 --| Parameters: mixed <pItem> the item to escape, bool <pPrefixSingle>
 --|
 --| Return: mixed the item with backticks
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigProtectIdentifiers pItem pPrefixSingle
+  local tPrefixSingle
+  
 	if pPrefixSingle is empty then
 		put FALSE into tPrefixSingle
 	else
@@ -1992,7 +2101,7 @@ end rigProtectIdentifiers
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigProtectIdentifiers
 --|
 --| Author: rabit
@@ -2002,30 +2111,34 @@ end rigProtectIdentifiers
 --| Requires: --
 --|
 --| Summary: This function is used extensively by the Active Record library, and by
---|                    a couple handlers in this library. 
---|                    It takes a column or table name (optionally with an alias) and inserts
---|                    the table prefix onto it.  Some logic is necessary in order to deal with
---|                    column names that include the path.  Consider a query like this:
+--|             a couple handlers in this library. 
+--|             It takes a column or table name (optionally with an alias) and inserts
+--|             the table prefix onto it.  Some logic is necessary in order to deal with
+--|             column names that include the path.  Consider a query like this:
 --|
---|                    SELECT * FROM hostname.database.table.column AS c FROM hostname.database.table
+--|             SELECT * FROM hostname.database.table.column AS c FROM hostname.database.table
 --|
---|                    Or a query with aliasing:
+--|             Or a query with aliasing:
 --|
---|                    SELECT m.member_id, m.member_name FROM members AS m
+--|             SELECT m.member_id, m.member_name FROM members AS m
 --|
---|                    Since the column name can include up to four segments (host, DB, table, column)
---|                    or also have an alias prefix, we need to do a bit of work to figure this out and
---|                    insert the table prefix (if it exists) in the proper position, and escape only
---|                    the correct identifiers.
+--|             Since the column name can include up to four segments (host, DB, table, column)
+--|             or also have an alias prefix, we need to do a bit of work to figure this out and
+--|             insert the table prefix (if it exists) in the proper position, and escape only
+--|             the correct identifiers.
 --| 
 --| Format:  _rigProtectIdentifiers(param1, param2, param3, param4)
 --|
 --| Parameters: mixed <pItem>, bool <pPrefixsingle>,  mixed <pProtectidentifiers>, bool <pFieldexists>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function _rigProtectIdentifiers pItem pPrefixsingle pProtectidentifiers pFieldexists
+  local tItem, tProtectidentifiers, tKey, tEscapedKey, tEscapedVal, tEscapedArray
+  local tRegEx, tAlias, tParts, tAliasedTables, tPartIsInArray, tReservedIdent
+  local tEscapedPart, ti, tPrefixCharsNum
+  
 	put pItem into tItem
 	put pProtectidentifiers into tProtectidentifiers
 	if tProtectidentifiers is not a boolean then
@@ -2199,7 +2312,8 @@ end _rigProtectIdentifiers
 
 
 
-----------------------------------------------------------------------
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbEscapeString
 --|
 --| Author: rabit
@@ -2215,9 +2329,11 @@ end _rigProtectIdentifiers
 --| Parameters: string <pString>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbEscapeString pString
+  local tString
+  
 	put pString into tString
 	replace "\" with "\\" in tString
 	replace "NUL" with "\NUL" in tString
@@ -2233,14 +2349,6 @@ end rigDbEscapeString
 
 
 
-
-
-
-
-
-
-
-
---| END OF DBdriver.lc
---| Location:  ./system/database/DBdriver.lc
+--| END OF DBdriver.livecodescript
+--| Location:  ./system/database/DBdriver.livecodescript
 ----------------------------------------------------------------------

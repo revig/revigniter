@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "sqliteResult"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,13 +22,57 @@ end if
 #
 # @category	Database
 # @author		rabit@revigniter.com
-# @link		  http://revigniter.com/userGuide/database/
+# @link		  https://revigniter.com/userGuide/database/
 ##
 
 
 
-# DECLARE VARIABLES
-local sTableInfo
+
+
+global gRigA
+
+local sTableInfo, sStackInUse
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-19
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
 
 
 /*----------------------------------------------------------------------
@@ -56,6 +94,8 @@ local sTableInfo
 ----------------------------------------------------------------------*/
 
 function rigNumRows pResultID
+  local tResultID, tNumRows
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -97,6 +137,8 @@ end rigNumRows
 ----------------------------------------------------------------------*/
 
 function rigNumFields pResultID
+  local tResultID, tNumFields
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -137,6 +179,8 @@ end rigNumFields
 ----------------------------------------------------------------------*/
 
 function rigListFields pResultID
+  local tResultID, tFieldNames
+  
 	if pResultID is empty then
 		put rigFetchDBdriverSetting("resultid") into tResultID
 	else
@@ -177,6 +221,9 @@ end rigListFields
 ----------------------------------------------------------------------*/
 
 function rigFieldData pTable
+  local tTableInfoQuerySuccess, tTypes, tPrimaryField, tDefaults, tResultID
+  local tFieldNames, tMaxLengths, tCounter, tFieldData
+  
   put TRUE into tTableInfoQuerySuccess
   put empty into tTypes
   put empty into tPrimaryField
@@ -249,6 +296,8 @@ end rigFieldData
 ----------------------------------------------------------------------*/
 
 command _rigPragmaTableInfo pTable
+  local tPragma
+  
   # GET TABLE META DATA
   put "table_info(" &  pTable & ")" into tPragma
 
@@ -269,8 +318,8 @@ end _rigPragmaTableInfo
 --| Requires: --
 --|
 --| Summary: Get the defined data types of each field instead of SQLite
---|					 storage classes as a comma separated list. _rigPragmaTableInfo
---|          needs to be called beforehand.
+--|					storage classes as a comma separated list. _rigPragmaTableInfo
+--|            needs to be called beforehand.
 --| 
 --| Format:  rigDbColumnTypes()
 --|
@@ -280,6 +329,8 @@ end _rigPragmaTableInfo
 ----------------------------------------------------------------------*/
 
 function rigDbColumnTypes
+  local tLine, tColumnType, tColumnTypes
+  
   if sTableInfo <> empty then
     # EACH LINE OF sTableInfo CONTAINS FIELD META DATA
     repeat for each line tLine in sTableInfo
@@ -318,7 +369,7 @@ end rigDbColumnTypes
 --| Requires: --
 --|
 --| Summary: Get the name of the primary field. _rigPragmaTableInfo
---|          needs to be called beforehand.
+--|            needs to be called beforehand.
 --| 
 --| Format:  rigDbPrimaryField()
 --|
@@ -328,6 +379,8 @@ end rigDbColumnTypes
 ----------------------------------------------------------------------*/
 
 function rigDbPrimaryField
+  local tPrimaryField
+  
   if sTableInfo <> empty then
     put empty into tPrimaryField
    
@@ -370,6 +423,8 @@ end rigDbPrimaryField
 ----------------------------------------------------------------------*/
 
 function rigDbDefaults
+  local tLine, tDefault, tDefaults
+  
   if sTableInfo <> empty then
     # EACH LINE OF sTableInfo CONTAINS FIELD META DATA
     repeat for each line tLine in sTableInfo
@@ -407,9 +462,9 @@ end rigDbDefaults
 --| Last Mod: --
 --| Requires: --
 --|
---| Summary: MOVES THE INTERNAL POINTER TO THE DESIRED OFFSET.  WE CALL
---|                    THIS INTERNALLY BEFORE FETCHING RESULTS TO MAKE SURE THE
---|                    RESULT SET STARTS AT ZERO.
+--| Summary: Moves the internal pointer to the desired offset. We call
+--|            this internally before fetching results to make sure the
+--|            result set starts at zero.
 --| 
 --| Format:  _rigDataSeek(param1, param2)
 --|
@@ -419,6 +474,8 @@ end rigDbDefaults
 ----------------------------------------------------------------------*/
 
 function _rigDataSeek pRecordsetID pN
+  local tN
+  
 	if pN is empty then
 		put 1 into tN
 	else
@@ -446,8 +503,8 @@ end _rigDataSeek
 --| Requires: rigDBQuery(), rigDbRow()
 --|
 --| Summary: Returns the last automatically generated value successfully
---| 				inserted for an AUTO_INCREMENT column as a result of the most
---| 				recently executed INSERT statement.
+--| 				  inserted for an AUTO_INCREMENT column as a result of the most
+--| 				  recently executed INSERT statement.
 --| 
 --| Format:	_rigDbLastInsertID(param1)
 --|
@@ -457,6 +514,8 @@ end _rigDataSeek
 ----------------------------------------------------------------------*/
 
 function _rigDbLastInsertID pTable
+  local tQuery, tRow
+  
   put rigDBQuery("SELECT last_insert_rowid()") into tQuery
 	
 	if tQuery["numrows"] = 1 then
@@ -492,11 +551,11 @@ end _rigDbLastInsertID
 ----------------------------------------------------------------------*/
 
 function rigCurrentConnectionID
-  if gDatabaseID is "" then
+  if gRigA["databaseID"] is "" then
     return rigFetchDBdriverSetting("connid")
   end if
   
-  return gDatabaseID
+  return gRigA["databaseID"]
 end rigCurrentConnectionID
 
 
@@ -504,6 +563,6 @@ end rigCurrentConnectionID
 
 
 
---| END OF sqliteResult.lc
---| Location:  ./system/database/drivers/sqlite/sqliteResult.lc
+--| END OF sqliteResult.livecodescript
+--| Location:  ./system/database/drivers/sqlite/sqliteResult.livecodescript
 ----------------------------------------------------------------------

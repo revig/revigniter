@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "mysqlDriver"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -32,38 +26,102 @@ end if
 # @subpackage	Drivers
 # @category	  Database
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/database/
+# @link		    https://revigniter.com/userGuide/database/
 ##
 
 
-# DECLARE VARIABLES
-local sDBdriver, _sEscapeChar, sDeleteHack, _sCountString, _sRandomKeyword
 
 
-# SET INITIAL VALUES
-put "mysql" into sDBdriver
+global gRigA
 
-# THE CHARACTER USED FOR ESCAPING  
-put "`" into _sEscapeChar
-
+local sDBdriver, _sEscapeChar, sDeleteHack, _sCountString, _sRandomKeyword, sStackInUse
 # CLAUSE AND CHARACTER USED FOR LIKE ESCAPE SEQUENCES - NOT USED IN MYSQL
-local _sLikeEscapeStr
-local _sLikeEscapeChr
+local _sLikeEscapeStr, _sLikeEscapeChr
 
-##
-# WHETHER TO USE THE MYSQL "DELETE HACK" WHICH ALLOWS THE NUMBER
-# OF AFFECTED ROWS TO BE SHOWN. USES A REPLACETEXT() WHEN ENABLED,
-# ADDING A BIT MORE PROCESSING TO ALL QUERIES.
-## 
-put TRUE into sDeleteHack
 
-##
-# THE SYNTAX TO COUNT ROWS IS SLIGHTLY DIFFERENT ACROSS DIFFERENT
-# DATABASE ENGINES, SO THIS STRING APPEARS IN EACH DRIVER AND IS
-# USED FOR THE COUNT_ALL() AND COUNT_ALL_RESULTS() FUNCTIONS.
-##
-put "SELECT COUNT(*) AS " into _sCountString
-put " RAND()" into _sRandomKeyword -- database specific random keyword
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-17
+ --| Last Mod: --
+ --| Requires: _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "mysql" into sDBdriver
+
+  # THE CHARACTER USED FOR ESCAPING  
+  put "`" into _sEscapeChar
+
+  ##
+  # WHETHER TO USE THE MYSQL "DELETE HACK" WHICH ALLOWS THE NUMBER
+  # OF AFFECTED ROWS TO BE SHOWN. USES A REPLACETEXT() WHEN ENABLED,
+  # ADDING A BIT MORE PROCESSING TO ALL QUERIES.
+  ## 
+  put TRUE into sDeleteHack
+
+  ##
+  # THE SYNTAX TO COUNT ROWS IS SLIGHTLY DIFFERENT ACROSS DIFFERENT
+  # DATABASE ENGINES, SO THIS STRING APPEARS IN EACH DRIVER AND IS
+  # USED FOR THE COUNT_ALL() AND COUNT_ALL_RESULTS() FUNCTIONS.
+  ##
+  put "SELECT COUNT(*) AS " into _sCountString
+  put " RAND()" into _sRandomKeyword -- database specific random keyword
+end _rigSetDefaultValues
+
 
 
 
@@ -87,6 +145,9 @@ put " RAND()" into _sRandomKeyword -- database specific random keyword
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
+  local tPort, tHostname, tDatabase, tUsername, tPassword, tUseSSL
+  local tSocket, tTimeout, tAutoReconnect, tDatabaseID
+  
 	put rigFetchDBdriverSetting("port") into tPort
 	put rigFetchDBdriverSetting("hostname") into tHostname
 	put rigFetchDBdriverSetting("database") into tDatabase
@@ -143,8 +204,10 @@ end rigDbConnect
 ----------------------------------------------------------------------*/
 
 function _rigDbSetCharset pCharset pCollation
+  local tQuery
+  
 	put "SET NAMES '" & rigDbEscapeString(pCharset) & "' COLLATE '" & rigDbEscapeString(pCollation) & "'" into tQuery
-	revExecuteSQL gDatabaseID, tQuery
+	revExecuteSQL gRigA["databaseID"], tQuery
 
 	if the result is not 0 then
 		return FALSE
@@ -201,35 +264,37 @@ end _rigDbVersion
 ----------------------------------------------------------------------*/
 
 function _rigDbExecute pSQL pConnectionID
-	put _rigPrepQuery(pSQL) into tSQL
+  local tSQL, tIsWriteType, tRecordSetID, tAffectedRows
+  
+  put _rigPrepQuery(pSQL) into tSQL
 
-	put rigFetchDBdriverSetting("iswritetype") into tIsWriteType
+  put rigFetchDBdriverSetting("iswritetype") into tIsWriteType
 
-	# IS THERE A RECORD SET
-	if tIsWriteType is not TRUE then
-		# RETURN A RECORD SET
+  # IS THERE A RECORD SET
+  if tIsWriteType is not TRUE then
+    # RETURN A RECORD SET
 
-		put revQueryDatabase ( pConnectionID, tSQL ) into tRecordSetID
+    put revQueryDatabase ( pConnectionID, tSQL ) into tRecordSetID
 
-		# QUERIES LIKE COMMIT RETURN EMPTY (NO RECORD SET ID)
-		# SO CHECK FOR EMPTY TOO
-		if (tRecordSetID is not empty) and (tRecordSetID is not an integer) then
-			rigLogMessage "error", "Database query error:" && tRecordSetID
-			return FALSE
-		end if
+    # QUERIES LIKE COMMIT RETURN EMPTY (NO RECORD SET ID)
+    # SO CHECK FOR EMPTY TOO
+    if (tRecordSetID is not empty) and (tRecordSetID is not an integer) then
+      rigLogMessage "error", "Database query error:" && tRecordSetID
+      return FALSE
+    end if
 
-		return tRecordSetID
-	else
-		# THERE IS NO RECORD SET, WE RETURN THE NUMBER OF AFFECTED ROWS
-		revExecuteSQL pConnectionID, tSQL
-		put the result into tAffectedRows
+    return tRecordSetID
+  else
+    # THERE IS NO RECORD SET, WE RETURN THE NUMBER OF AFFECTED ROWS
+    revExecuteSQL pConnectionID, tSQL
+    put the result into tAffectedRows
 
-		if tAffectedRows is not an integer then
-			return FALSE
-		end if
+    if tAffectedRows is not an integer then
+      return FALSE
+    end if
 
-		return tAffectedRows
-	end if
+    return tAffectedRows
+  end if
 end _rigDbExecute
 
 
@@ -254,14 +319,16 @@ end _rigDbExecute
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigPrepQuery pSQL
+private function _rigPrepQuery pSQL
+  local tSQL, tRegEx, tFoundStr, tStr
+  
 	put pSQL into tSQL
 	# "DELETE FROM TABLE" RETURNS 0 AFFECTED ROWS. THIS HACK MODIFIES
 	# THE QUERY SO THAT IT RETURNS THE NUMBER OF AFFECTED ROWS
 	if sDeleteHack is TRUE then
 		 put "(?i)^\s*DELETE\s+FROM\s+(\S+)\s*" into tRegEx
     
-		put empty into tFoundStr -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+		put empty into tFoundStr -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
 		get matchText(tStr,tRegEx,tFoundStr)
 		if it is TRUE then
 			put "DELETE FROM" && tFoundStr && "WHERE 1=1" into tSQL
@@ -294,29 +361,31 @@ end _rigPrepQuery
 ----------------------------------------------------------------------*/
 
 function rigTransBegin pTestMode
-	if rigFetchDBdriverSetting("transenabled") is not TRUE then
-		return TRUE
-	end if
+  local tVal, tResult
+  
+  if rigFetchDBdriverSetting("transenabled") is not TRUE then
+    return TRUE
+  end if
 
-	# WHEN TRANSACTIONS ARE NESTED WE ONLY BEGIN/COMMIT/ROLLBACK THE OUTERMOST ONES
-	if rigFetchDBdriverSetting("transdepth") > 0 then
-		return TRUE
-	end if
+  # WHEN TRANSACTIONS ARE NESTED WE ONLY BEGIN/COMMIT/ROLLBACK THE OUTERMOST ONES
+  if rigFetchDBdriverSetting("transdepth") > 0 then
+    return TRUE
+  end if
 
-	# RESET THE TRANSACTION FAILURE FLAG.
-	# IF THE pTestMode FLAG IS SET TO TRUE TRANSACTIONS WILL BE ROLLED BACK
-	# EVEN IF THE QUERIES PRODUCE A SUCCESSFUL RESULT.
-	if pTestMode is TRUE then
-		put TRUE into tVal
-	else
-		put FALSE into tVal
-	end if
-	rigSetDBdriverSetting "transfailure", tVal
+  # RESET THE TRANSACTION FAILURE FLAG.
+  # IF THE pTestMode FLAG IS SET TO TRUE TRANSACTIONS WILL BE ROLLED BACK
+  # EVEN IF THE QUERIES PRODUCE A SUCCESSFUL RESULT.
+  if pTestMode is TRUE then
+    put TRUE into tVal
+  else
+    put FALSE into tVal
+  end if
+  rigSetDBdriverSetting "transfailure", tVal
 
-	get rigDbSimpleQuery("SET AUTOCOMMIT=0")
-	put rigDbSimpleQuery("START TRANSACTION") into tResult-- can also be BEGIN or BEGIN WORK
+  get rigDbSimpleQuery("SET AUTOCOMMIT=0")
+  put rigDbSimpleQuery("START TRANSACTION") into tResult-- can also be BEGIN or BEGIN WORK
 
-	return tResult
+  return tResult
 end rigTransBegin
 
 
@@ -345,22 +414,24 @@ end rigTransBegin
 ----------------------------------------------------------------------*/
 
 command rigTransCommit
-	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
-	if tTransEnabled is not TRUE then
-		exit rigTransCommit
-	end if
+  local tTransEnabled, tTransDepth, tResult
+  
+  put rigFetchDBdriverSetting("transenabled") into tTransEnabled
+  if tTransEnabled is not TRUE then
+    exit rigTransCommit
+  end if
 
-	# WHEN TRANSACTIONS ARE NESTED WE ONLY BEGIN/COMMIT/ROLLBACK THE OUTERMOST ONES
-	put rigFetchDBdriverSetting("transdepth") into tTransDepth
-	if tTransDepth > 0 then
-		exit rigTransCommit
-	end if
+  # WHEN TRANSACTIONS ARE NESTED WE ONLY BEGIN/COMMIT/ROLLBACK THE OUTERMOST ONES
+  put rigFetchDBdriverSetting("transdepth") into tTransDepth
+  if tTransDepth > 0 then
+    exit rigTransCommit
+  end if
 
-	put rigDbSimpleQuery("COMMIT") into tResult
+  put rigDbSimpleQuery("COMMIT") into tResult
 
-	get rigDbSimpleQuery("SET AUTOCOMMIT=1")
+  get rigDbSimpleQuery("SET AUTOCOMMIT=1")
 
-	return tResult
+  return tResult
 end rigTransCommit
 
 
@@ -388,6 +459,8 @@ end rigTransCommit
 ----------------------------------------------------------------------*/
 
 command rigTransRollback
+  local tTransEnabled, tTransDepth, tConnectionID
+  
 	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
 	if tTransEnabled is not TRUE then
 		exit rigTransRollback
@@ -400,11 +473,11 @@ command rigTransRollback
 	end if
 
 	# ROLLBACK USING BUILT-IN FUNCTION
-	if gDatabaseID is "" then
+	if gRigA["databaseID"] is "" then
 		put rigFetchDBdriverSetting("connid") into tConnectionID
 		get revdb_rollback(tConnectionID)
 	else
-		get revdb_rollback(gDatabaseID)
+		get revdb_rollback(gRigA["databaseID"])
 	end if
 
 	if it is not empty then
@@ -427,7 +500,7 @@ end rigTransRollback
 --| Version:  1.3
 --| Created: 18-07-09
 --| Last Mod: 21-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Escapes string.
 --| 
@@ -440,6 +513,8 @@ end rigTransRollback
 ----------------------------------------------------------------------*/
 
 function rigEscapeStr pStr pLike
+  local tStr, tLike, tKey
+  
 	put pStr into tStr
 	if pLike is empty then
 		put FALSE into tLike
@@ -456,23 +531,23 @@ function rigEscapeStr pStr pLike
 	end if
 	
 	# \ to \\
-	replace rigNumToCodepoint(92) with rigNumToCodepoint(92) & rigNumToCodepoint(92) in tStr
+	replace numToCodepoint(92) with numToCodepoint(92) & numToCodepoint(92) in tStr
 	# ' to \'
-	replace rigNumToCodepoint(39) with rigNumToCodepoint(92) & rigNumToCodepoint(39) in tStr
+	replace numToCodepoint(39) with numToCodepoint(92) & numToCodepoint(39) in tStr
 	# " to \"
-	replace rigNumToCodepoint(34) with rigNumToCodepoint(92) & rigNumToCodepoint(34) in tStr
+	replace numToCodepoint(34) with numToCodepoint(92) & numToCodepoint(34) in tStr
 	# backspace to \b
-	replace rigNumToCodepoint(8) with rigNumToCodepoint(92) & rigNumToCodepoint(98) in tStr
+	replace numToCodepoint(8) with numToCodepoint(92) & numToCodepoint(98) in tStr
 	# NULL to \0
-	replace rigNumToCodepoint(0) with rigNumToCodepoint(92) & rigNumToCodepoint(48) in tStr
+	replace numToCodepoint(0) with numToCodepoint(92) & numToCodepoint(48) in tStr
 	# Control-Z to \Z
-	replace rigNumToCodepoint(26) with rigNumToCodepoint(92) & rigNumToCodepoint(90) in tStr
+	replace numToCodepoint(26) with numToCodepoint(92) & numToCodepoint(90) in tStr
 	# newline to \n
-	replace rigNumToCodepoint(10) with rigNumToCodepoint(92) & rigNumToCodepoint(110) in tStr
+	replace numToCodepoint(10) with numToCodepoint(92) & numToCodepoint(110) in tStr
 	# carriage return to \r
-	replace rigNumToCodepoint(13) with rigNumToCodepoint(92) & rigNumToCodepoint(114) in tStr
+	replace numToCodepoint(13) with numToCodepoint(92) & numToCodepoint(114) in tStr
 	# tab to \t
-	replace rigNumToCodepoint(9) with rigNumToCodepoint(92) & rigNumToCodepoint(116) in tStr
+	replace numToCodepoint(9) with numToCodepoint(92) & numToCodepoint(116) in tStr
 
 	# ESCAPE LIKE CONDITION WILDCARDS
 	if tLike is TRUE then
@@ -499,7 +574,7 @@ end rigEscapeStr
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific query string that counts all records in
---|                    the specified database.
+--|            the specified database.
 --| 
 --| Format:  rigDbCountAll(param1)
 --|
@@ -509,6 +584,8 @@ end rigEscapeStr
 ----------------------------------------------------------------------*/
 
 function rigDbCountAll pTable
+  local tNumrows, tTable, tSql, tQuery, tRow
+  
 	if pTable is empty then
 		return 0
 	end if
@@ -554,6 +631,8 @@ end rigDbCountAll
 ----------------------------------------------------------------------*/
 
 function _rigDbListTables pPrefixLimit
+  local tPrefixLimit, tSql, tPrefix
+  
 	if pPrefixLimit is empty then
 		put FALSE into tPrefixLimit
 	else
@@ -643,7 +722,9 @@ end _rigDbFieldData
 ----------------------------------------------------------------------*/
 
 function rigDbErrorMessage
-	if gDatabaseID is "" then
+  local tConnectionID
+  
+	if gRigA["databaseID"] is "" then
 		put rigFetchDBdriverSetting("connid") into tConnectionID
 		if (tConnectionID <> "") and (tConnectionID is an integer) then
 			return revDatabaseConnectResult(tConnectionID)
@@ -652,7 +733,7 @@ function rigDbErrorMessage
 		end if
 	end if
 
-	return revDatabaseConnectResult(gDatabaseID)
+	return revDatabaseConnectResult(gRigA["databaseID"])
 end rigDbErrorMessage
 
 
@@ -680,6 +761,8 @@ end rigDbErrorMessage
 ----------------------------------------------------------------------*/
 
 function _rigEscapeIdentifiers pItem
+  local tReservedIdent, tStr, tRegEx
+  
 	if _sEscapeChar is "" then
 		return pItem
 	end if
@@ -723,7 +806,7 @@ end _rigEscapeIdentifiers
 --| Requires: --
 --|
 --| Summary: This function implicitly groups FROM tables so there is no confusion
---|                    about operator precedence in harmony with SQL standards.
+--|            about operator precedence in harmony with SQL standards.
 --| 
 --| Format:  _rigFromTables(param1)
 --|
@@ -733,6 +816,8 @@ end _rigEscapeIdentifiers
 ----------------------------------------------------------------------*/
 
 function _rigFromTables pTables
+  local tTablesArray
+  
 	if pTables is not an array then
 		put pTables into tTablesArray[1]
 	else
@@ -783,19 +868,22 @@ end _rigInsert
 --| Version:  1.4
 --| Created: 28-09-09
 --| Last Mod: 21-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Generates a platform-specific update string from the supplied data.
 --| 
 --| Format:  _rigUpdate(param1, param2, param3, param4, param5)
 --|
---| Parameters: string <pTable> the table name, array <pValues> the update data, array <pWhere> the where clause
---|                       array <pOrderBy> the orderby clause, array <pLimit>the limit clause
+--| Parameters: string <pTable> the table name, array <pValues> the update data,
+--|               array <pWhere> the where clause, array <pOrderBy> the orderby clause,
+--|               array <pLimit>the limit clause
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function _rigUpdate pTable pValues pWhere pOrderBy pLimit
+  local tOrderBy, tWhere, tLimit, tKeyNum, tKey, tVal, tValstr, tSql
+  
 	put pOrderBy into tOrderBy
 	put pWhere into tWhere
 	if pLimit is empty then
@@ -819,15 +907,15 @@ function _rigUpdate pTable pValues pWhere pOrderBy pLimit
 	end if
 
 	if the number of lines in the keys of tOrderBy >= 1 then
-		combine tOrderBy using rigNumToCodepoint(2)
-		replace rigNumToCodepoint(2) with ", " in tOrderBy
+		combine tOrderBy using numToCodepoint(2)
+		replace numToCodepoint(2) with ", " in tOrderBy
 		put " ORDER BY" && tOrderBy into tOrderBy
 	else
 		put "" into tOrderBy
 	end if
 
-	combine tValstr using rigNumToCodepoint(2)
-	replace rigNumToCodepoint(2) with ", " in tValstr
+	combine tValstr using numToCodepoint(2)
+	replace numToCodepoint(2) with ", " in tValstr
 
 	put "UPDATE" && pTable && "SET" && tValstr into tSql
 
@@ -857,8 +945,8 @@ end _rigUpdate
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific truncate string from the supplied data
---|                   If the database does not support the truncate() command
---|                   This function maps to "DELETE FROM table".
+--|            If the database does not support the truncate() command
+--|            This function maps to "DELETE FROM table".
 --| 
 --| Format:  _rigTruncate(param1)
 --|
@@ -881,19 +969,21 @@ end _rigTruncate
 --| Version:  1.1
 --| Created: 28-09-09
 --| Last Mod: 03-12-015
---| Requires: rigFetchDBactiveRecSetting(), rigNumToCodepoint()
+--| Requires: rigFetchDBactiveRecSetting()
 --|
 --| Summary: Generates a platform-specific delete string from the supplied data.
 --| 
 --| Format:  _rigDelete(param1, param2, param3, param4)
 --|
---| Parameters: string <pTable> the table name, array <pWhere> the where clause, array <pLike>
---|                       array <pLimit>the limit clause
+--| Parameters: string <pTable> the table name, array <pWhere> the where clause,
+--|               array <pLike>, array <pLimit>the limit clause
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function _rigDelete pTable pWhere pLike pLimit
+  local tLike, tLimit, tConditions, tARwhere, tSeparator
+  
 	put pLike into tLike
 	if pLimit is empty then
 		put FALSE into tLimit
@@ -904,7 +994,7 @@ function _rigDelete pTable pWhere pLike pLimit
 	if (the number of lines in the keys of pWhere > 0) or (the number of lines in the keys of tLike > 0) then
 		put LF & "WHERE " into tConditions
 		put rigFetchDBactiveRecSetting("where") into tARwhere
-		put rigNumToCodepoint(1) into tSeparator
+		put numToCodepoint(1) into tSeparator
 		combine tARwhere using tSeparator
 		replace tSeparator with LF in tARwhere
 		put tARwhere after tConditions
@@ -944,12 +1034,15 @@ end _rigDelete
 --| 
 --| Format:  _rigLimit(param1, param2, param3)
 --|
---| Parameters: string <pSQL> the sql query string, integer <pLimit> the number of rows to limit the query to, integer <pOffset>
+--| Parameters: string <pSQL> the sql query string, integer <pLimit> the number
+--|               of rows to limit the query to, integer <pOffset>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function _rigLimit pSQL pLimit pOffset
+  local tOffset
+  
 	if (pOffset is 0) or (pOffset is FALSE) then
 		put "" into tOffset
 	else
@@ -981,6 +1074,8 @@ end _rigLimit
 ----------------------------------------------------------------------*/
 
 function _rigDbClose pConnectionID
+  local tError
+  
 	revCloseDatabase pConnectionID
 
 	if item 1 of the result is "revdberr" then
@@ -991,7 +1086,7 @@ function _rigDbClose pConnectionID
 	end if
 
 	# RESET VARIABLES
-	put empty into gDatabaseID
+	put empty into gRigA["databaseID"]
 	rigSetDBdriverSetting "connid", FALSE
 	rigSetDBdriverSetting "resultid", FALSE
 
@@ -1067,9 +1162,11 @@ end rigFetchDriverSpecificSetting
 ----------------------------------------------------------------------*/
 
 function rigSqlDateTimeToIntDate pDateTime
+  local tRegEx, tY, tM, tD, tT, tDateTime, tConvertedDate
+  
 	put "([0-9]+)-([0-9]+)-([0-9]+)\s([0-9]+\:[0-9]+\:[0-9]+)" into tRegEx
   
-	put empty into tY -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7        
+	put empty into tY -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7        
 	put empty into tM
 	put empty into tD
 	put empty into tT
@@ -1091,8 +1188,6 @@ end rigSqlDateTimeToIntDate
 
 
 
-
-
---| END OF mysqlDriver.lc
---| Location:  ./system/database/drivers/mysql/mysqlDriver.lc
+--| END OF mysqlDriver.livecodescript
+--| Location:  ./system/database/drivers/mysql/mysqlDriver.livecodescript
 ----------------------------------------------------------------------

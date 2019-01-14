@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "DBactiveRec"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,43 +24,110 @@ end if
 # @subpackage	Drivers
 # @category	  Database
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/database/
+# @link		    https://revigniter.com/userGuide/database/
 ##
 
 
-# DECLARE VARIABLES
-local sActiveRecord
 
-# SET INITIAL VALUES
-put "" into sActiveRecord["select"]
-put FALSE into sActiveRecord["distinct"]
-put "" into sActiveRecord["from"]
-put "" into sActiveRecord["join"]
-put "" into sActiveRecord["where"]
-put "" into sActiveRecord["like"]
-put "" into sActiveRecord["groupby"]
-put "" into sActiveRecord["having"]
-put FALSE into sActiveRecord["limit"]
-put FALSE into sActiveRecord["offset"]
-put FALSE into sActiveRecord["order"]
-put "" into sActiveRecord["orderby"]
-put "" into sActiveRecord["set"]
-put "" into sActiveRecord["wherein"]
-put "" into sActiveRecord["aliasedtables"]
-put "" into sActiveRecord["storearray"]
 
-# ACTIVE RECORD CACHING VARIABLES
-put FALSE into sActiveRecord["caching"]
-put "" into sActiveRecord["cacheexists"]
-put "" into sActiveRecord["cacheselect"]
-put "" into sActiveRecord["cachefrom"]
-put "" into sActiveRecord["cachejoin"]
-put "" into sActiveRecord["cachewhere"]
-put "" into sActiveRecord["cachelike"]
-put "" into sActiveRecord["cachegroupby"]
-put "" into sActiveRecord["cachehaving"]
-put "" into sActiveRecord["cacheorderby"]
-put "" into sActiveRecord["cacheset"]
+global gRigA
+
+local sActiveRecord, sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-17
+ --| Last Mod: --
+ --| Requires: _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "" into sActiveRecord["select"]
+  put FALSE into sActiveRecord["distinct"]
+  put "" into sActiveRecord["from"]
+  put "" into sActiveRecord["join"]
+  put "" into sActiveRecord["where"]
+  put "" into sActiveRecord["like"]
+  put "" into sActiveRecord["groupby"]
+  put "" into sActiveRecord["having"]
+  put FALSE into sActiveRecord["limit"]
+  put FALSE into sActiveRecord["offset"]
+  put FALSE into sActiveRecord["order"]
+  put "" into sActiveRecord["orderby"]
+  put "" into sActiveRecord["set"]
+  put "" into sActiveRecord["wherein"]
+  put "" into sActiveRecord["aliasedtables"]
+  put "" into sActiveRecord["storearray"]
+
+  # ACTIVE RECORD CACHING VARIABLES
+  put FALSE into sActiveRecord["caching"]
+  put "" into sActiveRecord["cacheexists"]
+  put "" into sActiveRecord["cacheselect"]
+  put "" into sActiveRecord["cachefrom"]
+  put "" into sActiveRecord["cachejoin"]
+  put "" into sActiveRecord["cachewhere"]
+  put "" into sActiveRecord["cachelike"]
+  put "" into sActiveRecord["cachegroupby"]
+  put "" into sActiveRecord["cachehaving"]
+  put "" into sActiveRecord["cacheorderby"]
+  put "" into sActiveRecord["cacheset"]
+end _rigSetDefaultValues
+
 
 
 
@@ -92,6 +153,10 @@ put "" into sActiveRecord["cacheset"]
 ----------------------------------------------------------------------*/
 
 command rigDbSelect pSelect pEscape
+  local tSelect, tKey, tIncr, tVal, tSelectsNum, tNewSelectsNum
+  local tCacheSelectsNum, tNewCacheSelectsNum, tCacheExistsNum
+  local tNewCacheExistsNum
+  
 	if pSelect is empty then
 		put "*" into tSelect
 	else
@@ -139,7 +204,7 @@ end rigDbSelect
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSelectMax
 --|
 --| Author: rabit
@@ -155,7 +220,7 @@ end rigDbSelect
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSelectMax pSelect pAlias
 	_rigMaxMinAvgSum pSelect, pAlias, "MAX"
@@ -167,7 +232,7 @@ end rigSelectMax
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSelectMin
 --|
 --| Author: rabit
@@ -183,7 +248,7 @@ end rigSelectMax
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSelectMin pSelect pAlias
 	_rigMaxMinAvgSum pSelect, pAlias, "MIN"
@@ -195,7 +260,7 @@ end rigSelectMin
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSelectAvg
 --|
 --| Author: rabit
@@ -211,7 +276,7 @@ end rigSelectMin
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSelectAvg pSelect pAlias
 	_rigMaxMinAvgSum pSelect, pAlias, "AVG"
@@ -224,7 +289,7 @@ end rigSelectAvg
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSelectSum
 --|
 --| Author: rabit
@@ -240,7 +305,7 @@ end rigSelectAvg
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSelectSum pSelect pAlias
 	_rigMaxMinAvgSum pSelect, pAlias, "SUM"
@@ -252,7 +317,7 @@ end rigSelectSum
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigMaxMinAvgSum
 --|
 --| Author: rabit
@@ -273,9 +338,13 @@ end rigSelectSum
 --| Parameters: string<pSelect> the field, string<pAlias> an alias, string <pType>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigMaxMinAvgSum pSelect pAlias pType
+private command _rigMaxMinAvgSum pSelect pAlias pType
+  local tSelect, tAlias, tType, tTempStr, tSQL, tSelectsNum, tNewSelectsNum
+  local tCacheSelectsNum, tNewCacheSelectsNum, tCacheExistsNum
+  local tNewCacheExistsNum
+  
 	put pSelect into tSelect
 	put pAlias into tAlias
 	if pType is empty then
@@ -320,7 +389,7 @@ end _rigMaxMinAvgSum
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigCreateAliasFromTable
 --|
 --| Author: rabit
@@ -336,9 +405,9 @@ end _rigMaxMinAvgSum
 --| Parameters: string<pItem>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigCreateAliasFromTable pItem
+private function _rigCreateAliasFromTable pItem
 	if "." is in pItem then
 		set the itemdelimiter to "."
 		return item -1 of pItem
@@ -351,7 +420,7 @@ end _rigCreateAliasFromTable
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbDistinct
 --|
 --| Author: rabit
@@ -367,9 +436,11 @@ end _rigCreateAliasFromTable
 --| Parameters: string<pVal>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbDistinct pVal
+  local tVal
+  
 	if pVal is empty then
 		put TRUE into tVal
 	else	
@@ -390,7 +461,7 @@ end rigDbDistinct
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbFrom
 --|
 --| Author: rabit
@@ -406,9 +477,11 @@ end rigDbDistinct
 --| Parameters: mixed <pFrom> can be a string or array
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbFrom pFrom
+  local tFrom, tFromKeyNum, tCachedFromKeyNum, tKey, tVal, tV, tTempFrom
+  
 	if pFrom is not an array then
 		put pFrom into tFrom[1]
 	else
@@ -505,6 +578,10 @@ end rigDbFrom
 ----------------------------------------------------------------------*/
 
 command rigDbJoin pTable pCond pType pEscape
+  local tCond, tType, tEscape, tRegEx, tMatch1, tMatch2, tMatch3, tCondA
+  local tCounter, tNewCond, tTable, tJoin, tJoinsNum, tNewJoinsNum
+  local tCacheJoinsNum, tNewCacheJoinsNum, tCacheExistsNum, tNewCacheExistsNum
+  
   put pCond into tCond
   put pType into tType
 
@@ -536,7 +613,7 @@ command rigDbJoin pTable pCond pType pEscape
   # REGEX TO STRIP APART SINGLE CONDITIONS
   put "([\[\]\w\.'-]+)(\s*[^\" & quote & "\[`'\w]+\s*)(.+)" into tRegEx
 
- 	put empty into tMatch1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+ 	put empty into tMatch1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
  	put empty into tMatch2
  	put empty into tMatch3
   if (it is true) and (tEscape is true) then
@@ -642,6 +719,8 @@ end rigDbJoin
 ----------------------------------------------------------------------*/
 
 command rigDbWhere pKey pValue pEscape
+  local tValue, tEscape
+  
 	if pValue is empty then
 		put NULL into tValue
 	else
@@ -670,7 +749,7 @@ end rigDbWhere
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOrWhere
 --|
 --| Author: rabit
@@ -687,9 +766,11 @@ end rigDbWhere
 --| Parameters: mixed<pKey>, mixed <pValue>, bool <pEscape>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOrWhere pKey pValue pEscape
+  local tValue, tEscape
+  
 	if pValue is empty then
 		put NULL into tValue
 	else
@@ -733,7 +814,11 @@ end rigDbOrWhere
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigWhere pKey pValue pType pEscape
+private command _rigWhere pKey pValue pType pEscape
+  local tKey, tValue, tType, tTemp, tEscape, tK, tV, tPrefix, tWheresNum
+  local tNewWheresNum, tLikesNum, tCacheWheresNum, tNewCacheWheresNum
+  local tCacheExistsNum, tNewCacheExistsNum
+  
 	put pKey into tKey
 
 	if pValue is empty then
@@ -857,7 +942,7 @@ end _rigWhere
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbWhereIn
 --|
 --| Author: rabit
@@ -874,9 +959,11 @@ end _rigWhere
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbWhereIn pKey pValues
+  local tKey, tValues
+  
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -900,7 +987,7 @@ end rigDbWhereIn
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOrWhereIn
 --|
 --| Author: rabit
@@ -917,9 +1004,11 @@ end rigDbWhereIn
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOrWhereIn pKey pValues
+  local tKey, tValues
+  
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -943,7 +1032,7 @@ end rigDbOrWhereIn
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbWhereNotIn
 --|
 --| Author: rabit
@@ -960,9 +1049,11 @@ end rigDbOrWhereIn
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbWhereNotIn pKey pValues
+  local tKey, tValues
+  
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -985,7 +1076,7 @@ end rigDbWhereNotIn
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOrWhereNotIn
 --|
 --| Author: rabit
@@ -1002,9 +1093,11 @@ end rigDbWhereNotIn
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOrWhereNotIn pKey pValues
+  local tKey, tValues
+  
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1046,7 +1139,10 @@ end rigDbOrWhereNotIn
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigWhereIn pKey pValues pNot pType
+private command _rigWhereIn pKey pValues pNot pType
+  local tKey, tValues, tNot, tType, tWhereInsNum, tK, tVal, tPrefix, tWhereIn
+  local tLikesNum, tWheresNum, tCacheWheresNum, tCacheExistsNum
+  
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1172,7 +1268,7 @@ end _rigWhereIn
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbLike
 --|
 --| Author: rabit
@@ -1189,9 +1285,11 @@ end _rigWhereIn
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbLike pField pMatch pSide
+  local tSide
+  
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1208,7 +1306,7 @@ end rigDbLike
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbNotLike
 --|
 --| Author: rabit
@@ -1225,9 +1323,11 @@ end rigDbLike
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbNotLike pField pMatch pSide
+  local tSide
+  
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1264,6 +1364,8 @@ end rigDbNotLike
 ----------------------------------------------------------------------*/
 
 command rigDbOrLike pField pMatch pSide
+  local tSide
+  
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1300,6 +1402,8 @@ end rigDbOrLike
 ----------------------------------------------------------------------*/
 
 command rigDbOrNotLike pField pMatch pSide
+  local tSide
+  
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1334,7 +1438,11 @@ end rigDbOrNotLike
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigLike pField pMatch pType pSide pNot
+private command _rigLike pField pMatch pType pSide pNot
+  local tField, tType, tSide, tTemp, tK, tV, tPrefix, tOpenParenthesis, tCloseParenthesis
+  local tLikeStatement, tLikeEscapeStr, tLikesNum, tNewLikesNum, tCacheLikesNum
+  local tCacheExistsNum
+  
 	put pField into tField
 
 	if pType is empty then
@@ -1459,6 +1567,8 @@ end _rigLike
 ----------------------------------------------------------------------*/
 
 command rigDbGroupBy pBy
+  local tBy, tKey, tVal, tGroupBysNum, tCacheGroupBysNum, tCacheExistsNum
+  
 	put pBy into tBy
 	if (tBy is not a boolean) and (tBy is not a number) and (tBy is not an array) then
 		split tBy using comma
@@ -1512,6 +1622,8 @@ end rigDbGroupBy
 ----------------------------------------------------------------------*/
 
 command rigDbHaving pKey pValue pEscape
+  local tEscape
+  
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -1528,7 +1640,7 @@ end rigDbHaving
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOrHaving
 --|
 --| Author: rabit
@@ -1544,9 +1656,11 @@ end rigDbHaving
 --| Parameters: string<pKey>, string <pValue>, bool <pEscape>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOrHaving pKey pValue pEscape
+  local tEscape
+  
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -1582,7 +1696,10 @@ end rigDbOrHaving
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigHaving pKey pValue pType pEscape
+private command _rigHaving pKey pValue pType pEscape
+  local tKey, tValue, tType, tEscape, tTemp, tK, tV, tHavingNum, tPrefix
+  local tNewHavingNum, tCacheHavingsNum, tCacheExistsNum
+  
 	put pKey into tKey
 	put pValue into tValue
 
@@ -1654,7 +1771,7 @@ end _rigHaving
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOrderBy
 --|
 --| Author: rabit
@@ -1670,9 +1787,12 @@ end _rigHaving
 --| Parameters: string<pOrderby>, string <pDirection> direction: asc or desc
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOrderBy pOrderby pDirection
+  local tOrderby, tDirection, tRandomKeyword, tPart, tTemp, tOrderbyStatement
+  local tOrderBysNum, tCacheOrderbysNum, tCacheExistsNum
+  
 	put pOrderby into tOrderby
 	put pDirection into tDirection
 	put rigFetchDriverSpecificSetting("_sRandomKeyword") into tRandomKeyword
@@ -1730,7 +1850,7 @@ end rigDbOrderBy
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbLimit
 --|
 --| Author: rabit
@@ -1746,7 +1866,7 @@ end rigDbOrderBy
 --| Parameters: integer <pLimit>, integer <pOffset>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbLimit pLimit pOffset
 	put pLimit into sActiveRecord["limit"]
@@ -1762,7 +1882,7 @@ end rigDbLimit
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbOffset
 --|
 --| Author: rabit
@@ -1778,7 +1898,7 @@ end rigDbLimit
 --| Parameters: integer<pOffset> the offset value
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbOffset pOffset
 	put pOffset into sActiveRecord["offset"]
@@ -1810,6 +1930,8 @@ end rigDbOffset
 ----------------------------------------------------------------------*/
 
 function rigDbValuesSet pKey pValue pEscape
+  local tEscape, tKeyArray, tCSRFprotection, tCSRFtokenName, tK, tKprotected
+  
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -1888,6 +2010,8 @@ end rigDbValuesSet
 ----------------------------------------------------------------------*/
 
 function rigDbGet pTable pLimit pOffset pReturnSubqueryString
+  local tSQL, tResult
+  
 	if pTable <> "" then
 		get _rigTrackAliases(pTable)
 		rigDbFrom pTable
@@ -1915,7 +2039,7 @@ end rigDbGet
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbCountAllResults
 --|
 --| Author: rabit
@@ -1933,9 +2057,11 @@ end rigDbGet
 --| Parameters: string<pTable>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbCountAllResults pTable
+  local tCountStr, tSql, tQuery, tRow
+  
 	if pTable is not empty then
 		get _rigTrackAliases(pTable)
 		rigDbFrom pTable
@@ -1963,7 +2089,7 @@ end rigDbCountAllResults
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigDbGetWhere
 --|
 --| Author: rabit
@@ -1979,9 +2105,11 @@ end rigDbCountAllResults
 --| Parameters: string<pTable>, string <pWhere> the where clause, string <pLimit> the limit clause, string <pOffset> the offset clause
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigDbGetWhere pTable pWhere pLimit pOffset
+  local tSql, tResult
+  
 	if pTable is not "" then
 		rigDbFrom pTable
 	end if
@@ -2030,6 +2158,9 @@ end rigDbGetWhere
 ----------------------------------------------------------------------*/
 
 function rigDbInsert pTable pInsertVals pLastInsertID
+  local tInsertVals, tLastInsertID, tTable, tArrayKeys
+  local tSQL, tArrayValues, tResultVal
+  
 	if pInsertVals is an array then
 		put rigDbValuesSet(pInsertVals) into tInsertVals
 	end if
@@ -2117,6 +2248,8 @@ end rigDbInsert
 ----------------------------------------------------------------------*/
 
 function rigDbUpdate pTable pSet pWhere pLimit
+  local tTable, tSql
+  
 	# COMBINE ANY CACHED COMPONENTS WITH THE CURRENT STATEMENTS
 	_rigMergeCache
 
@@ -2195,6 +2328,8 @@ end rigDbUpdate
 ----------------------------------------------------------------------*/
 
 function rigDbEmptyTable pTable
+  local tTable, tSql
+  
 	if pTable is empty then
 		if sActiveRecord["from"] is not an array then
 			# ERROR HANDLING
@@ -2247,6 +2382,8 @@ end rigDbEmptyTable
 ----------------------------------------------------------------------*/
 
 function rigDbTruncate pTable
+  local tTable, tSql
+  
 	if pTable is empty then
 		if sActiveRecord["from"] is not an array then
 			# ERROR HANDLING
@@ -2300,6 +2437,8 @@ end rigDbTruncate
 ----------------------------------------------------------------------*/
 
 function rigDbDelete pTable pWhere pLimit pResetData
+  local tTable, tResetData, tSingleTable, tSql
+  
 	put pTable into tTable
 	if pResetData is empty then
 		put TRUE into tResetData
@@ -2380,7 +2519,7 @@ end rigDbDelete
 --| Version:  1.0
 --| Created: 28-09-09
 --| Last Mod: 28-09-09
---| Requires: rigDbDisplayError
+--| Requires: rigDbDisplayError, rigFetchDBdriverSetting()
 --|
 --| Summary: Prepends a database prefix if one exists in configuration.
 --| 
@@ -2396,7 +2535,7 @@ function rigDbPrefix pTable
 		rigDbDisplayError "db_table_name_required"
 	end if
 
-	return sDBdriverSettings["dbprefix"] & pTable
+  return (rigFetchDBdriverSetting("dbprefix") & pTable)
 end rigDbPrefix
 
 
@@ -2406,7 +2545,7 @@ end rigDbPrefix
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigTrackAliases
 --|
 --| Author: rabit
@@ -2422,9 +2561,11 @@ end rigDbPrefix
 --| Parameters: string <pTable> the table
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigTrackAliases pTable
+private function _rigTrackAliases pTable
+  local tTable, tKey, tRegEx, tTableIsInArray, tKeyNum
+  
 	put pTable into tTable
 	if tTable is an array then
 		repeat for each key tKey in tTable
@@ -2493,7 +2634,9 @@ end _rigTrackAliases
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigCompileSelect pSelectOverride
+private function _rigCompileSelect pSelectOverride
+  local tSelectOverride, tSQL, tIncr, tColNames, tJoin
+  
 	if pSelectOverride is empty then
 		put FALSE into tSelectOverride
 	else
@@ -2623,7 +2766,7 @@ end _rigCompileSelect
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbStartCache
 --|
 --| Author: rabit
@@ -2639,7 +2782,7 @@ end _rigCompileSelect
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbStartCache
 	put TRUE into sActiveRecord["caching"]
@@ -2651,7 +2794,7 @@ end rigDbStartCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbStopCache
 --|
 --| Author: rabit
@@ -2667,7 +2810,7 @@ end rigDbStartCache
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbStopCache
 	put FALSE into sActiveRecord["caching"]
@@ -2681,7 +2824,7 @@ end rigDbStopCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigDbFlushCache
 --|
 --| Author: rabit
@@ -2697,7 +2840,7 @@ end rigDbStopCache
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigDbFlushCache
 	put "" into sActiveRecord["cacheselect"]
@@ -2720,7 +2863,7 @@ end rigDbFlushCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigMergeCache
 --|
 --| Author: rabit
@@ -2737,9 +2880,11 @@ end rigDbFlushCache
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigMergeCache
+private command _rigMergeCache
+  local tKey, tLocalKey, tCachedKey, tProtectIdentifiers
+  
 	if sActiveRecord["cacheexists"] is not an array then
 		exit _rigMergeCache
 	end if
@@ -2773,7 +2918,7 @@ end _rigMergeCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigARarrayMerge
 --|
 --| Author: rabit
@@ -2789,9 +2934,11 @@ end _rigMergeCache
 --| Parameters: array <pArrayA>, array <pArrayB>
 --|
 --| Return: array
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigARarrayMerge pArrayA pArrayB
+private function _rigARarrayMerge pArrayA pArrayB
+  local tElementsList, tElementsToAddList, tKeyNum, tMergedArray
+  
 	# CONVERT ARRAYS TO LISTS
 	rigLoadHelper "array"
 	put rigElementsList(pArrayA) into tElementsList
@@ -2819,7 +2966,7 @@ end _rigARarrayMerge
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigResetSelect
 --|
 --| Author: rabit
@@ -2835,9 +2982,9 @@ end _rigARarrayMerge
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigResetSelect
+private command _rigResetSelect
 	put empty into sActiveRecord["select"]
 	put empty into sActiveRecord["from"]
 	put empty into sActiveRecord["join"]
@@ -2857,7 +3004,7 @@ end _rigResetSelect
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigResetWrite
 --|
 --| Author: rabit
@@ -2874,9 +3021,9 @@ end _rigResetSelect
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigResetWrite
+private command _rigResetWrite
 	put empty into sActiveRecord["set"]
 	put empty into sActiveRecord["from"]
 	put empty into sActiveRecord["where"]
@@ -2890,7 +3037,7 @@ end _rigResetWrite
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFetchDBactiveRecSetting
 --|
 --| Author: rabit
@@ -2906,7 +3053,7 @@ end _rigResetWrite
 --| Parameters: string<pSettingsKey>
 --|
 --| Return: mixed
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFetchDBactiveRecSetting pSettingsKey
 	return sActiveRecord[pSettingsKey]
@@ -2966,6 +3113,8 @@ end rigDbOpenParenthesis
 ----------------------------------------------------------------------*/
 
 command rigDbCloseParenthesis
+  local tCloseParenthesisType
+  
 	# CHECK IF A PARENTHESIS WAS MOVED
 	if (sActiveRecord["openParenthesisSet"] is "LikeToWhere") or (sActiveRecord["closeParenthesisSet"] is "WhereToLike") then
 		put "closeParenthesisLike" into tCloseParenthesisType
@@ -3000,7 +3149,10 @@ end rigDbCloseParenthesis
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigDbJoinConditionsArray pStr
+private function _rigDbJoinConditionsArray pStr
+  local tStrStart, tCounter, tConditionsA, tAndOffset, tOrOffset, tStrCharsNum
+  local tOrBeforeAnd
+  
   put 1 into tStrStart
   put 0 into tCounter
   put empty into tConditionsA
@@ -3068,6 +3220,6 @@ end _rigDbJoinConditionsArray
 
 
 
---| END OF DBactiveRecord.lc
---| Location:  ./system/database/DBactiveRecord.lc
+--| END OF DBactiveRecord.livecodescript
+--| Location:  ./system/database/DBactiveRecord.livecodescript
 ----------------------------------------------------------------------
