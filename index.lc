@@ -1,6 +1,7 @@
 <?lc
 
-	global gEXT, gFCPATH, gSELF, gBASEPATH, gAPPPATH, gErrorData, gDatabaseID, gDocTypes, gAdvancedUnicode
+	global gRigA -- array keys are: EXT, FCPATH, SELF, BASEPATH, APPPATH, errorData, databaseID, docTypes
+	               -- controller, handler, module, COOKIE, segments, rSegments, applicationFolder, activeRecord
 
 ##
 #---------------------------------------------------------------
@@ -15,9 +16,7 @@
 # PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
-	global gSystemFolder
-	put "system" into gSystemFolder
-	
+	put "system" into gRigA["systemFolder"]
 
 
 ##
@@ -36,8 +35,7 @@
 # PATH MUST USE UNIX STYLE DIRECTORY SEPARATORS
 #
 ##
-	global gApplicationFolder
-	put "application" into gApplicationFolder
+	put "application" into gRigA["applicationFolder"]
 
 
 ##
@@ -67,8 +65,8 @@
   
   set the itemdel to "/"
   
-  if ((sIsWin is FALSE) and (char 1 of gSystemFolder is not "/")) or ((sIsWin is TRUE) and (char 2 of gSystemFolder is not ":")) then
-    put item 1 to -2 of sTempPath & "/" & gSystemFolder into gSystemFolder
+  if ((sIsWin is FALSE) and (char 1 of gRigA["systemFolder"] is not "/")) or ((sIsWin is TRUE) and (char 2 of gRigA["systemFolder"] is not ":")) then
+    put item 1 to -2 of sTempPath & "/" & gRigA["systemFolder"] into gRigA["systemFolder"]
   end if
 
 ##
@@ -92,49 +90,45 @@
 	--constant EXT = "." & item -1 of sTempFileName
 	--constant FCPATH = sTempPath
 	--constant SELF = sTempFileName
-	--constant BASEPATH = gSystemFolder & "/"
+	--constant BASEPATH = gRigA["systemFolder"] & "/"
 
 	--constant EXT = "[[" & quote & "." & quote && "item -1 of sTempFileName]]"
 	--constant FCPATH = "[[sTempPath]]"
 	--constant SELF = "[[sTempFileName]]"
-	--constant BASEPATH = "[[gSystemFolder" && quote & "/" & quote & "]]"
+	--constant BASEPATH = "[[gRigA["systemFolder"]" && quote & "/" & quote & "]]"
 
-	put "." & item -1 of sTempFileName into gEXT
+	put "." & item -1 of sTempFileName into gRigA["EXT"]
 	
-	put sTempPath into gFCPATH
-	put sTempFileName into gSELF
-	put gSystemFolder & "/" into gBASEPATH
+	put sTempPath into gRigA["FCPATH"]
+	put sTempFileName into gRigA["SELF"]
+	put gRigA["systemFolder"] & "/" into gRigA["BASEPATH"]
 
-	if char 1 of gApplicationFolder is "/" then
+	if char 1 of gRigA["applicationFolder"] is "/" then
 		# Absolute path
 		-- constant APPPATH = gApplicationFolder & "/"
-		put gApplicationFolder & "/" into gAPPPATH
+		put gRigA["applicationFolder"] into gRigA["APPPATH"]
 	else
 		# Relative path
-		if gApplicationFolder is "" then put "application" into gApplicationFolder
+		if gRigA["applicationFolder"] is "" then put "application" into gRigA["applicationFolder"]
 		
 		set the itemDel to slash
 		# look for app folder relative to the index folder
-		if there is a folder (item 1 to -2 of sTempPath & "/" & gApplicationFolder) then
+		if there is a folder (item 1 to -2 of sTempPath & "/" & gRigA["applicationFolder"]) then
 			-- constant APPPATH = index folder & "/" & gApplicationFolder & "/"
-			put item 1 to -2 of sTempPath & "/" & gApplicationFolder & "/" into gAPPPATH
+			put item 1 to -2 of sTempPath & "/" & gRigA["applicationFolder"] & "/" into gRigA["APPPATH"]
 		else
 			# app folder must me relative to system folder
 			-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
-			put gBASEPATH & gApplicationFolder & "/" into gAPPPATH
+			put gRigA["BASEPATH"] & gRigA["applicationFolder"] & "/" into gRigA["APPPATH"]
 		end if
 	end if
 
-  # Global gAdvancedUnicode needed to address differences
-  # between engine version ≥ 7 and prior versions.
-  set the itemDel to "."
-  if (item 1 of the version < 7) then
-    put FALSE into gAdvancedUnicode
-  else
-    put TRUE into gAdvancedUnicode
-  end if
 
 	set the itemDel to comma
+	
+  delete variable sTempPath
+  delete variable sIsWin
+  delete variable sTempFileName
 
 ##
 #---------------------------------------------------------------
@@ -145,7 +139,7 @@
 #
 ##
 
-	include gBASEPATH & "revigniter/RevIgniter" & gEXT
+	include gRigA["BASEPATH"] & "revigniter/RevIgniter" & gRigA["EXT"]
 
 
 --| END OF index.lc
