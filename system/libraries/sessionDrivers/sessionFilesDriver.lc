@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "sessionFilesDriver"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package     revIgniter
 # @author       rabit@revigniter.com
-# @copyright    Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license      http://revigniter.com/userGuide/license.html
-# @link          http://revigniter.com
+# @copyright    Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license      https://revigniter.com/userGuide/license.html
+# @link          https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -29,67 +23,116 @@ end if
 # @subpackage	Libraries
 # @category		  Sessions
 # @author			  rabit@revigniter.com
-# @link				  http://revigniter.com/userGuide/libraries/sessions.html
+# @link				  https://revigniter.com/userGuide/libraries/sessions.html
 ##
 
 
 
 
-# DECLARE VARIABLES
+global gRigA, gSessionA
+
 local sSessionTmpFolderName, sSessionFilePath, sSessionSaveLocationValid
 
-put "ri_sessions" into sSessionTmpFolderName
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-13
+ --| Last Mod: --
+ --| Requires: _rigInitializeSessFilesDriver
+ --|
+ --| Summary:  Run security check and initial routines. Set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    # SET INITIAL VALUES
+    put "ri_sessions" into sSessionTmpFolderName
+    
+    # CALL INITIAL HANDLERS
+    _rigInitializeSessFilesDriver    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
 
 
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigInitializeSessFilesDriver
+--| COMMAND _rigInitializeSessFilesDriver
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 01-09-2015
---| Last Mod: 01-09-2015
+--| Version:  1.1
+--| Created: 2015-09-01
+--| Last Mod: 2019-01-12
 --| Requires: rigLogMessage, _rigCreateSessionFolder, rigRTrim(), rigCanWriteFileTo()
 --|
 --| Summary: Initialize session files driver.
 --| 
---| Format:  rigInitializeSessFilesDriver 
+--| Format:  _rigInitializeSessFilesDriver 
 --|
 --| Parameters: --
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigInitializeSessFilesDriver
+private command _rigInitializeSessFilesDriver
+  local tTempFolderPath
+  
   put TRUE into sSessionSaveLocationValid
   
   # CHECK IF PATH TO SESSION FILES FOLDER IS SET
   # OTHERWISE USE TEMPORARY FOLDER PATH
-  if sSession["sess_save_location"] is empty then
+  if gSessionA["sess_save_location"] is empty then
     set the itemDel to "/"
     put (item 1 to -2 of the tempname) into tTempFolderPath
 
-    put tTempFolderPath & "/" & sSessionTmpFolderName into sSession["sess_save_location"]
+    put tTempFolderPath & "/" & sSessionTmpFolderName into gSessionA["sess_save_location"]
     # WE USE THE SESSION COOKIE NAME AS PREFIX
-    put tTempFolderPath & "/" & sSessionTmpFolderName & "/" & sSession["sess_cookie_name"] into sSessionFilePath
+    put tTempFolderPath & "/" & sSessionTmpFolderName & "/" & gSessionA["sess_cookie_name"] into sSessionFilePath
 
-    if there is a folder sSession["sess_save_location"] then
+    if there is a folder gSessionA["sess_save_location"] then
     else
       # NO FOLDER, SO CREATE FOLDER
       _rigCreateSessionFolder
     end if
       
   else
-    put rigRTrim(sSession["sess_save_location"], "/") into sSession["sess_save_location"]
+    replace "\" with "/" in gSessionA["sess_save_location"]
+    put rigRTrim(gSessionA["sess_save_location"], "/") into gSessionA["sess_save_location"]
+    if not rigIsAbsolutePath(gSessionA["sess_save_location"]) then
+      put the defaultfolder & "/" & gSessionA["sess_save_location"] into gSessionA["sess_save_location"]
+    else
+      put "/" & gSessionA["sess_save_location"] into gSessionA["sess_save_location"]
+    end if
+    
     # WE USE THE SESSION COOKIE NAME AS PREFIX
-    put sSession["sess_save_location"] & "/" & sSession["sess_cookie_name"] into sSessionFilePath
+    put gSessionA["sess_save_location"] & "/" & gSessionA["sess_cookie_name"] into sSessionFilePath
     
     # CHECK IF PATH TO SESSION FILES FOLDER SET BY USER EXISTS
     # AND IF IT IS WRITABLE
-    if there is a folder sSession["sess_save_location"] then
-      if rigCanWriteFileTo(sSession["sess_save_location"]) is FALSE then
-        rigLogMessage "error", "Session: Configured save location" && quote & sSession["sess_save_location"] & quote && "is not writable by revIgniter!"
+    if there is a folder gSessionA["sess_save_location"] then
+      if rigCanWriteFileTo(gSessionA["sess_save_location"]) is FALSE then
+        rigLogMessage "error", "Session: Configured save location" && quote & gSessionA["sess_save_location"] & quote && "is not writable by revIgniter!"
         put FALSE into sSessionSaveLocationValid
       end if
     else
@@ -98,7 +141,7 @@ command rigInitializeSessFilesDriver
     end if
     
   end if
-end rigInitializeSessFilesDriver
+end _rigInitializeSessFilesDriver
 
 
 
@@ -110,9 +153,9 @@ end rigInitializeSessFilesDriver
 --| COMMAND _rigCreateSessionFolder
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 01-09-2015
---| Last Mod: 01-09-2015
+--| Version:  1.1
+--| Created: 2015-09-01
+--| Last Mod: 2019-01-12
 --| Requires: rigLogMessage
 --|
 --| Summary: Create folder for session data.
@@ -125,19 +168,22 @@ end rigInitializeSessFilesDriver
 ----------------------------------------------------------------------*/
 
 command _rigCreateSessionFolder
+  local tCurrentUmask
+  
   set the convertOctals to true
   put the umask into tCurrentUmask
   set the umask to "0077"
 
-  create folder sSession["sess_save_location"]
+  create folder gSessionA["sess_save_location"]
   
   if the result is not empty then
-    if (item 1 to -2 of the tempname) is in sSession["sess_save_location"] then
+    set the itemDelimiter to "/"
+    if (item 1 to -2 of the tempname) is in gSessionA["sess_save_location"] then
       # USING TEMPORARY FOLDER
       rigLogMessage "error", "Session: Folder name in tmp folder already taken! Please set a custom sess_save_location in config.lc. System error:" && the sysError
     else
       
-      rigLogMessage "error", "Session: Configured save path" && quote & sSession["sess_save_location"] & quote && "is not a directory, doesn't exist or cannot be created. System error:" && the sysError
+      rigLogMessage "error", "Session: Configured save path" && quote & gSessionA["sess_save_location"] & quote && "is not a directory, doesn't exist or cannot be created. System error:" && the sysError
     end if
     put FALSE into sSessionSaveLocationValid
   end if
@@ -170,6 +216,9 @@ end _rigCreateSessionFolder
 ----------------------------------------------------------------------*/
 
 function rigGetSessData pSessID pSessIP pSessUserAgent pSessionA
+  local tMatchCounter, tMatches, tSessionFile, tSessionFileData, tUserData
+  local tCustomData, tKey, tVal
+  
   if sSessionSaveLocationValid is TRUE then
     
     put 0 into tMatchCounter
@@ -188,12 +237,12 @@ function rigGetSessData pSessID pSessIP pSessUserAgent pSessionA
       
       # MATCH IP AND USER AGENT
       #
-    	 if sSession["sess_match_ip"] is TRUE then
+    	 if gSessionA["sess_match_ip"] is TRUE then
          add 1 to tMatchCounter
          add trueFalseToDigit(pSessIP is line 2 of tSessionFileData) to tMatches
     	 end if
        
-    	 if sSession["sess_match_useragent"] is TRUE then
+    	 if gSessionA["sess_match_useragent"] is TRUE then
          add 1 to tMatchCounter
          add trueFalseToDigit(pSessUserAgent is line 3 of tSessionFileData) to tMatches
     	 end if
@@ -255,9 +304,11 @@ end rigGetSessData
 ----------------------------------------------------------------------*/
 
 command rigUpdateSessData pUserData
+  local tSessionFile, tSessionFileData
+  
   if sSessionSaveLocationValid is TRUE then
     
-	  put sSessionFilePath & sSession["userdata"]["session_id"] into tSessionFile
+	  put sSessionFilePath & gSessionA["userdata"]["session_id"] into tSessionFile
 
     if there is a file tSessionFile then
       put URL ("binfile:" & tSessionFile) into tSessionFileData
@@ -267,7 +318,7 @@ command rigUpdateSessData pUserData
         exit rigUpdateSessData
       end if
       
-      put sSession["userdata"]["last_activity"] into line 4 of tSessionFileData
+      put gSessionA["userdata"]["last_activity"] into line 4 of tSessionFileData
       put pUserData into line 5 of tSessionFileData
       
       put tSessionFileData into URL ("binfile:" & tSessionFile)
@@ -300,10 +351,12 @@ end rigUpdateSessData
 ----------------------------------------------------------------------*/
 
 command rigCreateSessData
+  local tSessionFile, tSessionUserData
+  
   if sSessionSaveLocationValid is TRUE then
     
 		# CREATE SESSION DATA FILE
-  	put sSessionFilePath & sSession["userdata"]["session_id"] into tSessionFile
+  	put sSessionFilePath & gSessionA["userdata"]["session_id"] into tSessionFile
 
   	open file tSessionFile for binary write
 		# ENGINE ≥ 7 VERSION
@@ -311,8 +364,8 @@ command rigCreateSessData
     -- open file tSessionFile for tCharset text write
     if the result is empty then -- success!
       
-      put sSession["userdata"]["session_id"] & return & sSession["userdata"]["ip_address"] \
-        & return & sSession["userdata"]["user_agent"] & return & sSession["userdata"]["last_activity"] & return into tSessionUserData
+      put gSessionA["userdata"]["session_id"] & return & gSessionA["userdata"]["ip_address"] \
+        & return & gSessionA["userdata"]["user_agent"] & return & gSessionA["userdata"]["last_activity"] & return into tSessionUserData
         
 			write tSessionUserData to file tSessionFile
         
@@ -349,10 +402,12 @@ end rigCreateSessData
 ----------------------------------------------------------------------*/
 
 command rigUpdateCurrentSess pOldSessID pNewSessID
+  local tKeys, tCookieData, tOldSessionFile, tNewSessionData, tNewSessionFile
+  
   # SET COOKIE EXPLICITLY TO ONLY HAVE OUR SESSION DATA
   put "session_id,ip_address,user_agent,last_activity" into tKeys
   repeat for each item tKey in tKeys
-    put sSession["userdata"][tKey] into tCookieData[tKey]
+    put gSessionA["userdata"][tKey] into tCookieData[tKey]
   end repeat
   
   if sSessionSaveLocationValid is TRUE then
@@ -385,7 +440,7 @@ command rigUpdateCurrentSess pOldSessID pNewSessID
       # session_id
       put pNewSessID into line 1 of tNewSessionData
       # last_activity
-      put sNow into line 4 of tNewSessionData
+      put gSessionA["now"] into line 4 of tNewSessionData
       
       write tNewSessionData to file tNewSessionFile
       
@@ -425,8 +480,10 @@ end rigUpdateCurrentSess
 ----------------------------------------------------------------------*/
 
 command rigDestroySessData
+  local tSessionFile
+  
   if sSessionSaveLocationValid is TRUE then
-    put sSessionFilePath & sSession["userdata"]["session_id"] into tSessionFile
+    put sSessionFilePath & gSessionA["userdata"]["session_id"] into tSessionFile
     delete file tSessionFile
   end if
 end rigDestroySessData
@@ -440,9 +497,9 @@ end rigDestroySessData
 --| COMMAND _rigGCexpiredSess
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 12-09-2015
---| Last Mod: 12-09-2015
+--| Version:  1.1
+--| Created: 2015-09-12
+--| Last Mod: 2019-01-12
 --| Requires: rigLogMessage
 --|
 --| Summary: This deletes expired session files if the probability percentage is met.
@@ -455,6 +512,9 @@ end rigDestroySessData
 ----------------------------------------------------------------------*/
 
 command _rigGCexpiredSess
+  local tRand, tUpperLimit, tSessionFilesList, tExpire
+  local tFileToDelete
+  
   if sSessionSaveLocationValid is TRUE then
     put empty into tRand
     repeat while (the length of tRand) < 8
@@ -464,16 +524,10 @@ command _rigGCexpiredSess
   
     put (tRand mod 100) into tRand
   
-    if tRand < sSession["gc_probability"] then
+    if tRand < gSessionA["gc_probability"] then
   
       # GET FILES LIST (NAMES AND MODIFICATION DATE)
-      put the defaultfolder into tCurrentDefFolder
-      set the defaultFolder to sSession["sess_save_location"]
-  	
-      put the detailed files into tSessionFilesList
-  	
-      set the defaultFolder to tCurrentDefFolder
-      #
+      put files(gSessionA["sess_save_location"], "detailed") into tSessionFilesList
   	
       if tSessionFilesList is not empty then
         filter tSessionFilesList without "*.,*"
@@ -484,11 +538,11 @@ command _rigGCexpiredSess
         filter tSessionFilesList without "*,MACSfdrp" -- remove folder aliases
         --------- ??????????
   
-        put sNow - sSession["sess_expiration"] into tExpire
+        put gSessionA["now"] - gSessionA["sess_expiration"] into tExpire
   	
         repeat for each line tFile in tSessionFilesList
           if item 5 of tFile < tExpire then
-            put sSession["sess_save_location"] & "/" & URLDecode(item 1 of tFile) into tFileToDelete
+            put gSessionA["sess_save_location"] & "/" & URLDecode(item 1 of tFile) into tFileToDelete
             delete file tFileToDelete
           end if
         end repeat
@@ -496,7 +550,7 @@ command _rigGCexpiredSess
       end if -- if tSessionFilesList is not empty then
 
       rigLogMessage "debug", "Session garbage collection performed."
-    end if -- if tRand < sSession["gc_probability"] then
+    end if -- if tRand < gSessionA["gc_probability"] then
   end if
 end _rigGCexpiredSess
 
@@ -507,14 +561,6 @@ end _rigGCexpiredSess
 
 
 
-# CALL INITIAL HANDLERS
-rigInitializeSessFilesDriver
-
-
-
-
-
-
---| END OF sessionFilesDriver.lc
---| Location:  ./system/libraries/sessionDrivers/sessionFilesDriver.lc
+--| END OF sessionFilesDriver.livecodescript
+--| Location:  ./system/libraries/sessionDrivers/sessionFilesDriver.livecodescript
 ----------------------------------------------------------------------
