@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "urlHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,7 +22,7 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/urlHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/urlHelper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -36,9 +30,51 @@ end if
 
 
 
+global gRigA
+
+local sStackInUse
 
 
-----------------------------------------------------------------------
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-17
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigASiteURL
 --|
 --| Author: rabit
@@ -48,17 +84,16 @@ end if
 --| Requires: rigSiteURL()
 --|
 --| Summary: Create a local URL based on your basepath. Segments can be passed via the
---|                    first parameter either as a string or an array.
+--|            first parameter either as a string or an array.
 --| 
 --| Format: rigASiteURL(param1)
 --|
 --| Parameters: string <pURI>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigASiteURL pURI
-
 	return rigSiteURL(pURI)
 end rigASiteURL
 
@@ -68,7 +103,7 @@ end rigASiteURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigBaseURL
 --|
 --| Author: rabit
@@ -84,10 +119,9 @@ end rigASiteURL
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigBaseURL
-
 	return rigConfigItem("baseUrl")
 end rigBaseURL
 
@@ -98,7 +132,7 @@ end rigBaseURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCurrentURL
 --|
 --| Author: rabit
@@ -108,16 +142,18 @@ end rigBaseURL
 --| Requires: rigUriString()
 --|
 --| Summary: Returns the full URL (including segments) of the page where this 
---|                    function is placed.
+--|            function is placed.
 --| 
 --| Format: rigCurrentURL()
 --|
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCurrentURL
+  local tUriStr
+  
 	put rigUriString() into tUriStr
 
 	return rigSiteURL(tUriStr)
@@ -129,7 +165,7 @@ end rigCurrentURL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCurrentURIstring
 --|
 --| Author: rabit
@@ -145,10 +181,9 @@ end rigCurrentURL
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCurrentURIstring
-
 	return rigUriString()
 end rigCurrentURIstring
 
@@ -158,7 +193,7 @@ end rigCurrentURIstring
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigIndexPage
 --|
 --| Author: rabit
@@ -174,10 +209,9 @@ end rigCurrentURIstring
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigIndexPage
-
 	return rigConfigItem("indexPage")
 end rigIndexPage
 
@@ -187,7 +221,7 @@ end rigIndexPage
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigAnchor
 --|
 --| Author: rabit
@@ -203,9 +237,11 @@ end rigIndexPage
 --| Parameters: mixed <pURI>, string <pTitle> the link title, mixed <pAttributes> any attributes
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigAnchor pURI pTitle pAttributes
+  local tRegEx, tSiteURL, tTitle, tAttributes
+  
 	if pURI is not an array then
 		put "^\w+://" into tRegEx
 
@@ -262,6 +298,8 @@ end rigAnchor
 ----------------------------------------------------------------------*/
 
 function rigAnchorPopUp pURI pTitle pAttributes
+  local tAttributes, tRegEx, tSiteURL, tTitle, tAtts, tKey
+  
 	if pAttributes is not an array then
 		put FALSE into tAttributes
 	else
@@ -323,7 +361,7 @@ end rigAnchorPopUp
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMailToLink
 --|
 --| Author: rabit
@@ -339,9 +377,11 @@ end rigAnchorPopUp
 --| Parameters: string <pEmail>, string <pTitle> the link title, mixed <pAttributes> any attributes
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigMailToLink pEmail pTitle pAttributes
+  local tTitle, tAttributes
+  
 	if pTitle is empty then
 		put pEmail into tTitle
 	else
@@ -368,7 +408,7 @@ end rigMailToLink
 --| Version:  1.2
 --| Created: 05-10-09
 --| Last Mod: 27-04-15
---| Requires: rigCodepointToNum(), rigArrayReverse(), rigNumToCodepoint()
+--| Requires: rigArrayReverse()
 --|
 --| Summary: Create a spam-protected mailTo link written in Javascript.
 --| 
@@ -380,132 +420,136 @@ end rigMailToLink
 ----------------------------------------------------------------------*/
 
 function rigSafeMailToLink pEmail pTitle pAttributes
-	if pTitle is empty then
-		put pEmail into tTitle
-	else
-		put pTitle into tTitle
-	end if
+  local tTitle, tStr, tCharsNum, tChar, tX, tKey, tVal, tTemp
+  local tTempCounter, tOrdinal, tCount, tNumber, tItemDelimiter
+  local tOutput, tNum, tV
+  
+  if pTitle is empty then
+    put pEmail into tTitle
+  else
+    put pTitle into tTitle
+  end if
 
-	put "<a href=" & quote & "mailto:" into tStr
-	repeat with i = 1 to 16
-		put char i of tStr into tX[i]
-	end repeat
+  put "<a href=" & quote & "mailto:" into tStr
+  repeat with i = 1 to 16
+    put char i of tStr into tX[i]
+  end repeat
 
-	put 16 into tCharsNum
-	repeat with i = 1 to (the number of chars in pEmail)
-		add 1 to tCharsNum
-		put char i of pEmail into tChar
-		put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
-	end repeat
+  put 16 into tCharsNum
+  repeat with i = 1 to (the number of chars in pEmail)
+    add 1 to tCharsNum
+    put char i of pEmail into tChar
+    put "|" & codepointToNum(tChar) into tX[tCharsNum]
+  end repeat
 
-	add 1 to tCharsNum
-	put quote into tX[tCharsNum]
+  add 1 to tCharsNum
+  put quote into tX[tCharsNum]
 
-	if pAttributes is not empty then
-		if pAttributes is an array then
-			repeat for each key tKey in pAttributes
-				put pAttributes[tKey] into tVal
+  if pAttributes is not empty then
+    if pAttributes is an array then
+      repeat for each key tKey in pAttributes
+        put pAttributes[tKey] into tVal
 				
-				add 1 to tCharsNum
-				put " " & tKey & "=" & quote into tX[tCharsNum]
+        add 1 to tCharsNum
+        put " " & tKey & "=" & quote into tX[tCharsNum]
 				
-				repeat with i = 1 to (the number of chars in tVal)
-					add 1 to tCharsNum
-					put char i of tVal into tChar
-					put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
-				end repeat
+        repeat with i = 1 to (the number of chars in tVal)
+          add 1 to tCharsNum
+          put char i of tVal into tChar
+          put "|" & codepointToNum(tChar) into tX[tCharsNum]
+        end repeat
 				
-				add 1 to tCharsNum
-				put quote into tX[tCharsNum]
-			end repeat
+        add 1 to tCharsNum
+        put quote into tX[tCharsNum]
+      end repeat
 
-		else
+    else
 
-			repeat with i = 1 to (the number of chars in pAttributes)
-				add 1 to tCharsNum
-				put char i of pAttributes into tChar
-				put "|" & rigCodepointToNum(tChar) into tX[tCharsNum]
-			end repeat
-		end if
-	end if
+      repeat with i = 1 to (the number of chars in pAttributes)
+        add 1 to tCharsNum
+        put char i of pAttributes into tChar
+        put "|" & codepointToNum(tChar) into tX[tCharsNum]
+      end repeat
+    end if
+  end if
 
-	add 1 to tCharsNum
-	put ">" into tX[tCharsNum]
+  add 1 to tCharsNum
+  put ">" into tX[tCharsNum]
 
-	put empty into tTemp
-	put 0 into tTempCounter
-	repeat with i = 1 to (the number of chars in tTitle)
-		add 1 to tCharsNum
-		put char i of tTitle into tChar
-		put rigCodepointToNum(tChar) into tOrdinal
+  put empty into tTemp
+  put 0 into tTempCounter
+  repeat with i = 1 to (the number of chars in tTitle)
+    add 1 to tCharsNum
+    put char i of tTitle into tChar
+    put codepointToNum(tChar) into tOrdinal
 
 		
-		if tOrdinal < 128 then
-			put "|" & tOrdinal into tX[tCharsNum]
-		else
-			if tTemp is not an array then
-				if tOrdinal < 224 then
-					put 2 into tCount
-				else
-					put 3 into tCount
-				end if
+    if tOrdinal < 128 then
+      put "|" & tOrdinal into tX[tCharsNum]
+    else
+      if tTemp is not an array then
+        if tOrdinal < 224 then
+          put 2 into tCount
+        else
+          put 3 into tCount
+        end if
 
-				add 1 to tTempCounter
-				put tOrdinal into tTemp[tTempCounter]
+        add 1 to tTempCounter
+        put tOrdinal into tTemp[tTempCounter]
 
-				if the number of lines in the keys of tTemp is tCount then
-					if tCount = 3 then
-						put ((tTemp[1] mod 16) * 4096) + ((tTemp[2] mod 64) * 64) + (tTemp[3] mod 64) into tNumber
-					else
-						put ((tTemp[1] mod 32) * 64) + (tTemp[2] mod 64) into tNumber
-					end if
+        if the number of lines in the keys of tTemp is tCount then
+          if tCount = 3 then
+            put ((tTemp[1] mod 16) * 4096) + ((tTemp[2] mod 64) * 64) + (tTemp[3] mod 64) into tNumber
+          else
+            put ((tTemp[1] mod 32) * 64) + (tTemp[2] mod 64) into tNumber
+          end if
 
-					add 1 to tCharsNum
-					put "|" & tNumber into tX[tCharsNum]
-					put 1 into tCount
-					put empty into tTemp
-				end if
-			end if
-		end if
-	end repeat
+          add 1 to tCharsNum
+          put "|" & tNumber into tX[tCharsNum]
+          put 1 into tCount
+          put empty into tTemp
+        end if
+      end if
+    end if
+  end repeat
 
-	add 1 to tCharsNum
-	put "<" into tX[tCharsNum]
+  add 1 to tCharsNum
+  put "<" into tX[tCharsNum]
 
-	add 1 to tCharsNum
-	put "/" into tX[tCharsNum]
+  add 1 to tCharsNum
+  put "/" into tX[tCharsNum]
 
-	add 1 to tCharsNum
-	put "a" into tX[tCharsNum]
+  add 1 to tCharsNum
+  put "a" into tX[tCharsNum]
 
-	add 1 to tCharsNum
-	put ">" into tX[tCharsNum]
+  add 1 to tCharsNum
+  put ">" into tX[tCharsNum]
 
-	# REVERSE ARRAY
-	put rigNumToCodepoint(1) into tItemDelimiter
-	put rigArrayReverse(tX, tItemDelimiter) into tX
+  # REVERSE ARRAY
+  put numToCodepoint(1) into tItemDelimiter
+  put rigArrayReverse(tX, tItemDelimiter) into tX
 
-	# WRITE HTML CODE
-	put "<script type=" & quote & "text/javascript" & quote & ">" & return & \
-	"var l=new Array();" & return into tOutput
+  # WRITE HTML CODE
+  put "<script type=" & quote & "text/javascript" & quote & ">" & return & \
+  "var l=new Array();" & return into tOutput
 
-	put 0 into tNum
-	repeat with i = 1 to tCharsNum
-		put tX[i] into tV
+  put 0 into tNum
+  repeat with i = 1 to tCharsNum
+    put tX[i] into tV
 
-		put "l[" & tNum & "]='" & tV & "';" after tOutput
-		add 1 to tNum
-	end repeat
+    put "l[" & tNum & "]='" & tV & "';" after tOutput
+    add 1 to tNum
+  end repeat
 	
-	put return & "for (var i = l.length-1; i >= 0; i=i-1)" & return & \
-	"{" & return & \
-	"if (l[i].substring(0, 1) == '|') document.write(" & quote & "&#" & quote & "+unescape(l[i].substring(1))+" & quote & ";" & quote & ");" & return & \
-	"else document.write(unescape(l[i]));" & return & \
-	"}" & return & \
-	"</script>" after tOutput
+  put return & "for (var i = l.length-1; i >= 0; i=i-1)" & return & \
+  "{" & return & \
+  "if (l[i].substring(0, 1) == '|') document.write(" & quote & "&#" & quote & "+unescape(l[i].substring(1))+" & quote & ";" & quote & ");" & return & \
+  "else document.write(unescape(l[i]));" & return & \
+    "}" & return & \
+    "</script>" after tOutput
 
-	return tOutput
-end rigSafeMailToLink
+    return tOutput
+  end rigSafeMailToLink
 
 
 
@@ -537,81 +581,85 @@ end rigSafeMailToLink
 ----------------------------------------------------------------------*/
 
 function rigAutoLink pStr pType pPopUp
-	put pStr into tStr
-	if pType is empty then
-		put "both" into tType
-	else
-		put pType into tType
-	end if
+  local tStr, tType, tPopUp, tRegEx, tMatchFound, tMS1, tME1
+  local tMS2, tME2, tMS3, tME3, tMS4, tME4, tMS5, tME5, tMS6, tME6
+  local tLink, tReplacement, tEmail
 
-	if pPopUp is TRUE then
-		# USE noopener AND noreferrer TO ADDRESS SECURITY ISSUES OF _blank TARGETS
-		put " rel=" & quote & "noopener noreferrer" & quote && "target=" & quote & "_blank" & quote into tPopUp
-	else
-		put "" into tPopUp
-	end if
+  put pStr into tStr
+  if pType is empty then
+    put "both" into tType
+  else
+    put pType into tType
+  end if
 
-	if tType is not "email" then
-		put "(?i)(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)" into tRegEx
-    
-    		put TRUE into tMatchFound
-    
-    		repeat until tMatchFound is FALSE
-         
-			get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3,tMS4,tME4,tMS5,tME5,tMS6,tME6)
-        
-        		if it is TRUE then
-            			put char tMS2 to tME6 of tStr into tLink
-            
-				if char -1 of tLink is "." then
-                			delete char -1 of tLink
-            			end if
-            
-            			put tLink into tReplacement
-             
-            			if (char 1 of tLink is "w") or (char 1 of tLink is "W") then
-                			put "<a href=" & quote & "http://" before tReplacement
-            			else
-                			put "<a href=" & quote before tReplacement
-            			end if
-             
-            			put quote & tPopUp & ">" & tLink & "</a>" after tReplacement
-             
-            			replace tLink with tReplacement in tStr
-             
-			else
-            			put FALSE into tMatchFound
-			end if
-		end repeat
-	end if
+  if pPopUp is TRUE then
+    # USE noopener AND noreferrer TO ADDRESS SECURITY ISSUES OF _blank TARGETS
+    put " rel=" & quote & "noopener noreferrer" & quote && "target=" & quote & "_blank" & quote into tPopUp
+  else
+    put "" into tPopUp
+  end if
 
-	if tType is not "url" then
-		put "(?i)([a-zA-Z0-9_\.\-\+]+)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-\.]*)" into tRegEx
-    
-    		put TRUE into tMatchFound
-    
-    		repeat until tMatchFound is FALSE
-         
-        		get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3)
-         
-        		if it is TRUE then
-            			put char tMS1 to tME3 of tStr into tEmail
+  if tType is not "email" then
+    put "(?i)(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)" into tRegEx
+  
+    put TRUE into tMatchFound
+  
+    repeat until tMatchFound is FALSE
+       
+      get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3,tMS4,tME4,tMS5,tME5,tMS6,tME6)
+      
+      if it is TRUE then
+        put char tMS2 to tME6 of tStr into tLink
+          
+        if char -1 of tLink is "." then
+          delete char -1 of tLink
+        end if
+          
+        put tLink into tReplacement
+           
+        if (char 1 of tLink is "w") or (char 1 of tLink is "W") then
+          put "<a href=" & quote & "http://" before tReplacement
+        else
+          put "<a href=" & quote before tReplacement
+        end if
+           
+        put quote & tPopUp & ">" & tLink & "</a>" after tReplacement
+           
+        replace tLink with tReplacement in tStr
+           
+      else
+        put FALSE into tMatchFound
+      end if
+    end repeat
+  end if
 
-            			if char -1 of tEmail is "." then
-                			delete char -1 of tEmail
-            			end if
+  if tType is not "url" then
+    put "(?i)([a-zA-Z0-9_\.\-\+]+)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-\.]*)" into tRegEx
+  
+    put TRUE into tMatchFound
+  
+    repeat until tMatchFound is FALSE
+       
+      get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3)
+       
+      if it is TRUE then
+        put char tMS1 to tME3 of tStr into tEmail
 
-            			put rigSafeMailToLink(tEmail) into tReplacement
+        if char -1 of tEmail is "." then
+          delete char -1 of tEmail
+        end if
 
-            			replace tEmail with tReplacement in tStr
-             
-        		else
-            			put FALSE into tMatchFound
-        		end if
-    		end repeat
-	end if
+        put rigSafeMailToLink(tEmail) into tReplacement
 
-	return tStr
+        replace tEmail with tReplacement in tStr
+           
+      else
+        put FALSE into tMatchFound
+      end if
+    end repeat
+  end if
+
+  return tStr
 end rigAutoLink
 
 
@@ -639,6 +687,8 @@ end rigAutoLink
 ----------------------------------------------------------------------*/
 
 function rigUrlPrep pStr pSecure
+  local tStr
+  
 	if (pStr is "http://") or (pStr is "https://") or (pStr is empty) then
 		return ""
 	end if
@@ -683,6 +733,9 @@ end rigUrlPrep
 ----------------------------------------------------------------------*/
 
 function rigUrlTitle pStr pSeparator pLowercase
+  local tSeparator, tReplace, tLowercase, tTransA, tTemp, tStr
+  local tTransAitemNum, tCounter, tTransItemA, tKey, tVal, tRegEx
+  
    if pSeparator is among the items of "dash,underscore,-,_" then
       put pSeparator into tSeparator
    end if
@@ -758,7 +811,7 @@ end rigUrlTitle
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigRedirect
 --|
 --| Author: rabit
@@ -768,17 +821,19 @@ end rigUrlTitle
 --| Requires: rigSiteURL()
 --|
 --| Summary: Header redirect in two flavors.
---|                    For very fine grained control over headers, you could use the Output
---|                    library's rigSetHeader command.
+--|            For very fine grained control over headers, you could use the Output
+--|            library's rigSetHeader command.
 --| 
 --| Format: rigRedirect param1, param2, param3
 --|
 --| Parameters: string <pUri>, string <pMethod> the method: location or redirect, integer <pHttpResponseCode>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigRedirect pUri pMethod pHttpResponseCode
+  local tMethod, tHttpResponseCode, tUri, tRegEx
+  
 	if pMethod is empty then
 		put "location" into tMethod
 	else
@@ -816,7 +871,7 @@ end rigRedirect
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigParseAttributes
 --|
 --| Author: rabit
@@ -832,9 +887,11 @@ end rigRedirect
 --| Parameters: array <pAttributes>, bool <pJavascript>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigParseAttributes pAttributes pJavascript
+private function _rigParseAttributes pAttributes pJavascript
+  local tAttributes, tJavascript, tAtt, tKey, tVal
+  
 	put pAttributes into tAttributes
 
 	if pJavascript is empty then
@@ -894,13 +951,15 @@ end _rigParseAttributes
 ----------------------------------------------------------------------*/
 
 function rigURLstripSpace pURL pSeparator
+  local tRegExWS, tCleanURL, tTopLevel, tTopLevelOffset, tDomain, tSegments
+  
   if pURL <> empty then
     # TRIM WHITESPACE AT THE START AND AT THE END
     put "(^\s+)|(\s+$)" into tRegExWS
     put replacetext(pURL,tRegExWS,empty) into tCleanURL
       
     # GET DOMAIN, DON'T APPLY SEPARATORS TO DOMAIN
-	  put empty into tTopLevel -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+	  put empty into tTopLevel -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
     get matchText(tCleanURL,"(\.[a-zA-Z\s]*/)",tTopLevel)
     put (offset(tTopLevel, tCleanURL)) + (the number of chars of tTopLevel) into tTopLevelOffset
     put char 1 to tTopLevelOffset of tCleanURL into tDomain
@@ -922,6 +981,6 @@ end rigURLstripSpace
 
 
 
---| END OF urlHelper.lc
---| Location:  ./system/helpers/urlHelper.lc
+--| END OF urlHelper.livecodescript
+--| Location:  ./system/helpers/urlHelper.livecodescript
 ----------------------------------------------------------------------

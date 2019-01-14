@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "downloadHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,10 +22,46 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/downloadHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/downloadHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+
+global gRigA
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-28
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -56,6 +86,8 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigForceDownload pFileName pData
+  local tExtension, tMime, tDataLength
+  
 	if (pFileName is empty) or (pData is empty) then
 		return FALSE
 	end if
@@ -72,9 +104,9 @@ command rigForceDownload pFileName pData
 
 	# LOAD THE MIME TYPES
 	try
-		require gAPPPATH & "config/mimes" & gEXT
+		_rigRequire gRigA["APPPATH"] & "config/mimes" & gRigA["EXT"]
 	catch err
-		rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gEXT
+		rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gRigA["EXT"]
 		return FALSE
 	end try
 
@@ -120,6 +152,6 @@ end rigForceDownload
 
 
 
---| END OF downloadHelper.lc
---| Location:  ./system/helpers/downloadHelper.lc
+--| END OF downloadHelper.livecodescript
+--| Location:  ./system/helpers/downloadHelper.livecodescript
 ----------------------------------------------------------------------

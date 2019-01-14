@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "htmlHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,7 +22,7 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/htmlHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/htmlHelper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -36,11 +30,52 @@ end if
 
 
 
+global gRigA
+
 local sNumberedListArray 		-- used by function _rigHtmlList()
+local sStackInUse
 
 
 
-----------------------------------------------------------------------
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-21
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlHeading
 --|
 --| Author: rabit
@@ -50,16 +85,18 @@ local sNumberedListArray 		-- used by function _rigHtmlList()
 --| Requires: --
 --|
 --| Summary: Generates an HTML heading tag.  First param is the data.
---|                   Second param is the size of the heading tag.
+--|            Second param is the size of the heading tag.
 --| 
 --| Format:  rigHtmlHeading(param1, 2)
 --|
 --| Parameters: string <pData>, integer <pH>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlHeading pData pH
+  local tH
+  
 	if pH is empty then
 		put 1 into tH
 	else
@@ -76,7 +113,7 @@ end rigHtmlHeading
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlUL
 --|
 --| Author: rabit
@@ -86,38 +123,40 @@ end rigHtmlHeading
 --| Requires: _rigHtmlList()
 --|
 --| Summary: Generates an HTML unordered list from
---|                   a comma delimited list or from a multi-dimensional array.
+--|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
---|                    of the list may be changed.
+--|            of the list may be changed.
 --| 
 --| Format:  rigHtmlUL(param1, param2)
 --|
 --| Parameters: mixed <pList>, mixed <pAttributes>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlUL pList pAttributes
-	put pList into tList
-	if tList is not an array then
-		if comma is in tList then
-			put 0 into tI
-			repeat for each item thisItem in tList
-				add 1 to ti
-				put thisItem into tTemp[ti]
-			end repeat
+  local tList, tI, tTemp
+  
+  put pList into tList
+  if tList is not an array then
+    if comma is in tList then
+      put 0 into tI
+      repeat for each item thisItem in tList
+        add 1 to tI
+        put thisItem into tTemp[tI]
+      end repeat
 
-			put tTemp into tList
+      put tTemp into tList
 
-		else
-			# SINGLE WORD
-			put tList into tList[1]
-		end if
-	end if
+    else
+      # SINGLE WORD
+      put tList into tList[1]
+    end if
+  end if
 	
-	put empty into sNumberedListArray
+  put empty into sNumberedListArray
 	
-	return _rigHtmlList("ul", tList, pAttributes)
+  return _rigHtmlList("ul", tList, pAttributes)
 end rigHtmlUL
 
 
@@ -127,7 +166,7 @@ end rigHtmlUL
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlOL
 --|
 --| Author: rabit
@@ -137,38 +176,40 @@ end rigHtmlUL
 --| Requires: _rigHtmlList()
 --|
 --| Summary: Generates an HTML ordered list from
---|                   a comma delimited list or from a multi-dimensional array.
+--|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
---|                    of the list may be changed.
+--|            of the list may be changed.
 --| 
 --| Format:  rigHtmlOL(param1, param2)
 --|
 --| Parameters: mixed <pList>, mixed <pAttributes>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlOL pList pAttributes
-	put pList into tList
-	if tList is not an array then
-		if comma is in tList then
-			put 0 into tI
-			repeat for each item thisItem in tList
-				add 1 to ti
-				put thisItem into tTemp[ti]
-			end repeat
+  local tList, tI, tTemp
+  
+  put pList into tList
+  if tList is not an array then
+    if comma is in tList then
+      put 0 into tI
+      repeat for each item thisItem in tList
+        add 1 to tI
+        put thisItem into tTemp[tI]
+      end repeat
 
-			put tTemp into tList
+      put tTemp into tList
 
-		else
-			# SINGLE WORD
-			put tList into tList[1]
-		end if
-	end if
+    else
+      # SINGLE WORD
+      put tList into tList[1]
+    end if
+  end if
 
-	put empty into sNumberedListArray
+  put empty into sNumberedListArray
 
-	return _rigHtmlList("ol", tList, pAttributes)
+  return _rigHtmlList("ol", tList, pAttributes)
 end rigHtmlOL
 
 
@@ -188,9 +229,9 @@ end rigHtmlOL
 --| Requires: --
 --|
 --| Summary: Generates an HTML ordered or unordered list from
---|                   a comma delimited list or from a multi-dimensional array.
+--|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
---|                    of the list may be changed.
+--|            of the list may be changed.
 --| 
 --| Format:  _rigHtmlList(param1, param2, param3, param4)
 --|
@@ -199,208 +240,212 @@ end rigHtmlOL
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitClosingTag
-	# CHECK IF THE ARRAY IS NUMBERED (LOOK AT FIRST KEY ONLY)
-	 if sNumberedListArray is empty then
-      		if (line 1 in the keys of pList) is a number then
-         		put TRUE into sNumberedListArray
-      		else
-         		put FALSE into sNumberedListArray
-      		end if
-   	end if	
+private function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitClosingTag
+  local tAttributes, tList, tI, tTemp, tDepth, tOut, tKey
+  local tVal, tAtts, tRegEx, tMatch, tMatch2, tWriteOpenList
+  local tOmitClosingTag, tLastListItem
+  
+  # CHECK IF THE ARRAY IS NUMBERED (LOOK AT FIRST KEY ONLY)
+  if sNumberedListArray is empty then
+    if (line 1 in the keys of pList) is a number then
+      put TRUE into sNumberedListArray
+    else
+      put FALSE into sNumberedListArray
+    end if
+  end if	
 
-	put pAttributes into tAttributes
-	put pList into tList
-	if tList is not an array then
-		if comma is in tList then
-			put 0 into tI
-			repeat for each item thisItem in tList
-				add 1 to ti
-				put thisItem into tTemp[ti]
-			end repeat
+  put pAttributes into tAttributes
+  put pList into tList
+  if tList is not an array then
+    if comma is in tList then
+      put 0 into tI
+      repeat for each item thisItem in tList
+        add 1 to tI
+        put thisItem into tTemp[tI]
+      end repeat
 
-			put tTemp into tList
+      put tTemp into tList
 
-		else
-			# SINGLE WORD
-			put tList into tList[1]
-		end if
-	end if
+    else
+      # SINGLE WORD
+      put tList into tList[1]
+    end if
+  end if
 
-	# INDENTATION DEPTH
-	if pDepth is empty then
-		put 0 into tDepth
-	else
-		put pDepth into tDepth
-	end if
+  # INDENTATION DEPTH
+  if pDepth is empty then
+    put 0 into tDepth
+  else
+    put pDepth into tDepth
+  end if
 
-	# SET THE INDENTATION BASED ON THE DEPTH
-	repeat tDepth
-		put " " after tOut
-	end repeat
+  # SET THE INDENTATION BASED ON THE DEPTH
+  repeat tDepth
+    put " " after tOut
+  end repeat
 
-	# WERE ANY ATTRIBUTES SUBMITTED?  IF SO GENERATE A STRING
-	if tAttributes is an array then
-		repeat for each key tKey in tAttributes
-			put tAttributes[tKey] into tVal
+  # WERE ANY ATTRIBUTES SUBMITTED?  IF SO GENERATE A STRING
+  if tAttributes is an array then
+    repeat for each key tKey in tAttributes
+      put tAttributes[tKey] into tVal
 
-			put " " & tKey & "=" & quote & tVal & quote after tAtts
-		end repeat
+      put " " & tKey & "=" & quote & tVal & quote after tAtts
+    end repeat
 
-		put tAtts into tAttributes
-	end if
+    put tAtts into tAttributes
+  end if
 
-	put "<li>.+</li>" into tRegEx   
-	put matchText((line -2 of pCurrentOut), tRegEx) into tMatch
+  put "<li>.+</li>" into tRegEx   
+  put matchText((line -2 of pCurrentOut), tRegEx) into tMatch
 
-	put "<" & pType & ".*>" into tRegEx   
-	put matchText((line -2 of pCurrentOut), tRegEx) into tMatch2
+  put "<" & pType & ".*>" into tRegEx   
+  put matchText((line -2 of pCurrentOut), tRegEx) into tMatch2
 
-	# CHECK IF AN OPENING LIST TAG SHOULD BE ADDED TO THE OUTPUT
-	if sNumberedListArray is TRUE then
-      		if ("</li>" is not in (line -2 of pCurrentOut)) and (tMatch2 is not TRUE) then
-         		put TRUE into tWriteOpenList
-      		else
-         		put FALSE into tWriteOpenList
-      		end if
+  # CHECK IF AN OPENING LIST TAG SHOULD BE ADDED TO THE OUTPUT
+  if sNumberedListArray is TRUE then
+    if ("</li>" is not in (line -2 of pCurrentOut)) and (tMatch2 is not TRUE) then
+      put TRUE into tWriteOpenList
+    else
+      put FALSE into tWriteOpenList
+    end if
       
-   	else
-      		if (tMatch is not TRUE) and ((tMatch2 is not TRUE) or (("<" & pType & ">") is not in (line -2 of pCurrentOut))) then
-         		put TRUE into tWriteOpenList
-      		else
-         		put FALSE into tWriteOpenList
-      		end if 
-   	end if
+  else
+    if (tMatch is not TRUE) and ((tMatch2 is not TRUE) or (("<" & pType & ">") is not in (line -2 of pCurrentOut))) then
+      put TRUE into tWriteOpenList
+    else
+      put FALSE into tWriteOpenList
+    end if 
+  end if
    
-   	if tWriteOpenList is TRUE then
+  if tWriteOpenList is TRUE then
 
-		# WRITE THE OPENING LIST TAG
-		put "<" & pType & tAttributes & ">" & return after tOut
+    # WRITE THE OPENING LIST TAG
+    put "<" & pType & tAttributes & ">" & return after tOut
 
-	else
-		put TRUE into tOmitClosingTag
-		put empty into line -1 of tOut
-	end if
+  else
+    put TRUE into tOmitClosingTag
+    put empty into line -1 of tOut
+  end if
 
-	# CYCLE THROUGH THE LIST ELEMENTS.  IF AN ARRAY IS
-	# ENCOUNTERED WE WILL RECURSIVELY CALL _rigHtmlList
-	if (line 1 in the keys of tList) is a number then
-		repeat with i = 1 to (the number of lines in the keys of tList)
-			put tList[i] into tVal
+  # CYCLE THROUGH THE LIST ELEMENTS.  IF AN ARRAY IS
+  # ENCOUNTERED WE WILL RECURSIVELY CALL _rigHtmlList
+  if (line 1 in the keys of tList) is a number then
+    repeat with i = 1 to (the number of lines in the keys of tList)
+      put tList[i] into tVal
 
-			put i into tLastListItem
+      put i into tLastListItem
 
-			if "<" is in line -1 of tOut then
+      if "<" is in line -1 of tOut then
 
-				repeat (tDepth + 2)
-					put " " after tOut
-				end repeat
+        repeat (tDepth + 2)
+          put " " after tOut
+        end repeat
 
-			else
-				put empty into line -1 of tOut
-				put "  " after tOut
-			end if
+      else
+        put empty into line -1 of tOut
+        put "  " after tOut
+      end if
 
-			put "<li>" after tOut
+      put "<li>" after tOut
 
-			if tVal is not an array then
-				put tVal after tOut
-			else
+      if tVal is not an array then
+        put tVal after tOut
+      else
 
-				if tLastListItem is not a number then
-					put tLastListItem & return after tOut
-				else
-					put char 1 to -5 of tOut into tOut
-				end if
+        if tLastListItem is not a number then
+          put tLastListItem & return after tOut
+        else
+          put char 1 to -5 of tOut into tOut
+        end if
 
-				put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut
+        put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut
 
-				if tOmitClosingTag is not TRUE then
+        if tOmitClosingTag is not TRUE then
 
-					repeat (tDepth + 2)
-						put " " after tOut
-					end repeat
-				else
-					put empty into line -1 of tOut
-					put "  " after tOut
-				end if
-			end if
+          repeat (tDepth + 2)
+            put " " after tOut
+          end repeat
+        else
+          put empty into line -1 of tOut
+          put "  " after tOut
+        end if
+      end if
 
-			if ("<li>" is not in (line -1 of tOut)) and  ("</li>" is in (line -2 of tOut)) then
-			else
-				put "</li>" & return after tOut
-			end if
+      if ("<li>" is not in (line -1 of tOut)) and  ("</li>" is in (line -2 of tOut)) then
+      else
+        put "</li>" & return after tOut
+      end if
 
-		end repeat
+    end repeat
 
-	else
+  else
 
-		repeat for each key tKey in tList
-			put tList[tKey] into tVal
+    repeat for each key tKey in tList
+      put tList[tKey] into tVal
 
-			put tKey into tLastListItem
+      put tKey into tLastListItem
 
-			if "<" is in line -1 of tOut then
+      if "<" is in line -1 of tOut then
 
-				repeat (tDepth + 2)
-					put " " after tOut
-				end repeat
-			else
-				put empty into line -1 of tOut
-				put "  " after tOut
-			end if
+        repeat (tDepth + 2)
+          put " " after tOut
+        end repeat
+      else
+        put empty into line -1 of tOut
+        put "  " after tOut
+      end if
 
-			put "<li>" after tOut
+      put "<li>" after tOut
 
-			if tVal is not an array then
-				put tVal after tOut
-			else
-				if tLastListItem is not a number then
-					put tLastListItem & return after tOut
-				else
-					put char 1 to -5 of tOut into tOut
-				end if
+      if tVal is not an array then
+        put tVal after tOut
+      else
+        if tLastListItem is not a number then
+          put tLastListItem & return after tOut
+        else
+          put char 1 to -5 of tOut into tOut
+        end if
 
-				put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut
+        put _rigHtmlList(pType, tVal, , (tDepth + 4), tOut, tOmitClosingTag) after tOut
 
-				if tOmitClosingTag is not TRUE then
+        if tOmitClosingTag is not TRUE then
 
-					repeat (tDepth + 2)
-						put " " after tOut
-					end repeat
-				else
-					put empty into line -1 of tOut
-					put "  " after tOut
-				end if
+          repeat (tDepth + 2)
+            put " " after tOut
+          end repeat
+        else
+          put empty into line -1 of tOut
+          put "  " after tOut
+        end if
 
-			end if
+      end if
 
-			if ("<li>" is not in (line -1 of tOut)) and  ("</li>" is in (line -2 of tOut)) then
-			else
-				put "</li>" & return after tOut
-			end if
+      if ("<li>" is not in (line -1 of tOut)) and  ("</li>" is in (line -2 of tOut)) then
+      else
+        put "</li>" & return after tOut
+      end if
 
-		end repeat
+    end repeat
 
-	end if
+  end if
 
-	# SET THE INDENTATION FOR THE CLOSING TAG
-	repeat tDepth
-		put " " after tOut
-	end repeat
+  # SET THE INDENTATION FOR THE CLOSING TAG
+  repeat tDepth
+    put " " after tOut
+  end repeat
 
-	if pOmitClosingTag is not TRUE then
-		# WRITE THE CLOSING LIST TAG
-		put "</" & pType & ">" & return after tOut
-	end if
+  if pOmitClosingTag is not TRUE then
+    # WRITE THE CLOSING LIST TAG
+    put "</" & pType & ">" & return after tOut
+  end if
 
-	return tOut
+  return tOut
 end _rigHtmlList
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlBr
 --|
 --| Author: rabit
@@ -416,9 +461,11 @@ end _rigHtmlList
 --| Parameters: integer <pNum>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlBr pNum
+  local tNum, tBrTags
+  
 	if pNum is empty then
 		put 1 into tNum
 	else
@@ -439,7 +486,7 @@ end rigHtmlBr
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlImg
 --|
 --| Author: rabit
@@ -455,9 +502,12 @@ end rigHtmlBr
 --| Parameters: mixed <pSrc>, bool <pIndexPage>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlImg pSrc pIndexPage
+  local tIndexPage, tKey, tSrc, tImg, tK, tV, tURL
+  local tBaseURL
+  
 	if pIndexPage is empty then
 		put FALSE into tIndexPage
 	else
@@ -505,10 +555,10 @@ end rigHtmlImg
 --| FUNCTION rigHtmlDocType
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 09-10-09
---| Last Mod: 17-09-15
---| Requires: rigLogMessage
+--| Version:  1.2
+--| Created: 2009-10-09
+--| Last Mod: 2019-01-03
+--| Requires: _rigRequire, rigLogMessage
 --|
 --| Summary: Generates a page document type declaration.
 --|
@@ -524,25 +574,27 @@ end rigHtmlImg
 ----------------------------------------------------------------------*/
 
 function rigHtmlDocType pType
+  local tType
+  
 	if pType is empty then
-		put "xhtml1-strict" into tType
+		put "html5" into tType
 	else
 		put pType into tType
 	end if
 
-	if gDocTypes is not an array then
+	if gRigA["docTypes"] is not an array then
 		# LOAD THE DOC TYPES
 		try
-			require gAPPPATH & "config/doctypes" & gEXT
+			_rigRequire gRigA["APPPATH"] & "config/doctypes" & gRigA["EXT"]
 		catch err
-			rigLogMessage "error", "An error occured while trying to include file:" && "doctypes" & gEXT
+			rigLogMessage "error", "An error occured while trying to include file:" && "doctypes" & gRigA["EXT"]
 			return FALSE
 		end try
 
 	end if
 
-	if gDocTypes[tType] is not empty then
-		return gDocTypes[tType]
+	if gRigA["docTypes"][tType] is not empty then
+		return gRigA["docTypes"][tType]
 	end if
 
 	return FALSE
@@ -568,12 +620,14 @@ end rigHtmlDocType
 --| Format:  rigHtmlLinkTag(param1, param2, param3, param4, param5, param6)
 --|
 --| Parameters: mixed <pHref> stylesheet hrefs or an array, string <pRel>, string <pType>, string <pTitle>,
---|                       string <pMedia>, bool <pIndexPage> should indexPage be added to the css path
+--|               string <pMedia>, bool <pIndexPage> should indexPage be added to the css path
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage
+  local tRel, tType, tIndexPage, tLink, tK, tV, tURL, tBaseURL
+  
 	if pRel is empty then
 		put "stylesheet" into tRel
 	else
@@ -654,7 +708,7 @@ end rigHtmlLinkTag
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlJsLink
 --|
 --| Author: rabit
@@ -668,12 +722,14 @@ end rigHtmlLinkTag
 --| Format:  rigHtmlJsLink(param1, param2)
 --|
 --| Parameters: mixed <pSrc>, bool <pIndexPage> should indexPage be added to the css path,
---|                      string <pNewLine>
+--|               string <pNewLine>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlJsLink pSrc pIndexPage pNewLine
+  local tIndexPage, tNewLine, tK, tV, tLink, tURL, tBaseURL
+  
 	if pIndexPage is empty then
 		put FALSE into tIndexPage
 	else
@@ -729,7 +785,7 @@ end rigHtmlJsLink
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlMeta
 --|
 --| Author: rabit
@@ -745,9 +801,12 @@ end rigHtmlJsLink
 --| Parameters: mixed <pName>, string <pContent>, string <pType>, string <pNewLine>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlMeta pName pContent pType pNewLine
+  local tType, tNewLine, tNameA, tKey, tMeta, tMetaName
+  local tContent, tStr
+  
 	if pType is empty then
 		put "name" into tType
 	else
@@ -763,21 +822,21 @@ function rigHtmlMeta pName pContent pType pNewLine
 	# SINCE WE ALLOW THE DATA TO BE PASSED AS A STRING, A SIMPLE ARRAY
 	# OR A MULTIDIMENSIONAL ONE, WE NEED TO DO A LITTLE PREPPING.
 	if pName is not an array then
-		put pName into tName[1]["name"]
-		put pContent into tName[1]["content"]
-		put tType into tName[1]["type"]
-		put tNewLine into tName[1]["newline"]
+		put pName into tNameA[1]["name"]
+		put pContent into tNameA[1]["content"]
+		put tType into tNameA[1]["type"]
+		put tNewLine into tNameA[1]["newline"]
 	else
 		# TURN SINGLE ARRAY INTO MULTIDIMENSIONAL
 		if pName["name"] is not empty then
-			put pName into tName[1]
+			put pName into tNameA[1]
 		else
-			put pName into tName
+			put pName into tNameA
 		end if
 	end if
 
-	repeat for each key tKey in tName
-		put tName[tKey] into tMeta
+	repeat for each key tKey in tNameA
+		put tNameA[tKey] into tMeta
 
 		if (tMeta["type"] is empty) or (tMeta["type"] is "name") then
 			put "name" into tType
@@ -815,7 +874,7 @@ end rigHtmlMeta
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigHtmlNbs
 --|
 --| Author: rabit
@@ -831,9 +890,11 @@ end rigHtmlMeta
 --| Parameters: integer <pNum>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigHtmlNbs pNum
+  local tNum, tNbsTags
+  
 	if pNum is empty then
 		put 1 into tNum
 	else
@@ -856,6 +917,6 @@ end rigHtmlNbs
 
 
 
---| END OF htmlHelper.lc
---| Location:  ./system/helpers/htmlHelper.lc
+--| END OF htmlHelper.livecodescript
+--| Location:  ./system/helpers/htmlHelper.livecodescript
 ----------------------------------------------------------------------

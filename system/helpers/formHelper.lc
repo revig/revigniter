@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "formHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,7 +22,7 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/formHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/formHelper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -36,7 +30,48 @@ end if
 
 
 
-local sPreppedFields
+global gRigA
+
+local sPreppedFields, sStackInUse
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-19
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
 
 
 /*----------------------------------------------------------------------
@@ -47,19 +82,23 @@ local sPreppedFields
 --| Created: 28-07-09
 --| Last Mod: 15-07-12
 --| Requires: rigSiteURL(), _rigAttributesToString(), rigFormHidden(), rigFetchConfigItem()
---|           rigGetCSRFhash(), rigGetCSRFtokenName()
+--|            rigGetCSRFhash(), rigGetCSRFtokenName()
 --|
 --| Summary: Creates the opening portion of the form.
 --| 
 --| Format:  rigFormOpen(param1, param2, param3)
 --|
---| Parameters: string <pAction> the URI segments of the form destination, array <pAttributes> a key/value pair of attributes,
---|                       array <pHidden> a key/value pair hidden data 
+--| Parameters: string <pAction> the URI segments of the form destination,
+--|               array <pAttributes> a key/value pair of attributes,
+--|               array <pHidden> a key/value pair hidden data 
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigFormOpen pAction pAttributes pHidden
+  local tAttributes, tURIstring, tAction, tForm, tCSRFprotection, tBaseURL
+  local tStandardURLs, tURIsegments, tSegment, tHiddenURI
+  
 	if pAttributes is not an array then
 		put "method=" & quote & "post" & quote into tAttributes
 	else
@@ -135,17 +174,20 @@ end rigFormOpen
 --| Requires: rigFormOpen()
 --|
 --| Summary: Form declaration - multipart type. Creates the opening portion
---|                   of the form, but with "multipart/form-data".
+--|            of the form, but with "multipart/form-data".
 --| 
 --| Format:  rigFormOpenMultiPart(param1, param2, param3)
 --|
---| Parameters: string <pAction> the URI segments of the form destination, array <pAttributes> a key/value pair of attributes,
--- |                      array <pHidden> a key/value pair hidden data 
+--| Parameters: string <pAction> the URI segments of the form destination,
+--|               array <pAttributes> a key/value pair of attributes,
+--|               array <pHidden> a key/value pair hidden data 
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigFormOpenMultiPart pAction pAttributes pHidden
+  local tAttributes
+  
 	put pAttributes into tAttributes
 	put "multipart/form-data" into tAttributes["enctype"]
 
@@ -168,7 +210,7 @@ end rigFormOpenMultiPart
 --| Requires: rigFormPrep()
 --|
 --| Summary: Generates hidden fields.  You can pass a simple
---|               key/value string or an associative array with multiple values.
+--|            key/value string or an associative array with multiple values.
 --| 
 --| Format:  rigFormHidden(param1, param2, param3)
 --|
@@ -178,6 +220,8 @@ end rigFormOpenMultiPart
 ----------------------------------------------------------------------*/
 
 function rigFormHidden pName pValue pRecursion
+  local tRecursion, tForm, tKey, tK, tV
+  
 	if pRecursion is empty then
 		put FALSE into tRecursion
 	else
@@ -234,6 +278,8 @@ end rigFormHidden
 ----------------------------------------------------------------------*/
 
 function rigFormInput pData pValue pExtra
+  local tDefaults
+  
 	put "text" into tDefaults["type"]
 
 	if pData is not an array then
@@ -272,6 +318,8 @@ end rigFormInput
 ----------------------------------------------------------------------*/
 
 function rigFormPassword pData pValue pExtra
+  local tData
+  
 	put pData into tData
 
 	if tData is not an array then
@@ -307,6 +355,8 @@ end rigFormPassword
 ----------------------------------------------------------------------*/
 
 function rigFormUpload pData pValue pExtra
+  local tData
+  
 	put pData into tData
 
 	if tData is not an array then
@@ -343,6 +393,8 @@ end rigFormUpload
 ----------------------------------------------------------------------*/
 
 function rigFormTextarea pData pValue pExtra
+  local tData, tDefaults, tVal, tName
+  
 	put pData into tData
 
 	if tData is not an array then
@@ -437,13 +489,17 @@ end rigFormMultiselect
 --| 
 --| Format:  rigFormDropDown(param1, param2[, param3][, param4][, param5])
 --|
---| Parameters: string <pName>, array <pOptions>, mixed <pSelected> (optional), string <pExtra> (optional), 
---| 						string <pSortType> (optional) can be "asctext", "desctext", "ascnum" or "descnum"
+--| Parameters: string <pName>, array <pOptions>, mixed <pSelected> (optional), 
+--| 						string <pExtra> (optional), string <pSortType> (optional) can be
+--|              "asctext", "desctext", "ascnum" or "descnum"
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigFormDropDown pName pOptions pSelected pExtra pSortType
+  local tOptions, tSelected, tExtra, tMultiple, tForm, tSelectedAsElementsList
+  local tKey, tVal, tValKeys, tSel, tValue, tAdditionalAttributes
+  
 	put pOptions into tOptions
 	put pSelected into tSelected
 	
@@ -584,6 +640,8 @@ end rigFormDropDown
 ----------------------------------------------------------------------*/
 
 function rigFormCheckbox pData pValue pChecked pExtra
+  local tChecked, tData, tDefaults
+  
 	if pChecked is empty then
 		put FALSE into tChecked
 	else
@@ -671,6 +729,8 @@ end rigFormCheckbox
 ----------------------------------------------------------------------*/
 
 function rigFormRadio pData pValue pChecked pExtra
+  local tChecked, tData
+  
 	if pChecked is empty then
 		put FALSE into tChecked
 	else
@@ -713,6 +773,8 @@ end rigFormRadio
 ----------------------------------------------------------------------*/
 
 function rigSubmitButton pData pValue pExtra
+  local tData, tDefaults
+  
 	put pData into tData
 
 	put "submit" into tDefaults["type"]
@@ -753,6 +815,8 @@ end rigSubmitButton
 ----------------------------------------------------------------------*/
 
 function rigResetButton pData pValue pExtra
+  local tData, tDefaults
+  
 	put pData into tData
 
 	put "reset" into tDefaults["type"]
@@ -794,6 +858,8 @@ end rigResetButton
 ----------------------------------------------------------------------*/
 
 function rigFormButton pData pContent pExtra
+  local tContent, tData, tDefaults
+  
 	put pContent into tContent
 	put pData into tData
 
@@ -846,12 +912,15 @@ end rigFormButton
 --| 
 --| Format:  rigFormLabel(param1, param2, param3)
 --|
---| Parameters: string <pLabelText> text to appear onscreen, string <pID> id the label applies to, array <pAttributes> additional attributes
+--| Parameters: string <pLabelText> text to appear onscreen, string <pID> id the label applies to,
+--|               array <pAttributes> additional attributes
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigFormLabel pLabelText pID pAttributes
+  local tLabel
+  
 	put "<label" into tLabel
 
 	if pID <> "" then
@@ -896,6 +965,8 @@ end rigFormLabel
 ----------------------------------------------------------------------*/
 
 function rigFormFieldset pLegendText pAttributes
+  local tFieldset
+  
 	put "<fieldset" into tFieldset
 	put _rigAttributesToString(pAttributes, FALSE) after tFieldset
 	put ">" & return after tFieldset
@@ -988,6 +1059,8 @@ end rigFormClose
 ----------------------------------------------------------------------*/
 
 function rigFormPrep pStr pFieldName
+  local tStr, tKey, tTemp, tRegEx, tReplacement, tStrToReplaceInFoundStr
+  
 	put pStr into tStr
 
 	# IF THE FIELD NAME IS AN ARRAY WE DO THIS RECURSIVELY
@@ -1010,7 +1083,6 @@ function rigFormPrep pStr pFieldName
 		return tStr
 	end if
 
-   
 	put "__TEMP_AMPERSANDS__" into tTemp
     
 	# REPLACE ENTITIES TO TEMPORARY MARKERS SO THAT 
@@ -1073,6 +1145,8 @@ end rigFormPrep
 ----------------------------------------------------------------------*/
 
 function rigSetValue pField pDefault pHtmlEscape
+  local tHtmlEscape
+  
 	if pHtmlEscape is empty then
 		put TRUE into tHtmlEscape
 	else
@@ -1106,7 +1180,7 @@ end rigSetValue
 --| Requires: rigSetSelectCheckboxRadio()
 --|
 --| Summary: Let's you set the selected value of a <select> menu via data in the POST array.
---|                   If Form Validation is active it retrieves the info from the validation library.
+--|            If Form Validation is active it retrieves the info from the validation library.
 --| 
 --| Format:  rigSetSelect(param1, param2, param3)
 --|
@@ -1116,6 +1190,8 @@ end rigSetValue
 ----------------------------------------------------------------------*/
 
 function rigSetSelect pField pValue pDefault
+  local tStatusMarker, tElement
+  
 	put "selected" into tStatusMarker
 	put "select" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1138,7 +1214,7 @@ end rigSetSelect
 --| Requires: rigSetSelectCheckboxRadio()
 --|
 --| Summary: Let's you set the selected value of a checkbox via the value in the POST array.
---|                    If Form Validation is active it retrieves the info from the validation library.
+--|            If Form Validation is active it retrieves the info from the validation library.
 --| 
 --| Format:  rigSetCheckbox(param1, param2, param3)
 --|
@@ -1148,6 +1224,8 @@ end rigSetSelect
 ----------------------------------------------------------------------*/
 
 function rigSetCheckbox pField pValue pDefault
+  local tStatusMarker, tElement
+  
 	put "checked" into tStatusMarker
 	put "checkbox" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1170,7 +1248,7 @@ end rigSetCheckbox
 --| Requires: rigSetSelectCheckboxRadio()
 --|
 --| Summary: Let's you set the selected value of a radio field via info in the POST array.
---|                   If Form Validation is active it retrieves the info from the validation library.
+--|            If Form Validation is active it retrieves the info from the validation library.
 --| 
 --| Format: rigSetRadio(param1, param2, param3)
 --|
@@ -1180,6 +1258,8 @@ end rigSetCheckbox
 ----------------------------------------------------------------------*/
 
 function rigSetRadio pField pValue pDefault
+  local tStatusMarker, tElement
+  
 	put "checked" into tStatusMarker
 	put "radio" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1212,6 +1292,8 @@ end rigSetRadio
 ----------------------------------------------------------------------*/
 
 function rigSetSelectCheckboxRadio pField pValue pDefault pStatusMarker pElement
+  local tField, tDefault, tFieldAsElementsList
+  
 	put pField into tField
 
 	if pDefault is empty then
@@ -1287,7 +1369,7 @@ end rigSetSelectCheckboxRadio
 --| Requires: rigLibIsLoaded(), rigLoaderLoadLibrary, rigFormValidError()
 --|
 --| Summary: Returns the error for a specific form field.  This is a helper for the
---|                    form validation library.
+--|            form validation library.
 --| 
 --| Format:  rigFormError(param1, param2, param3)
 --|
@@ -1327,7 +1409,7 @@ end rigFormError
 --| Requires: rigLibIsLoaded(), rigLoaderLoadLibrary, rigFormValidErrorString()
 --|
 --| Summary: Returns all the errors associated with a form submission.  This is a helper
---|                   function for the form validation library.
+--|            function for the form validation library.
 --| 
 --| Format:  rigValidationErrors(param1, param2)
 --|
@@ -1375,7 +1457,10 @@ end rigValidationErrors
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigParseFormAttributes pAttributes pDefault
+private function _rigParseFormAttributes pAttributes pDefault
+  local tDefault, tAttributesKeysList, tKey, tFoundLineNum, tRemainingAtts
+  local tAtt, tVal
+  
 	put pDefault into tDefault
     
 	set the wholematches to true
@@ -1450,7 +1535,9 @@ end _rigParseFormAttributes
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigAttributesToString pAttributes pFormtag
+private function _rigAttributesToString pAttributes pFormtag
+  local tAttributes, tFormtag, tCharset, tAtts
+  
 	put pAttributes into tAttributes
     
 	if pFormtag is empty then
@@ -1510,6 +1597,6 @@ end _rigAttributesToString
 
 
 
---| END OF formHelper.lc
---| Location:  ./system/helpers/formHelper.lc
+--| END OF formHelper.livecodescript
+--| Location:  ./system/helpers/formHelper.livecodescript
 ----------------------------------------------------------------------

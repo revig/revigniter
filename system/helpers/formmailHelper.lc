@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "formmailHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,7 +22,7 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/formmail_helper.html
+# @link		    https://revigniter.com/userGuide/helpers/formmail_helper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -36,8 +30,41 @@ end if
 
 
 
-# DECLARE VARIABLES
+global gRigA
+
 local sRawText, sFMtextComplete, sFMprefix, sFMsuffix, sFMvars
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-28
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target <> the short name of me then
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -57,7 +84,7 @@ local sRawText, sFMtextComplete, sFMprefix, sFMsuffix, sFMvars
 --| Format:  rigFormMail(param1, param2, param3)
 --|
 --| Parameters: string <pFilePath> path to template relative to root, array <pFormMailVars> data to replace
---|                       the placeholders with, string <pPrefix>, string <pSuffix>
+--|               the placeholders with, string <pPrefix>, string <pSuffix>
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
@@ -100,7 +127,7 @@ end rigFormMail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigFormMailReplace
 --|
 --| Author: rabit
@@ -116,9 +143,11 @@ end rigFormMail
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigFormMailReplace
+  local tRegEx, tReplacement
+  
 	put "(" & sFMprefix & "[A-Za-z1-9]+" & sFMsuffix & ")" into tRegEx
 	put "_callback_rigFmSubstitute" into tReplacement
 
@@ -149,7 +178,9 @@ end rigFormMailReplace
 --| Return: string
 ----------------------------------------------------------------------*/
 
-command rigFmSubstitute pTags	
+command rigFmSubstitute pTags
+  local tPrefixNum, tSuffixNum, tKey
+  
 	put 1 + (the number of chars of sFMprefix) into tPrefixNum
 	put -1 - (the number of chars of sFMsuffix) into tSuffixNum
 	put char tPrefixNum to tSuffixNum of pTags into tKey
@@ -165,6 +196,6 @@ end rigFmSubstitute
 
 
 
---| END OF formmailHelper.lc
---| Location:  ./system/helpers/formmailHelper.lc
+--| END OF formmailHelper.livecodescript
+--| Location:  ./system/helpers/formmailHelper.livecodescript
 ----------------------------------------------------------------------

@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "cookieHelper"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -28,10 +22,51 @@ end if
 # @subpackage	Helpers
 # @category	  Helpers
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/helpers/cookieHelper.html
+# @link		    https://revigniter.com/userGuide/helpers/cookieHelper.html
 ##
 
 ## ------------------------------------------------------------------------
+
+
+
+global gRigA
+
+local sStackInUse
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-13
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -75,7 +110,7 @@ end rigSetCookie
 --| Version:  1.6
 --| Created: 30-05-09
 --| Last Mod: 03-07-16
---| Requires: Input.lc, rigGetCookies(), rigConfigItem(), rigVarCookie()
+--| Requires: Input.lc, _rigGetCookies(), rigConfigItem(), rigVarCookie()
 --|
 --| Summary: Fetch an item from the COOKIE array.
 --| 
@@ -87,6 +122,9 @@ end rigSetCookie
 ----------------------------------------------------------------------*/
 
 function rigGetCookie pName pXssFlag
+  local tXssFlag, tPrefix, tCookiesArray, tCookieVal, tURLdecodedCookieVal
+  local tDecodedCookieVal
+  
 	if pXssFlag is empty then
 		put FALSE into tXssFlag
 	else
@@ -94,7 +132,7 @@ function rigGetCookie pName pXssFlag
 	end if
 
 	put empty into tPrefix
-	put rigGetCookies() into tCookiesArray
+	put _rigGetCookies() into tCookiesArray
 
 	if (pName is not among the keys of tCookiesArray) and (rigConfigItem("cookiePrefix") is not empty) then
 		put rigConfigItem("cookiePrefix") into tPrefix 
@@ -107,7 +145,7 @@ function rigGetCookie pName pXssFlag
     put base64Decode(tURLdecodedCookieVal) into tDecodedCookieVal
 		# IF THE VALUE IS MARKED AS ARRAY DECODE IT
     if char 1 to 2 of tDecodedCookieVal is "!a" then
-      if (char 1 to 3 of tDecodedCookieVal is ("!a" & rigNumToCodepoint(1))) and (char -3 to -1 of tDecodedCookieVal is (rigNumToCodepoint(1) & "a!")) then
+      if (char 1 to 3 of tDecodedCookieVal is ("!a" & numToCodepoint(1))) and (char -3 to -1 of tDecodedCookieVal is (numToCodepoint(1) & "a!")) then
         put arrayDecode(char 4 to -4 of tDecodedCookieVal) into tDecodedCookieVal
       end if
     end if
@@ -124,7 +162,7 @@ end rigGetCookie
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigGetCookies
+--| FUNCTION _rigGetCookies
 --|
 --| Author: Sarah Reichelt
 --| Modification: rabit
@@ -135,16 +173,18 @@ end rigGetCookie
 --|
 --| Summary: Fetch all cookies stored for this site / page.
 --| 
---| Format:  rigGetCookies()
+--| Format:  _rigGetCookies()
 --|
 --| Parameters: --
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigGetCookies
-	if gCOOKIE is not empty then
-		put gCOOKIE into tCookiesRaw
+private function _rigGetCookies
+  local tCookiesRaw, tCookieName, tCookiesA
+  
+	if gRigA["COOKIE"] is not empty then
+		put gRigA["COOKIE"] into tCookiesRaw
 	else
 		put $_SERVER["HTTP_COOKIE"] into tCookiesRaw
 	end if
@@ -155,17 +195,17 @@ function rigGetCookies
 		repeat for each line cookie in tCookiesRaw
 		  put item 1 of cookie into tCookieName
 			if char 1 of tCookieName = space then delete char 1 of tCookieName
-        put base64Decode(urlDecode(item 2 of cookie)) into tCookies[tCookieName]
+        put base64Decode(urlDecode(item 2 of cookie)) into tCookiesA[tCookieName]
       
 		end repeat
 	else
 		put item 1 of tCookiesRaw into tCookieName
 		if char 1 of tCookieName = space then delete char 1 of tCookieName
-      put base64Decode(urlDecode(item 2 of tCookiesRaw)) into tCookies[tCookieName]
+      put base64Decode(urlDecode(item 2 of tCookiesRaw)) into tCookiesA[tCookieName]
 	end if
 
-	return tCookies
-end rigGetCookies
+	return tCookiesA
+end _rigGetCookies
 
 
 
@@ -203,6 +243,6 @@ end rigDeleteCookie
 
 
 
---| END OF cookieHelper.lc
---| Location:  ./system/helpers/cookieHelper.lc
+--| END OF cookieHelper.livecodescript
+--| Location:  ./system/helpers/cookieHelper.livecodescript
 ----------------------------------------------------------------------
