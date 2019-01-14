@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Email"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -30,63 +24,137 @@ end if
 # @subpackage	Libraries
 # @category	  Mail
 # @author		  rabit@revigniter.com
-# @link		    http://revigniter.com/userGuide/libraries/email.html
+# @link		    https://revigniter.com/userGuide/libraries/email.html
 ##
 
 ## ------------------------------------------------------------------------
 
 
-# LOGGING
-rigLogMessage "debug", "Email Library Loaded"
 
-# DECLARE VARIABLES
-local sMailUseragent, sMailpath, sProtocol, sSmtpHost, sSmtpUser, sSmtpPass, sSmtpPort, sSmtpTimeout, sWordwrap, sWrapchars, sMailtype, sCharset, sMultipart, sAltMessage
-local sValidate, sPriority, sMailNewline, sCrlf, sSendMultipart, sBccBatchMode, sBccBatchSize, _sSubject, _sBody, _sFinalbody, _sAltBoundary, _sAtcBoundary
-local _sHeaderStr, _sSmtpConnect, _sEncoding, _sIP, _sSmtpAuth, _sReplytoFlag, _sDebugMsg, _sRecipients, _sCcArray, _sBccArray, _sHeaders, _sAttachName
-local _sAttachType, _sAttachDisp, _sProtocols, _sBaseCharsets, _sBitDepths, _sPriorities, _sSmtpReply, _sSmtpError, _sSmtpSuccess, _sSmtpReadyForNextCommand
+global gRigA
 
-local sValidSetMethods
+local sEmailA ----- keys are: mailUseragent, mailpath, smtpHost, smtpUser, smtpPass, smtpPort, smtpTimeout,
+                ----- wrapchars, charset, validate, bccBatchMode, bccBatchSize, altMessage, mailtype, wordwrap,
+                ----- protocol, priority, mailNewline, crlf
+                
+local sEmailArrayKeys, sValidSetHandlers, sMultipart, sSendMultipart, sStackInUse
 
-# SET INITIAL VALUES
-put "revIgniter" into sMailUseragent
-put "/usr/sbin/sendmail" into sMailpath		-- Sendmail path
-put "sendmail" into sProtocol 							-- mail/sendmail/smtp
-put "25" into sSmtpPort										-- SMTP Port
-put 300000 into sSmtpTimeout							-- SMTP Timeout in milliseconds
-put TRUE into sWordwrap									-- TRUE/FALSE  Turns word-wrap on/off
-put "76" into sWrapchars									-- Number of characters to wrap at
-put "text" into sMailtype									-- text/html  Defines email formatting
-put "utf-8" into sCharset									-- Default char set: iso-8859-1 or us-ascii
-put "mixed" into sMultipart								-- "mixed" (in the body) or "related" (separate)
-put FALSE into sValidate									-- TRUE/FALSE.  Enables email validation
-put "3" into sPriority											-- Default priority (1 - 5)
--- put "\n" into sMailNewline
--- put "\n" into sCrlf
-put LF into sMailNewline										-- Default newline.  CRLF or LF or numToChar(13) / numToCodepoint(13) (Use CRLF to comply with RFC 822)
-put LF into sCrlf													-- The RFC 2045 compliant CRLF for quoted-printable is numberToChar(13) & numberToChar(10).  Apparently some servers,
-																					-- even on the receiving end think they need to muck with CRLFs, so using LF, while
-																					-- distasteful, is the only thing that seems to work for all environments.
-put TRUE into sSendMultipart							-- TRUE/FALSE - Yahoo does not like multipart alternative, so this is an override.  Set to FALSE for Yahoo.
-put FALSE into sBccBatchMode							-- TRUE/FALSE  Turns on/off Bcc batch feature
-put 200 into sBccBatchSize								-- If bcc_batch_mode = TRUE, sets max number of Bccs in each batch
-put "8bit" into _sEncoding
-put FALSE into _sIP
-put FALSE into _sSmtpAuth
-put FALSE into _sReplytoFlag
-put "mail" into _sProtocols[1]
-put "sendmail" into _sProtocols[2]
-put "smtp" into _sProtocols[3]
-put "us-ascii" into _sBaseCharsets[1]			-- 7-bit charsets (excluding language suffix)
-put "iso-2022-" into _sBaseCharsets[2]		-- 7-bit charsets (excluding language suffix)
-put "7bit" into _sBitDepths[1]
-put "8bit" into _sBitDepths[2]
-put "1 (Highest)" into _sPriorities[1]
-put "2 (High)" into _sPriorities[2]
-put "3 (Normal)" into _sPriorities[3]
-put "4 (Low)" into _sPriorities[4]
-put "5 (Lowest)" into _sPriorities[5]
+local _sSubject, _sBody, _sFinalbody, _sAltBoundary, _sAtcBoundary
+local _sHeaderStr, _sSmtpConnect, _sEncoding, _sIP, _sSmtpAuth, _sReplytoFlag, _sDebugMsg
+local _sRecipients, _sCcArray, _sBccArray, _sHeaders, _sAttachName
+local _sAttachType, _sAttachDisp, _sProtocols, _sBaseCharsets, _sBitDepths, _sPriorities, _sSmtpReply
+local _sSmtpError, _sSmtpSuccess, _sSmtpReadyForNextCommand
 
-put "rigSet_sAltMessage,rigSet_sMailtype,rigSet_sWordwrap,rigSet_sProtocol,rigSet_sPriority,rigSet_sMailNewline,rigSet_sNewline,rigSet_sCrlf" into sValidSetMethods
+
+
+
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-11
+ --| Last Mod: --
+ --| Requires: rigLogMessage, _rigSetDefaultValues
+ --|
+ --| Summary:  Run security check and set initial values.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Email Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetDefaultValues
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set default values for library variables.
+--| 
+--| Format:  _rigSetDefaultValues
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigSetDefaultValues
+  put "revIgniter" into sEmailA["mailUseragent"]
+  put "/usr/sbin/sendmail" into sEmailA["mailpath"]    -- Sendmail path
+  put "sendmail" into sEmailA["protocol"]                -- sendmail or smtp
+  put "25" into sEmailA["smtpPort"]                      -- SMTP Port
+  put 300000 into sEmailA["smtpTimeout"]               -- SMTP Timeout in milliseconds
+  put TRUE into sEmailA["wordwrap"]                     -- TRUE/FALSE  Turns word-wrap on/off
+  put "76" into sEmailA["wrapchars"]                    -- Number of characters to wrap at
+  put "text" into sEmailA["mailtype"]                     -- text/html  Defines email formatting
+  put "utf-8" into sEmailA["charset"]                    -- Default char set: iso-8859-1 or us-ascii
+  put "mixed" into sMultipart                              -- "mixed" (in the body) or "related" (separate)
+  put FALSE into sEmailA["validate"]									  -- TRUE/FALSE.  Enables email validation
+  put "3" into sEmailA["priority"]										  -- Default priority (1 - 5)
+  -- put "\n" into sEmailA["mailNewline"]
+  -- put "\n" into sEmailA["crlf"]
+  put LF into sEmailA["mailNewline"]									  -- Default newline. CRLF or LF or numToChar(13) / numToCodepoint(13) (Use CRLF to comply with RFC 822)
+  put LF into sEmailA["crlf"]													-- The RFC 2045 compliant CRLF for quoted-printable is numberToChar(13) & numberToChar(10). Apparently
+  																					            -- some servers, even on the receiving end think they need to muck with CRLFs, so using LF, while
+  																					            -- distasteful, is the only thing that seems to work for all environments.
+  put TRUE into sSendMultipart							            -- TRUE/FALSE - Yahoo does not like multipart alternative, so this is an override.  Set to FALSE for Yahoo.
+  put FALSE into sEmailA["bccBatchMode"]						   -- TRUE/FALSE  Turns on/off Bcc batch feature
+  put 200 into sEmailA["bccBatchSize"]							   -- If bcc_batch_mode = TRUE, sets max number of Bccs in each batch
+  put "8bit" into _sEncoding
+  put FALSE into _sIP
+  put FALSE into _sSmtpAuth
+  put FALSE into _sReplytoFlag
+  put "sendmail" into _sProtocols[1]
+  put "smtp" into _sProtocols[2]
+  put "us-ascii" into _sBaseCharsets[1]			            -- 7-bit charsets (excluding language suffix)
+  put "iso-2022-" into _sBaseCharsets[2]		            -- 7-bit charsets (excluding language suffix)
+  put "7bit" into _sBitDepths[1]
+  put "8bit" into _sBitDepths[2]
+  put "1 (Highest)" into _sPriorities[1]
+  put "2 (High)" into _sPriorities[2]
+  put "3 (Normal)" into _sPriorities[3]
+  put "4 (Low)" into _sPriorities[4]
+  put "5 (Lowest)" into _sPriorities[5]
+  put "mailUseragent,mailpath,smtpHost,smtpUser,smtpPass,smtpPort,smtpTimeout,wrapchars,charset,validate,bccBatchMode,bccBatchSize,altMessage,mailtype,wordwrap,protocol,priority,mailNewline,crlf" into sEmailArrayKeys
+
+  put "rigSet_sAltMessage,rigSet_altMessage,rigSet_mailtype,rigSet_wordwrap,rigSet_protocol,rigSet_priority,rigSet_mailNewline,rigSet_crlf" into sValidSetHandlers
+end _rigSetDefaultValues
+
 
 
 
@@ -99,7 +167,7 @@ put "rigSet_sAltMessage,rigSet_sMailtype,rigSet_sWordwrap,rigSet_sProtocol,rigSe
 --| Version:  1.3
 --| Created: 14-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigInitializeMail
+--| Requires: rigInitializeMail
 --|
 --| Summary: Run initial configuration procedures.
 --| 
@@ -111,18 +179,20 @@ put "rigSet_sAltMessage,rigSet_sMailtype,rigSet_sWordwrap,rigSet_sProtocol,rigSe
 ----------------------------------------------------------------------*/
 
 command rigRunInitialEmailConfig pConfig
+  local tConfig
+  
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split tConfig using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
 	if tConfig is an array then
 		rigInitializeMail tConfig
 	else
-		if (sSmtpUser is "") and (sSmtpPass is "") then
+		if (sEmailA["smtpUser"] is "") and (sEmailA["smtpPass"] is "") then
 			put FALSE into _sSmtpAuth
 		else
 			put TRUE into _sSmtpAuth
@@ -135,14 +205,14 @@ end rigRunInitialEmailConfig
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigInitializeMail
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 14-08-09
---| Last Mod: 20-09-09
---| Requires: rigClearMail, rigSetInitialMailValue
+--| Version:  1.2
+--| Created: 2009-08-14
+--| Last Mod: 2019-01-04
+--| Requires: rigClearMail, _rigSetInitialMailValue
 --|
 --| Summary: Initialize preferences.
 --| 
@@ -151,28 +221,30 @@ end rigRunInitialEmailConfig
 --| Parameters: array <pConfig>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigInitializeMail pConfig
+  local tKey, tVal, tHandler
+  
 	rigClearMail
 
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
 
-			## CHECK IF VARIABLE WITH NAME TKEY IS SET ???????????????????????
+			## CHECK IF VARIABLE WITH NAME tKey IS SET ???????????????????????
 			# 
-			put "rigSet_s" & tKey into tMethod
-			if tMethod is among the items of sValidSetMethods then
-				do tMethod && tVal
+			put "rigSet_" & tKey into tHandler
+			if tHandler is among the items of sValidSetHandlers then
+				do tHandler && tVal
 			else
-				rigSetInitialMailValue tKey, tVal
+				_rigSetInitialMailValue tKey, tVal
 			end if		
 	
 		end repeat
 	end if
 
-	if (sSmtpUser is "") and (sSmtpPass is "") then
+	if (sEmailA["smtpUser"] is "") and (sEmailA["smtpPass"] is "") then
 		put FALSE into _sSmtpAuth
 	else
 		put TRUE into _sSmtpAuth
@@ -186,8 +258,8 @@ end rigInitializeMail
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigSetInitialMailValue
+/*----------------------------------------------------------------------
+--| COMMAND _rigSetInitialMailValue
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -197,55 +269,18 @@ end rigInitializeMail
 --|
 --| Summary: Set initial values.
 --| 
---| Format:  rigSetInitialMailValue param1, param2
+--| Format:  _rigSetInitialMailValue param1, param2
 --|
---| Parameters: string <pVarName>, mixed <pValue>
+--| Parameters: string <pKey>, mixed <pValue>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigSetInitialMailValue pVarName pValue
-	put "s" & pVarName into tVarName
-
-	switch tVarName
-		case "sMailUseragent"
-        		put pValue into sMailUseragent
-		break
-		case "sMailpath"
-        		put pValue into sMailpath
-		break
-		case "sSmtpHost"
-        		put pValue into sSmtpHost
-		break
-		case "sSmtpUser"
-        		put pValue into sSmtpUser
-		break
-		case "sSmtpPass"
-        		put pValue into sSmtpPass
-		break
-		case "sSmtpPort"
-        		put pValue into sSmtpPort
-		break
-		case "sSmtpTimeout"
-        		put pValue into sSmtpTimeout
-		break
-		case "sWrapchars"
-        		put pValue into sWrapchars
-		break
-		case "sCharset"
-        		put pValue into sCharset
-		break
-		case "sValidate"
-        		put pValue into sValidate
-		break
-		case "sBccBatchMode"
-        		put pValue into sBccBatchMode
-		break
-		case "sBccBatchSize"
-        		put pValue into sBccBatchSize
-		break
-    end switch
-end rigSetInitialMailValue
+private command _rigSetInitialMailValue pKey pValue
+  if pKey is among the items of sEmailArrayKeys then
+    put pValue into sEmailA[pKey]
+  end if
+end _rigSetInitialMailValue
 
 
 
@@ -253,7 +288,7 @@ end rigSetInitialMailValue
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigClearMail
 --|
 --| Author: rabit
@@ -269,9 +304,11 @@ end rigSetInitialMailValue
 --| Parameters: bool <pClearAttachments>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigClearMail pClearAttachments
+  local tClearAttachments, tDate
+  
 	if pClearAttachments is "" then
 		put FALSE into tClearAttachments
 	else
@@ -287,7 +324,7 @@ command rigClearMail pClearAttachments
 	put empty into _sHeaders
 	put empty into _sDebugMsg
 
-	_rigSetHeader "User-Agent", sMailUseragent
+	_rigSetHeader "User-Agent", sEmailA["mailUseragent"]
 
 	put _rigSetDate() into tDate
 	_rigSetHeader "Date", tDate
@@ -313,7 +350,7 @@ end rigClearMail
 --| Version:  1.2
 --| Created: 2009-08-15
 --| Last Mod: 2017-06-27
---| Requires: _rigStrToArray(), rigValidateEmail(), rigAddCslashes(), _rigPrepQencoding(), _rigSetHeader
+--| Requires: _rigStrToArray(), _rigValidateEmail(), rigAddCslashes(), _rigPrepQencoding(), _rigSetHeader
 --|
 --| Summary: Set From.
 --| 
@@ -325,6 +362,9 @@ end rigClearMail
 ----------------------------------------------------------------------*/
 
 command rigMailFrom pFrom, pName
+  local tRegEx, tFoundTextVar, tFrom, tFromArray, tCharsList
+  local tFromHeaderVal, tReturnHeaderVal
+  
 	put "\<(.*)\>" into tRegEx
 	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	get matchText(pFrom,tRegEx,tFoundTextVar)
@@ -335,17 +375,17 @@ command rigMailFrom pFrom, pName
 		put pFrom into tFrom
     	end if
 
-	if sValidate is TRUE then
+	if sEmailA["validate"] is TRUE then
 		put _rigStrToArray(tFrom) into tFromArray
-		get rigValidateEmail(tFromArray)
+		get _rigValidateEmail(tFromArray)
 	end if
 
 	# PREPARE THE DISPLAY NAME
 	if pName is not empty then
-		# ONLY USE Q ENCODING IF THERE ARE CHARACTERS THAT WOULD REQUIRE IT
-		 # OCTAL VALUES ARE USED HERE (128 - 255 AS DECIMAL VALUES)
-        	put "[\200-\377]" into tRegEx
-		get matchText(pName,tRegEx)
+    # ONLY USE Q ENCODING IF THERE ARE CHARACTERS THAT WOULD REQUIRE IT
+    # OCTAL VALUES ARE USED HERE (128 - 255 AS DECIMAL VALUES)
+    put "[\200-\377]" into tRegEx
+    get matchText(pName,tRegEx)
 		if it is not TRUE then
 			# ADD SLASHES FOR NON-PRINTING CHARACTERS, SLASHES, AND DOUBLE QUOTES, AND SURROUND IT IN DOUBLE QUOTES
 			# OCTAL VALUES ARE USED HERE (0 - 31 AND 127 AS DECIMAL VALUES)
@@ -376,7 +416,7 @@ end rigMailFrom
 --| Version:  1.1
 --| Created: 2009-08-16
 --| Last Mod: 2017-06-27
---| Requires: _rigStrToArray(), rigValidateEmail(), _rigSetHeader
+--| Requires: _rigStrToArray(), _rigValidateEmail(), _rigSetHeader
 --|
 --| Summary: Set reply-to.
 --| 
@@ -388,6 +428,8 @@ end rigMailFrom
 ----------------------------------------------------------------------*/
 
 command rigReplyTo pReplyto pName
+  local tName, tRegEx, tFoundTextVar, tReplyto, tReplyArray, tReplyHeaderVal
+  
 	put pName into tName
 
 	put "\<(.*)\>" into tRegEx
@@ -400,9 +442,9 @@ command rigReplyTo pReplyto pName
 		put pReplyto into tReplyto
     	end if
 
-	if sValidate is TRUE then
+	if sEmailA["validate"] is TRUE then
 		put _rigStrToArray(tReplyto) into tReplyArray
-		get rigValidateEmail(tReplyArray)
+		get _rigValidateEmail(tReplyArray)
 	end if
 
 	if tName is empty then
@@ -426,14 +468,14 @@ end rigReplyTo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailTo
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 16-08-09
---| Last Mod: 16-08-09
---| Requires: _rigStrToArray(), rigCleanEmail(), rigValidateEmail(), _rigGetProtocol(), _rigSetHeader
+--| Version:  1.1
+--| Created: 2009-08-16
+--| Last Mod: 2019-01-04
+--| Requires: _rigStrToArray(), _rigCleanEmail(), _rigValidateEmail(), _rigGetProtocol(), _rigSetHeader
 --|
 --| Summary: Set recipients.
 --| 
@@ -442,42 +484,35 @@ end rigReplyTo
 --| Parameters: mixed <pTo>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailTo pTo
-	put _rigStrToArray(pTo) into tTo
-	put rigCleanEmail(tTo) into tTo
+  local tTo, tProtocol, tToString
+  
+  put _rigStrToArray(pTo) into tTo
+  put _rigCleanEmail(tTo) into tTo
 
-	if sValidate is TRUE then
-		get rigValidateEmail(tTo)
-	end if
+  if sEmailA["validate"] is TRUE then
+    get _rigValidateEmail(tTo)
+  end if
 
-	put _rigGetProtocol() into tProtocol
+  put _rigGetProtocol() into tProtocol
 
-	if tProtocol is not "mail" then
-		put tTo into tToString
-		combine tToString using comma
-		replace comma with ", " in  tToString
-		_rigSetHeader "To", tToString
-	end if
+  put tTo into tToString
+  combine tToString using comma
+  replace comma with ", " in  tToString
+  _rigSetHeader "To", tToString
 
-	switch tProtocol
-		case "smtp"
-			put tTo into _sRecipients
-		break
-		case "sendmail"
-			put tTo into tToString
-			combine tToString using comma
-			replace comma with ", " in  tToString
-			put tToString into _sRecipients
-		break
-		case "mail"
-			put tTo into tToString
-			combine tToString using comma
-			replace comma with ", " in  tToString
-			put tToString into _sRecipients
-		break
-	 end switch
+  switch tProtocol
+    case "smtp"
+      put tTo into _sRecipients
+    break
+    case "sendmail"
+      put tTo into tToString
+      combine tToString using comma
+      replace comma with ", " in  tToString
+      put tToString into _sRecipients
+  end switch
 end rigMailTo
 
 
@@ -486,14 +521,14 @@ end rigMailTo
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailCC
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 16-08-09
 --| Last Mod: 16-08-09
---| Requires: _rigStrToArray(), rigCleanEmail(), rigValidateEmail(), _rigSetHeader, _rigGetProtocol()
+--| Requires: _rigStrToArray(), _rigCleanEmail(), _rigValidateEmail(), _rigSetHeader, _rigGetProtocol()
 --|
 --| Summary: Set CC.
 --| 
@@ -502,14 +537,16 @@ end rigMailTo
 --| Parameters: string <pCC>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailCC pCC
+  local tCC, tCCString, tProtocol
+  
 	put _rigStrToArray(pCC) into tCC
-	put rigCleanEmail(tCC) into tCC
+	put _rigCleanEmail(tCC) into tCC
 
-	if sValidate is TRUE then
-		get rigValidateEmail(tCC)
+	if sEmailA["validate"] is TRUE then
+		get _rigValidateEmail(tCC)
 	end if
 
 	put tCC into tCCString
@@ -529,14 +566,14 @@ end rigMailCC
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailBcc
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 16-08-09
 --| Last Mod: 16-08-09
---| Requires: _rigStrToArray(), rigCleanEmail(), rigValidateEmail(), _rigSetHeader, _rigGetProtocol()
+--| Requires: _rigStrToArray(), _rigCleanEmail(), _rigValidateEmail(), _rigSetHeader, _rigGetProtocol()
 --|
 --| Summary: Set BCC.
 --| 
@@ -545,25 +582,27 @@ end rigMailCC
 --| Parameters: string <pBcc>, string <pLimit>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailBcc pBcc pLimit
+  local tBcc, tProtocol, tBccItems, tBccString
+  
 	if (pLimit is not empty) and (pLimit is a number) then
-		put TRUE into sBccBatchMode
-		put pLimit into sBccBatchSize
+		put TRUE into sEmailA["bccBatchMode"]
+		put pLimit into sEmailA["bccBatchSize"]
 	end if
 
 	put _rigStrToArray(pBcc) into tBcc
-	put rigCleanEmail(tBcc) into tBcc
+	put _rigCleanEmail(tBcc) into tBcc
 
-	if sValidate is TRUE then
-		get rigValidateEmail(tBcc)
+	if sEmailA["validate"] is TRUE then
+		get _rigValidateEmail(tBcc)
 	end if
 
 	put _rigGetProtocol() into tProtocol
 	put the number of lines in the keys of tBcc into tBccItems
 
-	if (tProtocol is "smtp") or ((sBccBatchMode is TRUE) and (tBccItems > sBccBatchSize)) then
+	if (tProtocol is "smtp") or ((sEmailA["bccBatchMode"] is TRUE) and (tBccItems > sEmailA["bccBatchSize"])) then
 		put tBcc into _sBccArray
 	else
 		put tBcc into tBccString
@@ -579,7 +618,7 @@ end rigMailBcc
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailSubject
 --|
 --| Author: rabit
@@ -595,16 +634,12 @@ end rigMailBcc
 --| Parameters: string <pSubject>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailSubject pSubject
-	--put _rigGetProtocol() into tProtocol
+  local tSubject
 
-	--if tProtocol is not "mail" then
-		put _rigPrepQencoding(pSubject) into tSubject
-	--else
-		--put pSubject into tSubject
-	--end if
+  put _rigPrepQencoding(pSubject) into tSubject
 
 	_rigSetHeader "Subject", tSubject
 end rigMailSubject
@@ -622,7 +657,7 @@ end rigMailSubject
 --| Version:  1.1
 --| Created: 16-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigRTrim(), rigStripSlashes
+--| Requires: rigRTrim(), rigStripSlashes
 --|
 --| Summary: Set body.
 --| 
@@ -634,9 +669,11 @@ end rigMailSubject
 ----------------------------------------------------------------------*/
 
 command rigMailMessage pBody
+  local tBody
+  
 	put pBody into tBody
 
-	replace rigNumToCodepoint(13) with "" in tBody
+	replace numToCodepoint(13) with "" in tBody
 	put rigRTrim(tBody) into tBody
 	put rigStripSlashes(tBody) into _sBody
 end rigMailMessage
@@ -648,13 +685,13 @@ end rigMailMessage
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigMailAttach
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 17-08-09
---| Last Mod: 17-08-09
+--| Version:  1.1
+--| Created: 2009-08-17
+--| Last Mod: 2019-01-12
 --| Requires: _rigMimeTypes()
 --|
 --| Summary: Assign file attachments.
@@ -664,9 +701,11 @@ end rigMailMessage
 --| Parameters: string <pFilename>, string <pDisposition>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigMailAttach pFilename, pDisposition
+  local tDisposition, tNameItems, tTypeItems, tDispItems, tExtension
+  
 	if pDisposition is empty then
 		put "attachment" into tDisposition
 	else
@@ -694,7 +733,17 @@ command rigMailAttach pFilename, pDisposition
 	add 1 to tNameItems
 	add 1 to tTypeItems
 	add 1 to tDispItems
-
+  
+  
+  # USE ABSOLUTE PATH
+  replace "\" with "/" in pFilename
+  put rigTrim(pFilename, "/") into pFilename
+  if not rigIsAbsolutePath(pFilename, TRUE) then
+    put the defaultfolder & "/" & pFilename into pFilename
+  else
+    put "/" & pFilename into pFilename
+  end if
+  
 	put pFilename into _sAttachName[tNameItems]
 
 	set the itemDelimiter to "."
@@ -711,7 +760,7 @@ end rigMailAttach
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetHeader
 --|
 --| Author: rabit
@@ -727,9 +776,9 @@ end rigMailAttach
 --| Parameters: string <pHeader>, string <pValue>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSetHeader pHeader, pValue
+private command _rigSetHeader pHeader, pValue
 	put pValue into _sHeaders[pHeader]
 end _rigSetHeader
 
@@ -740,7 +789,7 @@ end _rigSetHeader
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND rigSet_sAltMessage
 --|
 --| Author: rabit
@@ -756,10 +805,10 @@ end _rigSetHeader
 --| Parameters: string <pStr>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 command rigSet_sAltMessage pStr
-	put pStr into sAltMessage
+	rigSet_altMessage
 end rigSet_sAltMessage
 
 
@@ -767,10 +816,35 @@ end rigSet_sAltMessage
 
 
 
+/*----------------------------------------------------------------------
+--| COMMAND rigSet_altMessage
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Set multipart value.
+--| 
+--| Format:  rigSet_altMessage param1
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigSet_altMessage pStr
+	put pStr into sEmailA["altMessage"]
+end rigSet_altMessage
 
 
-----------------------------------------------------------------------
---| COMMAND rigSet_sMailtype
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigSet_mailtype
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -780,20 +854,20 @@ end rigSet_sAltMessage
 --|
 --| Summary: Set mailtype.
 --| 
---| Format:  rigSet_sMailtype param1
+--| Format:  rigSet_mailtype param1
 --|
 --| Parameters: string <pType>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigSet_sMailtype pType
+command rigSet_mailtype pType
 	if pType is "html" then
-		put "html" into sMailtype
+		put "html" into sEmailA["mailtype"]
 	else
-		put "text" into sMailtype
+		put "text" into sEmailA["mailtype"]
 	end if
-end rigSet_sMailtype
+end rigSet_mailtype
 
 
 
@@ -801,8 +875,8 @@ end rigSet_sMailtype
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigSet_sWordwrap
+/*----------------------------------------------------------------------
+--| COMMAND rigSet_wordwrap
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -812,20 +886,20 @@ end rigSet_sMailtype
 --|
 --| Summary: Set wordwrap.
 --| 
---| Format:  rigSet_sWordwrap param1
+--| Format:  rigSet_wordwrap param1
 --|
 --| Parameters: bool <pWordwrap>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigSet_sWordwrap pWordwrap
+command rigSet_wordwrap pWordwrap
 	if pWordwrap is not FALSE then
-		put TRUE into sWordwrap
+		put TRUE into sEmailA["wordwrap"]
 	else
-		put FALSE into sWordwrap
+		put FALSE into sEmailA["wordwrap"]
 	end if
-end rigSet_sWordwrap
+end rigSet_wordwrap
 
 
 
@@ -834,7 +908,7 @@ end rigSet_sWordwrap
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sProtocol
+--| COMMAND rigSet_protocol
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -844,14 +918,16 @@ end rigSet_sWordwrap
 --|
 --| Summary: Set protocol.
 --| 
---| Format:  rigSet_sProtocol param1
+--| Format:  rigSet_protocol param1
 --|
 --| Parameters: string <pProtocol>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sProtocol pProtocol
+command rigSet_protocol pProtocol
+  local tProtocol
+  
 	if pProtocol is empty then
 		put "sendmail" into tProtocol
 	else
@@ -859,11 +935,11 @@ command rigSet_sProtocol pProtocol
 	end if
 
 	if rigInArray(_sProtocols, tProtocol) is FALSE then
-		put "sendmail" into sProtocol
+		put "sendmail" into sEmailA["protocol"]
 	else
-		put toLower(tProtocol) into sProtocol
+		put toLower(tProtocol) into sEmailA["protocol"]
 	end if
-end rigSet_sProtocol
+end rigSet_protocol
 
 
 
@@ -872,8 +948,8 @@ end rigSet_sProtocol
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigSet_sPriority
+/*----------------------------------------------------------------------
+--| COMMAND rigSet_priority
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -883,14 +959,16 @@ end rigSet_sProtocol
 --|
 --| Summary: Set priority.
 --| 
---| Format:  rigSet_sPriority param1
+--| Format:  rigSet_priority param1
 --|
 --| Parameters: integer <pN>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigSet_sPriority pN
+command rigSet_priority pN
+  local tN
+  
 	if pN is empty then
 		put 3 into tN
 	else
@@ -898,12 +976,12 @@ command rigSet_sPriority pN
 	end if
 
 	if (tN is not a number) or (tN < 1) or (tN > 5) then
-		put 3 into sPriority
-		exit rigSet_sPriority
+		put 3 into sEmailA["priority"]
+		exit rigSet_priority
 	end if
 
-	put tN into sPriority
-end rigSet_sPriority
+	put tN into sEmailA["priority"]
+end rigSet_priority
 
 
 
@@ -913,24 +991,26 @@ end rigSet_sPriority
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sMailNewline
+--| COMMAND rigSet_mailNewline
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 17-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Set newline character.
 --| 
---| Format:  rigSet_sMailNewline param1
+--| Format:  rigSet_mailNewline param1
 --|
 --| Parameters: string <pNewline>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sMailNewline pNewline
+command rigSet_mailNewline pNewline
+  local tNewline
+  
 	if pNewline is empty then
 		-- put "\n" into tNewline
 		put LF into tNewline
@@ -939,14 +1019,14 @@ command rigSet_sMailNewline pNewline
 	end if
 
 	-- if (tNewline <> "\n") and (tNewline <> "\r\n") and (tNewline <> "\r") then
-	if (tNewline <> LF) and (tNewline <> CRLF) and (tNewline <> rigNumToCodepoint(13)) then
-		-- put "\n" into sMailNewline
-		put LF into sMailNewline
-		exit rigSet_sMailNewline
+	if (tNewline <> LF) and (tNewline <> CRLF) and (tNewline <> numToCodepoint(13)) then
+		-- put "\n" into sEmailA["mailNewline"]
+		put LF into sEmailA["mailNewline"]
+		exit rigSet_mailNewline
 	end if
 
-	put tNewline into sMailNewline
-end rigSet_sMailNewline
+	put tNewline into sEmailA["mailNewline"]
+end rigSet_mailNewline
 
 
 
@@ -954,24 +1034,26 @@ end rigSet_sMailNewline
 
 
 /*----------------------------------------------------------------------
---| COMMAND rigSet_sCrlf
+--| COMMAND rigSet_crlf
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 17-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Set CRLF.
 --| 
---| Format:  rigSet_sCrlf param1
+--| Format:  rigSet_crlf param1
 --|
 --| Parameters: string <pCRLF>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSet_sCrlf pCRLF
+command rigSet_crlf pCRLF
+  local tCRLF
+  
 	if pCRLF is empty then
 		-- put "\n" into tCRLF
 		put LF into tCRLF
@@ -980,14 +1062,14 @@ command rigSet_sCrlf pCRLF
 	end if
 
 	-- if (tCRLF <> "\n") and (tCRLF <> "\r\n") and (tCRLF <> "\r") then
-	if (tCRLF <> LF) and (tCRLF <> CRLF) and (tCRLF <> rigNumToCodepoint(13)) then
-		-- put "\n" into sCrlf
-		put LF into sCrlf
-		exit rigSet_sCrlf
+	if (tCRLF <> LF) and (tCRLF <> CRLF) and (tCRLF <> numToCodepoint(13)) then
+		-- put "\n" into sEmailA["crlf"]
+		put LF into sEmailA["crlf"]
+		exit rigSet_crlf
 	end if
 
-	put tCRLF into sCrlf
-end rigSet_sCrlf
+	put tCRLF into sEmailA["crlf"]
+end rigSet_crlf
 
 
 
@@ -995,7 +1077,7 @@ end rigSet_sCrlf
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetBoundaries
 --|
 --| Author: rabit
@@ -1011,9 +1093,11 @@ end rigSet_sCrlf
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSetBoundaries
+private command _rigSetBoundaries
+  local tUniqueid
+  
 	repeat 25
         	put any char of "1234567890abcdefghijklmnopqrstuvwxyz" after tUniqueid
     	end repeat
@@ -1049,7 +1133,9 @@ end _rigSetBoundaries
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigGetMessageID
+private function _rigGetMessageID
+  local tFrom, tDomain, tUniqueid
+  
 	put _sHeaders["Return-Path"] into tFrom
 	replace ">" with "" in tFrom
 	replace "<" with "" in tFrom
@@ -1087,28 +1173,30 @@ end _rigGetMessageID
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigGetProtocol pReturn
+private function _rigGetProtocol pReturn
+  local tReturn
+  
 	if pReturn is empty then
 		put TRUE into tReturn
 	else
 		put pReturn into tReturn
 	end if
 
-	put toLower(sProtocol) into sProtocol
+	put toLower(sEmailA["protocol"]) into sEmailA["protocol"]
 
-	if rigInArray(_sProtocols, sProtocol) is FALSE then
-		put "sendmail" into sProtocol
+	if rigInArray(_sProtocols, sEmailA["protocol"]) is FALSE then
+		put "sendmail" into sEmailA["protocol"]
 	end if
 
 	if tReturn is TRUE then
-		return sProtocol
+		return sEmailA["protocol"]
 	end if
 end _rigGetProtocol
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetMailEncoding
 --|
 --| Author: rabit
@@ -1124,9 +1212,11 @@ end _rigGetProtocol
 --| Parameters: bool <pReturn>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigGetMailEncoding pReturn
+private function _rigGetMailEncoding pReturn
+  local tReturn, tKey, tCharset, tCharsetLength
+  
 	if pReturn is empty then
 		put TRUE into tReturn
 	else
@@ -1141,7 +1231,7 @@ function _rigGetMailEncoding pReturn
 		put _sBaseCharsets[tKey] into tCharset
 
 		put the length of tCharset into tCharsetLength
-		if (the length of sCharset >= tCharsetLength) and ((char 1 to tCharsetLength of sCharset) is tCharset) then
+		if (the length of sEmailA["charset"] >= tCharsetLength) and ((char 1 to tCharsetLength of sEmailA["charset"]) is tCharset) then
 			put "7bit" into _sEncoding
 		end if
 	end repeat
@@ -1154,7 +1244,7 @@ end _rigGetMailEncoding
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetContentType
 --|
 --| Author: rabit
@@ -1170,14 +1260,14 @@ end _rigGetMailEncoding
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigGetContentType
-	if (sMailtype is "html") and (_sAttachName is not an array) then
+private function _rigGetContentType
+	if (sEmailA["mailtype"] is "html") and (_sAttachName is not an array) then
 		return "html"
-	else if (sMailtype is "html") and (_sAttachName is an array) then
+	else if (sEmailA["mailtype"] is "html") and (_sAttachName is an array) then
 		return "html-attach"
-	else if (sMailtype is "text") and (_sAttachName is an array) then
+	else if (sEmailA["mailtype"] is "text") and (_sAttachName is an array) then
 		return "plain-attach"
 	else
 		return "plain"
@@ -1187,7 +1277,7 @@ end _rigGetContentType
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSetDate
 --|
 --| Author: rabit
@@ -1203,16 +1293,16 @@ end _rigGetContentType
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigSetDate
+private function _rigSetDate
 	return the internet date
 end _rigSetDate
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetMimeMessage
 --|
 --| Author: rabit
@@ -1228,18 +1318,18 @@ end _rigSetDate
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigGetMimeMessage
-	return "This is a multi-part message in MIME format." & sMailNewline & "Your email application may not support this format."
+private function _rigGetMimeMessage
+	return "This is a multi-part message in MIME format." & sEmailA["mailNewline"] & "Your email application may not support this format."
 end _rigGetMimeMessage
 
 
 
 
 
-----------------------------------------------------------------------
---| FUNCTION rigValidateEmail
+/*----------------------------------------------------------------------
+--| FUNCTION _rigValidateEmail
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -1249,14 +1339,16 @@ end _rigGetMimeMessage
 --|
 --| Summary: Validate email address.
 --| 
---| Format:  rigValidateEmail(param1)
+--| Format:  _rigValidateEmail(param1)
 --|
 --| Parameters: string <pEmail>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function rigValidateEmail pEmail
+private function _rigValidateEmail pEmail
+  local tKey, tVal
+  
 	if pEmail is not an array then
 		_rigSetErrorMessage "email_must_be_array"
 		return FALSE
@@ -1272,7 +1364,7 @@ function rigValidateEmail pEmail
 	end repeat
 
 	return TRUE
-end rigValidateEmail
+end _rigValidateEmail
 
 
 
@@ -1280,7 +1372,7 @@ end rigValidateEmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigMailValidEmail
 --|
 --| Author: rabit
@@ -1296,9 +1388,11 @@ end rigValidateEmail
 --| Parameters: string <pAddress>
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigMailValidEmail pAddress
+  local tRegEx
+  
 	put "(?ix)^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$" into tRegEx
 
 	return matchtext(pAddress,tRegEx)
@@ -1311,7 +1405,7 @@ end rigMailValidEmail
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigCleanEmail
+--| FUNCTION _rigCleanEmail
 --|
 --| Author: rabit
 --| Version:  1.1
@@ -1321,14 +1415,16 @@ end rigMailValidEmail
 --|
 --| Summary: Clean extended email address: Joe Smith <joe@smith.com>.
 --| 
---| Format:  rigCleanEmail(param1)
+--| Format:  _rigCleanEmail(param1)
 --|
 --| Parameters: mixed <pEmail>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigCleanEmail pEmail
+private function _rigCleanEmail pEmail
+  local tRegEx, tFoundTextVar, tCounter, tAddy, tCleanEmail
+  
 	put "\<(.*)\>" into tRegEx
 	put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	
@@ -1355,7 +1451,7 @@ function rigCleanEmail pEmail
 	end repeat
 
 	return tCleanEmail
-end rigCleanEmail
+end _rigCleanEmail
 
 
 
@@ -1370,7 +1466,7 @@ end rigCleanEmail
 --| Version:  1.1
 --| Created: 2009-08-17
 --| Last Mod: 2017-06-27
---| Requires: rigWord_wrap(), rigStripHTML(), rigTrim()
+--| Requires: _rigWord_wrap(), rigStripHTML(), rigTrim()
 --|
 --| Summary: Build alternative plain text message.
 --|
@@ -1386,9 +1482,11 @@ end rigCleanEmail
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigGetAltMessage
-	if sAltMessage is not empty then
-		return rigWord_wrap(sAltMessage, "76")
+private function _rigGetAltMessage
+  local tRegEx, tFoundTextVar, tBody, tN, tNewLines
+  
+	if sEmailA["altMessage"] is not empty then
+		return _rigWord_wrap(sEmailA["altMessage"], "76")
 	end if
 
 	put "(?i)\<body.*?\>(.*)\<\/body\>" into tRegEx
@@ -1423,40 +1521,45 @@ function _rigGetAltMessage
 
 	replace tab with "" in tBody -----------------
 
-	return rigWord_wrap(tBody, "76")
+	return _rigWord_wrap(tBody, "76")
 end _rigGetAltMessage
 
 
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigWord_wrap
+--| FUNCTION _rigWord_wrap
 --|
 --| Author: rabit
 --| Version:  1.5
 --| Created: 2009-08-17
 --| Last Mod: 2017-06-27
---| Requires: rigPregReplace(), rigNumToCodepoint(), rigWordWrap(), rigUnwrappedWrapMarkersString()
+--| Requires: rigPregReplace(), rigWordWrap(), _rigUnwrappedWrapMarkersString()
 --|
 --| Summary: Word wrap.
 --| 
---| Format:  rigWord_wrap(param1, param2)
+--| Format:  _rigWord_wrap(param1, param2)
 --|
 --| Parameters: string <pStr>, integer <pCharLim>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigWord_wrap pStr pCharLim
+private function _rigWord_wrap pStr pCharLim
+  local tStr, tCharLim, tRegEx, tReplacement, tStrToCheck
+  local tStrMarked, tMatchFound, tCounter, tFoundStr, tFoundStrLength
+  local tStrOffset, tSearchStartNum, tStrLength, tStrFragment, tUnwrap
+  local tOutput, tTemp, tKey, tVal
+  
 	put pStr into tStr
 	put pCharLim into tCharLim
 
 	# SET THE CHARACTER LIMIT
 	if pCharLim is empty then
-		if sWrapchars is empty then
+		if sEmailA["wrapchars"] is empty then
 			put 76 into tCharLim
 		else
-			put sWrapchars into tCharLim
+			put sEmailA["wrapchars"] into tCharLim
 		end if
 	end if
 
@@ -1466,9 +1569,9 @@ function rigWord_wrap pStr pCharLim
 	put rigPregReplace(tStr, tRegEx,,tReplacement) into tStr
 
 	# STANDARDIZE NEWLINES
-	if rigNumToCodepoint(13) is in tStr then
+	if numToCodepoint(13) is in tStr then
 		replace CRLF with LF in tStr
-		replace rigNumToCodepoint(13) with LF in tStr
+		replace numToCodepoint(13) with LF in tStr
 	end if
 
 	# IF THE CURRENT WORD IS SURROUNDED BY {UNWRAP} TAGS WE'LL
@@ -1536,7 +1639,7 @@ function rigWord_wrap pStr pCharLim
 		# IS THE LINE WITHIN THE ALLOWED CHARACTER COUNT?
 		# IF SO WE'LL JOIN IT TO THE OUTPUT AND CONTINUE
 		if (the length of thisLine) <= tCharLim then
-			put thisLine & sMailNewline after tOutput
+			put thisLine & sEmailA["mailNewline"] after tOutput
 			next repeat
 		end if
         
@@ -1558,18 +1661,18 @@ function rigWord_wrap pStr pCharLim
 		# IF $TEMP CONTAINS DATA IT MEANS WE HAD TO SPLIT UP AN OVER-LENGTH
 		# WORD INTO SMALLER CHUNKS SO WE'LL ADD IT BACK TO OUR CURRENT LINE
 		if tTemp <> "" then
-			put tTemp & sMailNewline & thisLine after tOutput
+			put tTemp & sEmailA["mailNewline"] & thisLine after tOutput
 		else
 			put thisLine after tOutput
 		end if
         
-		put sMailNewline after tOutput
+		put sEmailA["mailNewline"] after tOutput
 	end repeat
 
 	# PUT OUR MARKERS BACK
 	if tUnwrap is an array then
 		# UNWRAP MARKERS
-		put rigUnwrappedWrapMarkersString(tOutput) into tOutput
+		put _rigUnwrappedWrapMarkersString(tOutput) into tOutput
 
 		repeat for each key tKey in tUnwrap
 			put tUnwrap[tKey] into tVal
@@ -1578,7 +1681,7 @@ function rigWord_wrap pStr pCharLim
 	end if
 
 	return tOutput
-end rigWord_wrap
+end _rigWord_wrap
 
 
 
@@ -1586,14 +1689,14 @@ end rigWord_wrap
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigBuildHeaders
 --|
 --| Author: rabit
 --| Version:  1.1
 --| Created: 19-08-09
 --| Last Mod: 26-12-09
---| Requires: --
+--| Requires: _rigCleanEmail(), _rigSetHeader, _rigGetMessageID()
 --|
 --| Summary: Build final headers.
 --| 
@@ -1602,15 +1705,17 @@ end rigWord_wrap
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigBuildHeaders
-	put rigCleanEmail(_sHeaders["From"]) into tHeadersFrom
+private command _rigBuildHeaders
+  local tHeadersFrom, tMessageID
+  
+	put _rigCleanEmail(_sHeaders["From"]) into tHeadersFrom
 	_rigSetHeader "X-Sender", tHeadersFrom
 
-	_rigSetHeader "X-Mailer", sMailUseragent
+	_rigSetHeader "X-Mailer", sEmailA["mailUseragent"]
 
-	_rigSetHeader "X-Priority", _sPriorities[sPriority]
+	_rigSetHeader "X-Priority", _sPriorities[sEmailA["priority"]]
 
 	put _rigGetMessageID() into tMessageID
 	_rigSetHeader "Message-ID", tMessageID
@@ -1622,13 +1727,13 @@ end _rigBuildHeaders
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigWriteHeaders
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 19-08-09
---| Last Mod: 24-07-10
+--| Version:  1.2
+--| Created: 2009-08-19
+--| Last Mod: 2019-01-04
 --| Requires: rigTrim(), rigRTrim()
 --|
 --| Summary: Write headers as a string.
@@ -1638,13 +1743,10 @@ end _rigBuildHeaders
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigWriteHeaders
-	if sProtocol is "mail" then
-		put _sHeaders["Subject"] into _sSubject
-		delete variable _sHeaders["Subject"]
-	end if
+private command _rigWriteHeaders
+  local tKey, tVal
 
 	put empty into _sHeaderStr
 	repeat for each key tKey in _sHeaders
@@ -1653,14 +1755,9 @@ command _rigWriteHeaders
 		put rigTrim(tVal) into tVal
 		
 		if tVal <> "" then
-			put tKey & ": " & tVal & sMailNewline after _sHeaderStr
+			put tKey & ": " & tVal & sEmailA["mailNewline"] after _sHeaderStr
 		end if
 	end repeat
-
-	# ACTUALLY NOT NEEDED
-	if _rigGetProtocol() is "mail" then
-		put rigRTrim(_sHeaderStr) into _sHeaderStr
-	end if
 end _rigWriteHeaders
 
 
@@ -1672,12 +1769,12 @@ end _rigWriteHeaders
 --| COMMAND _rigBuildMessage
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 19-08-09
---| Last Mod: 22-12-14
---| Requires: rigWord_wrap(), _rigSetBoundaries, _rigWriteHeaders, _rigGetProtocol(),
+--| Version:  1.5
+--| Created: 2009-08-19
+--| Last Mod: 2019-01-12
+--| Requires: _rigWord_wrap(), _rigSetBoundaries, _rigWriteHeaders, _rigGetProtocol(),
 --|           _rigGetContentType(), _rigGetMailEncoding(), _rigGetMimeMessage(),
---|           _rigGetAltMessage(), _rigPrepQuotedPrintable(), rigNumToCodepoint()
+--|           _rigGetAltMessage(), _rigPrepQuotedPrintable()
 --|
 --| Summary: Build final body and attachments.
 --| 
@@ -1688,24 +1785,21 @@ end _rigWriteHeaders
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigBuildMessage
-	if (sWordwrap is TRUE)  and  (sMailtype <> "html") then
-		put rigWord_wrap(_sBody) into _sBody
+private command _rigBuildMessage
+  local tProtocol, tHdr, tContentType, tEncoding, tMimeMessage, tAltMessage
+  local tBody, tAttacheNameItems, tZ, tFileName, tBaseName, tCtype, tH
+  local tAttachment, tFolderName, tFileNameFromPath, tOldFolder, tFileList
+  local tInfo, tFileSize, tFile, tFilesToAttach, tNamesOfFilesToAttach
+  local tAttachmentAsString, tItemCount, tItemName
+  
+	if (sEmailA["wordwrap"] is TRUE)  and  (sEmailA["mailtype"] <> "html") then
+		put _rigWord_wrap(_sBody) into _sBody
 	end if
 
 	_rigSetBoundaries
 	_rigWriteHeaders
 
 	put _rigGetProtocol() into tProtocol
-
-	# HEADERS CAN CURRENTLY BE SET WITH SENDMAIL AND SMTP ONLY
-	/*
-	if tProtocol is "mail" then
-		put sMailNewline into tHdr
-	else
-		put "" into tHdr
-	end if
-	*/
 
 	put "" into tHdr
 
@@ -1719,25 +1813,10 @@ command _rigBuildMessage
 
 	switch tContentType
 		case "plain"
-			put "Content-Type: text/plain; charset=" & sCharset  & sMailNewline after tHdr
+			put "Content-Type: text/plain; charset=" & sEmailA["charset"]  & sEmailA["mailNewline"] after tHdr
 			put "Content-Transfer-Encoding: " & tEncoding after tHdr
 
-			# HEADERS CAN CURRENTLY BE SET WITH SENDMAIL AND SMTP ONLY
-			/*
-			if tProtocol is "mail" then
-				put tHdr after _sHeaderStr
-				put _sBody into _sFinalbody
-
-				exit _rigBuildMessage
-			end if
-			*/
-			
-			if tProtocol is "mail" then
-				put _sBody into _sFinalbody
-				exit _rigBuildMessage
-			end if
-
-			put sMailNewline & sMailNewline & _sBody after tHdr
+			put sEmailA["mailNewline"] & sEmailA["mailNewline"] & _sBody after tHdr
 			put tHdr into _sFinalbody
 
 			exit _rigBuildMessage
@@ -1745,46 +1824,27 @@ command _rigBuildMessage
 
 		case "html"
 			if sSendMultipart is FALSE then
-				put "Content-Type: text/html; charset=" & sCharset & sMailNewline after tHdr
+				put "Content-Type: text/html; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
 				put "Content-Transfer-Encoding: quoted-printable" after tHdr
 
 			else
 
-				put "Content-Type: multipart/alternative; boundary=" & quote & _sAltBoundary & quote & sMailNewline & sMailNewline after tHdr
-				put tMimeMessage & sMailNewline & sMailNewline after tHdr
-				put "--" & _sAltBoundary & sMailNewline after tHdr
+				put "Content-Type: multipart/alternative; boundary=" & quote & _sAltBoundary & quote & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+				put tMimeMessage & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+				put "--" & _sAltBoundary & sEmailA["mailNewline"] after tHdr
 
-				put "Content-Type: text/plain; charset=" & sCharset & sMailNewline after tHdr
-				put "Content-Transfer-Encoding: " & tEncoding & sMailNewline & sMailNewline after tHdr
-				put tAltMessage & sMailNewline & sMailNewline & "--" & _sAltBoundary & sMailNewline after tHdr
+				put "Content-Type: text/plain; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
+				put "Content-Transfer-Encoding: " & tEncoding & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+				put tAltMessage & sEmailA["mailNewline"] & sEmailA["mailNewline"] & "--" & _sAltBoundary & sEmailA["mailNewline"] after tHdr
 
-				put "Content-Type: text/html; charset=" & sCharset & sMailNewline after tHdr
+				put "Content-Type: text/html; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
 				put "Content-Transfer-Encoding: quoted-printable" after tHdr
 			end if
 
 			put _rigPrepQuotedPrintable(_sBody) into _sBody
 
-			# HEADERS CAN CURRENTLY BE SET WITH SENDMAIL AND SMTP ONLY
-			/*
-			if tProtocol is "mail" then
-				put tHdr after _sHeaderStr
-				put _sBody & sMailNewline & sMailNewline into _sFinalbody
-
-				if sSendMultipart is not FALSE then
-					put "--" & _sAltBoundary & "--" after _sFinalbody
-				end if
-
-				exit _rigBuildMessage
-			end if
-			*/
-		
-			if tProtocol is "mail" then
-				put _sBody into _sFinalbody
-				exit _rigBuildMessage
-			end if
-
-			put sMailNewline & sMailNewline after tHdr
-			put _sBody & sMailNewline & sMailNewline after tHdr
+			put sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put _sBody & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
 
 			if sSendMultipart is not FALSE then
 				put "--" & _sAltBoundary & "--" after tHdr
@@ -1796,66 +1856,39 @@ command _rigBuildMessage
 		break
 
 		case "plain-attach"
-			put "Content-Type: multipart/" & sMultipart & "; boundary=" & quote & _sAtcBoundary & quote & sMailNewline & sMailNewline after tHdr
-			put tMimeMessage & sMailNewline & sMailNewline after tHdr
-			put "--" & _sAtcBoundary & sMailNewline after tHdr
+			put "Content-Type: multipart/" & sMultipart & "; boundary=" & quote & _sAtcBoundary & quote & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put tMimeMessage & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put "--" & _sAtcBoundary & sEmailA["mailNewline"] after tHdr
 
-			put "Content-Type: text/plain; charset=" & sCharset & sMailNewline after tHdr
+			put "Content-Type: text/plain; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
 			put "Content-Transfer-Encoding: " & tEncoding after tHdr
 
-			# HEADERS CAN CURRENTLY BE SET WITH SENDMAIL AND SMTP ONLY
-			/*
-			if tProtocol is "mail" then
-				put tHdr after _sHeaderStr
-				put _sBody & sMailNewline & sMailNewline into tBody
- 			end if
-			*/
-
-			if tProtocol is "mail" then
-				put _sBody & sMailNewline & sMailNewline into tBody
- 			end if
-
-			put sMailNewline & sMailNewline after tHdr
-			put _sBody & sMailNewline & sMailNewline after tHdr
+			put sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put _sBody & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
 		break
 
 		case "html-attach"
-			put "Content-Type: multipart/" & sMultipart & "; boundary=" & quote & _sAtcBoundary & quote & sMailNewline & sMailNewline after tHdr
-			put tMimeMessage & sMailNewline & sMailNewline after tHdr
-			put "--" & _sAtcBoundary & sMailNewline after tHdr
+			put "Content-Type: multipart/" & sMultipart & "; boundary=" & quote & _sAtcBoundary & quote & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put tMimeMessage & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put "--" & _sAtcBoundary & sEmailA["mailNewline"] after tHdr
 
-			put "Content-Type: multipart/alternative; boundary=" & quote & _sAltBoundary & quote & sMailNewline & sMailNewline after tHdr
-			put "--" & _sAltBoundary & sMailNewline after tHdr
+			put "Content-Type: multipart/alternative; boundary=" & quote & _sAltBoundary & quote & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put "--" & _sAltBoundary & sEmailA["mailNewline"] after tHdr
 
-			put "Content-Type: text/plain; charset=" & sCharset & sMailNewline after tHdr
-			put "Content-Transfer-Encoding: " & tEncoding & sMailNewline & sMailNewline after tHdr
-			put tAltMessage & sMailNewline & sMailNewline & "--" & _sAltBoundary & sMailNewline after tHdr
+			put "Content-Type: text/plain; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
+			put "Content-Transfer-Encoding: " & tEncoding & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put tAltMessage & sEmailA["mailNewline"] & sEmailA["mailNewline"] & "--" & _sAltBoundary & sEmailA["mailNewline"] after tHdr
 
-			put "Content-Type: text/html; charset=" & sCharset & sMailNewline after tHdr
+			put "Content-Type: text/html; charset=" & sEmailA["charset"] & sEmailA["mailNewline"] after tHdr
 			put "Content-Transfer-Encoding: quoted-printable" after tHdr
 
 			put _rigPrepQuotedPrintable(_sBody) into _sBody
 
-			# HEADERS CAN CURRENTLY BE SET WITH SENDMAIL AND SMTP ONLY
-			/*
-			if tProtocol is "mail" then
-				put tHdr after _sHeaderStr
-
-				put _sBody & sMailNewline & sMailNewline into tBody
-				put "--" & _sAltBoundary & "--" & sMailNewline & sMailNewline after tBody
- 			end if
-			*/
-			
-			if tProtocol is "mail" then
-				put _sBody into tBody
- 			end if
-
-			put sMailNewline & sMailNewline after tHdr
-			put _sBody & sMailNewline & sMailNewline after tHdr
-			put "--" & _sAltBoundary & "--" & sMailNewline & sMailNewline after tHdr
+			put sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put _sBody & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
+			put "--" & _sAltBoundary & "--" & sEmailA["mailNewline"] & sEmailA["mailNewline"] after tHdr
 		break
 	end switch
-
 
 	put 0 into tAttacheNameItems
 
@@ -1878,33 +1911,29 @@ command _rigBuildMessage
 				return FALSE
 			end if
 
-			put "--" & _sAtcBoundary & sMailNewline into tH
+			put "--" & _sAtcBoundary & sEmailA["mailNewline"] into tH
 			put "Content-type: " & tCtype & "; " after tH
-			put "name=" & quote & tBaseName & quote & sMailNewline after tH
-			put "Content-Disposition: " & _sAttachDisp[i] & ";" & sMailNewline after tH
-			put "Content-Transfer-Encoding: base64" & sMailNewline after tH
+			put "name=" & quote & tBaseName & quote & sEmailA["mailNewline"] after tH
+			put "Content-Disposition: " & _sAttachDisp[i] & ";" & sEmailA["mailNewline"] after tH
+			put "Content-Transfer-Encoding: base64" & sEmailA["mailNewline"] after tH
 
-			add 1 to tZ
-			put tH into tAttachment[tZ]
-			# GET FILE SIZE
-			-- put the itemdelimiter into tOldItemDelimiter
-    			-- set the itemdelimiter to "/"
-    			put item 1 to -2 of tFileName & "/" into tFolderName
+      add 1 to tZ
+      put tH into tAttachment[tZ]
+      # GET FILE SIZE
+      -- put the itemdelimiter into tOldItemDelimiter
+      -- set the itemdelimiter to "/"
+      put item 1 to -2 of tFileName & "/" into tFolderName
 
-    			put item -1 of tFileName into tFileNameFromPath
-    			-- set the itemdelimiter to tOldItemDelimiter
-    
-    			put the directory into tOldFolder
-    			set the directory to tFolderName
-    			put urldecode(the detailed files) into tFileList
+      put item -1 of tFileName into tFileNameFromPath
+      -- set the itemdelimiter to tOldItemDelimiter
+
+      put urldecode(files(tFolderName, "detailed")) into tFileList
      
-    			filter tFileList with tFileNameFromPath & "*"
-    			put tFileList into tInfo
+      filter tFileList with tFileNameFromPath & "*"
+      put tFileList into tInfo
     
-			set the itemdelimiter to comma
-    			put item 2 of tInfo into tFileSize
-    
-    			set the directory to tOldFolder
+      set the itemdelimiter to comma
+      put item 2 of tInfo into tFileSize
 			#
 		
 			add 1 to tZ
@@ -1934,42 +1963,14 @@ command _rigBuildMessage
 		delete char -1 of tNamesOfFilesToAttach
 
 		put tAttachment into tAttachmentAsString
-		combine tAttachmentAsString using rigNumToCodepoint(1)
-		replace rigNumToCodepoint(1) with sMailNewline in tAttachmentAsString
+		combine tAttachmentAsString using numToCodepoint(1)
+		replace numToCodepoint(1) with sEmailA["mailNewline"] in tAttachmentAsString
 
 	else
 		put "" into tAttachmentAsString
 	end if -- if _sAttachName is an array then
 
-	if tProtocol is "mail" then
-		put rigShellEscape(tBody) into tBody
-
-		put 0 into tItemCount
-		if tAttacheNameItems > 1 then
-			# USE rigNumToCodepoint(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
-			put tBody & rigNumToCodepoint(1) into _sFinalbody
-
-			repeat for each item tFileItem in tFilesToAttach
-				add 1 to tItemCount
-				put item tItemCount of tNamesOfFilesToAttach into tItemName
-				put ";uuencode" && rigQ(tFileItem) && rigQ(tItemName) after _sFinalbody
-			end repeat
-		else
-			if tAttacheNameItems = 1 then
-				# USE rigNumToCodepoint(1) AS ITEMDELIMITER LATER IN THE SENDWITHMAIL FUNCTION
-				put tBody & rigNumToCodepoint(1) & ";uuencode" && rigQ(tFilesToAttach) && rigQ(tNamesOfFilesToAttach) into _sFinalbody
-			else
-				# THERE IS NO ATTACHMENT
-				put tBody into _sFinalbody
-			end if
-		end if
-
-		-- put tBody & tAttachmentAsString & sMailNewline & "--" & _sAtcBoundary & "--" into _sFinalbody
-
-		exit _rigBuildMessage
-	end if -- if tProtocol is "mail" then
-
-	put tHdr & tAttachmentAsString & sMailNewline & "--" & _sAtcBoundary & "--" into _sFinalbody
+	put tHdr & tAttachmentAsString & sEmailA["mailNewline"] & "--" & _sAtcBoundary & "--" into _sFinalbody
 end _rigBuildMessage
 
 
@@ -1983,7 +1984,7 @@ end _rigBuildMessage
 --| Version:  1.3
 --| Created: 20-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Prepares string for Quoted-Printable Content-Transfer-Encoding
 --|            Refer to RFC 2045 http://www.ietf.org/rfc/rfc2045.txt.
@@ -1995,7 +1996,10 @@ end _rigBuildMessage
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigPrepQuotedPrintable pStr pCharLim
+private function _rigPrepQuotedPrintable pStr pCharLim
+  local tStr, tCharLim, tRegEx, tEscape, tOutput, tLength, tTemp
+  local tChar, tAscii, tAsciiHex, tCRLFfound, tLastChar
+  
 	put pStr into tStr
 
 	# SET THE CHARACTER LIMIT
@@ -2017,11 +2021,11 @@ function _rigPrepQuotedPrintable pStr pCharLim
 
 	# STANDARDIZE NEWLINES
 	-- if "\r" is in tStr then
-	if rigNumToCodepoint(13) is in tStr then
+	if numToCodepoint(13) is in tStr then
 		-- replace "\r\n" with "\n" in tStr
 		replace CRLF with LF in tStr
 		-- replace "\r" with "\n" in tStr
-		replace rigNumToCodepoint(13) with LF in tStr
+		replace numToCodepoint(13) with LF in tStr
 	end if
 
 	# WE ARE INTENTIONALLY WRAPPING SO MAIL SERVERS WILL ENCODE CHARACTERS
@@ -2030,9 +2034,9 @@ function _rigPrepQuotedPrintable pStr pCharLim
 	replace "{/unwrap}" with "" in tStr
 
 	# BREAK INTO AN ARRAY OF LINES
-	-- replace "\n" with rigNumToCodepoint(1) in tStr
-	replace LF with rigNumToCodepoint(1) in tStr
-	split tStr using rigNumToCodepoint(1)
+	-- replace "\n" with numToCodepoint(1) in tStr
+	replace LF with numToCodepoint(1) in tStr
+	split tStr using numToCodepoint(1)
 
 	put "=" into tEscape
 	put empty into tOutput
@@ -2043,11 +2047,11 @@ function _rigPrepQuotedPrintable pStr pCharLim
 
 		# LOOP THROUGH EACH CHARACTER IN THE LINE TO ADD SOFT-WRAP
 		# CHARACTERS AT THE END OF A LINE " =\r\n" AND ADD THE NEWLY
-		# PROCESSED LINE(S) TO THE OUTPUT (SEE COMMENT ON sCrlf VARIABLE)
+		# PROCESSED LINE(S) TO THE OUTPUT (SEE COMMENT ON sEmailA["crlf"] VARIABLE)
 		repeat with i = 1 to tLength
 			# GRAB THE NEXT CHARACTER
 			put char i of thisLine into tChar
-			put rigCodepointToNum(tChar) into tAscii
+			put codepointToNum(tChar) into tAscii
 
 			# CONVERT SPACES AND TABS BUT ONLY IF IT'S THE END OF THE LINE
 			if i = tLength then
@@ -2070,7 +2074,7 @@ function _rigPrepQuotedPrintable pStr pCharLim
 			# IF WE'RE AT THE CHARACTER LIMIT, ADD THE LINE TO THE OUTPUT,
 			# RESET OUR TEMP VARIABLE, AND KEEP ON CHUGGIN'
 			if (the length of tTemp) + (the length of tChar) >= tCharLim then
-				put tTemp & tEscape & sCrlf after tOutput
+				put tTemp & tEscape & sEmailA["crlf"] after tOutput
 				put empty into tTemp
 			end if
 
@@ -2079,7 +2083,7 @@ function _rigPrepQuotedPrintable pStr pCharLim
 		end repeat
 
 		# ADD OUR COMPLETED LINE TO THE OUTPUT
-		put tTemp & sCrlf after tOutput
+		put tTemp & sEmailA["crlf"] after tOutput
 
 	end repeat
 
@@ -2087,7 +2091,7 @@ function _rigPrepQuotedPrintable pStr pCharLim
 	put TRUE into tCRLFfound
 	repeat until tCRLFfound is FALSE
 		put char -1 of tOutput into tLastChar
-		if (rigCodepointToNum(tLastChar) is 13) or (rigCodepointToNum(tLastChar) is 10) then
+		if (codepointToNum(tLastChar) is 13) or (codepointToNum(tLastChar) is 10) then
 			delete char -1 of tOutput
 		else
 			put FALSE into tCRLFfound
@@ -2108,7 +2112,7 @@ end _rigPrepQuotedPrintable
 --| Version:  1.2
 --| Created: 2009-08-16
 --| Last Mod: 2017-06-27
---| Requires: rigNumToCodepoint(), rigCodepointToNum()
+--| Requires: --
 --|
 --| Summary: Performs "Q Encoding" on a string for use in email headers.  It's related
 --|            but not identical to quoted-printable, so it has its own method.
@@ -2120,7 +2124,11 @@ end _rigPrepQuotedPrintable
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function _rigPrepQencoding pStr pFrom
+private function _rigPrepQencoding pStr pFrom
+  local tFrom, tStr, tCharsetLength, tLimit, tConvert, tOutput, tTemp
+  local tConvertedChar, tAscii, tAsciiHEX, tRegEx, tFoundTextVar
+  local tLineNums, tCounter, tModStr
+  
 	if (pFrom is empty) or (pFrom is not a boolean) then
 		put FALSE into tFrom
 	else
@@ -2130,13 +2138,13 @@ function _rigPrepQencoding pStr pFrom
 	put pStr into tStr
 	
 	-- replace "\r" with "" in tStr
-	replace rigNumToCodepoint(13) with "" in tStr
+	replace numToCodepoint(13) with "" in tStr
 	-- replace "\n" with "" in tStr
 	replace LF with "" in tStr
 	
 	# LINE LENGTH MUST NOT EXCEED 76 CHARACTERS, SO WE ADJUST FOR
 	# A SPACE, 7 EXTRA CHARACTERS =??Q??=, AND THE CHARSET THAT WE WILL ADD TO EACH LINE
-	put the length of sCharset into tCharsetLength
+	put the length of sEmailA["charset"] into tCharsetLength
 	put (75 - 7) - tCharsetLength into tLimit
 
 	# THESE SPECIAL CHARACTERS MUST BE CONVERTED TOO
@@ -2154,7 +2162,7 @@ function _rigPrepQencoding pStr pFrom
 	repeat for each char thisChar in tStr
 		put thisChar into tConvertedChar
 		# GRAB THE NEXT CHARACTER
-		put rigCodepointToNum(tConvertedChar) into tAscii
+		put codepointToNum(tConvertedChar) into tAscii
 
 		# CONVERT ALL NON-PRINTABLE ASCII CHARACTERS AND OUR SPECIALS
 		if (tAscii < 32) or (tAscii > 126) or (rigInArray(tConvert, tConvertedChar) is TRUE) then
@@ -2169,7 +2177,7 @@ function _rigPrepQencoding pStr pFrom
 		# IF WE'RE AT THE CHARACTER LIMIT, ADD THE LINE TO THE OUTPUT,
 		# RESET OUR TEMP VARIABLE, AND KEEP ON CHUGGIN'
 		if ((the length of tTemp) + 1) >= tLimit then
-			put tTemp & sCrlf after tOutput
+			put tTemp & sEmailA["crlf"] after tOutput
 			put empty into tTemp
 		end if
 
@@ -2223,10 +2231,10 @@ end _rigPrepQencoding
 --| FUNCTION rigMailSend
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 23-08-09
---| Last Mod: 09-12-17
---| Requires: rigReplyTo, _rigSetErrorMessage, _rigBuildHeaders, rigBatchBccSend(),
+--| Version:  1.3
+--| Created: 2009-08-23
+--| Last Mod: 2019-01-04
+--| Requires: rigReplyTo, _rigSetErrorMessage, _rigBuildHeaders, _rigBatchBccSend(),
 --|            _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Send email.
@@ -2240,9 +2248,7 @@ end _rigPrepQencoding
 
 function rigMailSend
 	if _sReplytoFlag is FALSE then
-		if (sProtocol <> "mail") or ((sProtocol is "mail") and (_sHeaders["From"] <> empty)) then
-			rigReplyTo _sHeaders["From"]
-		end if
+    rigReplyTo _sHeaders["From"]
 	end if
 
 	if (_sRecipients is not an array) and (_sRecipients is empty) then
@@ -2261,9 +2267,9 @@ function rigMailSend
 
 	_rigBuildHeaders
 
-	if (sBccBatchMode is TRUE) and (_sBccArray is an array) then
-		if (the number of lines in the keys of _sBccArray) > sBccBatchSize then
-			get rigBatchBccSend()
+	if (sEmailA["bccBatchMode"] is TRUE) and (_sBccArray is an array) then
+		if (the number of lines in the keys of _sBccArray) > sEmailA["bccBatchSize"] then
+			get _rigBatchBccSend()
 
 			return it
 		end if
@@ -2287,26 +2293,28 @@ end rigMailSend
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigBatchBccSend
+--| FUNCTION _rigBatchBccSend
 --|
 --| Author: rabit
 --| Version:  1.2
 --| Created: 23-08-09
 --| Last Mod: 22-12-14
---| Requires: _rigStrToArray(), rigCleanEmail(), rigNumToCodepoint(), _rigSetHeader,
+--| Requires: _rigStrToArray(), _rigCleanEmail(), _rigSetHeader,
 --|            _rigBuildMessage, _rigSpoolEmail()
 --|
 --| Summary: Sends groups of BCCs in batches.
 --| 
---| Format:  rigBatchBccSend()
+--| Format:  _rigBatchBccSend()
 --|
 --| Parameters: --
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigBatchBccSend
-	put sBccBatchSize into tFloat
+private function _rigBatchBccSend
+  local tFloat, tSet, tBccCount, tChunkCounter, tChunk, tChunkCount, tBcc
+  
+	put sEmailA["bccBatchSize"] into tFloat
 	put "" into tSet
 
 	put the number of lines in the keys of _sBccArray into tBccCount
@@ -2321,7 +2329,7 @@ function rigBatchBccSend
 		if i = tFloat then
 			add 1 to tChunkCounter
 			put char 2 to -1 of tSet into tChunk[tChunkCounter]
-			put tFloat + sBccBatchSize into tFloat
+			put tFloat + sEmailA["bccBatchSize"] into tFloat
 			put "" into tSet
 		end if
 
@@ -2336,11 +2344,11 @@ function rigBatchBccSend
 	repeat with i = 1 to tChunkCount
 		put empty into _sHeaders["Bcc"]
 		put _rigStrToArray(tChunk[i]) into tBcc
-		put rigCleanEmail(tBcc) into tBcc
+		put _rigCleanEmail(tBcc) into tBcc
 
-		if sProtocol is not "smtp" then
-			combine tBcc using rigNumToCodepoint(1)
-			replace rigNumToCodepoint(1) with ", " in tBcc
+		if sEmailA["protocol"] is not "smtp" then
+			combine tBcc using numToCodepoint(1)
+			replace numToCodepoint(1) with ", " in tBcc
 
 			_rigSetHeader "Bcc", tBcc
 		else
@@ -2350,7 +2358,7 @@ function rigBatchBccSend
 		_rigBuildMessage
 		get _rigSpoolEmail()
 	end repeat
-end rigBatchBccSend
+end _rigBatchBccSend
 
 
 
@@ -2359,7 +2367,7 @@ end rigBatchBccSend
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigUnwrapSpecials
 --|
 --| Author: rabit
@@ -2375,9 +2383,11 @@ end rigBatchBccSend
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigUnwrapSpecials
+private command _rigUnwrapSpecials
+  local tRegEx
+  
 	put "(?i)\{unwrap\}(.*?)\{\/unwrap\}" into tRegEx
 	
 	put rigPregReplace(_sFinalbody, tRegEx, , "_callback__rigRemoveNlCallback") into _sFinalbody
@@ -2397,7 +2407,7 @@ end _rigUnwrapSpecials
 --| Version:  1.1
 --| Created: 23-08-09
 --| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint()
+--| Requires: --
 --|
 --| Summary: Strip line-breaks via callback.
 --| 
@@ -2408,13 +2418,15 @@ end _rigUnwrapSpecials
 --| Return: string
 ----------------------------------------------------------------------*/
 
-command _rigRemoveNlCallback pStr
-    	put pStr into tStr
+private command _rigRemoveNlCallback pStr
+  local tStr
+  
+  put pStr into tStr
     
 	-- if ("\r" is in tStr) or ("\n" is in tStr) then
-	if (rigNumToCodepoint(13) is in tStr) or (LF is in tStr) then
+	if (numToCodepoint(13) is in tStr) or (LF is in tStr) then
 		-- replace "\r" with "" in tStr
-		replace rigNumToCodepoint(13) with "" in tStr
+		replace numToCodepoint(13) with "" in tStr
     		-- replace "\n" with "" in tStr
 		replace LF with "" in tStr
 	end if
@@ -2427,14 +2439,15 @@ end _rigRemoveNlCallback
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSpoolEmail
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 23-08-09
---| Last Mod: 23-08-09
---| Requires: --
+--| Version:  1.1
+--| Created: 2009-08-23
+--| Last Mod: 2018-12-30
+--| Requires: _rigUnwrapSpecials, _rigGetProtocol(), _rigSetErrorMessage
+--|            _rigSendWithSendmail(), _rigSendWithSmtp()
 --|
 --| Summary: Spool mail to the mail server.
 --| 
@@ -2443,24 +2456,16 @@ end _rigRemoveNlCallback
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigSpoolEmail
+private function _rigSpoolEmail
+  local tProtocol
+  
 	_rigUnwrapSpecials
 
 	put _rigGetProtocol() into tProtocol
 			
 	switch tProtocol
-		case "mail"
-			get _rigSendWithMail()
-
-			if it is not TRUE then
-				_rigSetErrorMessage "email_send_failure_mail"
-				
-				return FALSE
-			end if
-		break
-
 		case "sendmail"
 			get _rigSendWithSendmail()
 
@@ -2479,7 +2484,6 @@ function _rigSpoolEmail
 				
 				return FALSE
 			end if
-		break
 	end switch
 
 	_rigSetErrorMessage "email_sent", tProtocol
@@ -2491,133 +2495,6 @@ end _rigSpoolEmail
 
 
 
-/*----------------------------------------------------------------------
---| FUNCTION _rigSendWithMail
---|
---| Author: rabit
---| Version:  1.4
---| Created: 14-09-09
---| Last Mod: 03-05-15
---| Requires: rigShellEscape(), rigNumToCodepoint(), rigQ(), _rigTempMailPath(), rigLogMessage
---|
---| Summary: Send using mail as shell command. Can not be used to send html mail.
---| 
---| Format:  _rigSendWithMail()
---|
---| Parameters: --
---|
---| Return: bool
-----------------------------------------------------------------------*/
-
-function _rigSendWithMail
-	put rigCleanEmail(_sHeaders["From"]) into tFrom
-
-	# PREPARE HEADER DATA FOR SHELL COMMAND
-	if "uuencode" is not in _sFinalbody then
-		put rigShellEscape(_sFinalbody) into tFinalbody
-	else
-		put _sFinalbody into tFinalbody
-	end if
-	put rigShellEscape(_sHeaders["Cc"]) into tCC
-	put rigShellEscape(_sHeaders["Bcc"]) into tBCC
-	put rigShellEscape(_sSubject) into tSubject
-	put rigShellEscape(_sRecipients) into tRecipients
-	put rigShellEscape(tFrom) into tFrom
-
-	if "uuencode" is in tFinalbody then
-		# THERE IS AN ATTACHMENT
-		set the itemdelimiter to rigNumToCodepoint(1)
-    		put item 1 of tFinalbody into tBody
-		put rigShellEscape(tBody) into tBody
-		put item 2 of tFinalbody into tAttachment
-		put rigShellEscape(tAttachment) into tAttachment
-		
-		set the itemDelimiter to space
-		put item 2 of tAttachment into tAtmntPath
-		put item 3 of tAttachment into tAtmntName
-		# REMOVE ESCAPE CHAR
-		delete char 1 of tAtmntPath
-		delete char -2 of tAtmntPath
-		delete char 1 of tAtmntName
-		delete char -2 of tAtmntName
-		put item 1 of tAttachment && tAtmntPath && tAtmntName into tAttachment
-	else
-		put tFinalbody into tBody
-	end if
-
-	# TEMPORARILY SAVE BODY TO DISK
-	#
-	#GET PATH TO TEMP DIRECTORY
-	put _rigTempMailPath() into tTempMailPath
-	put tBody into URL ("binfile:" & tTempMailPath)
-
-	if the result <> empty then
-		rigLogMessage "error", "Error on saving temporary eMail data:" && tTempMailPath && "System error:" && the sysError
-	end if
-
-	if "uuencode" is not in _sFinalbody then
-		# THERE IS NO ATTACHMENT	
-		# BUILD SHELL COMMAND
-		put "cat" && rigQ(tTempMailPath) && "| mail -s" && rigQ(tSubject) into tCmd
-        
-		if tCC is not empty then
-			put " -c" && rigQ(tCC) after tCmd
-		end if
-		if tBCC is not empty then
-			put " -b" && rigQ(tBCC) after tCmd
-		end if
-        
-		if tFrom is not empty then
-			# THE DOUBLE DASH STOPS MAIL FROM PARSING THE -f OPTION AND PASSES IT TO SENDMAIL.
-			# THE -f OPTION SETS THE ENVELOPE SENDER ADDRESS IN SENDMAIL.
-			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
-			# THE BEHAVIOR FOR -- HAS CHANGED AND IT SEEMS THAT THERE IS NO WAY TO SPECIFY
-			# THE SENDER ADDRESS USING MAIL THROUGH THE COMMAND LINE ANYMORE.
-			# SO, THIS IS WHY THE SENDER ADDRESS IS OPTIONAL SINCE HANDLER VERSION 1.4
-		else
-			put space & rigQ(tRecipients) after tCmd
-		end if
-
-	else	
-		# BUILD SHELL COMMAND
-		put "(cat" && rigQ(tTempMailPath) & tAttachment &")" && "| mail -s" && rigQ(tSubject) into tCmd
-        
-		if tCC is not empty then
-			put " -c" && rigQ(tCC) after tCmd
-		end if
-		if tBCC is not empty then
-			put " -b" && rigQ(tBCC) after tCmd
-		end if
-     
-		if tFrom is not empty then
-			put space & rigQ(tRecipients) && "-- -f" && rigQ(tFrom) after tCmd
-		else
-			put space & rigQ(tRecipients) after tCmd
-		end if
-
-	end if
-
-	# SEND SHELL COMMAND
-	put shell(tCmd) into tResult
-
-	# REMOVE TEMP MAIL FILE
-	delete file tTempMailPath
-	if the result is not empty then
-		rigLogMessage "error", "Temporary eMail data could not be deleted:" && tTempMailPath
-	end if
-
-	# CHECK MAIL RESULT
-	if tResult is empty then
-		return TRUE
-	else
-		rigLogMessage "error", "Error on sending eMail:" && tResult
-		return FALSE
-	end if
-
-end _rigSendWithMail
-
-
-
 
 /*----------------------------------------------------------------------
 --| FUNCTION _rigSendWithSendmail
@@ -2626,7 +2503,7 @@ end _rigSendWithMail
 --| Version:  1.1
 --| Created: 17-09-09
 --| Last Mod: 02-02-15
---| Requires: rigShellEscape(), _rigTempMailPath(), rigLogMessage
+--| Requires: _rigCleanEmail(), rigShellEscape(), _rigTempMailPath(), rigLogMessage
 --|
 --| Summary: Send using sendmail as shell command.
 --| 
@@ -2637,8 +2514,11 @@ end _rigSendWithMail
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function _rigSendWithSendmail
-	put rigCleanEmail(_sHeaders["From"]) into tEnvelopeSender
+private function _rigSendWithSendmail
+  local tEnvelopeSender, tHdr, tFinalbody, tTempMailPath, tMailData
+  local tCmd, tResult
+  
+	put _rigCleanEmail(_sHeaders["From"]) into tEnvelopeSender
 
 	--put rigShellEscape(_sHeaderStr) into tHdr
 	--put rigShellEscape(_sFinalbody) into tFinalbody
@@ -2657,7 +2537,7 @@ function _rigSendWithSendmail
 	end if
 
 	# BUILD COMMAND
-	put "cat" && quote & tTempMailPath & quote && "|" && sMailpath && "-t -oi -f" && rigQ(tEnvelopeSender) into tCmd
+	put "cat" && quote & tTempMailPath & quote && "|" && sEmailA["mailpath"] && "-t -oi -f" && rigQ(tEnvelopeSender) into tCmd
 
 	# SEND SHELL COMMAND
 	put shell(tCmd) into tResult
@@ -2680,14 +2560,14 @@ end _rigSendWithSendmail
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigSendWithSmtp
 --|
 --| Author: rabit
 --| Version:  1.0
 --| Created: 17-09-09
 --| Last Mod: 17-09-09
---| Requires: _rigSetErrorMessage, _rigSmtpConnect, _rigSmtpAuthenticate, rigCleanEmail(), _rigSendSmtpCommand
+--| Requires: _rigSetErrorMessage, _rigSmtpConnect, _rigSmtpAuthenticate, _rigCleanEmail(), _rigSendSmtpCommand
 --|                  _rigSendSmtpData, _rigGetSmtpData()
 --|
 --| Summary: Send mail using an smtp socket.
@@ -2697,10 +2577,12 @@ end _rigSendWithSendmail
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigSendWithSmtp
-	if sSmtpHost is empty then
+private function _rigSendWithSmtp
+  local tFrom, tKey, tVal, tFinalbody, tDataToSend
+  
+	if sEmailA["smtpHost"] is empty then
 		_rigSetErrorMessage "email_no_hostname"
 		return FALSE
 	end if
@@ -2708,7 +2590,7 @@ function _rigSendWithSmtp
 	_rigSmtpConnect
 	_rigSmtpAuthenticate
 
-	put rigCleanEmail(_sHeaders["From"]) into tFrom
+	put _rigCleanEmail(_sHeaders["From"]) into tFrom
 	_rigSendSmtpCommand "from", tFrom
 
 	repeat for each key tKey in _sRecipients
@@ -2742,8 +2624,8 @@ function _rigSendWithSmtp
 	put replacetext(_sFinalbody,"(?m)^\.", "..") into tFinalbody
 
 	put _sHeaderStr & tFinalbody into tDataToSend
-	_rigSendSmtpData tDataToSend, sSmtpTimeout, FALSE
-	_rigSendSmtpData ".", sSmtpTimeout
+	_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"], FALSE
+	_rigSendSmtpData ".", sEmailA["smtpTimeout"]
 
 	_rigSetErrorMessage _sSmtpReply
 	if char 1 to 3 of of _sSmtpReply is not "250" then
@@ -2766,7 +2648,7 @@ end _rigSendWithSmtp
 --| Version:  1.2
 --| Created: 17-09-09
 --| Last Mod: 13-02-15
---| Requires: rigResetSmtpVars, _rigSetErrorMessage, _rigSendSmtpCommand
+--| Requires: _rigResetSmtpVars, _rigSetErrorMessage, _rigSendSmtpCommand
 --|
 --| Summary: SMTP connect.
 --| 
@@ -2777,11 +2659,11 @@ end _rigSendWithSmtp
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command _rigSmtpConnect
+private command _rigSmtpConnect
 	# RESET SMTP VARIABLES
-	rigResetSmtpVars
+	_rigResetSmtpVars
 
-	put sSmtpHost & ":" & sSmtpPort into _sSmtpConnect
+	put sEmailA["smtpHost"] & ":" & sEmailA["smtpPort"] into _sSmtpConnect
 
 	open socket to _sSmtpConnect with message "_rigGetSmtpData"
 
@@ -2812,9 +2694,9 @@ end _rigSmtpConnect
 --| COMMAND _rigSendSmtpCommand
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 2009-09-18
---| Last Mod: 2018-12-14
+--| Version:  1.0
+--| Created: 18-09-09
+--| Last Mod: 18-09-09
 --| Requires: _rigSendSmtpData, _rigSetErrorMessage
 --|
 --| Summary: Send smtp command.
@@ -2826,15 +2708,17 @@ end _rigSmtpConnect
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command _rigSendSmtpCommand pCmd, pData
+private command _rigSendSmtpCommand pCmd, pData
+  local tDataToSend, tResp, tDebugItemsNum
+  
 	switch pCmd
     		case "hello"
         		if (_sSmtpAuth is TRUE) or (_rigGetMailEncoding() is "8bit") then
 				put "EHLO" && _rigGetHostname() into tDataToSend
-				_rigSendSmtpData tDataToSend, sSmtpTimeout
+				_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 			else
 				put "HELO" && _rigGetHostname() into tDataToSend
-				_rigSendSmtpData tDataToSend, sSmtpTimeout
+				_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 			end if
 
 			put 250 into tResp
@@ -2842,26 +2726,26 @@ command _rigSendSmtpCommand pCmd, pData
 
 		case "from"
 			put "MAIL FROM:<" & pData & ">" into tDataToSend
-			_rigSendSmtpData tDataToSend, sSmtpTimeout
+			_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 	
 			put 250 into tResp
 		break
 
 		case "to"
 			put "RCPT TO:<" & pData & ">" into tDataToSend
-			_rigSendSmtpData tDataToSend, sSmtpTimeout
+			_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 
 			put 250 into tResp
 		break
 
 		case "data"
-			_rigSendSmtpData "DATA", sSmtpTimeout
+			_rigSendSmtpData "DATA", sEmailA["smtpTimeout"]
 
 			put 354 into tResp
 		break
 
 		case "quit"
-			_rigSendSmtpData "QUIT", sSmtpTimeout
+			_rigSendSmtpData "QUIT", sEmailA["smtpTimeout"]
 
 			put 221 into tResp
 		break
@@ -2878,7 +2762,7 @@ command _rigSendSmtpCommand pCmd, pData
 
 	if pCmd is "quit" then
 		 if (_sSmtpConnect is among the lines of the openSockets) then close socket _sSmtpConnect
-  		-- put TRUE into sSmtpSocketContinue ????
+  		-- put TRUE into sSmtpSocketContinue ??????????
 	end if
 
 	return TRUE
@@ -2887,7 +2771,7 @@ end _rigSendSmtpCommand
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSmtpAuthenticate
 --|
 --| Author: rabit
@@ -2903,21 +2787,23 @@ end _rigSendSmtpCommand
 --| Parameters: --
 --|
 --| Return: bool
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSmtpAuthenticate
+private command _rigSmtpAuthenticate
+  local tDataToSend
+  
 	if _sSmtpAuth is FALSE then
 		return TRUE
 	end if
 
-	if (sSmtpUser is empty) and (sSmtpPass is empty) then
+	if (sEmailA["smtpUser"] is empty) and (sEmailA["smtpPass"] is empty) then
 		_rigSetErrorMessage "email_no_smtp_unpw"
 		return FALSE
 	end if
 
-	_rigSendSmtpData "AUTH LOGIN", sSmtpTimeout
+	_rigSendSmtpData "AUTH LOGIN", sEmailA["smtpTimeout"]
 	# RESET SMTP VARIABLES
-	--rigResetSmtpVars
+	--_rigResetSmtpVars
 
 	--_rigGetSmtpData
 	--wait until _sSmtpReadyForNextCommand is TRUE with messages
@@ -2927,10 +2813,10 @@ command _rigSmtpAuthenticate
 		return FALSE
 	end if
 
-	put base64Encode(sSmtpUser) into tDataToSend
-	_rigSendSmtpData tDataToSend, sSmtpTimeout
+	put base64Encode(sEmailA["smtpUser"]) into tDataToSend
+	_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 	# RESET SMTP VARIABLES
-	--rigResetSmtpVars
+	--_rigResetSmtpVars
 
 	--_rigGetSmtpData
 	--wait until _sSmtpReadyForNextCommand is TRUE with messages
@@ -2940,10 +2826,10 @@ command _rigSmtpAuthenticate
 		return FALSE
 	end if
 
-	put base64Encode(sSmtpPass) into tDataToSend
-	_rigSendSmtpData tDataToSend, sSmtpTimeout
+	put base64Encode(sEmailA["smtpPass"]) into tDataToSend
+	_rigSendSmtpData tDataToSend, sEmailA["smtpTimeout"]
 	# RESET SMTP VARIABLES
-	--rigResetSmtpVars
+	--_rigResetSmtpVars
 
 	--_rigGetSmtpData
 	--wait until _sSmtpReadyForNextCommand is TRUE with messages
@@ -2966,7 +2852,7 @@ end _rigSmtpAuthenticate
 --| Version:  1.3
 --| Created: 18-09-09
 --| Last Mod: 13-02-15
---| Requires: rigResetSmtpVars
+--| Requires: _rigResetSmtpVars
 --|
 --| Summary: Send SMTP data.
 --| 
@@ -2977,22 +2863,24 @@ end _rigSmtpAuthenticate
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-command _rigSendSmtpData pData, pTimeout
+private command _rigSendSmtpData pData, pTimeout
+  local tTimeout
+  
 	if pTimeout is empty then
-		put sSmtpTimeout into tTimeout
+		put sEmailA["smtpTimeout"] into tTimeout
 	else
 		put pTimeout into tTimeout
 	end if
 
 	# RESET SMTP VARIABLES
-	rigResetSmtpVars
+	_rigResetSmtpVars
 
 	set the sockettimeoutinterval to tTimeout
 
 	if (paramcount() = 2) then
-		write pData & sMailNewline to socket _sSmtpConnect with message "_rigGetSmtpData"
+		write pData & sEmailA["mailNewline"] to socket _sSmtpConnect with message "_rigGetSmtpData"
 	else
-		write pData & sMailNewline to socket _sSmtpConnect with message "_rigSmtpDataWritten"
+		write pData & sEmailA["mailNewline"] to socket _sSmtpConnect with message "_rigSmtpDataWritten"
 	end if
 
 	wait until _sSmtpReadyForNextCommand is TRUE with messages
@@ -3003,7 +2891,7 @@ end _rigSendSmtpData
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSmtpDataWritten
 --|
 --| Author: rabit
@@ -3019,16 +2907,16 @@ end _rigSendSmtpData
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSmtpDataWritten
+private command _rigSmtpDataWritten
   put TRUE into _sSmtpSuccess
   put TRUE into _sSmtpReadyForNextCommand
 end _rigSmtpDataWritten
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigGetSmtpData
 --|
 --| Author: rabit
@@ -3044,17 +2932,17 @@ end _rigSmtpDataWritten
 --| Parameters: string <pSmtpConnection>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigGetSmtpData pSmtpConnection
-  read from socket pSmtpConnection until sMailNewline with message "_rigDataFromSmtpSocket"
+private command _rigGetSmtpData pSmtpConnection
+  read from socket pSmtpConnection until sEmailA["mailNewline"] with message "_rigDataFromSmtpSocket"
 end _rigGetSmtpData
 
 
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigDataFromSmtpSocket
 --|
 --| Author: rabit
@@ -3070,14 +2958,14 @@ end _rigGetSmtpData
 --| Parameters: string <pSmtpConnection>, string <pData>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigDataFromSmtpSocket pSmtpConnection, pData
+private command _rigDataFromSmtpSocket pSmtpConnection, pData
 	put pData after _sSmtpReply
 
 	if offset("-",pData) is 4 then
 		# THE REPLY CONSISTS OF MULTIPLE LINES
-		read from socket pSmtpConnection until sMailNewline with message "_rigDataFromSmtpSocket"
+		read from socket pSmtpConnection until sEmailA["mailNewline"] with message "_rigDataFromSmtpSocket"
 	else
 		# THE REPLY CONSISTS OF ONE SINGLE LINES
 		switch (char 1 to 3 of _sSmtpReply)
@@ -3123,8 +3011,8 @@ end _rigDataFromSmtpSocket
 
 
 
-----------------------------------------------------------------------
---| COMMAND rigResetSmtpVars
+/*----------------------------------------------------------------------
+--| COMMAND _rigResetSmtpVars
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -3134,19 +3022,19 @@ end _rigDataFromSmtpSocket
 --|
 --| Summary: Reset smtp variables.
 --| 
---| Format:  rigResetSmtpVars
+--| Format:  _rigResetSmtpVars
 --|
 --| Parameters: --
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command rigResetSmtpVars
+private command _rigResetSmtpVars
 	put EMPTY into _sSmtpReply
   put EMPTY into _sSmtpError
 	put FALSE into _sSmtpSuccess
 	put FALSE into _sSmtpReadyForNextCommand
-end rigResetSmtpVars
+end _rigResetSmtpVars
 
 
 
@@ -3154,7 +3042,7 @@ end rigResetSmtpVars
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigGetHostname
 --|
 --| Author: rabit
@@ -3170,9 +3058,9 @@ end rigResetSmtpVars
 --| Parameters: --
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigGetHostname
+private function _rigGetHostname
 	if $_SERVER["SERVER_NAME"] is not empty then
 		return $_SERVER["SERVER_NAME"]
 	end if
@@ -3202,6 +3090,8 @@ end _rigGetHostname
 ----------------------------------------------------------------------*/
 
 function rigPrintMailDebugger
+  local tKey, tVal, tMsg, tHeaderStr, tSubject, tFinalbody
+  
 	if the number of lines in the keys of _sDebugMsg > 0 then
 		repeat for each key tKey in _sDebugMsg
 			put _sDebugMsg[tKey] into tVal
@@ -3225,7 +3115,7 @@ end rigPrintMailDebugger
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| COMMAND _rigSetErrorMessage
 --|
 --| Author: rabit
@@ -3241,9 +3131,11 @@ end rigPrintMailDebugger
 --| Parameters: string <pMsg>, string <pVal>
 --|
 --| Return: empty
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-command _rigSetErrorMessage pMsg pVal
+private command _rigSetErrorMessage pMsg pVal
+  local tMsg, tCurrentDebugItems, tLine
+  
 	put pMsg into tMsg
 
 	get rigLangLoadLang("email")
@@ -3265,7 +3157,7 @@ end _rigSetErrorMessage
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION _rigMimeTypes
 --|
 --| Author: rabit
@@ -3281,9 +3173,11 @@ end _rigSetErrorMessage
 --| Parameters: string <pExt>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
-function _rigMimeTypes pExt
+private function _rigMimeTypes pExt
+  local tExtension, tMime
+  
 	put tolower(pExt) into tExtension
 
 	put "application/mac-binhex40" into tMime["hqx"]
@@ -3389,24 +3283,26 @@ end _rigMimeTypes
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigUnwrappedWrapMarkersString
+--| FUNCTION _rigUnwrappedWrapMarkersString
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 2009-09-21
---| Last Mod: 2018-12-14
+--| Version:  1.0
+--| Created: 21-09-09
+--| Last Mod: 21-09-09
 --| Requires: --
 --|
 --| Summary: Unwrap wrapped unwrap markers in wrapped string.
 --| 
---| Format:  rigUnwrappedWrapMarkersString(param1)
+--| Format:  _rigUnwrappedWrapMarkersString(param1)
 --|
 --| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigUnwrappedWrapMarkersString pStr
+private function _rigUnwrappedWrapMarkersString pStr
+  local tLineCount, tNotWrapped, tNextLine, tMarkerEndFound, tWrappedChars
+  
 	put 0 into tLineCount
 
 	repeat for each line thisLine in pStr
@@ -3438,13 +3334,70 @@ function rigUnwrappedWrapMarkersString pStr
 	end repeat
 
 	return pStr
-end rigUnwrappedWrapMarkersString
+end _rigUnwrappedWrapMarkersString
 
 
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigEmailGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Get rule names, prep methods, field data.
+--| 
+--| Format:  rigEmailGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
 
---| END OF Email.lc
---| Location:  ./system/libraries/Email.lc
+function rigEmailGet pWhat
+  if pWhat is among the keys of sEmailA then
+    return sEmailA[pWhat]
+  end if
+   
+  return empty
+end rigEmailGet
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigEmailSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-04
+--| Last Mod: 2019-01-04
+--| Requires: --
+--|
+--| Summary: Setter for email array variables.
+--| 
+--| Format:  rigEmailSet param1, param2
+--|
+--| Parameters: string <pKey> sEmailA array key, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigEmailSet pKey pVal
+  if pKey is among the keys of sEmailA then
+    put pVal into sEmailA[pKey]
+  end if
+end rigEmailSet
+
+
+
+
+
+--| END OF Email.livecodescript
+--| Location:  ./system/libraries/Email.livecodescript
 ----------------------------------------------------------------------
