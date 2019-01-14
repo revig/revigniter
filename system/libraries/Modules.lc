@@ -1,10 +1,4 @@
-<?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+script "Modules"
 
 ##
 # revIgniter
@@ -14,9 +8,9 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
-# @license		http://revigniter.com/userGuide/license.html
-# @link		    http://revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
@@ -31,19 +25,56 @@ end if
 # @subpackage	Libraries
 # @category	     Libraries
 # @author		     rabit@revigniter.com
-# @link		       http://revigniter.com/userGuide/libraries/modules.html
+# @link		       https://revigniter.com/userGuide/libraries/modules.html
 ##
 
 
 
-# LOGGING
-rigLogMessage "debug", "Modules Library Loaded"
+
+global gRigA, gModuleHandlers, gModulesHandlersA
+
+local sModuleSegments, sStackInUse
 
 
-# DECLARE VARIABLES
-global gModuleHandlers, gModulesHandlersA
 
-local sModuleSegments
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-22
+ --| Last Mod: --
+ --| Requires: rigLogMessage
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Modules Library Loaded"
+      end if
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
 
 
 
@@ -96,7 +127,7 @@ end rigRunInitialModulesConfig
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigRegisterModuleHandlers pModule pHandlers
+private command _rigRegisterModuleHandlers pModule pHandlers
 	put replacetext(pHandlers,"[ ]+","") into gModulesHandlersA[pModule]
 end _rigRegisterModuleHandlers
 
@@ -125,6 +156,8 @@ end _rigRegisterModuleHandlers
 ----------------------------------------------------------------------*/
 
 command rigLoadModule pModuleSegments
+  local tSegmentsArray, tModule, tController, tControllerPath
+  
   put rigTrim(pModuleSegments, "/") into pModuleSegments
   put pModuleSegments into tSegmentsArray
   split tSegmentsArray by "/"
@@ -151,8 +184,8 @@ command rigLoadModule pModuleSegments
     put item -1 of pModuleSegments into tController
     
     # LOAD MODULE CONTROLLER AND STORE CONTROLLER HANDLER NAMES IN AN ARRAY
-    put rigFetchDirectory() & tController & gEXT into tControllerPath
-    require gAPPPATH & tControllerPath
+    put rigFetchDirectory() & tController & gRigA["EXT"] into tControllerPath
+    _rigRequire gRigA["APPPATH"] & tControllerPath
 
     rigLogMessage "debug", "Module loaded: " & pModuleSegments
 
@@ -177,7 +210,7 @@ end rigLoadModule
 --| Version:  1.0
 --| Created: 17-11-2015
 --| Last Mod: 26-12-2015
---| Requires: rigTrim(), rigModuleError(), _rigGetViewPath(), _rigSetViewPath, _rigDo
+--| Requires: rigTrim(), _rigModuleError(), _rigGetViewPath(), _rigSetViewPath, _rigDo
 --|
 --| Summary: Return output (a view) or a return value from a module controller.
 --| 
@@ -189,6 +222,9 @@ end rigLoadModule
 ----------------------------------------------------------------------*/
 
 function rigRunModule pModuleSegments pParamsA
+  local tCallIndex, tModule, tNumSegments, tHandler, tError
+  local tCurrentViewPath, tTempViewPath, tModuleData
+  
   put rigTrim(pModuleSegments, "/") into sModuleSegments
 
   set the itemDel to "/"
@@ -256,14 +292,14 @@ function rigRunModule pModuleSegments pParamsA
   end if -- if tCallIndex is FALSE then
     
   # BEFORE CALLING ANY MODULE HANDLER CHECK IF THERE WAS AN ERROR WHILE LOADING THE MODULE
-  put rigModuleError(tModule) into tError
+  put _rigModuleError(tModule) into tError
   if tError <> FALSE then
     return tError
   end if
 
   # CHANGE VIEW PATH TO MODULE VIEW PATH
   put _rigGetViewPath() into tCurrentViewPath
-  put gAPPPATH & "modules/" & (item 1 of sModuleSegments) & "/views/" into tTempViewPath
+  put gRigA["APPPATH"] & "modules/" & (item 1 of sModuleSegments) & "/views/" into tTempViewPath
   _rigSetViewPath tTempViewPath
 
   # CALL MODULE HANDLER AND RESET VIEW PATH
@@ -280,7 +316,7 @@ end rigRunModule
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigModuleError
+--| FUNCTION _rigModuleError
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -290,14 +326,16 @@ end rigRunModule
 --|
 --| Summary: Get error data in case module failed to load.
 --| 
---| Format:  rigModuleError(param1)
+--| Format: _rigModuleError(param1)
 --|
 --| Parameters: string <pModule>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigModuleError pModule
+private function _rigModuleError pModule
+  local tErrorStr
+  
   if gModulesHandlersA[pModule]["error"] is "404" then
   	# THE SEGMENTS DO NOT CORRELATE TO A VALID MODULE
     put "Segments did not correlate to a valid module. Could not run module: " & pModule into tErrorStr
@@ -306,7 +344,7 @@ function rigModuleError pModule
   end if
   
   return FALSE
-end rigModuleError
+end _rigModuleError
 
 
 
@@ -331,6 +369,8 @@ end rigModuleError
 ----------------------------------------------------------------------*/
 
 function rigFetchModuleSegment pSegmentNum pNoResult
+  local tNoResult, tModuleSegments
+  
   if pNoResult is "" then
     put FALSE into tNoResult
   else
@@ -380,6 +420,8 @@ end rigFetchModuleSegment
 ----------------------------------------------------------------------*/
 
 function rigModuleUriToAssoc pN pDefaultA
+  local tN
+  
 	if pN is empty then
 		put 3 into tN
 	else
@@ -412,7 +454,10 @@ end rigModuleUriToAssoc
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigModuleUriToAssoc pN pDefaultA
+private function _rigModuleUriToAssoc pN pDefaultA
+  local tN, tTotalSegments, tSegmentsArray, tKey, tVal, tRetval
+  local tSegmNum, tK, tSlicedArray, tIncr, tI, tLastVal
+  
   if pN is empty then
     put 3 into tN
   else
@@ -504,7 +549,9 @@ end _rigModuleUriToAssoc
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function _rigModuleSegmentsArray
+private function _rigModuleSegmentsArray
+  local tIncr, tNumKeys, tItem, tTempStr, tSegmentsA
+  
   put 0 into tIncr
   put 0 into tNumKeys
   set the itemDelimiter to "/"
@@ -530,10 +577,66 @@ end _rigModuleSegmentsArray
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigModulesGet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Get sModuleSegments variable value.
+--| 
+--| Format: rigModulesGet(param)
+--|
+--| Parameters: string <pWhat>
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigModulesGet pWhat
+  if (pWhat is "moduleSegments") or (pWhat is "sModuleSegments") then
+    return sModuleSegments
+  end if
+   
+  return empty
+end rigModulesGet
 
 
 
 
---| END OF Modules.lc
---| Location:  ./system/libraries/Modules.lc
+/*----------------------------------------------------------------------
+--| COMMAND rigModulesSet
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-01-07
+--| Last Mod: 2019-01-07
+--| Requires: --
+--|
+--| Summary: Setter for sModuleSegments variable.
+--| 
+--| Format: rigModulesSet param1, param2
+--|
+--| Parameters: string <pKey>, mixed <pVal>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+command rigModulesSet pKey pVal
+  if (pKey is "moduleSegments") or (pKey is "sModuleSegments") then
+    put pVal into sModuleSegments
+  end if
+end rigModulesSet
+
+
+
+
+
+
+
+
+--| END OF Modules.livecodescript
+--| Location:  ./system/libraries/Modules.livecodescript
 ----------------------------------------------------------------------
