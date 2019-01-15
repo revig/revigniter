@@ -25,8 +25,8 @@ end if
 #
 # 1. Libraries
 # 2. Stacks
-# 3. Helper files
-# 4. Plugins
+# 3. Database
+# 4. Helper files
 # 5. Extensions (LiveCode Builder libraries)
 # 6. Custom config files
 # 7. Language files
@@ -37,7 +37,7 @@ end if
 
 ##
 # -------------------------------------------------------------------
-#  Auto-load Libraries
+#  Auto-load Libraries / Database
 # -------------------------------------------------------------------
 # These are the libraries located in the system/libraries folder,
 # in the system/application/libraries folder or in your
@@ -100,21 +100,6 @@ put sAutoStacks into gModuleAutoload["stacks"]
 put "" into sAutoHelper[1]
 put sAutoHelper into gModuleAutoload["helper"]
 
-
-##
-# -------------------------------------------------------------------
-#  Auto-load Plugins
-# -------------------------------------------------------------------
-# Prototype:
-#
-#     put "footerlinks,jsCalendar,myPlugin" into sAutoPlugins
-#     split sAutoPlugins using comma
-#
-#     put sAutoPlugins into gModuleAutoload["plugin"]
-##
-
-put "" into sAutoPlugins[1]
-put sAutoPlugins into gModuleAutoload["plugin"]
 
 
 ##

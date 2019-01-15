@@ -13,7 +13,7 @@ end if
 # In order to keep the framework as light-weight as possible only the
 # absolute minimal resources are loaded by default. For example,
 # the database is not connected to automatically since no assumption
-# is made regarding whether you intend to use it.  This file lets
+# is made regarding whether you intend to use it. This file lets
 # you globally define which systems you would like loaded with every
 # request.
 #
@@ -27,11 +27,10 @@ end if
 # 2. Stacks
 # 3. Database
 # 4. Helper files
-# 5. Plugins
-# 6. Extensions (LiveCode Builder libraries)
-# 7. Custom config files
-# 8. Language files
-# 9. Models
+# 5. Extensions (LiveCode Builder libraries)
+# 6. Custom config files
+# 7. Language files
+# 8. Models
 #
 ##
 
@@ -100,22 +99,6 @@ put sAutoStacks into gAutoload["stacks"]
 
 put "" into sAutoHelper[1]
 put sAutoHelper into gAutoload["helper"]
-
-
-##
-# -------------------------------------------------------------------
-#  Auto-load Plugins
-# -------------------------------------------------------------------
-# Prototype:
-#
-#     put "footerlinks,jsCalendar" into sAutoPlugins
-#     split sAutoPlugins using comma
-#
-#     put sAutoPlugins into gAutoload["plugin"]
-##
-
-put "" into sAutoPlugins[1]
-put sAutoPlugins into gAutoload["plugin"]
 
 
 ##
