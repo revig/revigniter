@@ -27,6 +27,35 @@ end if
 	constant FILE_WRITE_UMASK = "0111"
 	constant DIR_READ_UMASK = "0022"
 	constant DIR_WRITE_UMASK = "0000"
+	
+	
+  function rigConstant pWhich
+    switch pWhich
+      case "FILE_READ_MODE"
+        return FILE_READ_MODE
+      break
+      case "FILE_WRITE_MODE"
+        return FILE_WRITE_MODE
+      break
+      case "DIR_READ_MODE"
+        return DIR_READ_MODE
+      break
+      case "DIR_WRITE_MODE"
+        return DIR_WRITE_MODE
+      break
+      case "FILE_READ_UMASK"
+        return FILE_READ_UMASK
+      break
+      case "FILE_WRITE_UMASK"
+        return FILE_WRITE_UMASK
+      break
+      case "DIR_READ_UMASK"
+        return DIR_READ_UMASK
+      break
+      case "DIR_WRITE_UMASK"
+        return DIR_WRITE_UMASK
+    end switch
+  end rigConstant
 
 
 --| END OF constants.lc
