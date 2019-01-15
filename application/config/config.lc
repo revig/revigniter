@@ -440,7 +440,7 @@ end if
 # Browser Cache Busting
 #--------------------------------------------------------------------------
 #
-# This setting is used by the asset helper and the galleria plugin. It determines if
+# This setting is used by the asset helper and the galleria helper. It determines if
 # asset file names should include the timestamp of last modification as a mechanism
 # for automatically updating user's cache once you start using far future expires
 # headers for your static files like images, CSS files, JavaScript files etc. This
