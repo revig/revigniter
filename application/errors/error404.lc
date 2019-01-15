@@ -27,8 +27,8 @@ margin: 			0 0 4px 0;
 </head>
 <body>
 	<div id="content">
-		<h1>[[gErrorData["heading"] ]]</h1>
-		[[gErrorData["message"] ]]
+		<h1>[[gRigA["errorData"]["heading"] ]]</h1>
+		[[gRigA["errorData"]["message"] ]]
 	</div>
 </body>
 </html>
