@@ -654,7 +654,6 @@ command rigLoadExtension pExtensions pModule
 
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
-    # GET PATH TO plugins FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
     put "modules/" & pModule & "/" into tModulePath
     put pModule & "/" into tFolderPrefix
   end if
@@ -1359,11 +1358,11 @@ end _rigLoadLibrary
 --| Version:  1.5
 --| Created: 30-06-09
 --| Last Mod: 10-07-16
---| Requires: rigLoadConfigFile(), rigLoadHelper, rigLoadPlugin, rigLoadLanguage, rigLoadDatabase(),
+--| Requires: rigLoadConfigFile(), rigLoadHelper, rigLoadLanguage, rigLoadDatabase(),
 --|            rigLoadScaffolding(), rigLoaderLoadLibrary, rigLoadStack, rigLoadModel, rigLoadExtension
 --|
---| Summary: The config/autoload.lc file contains an array that permits sub-systems,
---|             libraries, plugins, and helpers to be loaded automatically.
+--| Summary: The config/autoload.lc file contains an array that permits libraries, stacks, a database,
+--|             helpers, extensions, config files, language files and modules to be loaded automatically.
 --| 
 --| Format:  _rigAutoloader param1
 --|
@@ -1407,13 +1406,9 @@ command _rigAutoloader pModule
 		end repeat
 	end if
 
-	# AUTOLOAD PLUGINS, HELPERS AND LANGUAGES
+	# AUTOLOAD HELPERS, EXTENSIONS AND LANGUAGES
 	if tAutoload["helper"] is an array and tAutoload["helper"][1] is not "" then
 		rigLoadHelper tAutoload["helper"], pModule
-	end if
-	
-	if tAutoload["plugin"] is an array and tAutoload["plugin"][1] is not "" then
-		rigLoadPlugin tAutoload["plugin"], pModule
 	end if
 	
 	if tAutoload["extension"] is an array and tAutoload["extension"][1] is not "" then
