@@ -1,11 +1,11 @@
 <?lc
 # THE variablenames FUNCTION OUTSIDE HANDLERS RETURNS NOTHING, YIELDS A SERVER ERROR IN revIgniter.
 
--- if "gBASEPATH" is not among the items of line 4 of the variablenames then
+-- if "gRigA" is not among the items of line 4 of the variablenames then
 
 # NOTE: THIS HAS CHANGED IN SERVER VERSION 7!
-# HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gBASEPATH IS TREATED AS A LOCAL VARIABLE
-# CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gBASEPATH IS 2.
+# HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gRigA IS TREATED AS A LOCAL VARIABLE
+# CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gRigA IS 2.
 
 if gRigA is not an array then
 	put "No direct script access allowed."
@@ -328,7 +328,7 @@ end if
 			_remap gRigA["handler"]
 		else
 
-			# CHECK IF gHandler IS IN CONTROLLER
+			# CHECK IF gRigA["handler"] IS IN CONTROLLER
 			if (gRigA["handler"] <> empty) and ((gRigA["handler"] is not among the items of gControllerHandlers) or (gRigA["handler"] is gRigA["controller"])) then
 				
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS

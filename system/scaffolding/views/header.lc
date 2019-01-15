@@ -5,7 +5,7 @@
 <title>[[gData["pageTitle"] ]]</title>
 
 <style type="text/css">
-<? return rigLoadFile(gBASEPATH & "scaffolding/views/stylesheet.css", TRUE) ?>
+<? return rigLoadFile(gRigA["BASEPATH"] & "scaffolding/views/stylesheet.css", TRUE) ?>
 </style>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

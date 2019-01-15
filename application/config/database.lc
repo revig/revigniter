@@ -88,7 +88,7 @@ put "" into sDB["default"]["dbRedirectOnError"]
 
 put FALSE into sDB["default"]["cacheon"]
 
-put gBASEPATH & "database/cache/" into sDB["default"]["cachedir"]
+put gRigA["BASEPATH"] & "database/cache/" into sDB["default"]["cachedir"]
 
 put "utf8" into sDB["default"]["charset"]
 

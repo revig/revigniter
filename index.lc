@@ -105,7 +105,7 @@
 
 	if char 1 of gRigA["applicationFolder"] is "/" then
 		# Absolute path
-		-- constant APPPATH = gApplicationFolder & "/"
+		-- constant APPPATH = gRigA["applicationFolder"] & "/"
 		put gRigA["applicationFolder"] into gRigA["APPPATH"]
 	else
 		# Relative path
@@ -114,11 +114,11 @@
 		set the itemDel to slash
 		# look for app folder relative to the index folder
 		if there is a folder (item 1 to -2 of sTempPath & "/" & gRigA["applicationFolder"]) then
-			-- constant APPPATH = index folder & "/" & gApplicationFolder & "/"
+			-- constant APPPATH = index folder & "/" & gRigA["applicationFolder"] & "/"
 			put item 1 to -2 of sTempPath & "/" & gRigA["applicationFolder"] & "/" into gRigA["APPPATH"]
 		else
 			# app folder must me relative to system folder
-			-- constant APPPATH = BASEPATH & gApplicationFolder & "/"
+			-- constant APPPATH = BASEPATH & gRigA["applicationFolder"] & "/"
 			put gRigA["BASEPATH"] & gRigA["applicationFolder"] & "/" into gRigA["APPPATH"]
 		end if
 	end if

@@ -22,12 +22,12 @@ end if
 
 /*
 	# SAMPLE FOR A PRECONTROLLER HOOK
-	put "MyHandler" into gHooks["preController"]["handler"]
-	put "MyScript.lc" into gHooks["preController"]["filename"]
-	put "hooks" into gHooks["preController"]["filepath"]
-	put "beer" into gHooks["preController"]["params"][1]
-	put "wine" into gHooks["preController"]["params"][2]
-	put "snacks" into gHooks["preController"]["params"][3]
+	put "MyHandler" into gHooksA["preController"]["handler"]
+	put "MyScript.lc" into gHooksA["preController"]["filename"]
+	put "hooks" into gHooksA["preController"]["filepath"]
+	put "beer" into gHooksA["preController"]["params"][1]
+	put "wine" into gHooksA["preController"]["params"][2]
+	put "snacks" into gHooksA["preController"]["params"][3]
 */
 
 
