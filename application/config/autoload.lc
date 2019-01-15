@@ -35,7 +35,7 @@ end if
 ##
 
 # DECLARE VARIABLES
-local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoPlugins, sAutoCustConfigs, sAutoLangFiles, sAutoModels, sAutoExtensions
+local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoCustConfigs, sAutoLangFiles, sAutoModels, sAutoExtensions
 
 
 ##
