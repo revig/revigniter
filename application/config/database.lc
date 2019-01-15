@@ -21,7 +21,7 @@ end if
 #                the default setting "localhost" to "127.0.0.1" if the connection
 #                to a local SQL server fails.
 #                In case you use SQLite set this variable to the database file path like:
-#               gAPPPATH & "db/myDatabase.sqlite"
+#                gRigA["APPPATH"] & "db/myDatabase.sqlite"
 #	["username"] The username used to connect to the database
 #	["password"] The password used to connect to the database
 #	["database"] The name of the database you want to connect to
@@ -39,7 +39,7 @@ end if
 #	["dbcollat"] The character collation used in communicating with the database
 # ["cacheautodel"] TRUE/FALSE - Whether to delete the query cache on write queries.
 # ["options"] A comma delimited list of SQLite options. Can be empty or can
-#             contain "binary", "extensions" or both.
+#              contain "binary", "extensions" or both.
 # ["port"] The port number you want to connect to.
 # ["useSSL"] TRUE/FALSE Whether to use SSL for the connection or not.
 #
@@ -53,21 +53,20 @@ end if
 # 										to the database on the next interaction after connection has been lost.
 #
 # The sActiveGroup variable lets you choose which connection group to
-# make active.  By default there is only one group (the "default" group).
+# make active. By default there is only one group (the "default" group).
 #
-# The gActiveRecord variables lets you determine whether or not to load
+# The gRigA["activeRecord"] variable lets you determine whether or not to load
 # the active record library
 ##
 
-# DECLARE VARIABLES
--- global gActiveRecord -- declared in DB.lc
+
 
 local sDB, sActiveGroup
 
 
 
 put "default" into sActiveGroup
-put TRUE into gActiveRecord
+put TRUE into gRigA["activeRecord"]
 
 put "localhost" into sDB["default"]["hostname"]
 
