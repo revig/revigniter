@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>SiteLinks Plugin : revIgniter User Guide</title>
+		<title>QueryToJSON Plugin : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">SiteLinks Plugin</li>
+			 		 	<li class="active">QueryToJSON Plugin</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -86,82 +86,102 @@
 <div id="content">
 
 
-<h1>SiteLinks Plugin</h1>
+<h1>QueryToJSON Plugin</h1>
 
-<p>The SiteLinks Plugin file contains a function that assists in writing links like footer navigation links or breadcrumbs navigation links.</p>
+<p>The QueryToJSON Plugin file contains a function for converting database query result arrays to the JSON format.</p>
 
 
 <h2>Loading this Plugin</h2>
 
 <p>This plugin is loaded using the following code:</p>
-<pre><code class="lang-livecodeserver">rigLoadPlugin "sitelinks"</code></pre>
+<pre><code class="lang-livecodeserver">rigLoadPlugin "querytojson"</code></pre>
 
 <p>The function:</p>
 
-<h3>rigSiteLinks(<var>pLinks</var>, <var>pCurrentPage</var>, <var>pSeparator</var>, <var>pSelector</var>)</h3>
+<h3>rigQueryToJSON(<var>pResult</var>, <var>pFieldnames</var>)</h3>
 
-<p>The first parameter is a numbered array of site links preferable stored in a custom config file in your <dfn>application/config/</dfn> folder. The second parameter indicates the current page. The third parameter defines the link separator. The fourth parameter is used to define the div and paragraph id/class selector.</p>
+<p>The first parameter is a database query result array. The optional second parameter is an array containing the field names
+	of the database table. Example:</p>
 
 
 <div class="codeSample">
-<pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
-put "copyright" into tFooterlinks[1]["copyright 2009 yourname.com"]
-put "home" into tFooterlinks[2]["Home"]
-put "contact" into tFooterlinks[3]["Contact"]
-put "imprint" into tFooterlinks[4]["Imprint"]
+<pre><code># MODEL DATABASE QUERY
+put mymodelFetchAllData("recipe") into tQuery
+put tQuery["resultarray"] into tResult
+put tQuery["fieldnames"] into tFieldNames
+
+# CONVERT ARRAY TO JSON
+put rigQueryToJSON(tResult, tFieldNames) into gData["jsonData"]
+</code></pre>
+</div>
+
+<p>Conversion example:</p>
+
+<p>Input: database table</p>
+
+<div class="table">
+<table>
+<tr>
+<th>ID</th><th>Name</th><th>Directions</th></tr>
+<tr>
+<td class="td">1</td><td class="td">Banana Bread</td><td class="td">How to make banana bread.</td></tr>
+<tr>
+<td class="td">2</td><td class="td">Pancakes</td><td class="td">How to make pancakes.</td></tr>
+</table>
+</div>
+
+<p>Output: JSON</p>
+
+<pre><code>{
+"queryToJSON":[
+{
+"ID":"1",
+"Name":"Banana Bread",
+"Directions":"How to make banana bread."
+},
+{
+"ID":"2",
+"Name":"Pancakes",
+"Directions":"How to make pancakes."
+}
+]
+}
+</code></pre>
 
 
-# THE STATEMENT IN YOUR CONTROLLER
-put rigSiteLinks(tFooterlinks, "Contact", " :: ", "footer") into gData["footerLinks"]
+
+
+<p>To reference the JSON object use the term "queryToJSON". To reference individual items of the JSON records use the table field names.
+	If the "fieldnames" parameter is empty, item names are "field1", "field2", "field3" ... etc. Example using the Jquery library:</p>
+
+<div class="codeSample">
+<pre><code>rigJQopen
+rigJQeventOpen "'#go'", "'click'"
+put "getjsontest/getjsondata" into tAjax["url"]
+put "'json'" into tAjax["dataType"]
+
+put rigJQvarR("jsObj, data;") & return into tSuccess
+put rigJQsetR("'#resultData'", "append", "'&lt;p>' + element.myTabeleFieldName + '&lt;/p>'") into tCallback
+put rigJQeachOpenR("jsObj.queryToJSON", , tCallback) && rigJQeachCloseR() after tSuccess
+
+put tSuccess into tAjax["success"]
+
+rigJQajax tAjax
+
+rigJQeventClose
+rigJQclose
+
+put the result into gData["JQscript"]
 </code></pre>
 </div>
 
 
-<p><strong>Note:</strong> The elements (values) of the links array are URI segments and the keys are the names displayed.</p>
-
-<p>The output looks like this:</p>
-
-<pre><code>&lt;div id="footer">
-	&lt;p class="footer">
-		&lt;a href="http://yourSite.com/copyright">copyright 2011 yourname.com&lt;/a>&lt;span class="separator"> :: &lt;/span>
-		&lt;a href="http://yourSite.com/home">Home</a>&lt;span class="separator"> :: &lt;/span>
-		&lt;span class="currentpage">Contact&lt;/span>&lt;span class="separator"> :: &lt;/span>
-		&lt;a href="http://yourSite.com/imprint">Imprint&lt;/a>
-	&lt;/p>
-&lt;/div>
-</code></pre>
+<p>In the example above we perform an Ajax request. We store the retrieved data in a variable called "jsObj" and reference the
+	JSON object with "jsObj.queryToJSON". We iterate over the JSON object using "element.myTabeleFieldName" for an item
+	"myTabeleFieldName" in each JSON record "element" where "myTabeleFieldName" is the name of a database tabel field and
+	"element" is an argument of the JQuery .each function (rigJQeachOpenR).</p>
 
 
-<p>Alternatively you can add css id selectors to the links in order to make them distinguishable in your style sheet. This way 
-you can use images instead of text for your navigation links. To accomplish this you need to append a comma and an id selector
-to each URI and you need to use different numbers of nonbreaking spaces as names so that you are able to define the current page link. </p>
-
-<p>Here is an example:</p>
-
-<div class="codeSample">
-<pre><code># THE LINKS ARRAY IN YOUR CUSTOM CONFIG FILE
-put "copyright,IDselectorCopyright" into tFooterlinks[1]["&amp;nbsp;"]
-put "home,IDselectorHome" into tFooterlinks[2]["&amp;nbsp;&amp;nbsp;"]
-put "contact,IDselectorContact" into tFooterlinks[3]["&amp;nbsp;&amp;nbsp;&amp;nbsp;"]
-put "imprint,IDselectorImprint" into tFooterlinks[4]["&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;"]
-
-
-# THE STATEMENT IN YOUR CONTROLLER
-put rigSiteLinks(tFooterlinks, "&amp;nbsp;&amp;nbsp;&amp;nbsp;", " :: ", "footer") into gData["footerLinks"]
-</code></pre>
-</div>
-
-<p>The output looks like this:</p>
-
-<pre><code>&lt;div id="footer">
-	&lt;p class="footer">
-		&lt;a href="http://yourSite.com/copyright" id="IDselectorCopyright">copyright 2011 yourname.com&lt;/a>&lt;span class="separator"> :: &lt;/span>
-		&lt;a href="http://yourSite.com/home" id="IDselectorHome">Home</a>&lt;span class="separator"> :: &lt;/span>
-		&lt;span class="currentpage" id="IDselectorContact">Contact&lt;/span>&lt;span class="separator"> :: &lt;/span>
-		&lt;a href="http://yourSite.com/imprint" id="IDselectorImprint">Imprint&lt;/a>
-	&lt;/p>
-&lt;/div>
-</code></pre>
 
 
 </div>
@@ -173,10 +193,11 @@ put rigSiteLinks(tFooterlinks, "&amp;nbsp;&amp;nbsp;&amp;nbsp;", " :: ", "footer
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="../plugins/queryvalues_plugin.html">QueryValues Plugin</a>
+Previous Topic:&nbsp;&nbsp;<a href="markdown_helper.html">Markdown Helper</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
-<a href="../index.html">User Guide Home</a>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="queryvalues_helper.html">QueryValues Helper</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
