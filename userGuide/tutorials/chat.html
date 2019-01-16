@@ -293,7 +293,7 @@ a:hover {
 
 <h2>Controller</h2>
 
-<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries, helpers and plugins plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
+<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
 
 <p>We start with the basic prototype for a controller script:</p>
 
@@ -306,7 +306,7 @@ put "index,chat" into gControllerHandlers
 
 # THE CONTROLLER HANDLER
 command chat
-&nbsp;&nbsp;&nbsp; # LOAD REQUIRED LIBRAIES, MODELS, HELPERS, PLUGINS
+&nbsp;&nbsp;&nbsp; # LOAD REQUIRED LIBRAIES, MODELS, HELPERS
 end chat
 
 # THE DEFAULT HANDLER
@@ -324,7 +324,7 @@ end index
 
 <p>Save this script as "chat.lc" in <samp>system/application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
-<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required libraries, helpers, plugins, models and the database.</p>
+<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required libraries, helpers, models and the database.</p>
 	
 	<p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the jQuery library:</p>
 

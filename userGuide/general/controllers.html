@@ -333,7 +333,8 @@ See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 <a name="good"></a>
 <h2>Good Practice</h2>
 
-<p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, plugins, models, a database etc.
+<p>It is good practice, though not mandatory, to load all needed libraries, databases, stacks, helpers, extensions, custom config files, 
+language files and models in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, models, a database etc.
 Let's say your controller is called "blog.lc", then your code would look like this:</p>
 
 <div class="codeSample">
@@ -344,7 +345,7 @@ put "index,blog" into gControllerHandlers
 
 
 command blog
-	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS, PLUGINS
+	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS ETC.
 end blog
 
 command index

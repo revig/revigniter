@@ -125,7 +125,7 @@
 	<li>Each module may contain a config/autoload.lc file.</li>
 	<li>Each module may contain a config/config.lc file.</li>
 	<li>Each module may contain a config/routes.lc file. Note, this file is mandatory if a module controller is used as application controller.</li>
-	<li>Each module may contain a language directory, a helpers directory, a libraries directory, a plugins directory and a stacks directory.</li>
+	<li>Each module may contain an extensions directory, a language directory, a helpers directory, a libraries directory, a models directory and a stacks directory.</li>
 </ul>
 
 
@@ -140,12 +140,11 @@
 		|--myModule/
 			|--config/
 			|--controllers/
-			|--files/
+			|--extensions/
 			|--helpers/
 			|--language/
 			|--libraries/
 			|--models/
-			|--plugins/
 			|--stacks/
 			|--views/
 </code></pre>
@@ -176,7 +175,7 @@ put "myModule,myModuleIndex,otherHandler" into gModuleHandlers
 
 command myModule
 	# MAIN HANDLER, THIS HANDLER IS CALLED WHEN THE CONTROLLER IS LOADED
-	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS, PLUGINS HERE
+	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS ETC. HERE
 	-- Code...
 end myModule
 
@@ -281,8 +280,6 @@ rigLoaderLoadLibrary "Modulelibrary", , "myModule"
 get rigLangLoadLang("moduleLang", "french", "myModule")
 
 rigLoadHelper "moduleHelper", "myModule"
-
-rigLoadPlugin "modulePlugInPi", "myModule"
 
 get rigLoadConfig("mymoduleconfig", TRUE, TRUE, "myModule")
 
