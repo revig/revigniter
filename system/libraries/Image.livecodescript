@@ -6,25 +6,25 @@ script "Image"
 # An application development framework for LiveCode
 # modeled on CodeIgniter.
 #
-# @package	revIgniter
-# @author		rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2014, dimensionB Bitter u. Bitter GmbH
-# @license	      https://revigniter.com/userGuide/license.html
-# @link		      https://revigniter.com
+# @package	  revIgniter
+# @author		  rabit@revigniter.com
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @license	  https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
 ##
 
 ## ------------------------------------------------------------------------
 
 ##
-# revIgniter Image Manipulation Stack
+# revIgniter Image Manipulation Library
 #
 #
-# @version         1.0.0
-# @package	  revIgniter
-# @subpackage  Stacks
-# @category	  Image
-# @author		  rabit@revigniter.com
-# @link		        https://revigniter.com/userGuide/libraries/image_lib.html
+# @version       1.0.0
+# @package	    revIgniter
+# @subpackage  Libraries
+# @category	    Image
+# @author		    rabit@revigniter.com
+# @link		      https://revigniter.com/userGuide/libraries/image_lib.html
 ##
 
 ## ------------------------------------------------------------------------

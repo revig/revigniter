@@ -20,7 +20,7 @@ script "Ftp"
 #
 # @package      revIgniter
 # @subpackage   Libraries
-# @category      Libraries
+# @category      FTP
 # @author		     rabit@revigniter.com
 # @link		       https://revigniter.com/userGuide/libraries/ftp.html
 ##
