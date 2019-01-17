@@ -92,13 +92,13 @@
 <ol>
 <li>Unzip the package.</li>
 <li>Upload the revIgniter folders and files to your server.  Normally the index.lc file will be at your root.</li>
-<li>Open the <dfn>application/config/config.lc</dfn> file with a text editor and set your base URL.  If you intend to use encryption or sessions, set your encryption key.</li>
+<li>Open the <dfn>application/config/config.lc</dfn> file with a text editor and set your base URL.  If you intend to use encryption or sessions, set your encryption key. If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>system/logs</dfn> folder is writable.</li>
 <li>If you intend to use a database, open the <dfn>application/config/database.lc</dfn> file with a text editor and set your database settings.</li>
 </ol>
 
 <p>If you wish to hide the location of your revIgniter files you can rename the <dfn>system</dfn> folder
 to something more private.  If you do rename it, you must open your main <kbd>index.lc</kbd> file and set the <samp>gRigA["systemFolder"]</samp>
-variable at the top of the page with the new name you've chosen.</p>
+variable at the top of the page to the new name you've chosen.</p>
 
 <p>To increase security even further you can move your system and application folder above web root. Before doing so please read the section <a href="../general/managing_apps.html">Managing Your Application</a>.</p>
 
