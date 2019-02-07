@@ -19,18 +19,21 @@
 @someGray:									#7b7b7b;
 @rigGrayLight:							#f2f2f2;
 @silver:										#f5f5f5;
-@lightSilver:								#f9f9f9;
-@darkGray:									#444;
-@charcoalGray:							#333;
+@lightSilver:								#c7c7c7;
+@darkGray:									#2B3137;
+@charcoalGray:							#161616;
 @blueGray:									#d5dbe7;
 @blueLight:									#d0d9f8;
-@blueDark:									#2b4662;
 @ruleGray:									#bbb;
-@rigGreen:									#009700;
-@rigOrange:									#FFBD00;
-@orangeBrown:								#d9a000;
-@purple:										#480091;
-@rigRed:										#d00;
+@rigGreen:									#88c688;
+@rigRedDark:								#470901;
+@orangeBrown:							#d8ad7e;
+@purple:										#B875FB;
+@rigRed:										#fb6161;
+@rigGreenLight:							#bdec96;
+@rigGreenSignal:						#baf051;
+/*@rigGreenSignalTransp:			rgba(186,240,81,0.9);*/
+@rigGreenSignalTransp:			rgba(172, 174, 176, 0.9);
 /*// < ------------------------- Colors end */
 
 
@@ -47,6 +50,11 @@
 @fontSizeBase:							14px;
 @fontSizeSmall:							12px;
 @fontSizeLarge:							16px;
+@font-face {
+  font-family: 'SourceCodeProRegular';
+  src: url('../fonts/SourceCodeProRegular.eot');
+  src: url('../fonts/SourceCodeProRegular.eot') format('embedded-opentype'), url('../fonts/SourceCodeProRegular.woff2') format('woff2'), url('../fonts/SourceCodeProRegular.woff') format('woff'), url('../fonts/SourceCodeProRegular.ttf') format('truetype'), url('../fonts/SourceCodeProRegular.svg#SourceCodeProRegular') format('svg');
+}
 
 .fontBoldNormal {
  font-weight: bold;
@@ -206,8 +214,8 @@ div .table {
 #content {
 	padding-top: 18px;
 	h1 {
-		color: @black;
-		border-bottom: 1px solid @ruleGray;
+		color: @white;
+		border-bottom: 1px solid @lightSilver;
 		background-color: transparent;
 		margin: 0 0 20px 0;
 		padding: 7px 0 7px 3px;
@@ -215,13 +223,13 @@ div .table {
 	h2 {
 	  background-color: transparent;
 	  border-bottom: 1px solid @ruleGray;
-	  color: @blueDark;
+	  color: @white;
 	  margin: 28px 0 16px 0;
 	  padding: 5px 0 6px 0;
 	}
 	h3 {
 	 background-color: transparent;
-	 color: @blueDark;
+	 color: @white;
 	 margin: 22px 0 15px 0;
 	 padding: 0 0 0 0;
 	}
@@ -253,7 +261,7 @@ div .table {
 	 font-size: inherit;
 	}
 	ul {
-	 list-style-image: url(../images/arrow.gif);
+	 list-style-image: url(../images/arrowN.png);
 	 margin: 10px 0 12px 0;
 	 padding-left: 20px;
 	}
@@ -274,18 +282,21 @@ div .table {
 	.td {
 	 	font-weight: normal;
 	 	padding: 6px;
-	 	background-color: @silver;
-		color: @blueDark;
+	 	background-color: @darkGray;
+		color: @lightSilver;
 	}
 	.tdpackage {
 	 font-weight: normal;
 	}
 	.important {
-	 background: @rigOrange;
-	 color: @charcoalGray;
+	 /* background: @rigRedDark; */
+	 color: @lightSilver;
 	 margin: 10px 0 5px 0;
 	 padding: 10px;
 	 .roundedCorners;
+	 	border-style: solid;
+	 	border-width: 2px;
+	 	border-color: @lightSilver;
 	 p {
 	  margin: 6px 0 8px 0;
 	  padding: 0;
@@ -299,6 +310,9 @@ div .table {
 		max-width: 639px;
 		margin-top:60px;
 		margin-bottom:100px;
+	}
+	ol {
+		padding-left: 20px;
 	}
 }
 
@@ -367,7 +381,7 @@ form {
 
 .textarea {
  font-size: @fontSizeLarge;
- color: @blueDark;
+ color: @rigGreenLight;
  background-color: @lightSilver;
  border: 1px solid @rigGray;
  width: 100%;
@@ -521,7 +535,8 @@ div #box {
 // ------------------------- > */
 
 pre code {
-	font-family: Monaco, Verdana, Sans-serif;
+	/*font-family: Monaco, Verdana, Sans-serif;*/
+	font-family: 'SourceCodeProRegular', Georgia, serif;
 }
 
 
@@ -531,7 +546,7 @@ pre .css .rule .hljs-keyword,
 pre .hljs-winutils,
 pre .javascript .hljs-title,
 pre .hljs-subst {
-  color: #954121;
+  color: #fc6c36;
 }
 
 
@@ -542,7 +557,7 @@ pre .hljs-hexcolor {
 
 pre .hljs-tag .hljs-value,
 pre .tex .hljs-formula {
-  color: #219161;
+  color: #2ec081;
 }
 
 
@@ -565,13 +580,13 @@ pre .hljs-class .hljs-title {
 
 pre .hljs-tag,
 pre .hljs-tag .hljs-title {
-  color: #000080;
+  color: #6f6ff9;
   font-weight: normal
 }
 
 pre .hljs-attribute,
 pre .instancevar {
-  color: #008080
+  color: #579aa5
 }
 
 pre .hljs-regexp {
@@ -620,33 +635,33 @@ pre .hljs-chunk {
 
 
 pre .hljs-preprocessor {
-  color: #000;
+  color: @lightSilver;
   font-weight: normal;
 }
 
 
 pre .hljs-built_in {
-  color: #0086b3;
+  color: #00bfff;
 }
 
 
 pre .hljs-variable {
-	color: #318495;
+	color: @white;
 }
 
 
 pre .hljs-string {
-	color: #036A07;
+	color: #96ff00;
 }
 
 
 pre .hljs-keyword {
-	color: #0000FF;
+	color: #167CFF;
 }
 
 
 pre .hljs-title {
-  color: #9F6E06;
+  color: #FF8610;
 }
 
 
@@ -657,12 +672,12 @@ pre .hljs-comment {
 
 
 pre .hljs-constant {
-	color: #06960E;
+	color: #ffba30;
 }
 
 
 pre .hljs-number {
-	color: #0000CD;
+	color: #0BB607;
 }
 
 /*// < ------------------------- Highlight end */
