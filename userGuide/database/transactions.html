@@ -112,11 +112,11 @@ but there's really no benefit).</p>
 
 <p>To run your queries using transactions you will use the <dfn>rigDbTransStart</dfn> and <dfn>rigTransComplete()</dfn> handlers as follows:</p>
 
-<pre><code><kbd>rigDbTransStart</kbd>
+<pre><code>rigDbTransStart
 get rigDbQuery("AN SQL QUERY…")
 get rigDbQuery("ANOTHER QUERY…")
 get rigDbQuery("AND YET ANOTHER QUERY…")
-<kbd>get rigTransComplete()</kbd>
+get rigTransComplete()
 </code></pre>
 
 <p>You can run as many queries as you want between the start/complete handlers and they will all be committed or rolled back based on success or failure
@@ -144,7 +144,7 @@ get rigDbQuery("AN SQL QUERY…")
 get rigDbQuery("ANOTHER QUERY…")
 get rigTransComplete()
 
-if <kbd>rigDbTransStatus()</kbd> is FALSE then
+if rigDbTransStatus() is FALSE then
 	# generate an error... or use the rigLogMessage handler to log your error
 end if
 </code></pre>
