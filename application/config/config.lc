@@ -161,13 +161,13 @@ end if
 #
 # The other items let you set the query string "words" that will
 # invoke your controllers and its handlers:
-# example.com/index.lc?c=controller&m=method
+# example.com/index.lc?c=controller&h=handler
 #
 ##
 
 	put FALSE into gConfig["enableQueryStrings"]
 	put "c" into gConfig["controllerTrigger"]
-	put "m" into gConfig["methodTrigger"]
+	put "h" into gConfig["handlerTrigger"]
 
 
 

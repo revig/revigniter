@@ -383,9 +383,9 @@ end rigSlashItem
 --| FUNCTION rigSiteURL
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 2009-07-28
---| Last Mod: 2017-06-27
+--| Last Mod: 2019-02-08
 --| Requires: rigSlashItem(), rigFetchConfigItem()
 --|
 --| Summary: Site URL
@@ -398,7 +398,7 @@ end rigSlashItem
 ----------------------------------------------------------------------*/
 
 function rigSiteURL pURI
-  local tURI, tStandardURLs, tConfigValue, tSuffix, tRegEx, tFoundString, tC, tM
+  local tURI, tStandardURLs, tConfigValue, tSuffix, tRegEx, tFoundString, tC, tH
   local tQueryString, tCurrentKeyNum, tSegment, tKeyNotUsed, tKey, tPrefix
   
   put pURI into tURI
@@ -434,8 +434,8 @@ function rigSiteURL pURI
 
       if "/" is in tURI then -- controller and handler 
         # GET HANDLER TRIGGER
-        put rigFetchConfigItem("methodTrigger") into tM 
-        -- replace "/" with "&" & tM & "=" in tURI 
+        put rigFetchConfigItem("handlerTrigger") into tH 
+        -- replace "/" with "&" & tH & "=" in tURI 
 
         set the itemdel to "/"
         
@@ -451,7 +451,7 @@ function rigSiteURL pURI
           if tSegment > 1 then
             # HANDLER SEGMENT
             if tSegment is 2 then
-              put "&" & tM & "=" & thisItem after tQueryString
+              put "&" & tH & "=" & thisItem after tQueryString
             else
               # OTHER SEGMENTS
               put tCurrentKeyNum + 1 into tCurrentKeyNum
@@ -460,7 +460,7 @@ function rigSiteURL pURI
                     
               repeat until tKeyNotUsed is TRUE
                 put numToCodepoint(tCurrentKeyNum) into tKey
-                if (tKey is not tC) and (tKey is not tM) then
+                if (tKey is not tC) and (tKey is not tH) then
                   put TRUE into tKeyNotUsed
                 else
                   put tCurrentKeyNum + 1 into tCurrentKeyNum

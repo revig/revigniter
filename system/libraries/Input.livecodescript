@@ -145,9 +145,9 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.7
---| Created: 17-06-09
---| Last Mod: 15-10-15
+--| Version:  1.8
+--| Created: 2009-06-17
+--| Last Mod: 2019-02-08
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
 --|           	_rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
@@ -187,7 +187,7 @@ private command _rigSanitizeGlobals
 	if $_GET is an array then
 		if (the number of lines in the keys of $_GET > 1) then
 			if (the number of lines in the keys of $_GET = 2) then
-				if (line 2 of the keys of $_GET) is not rigFetchConfigItem("methodTrigger") then
+				if (line 2 of the keys of $_GET) is not rigFetchConfigItem("handlerTrigger") then
 					put $_GET into $_POST
 				end if
 			else

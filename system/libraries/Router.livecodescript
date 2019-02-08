@@ -111,9 +111,9 @@ end libraryStack
  --| COMMAND _rigSetRouting
  --|
  --| Author: rabit
- --| Version:  1.7
+ --| Version:  1.8
  --| Created: 2009-06-19
- --| Last Mod: 2018-12-14
+ --| Last Mod: 2019-02-08
  --| Requires: rigFetchConfigItem(), _rigFilterUri, rigTrim(), rigSetController, rigSetHandler, _rigExplodeSegments,
  --|            _rigSetRouting, _rigValidateQueryRequest(), _rigFetchUriString, rigShowError, _rigSetRequest,
  --|					rigLogMessage, _rigRemoveUrlSuffix, _rigParseRoutes
@@ -143,8 +143,8 @@ private command _rigSetRouting
 
     rigSetController tFilteredStrippedString
 
-    if $_GET[rigFetchConfigItem("methodTrigger")] is not empty then
-      put _rigFilterUri($_GET[rigFetchConfigItem("methodTrigger")]) into tFilteredStrippedString
+    if $_GET[rigFetchConfigItem("handlerTrigger")] is not empty then
+      put _rigFilterUri($_GET[rigFetchConfigItem("handlerTrigger")]) into tFilteredStrippedString
       # TRIM WHITESPACE
       put rigTrim(tFilteredStrippedString) into tFilteredStrippedString
       rigSetHandler tFilteredStrippedString
