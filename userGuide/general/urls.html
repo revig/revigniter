@@ -141,7 +141,7 @@ a request for your index.lc file. If you use this method to remove the page, set
 
 <p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
 
-<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See http://httpd.apache.org/docs/current/mod/mod_rewrite.html</p>
+<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See <a href="http://httpd.apache.org/docs/current/mod/mod_rewrite.html">http://httpd.apache.org/docs/current/mod/mod_rewrite.html</a></p>
 
 
 <h2>Adding a URL Suffix</h2>
@@ -167,12 +167,12 @@ open your config file you'll see these items:</p>
 
 <pre><code>put FALSE into gConfig["enableQueryStrings"]
 put  "c" into gConfig["controllerTrigger"]
-put "m" into gConfig["methodTrigger"]</code></pre>
+put "h" into gConfig["handlerTrigger"]</code></pre>
 
 <p>If you change "enableQueryStrings" to TRUE this feature will become active.  Your controllers and handlers will then
 be accessible using the "trigger" words you've set to invoke your controllers and handlers:</p>
 
-<pre><code>index.lc?c=controller&amp;m=method</code></pre>
+<pre><code>index.lc?c=controller&amp;h=handler</code></pre>
 
 
 
