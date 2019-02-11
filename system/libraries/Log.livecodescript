@@ -102,8 +102,8 @@ private command _rigSetDefaultValues
   put 4 into sLogA["logLevels"]["ALL"]
 
   # GET LOG PATH
-  if gConfig["logPath"] is not empty then
-  	put gConfig["logPath"] into sLogA["logPath"]
+  if gConfig["log_path"] is not empty then
+  	put gConfig["log_path"] into sLogA["logPath"]
   else
   	put gRigA["BASEPATH"] & "logs/" into sLogA["logPath"]
   end if
