@@ -32,7 +32,7 @@ script "Image"
 
 
 
-global gRigA, gSystemFolder
+global gRigA
 
 local sImageA, sStackInUse
 
@@ -1598,11 +1598,12 @@ end _rigImageSourceTag
 ----------------------------------------------------------------------*/
 
 private function _rigImageSourceFile
-  local tSystemFolder, tFilePath
+  local tFilePath
    
-	set the itemDelimiter to "/"
-	put item -1 of 	gSystemFolder into tSystemFolder		
-  -- put "./" & tSystemFolder & "/application/controllers/" & sImageA["dynamicOutputURI"] & gRigA["EXT"] into tFilePath
+	-- local tSystemFolder
+	-- set the itemDelimiter to "/"
+	-- put item -1 of 	gRigA["systemFolder"] into tSystemFolder		
+ 	-- put "./" & tSystemFolder & "/application/controllers/" & sImageA["dynamicOutputURI"] & gRigA["EXT"] into tFilePath
   put gRigA["APPPATH"] & "controllers/" & sImageA["dynamicOutputURI"] & gRigA["EXT"] into tFilePath
 
 	return tFilePath
