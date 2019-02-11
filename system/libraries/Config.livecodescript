@@ -225,7 +225,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 		if pFailGracefully is TRUE then
 			return FALSE
 		else
-			rigShowError "The configuration file" && item -1 of tConfigFileName & ".livecodescript" && "does not exist."
+			rigShowError "The configuration file" && item -1 of tConfigFileName & gRigA["EXT"] && "does not exist."
 		end if
 	end if
 
@@ -247,7 +247,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && item -1 of tConfigFileName & ".livecodescript" && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & gRigA["EXT"] && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 
@@ -266,7 +266,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 			if pFailGracefully is TRUE then
 				return FALSE
 			else
-				rigShowError "Your" && item -1 of tConfigFileName & ".livecodescript" && "file does not appear to contain a valid configuration array."
+				rigShowError "Your" && item -1 of tConfigFileName & gRigA["EXT"] && "file does not appear to contain a valid configuration array."
 			end if
 		end if
 	end if
@@ -276,9 +276,9 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   put tConfigFileName into sConfigIsLoaded[tConfigIsLoadedKeyNum]
 
   if pModule <> empty then
-    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & ".livecodescript"
+    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & gRigA["EXT"]
   else
-    rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & ".livecodescript"
+    rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & gRigA["EXT"]
   end if
   
 	return TRUE
