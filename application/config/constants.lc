@@ -16,6 +16,8 @@ end if
 # certain environments Octal values should
 # always be used to set the mode correctly.
 #
+# Note: Accessing these constants within script only stacks requires
+# the rigConstant() function, see below.
 ##
 
 	constant FILE_READ_MODE = "644"
