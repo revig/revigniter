@@ -121,7 +121,7 @@ know what you are doing before attempting it.</p>
 
 <p>To use one of your own system libraries instead of a default one simply place your version inside your local <dfn>application/libraries</dfn> directory:</p>
 
-<pre><code>application/libraries/<dfn>some-library.lc</dfn></code></pre>
+<pre><code>application/libraries/<dfn>Somelibrary.livecodescript</dfn></code></pre>
 
 <p>If this directory does not exist you can create it.</p>
 
@@ -139,8 +139,9 @@ Extending a library is nearly identical to replacing a library with one exceptio
 <li>Your new library name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
 </ul>
 
-<p>For example, to extend the native <kbd>Input</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Input.lc</kbd>.</p>
+<p>For example, to extend the native <kbd>Input</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Input.livecodescript</kbd>.</p>
 
+<p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build models, libraries, helpers etc.</p>
 
 <h3>Setting Your Own Prefix</h3>
 

@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Pagination Library : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Pagination Library : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Pagination Library</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Pagination Library</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 
@@ -126,13 +126,13 @@ put rigCreatePaginationLinks() into gData["pagination"]</code></pre>
 minimum you need the three shown.  Here is a description of what those items represent:</p>
 
 <ul>
-	<li><strong>baseUrl</strong> This is the full URL to the controller/handler containing your pagination.  In the example
-	above, it is pointing to a controller called "test" and a handler called "page".  Keep in mind that you can
-	<a href="../general/routing.html">re-route your URI</a> if you need a different structure.</li>
-	<li><strong>totalRows</strong> This number represents the total rows in the result set you are creating pagination for.
-	Typically this number will be the total rows that your database query returned.
-	</li>
-	<li><strong>perPage</strong> The number of items you intend to show per page.  In the above example, you would be showing 20 items per page.</li>
+  <li><strong>baseUrl</strong> This is the full URL to the controller/handler containing your pagination.  In the example
+  above, it is pointing to a controller called "test" and a handler called "page".  Keep in mind that you can
+  <a href="../general/routing.html">re-route your URI</a> if you need a different structure.</li>
+  <li><strong>totalRows</strong> This number represents the total rows in the result set you are creating pagination for.
+  Typically this number will be the total rows that your database query returned.
+  </li>
+  <li><strong>perPage</strong> The number of items you intend to show per page.  In the above example, you would be showing 20 items per page.</li>
 </ul>
 
 <p>The <var>rigCreatePaginationLinks()</var> function returns an empty string when there is no pagination to show.</p>
@@ -145,62 +145,62 @@ minimum you need the three shown.  Here is a description of what those items rep
 
 <div class="codeSample">
 <pre><code>command page
-	# LET'S ASSUME YOU RETRIEVE YOUR DATA FROM A SQL DATABASE
-	# USING ACTIVE RECORD FEATURES
-	# SO, GET TOTAL NUMBER OF ROWS
-	put rigDbCountAllResults("yourTable") into tTotalNumRecords
+  # LET'S ASSUME YOU RETRIEVE YOUR DATA FROM A SQL DATABASE
+  # USING ACTIVE RECORD FEATURES
+  # SO, GET TOTAL NUMBER OF ROWS
+  put rigDbCountAllResults("yourTable") into tTotalNumRecords
 
-	# PAGINATION CONFIGURATION
-	# DO THE PAGINATION BASE URL CONFIGURATION
-	put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
-	
-	# SET LIMIT OF ROWS TO BE DISPLAYED
-	# LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
-	put 20 into tConfig["perPage"]
-	
-	# SET TOTAL ROWS CONFIGURATION
-	put tTotalNumRecords into tConfig["totalRows"]
-	# CONFIGURATION END
-	
-	# INITIALIZE PAGINATION
-	rigInitializePagination tConfig
+  # PAGINATION CONFIGURATION
+  # DO THE PAGINATION BASE URL CONFIGURATION
+  put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+  
+  # SET LIMIT OF ROWS TO BE DISPLAYED
+  # LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
+  put 20 into tConfig["perPage"]
+  
+  # SET TOTAL ROWS CONFIGURATION
+  put tTotalNumRecords into tConfig["totalRows"]
+  # CONFIGURATION END
+  
+  # INITIALIZE PAGINATION
+  rigInitializePagination tConfig
 
-	# GET PAGE NUMBER
-	# NOTE: THIS IS THE OFFSET FOR YOUR QUERY
-	put rigFetchSegment(3) into tPageNum
-	if (tPageNum is an integer) and (tPageNum > 0) and (tPageNum < tTotalNumRecords) then
-		put tPageNum into tOffset
-	else
-		put 0 into tOffset
-	end if
+  # GET PAGE NUMBER
+  # NOTE: THIS IS THE OFFSET FOR YOUR QUERY
+  put rigFetchSegment(3) into tPageNum
+  if (tPageNum is an integer) and (tPageNum > 0) and (tPageNum < tTotalNumRecords) then
+    put tPageNum into tOffset
+  else
+    put 0 into tOffset
+  end if
 
-	# GET DATABASE QUERY RESULT DATA 
-	# YOUR DATABASE QUERY STUFF HERE . . . LIKE
-	# rigDbOrderBy, rigDbWhere OR WHATEVER
+  # GET DATABASE QUERY RESULT DATA 
+  # YOUR DATABASE QUERY STUFF HERE . . . LIKE
+  # rigDbOrderBy, rigDbWhere OR WHATEVER
 
-	# SET THE QUERY LIMITS
-	rigDbLimit tConfig["perPage"], tOffset
+  # SET THE QUERY LIMITS
+  rigDbLimit tConfig["perPage"], tOffset
 
-	# GET QUERY RESULT
-	put rigDbGet("yourTable") into tQueryResult
+  # GET QUERY RESULT
+  put rigDbGet("yourTable") into tQueryResult
 
-	if tQueryResult["numrows"] > 0 then
-		# DEAL WITH THE QUERY RESULT DATA HERE, BUILD A TABLE OR WHATEVER
-		# . . .
-		# STORE YOUR PAGINATION DATA IN gData
-		put tYourData into gData["paginationData"]
-	
-		# FINALLY GET PAGINATION HTML LINKS
-		put rigCreatePaginationLinks() into gData["paginationLinks"]
-	end if
+  if tQueryResult["numrows"] > 0 then
+    # DEAL WITH THE QUERY RESULT DATA HERE, BUILD A TABLE OR WHATEVER
+    # . . .
+    # STORE YOUR PAGINATION DATA IN gData
+    put tYourData into gData["paginationData"]
+  
+    # FINALLY GET PAGINATION HTML LINKS
+    put rigCreatePaginationLinks() into gData["paginationLinks"]
+  end if
 
-	# LOAD THE VIEW FILE
-	get rigLoadView("testView")
+  # LOAD THE VIEW FILE
+  get rigLoadView("testView")
 end page
 </code></pre>
 </div>
 
-<p>Now all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"] ]] and the edited data retrieved from your database like [[gData["paginationData"] ]].</p>
+<p>Now all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"]]] and the edited data retrieved from your database like [[gData["paginationData"]]].</p>
 
 
 <h2>AJAX Example</h2>
@@ -227,9 +227,9 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 <h3>Notes:</h3>
 
 <ul>
-	<li>Add the AJAX pagination script like [[gData["ajaxCode"] ]] to your view file preferably at the bottom just before the closing body tag.</li>
-	<li>The AJAX pagination code adds a segment named "ajaxrequest" to pagination links. This allows us with the help of the <dfn>rigFetchSegment()</dfn> function or the <dfn>reigFetchRsegment()</dfn> function respectively to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard http request.</li>
-	<li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
+  <li>Add the AJAX pagination script like [[gData["ajaxCode"]]] to your view file preferably at the bottom just before the closing body tag.</li>
+  <li>The AJAX pagination code adds a segment named "ajaxrequest" to pagination links. This allows us with the help of the <dfn>rigFetchSegment()</dfn> function or the <dfn>reigFetchRsegment()</dfn> function respectively to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard http request.</li>
+  <li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
 </ul>
 
 <div class="codeSample">
@@ -245,9 +245,9 @@ put "myPaginationDataID" into tConfig["dataElementID"]
 <h2>Setting preferences in a config file</h2>
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
-Simply create a new file called <var>pagination.lc</var>,  add an
+Simply create a new file called <kbd>pagination.lc</kbd>,  add an
 array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
-array as parameter. Then save the file in: <var>application/config/pagination.lc</var> and it will be used automatically. You
+array as parameter. Then save the file in: <kbd>application/config/pagination.lc</kbd> and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
 
 <p>Example:</p>
@@ -491,7 +491,7 @@ rigRunInitialPaginationConfig sConfig
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
 <span class="separator"> :: </span>
@@ -500,7 +500,7 @@ Previous Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
 Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -508,8 +508,8 @@ Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>

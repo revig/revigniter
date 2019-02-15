@@ -289,7 +289,7 @@ put rigFormDropDown("shirts", tOptions, "large", tJS) into gData["dropDown"]</co
 
 <p>Lets you create a standard multiselect field.  The first parameter will contain the name of the field,
 the second parameter will contain an associative array of options, and the third parameter will contain the
-value or values you wish to be selected.  The parameter usage is identical to using <kbd>rigFormDropDown()</kbd> above,
+value or values you wish to be selected.  The parameter usage is identical to using <dfn>rigFormDropDown()</dfn> above,
 except of course that the name of the field will need to use POST array syntax, e.g. <samp>foo[]</samp>.</p>
 
 
@@ -459,7 +459,7 @@ put rigFormClose(tString) into gData["formClose"]
 
 <pre><code>put "Here is a string containing <strong>" & quote & "quoted" & quote & "</strong> text." into gData["string"]
 
-&lt;input type="text" name="myform" value="<var>[[gData["string"] ]]</var>" /></code></pre>
+&lt;input type="text" name="myform" value="<var>[[gData["string"]]]</var>" /></code></pre>
 
 <p>Since the above string contains a set of quotes it will cause the form to break.
 The rigFormPrep function converts HTML so that it can be used safely:</p>
@@ -478,7 +478,7 @@ The second (optional) parameter allows you to set a default value for the form. 
 
 <pre><code>put rigSetValue("quantity", "0") into gData["qty"]
 
-&lt;input type="text" name="quantity" value="<dfn>[[gData["qty"] ]]</dfn>" size="50" /></code></pre>
+&lt;input type="text" name="quantity" value="<dfn>[[gData["qty"]]]</dfn>" size="50" /></code></pre>
 
 <p>The above form will show "0" when loaded for the first time.</p>
 <p>In case you need to use this function in combination with i.e. rigFormInput() you can turn off HTML escaping of the value and avoid double-escaping setting the third (optional) parameter to FALSE.</p>
@@ -496,9 +496,9 @@ put rigSetSelect("mySelect", "two") into gData["mySelectTwo"]
 put rigSetSelect("mySelect", "three") into gData["mySelectThree"]
 
 &lt;select name="myselect">
-&lt;option value="one" <dfn>[[gData["mySelectOne"] ]]</dfn> >One&lt;/option>
-&lt;option value="two" <dfn>[[gData["mySelectTwo"] ]]</dfn> >Two&lt;/option>
-&lt;option value="three" <dfn>[[gData["mySelectThree"] ]]</dfn> >Three&lt;/option>
+&lt;option value="one" <dfn>[[gData["mySelectOne"]]]</dfn> >One&lt;/option>
+&lt;option value="two" <dfn>[[gData["mySelectTwo"]]]</dfn> >Two&lt;/option>
+&lt;option value="three" <dfn>[[gData["mySelectThree"]]]</dfn> >Three&lt;/option>
 &lt;/select>
 </code></pre>
 
@@ -512,9 +512,9 @@ must contain the name of the checkbox, the second parameter must contain its val
 put rigSetCheckbox("myCheck[]", "B") into gData["myCheckB"]
 put rigSetCheckbox("myCheck[]", "C") into gData["myCheckC"]
 
-&lt;input type="checkbox" name="myCheck[]" value="A" <dfn>[[gData["myCheckA"] ]]</dfn> />
-&lt;input type="checkbox" name="myCheck[]" value="B" <dfn>[[gData["myCheckB"] ]]</dfn> />
-&lt;input type="checkbox" name="myCheck[]" value="C" <dfn>[[gData["myCheckC"] ]]</dfn> />
+&lt;input type="checkbox" name="myCheck[]" value="A" <dfn>[[gData["myCheckA"]]]</dfn> />
+&lt;input type="checkbox" name="myCheck[]" value="B" <dfn>[[gData["myCheckB"]]]</dfn> />
+&lt;input type="checkbox" name="myCheck[]" value="C" <dfn>[[gData["myCheckC"]]]</dfn> />
 </code></pre>
 
 
@@ -525,8 +525,8 @@ put rigSetCheckbox("myCheck[]", "C") into gData["myCheckC"]
 <pre><code>put rigSetRadio("myRadio", "1", TRUE) into gData["myRadio1"]
 put rigSetRadio("myRadio", "2") into gData["myRadio2"]
 
-&lt;input type="radio" name="myRadio" value="1" <dfn>[[gData["myRadio1"] ]]</dfn> />
-&lt;input type="radio" name="myRadio" value="2" <dfn>[[gData["myRadio2"] ]]</dfn> />
+&lt;input type="radio" name="myRadio" value="1" <dfn>[[gData["myRadio1"]]]</dfn> />
+&lt;input type="radio" name="myRadio" value="2" <dfn>[[gData["myRadio2"]]]</dfn> />
 </code></pre>
 
 

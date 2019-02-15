@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Session Library : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Session Library : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Session Library</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Session Library</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 
@@ -186,7 +186,7 @@ having to run a database query when you need it.</p>
 
 <pre><code class="lang-livecodeserver">rigSetSessUserdata <samp>tArray</samp></code></pre>
 
-<p>Where <samp>tArray</samp> is an associative array containing your new data.  Here's an example:</p>
+<p>Where <var>tArray</var> is an associative array containing your new data.  Here's an example:</p>
 
 
 <pre><code>put "johndoe" into tNewData["username"]
@@ -319,13 +319,13 @@ prototype required by the Session Library.<br />MySQL version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE ri_sessions (
-	session_id varchar(40) DEFAULT 0 NOT NULL,
-	ip_address varchar(45) DEFAULT 0 NOT NULL,
-	user_agent varchar(120) NOT NULL,
-	last_activity integer DEFAULT 0 NOT NULL,
-	user_data text,
-	PRIMARY KEY(session_id),
-	CONSTRAINT check_last_activity CHECK(last_activity >= 0)
+  session_id varchar(40) DEFAULT 0 NOT NULL,
+  ip_address varchar(45) DEFAULT 0 NOT NULL,
+  user_agent varchar(120) NOT NULL,
+  last_activity integer DEFAULT 0 NOT NULL,
+  user_data text,
+  PRIMARY KEY(session_id),
+  CONSTRAINT check_last_activity CHECK(last_activity >= 0)
 );
 </code></pre>
 </div>
@@ -334,12 +334,12 @@ prototype required by the Session Library.<br />MySQL version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE "main"."ri_sessions" (
-	"session_id" text(40) NOT NULL DEFAULT '0',
-	"ip_address" text(45) NOT NULL DEFAULT '0',
-	"user_agent" text(120) NOT NULL,
-	"last_activity" integer(10) NOT NULL DEFAULT 0,
-	"user_data" text,
-	PRIMARY KEY("session_id")
+  "session_id" text(40) NOT NULL DEFAULT '0',
+  "ip_address" text(45) NOT NULL DEFAULT '0',
+  "user_agent" text(120) NOT NULL,
+  "last_activity" integer(10) NOT NULL DEFAULT 0,
+  "user_data" text,
+  PRIMARY KEY("session_id")
 );
 </code></pre>
 </div>
@@ -366,7 +366,7 @@ do not need to write your own routine to do it.</p>
 <p>Another option to establish session ID validation is to save session data to a file. To use your file system for storing session data set the session driver to "files" in your config file as follows:</p>
 
 <pre><code>put "files" into gConfig["sess_driver"]</code></pre>
-	
+  
 <p>You can specify a location to save sessions to by setting gConfig["sess_save_location"] to an <strong>absolute</strong> path to a <strong>writable</strong> directory like:</p>
 
 <pre><code>put "/my/absolute/path/to/sessionLocation" into gConfig["sess_save_location"]</code></pre>
@@ -401,71 +401,71 @@ do not need to write your own routine to do it.</p>
 <div class="table">
 <table>
 <tr>
-	<th>Preference</th>
-	<th>Default</th>
-	<th>Options</th>
-	<th>Description</th>
+  <th>Preference</th>
+  <th>Default</th>
+  <th>Options</th>
+  <th>Description</th>
 </tr>
 <tr>
-	<td class="td"><strong>sess_cookie_name</strong></td>
-	<td class="td">ri_session</td>
-	<td class="td">None</td>
-	<td class="td">The name you want the session cookie saved as.</td>
+  <td class="td"><strong>sess_cookie_name</strong></td>
+  <td class="td">ri_session</td>
+  <td class="td">None</td>
+  <td class="td">The name you want the session cookie saved as.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_expiration</strong></td>
-	<td class="td">129600</td>
-	<td class="td">None</td>
-	<td class="td">The number of seconds you would like the session to last. The default value is 36 hours (129600 seconds). If you would like a non-expiring session set the value to zero: 0. Keep in mind that the value is related to server time.</td>
+  <td class="td"><strong>sess_expiration</strong></td>
+  <td class="td">129600</td>
+  <td class="td">None</td>
+  <td class="td">The number of seconds you would like the session to last. The default value is 36 hours (129600 seconds). If you would like a non-expiring session set the value to zero: 0. Keep in mind that the value is related to server time.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_expire_on_close</strong></td>
-	<td class="td">TRUE</td>
-	<td class="td">TRUE/FALSE (boolean)</td>
-	<td class="td">Whether to cause the session to expire automatically when the browser window is closed.</td>
+  <td class="td"><strong>sess_expire_on_close</strong></td>
+  <td class="td">TRUE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">Whether to cause the session to expire automatically when the browser window is closed.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_encrypt_cookie</strong></td>
-	<td class="td">FALSE</td>
-	<td class="td">TRUE/FALSE (boolean)</td>
-	<td class="td">Whether to encrypt the session data.</td>
+  <td class="td"><strong>sess_encrypt_cookie</strong></td>
+  <td class="td">FALSE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">Whether to encrypt the session data.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_hash_type</strong></td>
-	<td class="td"></td>
-	<td class="td">Possible values are SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384 and SHA3-512.</td>
-	<td class="td">The hash type to be used by the encryption library for session cookie encryption. The default value is empty which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please chose a more secure flavor.</td>
+  <td class="td"><strong>sess_hash_type</strong></td>
+  <td class="td"></td>
+  <td class="td">Possible values are SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384 and SHA3-512.</td>
+  <td class="td">The hash type to be used by the encryption library for session cookie encryption. The default value is empty which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please chose a more secure flavor.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_driver</strong></td>
-	<td class="td"></td>
-	<td class="td">database/files</td>
-	<td class="td">Whether to save the session data to a database, to a file or in a cookie.  You must create the table before enabling the database option. If this option is set to empty all session data is stored in the cookie.</td>
+  <td class="td"><strong>sess_driver</strong></td>
+  <td class="td"></td>
+  <td class="td">database/files</td>
+  <td class="td">Whether to save the session data to a database, to a file or in a cookie.  You must create the table before enabling the database option. If this option is set to empty all session data is stored in the cookie.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_save_location</strong></td>
-	<td class="td"></td>
-	<td class="td">Any valid SQL table name or any valid absolute path to a writable directory respectively. If set to empty the default table name "ri_sessions" or the standard temporary folder respectively is used in case sess_driver is "database" or "files".</td>
-	<td class="td">The location to save sessions to. Of course this is driver dependant.</td>
+  <td class="td"><strong>sess_save_location</strong></td>
+  <td class="td"></td>
+  <td class="td">Any valid SQL table name or any valid absolute path to a writable directory respectively. If set to empty the default table name "ri_sessions" or the standard temporary folder respectively is used in case sess_driver is "database" or "files".</td>
+  <td class="td">The location to save sessions to. Of course this is driver dependant.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_time_to_update</strong></td>
-	<td class="td">300</td>
-	<td class="td">Time in seconds</td>
-	<td class="td">This options controls how often the session library will regenerate itself and create a new session id.</td>
+  <td class="td"><strong>sess_time_to_update</strong></td>
+  <td class="td">300</td>
+  <td class="td">Time in seconds</td>
+  <td class="td">This options controls how often the session library will regenerate itself and create a new session id.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_match_ip</strong></td>
-	<td class="td">FALSE</td>
-	<td class="td">TRUE/FALSE (boolean)</td>
-	<td class="td">Whether to match the user's IP address when reading the session data.  Note that some ISPs dynamically
-	changes the IP, so if you want a non-expiring session you will likely set this to FALSE.</td>
+  <td class="td"><strong>sess_match_ip</strong></td>
+  <td class="td">FALSE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">Whether to match the user's IP address when reading the session data.  Note that some ISPs dynamically
+  changes the IP, so if you want a non-expiring session you will likely set this to FALSE.</td>
 </tr>
 <tr>
-	<td class="td"><strong>sess_match_useragent</strong></td>
-	<td class="td">TRUE</td>
-	<td class="td">TRUE/FALSE (boolean)</td>
-	<td class="td">Whether to match the User Agent when reading the session data.</td>
+  <td class="td"><strong>sess_match_useragent</strong></td>
+  <td class="td">TRUE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">Whether to match the User Agent when reading the session data.</td>
 </tr>
 </table>
 </div>
@@ -473,7 +473,7 @@ do not need to write your own routine to do it.</p>
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the session expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
 
 
-<p class="important"><strong>Note:</strong> Cookie related settings as defined in <dfn>application/config/config.lc</dfn> apply to session cookies too.</p>
+<p class="important"><strong>Note:</strong> Cookie related settings as defined in <kbd>application/config/config.lc</kbd> apply to session cookies too.</p>
 
 </div>
 <!-- END CONTENT -->
@@ -482,7 +482,7 @@ do not need to write your own routine to do it.</p>
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
 <span class="separator"> :: </span>
@@ -491,7 +491,7 @@ Previous Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
 Next Topic:&nbsp;&nbsp;<a href="trackback.html">Trackback Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -499,8 +499,8 @@ Next Topic:&nbsp;&nbsp;<a href="trackback.html">Trackback Library</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>

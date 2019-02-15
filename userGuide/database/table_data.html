@@ -99,7 +99,7 @@
 <pre><code>put rigDbListTables() into tTables
 
 repeat for each key tKey in tTables
-	put tTables[tKey] & comma after tTableslist
+  put tTables[tKey] & comma after tTableslist
 end repeat
 </code></pre>
 
@@ -110,7 +110,7 @@ end repeat
 Returns a boolean TRUE/FALSE.  Usage example:</p>
 
 <pre><code>if rigDbTableExists("tablename") is TRUE then
-	-- some code...
+  -- some code...
 end if
 </code></pre>
 

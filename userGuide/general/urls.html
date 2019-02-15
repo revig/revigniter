@@ -124,12 +124,12 @@ contain handlers that make it easy to work with your URI data.  In addition, you
 
 <div class="codeSample">
 <pre><code>&lt;IfModule mod_rewrite.c>
-	RewriteEngine on
-	RewriteBase /
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond $1 !^(index\.lc|image|img|assets|robots\.txt|css|js)
-	RewriteRule ^(.*)$ index.lc?/$1 [L]
+  RewriteEngine on
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond $1 !^(index\.lc|image|img|assets|robots\.txt|css|js)
+  RewriteRule ^(.*)$ index.lc?/$1 [L]
 &lt;/IfModule>
 </code></pre>
 </div>

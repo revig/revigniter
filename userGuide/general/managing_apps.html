@@ -94,37 +94,37 @@ revIgniter installation, or even to rename or relocate your <dfn>application</df
 <h2>Renaming the Application Folder</h2>
 
 <p>If you would like to rename your <dfn>application</dfn> folder you may do so as long as you open your main <kbd>index.lc</kbd>
-file and set its name using the <samp>gApplicationFolder</samp> variable:</p>
+file and set its name using the <var>gRigA["applicationFolder"]</var> variable:</p>
 
-<pre><code>put "application" into gApplicationFolder</code></pre>
+<pre><code>put "application" into gRigA["applicationFolder"]</code></pre>
 
 <h2>Relocating your Application Folder</h2>
 
-<p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>system</kbd> folder. 
-To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <samp>gApplicationFolder</samp> variable.
-You may use a relative path as long as your application folder is in the root folder or below.</p>
+<p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>root</kbd> folder. 
+To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <var>gRigA["applicationFolder"]</var> variable.
+You may use a relative path as long as your application folder is in the <kbd>root</kbd> folder or below.</p>
 
 
-<pre><code>put "/Path/to/your/application" into gApplicationFolder</code></pre>
+<pre><code>put "/Path/to/your/application" into gRigA["applicationFolder"]</code></pre>
 
-<p>If you just like to move the application folder to the root folder you do not need to modify index.lc at all.</p>
+<p>If you just like to move the application folder to the <kbd>system</kbd> folder you do not need to modify index.lc at all.</p>
 
 <h2>Renaming the System Folder</h2>
 
 <p>Similar to the way to rename the application folder described above you may rename your system folder as long as you open your main <kbd>index.lc</kbd>
-file and set its name using the <samp>gSystemFolder</samp> variable:</p>
+file and set its name using the <samp>gRigA["systemFolder"]</samp> variable:</p>
 
-<pre><code>put "system" into gSystemFolder</code></pre>
+<pre><code>put "system" into gRigA["systemFolder"]</code></pre>
 
 
 <h2>Relocating your System Folder</h2>
 
-<p>To move your <dfn>system</dfn> folder to a different location on your server than your root folder open your main <kbd>index.lc</kbd> and set 
-	a <em>full server path</em> in the <samp>gSystemFolder</samp> variable.
-You may use a relative path as long as your application folder is in the root folder or below.</p>
+<p>To move your <dfn>system</dfn> folder to a different location on your server than your <kbd>root</kbd> folder open your main <kbd>index.lc</kbd> and set 
+	a <em>full server path</em> in the <samp>gRigA["systemFolder"]</samp> variable.
+You may use a relative path as long as your application folder is in the <kbd>root</kbd> folder or below.</p>
 
 
-<pre><code>put "/Path/to/your/system" into gSystemFolder</code></pre>
+<pre><code>put "/Path/to/your/system" into gRigA["systemFolder"]</code></pre>
 
 
 <p class="important"><strong>Note:</strong>&nbsp; The path to your application folder or system folder must use Unix style directory separators. Do not add
@@ -140,46 +140,50 @@ own sub-folder.</p>
 <p>For example, let's say you want to create two applications, "foo" and "bar".  You will structure your
 application folder like this:</p>
 
-<pre><code>system/application/<var>foo</var>/
-system/application/<var>foo</var>/config/
-system/application/<var>foo</var>/controllers/
-system/application/<var>foo</var>/db/
-system/application/<var>foo</var>/errors/
-system/application/<var>foo</var>/extensions/
-system/application/<var>foo</var>/helpers/
-system/application/<var>foo</var>/hooks/
-system/application/<var>foo</var>/index.html
-system/application/<var>foo</var>/language/
-system/application/<var>foo</var>/libraries/
-system/application/<var>foo</var>/models/
-system/application/<var>foo</var>/modules/
-system/application/<var>foo</var>/stacks/
-system/application/<var>foo</var>/views/
-system/application/<samp>bar</samp>/
-system/application/<samp>bar</samp>/config/
-system/application/<samp>bar</samp>/controllers/
-system/application/<samp>bar</samp>/db/
-system/application/<samp>bar</samp>/errors/
-system/application/<samp>bar</samp>/extensions/
-system/application/<samp>bar</samp>/helpers/
-system/application/<samp>bar</samp>/hooks/
-system/application/<samp>bar</samp>/index.html
-system/application/<samp>bar</samp>/language/
-system/application/<samp>bar</samp>/libraries/
-system/application/<samp>bar</samp>/models/
-system/application/<samp>bar</samp>/modules/
-system/application/<samp>bar</samp>/stacks/
-system/application/<samp>bar</samp>/views/</code></pre>
+<pre><code>application/<var>foo</var>/
+application/<var>foo</var>/cache/
+application/<var>foo</var>/config/
+application/<var>foo</var>/controllers/
+application/<var>foo</var>/db/
+application/<var>foo</var>/errors/
+application/<var>foo</var>/extensions/
+application/<var>foo</var>/helpers/
+application/<var>foo</var>/hooks/
+application/<var>foo</var>/index.html
+application/<var>foo</var>/language/
+application/<var>foo</var>/libraries/
+application/<var>foo</var>/logs/
+application/<var>foo</var>/models/
+application/<var>foo</var>/modules/
+application/<var>foo</var>/stacks/
+application/<var>foo</var>/views/
+application/<samp>bar</samp>/
+application/<samp>bar</samp>/cache/
+application/<samp>bar</samp>/config/
+application/<samp>bar</samp>/controllers/
+application/<samp>bar</samp>/db/
+application/<samp>bar</samp>/errors/
+application/<samp>bar</samp>/extensions/
+application/<samp>bar</samp>/helpers/
+application/<samp>bar</samp>/hooks/
+application/<samp>bar</samp>/index.html
+application/<samp>bar</samp>/language/
+application/<samp>bar</samp>/libraries/
+application/<samp>bar</samp>/logs/
+application/<samp>bar</samp>/models/
+application/<samp>bar</samp>/modules/
+application/<samp>bar</samp>/stacks/
+application/<samp>bar</samp>/views/</code></pre>
 
 
-<p>To select a particular application for use requires that you open your main front controller, the <kbd>index.lc</kbd> file, and set the <dfn>gApplicationFolder</dfn>
+<p>To select a particular application for use requires that you open your main front controller, the <kbd>index.lc</kbd> file, and set the <var>gRigA["applicationFolder"]</var>
 variable. For example, to select the "foo" application for use you would do this:</p>
 
-<pre><code>put "application/foo" into gApplicationFolder</code></pre>
+<pre><code>put "application/foo" into gRigA["applicationFolder"]</code></pre>
 
-<p>To set the <dfn>gApplicationFolder</dfn> variable for the "bar" application you need another front controller located at document root. Let's name it <kbd>bar.lc</kbd>. The corresponding setting should read like this:</p>
+<p>To set the <var>gRigA["applicationFolder"]</var> variable for the "bar" application you need another front controller located at document <kbd>root</kbd>. Let's name it <kbd>bar.lc</kbd>. The corresponding setting should read like this:</p>
 
-<pre><code>put "application/bar" into gApplicationFolder</code></pre>
+<pre><code>put "application/bar" into gRigA["applicationFolder"]</code></pre>
 
 <p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file which 
 calls the desired application.  The index.lc file can be named anything you want.</p>

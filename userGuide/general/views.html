@@ -103,12 +103,12 @@ you should do so before continuing.</p>
 
 <div class="codeSample">
 <pre><code>&lt;html>
-	&lt;head>
-		&lt;title>My Blog&lt;/title>
-	&lt;/head>
-	&lt;body>
-		&lt;h1>Welcome to my Blog!&lt;/h1>
-	&lt;/body>
+  &lt;head>
+    &lt;title>My Blog&lt;/title>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>Welcome to my Blog!&lt;/h1>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
@@ -128,13 +128,13 @@ you should do so before continuing.</p>
 
 
 <div class="codeSample">
-<pre><code>&lt;?rev
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
 command index
-	get rigLoadView("blogview")
+  get rigLoadView("blogview")
 end index
 </code></pre>
 </div>
@@ -149,17 +149,17 @@ end index
 
 
 <div class="codeSample">
-<pre><code>&lt;?rev
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
 command index
-	put "Your title" into gData["pageTitle"]
-	get rigLoadView("header")
-	get rigLoadView("menu")
-	get rigLoadView("content")
-	get rigLoadView("footer")
+  put "Your title" into gData["pageTitle"]
+  get rigLoadView("header")
+  get rigLoadView("menu")
+  get rigLoadView("content")
+  get rigLoadView("footer")
 end index
 </code></pre>
 </div>
@@ -187,15 +187,15 @@ get rigLoadView("blogview")
 <p>Let's try it with your controller file.  Open it and add this code:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?rev
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
 command index
-	put "My Real Title" into gData["title"]
-	put "My Real Heading" into gData["heading"]
-	get rigLoadView("blogview")
+  put "My Real Title" into gData["title"]
+  put "My Real Heading" into gData["heading"]
+  get rigLoadView("blogview")
 end index
 </code></pre>
 </div>
@@ -206,17 +206,17 @@ end index
 
 <div class="codeSample">
 <pre><code>&lt;html>
-	&lt;head>
-		&lt;title>[[gData["title"] ]]&lt;/title>
-	&lt;/head>
-	&lt;body>
-		&lt;h1>[[gData["heading"] ]]&lt;/h1>
-	&lt;/body>
+  &lt;head>
+    &lt;title>[[gData["title"]]]&lt;/title>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>[[gData["heading"]]]&lt;/h1>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
 
-<p><strong>Note:</strong> Like in the example above, add a space between the right array bracket and the merge brackets. Load the page at the URL you've been using and you should see the variables replaced.</p>
+<p><strong>Note:</strong> Load the page at the URL you've been using and you should see the variables replaced.</p>
 
 <h2>Creating Loops / Using LiveCode in View Files</h2>
 
@@ -228,17 +228,17 @@ pull data from your database it will typically be in the form of a multi-dimensi
 
 
 <div class="codeSample">
-<pre><code>&lt;?rev
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
 command index
-	put "Clean House,Call Mom,Run Errands" into gData["toDoList"]
+  put "Clean House,Call Mom,Run Errands" into gData["toDoList"]
 
-	put "My Real Title" into gData["title"]
-	put "My Real Heading" into gData["heading"]
-	get rigLoadView("blogview")
+  put "My Real Title" into gData["title"]
+  put "My Real Heading" into gData["heading"]
+  get rigLoadView("blogview")
 end index
 </code></pre>
 </div>
@@ -249,40 +249,40 @@ end index
 
 <div class="codeSample">
 <pre><code>&lt;html>
-	&lt;head>
-		&lt;title>[[gData["title"] ]]&lt;/title>
-	&lt;/head>
-	&lt;body>
-		&lt;h1>[[gData["heading"] ]]&lt;/h1>
-		&lt;p>
-			&lt;? put "&lt;ul>" into tToDo
-			repeat for each item thisItem in gData["toDoList"]
-				put "&lt;li>" & thisItem & "&lt;/li>" after tToDo
-			end repeat
-			put "&lt;/ul>" after tToDo
-			return tToDo ?>
-		&lt;/p>
-	&lt;/body>
+  &lt;head>
+    &lt;title>[[gData["title"]]]&lt;/title>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>[[gData["heading"]]]&lt;/h1>
+    &lt;p>
+      &lt;? put "&lt;ul>" into tToDo
+      repeat for each item thisItem in gData["toDoList"]
+        put "&lt;li>" & thisItem & "&lt;/li>" after tToDo
+      end repeat
+      put "&lt;/ul>" after tToDo
+      return tToDo ?>
+    &lt;/p>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
 
 <p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
-Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?rev" in view files because all views and nested views are merged (into the final output data).</p>
+Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?lc" in view files because all views and nested views are merged (into the final output data).</p>
 
 <p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
 
 <div class="codeSample">
 <pre><code>&lt;html>
-	&lt;head>
-		&lt;title>[[gData["title"] ]]&lt;/title>
-	&lt;/head>
-	&lt;body>
-		&lt;h1>&lt;? return rigLangLangLine("myInternationalHeading") ?>&lt;/h1>
+  &lt;head>
+    &lt;title>[[gData["title"]]]&lt;/title>
+  &lt;/head>
+  &lt;body>
+    &lt;h1>&lt;? return rigLangLangLine("myInternationalHeading") ?>&lt;/h1>
 		
-		&lt;p>&lt;? return rigLangLangLine("myInternationalBodyText") ?>&lt;/p>
+    &lt;p>&lt;? return rigLangLangLine("myInternationalBodyText") ?>&lt;/p>
 
-	&lt;/body>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
@@ -307,11 +307,11 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 
 <div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
-	&lt;html>
-		&lt;head>
-			&lt;title>[[gData["pageTitle"] ]]&lt;/title>
-		&lt;/head>
-		&lt;body>
+  &lt;html>
+    &lt;head>
+      &lt;title>[[gData["pageTitle"]]]&lt;/title>
+    &lt;/head>
+    &lt;body>
 </code></pre>
 </div>
 
@@ -337,8 +337,8 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 <p>nestedviewsFooter.lc, the footer view:</p>
 
 <div class="codeSample">
-<pre><code>	&lt;p>&lt;br />Page rendered in {{g_ElapsedTime_}} seconds&lt;/p>
-	&lt;/body>
+<pre><code>  &lt;p>&lt;br />Page rendered in {{g_ElapsedTime_}} seconds&lt;/p>
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
@@ -356,22 +356,22 @@ return tHeader && tContent && tFooter ?>
 <p>Then, in the controller, we solely load the main view file to send a complete web page to the browser like in the following example:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?rev
+<pre><code>&lt;?lc
 
 put "welcome,index" into gControllerHandlers
 
 
 command welcome
-	# code...
+  # code...
 end welcome
 
 
 command index
-	# SET PAGE TITLE
-	put "YourPageTitle" into gData["pageTitle"]
+  # SET PAGE TITLE
+  put "YourPageTitle" into gData["pageTitle"]
 
-	# LOAD THE MAIN VIEW FILE
-	get rigLoadView("nestedviewsMain")
+  # LOAD THE MAIN VIEW FILE
+  get rigLoadView("nestedviewsMain")
 end index
 
 

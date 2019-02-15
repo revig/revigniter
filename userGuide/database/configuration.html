@@ -189,9 +189,9 @@ for the primary connection, but it too can be renamed to something more relevant
 
 <h3>Active Record</h3>
 
-<p>The <a href="active_record.html">Active Record Library</a> is globally enabled or disabled by setting the gActiveRecord variable in the database configuration file to TRUE/FALSE (boolean). If you are not using the active record library, setting it to FALSE will utilize fewer resources when the database libraries are initialized.</p>
+<p>The <a href="active_record.html">Active Record Library</a> is globally enabled or disabled by setting the gRigA["activeRecord"] variable in the database configuration file to TRUE/FALSE (boolean). If you are not using the active record library, setting it to FALSE will utilize fewer resources when the database libraries are initialized.</p>
 
-<pre><code>put TRUE into gActiveRecord</code></pre>
+<pre><code>put TRUE into gRigA["activeRecord"]</code></pre>
 
 <p class="important"><strong>Note:</strong> that some revIgniter libraries such as Sessions require Active Records be enabled to access certain functionality.</p>
 

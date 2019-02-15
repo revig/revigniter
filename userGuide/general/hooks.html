@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Hooks : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Hooks : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Hooks - Extending the Framework Core</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Hooks - Extending the Framework Core</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 <h1>Hooks - Extending the Framework Core</h1>
@@ -106,12 +106,12 @@ your own scripts in some other location.
 <p>Hooks are defined in the <dfn>application/config/hooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
 
 <div class="codeSample">
-<pre><code>	put "MyHandler" into gHooks["preController"]["handler"]
-	put "MyScript.lc" into gHooks["preController"]["filename"]
-	put "hooks" into gHooks["preController"]["filepath"]
-	put "beer" into gHooks["preController"]["params"][1]
-	put "wine" into gHooks["preController"]["params"][2]
-	put "snacks" into gHooks["preController"]["params"][3]
+<pre><code>  put "MyHandler" into gHooksA["preController"]["handler"]
+  put "MyScript.lc" into gHooksA["preController"]["filename"]
+  put "hooks" into gHooksA["preController"]["filepath"]
+  put "beer" into gHooksA["preController"]["params"][1]
+  put "wine" into gHooksA["preController"]["params"][2]
+  put "snacks" into gHooksA["preController"]["params"][3]
 </code></pre>
 </div>
 
@@ -132,19 +132,19 @@ The following items should be defined in your associative hook array:</p>
 <p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
 
 <div class="codeSample">
-<pre><code>	put "MyHandler" into gHooks["preController"][1]["handler"]
-	put "MyScript.lc" into gHooks["preController"][1]["filename"]
-	put "hooks" into gHooks["preController"][1]["filepath"]
-	put "beer" into gHooks["preController"][1]["params"][1]
-	put "wine" into gHooks["preController"][1]["params"][2]
-	put "snacks" into gHooks["preController"][1]["params"][3]
+<pre><code>  put "MyHandler" into gHooksA["preController"][1]["handler"]
+  put "MyScript.lc" into gHooksA["preController"][1]["filename"]
+  put "hooks" into gHooksA["preController"][1]["filepath"]
+  put "beer" into gHooksA["preController"][1]["params"][1]
+  put "wine" into gHooksA["preController"][1]["params"][2]
+  put "snacks" into gHooksA["preController"][1]["params"][3]
 
-	put "MyOtherHandler" into gHooks["preController"][2]["handler"]
-	put "MyOtherScript.lc" into gHooks["preController"][2]["filename"]
-	put "hooks" into gHooks["preController"][2]["filepath"]
-	put "red" into gHooks["preController"][2]["params"][1]
-	put "yellow" into gHooks["preController"][2]["params"][2]
-	put "blue" into gHooks["preController"][2]["params"][3]
+  put "MyOtherHandler" into gHooksA["preController"][2]["handler"]
+  put "MyOtherScript.lc" into gHooksA["preController"][2]["filename"]
+  put "hooks" into gHooksA["preController"][2]["filepath"]
+  put "red" into gHooksA["preController"][2]["params"][1]
+  put "yellow" into gHooksA["preController"][2]["params"][2]
+  put "blue" into gHooksA["preController"][2]["params"][3]
 </code></pre>
 </div>
 
@@ -156,40 +156,73 @@ The following items should be defined in your associative hook array:</p>
 <p>The following is a list of available hook points.</p>
 
 <ul>
-		<li><strong>preSystem</strong><br />
-			Called very early during system execution.  Only the benchmark and hooks library have been loaded at this point. No routing or other processes have happened.</li>
-		<li><strong>preController</strong><br />
-			Called immediately prior to any of your controllers being called. All base libraries, routing, and security checks have been done.</li>
-		<li><strong>postControllerConstructor</strong><br />
-			Called immediately after your controller is loaded, but prior to any handler calls happening.</li>
-		<li><strong>postController</strong><br />
-			Called immediately after your controller is fully executed.</li>
-		<li><strong>displayOverride</strong><br />
-			Overrides the <dfn>_rigDisplay</dfn> command, used to send the finalized page to the web browser at the end of system execution.  This permits you to
-			use your own display methodology.  The finalized data will be available by calling <dfn>rigGetOutput()</dfn></li>
-		<li><strong>cacheOverride</strong><br />
-			Enables you to call your own handler instead of the <dfn>_rigOutDisplayCache()</dfn> function in the output library.  This permits you to use your own cache display mechanism.</li>
-		<li><strong>scaffoldingOverride</strong><br />
-			Permits a scaffolding request to trigger your own script instead.</li>
-		<li><strong>postSystem</strong><br />
-			Called after the final rendered page is sent to the browser, at the end of system execution after the finalized data is sent to the browser.</li>
-	</ul>
-	
-	
-	<h2>Hook Example Using displayOverride as Hook Point to Minify Output</h2>
-	
-	<p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
-	
-	<p>First you need a script which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks</dfn> for your convenience:</p>
+    <li><strong>preSystem</strong><br />
+      Called very early during system execution.  Only the benchmark and hooks library have been loaded at this point. No routing or other processes have happened.</li>
+    <li><strong>preController</strong><br />
+      Called immediately prior to any of your controllers being called. All base libraries, routing, and security checks have been done.</li>
+    <li><strong>postControllerConstructor</strong><br />
+      Called immediately after your controller is loaded, but prior to any handler calls happening.</li>
+    <li><strong>postController</strong><br />
+      Called immediately after your controller is fully executed.</li>
+    <li><strong>displayOverride</strong><br />
+      Overrides the <dfn>_rigDisplay</dfn> command, used to send the finalized page to the web browser at the end of system execution.  This permits you to
+      use your own display methodology.  The finalized data will be available by calling <dfn>rigGetOutput()</dfn></li>
+    <li><strong>cacheOverride</strong><br />
+      Enables you to call your own handler instead of the <dfn>_rigOutDisplayCache()</dfn> function in the output library.  This permits you to use your own cache display mechanism.</li>
+    <li><strong>scaffoldingOverride</strong><br />
+      Permits a scaffolding request to trigger your own script instead.</li>
+    <li><strong>postSystem</strong><br />
+      Called after the final rendered page is sent to the browser, at the end of system execution after the finalized data is sent to the browser.</li>
+  </ul>
+  
+  
+  <h2>Hook Example Using displayOverride as Hook Point to Minify Output</h2>
+  
+  <p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
+  
+  <p>First you need a script only stack which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks/overrideOutput.livecodescript</dfn> for your convenience:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
+<pre><code>script "overrideOutput"
 
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+
+global gRigA
+
+local sStackInUse
+
+
+ /*----------------------------------------------------------------------
+ --| COMMAND libraryStack
+ --|
+ --| Author: rabit
+ --| Version:  1.0
+ --| Created: 2018-12-09
+ --| Last Mod: --
+ --| Requires: --
+ --|
+ --| Summary:  Run security check.
+ --| 
+ --| Parameters: --
+ --|
+ --| Return: empty
+ ----------------------------------------------------------------------*/
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then 
+    if sStackInUse &lt;> TRUE then
+      put TRUE into sStackInUse
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
 
 
 
@@ -204,7 +237,7 @@ end if
 --|
 --| Summary: Minifies HTML output.
 --| 
---| Format:  rigMinifyOutput	
+--| Format:  rigMinifyOutput  
 --|
 --| Parameters: --
 --|
@@ -212,51 +245,53 @@ end if
 ----------------------------------------------------------------------*/
 
 command rigMinifyOutput
-	put rigGetOutput() into tRawHTML
+  put rigGetOutput() into tRawHTML
 
-	# REMOVE COMMENTS
-	put "(?s)(\&lt;!--\s*[^\s\[\>\&lt;].*?--\>)" into tRegEx
-	put " " into tReplacement
-	put rigPregReplace(tRawHTML, tRegEx, , tReplacement) into tMinifiedHTML
+  # REMOVE COMMENTS
+  put "(?s)(\&lt;!--\s*[^\s\[\>\&lt;].*?--\>)" into tRegEx
+  put " " into tReplacement
+  put rigPregReplace(tRawHTML, tRegEx, , tReplacement) into tMinifiedHTML
 
-	# REMOVE WHITESPACE
-	put "(?s)(\>\s+\&lt;)" into tRegEx
-	put ">&lt;" into tReplacement
-	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+  # REMOVE WHITESPACE
+  put "(?s)(\>\s+\&lt;)" into tRegEx
+  put ">&lt;" into tReplacement
+  put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
 
-	put "(?s)((\s)+)" into tRegEx
-	put " " into tReplacement
-	put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
+  put "(?s)((\s)+)" into tRegEx
+  put " " into tReplacement
+  put rigPregReplace(tMinifiedHTML, tRegEx, , tReplacement) into tMinifiedHTML
 
-	# DISPLAY HTML
-	rigSetOutput tMinifiedHTML
-	_rigDisplay
+  # DISPLAY HTML
+  rigSetOutput tMinifiedHTML
+  _rigDisplay
 end rigMinifyOutput
 
 
 
 
---| END OF overrideOutput.lc
---| Location:  ./system/application/hooks/overrideOutput.lc
-----------------------------------------------------------------------	
+--| END OF overrideOutput.livecodescript
+--| Location:  ./application/hooks/overrideOutput.livecodescript
+----------------------------------------------------------------------
 </code></pre>
 </div>
+
+<p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build hooks, models, libraries, helpers etc.</p>
 
 <p>The next step is to add the following lines to your hooks.lc file in <dfn>system/application/config</dfn>:</p>
 
 
 <div class="codeSample">
 <pre><code># MINIFY OUTPUT
-put "rigMinifyOutput" into gHooks["displayOverride"]["handler"]
-put "overrideOutput.lc" into gHooks["displayOverride"]["filename"]
-put "hooks" into gHooks["displayOverride"]["filepath"]
+put "rigMinifyOutput" into gHooksA["displayOverride"]["handler"]
+put "overrideOutput.lc" into gHooksA["displayOverride"]["filename"]
+put "hooks" into gHooksA["displayOverride"]["filepath"]
 </code></pre>
 </div>
-	
+  
 
 <p>Now enable hooks in <dfn>system/application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
 
-	
+  
 </div>
 <!-- END CONTENT -->
 
@@ -264,7 +299,7 @@ put "hooks" into gHooks["displayOverride"]["filepath"]
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="using_stacks.html">Using Stacks</a>
 <span class="separator"> :: </span>
@@ -273,7 +308,7 @@ Previous Topic:&nbsp;&nbsp;<a href="using_stacks.html">Using Stacks</a>
 Next Topic:&nbsp;&nbsp;<a href="autoloader.html">Auto-loading Resources</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 
@@ -282,8 +317,8 @@ Next Topic:&nbsp;&nbsp;<a href="autoloader.html">Auto-loading Resources</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
