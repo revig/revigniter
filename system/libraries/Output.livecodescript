@@ -533,9 +533,9 @@ end _rigDisplay
 --| COMMAND _rigWriteCache
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 25-07-09
---| Last Mod: 02-02-15
+--| Version:  1.3
+--| Created: 2009-07-25
+--| Last Mod: 2019-02-11
 --| Requires: rigFetchConfigItem(), rigCanWriteFileTo(), rigHexDigest(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
@@ -554,7 +554,7 @@ private command _rigWriteCache pOutput
 	put rigFetchConfigItem("cache_path") into tPath
 
 	if tPath is empty then
-		put gRigA["BASEPATH"] & "cache/" into tCachePath
+		put gRigA["APPPATH"] & "cache/" into tCachePath
 	else
 		put tPath into tCachePath
 	end if
@@ -656,9 +656,9 @@ end _rigWriteCache
 --| FUNCTION _rigOutDisplayCache
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2009-07-25
---| Last Mod: 2017-06-27
+--| Last Mod: 2019-02-11
 --| Requires: rigFetchConfigItem(), rigCanWriteFileTo(), rigHexDigest(), rigLogMessage, _rigDisplay
 --|
 --| Summary:  Update/serve a cached file.
@@ -677,7 +677,7 @@ function _rigOutDisplayCache
 	put rigFetchConfigItem("cache_path") into tCachePath
 
 	if tCachePath is empty then
-		put gRigA["BASEPATH"] & "cache/" into tCachePath
+		put gRigA["APPPATH"] & "cache/" into tCachePath
 	end if
 
 	if (there is not a folder tCachePath) or (rigCanWriteFileTo(tCachePath) is not TRUE) then
