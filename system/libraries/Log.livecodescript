@@ -105,7 +105,7 @@ private command _rigSetDefaultValues
   if gConfig["log_path"] is not empty then
   	put gConfig["log_path"] into sLogA["logPath"]
   else
-  	put gRigA["BASEPATH"] & "logs/" into sLogA["logPath"]
+  	put gRigA["APPPATH"] & "logs/" into sLogA["logPath"]
   end if
 
   if there is a folder sLogA["logPath"] then
