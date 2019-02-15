@@ -223,7 +223,7 @@ end if
 #--------------------------------------------------------------------------
 #
 # Leave this BLANK unless you would like to set something other than the default
-# system/logs/ folder.  Use a full server path with trailing slash.
+# application/logs/ folder. Use a full server path with trailing slash.
 #
 # Please make sure that your logs folder is writable.
 #
@@ -238,7 +238,7 @@ end if
 #--------------------------------------------------------------------------
 #
 # Leave this BLANK unless you would like to set something other than the default
-# system/cache/ folder.  Use a full server path with trailing slash.
+# application/cache/ folder. Use a full server path with trailing slash.
 #
 ##
 
