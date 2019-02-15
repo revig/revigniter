@@ -23,7 +23,7 @@ end if
 /*
 	# SAMPLE FOR A PRECONTROLLER HOOK
 	put "MyHandler" into gHooksA["preController"]["handler"]
-	put "MyScript.lc" into gHooksA["preController"]["filename"]
+	put "MyScript.livecodescript" into gHooksA["preController"]["filename"]
 	put "hooks" into gHooksA["preController"]["filepath"]
 	put "beer" into gHooksA["preController"]["params"][1]
 	put "wine" into gHooksA["preController"]["params"][2]

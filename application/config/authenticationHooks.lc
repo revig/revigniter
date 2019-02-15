@@ -23,7 +23,7 @@ local sAuthenticationHooks
 /*
 	# SAMPLE FOR A authPreUpdateUser HOOK
 	put "MyHandler" into sAuthenticationHooks["authPreUpdateUser"]["handler"]
-	put "MyScript.lc" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
+	put "MyScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
 	put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"]["filepath"]
 	put "beer" into sAuthenticationHooks["authPreUpdateUser"]["params"][1]
 	put "wine" into sAuthenticationHooks["authPreUpdateUser"]["params"][2]
