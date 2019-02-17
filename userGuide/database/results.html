@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Generating Query Results : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Generating Query Results : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,44 +38,44 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-						<li><a href="index.html">Database Library</a></li>
-			 		 	<li class="active">Query Results</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+            <li><a href="index.html">Database Library</a></li>
+              <li class="active">Query Results</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -83,7 +83,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 
@@ -93,152 +93,165 @@
 
 <p>There are several ways to generate query results:</p>
 
-	<h3>rigDBresult()</h3>
-	
-	<p>This function returns the query result data as an array.
-	
-	Typically you'll use this in a loop, like this:</p>
-	
+  <h3>rigDBresult()</h3>
+  
+  <p>This function returns the query result data as an array.
+  
+  Typically you'll use this in a loop, like this:</p>
+
+<div class="codeSample">
 <pre><code>get rigDbQuery("YOUR QUERY")
-	
+  
 put rigDBresult() into tResult
-	
+  
 repeat for each key tKey in tResult
-	put tResult[tKey] into tRow
-	put tRow[2] & comma after tResultData
-	put tRow[4] & comma after tResultData
-	put tRow[7] & return after tResultData
+  put tResult[tKey] into tRow
+  put tRow[2] & comma after tResultData
+  put tRow[4] & comma after tResultData
+  put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	<p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep 
+</div>
+  
+  <p>In the example above index 2, 4 and 7 of tRow define the value in the second, fourth and seventh column of the current row. Note: If you need to keep 
 the order of the result values, you need to add an incrementer:</p>
 
+<div class="codeSample">
 <pre><code>get rigDbQuery("YOUR QUERY")
-	
+  
 put rigDBresult() into tResult
-	
+  
 put 0 into tIncr
 repeat for each key tKey in tResult
-	add 1 to tIncr
-	
-	put tResult[tIncr] into tRow
-	put tRow[2] & comma after tResultData
-	put tRow[4] & comma after tResultData
-	put tRow[7] & return after tResultData
+  add 1 to tIncr
+  
+  put tResult[tIncr] into tRow
+  put tRow[2] & comma after tResultData
+  put tRow[4] & comma after tResultData
+  put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	
-	<p>You may fetch the values for each row by column name like in the following example:</p>
-	
-<pre><code>get rigDbQuery("YOUR QUERY")
-	
-put rigDBresult() into tResult
-	
-put 0 into tIncr
-repeat for each key tKey in tResult
-	add 1 to tIncr
-	
-	put rigDbRow(tIncr) into tRow
-	
-	put tRow["title"] & comma after tResultData
-	put tRow["name"] & comma after tResultData
-	put tRow["body"] & return after tResultData
-end repeat
-</code></pre>
-	
+</div>
+  
+  
+  <p>You may fetch the values for each row by column name like in the following example:</p>
 
-	<p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
-	
+<div class="codeSample">
+<pre><code>get rigDbQuery("YOUR QUERY")
+  
+put rigDBresult() into tResult
+  
+put 0 into tIncr
+repeat for each key tKey in tResult
+  add 1 to tIncr
+  
+  put rigDbRow(tIncr) into tRow
+  
+  put tRow["title"] & comma after tResultData
+  put tRow["name"] & comma after tResultData
+  put tRow["body"] & return after tResultData
+end repeat
+</code></pre>
+</div>
+  
+
+  <p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
+
+<div class="codeSample">
 <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
-	
+  
 # CHECK IF THE QUERY RESULT HAS DATA
 if tQuery["numrows"] > 0 then
-	put rigDBresult() into tResult
-	
-	put 0 into tIncr
-	repeat for each key tKey in tResult
-		add 1 to tIncr
-	
-		put rigDbRow(tIncr) into tRow
-	
-		put tRow["title"] & comma after tResultData
-		put tRow["name"] & comma after tResultData
-		put tRow["body"] & return after tResultData
-	end repeat
+  put rigDBresult() into tResult
+  
+  put 0 into tIncr
+  repeat for each key tKey in tResult
+    add 1 to tIncr
+  
+    put rigDbRow(tIncr) into tRow
+  
+    put tRow["title"] & comma after tResultData
+    put tRow["name"] & comma after tResultData
+    put tRow["body"] & return after tResultData
+  end repeat
 end if
 </code></pre>
-	
-	<h3>yourQuery["resultarray"]</h3>
-	
-	<p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
-<pre><code>
-put rigDbQuery("YOUR QUERY") into tQuery
-	
+</div>
+  
+  <h3>yourQuery["<var>resultarray</var>"]</h3>
+  
+  <p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
+
+<div class="codeSample">
+<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+  
 repeat for each key tKey in tQuery["resultarray"]
-	
-	put tQuery["resultarray"][tKey] into tRow
-	put tRow[2] & comma after tResultData
-	put tRow[4] & comma after tResultData
-	put tRow[7] & return after tResultData
+  
+  put tQuery["resultarray"][tKey] into tRow
+  put tRow[2] & comma after tResultData
+  put tRow[4] & comma after tResultData
+  put tRow[7] & return after tResultData
 end repeat
 </code></pre>
-	
-	
-	<h3>yourQuery["fieldnames"]</h3>
-	
-	<p>This query result index contains the table field names in a numbered array.</p>
-	
-	
-	<h3><a name="fieldnumbers">&nbsp;</a>yourQuery["fieldnumbers"]</h3>
-	
-	<p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
-	
-	<pre><code>
-	put rigDbQuery("YOUR QUERY") into tQuery
-	
-	repeat for each key tKey in tQuery["resultarray"]
-	
-		put tQuery["resultarray"][tKey] into tRow
-		put tRow[tQuery["fieldnumbers"]["title"]] & comma after tResultData
-		put tRow[tQuery["fieldnumbers"]["name"]] & comma after tResultData
-		put tRow[tQuery["fieldnumbers"]["body"]] & return after tResultData
-	end repeat
-	</code></pre>
+</div>
+  
+  
+  <h3>yourQuery["<var>fieldnames</var>"]</h3>
+  
+  <p>This query result index contains the table field names in a numbered array.</p>
+  
+  
+  <h3><a name="fieldnumbers">&nbsp;</a>yourQuery["<var>fieldnumbers</var>"]</h3>
+  
+  <p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
+
+<div class="codeSample">
+  <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+  
+repeat for each key tKey in tQuery["resultarray"]
+  
+  put tQuery["resultarray"][tKey] into tRow
+  put tRow[tQuery["fieldnumbers"]["title"]] & comma after tResultData
+  put tRow[tQuery["fieldnumbers"]["name"]] & comma after tResultData
+  put tRow[tQuery["fieldnumbers"]["body"]] & return after tResultData
+end repeat
+</code></pre>
+</div>
 
 
-	<h3>rigDbRow()</h3>
-	
-	<p>This function returns a single result row as an array.  If your query has more than one row, it returns only the first row.
-	The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
-<pre><code>
-put rigDbQuery("YOUR QUERY") into tQuery
-	
+  <h3>rigDbRow()</h3>
+  
+  <p>This function returns a single result row as an array.  If your query has more than one row, it returns only the first row.
+  The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
+
+<div class="codeSample">
+<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+  
 if tQuery["numrows"] > 0 then
-	
-	put rigDbRow() into tRow
-	
-	put tRow["title"] & comma after tResultData
-	put tRow["name"] & comma after tResultData
-	put tRow["body"] & return after tResultData
+  
+  put rigDbRow() into tRow
+  
+  put tRow["title"] & comma after tResultData
+  put tRow["name"] & comma after tResultData
+  put tRow["body"] & return after tResultData
 end if
 </code></pre>
-	
-	<p>If you want a specific row returned you can submit the row number as a digit in the first parameter:</p>
-	
+</div>
+  
+  <p>If you want a specific row returned you can submit the row number as a digit in the first parameter:</p>
+  
 <pre><code>put rigDbRow(5) into tRow</code></pre>
 
 
-	
- 	<p>In addition, you can walk forward/backwards/first/last through your results using these variations:</p>
+  
+   <p>In addition, you can walk forward/backwards/first/last through your results using these variations:</p>
 
 <p>
-	<strong>put rigDbFirstRow() into tRow</strong><br />
-	<strong>put rigDbLastRow() into tRow</strong><br />
-	<strong>put rigDbNextRow() into tRow</strong><br />
-	<strong>put rigDbPreviousRow() into tRow</strong><br />
-	<strong>put rigDbCurrentRow() into tRow</strong>
+  <strong>put rigDbFirstRow() into tRow</strong><br />
+  <strong>put rigDbLastRow() into tRow</strong><br />
+  <strong>put rigDbNextRow() into tRow</strong><br />
+  <strong>put rigDbPreviousRow() into tRow</strong><br />
+  <strong>put rigDbCurrentRow() into tRow</strong>
 </p>
 
 <p>They all return an array.</p>
@@ -250,23 +263,26 @@ end if
 <h3>rigNumRows()</h3>
 <p>The number of rows returned by the query.</p>
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
-	
+  
 get rigNumRows()
 </code></pre>
+</div>
 
 <p>Note: You can always use tQuery["numrows"].</p>
 
 <h3>rigNumFields()</h3>
 <p>The number of FIELDS (columns) returned by the query.</p>
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("SELECT * FROM myTable") into tQuery
-	
+  
 get rigNumFields()
 </code></pre>
+</div>
 
-
-	
+  
 
 </div>
 <!-- END CONTENT -->
@@ -275,7 +291,7 @@ get rigNumFields()
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="queries.html">Queries</a>
 <span class="separator"> :: </span>
@@ -284,7 +300,7 @@ Previous Topic:&nbsp;&nbsp;<a href="queries.html">Queries</a>
 Next Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Handlers</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -292,12 +308,14 @@ Next Topic:&nbsp;&nbsp;<a href="helpers.html">Query Helper Handlers</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

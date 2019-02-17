@@ -42,7 +42,6 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'general/views.html">Views</a></li>' +
 			'<li class="item"><a href="'+base+'general/models.html">Models</a></li>' +
 			'<li class="item"><a href="'+base+'general/helpers.html">Helpers</a></li>' +
-			'<li class="item"><a href="'+base+'general/plugins.html">Plugins</a></li>' +
 			'<li class="item"><a href="'+base+'general/libraries.html">Using revIgniter Libraries</a></li>' +
 			'<li class="item"><a href="'+base+'general/creating_libraries.html">Creating Your Own Libraries</a></li>' +
 			'<li class="item"><a href="'+base+'general/core_libraries.html">Creating Core Libraries</a></li>' +
@@ -60,7 +59,7 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'general/managing_apps.html">Managing Applications</a></li>' +
 			'<li class="item"><a href="'+base+'general/security.html">Security</a></li>' +
 			
-			'<li class="header">Tutorials</li>' +
+			'<li class="header">Tutorial</li>' +
 		 	'<li class="item"><a href="'+base+'tutorials/chat.html">Simple Chat Application</a></li>' +
 		'</ul>' +
 		'</div>' +
@@ -107,19 +106,17 @@ function create_menu(basepath)
 			'<li class="item"><a href="'+base+'helpers/file_helper.html">File Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/form_helper.html">Form Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/formmail_helper.html">Form-Mail Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/galleria_helper.html">Galleria Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/html_helper.html">HTML Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/jwt_helper.html">JWT Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/language_helper.html">Language Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/markdown_helper.html">Markdown Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/querytojson_helper.html">QueryToJSON Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/queryvalues_helper.html">QueryValues Helper</a></li>' +
+			'<li class="item"><a href="'+base+'helpers/sitelinks_helper.html">SiteLinks Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/string_helper.html">String Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/url_helper.html">URL Helper</a></li>' +
 			'<li class="item"><a href="'+base+'helpers/xml_helper.html">XML Helper</a></li>' +
-			
-			'<li class="header">Plugin Reference</li>' +
-			'<li class="item"><a href="'+base+'plugins/galleria_plugin.html">Galleria Plugin</a></li>' +
-			'<li class="item"><a href="'+base+'plugins/markdown_plugin.html">Markdown Plugin</a></li>' +
-		 	'<li class="item"><a href="'+base+'plugins/querytojson_plugin.html">QueryToJSON Plugin</a></li>' +
-		 	'<li class="item"><a href="'+base+'plugins/queryvalues_plugin.html">QueryValues Plugin</a></li>' +
-			'<li class="item"><a href="'+base+'plugins/sitelinks_plugin.html">SiteLinks Plugin</a></li>' +
 		'</ul>' +
 		'</div>' +
 		'</div>';

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -113,6 +113,7 @@
 
 <p>Let's say your template looks like this:</p>
 
+<div class="codeSample">
 <pre><code>Dear <#firstName> <#lastName>,
 
 thanks for your message regarding <#subject>.
@@ -125,10 +126,12 @@ Rev Igniter
 <p>
 Company
 </p></code></pre>
+</div>
 
 
 <p>Then your code would look like this:</p>
 
+<div class="codeSample">
 <pre><code>put "John" into tFormMailArray["firstName"]
 put "Doe" into tFormMailArray["lastName"]
 put "revIgniter" into tFormMailArray["subject"]
@@ -138,6 +141,7 @@ put "assets/modules/contact/emailText/contactConfirmationMail.txt" into tMailTex
 get rigFormMail(tMailText, tFormMailArray)
 put rigFormMailReplace() into tResponse
 </code></pre>
+</div>
 
 
 </div>
@@ -153,7 +157,7 @@ Previous Topic:&nbsp;&nbsp;<a href="form_helper.html">Form Helper</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="html_helper.html">HTML Helper</a></p>
+Next Topic:&nbsp;&nbsp;<a href="galleria_helper.html">Galleria Helper</a></p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>
 </div>
@@ -169,6 +173,8 @@ Next Topic:&nbsp;&nbsp;<a href="html_helper.html">HTML Helper</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

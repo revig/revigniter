@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -122,15 +122,17 @@ contain handlers that make it easy to work with your URI data.  In addition, you
 <p>You can easily remove this file by using a .htaccess file with some simple rules. Here is an example
  of such a file, using the "negative" method in which everything is redirected except the specified items:</p>
 
+<div class="codeSample">
 <pre><code>&lt;IfModule mod_rewrite.c>
-	RewriteEngine on
-	RewriteBase /
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteCond $1 !^(index\.lc|image|img|assets|robots\.txt|css|js)
-	RewriteRule ^(.*)$ index.lc?/$1 [L]
+  RewriteEngine on
+  RewriteBase /
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond $1 !^(index\.lc|image|img|assets|robots\.txt|css|js)
+  RewriteRule ^(.*)$ index.lc?/$1 [L]
 &lt;/IfModule>
 </code></pre>
+</div>
 
 <p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, css and js is treated as
 a request for your index.lc file. If you use this method to remove the page, set the Index File variable in your <dfn>application/config/config.lc</dfn> file so that it is blank.</p>
@@ -139,7 +141,7 @@ a request for your index.lc file. If you use this method to remove the page, set
 
 <p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
 
-<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See http://httpd.apache.org/docs/current/mod/mod_rewrite.html</p>
+<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See <a href="http://httpd.apache.org/docs/current/mod/mod_rewrite.html">http://httpd.apache.org/docs/current/mod/mod_rewrite.html</a></p>
 
 
 <h2>Adding a URL Suffix</h2>
@@ -165,12 +167,12 @@ open your config file you'll see these items:</p>
 
 <pre><code>put FALSE into gConfig["enableQueryStrings"]
 put  "c" into gConfig["controllerTrigger"]
-put "m" into gConfig["methodTrigger"]</code></pre>
+put "h" into gConfig["handlerTrigger"]</code></pre>
 
 <p>If you change "enableQueryStrings" to TRUE this feature will become active.  Your controllers and handlers will then
 be accessible using the "trigger" words you've set to invoke your controllers and handlers:</p>
 
-<pre><code>index.lc?c=controller&amp;m=method</code></pre>
+<pre><code>index.lc?c=controller&amp;h=handler</code></pre>
 
 
 
@@ -192,6 +194,8 @@ be accessible using the "trigger" words you've set to invoke your controllers an
 <div id="footer">
 	<div class="container">
 <p>
+	Previous Topic:&nbsp;&nbsp;<a href="../overview/goals.html">Architectural Goals</a>
+	<span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="controllers.html">Controllers</a></p>
@@ -211,6 +215,7 @@ Next Topic:&nbsp;&nbsp;<a href="controllers.html">Controllers</a></p>
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
 
+<script src="../js/clipboard-ck.js"></script>
 
 </body>
 </html>

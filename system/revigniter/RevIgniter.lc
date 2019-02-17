@@ -1,15 +1,13 @@
-<?rev
+<?lc
 # THE variablenames FUNCTION OUTSIDE HANDLERS RETURNS NOTHING, YIELDS A SERVER ERROR IN revIgniter.
 
--- if "gBASEPATH" is not among the items of line 4 of the variablenames then
+-- if "gRigA" is not among the items of line 4 of the variablenames then
 
 # NOTE: THIS HAS CHANGED IN SERVER VERSION 7!
-# HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gBASEPATH IS TREATED AS A LOCAL VARIABLE
-# CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gBASEPATH IS 2.
+# HOWEVER IN THIS CONTEXT (OUTSIDE HANDLERS) THE "global" gRigA IS TREATED AS A LOCAL VARIABLE
+# CREATED IN THE CURRENT HANDLER (CONFUSED?), SO THE LINE NUMBER OF the variablenames INCLUDING gRigA IS 2.
 
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
+if gRigA is not an array then
 	put "No direct script access allowed."
 	exit to top
 end if
@@ -22,7 +20,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2018, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -45,25 +43,35 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "1.10.3"
+	constant RIVERSION = "2.0.0"
 	constant RISTATE = "final"
+	
+# VERSION GETTER
+  function rigVersion pWhat
+    switch pWhat
+      case "state"
+        return RISTATE
+      default
+        return RIVERSION
+    end switch
+  end rigVersion
 	
 	
 ##
 #------------------------------------------------------
 #  DECLARE ADDITIONAL GLOBAL VARIABLES
-	 global gController, gHandler, gControllerHandlers, gData, gModule, gModuleHandlers, gModulesHandlersA
+	 global gControllerHandlers, gData, gModuleHandlers, gModulesHandlersA, gConfig, gHooksA, gRoute, gLang
 #------------------------------------------------------
 ##
 
 
 ##
 #------------------------------------------------------
-#  Load the global handlers
+#  Load the global handlers, loads the main configuration file too
 #------------------------------------------------------
 ##
 
-	require gBASEPATH & "revigniter/Common" & gEXT
+	start using stack "/Users/rabit/Sites/livecodeServer/system/revigniter/Common.livecodescript"
 
 
 ##
@@ -72,7 +80,7 @@ end if
 #------------------------------------------------------
 ##
 
-	require gAPPPATH & "config/constants" & gEXT
+	require gRigA["APPPATH"] & "config/constants" & gRigA["EXT"]
 
 
 ##
@@ -163,42 +171,42 @@ end if
   put TRUE into tUnableToLaodPage
   put rigFetchDirectory() into tRigControllerDir
   
-  put tRigControllerDir & gController & gEXT into tControllerPath
+  put tRigControllerDir & gRigA["controller"] & gRigA["EXT"] into tControllerPath
 	
   if tRigControllerDir is empty then
-    if gModule is empty then
-      put "controllers/" & gController & gEXT into tControllerPath
+    if gRigA["module"] is empty then 
+      put "controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
       put "controllers/" into tRigControllerDir
       put gRoute[1]["404Override"] into tRig404Override
     else
-      put "modules/" & gModule & "/controllers/" & gController & gEXT into tControllerPath
-      put "modules/" & gModule & "/controllers/" into tRigControllerDir
-      put gRoute[gModule][1]["404Override"] into tRig404Override
+      put "modules/" & gRigA["module"] & "/controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
+      put "modules/" & gRigA["module"] & "/controllers/" into tRigControllerDir
+      put gRoute[gRigA["module"]][1]["404Override"] into tRig404Override
     end if
   end if
 
-	if there is a file (gAPPPATH & tControllerPath) then
+	if there is a file (gRigA["APPPATH"] & tControllerPath) then
 		put FALSE into tUnableToLaodPage
       
 		# CHECK IF WE ARE DEALING WITH A MODULE
-		if gModule <> empty then
+		if gRigA["module"] <> empty then
 
 			# LOAD CONFIG FILE ASSOCIATED WITH MODULE IF AVAILABLE
-			get rigLoadConfigFile(, TRUE, TRUE, gModule)
+			get rigLoadConfigFile(, TRUE, TRUE, gRigA["module"])
         
 			# LOAD AUTOLOAD FILE ASSOCIATED WITH MODULE IF AVAILABLE
-			rigLoadAutoLoad gModule, TRUE
+			rigLoadAutoLoad gRigA["module"], TRUE
 		end if
 
-		include gAPPPATH & tControllerPath
+		include gRigA["APPPATH"] & tControllerPath
 
-		if gModule <> empty then
+		if gRigA["module"] <> empty then
 			put gModuleHandlers into gControllerHandlers
 		end if
 	end if
   
   if tUnableToLaodPage is TRUE then
-    rigShowError "Unable to load your default controller. Please make sure the controller specified in your routes" & gEXT & " file is valid."
+    rigShowError "Unable to load your default controller. Please make sure the controller specified in your routes" & gRigA["EXT"] & " file is valid."
   end if
 
 
@@ -223,7 +231,7 @@ end if
 #  controller handlers that begin with an underscore
 ##
 
-	if (gController is empty) or (gHandler Is "controller") or (gHandler begins with "_") or (toLower(gHandler) is among the items of toLower(rigFetchControllerLibHandlers())) then
+	if (gRigA["controller"] is empty) or (gRigA["handler"] Is "controller") or (gRigA["handler"] begins with "_") or (toLower(gRigA["handler"]) is among the items of toLower(rigFetchControllerLibHandlers())) then
 
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
 		if tRig404Override <> empty then
@@ -231,15 +239,15 @@ end if
 			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
-			put t404ErrorSegments[1] into gController
-			put t404ErrorSegments[2] into gHandler
+       put t404ErrorSegments[1] into gRigA["controller"]
+       put t404ErrorSegments[2] into gRigA["handler"]
 
-			include gAPPPATH & tRigControllerDir & gController & gEXT
+       include gRigA["APPPATH"] & tRigControllerDir & gRigA["controller"] & gRigA["EXT"]
 
 		else
 
-			put gController & "/" & gHandler into gErrorData["page"]
-			rigShow404 gErrorData
+      put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
+      rigShow404 gRigA["errorData"]
 
 		end if
 	end if
@@ -262,7 +270,7 @@ end if
 ##
 
 	#MARK A START POINT SO WE CAN BENCHMARK THE CONTROLLER
-	rigTimeMark "controllerExecutionTime_" & gController &  "/" & gHandler & "_start"
+	rigTimeMark "controllerExecutionTime_" & gRigA["controller"] &  "/" & gRigA["handler"] & "_start"
 	
 	##
 	
@@ -270,11 +278,11 @@ end if
 	put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 	
 	# RUN THE CONTROLLER HANDLER IF HANDLER NAME IS IN GLOBAL gControllerHandlers
-		_rigDo gController
+		_rigDo gRigA["controller"]
 		
 	# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
 	# THAT ITS NAME IS IN GLOBAL gControllerHandlers
-	if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
+	if (the result is not empty) and (gRigA["handler"] is not among the items of gControllerHandlers) then
 		
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
 		if tRig404Override <> empty then
@@ -282,18 +290,18 @@ end if
 			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
-			put t404ErrorSegments[1] into gController
-			put t404ErrorSegments[2] into gHandler
+       put t404ErrorSegments[1] into gRigA["controller"]
+       put t404ErrorSegments[2] into gRigA["handler"]
 
-			include gAPPPATH & tRigControllerDir & gController & gEXT
+       include gRigA["APPPATH"] & tRigControllerDir & gRigA["controller"] & gRigA["EXT"]
 				
 			# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 			put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 				
 		else
 				
-			put gController & "/" & gHandler into gErrorData["page"]
-			rigShow404 gErrorData
+       put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
+       rigShow404 gRigA["errorData"]
 		end if
 	end if
 	##
@@ -317,11 +325,11 @@ end if
 
 		# IS THERE A "REMAP" HANDLER?
 		if "_remap" is among the items of gControllerHandlers then
-			_remap gHandler
+			_remap gRigA["handler"]
 		else
 
-			# CHECK IF gHandler IS IN CONTROLLER
-			if (gHandler <> empty) and ((gHandler is not among the items of gControllerHandlers) or (gHandler is gController)) then
+			# CHECK IF gRigA["handler"] IS IN CONTROLLER
+			if (gRigA["handler"] <> empty) and ((gRigA["handler"] is not among the items of gControllerHandlers) or (gRigA["handler"] is gRigA["controller"])) then
 				
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
 				if tRig404Override  <> empty then
@@ -329,43 +337,43 @@ end if
 					put tRig404Override into t404ErrorSegments
 
 					split t404ErrorSegments by "/"
-					put t404ErrorSegments[1] into gController
-					put t404ErrorSegments[2] into gHandler
+					put t404ErrorSegments[1] into gRigA["controller"]
+					put t404ErrorSegments[2] into gRigA["handler"]
 
-					include gAPPPATH & tRigControllerDir & gController & gEXT
+					include gRigA["APPPATH"] & tRigControllerDir & gRigA["controller"] & gRigA["EXT"]
 
 					# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 					put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
 
-					_rigDo gController
-					if (the result is not empty) and (gHandler is not among the items of gControllerHandlers) then
-						put gController & "/" & gHandler into gErrorData["page"]
-						rigShow404 gErrorData
+					_rigDo gRigA["controller"]
+					if (the result is not empty) and (gRigA["handler"] is not among the items of gControllerHandlers) then
+              put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
+              rigShow404 gRigA["errorData"]
 					end if
 
 				else
 				
-					put gController & "/" & gHandler into gErrorData["page"]
-					rigShow404 gErrorData
+            put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
+            rigShow404 gRigA["errorData"]
 				end if
 			end if
 		
 			# CALL THE REQUESTED HANDLER.
 			# ANY URI SEGMENTS PRESENT (BESIDES THE CONTROLLER/HANDLER) WILL BE PASSED TO THE HANDLER FOR CONVENIENCE
-			if (the number of lines in the keys of gRSegments) > 2 then
+			if (the number of lines in the keys of gRigA["rSegments"]) > 2 then
 				put 1 into sIncr
-				repeat for each line sRSegKey in the keys of gRSegments
+				repeat for each line sRSegKey in the keys of gRigA["rSegments"]
 					if sIncr > 2 then
-						put quote & gRSegments[sRSegKey] & quote & comma after sHandlerParams
+						put quote & gRigA["rSegments"][sRSegKey] & quote & comma after sHandlerParams
 					end if
 					add 1 to sIncr
 				end repeat
 				delete last char of sHandlerParams
-				put gHandler into sHandler
+				put gRigA["handler"] into sHandler
 				put sHandler && sHandlerParams into sHandler
 				_rigDo sHandler
 			else
-				_rigDo gHandler
+				_rigDo gRigA["handler"]
 			end if -- if (the number of lines in the keys of gRSegments) > 2 then
 		end if -- if "_remap" is among the items of gControllerHandlers then
 	
@@ -373,7 +381,7 @@ end if
 
 
 	# MARK A BENCHMARK END POINT
-	rigTimeMark "controllerExecutionTime_" & gController &  "/" & gHandler & "_end"
+	rigTimeMark "controllerExecutionTime_" & gRigA["controller"] &  "/" & gRigA["handler"] & "_end"
 
 
 ##
@@ -404,6 +412,12 @@ end if
       end if
     end if
 	end _rigDo
+
+
+# HELPER
+	command _rigRequire pPath
+	  require pPath
+	end _rigRequire
 
 
 ##
@@ -442,9 +456,9 @@ end if
 #------------------------------------------------------
 ##
 
-if gDatabaseID is an integer then
-	get _rigCloseDB()
-end if
+	if gRigA["databaseID"] is an integer then
+		get _rigCloseDB()
+	end if
 
 
 --| END OF RevIgniter.lc

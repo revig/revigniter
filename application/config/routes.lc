@@ -1,0 +1,68 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+#-------------------------------------------------------------------------
+# URI ROUTING
+#-------------------------------------------------------------------------
+# This file lets you re-map URI requests to specific controller functions.
+#
+# Typically there is a one-to-one relationship between a URL string
+# and its corresponding controller page library/handler. The segments in a
+# URL normally follow this pattern:
+#
+# 	example.com/pagelibrary/handler/ID/
+#
+# In some instances, however, you may want to remap this relationship
+# so that a different page library/handler is called than the one
+# corresponding to the URL.
+#
+# Please see the user guide for complete details:
+#
+#	http://revigniter.com/user_guide/general/routing.html
+#
+#-------------------------------------------------------------------------
+# RESERVED ROUTES
+# -------------------------------------------------------------------------
+#
+# There are three reserved routes:
+#
+#	put "welcome" into gRoute[1]["defaultController"] 
+#
+# This route indicates which controller page library should be loaded if the
+# URI contains no data. In the above example, the "welcome" page library
+# would be loaded.
+#
+#	put "errors/pageMissing" into gRoute[1]["404Override"]
+#
+# This route will tell the Router what URI segments to use if those
+# provided in the URL cannot be matched to a valid route. If it is
+# empty the default 404 error page is provided.
+#
+#	put "scaffolding" into gRoute[1]["scaffoldingTrigger"]
+#
+# This route lets you set a "secret" word that will trigger the
+# scaffolding feature for added security. Note: scaffolding must be
+# enabled in the controller in which you intend to use it.
+#
+# Note: The gRoute array must be numbered and the key number for
+# reserved  routes must be 1. So custom route key numbers start
+# with number 2.
+#
+##
+
+
+put "welcome" into gRoute[1]["defaultController"]
+put "" into gRoute[1]["404Override"]
+put "" into gRoute[1]["scaffoldingTrigger"]
+
+
+
+
+--| END OF routes.lc
+--| Location: ./application/config/routes.lc
+----------------------------------------------------------------------

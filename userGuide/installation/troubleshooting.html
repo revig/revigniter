@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -95,13 +95,13 @@ See the comments in the sample files in the <dfn>application/controllers</dfn> f
 
 <h2>Error Logging</h2>
 
-<p>If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>system/logs</dfn> folder is writable.</p>
+<p>If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>application/logs</dfn> folder is writable.</p>
 
 <h2>Search-Engine Friendly URLs</h2>
 
 <p>If you find that no matter what you put in your URL only your default page is loading, it might be that your server
 does not support the PATH_INFO variable needed to serve search-engine friendly URLs. This does not apply to the 
-On-Rev hosting service.<br />
+LiveCode hosting service.<br />
 
 As a first step, open your <dfn>application/config/config.lc</dfn> file and look for the <kbd>URI Protocol</kbd>
 information. It will recommend that you try a couple alternate settings.  If it still doesn't work you may try to use 
@@ -110,14 +110,8 @@ query string based URLs by setting <samp>gConfig["enableQueryStrings"]</samp> in
 
 <h2>Setting Headers and Cookies</h2>
 
-<p>If you have problems setting headers or cookies watch out for whitespace. Make sure that there is no whitespace before the &lt;?rev tag of your script files and that no whitespace follows the terminating "?>" tag. Generally it is better to leave terminating "?>" tags off, this way whitespace at the end of the script does not accidentally output content to the browser. Furthermore make sure that your files are not saved using UTF-8 (BOM). Using BOM prevents changing any header because characters are sent prior to sending headers, this means headers you set or cookies can not be sent.</p>
+<p>If you have problems setting headers or cookies watch out for whitespace. Make sure that there is no whitespace before the &lt;?lc tag of your script files and that no whitespace follows the terminating "?>" tag. Generally it is better to leave terminating "?>" tags off, this way whitespace at the end of the script does not accidentally output content to the browser. Furthermore make sure that your files are not saved using UTF-8 (BOM). Using BOM prevents changing any header because characters are sent prior to sending headers, this means headers you set or cookies can not be sent.</p>
 
-
-<h2>gData Variables</h2>
-
-<p>
-If you use LiveCode server <kbd>prior to version 6.1.3</kbd> dont't forget to add a space between the right array bracket and the merge brackets of your gData variables in your view files.
-</p>
 
 <h2>Code in View Files</h2>
 
@@ -166,7 +160,7 @@ Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Ve
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="../overview/at_a_glance.html">revIgniter at a Glance</a>
+Next Topic:&nbsp;&nbsp;<a href="../overview/getting_started.html">Getting Started</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>

@@ -1,0 +1,29 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+
+
+
+
+put "<!DOCTYPE html PUBLIC " & quote & "-//W3C//DTD XHTML 1.1//EN" & quote && quote & "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" & quote & ">" into gRigA["docTypes"]["xhtml11"]
+put "<!DOCTYPE html PUBLIC " & quote & "-//W3C//DTD XHTML 1.0 Strict//EN" & quote && quote & "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd" & quote & ">" into gRigA["docTypes"]["xhtml1-strict"]
+put "<!DOCTYPE html PUBLIC " & quote & "-//W3C//DTD XHTML 1.0 Transitional//EN" & quote && quote & "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" & quote & ">" into gRigA["docTypes"]["xhtml1-trans"]
+put "<!DOCTYPE html PUBLIC " & quote & "-//W3C//DTD XHTML 1.0 Frameset//EN" & quote && quote & "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd" & quote & ">" into gRigA["docTypes"]["xhtml1-frame"]
+put "<!DOCTYPE html>" into gRigA["docTypes"]["html5"]
+put "<!DOCTYPE HTML PUBLIC " & quote & "-//W3C//DTD HTML 4.01//EN" & quote && quote & "http://www.w3.org/TR/html4/strict.dtd" & quote & ">" into gRigA["docTypes"]["html4-strict"]
+put "<!DOCTYPE HTML PUBLIC " & "-//W3C//DTD HTML 4.01 Transitional//EN" & quote && quote & "http://www.w3.org/TR/html4/loose.dtd" & quote & ">" into gRigA["docTypes"]["html4-trans"]
+put "<!DOCTYPE HTML PUBLIC " & quote & "-//W3C//DTD HTML 4.01 Frameset//EN" & quote && quote & "http://www.w3.org/TR/html4/frameset.dtd" & quote & ">" into gRigA["docTypes"]["html4-frame"]
+
+
+
+
+
+
+
+--| END OF doctypes.lc
+--| Location: ./application/config/doctypes.lc
+----------------------------------------------------------------------

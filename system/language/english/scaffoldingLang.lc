@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "View Records" into gLang["scaff_view_records"]
 put "Create New Record" into gLang["scaff_create_record"]

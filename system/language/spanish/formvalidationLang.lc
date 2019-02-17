@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "El campo %s es obligatorio." into gLang["requiredR"]
 put "El campo %s debe contener un valor." into gLang["isset"]

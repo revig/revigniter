@@ -1,0 +1,38 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+#-------------------------------------------------------------------------
+# Hooks
+# -------------------------------------------------------------------------
+# This file lets you define "hooks" to extend revIgniter without hacking the core
+# files.  Please see the user guide for info:
+#
+#	http://revigniter.com/userGuide/general/hooks.html
+#
+##
+
+
+
+
+
+/*
+	# SAMPLE FOR A PRECONTROLLER HOOK
+	put "MyHandler" into gHooksA["preController"]["handler"]
+	put "MyScript.livecodescript" into gHooksA["preController"]["filename"]
+	put "hooks" into gHooksA["preController"]["filepath"]
+	put "beer" into gHooksA["preController"]["params"][1]
+	put "wine" into gHooksA["preController"]["params"][2]
+	put "snacks" into gHooksA["preController"]["params"][3]
+*/
+
+
+
+
+--| END OF hooks.lc
+--| Location: ./application/config/hooks.lc
+----------------------------------------------------------------------

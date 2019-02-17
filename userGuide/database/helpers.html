@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -140,7 +140,7 @@ put rigDbInsertString("tablename", tArray) into tStr
 <p>The first parameter is the table name, the second is an associative array with the data to be inserted.  The above example produces:</p>
 <pre><code>INSERT INTO tablename (name, email, url) VALUES ('Rick', 'rick@example.com', 'example.com')</code></pre>
 
-<p class="important">Note: Values are automatically escaped, producing safer queries.</p>
+<p class="important"><strong>Note:</strong> Values are automatically escaped, producing safer queries.</p>
 
 
 
@@ -159,7 +159,7 @@ put rigDbUpdateString("tablename", tData, tWhere) into tStr
 <p>The first parameter is the table name, the second is an associative array with the data to be updated, and the third parameter is the "where" clause which can be a string or an associative array. The above example produces:</p>
 <pre><code> UPDATE tablename SET name = 'Rick', email = 'rick@example.com', url = 'example.com' WHERE authorID = 1 AND status = 'active'</code></pre>
 
-<p class="important">Note: Values are automatically escaped, producing safer queries.</p>
+<p class="important"><strong>Note:</strong> Values are automatically escaped, producing safer queries.</p>
 
 
 <h3>rigSqlDateTimeToIntDate(<var>pDateTime</var>)</h3>

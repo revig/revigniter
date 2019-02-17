@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "The %s field is required." into gLang["requiredR"]
 put "The %s field must have a value." into gLang["isset"]

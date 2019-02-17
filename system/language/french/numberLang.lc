@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "To" into gLang["terabyte_abbr"]
 put "Go" into gLang["gigabyte_abbr"]

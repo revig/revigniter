@@ -1,0 +1,47 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+#-------------------------------------------------------------------------
+# Authentication Hooks
+# -------------------------------------------------------------------------
+# This file lets you define "hooks" to extend the Authentication.lc library
+# without hacking the library itself. Please see the user guide for info:
+#
+#	http://revigniter.com/userGuide/libraries/authentication.html
+#
+##
+
+
+local sAuthenticationHooks
+
+
+/*
+	# SAMPLE FOR A authPreUpdateUser HOOK
+	put "MyHandler" into sAuthenticationHooks["authPreUpdateUser"]["handler"]
+	put "MyScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
+	put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"]["filepath"]
+	put "beer" into sAuthenticationHooks["authPreUpdateUser"]["params"][1]
+	put "wine" into sAuthenticationHooks["authPreUpdateUser"]["params"][2]
+	put "snacks" into sAuthenticationHooks["authPreUpdateUser"]["params"][3]
+*/
+
+
+
+
+
+
+
+
+# START AUTHENTICATION HOOKS CONFIGURATION
+rigSetAuthHooksConfig sAuthenticationHooks
+
+
+
+--| END OF authenticationHooks.lc
+--| Location: ./application/config/authenticationHooks.lc
+----------------------------------------------------------------------

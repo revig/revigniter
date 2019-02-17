@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -315,17 +315,16 @@ to the controller you want to direct to. The handler will build the URL based on
 method (default) or the "refresh" method.  Location is faster, but on Windows servers it can sometimes be a problem.  The optional third parameter allows you to send a specific HTTP Response Code - this could be used for example to create 301 redirects for search engine purposes. The default Response Code is 302. The third parameter is <em>only</em> available with 'location' redirects, and not 'refresh'. Examples:</p>
 
 <pre><code>if loggedIn is FALSE then
-	rigRedirect "/login/form/", "refresh"
+  rigRedirect "/login/form/", "refresh"
 end if
 
 -- with 301 redirect
 rigRedirect "/login/form/", "location", 301</code></pre>
 
 <p class="important"><strong>Note:</strong> In order for this handler to work it must be used before anything is outputted
-to the browser since it utilizes server headers.<br />
-<strong>Note:</strong> For  very fine grained control over headers, you should use the <a href="../libraries/output.html">Output  Library</a>'s rigSetHeader handler.</p>
+to the browser since it utilizes server headers.</p>
 
-
+<p class="important"><strong>Note:</strong> For  very fine grained control over headers, you should use the <a href="../libraries/output.html">Output  Library</a>'s rigSetHeader handler.</p>
 
 
 

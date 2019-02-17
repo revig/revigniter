@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Vous devez sp&eacute;cifier une image source dans vos pr&eacute;f&eacute;rences." into gLang["imglib_source_image_required"]
 put "ImageMagick est requise pour cette fonctionnalit&eacute;." into gLang["imglib_im_required"]

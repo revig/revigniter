@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Tb" into gLang["terabyte_abbr"]
 put "Gb" into gLang["gigabyte_abbr"]

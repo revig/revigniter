@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Form Validation : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Form Validation : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Form Validation</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Form Validation</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 <h1>Form Validation</h1>
@@ -94,23 +94,23 @@
 <li><a href="#overview">Overview</a></li>
 <li><a href="#tutorial">Form Validation Tutorial</a>
 
-	<ul>
-		<li><a href="#theform">The Form</a></li>
-		<li><a href="#thesuccesspage">The Success Page</a></li>
-		<li><a href="#thecontroller">The Controller</a></li>
-		<li><a href="#validationrules">Setting Validation Rules</a></li>
-		<li><a href="#validationrulesasarray">Setting Validation Rules Using an Array</a></li>
-		<li><a href="#cascadingrules">Cascading Rules</a></li>
-		<li><a href="#preppingdata">Prepping Data</a></li>
-		<li><a href="#repopulatingform">Re-populating the Form</a></li>
-		<li><a href="#callbacks">Callbacks</a></li>
-		<li><a href="#settingerrors">Setting Error Messages</a></li>
-		<li><a href="#errordelimiters">Changing the Error Delimiters</a></li>
-		<li><a href="#translatingfn">Translating Field Names</a></li>
-		<li><a href="#individualerrors">Showing Errors Individually</a></li>
-		<li><a href="#savingtoconfig">Saving Sets of Validation Rules to a Config File</a></li>
-		<li><a href="#arraysasfields">Using Arrays as Field Names</a></li>
-	</ul>
+  <ul>
+    <li><a href="#theform">The Form</a></li>
+    <li><a href="#thesuccesspage">The Success Page</a></li>
+    <li><a href="#thecontroller">The Controller</a></li>
+    <li><a href="#validationrules">Setting Validation Rules</a></li>
+    <li><a href="#validationrulesasarray">Setting Validation Rules Using an Array</a></li>
+    <li><a href="#cascadingrules">Cascading Rules</a></li>
+    <li><a href="#preppingdata">Prepping Data</a></li>
+    <li><a href="#repopulatingform">Re-populating the Form</a></li>
+    <li><a href="#callbacks">Callbacks</a></li>
+    <li><a href="#settingerrors">Setting Error Messages</a></li>
+    <li><a href="#errordelimiters">Changing the Error Delimiters</a></li>
+    <li><a href="#translatingfn">Translating Field Names</a></li>
+    <li><a href="#individualerrors">Showing Errors Individually</a></li>
+    <li><a href="#savingtoconfig">Saving Sets of Validation Rules to a Config File</a></li>
+    <li><a href="#arraysasfields">Using Arrays as Field Names</a></li>
+  </ul>
 </li>
 <li><a href="#rulereference">Rule Reference</a></li>
 <li><a href="#preppingreference">Prepping Reference</a></li>
@@ -185,37 +185,37 @@ Form validation, while simple to create, is generally very messy and tedious to 
 <p>Create a form called <dfn>myForm.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp>
 folder:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;/html>
-	&lt;head>
-		&lt;title>My Form&lt;/title>
-	&lt;/head>
-	&lt;body>
+  &lt;head>
+    &lt;title>My Form&lt;/title>
+  &lt;/head>
+  &lt;body>
 
-		&lt;p>[[gData["formErrors"] ]]&lt;/p>
+    &lt;p>[[gData["formErrors"]]]&lt;/p>
 
-		[[gData["formOpenTag"] ]]
+    [[gData["formOpenTag"]]]
 
-		&lt;h5>Username&lt;/h5>
-		&lt;input type="text" name="username" value="" size="50" />
+    &lt;h5>Username&lt;/h5>
+    &lt;input type="text" name="username" value="" size="50" />
 
-		&lt;h5>Password&lt;/h5>
-		&lt;input type="text" name="password" value="" size="50" />
+    &lt;h5>Password&lt;/h5>
+    &lt;input type="text" name="password" value="" size="50" />
 
-		&lt;h5>Password Confirm&lt;/h5>
-		&lt;input type="text" name="passconf" value="" size="50" />
+    &lt;h5>Password Confirm&lt;/h5>
+    &lt;input type="text" name="passconf" value="" size="50" />
 
-		&lt;h5>Email Address&lt;/h5>
-		&lt;input type="text" name="email" value="" size="50" />
+    &lt;h5>Email Address&lt;/h5>
+    &lt;input type="text" name="email" value="" size="50" />
 
-		&lt;div>&lt;input type="submit" value="Submit" />&lt;/div>
+    &lt;div>&lt;input type="submit" value="Submit" />&lt;/div>
 
-		&lt;/form>
+    &lt;/form>
 
-	&lt;/body>
+  &lt;/body>
 &lt;/html>
 </code></pre>
-
+</div>
 
 
 
@@ -226,21 +226,21 @@ folder:</p>
 <p>Create a form called <dfn>formSuccess.lc</dfn>.  In it, place this code and save it to your <samp>system/application/views/</samp>
 folder:</p>
 
-
+<div class="codeSample">
 <pre><code>&lt;html>
-	&lt;head>
-		&lt;title>My Form&lt;/title>
-	&lt;/head>
-	&lt;body>
+  &lt;head>
+    &lt;title>My Form&lt;/title>
+  &lt;/head>
+  &lt;body>
 
-		&lt;h3>Your form was successfully submitted!&lt;/h3>
+    &lt;h3>Your form was successfully submitted!&lt;/h3>
 
-		&lt;p>[[gData["againAnchor"] ]]&lt;/p>
+    &lt;p>[[gData["againAnchor"]]]&lt;/p>
 
-	&lt;/body>
+  &lt;/body>
 &lt;/html>
 </code></pre>
-
+</div>
 
 
 <a name="thecontroller"></a>
@@ -250,7 +250,8 @@ folder:</p>
 folder:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
@@ -259,27 +260,27 @@ put "index" into gControllerHandlers
 
 
 command index
-	put "form,url" into tHelpers
-	rigLoadHelper tHelpers
+  put "form,url" into tHelpers
+  rigLoadHelper tHelpers
 
-	rigLoaderLoadLibrary "Formvalidation"
+  rigLoaderLoadLibrary "Formvalidation"
 
-	# BUILD THE FORM OPEN TAG
-	put rigFormOpen("form") into gData["formOpenTag"]
+  # BUILD THE FORM OPEN TAG
+  put rigFormOpen("form") into gData["formOpenTag"]
 
-	if rigFormValidRun() is FALSE then
-		# GET VALIDATION ERRORS
-		put rigValidationErrors() into gData["formErrors"]
-		get rigLoadView("myForm")
-	else
-		# THIS LINK IS ON THE SUCCESS PAGE
-		put rigAnchor("form", "Try it again!") into gData["againAnchor"]
-		get rigLoadView("formSuccess")
-	end if
+  if rigFormValidRun() is FALSE then
+    # GET VALIDATION ERRORS
+    put rigValidationErrors() into gData["formErrors"]
+    get rigLoadView("myForm")
+  else
+    # THIS LINK IS ON THE SUCCESS PAGE
+    put rigAnchor("form", "Try it again!") into gData["againAnchor"]
+    get rigLoadView("formSuccess")
+  end if
 end index
 
 </code></pre>
-
+</div>
 
 <h2>Try it!</h2>
 
@@ -305,14 +306,14 @@ function only returns <kbd>TRUE</kbd> if it has successfully applied your rules 
 Technically, this isn't necessary.  You could create the form using standard HTML.  However, the benefit of using the helper
 is that it generates the action URL for you, based on the URL in your config file.  This makes your application more portable in the event your URLs change.
 
-<pre><code>[[gData["formOpenTag"] ]]</code></pre>
+<pre><code>[[gData["formOpenTag"]]]</code></pre>
 
 <p>This expression will be merged with the result of the rigFormOpen() function in the controller.</p>
 
 </li>
 
 <li>At the top of the form you'll notice the following expression:
-<pre><code>[[gData["formErrors"] ]]</code></pre>
+<pre><code>[[gData["formErrors"]]]</code></pre>
 
 <p>This expression will be merged with any error messages sent back by the validator. If there are no messages it is merged to an empty string.</p>
 </li>
@@ -338,23 +339,26 @@ at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn
 <p>The above function takes <strong>three</strong> parameters as input:</p>
 
 <ol>
-	<li>The field name - the exact name you've given the form field.</li>
-	<li>A "human" name for this field, which will be inserted into the error message. For example, if your field is named "user" you might give it a human name of "Username". <strong>Note:</strong> If you would like the field name to be stored in a language file, please see <a href="#translatingfn">Translating Field Names</a>.</li>
-	<li>The validation rules for this form field.</li>
+  <li>The field name - the exact name you've given the form field.</li>
+  <li>A "human" name for this field, which will be inserted into the error message. For example, if your field is named "user" you might give it a human name of "Username". <strong>Note:</strong> If you would like the field name to be stored in a language file, please see <a href="#translatingfn">Translating Field Names</a>.</li>
+  <li>The validation rules for this form field.</li>
 </ol>
 
 
 <p><br />Here is an example. In your <dfn>controller</dfn> (form.lc), add this code just below the validation initialization function:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR"
 rigSetRules "password", "Password", "requiredR"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR"
 </code></pre>
+</div>
 
 <p>Your controller should now look like this:</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
@@ -363,31 +367,32 @@ put "index" into gControllerHandlers
 
 
 command index
-	put "form,url" into tHelpers
-	rigLoadHelper tHelpers
+  put "form,url" into tHelpers
+  rigLoadHelper tHelpers
 
-	rigLoaderLoadLibrary "Formvalidation"
+  rigLoaderLoadLibrary "Formvalidation"
 
-	# BUILD THE FORM OPEN TAG
-	put rigFormOpen("form") into gData["formOpenTag"]
+  # BUILD THE FORM OPEN TAG
+  put rigFormOpen("form") into gData["formOpenTag"]
 
-	rigSetRules "username", "Username", "requiredR"
-	rigSetRules "password", "Password", "requiredR"
-	rigSetRules "passconf", "Password Confirmation", "requiredR"
-	rigSetRules "email", "Email", "requiredR"
+  rigSetRules "username", "Username", "requiredR"
+  rigSetRules "password", "Password", "requiredR"
+  rigSetRules "passconf", "Password Confirmation", "requiredR"
+  rigSetRules "email", "Email", "requiredR"
 
-	if rigFormValidRun() is FALSE then
-		# GET VALIDATION ERRORS
-		put rigValidationErrors() into gData["formErrors"]
-		get rigLoadView("myForm")
-	else
-		# THIS LINK IS ON THE SUCCESS PAGE
-		put rigAnchor("form", "Try it again!") into gData["againAnchor"]
-		get rigLoadView("formSuccess")
-	end if
+  if rigFormValidRun() is FALSE then
+    # GET VALIDATION ERRORS
+    put rigValidationErrors() into gData["formErrors"]
+    get rigLoadView("myForm")
+  else
+    # THIS LINK IS ON THE SUCCESS PAGE
+    put rigAnchor("form", "Try it again!") into gData["againAnchor"]
+    get rigLoadView("formSuccess")
+  end if
 end index
 
 </code></pre>
+</div>
 
 <p>Note: The last character ("R") in rules indicate, that it is a rule and helps to avoid name conflicts.</p>
 
@@ -406,6 +411,7 @@ there is an error.  We'll get to that shortly.</p>
 <p>Before moving on, it should be noted that the rule setting function can be passed an array if you prefer to set all your rules in one action.
 If you use this approach you must name your array keys as indicated:</p>
 
+<div class="codeSample">
 <pre><code>put "username" into tConfig[1]["field"]
 put "Username" into tConfig[1]["label"]
 put "requiredR" into tConfig[1]["rules"]
@@ -424,7 +430,7 @@ put "requiredR" into tConfig[4]["rules"]
 
 rigSetRules tConfig
 </code></pre>
-
+</div>
 
 
 
@@ -435,11 +441,13 @@ rigSetRules tConfig
 
 <p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of rule setting function, like this:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR|minLengthR[5]|maxLengthR[12]"
 rigSetRules "password", "Password", "requiredR|matchesR[passconf]"
 rigSetRules "passconf", "Password Confirmation", "requiredR"
 rigSetRules "email", "Email", "requiredR|validEmailR"
 </code></pre>
+</div>
 
 <p>The above code sets the following rules:</p>
 
@@ -460,11 +468,13 @@ There are numerous rules available which you can read about in the validation re
 <p>In addition to the validation functions like the ones we used above, you can also prep your data in various ways.
 For example, you can set up rules like this:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "<kbd>trim</kbd>|requiredR|minLengthR[5]|maxLengthR[12]|<kbd>xssClean</kbd>"
 rigSetRules "password", "Password", "<kbd>trim</kbd>|requiredR|matchesR[passconf]|<kbd>md5</kbd>"
 rigSetRules "passconf", "Password Confirmation", "<kbd>trim</kbd>|requiredR"
 rigSetRules "email", "Email", "<kbd>trim</kbd>|requiredR|validEmailR"
 </code></pre>
+</div>
 
 
 <p>In the above example, we are "trimming" the fields, converting the password to md5, and running the username through
@@ -486,7 +496,8 @@ that permit you to do this. The one you will use most commonly is:</p>
 
 <p>Complement your <dfn>form.lc</dfn> controller as shown:</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
@@ -495,63 +506,64 @@ put "index" into gControllerHandlers
 
 
 command index
-	put "form,url" into tHelpers
-	rigLoadHelper tHelpers
+  put "form,url" into tHelpers
+  rigLoadHelper tHelpers
 
-	rigLoaderLoadLibrary "Formvalidation"
+  rigLoaderLoadLibrary "Formvalidation"
 
-	# BUILD THE FORM OPEN TAG
-	put rigFormOpen("form") into gData["formOpenTag"]
+  # BUILD THE FORM OPEN TAG
+  put rigFormOpen("form") into gData["formOpenTag"]
 
-	rigSetRules "username", "Username", "requiredR"
-	rigSetRules "password", "Password", "requiredR"
-	rigSetRules "passconf", "Password Confirmation", "requiredR"
-	rigSetRules "email", "Email", "requiredR"
+  rigSetRules "username", "Username", "requiredR"
+  rigSetRules "password", "Password", "requiredR"
+  rigSetRules "passconf", "Password Confirmation", "requiredR"
+  rigSetRules "email", "Email", "requiredR"
 
-	if rigFormValidRun() is FALSE then
-		# GET VALIDATION ERRORS
-		put rigValidationErrors() into gData["formErrors"]
+  if rigFormValidRun() is FALSE then
+    # GET VALIDATION ERRORS
+    put rigValidationErrors() into gData["formErrors"]
 
-		# RE-POPULATE THE FORM
-		put rigSetValue("username") into gData["name"]
-		put rigSetValue("password") into gData["pw"]
-		put rigSetValue("passconf") into gData["pwconf"]
-		put rigSetValue("email") into gData["mail"]
-		
-		get rigLoadView("myForm")
-	else
-		# THIS LINK IS ON THE SUCCESS PAGE
-		put rigAnchor("form", "Try it again!") into gData["againAnchor"]
-		get rigLoadView("formSuccess")
-	end if
+    # RE-POPULATE THE FORM
+    put rigSetValue("username") into gData["name"]
+    put rigSetValue("password") into gData["pw"]
+    put rigSetValue("passconf") into gData["pwconf"]
+    put rigSetValue("email") into gData["mail"]
+    
+    get rigLoadView("myForm")
+  else
+    # THIS LINK IS ON THE SUCCESS PAGE
+    put rigAnchor("form", "Try it again!") into gData["againAnchor"]
+    get rigLoadView("formSuccess")
+  end if
 end index
 
 </code></pre>
+</div>
 
 <p>Open your <dfn>myForm.lc</dfn> view file and update the <strong>value</strong> in each field using the corresponding expression to be merged:</p>
 
 
-
+<div class="codeSample">
 <pre><code>&lt;head>
 &lt;title>My Form&lt;/title>
 &lt;/head>
 &lt;body>
 
-&lt;p>[[gData["formErrors"] ]]&lt;/p>
+&lt;p>[[gData["formErrors"]]]&lt;/p>
 
-[[gData["formOpenTag"] ]]
+[[gData["formOpenTag"]]]
 
 &lt;h5>Username&lt;/h5>
-&lt;input type="text" name="username" value="[[gData["name"] ]]" size="50" />
+&lt;input type="text" name="username" value="[[gData["name"]]]" size="50" />
 
 &lt;h5>Password&lt;/h5>
-&lt;input type="text" name="password" value="[[gData["pw"] ]]" size="50" />
+&lt;input type="text" name="password" value="[[gData["pw"]]]" size="50" />
 
 &lt;h5>Password Confirm&lt;/h5>
-&lt;input type="text" name="passconf" value="[[gData["pwconf"] ]]" size="50" />
+&lt;input type="text" name="passconf" value="[[gData["pwconf"]]]" size="50" />
 
 &lt;h5>Email Address&lt;/h5>
-&lt;input type="text" name="email" value="[[gData["mail"] ]]" size="50" />
+&lt;input type="text" name="email" value="[[gData["mail"]]]" size="50" />
 
 &lt;div>&lt;input type="submit" value="Submit" />&lt;/div>
 
@@ -560,6 +572,7 @@ end index
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p><dfn>Now reload your page and submit the form so that it triggers an error.  Your form fields should now be re-populated</dfn></p>
@@ -570,7 +583,7 @@ permit you to re-populate &lt;select> menus, radio buttons, and checkboxes.</p>
 
 <p><strong>Important Note:</strong> If you use an array as the name of a form field, you must supply it as an array to the function.  Example:</p>
 
-<pre><code>&lt;input type="checkbox" name="<kbd>myCheckbox[]</kbd>" value="A" [[gData["myCheckA"] ]] /></code></pre>
+<pre><code>&lt;input type="checkbox" name="<kbd>myCheckbox[]</kbd>" value="A" [[gData["myCheckA"]]] /></code></pre>
 
 <p>For more info please see the <a href="#arraysasfields">Using Arrays as Field Names</a> section below.</p>
 
@@ -592,8 +605,8 @@ create a callback handler that does that.  Let's create a example of this.</p>
 
 <p>Then add a new handler called <dfn>userNameCheck</dfn> to your controller.  Here's how your controller should now look:</p>
 
-
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,userNameCheck" into gControllerHandlers
@@ -602,47 +615,48 @@ put "index,userNameCheck" into gControllerHandlers
 
 
 command index
-	put "form,url" into tHelpers
-	rigLoadHelper tHelpers
+  put "form,url" into tHelpers
+  rigLoadHelper tHelpers
 
-	rigLoaderLoadLibrary "Formvalidation"
+  rigLoaderLoadLibrary "Formvalidation"
 
-	# BUILD THE FORM OPEN TAG
-	put rigFormOpen("form") into gData["formOpenTag"]
+  # BUILD THE FORM OPEN TAG
+  put rigFormOpen("form") into gData["formOpenTag"]
 
-	rigSetRules "username", "Username", "callback_userNameCheck"
-	rigSetRules "password", "Password", "requiredR"
-	rigSetRules "passconf", "Password Confirmation", "requiredR"
-	rigSetRules "email", "Email", "requiredR"
+  rigSetRules "username", "Username", "callback_userNameCheck"
+  rigSetRules "password", "Password", "requiredR"
+  rigSetRules "passconf", "Password Confirmation", "requiredR"
+  rigSetRules "email", "Email", "requiredR"
 
-	if rigFormValidRun() is FALSE then
-		# GET VALIDATION ERRORS
-		put rigValidationErrors() into gData["formErrors"]
+  if rigFormValidRun() is FALSE then
+    # GET VALIDATION ERRORS
+    put rigValidationErrors() into gData["formErrors"]
 
-		# RE-POPULATE THE FORM
-		put rigSetValue("username") into gData["name"]
-		put rigSetValue("password") into gData["pw"]
-		put rigSetValue("passconf") into gData["pwconf"]
-		put rigSetValue("email") into gData["mail"]
-		
-		get rigLoadView("myForm")
-	else
-		# THIS LINK IS ON THE SUCCESS PAGE
-		put rigAnchor("form", "Try it again!") into gData["againAnchor"]
-		get rigLoadView("formSuccess")
-	end if
+    # RE-POPULATE THE FORM
+    put rigSetValue("username") into gData["name"]
+    put rigSetValue("password") into gData["pw"]
+    put rigSetValue("passconf") into gData["pwconf"]
+    put rigSetValue("email") into gData["mail"]
+    
+    get rigLoadView("myForm")
+  else
+    # THIS LINK IS ON THE SUCCESS PAGE
+    put rigAnchor("form", "Try it again!") into gData["againAnchor"]
+    get rigLoadView("formSuccess")
+  end if
 end index
 
 
 command userNameCheck pStr
-	if pStr = "test" then
-		rigSetMessage "userNameCheck", "The %s field can not be the word"  && quote & "test" & quote & "."
-		return FALSE
-	else
-		return TRUE
-	end if
+  if pStr = "test" then
+    rigSetMessage "userNameCheck", "The %s field can not be the word"  && quote & "test" & quote & "."
+    return FALSE
+  else
+    return TRUE
+  end if
 end userNameCheck
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Don't forget to add the "userNameCheck" handler name to the list in the gControllerHandlers variable
 at the top of the controller file.</p>
@@ -746,31 +760,35 @@ individually.</p>
 
 <p>Try it! Change your controller so that it looks like this:</p>
 
+<div class="codeSample">
 <pre><code>put rigFormError("username") into gData["nameError"]
 put rigFormError("password") into gData["pwError"]
 put rigFormError("passconf") into gData["pwConfError"]
 put rigFormError("email") into gData["emailError"]
 </code></pre>
+</div>
 
 
 <p>Change your form so that it looks like this:</p>
 
+<div class="codeSample">
 <pre><code>&lt;h5>Username&lt;/h5>
-[[gData["nameError"] ]]
-&lt;input type="text" name="username" value="[[gData["name"] ]]" size="50" />
+[[gData["nameError"]]]
+&lt;input type="text" name="username" value="[[gData["name"]]]" size="50" />
 
 &lt;h5>Password&lt;/h5>
-[[gData["pwError"] ]]
-&lt;input type="text" name="password" value="[[gData["pw"] ]]" size="50" />
+[[gData["pwError"]]]
+&lt;input type="text" name="password" value="[[gData["pw"]]]" size="50" />
 
 &lt;h5>Password Confirm&lt;/h5>
-[[gData["pwConfError"] ]]
-&lt;input type="text" name="passconf" value="[[gData["pwconf"] ]]" size="50" />
+[[gData["pwConfError"]]]
+&lt;input type="text" name="passconf" value="[[gData["pwconf"]]]" size="50" />
 
 &lt;h5>Email Address&lt;/h5>
-[[gData["emailError"] ]]
-&lt;input type="text" name="email" value="[[gData["mail"] ]]" size="50" />
+[[gData["emailError"]]]
+&lt;input type="text" name="email" value="[[gData["mail"]]]" size="50" />
 </code></pre>
+</div>
 
 
 <p>If there are no errors, nothing will be shown.  If there is an error, the message will appear.</p>
@@ -799,7 +817,8 @@ you can manually call each set as needed.</p>
 <p>To store your validation rules, simply create a file named <kbd>validation.lc</kbd> in your <dfn>application/config/</dfn> folder.
 In that file you will place an array with your rules. As shown earlier, the validation array will have this prototype:</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -823,21 +842,23 @@ put "requiredR" into sConfig[4]["rules"]
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
+</div>
 
 
 <p><dfn>Your validation rule file will be loaded automatically and used when you call the rigFormValidRun() function.</dfn></p>
 
-<p class="important">Please note that you MUST add the <dfn>fetchValidationConf()</dfn> function to your configuration file as shown above.</p>
+<p class="important">Please note that you MUST add the <dfn>rigFetchValidationConf()</dfn> function to your configuration file as shown above.</p>
 
 
 <p><br />There is an alternative to generate the rules array in a config file. It significantly reduces the required amount of code. Using this approach the example above would read like:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -851,10 +872,11 @@ rigAddValidationRules "email", "Email", "requiredR", sConfig
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
+</div>
 
 
 
@@ -864,8 +886,8 @@ end fetchValidationConf
 We've arbitrarily called these two rules "signup" and "email".  You can name your rules anything you want:</p>
 
 
-
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -906,16 +928,18 @@ put "requiredR" into sConfig["email"][4]["rules"]
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
+</div>
 
 
 <p><br />Similar to the simple array example above there is an alternative to generate rules organized into "sets" too. Here is an example using the rules above:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -936,24 +960,25 @@ rigAddValidationRules "message", "MessageBody", "requiredR", sConfig
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
-
+</div>
 
 
 <h2>Calling a Specific Rule Group</h2>
 
 <p>In order to call a specific group you will pass its name to the <kbd>rigFormValidRun()</kbd> function.  For example, to call the <kbd>signup</kbd> rule you will do this:</p>
 
+<div class="codeSample">
 <pre><code>if rigFormValidRun("<kbd>signup</kbd>") is FALSE then
-	get rigLoadView("myForm")
+  get rigLoadView("myForm")
 else
-	get rigLoadView("formSuccess")
+  get rigLoadView("formSuccess")
 end if
 </code></pre>
-
+</div>
 
 
 <h2>Associating a Controller Handler with a Rule Group</h2>
@@ -961,7 +986,8 @@ end if
 <p>An alternate (and more automatic) method of calling a rule group is to name it according to the controller controller/handler you intend to use it with.  For example, let's say you
 have a controller named <kbd>member</kbd> and a handler named <kbd>signup</kbd>.  Here's what your controller might look like:</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,member,signup" into gControllerHandlers
@@ -971,30 +997,32 @@ put "index,member,signup" into gControllerHandlers
 
 
 command member
-	rigLoaderLoadLibrary "Formvalidation"
+  rigLoaderLoadLibrary "Formvalidation"
 end member
 
 
 command index
-	-- YOUR CODE HERE
+  -- YOUR CODE HERE
 end index
 
 
 command <kbd>signup</kbd>
 
-	if rigFormValidRun() is FALSE then
-		get rigLoadView("myForm")
-	else
-		get rigLoadView("formSuccess")
-	end if
+  if rigFormValidRun() is FALSE then
+    get rigLoadView("myForm")
+  else
+    get rigLoadView("formSuccess")
+  end if
 end <kbd>signup</kbd>
 </code></pre>
+</div>
 
 
 <p>In your validation config file, you will name your rule group <kbd>member/signup</kbd>:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -1018,17 +1046,19 @@ put "requiredR" into sConfig["<kbd>member/signup</kbd>"][4]["rules"]
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
+</div>
 
 <p><dfn>When a rule group is named identically to a controller/handler it will be used automatically when the rigFormValidRun() function is invoked from that controller/handler.</dfn></p>
 
 <p><br />Similar to examples above you can reduce the amount of required code using the following approach:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 
 local sConfig
@@ -1043,10 +1073,11 @@ rigAddValidationRules "email", "Email", "requiredR", sConfig
 
 
 # THIS FUNCTION IS MANDATORY
-function fetchValidationConf
-	return sConfig
-end fetchValidationConf
+function rigFetchValidationConf
+  return sConfig
+end rigFetchValidationConf
 </code></pre>
+</div>
 
 
 <p>&nbsp;</p>
@@ -1137,7 +1168,7 @@ POST array:</p>
 <td class="td">Returns FALSE if the form element does not match the one in the parameter.</td>
 <td class="td">matchesR[form_item]</td>
 </tr><tr>
-	
+  
 
 <td class="td"><strong>minLengthR</strong></td>
 <td class="td">Yes</td>
@@ -1156,13 +1187,13 @@ POST array:</p>
 <td class="td">Returns FALSE if the form element is not exactly the parameter value.</td>
 <td class="td">exactLengthR[8]</td>
 </tr><tr>
-	
+  
 <td class="td"><strong>greaterThanR</strong></td>
 <td class="td">Yes</td>
 <td class="td">Returns FALSE if the form element is less than the parameter value or not numeric.</td>
 <td class="td">greaterThanR[8]</td>
 </tr><tr>
-	
+  
 <td class="td"><strong>lessThanR</strong></td>
 <td class="td">Yes</td>
 <td class="td">Returns FALSE if the form element is greater than the parameter value or not numeric.</td>
@@ -1336,7 +1367,7 @@ put the result into tStringValidResult
 <td class="td">No</td>
 <td class="td">Converts a field to md5.</td>
 </tr><tr>
-	
+  
 <td class="td"><strong>sha1</strong></td>
 <td class="td">No</td>
 <td class="td">Converts a field to a base64 encoded SHA-1 digest.</td>
@@ -1404,13 +1435,13 @@ group via the function, as described in: <a href="#savingtoconfig">Saving Groups
 <h3>rigSetPrefilledValues pPrefilledValues</h3>
 
 <p>This command is needed if you use any prefilled form fields in combination with the rigRequiredR validation rule so that
-	the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma delimited list or in an array.</p>
-	
+  the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma delimited list or in an array.</p>
+  
 <p>Let's say the default values of your form fields are "First Name", "Last Name" and "name@any.com". Then you would store these
-	values in a validator variable like in the following example:</p>
+  values in a validator variable like in the following example:</p>
 
 <pre><code>rigSetPrefilledValues "First Name,Last Name,name@any.com"
-	
+  
 # OR ALTERNATIVELY
 put "First Name" into tPrefilledArray[1]
 put "Last Name" into tPrefilledArray[2]
@@ -1475,9 +1506,9 @@ put rigSetSelect("mySelect", "three") into gData["mySelectThree"]
 <p>Your view file should look like this:</p>
 
 <pre><code>&lt;select name="mySelect">
-&lt;option value="one" [[gData["mySelectOne"] ]] >One</option>
-&lt;option value="two" [[gData["mySelectTwo"] ]] >Two</option>
-&lt;option value="three" [[gData["mySelectThree"] ]] >Three</option>
+&lt;option value="one" [[gData["mySelectOne"]]] >One</option>
+&lt;option value="two" [[gData["mySelectTwo"]]] >Two</option>
+&lt;option value="three" [[gData["mySelectThree"]]] >Three</option>
 &lt;/select>
 </code></pre>
 
@@ -1494,9 +1525,9 @@ put rigSetCheckbox("myCheck[]", "C") into gData["myCheckC"]
 
 <p>Your view file should look like this:</p>
 
-<pre><code>&lt;input type="checkbox" name="myCheck[]" value="A" [[gData["myCheckA"] ]] />
-&lt;input type="checkbox" name="myCheck[]" value="B" [[gData["myCheckB"] ]] />
-&lt;input type="checkbox" name="myCheck[]" value="C" [[gData["myCheckC"] ]] />
+<pre><code>&lt;input type="checkbox" name="myCheck[]" value="A" [[gData["myCheckA"]]] />
+&lt;input type="checkbox" name="myCheck[]" value="B" [[gData["myCheckB"]]] />
+&lt;input type="checkbox" name="myCheck[]" value="C" [[gData["myCheckC"]]] />
 </code></pre>
 
 
@@ -1510,8 +1541,8 @@ put rigSetRadio("myRadio", "2") into gData["myRadio2"]
 
 <p>Your view file should look like this:</p>
 
-<pre><code>&lt;input type="radio" name="myRadio" value="1" [[gData["myRadio1"] ]] />
-&lt;input type="radio" name="myRadio" value="2" [[gData["myRadio2"] ]] />
+<pre><code>&lt;input type="radio" name="myRadio" value="1" [[gData["myRadio1"]]] />
+&lt;input type="radio" name="myRadio" value="2" [[gData["myRadio2"]]] />
 </code></pre>
 
 
@@ -1523,7 +1554,7 @@ put rigSetRadio("myRadio", "2") into gData["myRadio2"]
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library</a>
 <span class="separator"> :: </span>
@@ -1532,7 +1563,7 @@ Previous Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library<
 Next Topic:&nbsp;&nbsp;<a href="ftp.html">FTP Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -1540,12 +1571,15 @@ Next Topic:&nbsp;&nbsp;<a href="ftp.html">FTP Library</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

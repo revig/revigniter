@@ -1,0 +1,349 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+##
+# -------------------------------------------------------------------
+# MIME TYPES
+# -------------------------------------------------------------------
+# This file contains an array of mime types.  It is used by the
+# Upload library to help identify allowed file types.
+#
+##
+
+
+
+# DECLARE VARIABLES
+local sMime
+
+put "application/mac-binhex40" into sMime["hqx"][1]
+put "application/mac-binhex" into sMime["hqx"][2]
+put "application/x-binhex40" into sMime["hqx"][3]
+put "application/x-mac-binhex40" into sMime["hqx"][4]
+put "application/mac-compactpro" into sMime["cpt"]
+put "text/x-comma-separated-values" into sMime["csv"][1]
+put "text/comma-separated-values" into sMime["csv"][2]
+put "application/octet-stream" into sMime["csv"][3]
+put "application/vnd.ms-excel" into sMime["csv"][4]
+put "application/x-csv" into sMime["csv"][5]
+put "text/csv" into sMime["csv"][6]
+put "application/csv" into sMime["csv"][7]
+put "application/excel" into sMime["csv"][8]
+put "application/vnd.msexcel" into sMime["csv"][9]
+put "text/plain" into sMime["csv"][10]
+put "application/macbinary" into sMime["bin"][1]
+put "application/mac-binary" into sMime["bin"][2]
+put "application/octet-stream" into sMime["bin"][3]
+put "application/x-binary" into sMime["bin"][4]
+put "application/x-macbinary" into sMime["bin"][5]
+put "application/octet-stream" into sMime["dms"]
+put "application/octet-stream" into sMime["lha"]
+put "application/octet-stream" into sMime["lzh"]
+put "application/octet-stream" into sMime["exe"][1]
+put "application/x-msdownload" into sMime["exe"][2]
+put "application/octet-stream" into sMime["class"]
+put "application/x-photoshop" into sMime["psd"][1]
+put "image/vnd.adobe.photoshop" into sMime["psd"][2]
+put "application/octet-stream" into sMime["so"]
+put "application/octet-stream" into sMime["sea"]
+put "application/octet-stream" into sMime["dll"]
+put "application/oda" into sMime["oda"]
+put "application/pdf" into sMime["pdf"][1]
+put "application/force-download" into sMime["pdf"][2]
+put "application/x-download" into sMime["pdf"][3]
+put "binary/octet-stream" into sMime["pdf"][4]
+put "application/pdf" into sMime["ai"][1]
+put "application/postscript" into sMime["ai"][2]
+put "application/postscript" into sMime["eps"]
+put "application/postscript" into sMime["ps"]
+put "application/smil" into sMime["smi"]
+put "application/smil" into sMime["smil"]
+put "application/vnd.mif" into sMime["mif"]
+put "application/excel" into sMime["xls"][1]
+put "application/vnd.ms-excel" into sMime["xls"][2]
+put "application/msexcel" into sMime["xls"][3]
+put "application/x-msexcel" into sMime["xls"][4]
+put "application/x-ms-excel" into sMime["xls"][5]
+put "application/x-excel" into sMime["xls"][6]
+put "application/x-dos_ms_excel" into sMime["xls"][7]
+put "application/xls" into sMime["xls"][8]
+put "application/x-xls" into sMime["xls"][9]
+put "application/download" into sMime["xls"][10]
+put "application/vnd.ms-office" into sMime["xls"][11]
+put "application/msword" into sMime["xls"][12]
+put "application/powerpoint" into sMime["ppt"][1]
+put "application/vnd.ms-powerpoint" into sMime["ppt"][2]
+put "application/vnd.ms-office" into sMime["ppt"][3]
+put "application/msword" into sMime["ppt"][4]
+put "application/vnd.openxmlformats-officedocument.presentationml.presentation" into sMime["pptx"][1]
+put "application/x-zip" into sMime["pptx"][2]
+put "application/zip" into sMime["pptx"][3]
+put "application/wbxml" into sMime["wbxml"]
+put "application/wmlc" into sMime["wmlc"]
+put "application/x-director" into sMime["dcr"]
+put "application/x-director" into sMime["dir"]
+put "application/x-director" into sMime["dxr"]
+put "application/x-dvi" into sMime["dvi"]
+put "application/x-gtar" into sMime["gtar"]
+put "application/x-gzip" into sMime["gz"]
+put "application/x-gzip" into sMime["gzip"]
+put "application/x-httpd-php" into sMime["php"][1]
+put "application/php" into sMime["php"][2]
+put "application/x-php" into sMime["php"][3]
+put "text/php" into sMime["php"][4]
+put "text/x-php" into sMime["php"][5]
+put "application/x-httpd-php-source" into sMime["php"][6]
+put "application/x-httpd-php" into sMime["php4"]
+put "application/x-httpd-php" into sMime["php3"]
+put "application/x-httpd-php" into sMime["phtml"]
+put "application/x-httpd-php-source" into sMime["phps"]
+put "application/x-javascript" into sMime["js"]
+put "application/x-shockwave-flash" into sMime["swf"]
+put "application/x-stuffit" into sMime["sit"]
+put "application/x-tar" into sMime["tar"]
+put "application/x-tar" into sMime["tgz"][1]
+put "application/x-gzip-compressed" into sMime["tgz"][2]
+put "application/x-compress" into sMime["z"]
+put "application/xhtml+xml" into sMime["xhtml"]
+put "application/xhtml+xml" into sMime["xht"]
+put "application/x-zip" into sMime["zip"][1]
+put "application/zip" into sMime["zip"][2]
+put "application/x-zip-compressed" into sMime["zip"][3]
+put "application/s-compressed" into sMime["zip"][4]
+put "multipart/x-zip" into sMime["zip"][5]
+put "application/x-rar" into sMime["rar"][1]
+put "application/rar" into sMime["rar"][2]
+put "application/x-rar-compressed" into sMime["rar"][3]
+put "audio/midi" into sMime["mid"]
+put "audio/midi" into sMime["midi"]
+put "audio/mpeg" into sMime["mpga"]
+put "audio/mpeg" into sMime["mp2"]
+put "audio/mpeg" into sMime["mp3"][1]
+put "audio/mpg" into sMime["mp3"][2]
+put "audio/mpeg3" into sMime["mp3"][3]
+put "audio/mp3" into sMime["mp3"][4]
+put "audio/x-aiff" into sMime["aif"][1]
+put "audio/aiff" into sMime["aif"][2]
+put "audio/x-aiff" into sMime["aiff"][1]
+put "audio/aiff" into sMime["aiff"][2]
+put "audio/x-aiff" into sMime["aifc"]
+put "audio/x-pn-realaudio" into sMime["ram"]
+put "audio/x-pn-realaudio" into sMime["rm"]
+put "audio/x-pn-realaudio-plugin" into sMime["rpm"]
+put "audio/x-realaudio" into sMime["ra"]
+put "video/vnd.rn-realvideo" into sMime["rv"]
+put "audio/x-wav" into sMime["wav"][1]
+put "audio/wave" into sMime["wav"][2]
+put "audio/wav" into sMime["wav"][3]
+put "image/bmp" into sMime["bmp"][1]
+put "image/x-bmp" into sMime["bmp"][2]
+put "image/x-bitmap" into sMime["bmp"][3]
+put "image/x-xbitmap" into sMime["bmp"][4]
+put "image/x-win-bitmap" into sMime["bmp"][5]
+put "image/x-windows-bmp" into sMime["bmp"][6]
+put "image/ms-bmp" into sMime["bmp"][7]
+put "image/x-ms-bmp" into sMime["bmp"][8]
+put "application/bmp" into sMime["bmp"][9]
+put "application/x-bmp" into sMime["bmp"][10]
+put "application/x-win-bitmap" into sMime["bmp"][11]
+put "image/gif" into sMime["gif"]
+put "image/jpeg" into sMime["jpeg"][1]
+put "image/pjpeg" into sMime["jpeg"][2]
+put "image/jpeg" into sMime["jpg"][1]
+put "image/pjpeg" into sMime["jpg"][2]
+put "image/jpeg" into sMime["jpe"][1]
+put "image/pjpeg" into sMime["jpe"][2]
+put "image/png" into sMime["png"][1]
+put "image/x-png" into sMime["png"][2]
+put "image/tiff" into sMime["tiff"]
+put "image/tiff" into sMime["tif"]
+put "text/css" into sMime["css"][1]
+put "text/plain" into sMime["css"][2]
+put "text/html" into sMime["html"][1]
+put "text/plain" into sMime["html"][2]
+put "text/html" into sMime["htm"][1]
+put "text/plain" into sMime["htm"][2]
+put "text/html" into sMime["shtml"][1]
+put "text/plain" into sMime["shtml"][2]
+put "text/plain" into sMime["txt"]
+put "text/plain" into sMime["text"]
+put "text/plain" into sMime["log"][1]
+put "text/x-log" into sMime["log"][2]
+put "text/richtext" into sMime["rtx"]
+put "text/rtf" into sMime["rtf"]
+put "application/xml" into sMime["xml"][1]
+put "text/xml" into sMime["xml"][2]
+put "text/plain" into sMime["xml"][3]
+put "application/xml" into sMime["xsl"][1]
+put "text/xsl" into sMime["xsl"][2]
+put "text/xml" into sMime["xsl"][3]
+put "video/mpeg" into sMime["mpeg"]
+put "video/mpeg" into sMime["mpg"]
+put "video/mpeg" into sMime["mpe"]
+put "video/quicktime" into sMime["qt"]
+put "video/quicktime" into sMime["mov"]
+put "video/x-msvideo" into sMime["avi"][1]
+put "video/msvideo" into sMime["avi"][2]
+put "video/avi" into sMime["avi"][3]
+put "application/x-troff-msvideo" into sMime["avi"][4]
+put "video/x-sgi-movie" into sMime["movie"]
+put "application/msword" into sMime["doc"][1]
+put "application/vnd.ms-office" into sMime["doc"][2]
+put "application/vnd.openxmlformats-officedocument.wordprocessingml.document" into sMime["docx"][1]
+put "application/zip" into sMime["docx"][2]
+put "application/msword" into sMime["docx"][3]
+put "application/x-zip" into sMime["docx"][4]
+put "application/msword" into sMime["dot"][1]
+put "application/vnd.ms-office" into sMime["dot"][2]
+put "application/vnd.openxmlformats-officedocument.wordprocessingml.document" into sMime["dotx"][1]
+put "application/zip" into sMime["dotx"][2]
+put "application/msword" into sMime["dotx"][3]
+put "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" into sMime["xlsx"][1]
+put "application/zip" into sMime["xlsx"][2]
+put "application/vnd.ms-excel" into sMime["xlsx"][3]
+put "application/msword" into sMime["xlsx"][4]
+put "application/x-zip" into sMime["xlsx"][5]
+put "application/msword" into sMime["word"][1]
+put "application/octet-stream" into sMime["word"][2]
+put "application/excel" into sMime["xl"]
+put "message/rfc822" into sMime["eml"]
+put "application/runrev" into sMime["rev"]
+put "application/octet-stream" into sMime["ipa"]
+put "text/xml" into sMime["plist"]
+put "application/json" into sMime["json"][1]
+put "text/json" into sMime["json"][2]
+put "application/x-x509-user-cert" into sMime["pem"][1]
+put "application/x-pem-file" into sMime["pem"][2]
+put "application/octet-stream" into sMime["pem"][3]
+put "application/x-pkcs10" into sMime["p10"][1]
+put "application/pkcs10" into sMime["p10"][2]
+put "application/x-pkcs12" into sMime["p12"]
+put "application/x-pkcs7-signature" into sMime["p7a"]
+put "application/pkcs7-mime" into sMime["p7c"][1]
+put "application/x-pkcs7-mime" into sMime["p7c"][2]
+put "application/pkcs7-mime" into sMime["p7m"][1]
+put "application/x-pkcs7-mime" into sMime["p7m"][2]
+put "application/x-pkcs7-certreqresp" into sMime["p7r"]
+put "application/pkcs7-signature" into sMime["p7s"]
+put "application/x-x509-ca-cert" into sMime["crt"][1]
+put "application/x-x509-user-cert" into sMime["crt"][2]
+put "application/pkix-cert" into sMime["crt"][3]
+put "application/x-x509-ca-cert" into sMime["der"]
+put "application/octet-stream" into sMime["kdb"]
+put "application/pgp" into sMime["pgp"]
+put "application/gpg-keys" into sMime["gpg"]
+put "application/octet-stream" into sMime["sst"]
+put "application/octet-stream" into sMime["csr"]
+put "application/x-pkcs7" into sMime["rsa"]
+put "application/pkix-cert" into sMime["cer"][1]
+put "application/x-x509-ca-cert" into sMime["cer"][2]
+put "video/3gpp2" into sMime["3g2"]
+put "video/3gp" into sMime["3gp"]
+put "video/mp4" into sMime["mp4"]
+put "audio/x-m4a" into sMime["m4a"]
+put "video/mp4" into sMime["f4v"]
+put "video/webm" into sMime["webm"]
+put "audio/x-acc" into sMime["aac"]
+put "application/vnd.mpegurl" into sMime["m4u"]
+put "text/plain" into sMime["m3u"]
+put "application/xspf+xml" into sMime["xspf"]
+put "video/x-ms-wmv" into sMime["wmv"][1]
+put "video/x-ms-asf" into sMime["wmv"][2]
+put "audio/x-au" into sMime["au"]
+put "audio/ac3" into sMime["ac3"]
+put "audio/x-flac" into sMime["flac"]
+put "audio/ogg" into sMime["ogg"]
+put "application/vnd.google-earth.kmz" into sMime["kmz"][1]
+put "application/zip" into sMime["kmz"][2]
+put "application/x-zip" into sMime["kmz"][3]
+put "application/vnd.google-earth.kml+xml" into sMime["kml"][1]
+put "application/xml', 'text/xml" into sMime["kml"][2]
+put "text/calendar" into sMime["ics"]
+put "text/calendar" into sMime["ical"]
+put "text/x-scriptzsh" into sMime["zsh"]
+put "application/x-compressed" into sMime["7zip"][1]
+put "application/x-zip-compressed" into sMime["7zip"][2]
+put "application/zip" into sMime["7zip"][3]
+put "multipart/x-zip" into sMime["7zip"][4]
+put "application/cdr" into sMime["cdr"][1]
+put "application/coreldraw" into sMime["cdr"][2]
+put "application/x-cdr" into sMime["cdr"][3]
+put "application/x-coreldraw" into sMime["cdr"][4]
+put "image/cdr" into sMime["cdr"][5]
+put "image/x-cdr" into sMime["cdr"][6]
+put "zz-application/zz-winassoc-cdr" into sMime["cdr"][7]
+put "audio/x-ms-wma" into sMime["wma"][1]
+put "video/x-ms-asf" into sMime["wma"][2]
+put "application/java-archive" into sMime["jar"][1]
+put "application/x-java-application" into sMime["jar"][2]
+put "application/x-jar" into sMime["jar"][3]
+put "application/x-compressed" into sMime["jar"][4]
+put "image/svg+xml" into sMime["svg"][1]
+put "application/xml" into sMime["svg"][2]
+put "text/xml" into sMime["svg"][3]
+put "text/x-vcard" into sMime["vcf"]
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchMimeType
+--|
+--| Author: rabit
+--| Version:  1.1
+--| Created: 10-07-09
+--| Last Mod: 05-11-09
+--| Requires: --
+--|
+--| Summary: Fetch mime type by providing an extension.
+--| 
+--| Format:  rigFetchMimeType(param1)
+--|
+--| Parameters: string<pExtension>
+--|
+--| Return: mixed
+----------------------------------------------------------------------
+
+function rigFetchMimeType pExtension
+	if pExtension is among the keys of sMime then
+		return sMime[pExtension]
+	end if
+
+	return FALSE	
+end rigFetchMimeType
+
+
+
+
+
+
+----------------------------------------------------------------------
+--| FUNCTION rigFetchAllMimeTypes
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 10-07-09
+--| Last Mod: 10-07-09
+--| Requires: --
+--|
+--| Summary: Fetch mime types.
+--| 
+--| Format:  rigFetchAllMimeTypes()
+--|
+--| Parameters: --
+--|
+--| Return: array
+----------------------------------------------------------------------
+
+function rigFetchAllMimeTypes
+	return sMime
+end rigFetchAllMimeTypes
+
+
+
+
+
+--| END OF mimes.lc
+--| Location: ./application/config/mimes.lc
+----------------------------------------------------------------------

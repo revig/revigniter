@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -92,7 +92,7 @@
 
 
 <h3>rigFetchConfigItem("<var>Item</var>", "<var>Index</var>")</h3>
-<p>The <a href="../libraries/config.html">Config library</a> is the preferred way of accessing configuration information, however rigFetchConfigItem() can be used to retrieve single keys. See Config library documentation for more information.</p>
+<p>The <a href="../libraries/config.html">Config library</a> is the preferred way of accessing configuration information, however rigFetchConfigItem() can be used to retrieve single keys. See <a href="../libraries/config.html">Config library</a> documentation for more information.</p>
 
 <h3>rigShowError "<var>message</var>"<br />
 	<br />
@@ -118,6 +118,7 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 <p>Generates a random string unique for each request as used by Content-Security-Policy response headers.
 <br>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "'nonce-" & rigNonce() & "'" into tSrcNonce
 # GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
 put "Content-Security-Policy" into tCspMetaA["name"]
@@ -125,9 +126,12 @@ put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
 put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 </code></pre>
+</div>
 
 <p>Add csp nonce to your view file.</p>
-<pre><code>[[gData["cspTag"] ]] -- see above
+
+<div class="codeSample">
+<pre><code>[[gData["cspTag"]]] &lt;!-- see above -->
 
 &lt;style nonce="&lt;? return rigNonce() ?>" type="text/css">
 body {
@@ -136,6 +140,7 @@ body {
 ...
 &lt;/style>
 </code></pre>
+</div>
 
 
 </div>
@@ -167,6 +172,8 @@ Next Topic:&nbsp;&nbsp;<a href="scaffolding.html">Scaffolding</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

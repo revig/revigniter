@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Database Quick Start : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Database Quick Start : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,44 +38,44 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-						<li><a href="index.html">Database Library</a></li>
-			 		 	<li class="active">Database Example Code</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+            <li><a href="index.html">Database Library</a></li>
+              <li class="active">Database Example Code</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -83,7 +83,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 
@@ -106,15 +106,17 @@ read the individual pages describing each method.</p>
 
 <h2>Standard Query With Multiple Results</h2>
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("SELECT name, title, email FROM myTable") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
-	put rigDbRow(i) into tRowData
-	put tRowData["title"] & comma after tResultData
-	put tRowData["name"] & comma after tResultData
-	put tRowData["email"] & return after tResultData
+  put rigDbRow(i) into tRowData
+  put tRowData["title"] & comma after tResultData
+  put tRowData["name"] & comma after tResultData
+  put tRowData["email"] & return after tResultData
 end repeat
 </code></pre>
+</div>
 
 <p>The above <dfn>rigDbQuery()</dfn> function returns an array.</p>
 
@@ -123,39 +125,45 @@ end repeat
 <p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test for a result first:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
 
 # CHECK IF THE QUERY RESULT HAS DATA
 if tQuery["numrows"] > 0 then
 
-	repeat with i = 1 to tQuery["numrows"]
-		put rigDbRow(i) into tRowData
-		put tRowData["title"] & comma after tResultData
-		put tRowData["name"] & comma after tResultData
-		put tRowData["body"] & return after tResultData
-	end repeat
+  repeat with i = 1 to tQuery["numrows"]
+    put rigDbRow(i) into tRowData
+    put tRowData["title"] & comma after tResultData
+    put tRowData["name"] & comma after tResultData
+    put tRowData["body"] & return after tResultData
+  end repeat
 end if
 </code></pre>
+</div>
 
 
 
 <h2>Standard Query With Single Result</h2>
 
+<div class="codeSample">
 <pre><code>get rigDbQuery("SELECT name FROM myTable LIMIT 1")
 
 put rigDbRow(1) into tRow
 put tRow["name"] into tName
 </code></pre>
+</div>
 
 
 <h2>Standard Insert</h2>
 
+<div class="codeSample">
 <pre><code>put "INSERT INTO mytable (title, name) VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
 
 get rigDbQuery(tSQL)
 
 put rigDbAffectedRows() into tAffectedRows
 </code></pre>
+</div>
 
 <p>The function rigDbAffectedRows() returns an integer or a boolean.</p>
 
@@ -164,13 +172,15 @@ put rigDbAffectedRows() into tAffectedRows
 
 <p>The <a href="active_record.html">Active Record Pattern</a> gives you a simplified means of retrieving data:</p>
 
+<div class="codeSample">
 <pre><code>put rigDbGet("tableName") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
-	put rigDbRow(i) into tRowData
-	put tRowData["title"] & comma after tTitles
+  put rigDbRow(i) into tRowData
+  put tRowData["title"] & comma after tTitles
 end repeat
 </code></pre>
+</div>
 
 <p>The above <dfn>rigDbGet()</dfn> function retrieves all the results from the supplied table.
 The <a href="active_record.html">Active Record</a> library contains a full compliment of handlers
@@ -179,6 +189,7 @@ for working with data.</p>
 
 <h2>Active Record Insert</h2>
 
+<div class="codeSample">
 <pre><code>put tTitle into tData["title"]
 put tName into tData["name"]
 put tDate into tData["date"]
@@ -187,7 +198,7 @@ get rigDbInsert("mytable", tData)
 
 -- Produces: "INSERT INTO mytable (title, name, date) VALUES ('" & tTitle & "', '" & tName & "', '" & tData & "')"
 </code></pre>
-
+</div>
 
 
 
@@ -198,7 +209,7 @@ get rigDbInsert("mytable", tData)
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="index.html">Database Library</a>
 <span class="separator"> :: </span>
@@ -207,7 +218,7 @@ Previous Topic:&nbsp;&nbsp;<a href="index.html">Database Library</a>
 Next Topic:&nbsp;&nbsp;<a href="configuration.html">Database Configuration</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -215,12 +226,14 @@ Next Topic:&nbsp;&nbsp;<a href="configuration.html">Database Configuration</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Creating Libraries : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Creating Libraries : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Creating Libraries</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Creating Libraries</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 <h1>Creating Libraries</h1>
@@ -118,32 +118,66 @@ they are initialized.</p>
 
 <h2>The Library File</h2>
 
-<p>Libraries should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
+<p>Libraries are script only stacks and should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
 
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
 
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+<div class="codeSample">
+<pre><code>script "Library_Name"
 
-# LOGGING
-rigLogMessage "debug", "Your Library Loaded"
+
+global gRigA
 
 # DECLARE LOCAL VARIABLES
+sStackInUse
 
 
-# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitialLibrarynameConfig
-command rigRunInitialYourlibConfig
-	--Run initial configuration procedures. Don't remove this handler, even if it does nothing.
-end rigRunInitialYourlibConfig
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse &lt;> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Library_Name Library Loaded"
+      end if
+      
+      # SET INITIAL VALUES OF THE LIBRARY VARIABLES
+      _rigSetDefaultValues
+      #
+    end if -- if sStackInUse &lt;> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+# SET INITIAL VALUES
+private command _rigSetDefaultValues
+  -- your code here
+end _rigSetDefaultValues
+
+
+
+# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial&lt;library name>Config
+command rigRunInitialLibrary_NameConfig
+  --Run initial configuration procedures. Don't remove this handler, even if it does nothing.
+end rigRunInitialLibrary_NameConfig
 
 
 command someHandler
-
+  -- your code here
 end someHandler
 </code></pre>
+</div>
+
+<p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build models, libraries, helpers etc.</p>
 
 
 <h2>Using Your Library</h2>
@@ -152,7 +186,9 @@ end someHandler
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Somelibrary"</code></pre>
 
-<p>Where <em>Somelibrary</em> is the file name, without the ".lc" file extension. You can submit the file name capitalized or lower case,
+<p>Where <em>Somelibrary</em> is the file name, without the ".livecodescript" file extension.</p>
+
+<p class="important"><strong>Note:</strong> You can submit the file name capitalized or lower case,
 revIgniter doesn't care, but do not use compound words like camel case or pascal case.</p>
 
 <p>Once loaded you can access the handlers of your library.</p>
@@ -164,37 +200,33 @@ revIgniter doesn't care, but do not use compound words like camel case or pascal
 <p>In the library loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your library:</p>
 
 
-<pre><code>put "large" into tParams["type"]
-put "red" into tParams["color"]
+<pre><code>put "large" into tParamsA["type"]
+put "red" into tParamsA["color"]
 
-rigLoaderLoadLibrary "Somelibrary", <kbd>tParams</kbd>
+rigLoaderLoadLibrary "Somelibrary", <kbd>tParamsA</kbd>
 </code></pre>
 
 
-<p>If you use this feature you must set up your library to expect data:</p>
+<p>If you use this feature you must set up your initialization handler to expect data:</p>
 
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
-
-# LOGGING
-rigLogMessage "debug", "Your Library Loaded"
-
-# DECLARE LOCAL VARIABLES
-
-
-# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitialLibrarynameConfig
-command rigRunInitialYourlibConfig pParams
-	--Do something with pParams.
-end rigRunInitialYourlibConfig
+<div class="codeSample">
+<pre><code># PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial&lt;library name>Config
+command rigRunInitialLibrary_NameConfig pParamsA
+  if pParamsA is not an array then
+    if pParamsA is not empty then
+      split pParamsA using numToCodepoint(1) and numToCodepoint(2)
+    end if
+  end if
+	
+  if pParamsA is an array then
+    -- do something with pParamsA
+  end if
+end rigRunInitialLibrary_NameConfig
 </code></pre>
+</div>
 
 
-<p class="important">You can also pass parameters stored in a config file. Simply create a config file named identically to the library <kbd>file name</kbd>
+<p class="important"><strong>Note: </strong>You can also pass parameters stored in a config file. Simply create a config file named identically to the library <kbd>file name</kbd>
 and store it in your <dfn>application/config/</dfn> folder.  Note that if you dynamically pass parameters as described above,
 the config file option will not be available.</p>
 
@@ -204,7 +236,7 @@ the config file option will not be available.</p>
 
 <p>Simply by naming your library files identically to a native library will cause revIgniter to use it instead of the native one. To use this
 feature you must name the file exactly the same as the native library.  For example, to replace the native <kbd>Email</kbd> library
-you'll create a file named <dfn>application/libraries/Email.lc</dfn>.</p>
+you'll create a file named <dfn>application/libraries/Email.livecodescript</dfn>.</p>
 
 
 <p>To load your library you'll see the standard loading handler:</p>
@@ -216,7 +248,7 @@ you'll create a file named <dfn>application/libraries/Email.lc</dfn>.</p>
 
 <h2>Extending Native Libraries</h2>
 
-<p>If all you need to do is add some functionality to an existing library - perhaps add a function or two - then
+<p>If all you need to do is add some functionality to an existing library - perhaps add a handler or two - then
 it's overkill to replace the entire library with your version.  In this case it's better to simply extend the library.
 Extending a library is nearly identical to replacing a library with one exception:</p>
 
@@ -224,7 +256,7 @@ Extending a library is nearly identical to replacing a library with one exceptio
 <li>Your new library name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
 </ul>
 
-<p>For example, to extend the native <kbd>Email</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Email.lc</kbd>.</p>
+<p>For example, to extend the native <kbd>Email</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Email.livecodescript</kbd>.</p>
 
 
 
@@ -246,46 +278,161 @@ to load the example above, which extends the Email library, you will use:</p>
 <p>Keep in mind that this setting applies to stacks too.</p>
 
 
+<h3>Library Getter and Setter</h3>
+
+<p>To be able to access native library script variables in your sub-library most libraries provide a getter 
+	function and a setter command. <br>The prototype for the getter function is: <kbd>rig&lt;Libraryname>Get</kbd>(<dfn>pWhat</dfn>). The prototype for the setter command is: <kbd>rig&lt;Libraryname>Set</kbd> <dfn>pKey pVal</dfn>.<br>
+So, for example to access the Formvalidation library variables you can use the handlers <kbd>rigFormvalidationGet</kbd> <dfn>pWhat</dfn> and <kbd>rigFormvalidationSet</kbd> <dfn>pKey pVal</dfn>.
+</p>
+
+<p class="important"><strong>Note:</strong> All values you can set or get are combined in one array variable.</p>
+
+
+<h2>Extending Native Libraries Example</h2>
+
+<p>Let's say you would like to add validation rules to the Formvalidation library. To achieve this the process is as follows:</p>
+
+<p>Step1: Check the getter or setter handler in the Formvalidation library which reveals the required array variable name. 
+	In this case this is <dfn>sFormValidA</dfn>. <br>
+	Note: These handlers are always at the bottom of the script. 
+	The <kbd>_rigSetDefaultValues</kbd> handler tells you that the validation rules are stored in <dfn>sFormValidA["ruleNames"]</dfn>. 
+	This is the information you need to extend the list of available validation rules.</p>
+	
+<p>Step 2: Create a file named <kbd>MY_Formvalidation.livecodescript</kbd> in <dfn>application/libraries</dfn>.</p>
+
+
+<p>Step 3: Add your code to extend the validation rules list using the library getter and setter. Your code may look like the following example.</p>
+
+
+
+<div class="codeSample">
+<pre><code>script "MY_Formvalidation"
+
+
+global gRigA
+
+local sStackInUse
+
+
+
+on libraryStack
+  local tRuleNames
+  
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then 
+    if sStackInUse &lt;> TRUE then
+      put TRUE into sStackInUse
+      
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "MY_Formvalidation Library Loaded"
+      end if
+    
+      # EXTEND THE VALIDATION RULES LIST USING THE GETTER AND SETTER OF THE NATIVE LIBRARY
+      put rigFormvalidationGet("ruleNames") & ",validPasswordR,validRoleR,validNHSpasswordR" into tRuleNames
+      rigFormvalidationSet "ruleNames", tRuleNames
+      #
+    end if
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+
+
+# ADD YOUR CUSTOM VALIDATION RULES
+command rigValidPasswordR pStr
+  local tRegEx
+  
+  put "^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\p{P}]).{8,40}$" into tRegEx
+  return matchText(pStr, tRegEx)
+end rigValidPasswordR
+
+
+
+command rigValidRoleR pStr
+  local tRegEx
+  
+  put "^((?!initialRole).)*$" into tRegEx
+  return matchText(pStr, tRegEx)
+end rigValidRoleR
+
+
+
+command rigValidNHSpasswordR pStr
+  local tRegEx
+  
+  put "^.+(@nhs\.net)$" into tRegEx
+  return matchText(pStr, tRegEx)
+end rigValidNHSpasswordR
+</code></pre>
+</div>
+
+
 <h2>Custom Library Example Using the Quartam PDF Library</h2>
 
 
-<p>Let's say you want to integrate the Quartam PDF Library 1.1.5 (mind the version number) into revIgniter. This requires the following work steps (Note: This example assumes you name your copy of the server include file "Qrtpdflib.lc"):</p>
+<p>Let's say you want to integrate the Quartam PDF Library 1.1.5 (mind the version number) into revIgniter. This requires the following work steps (Note: This example assumes you name your copy of the Quartam PDF Library server include file "Qrtpdflib.livecodescript"):</p>
 
 
 <p><strong>Step 1</strong>: Download the Quartam PDF Library from <a href="http://downloads.quartam.com/qrtpdflib_115_xplatform.zip">http://downloads.quartam.com/qrtpdflib_115_xplatform.zip</a></p>
 
 <p><strong>Step 2</strong>: Prepare a copy of the server include file generated by qrtpdflib.livecode. This involves the following:<br />
-Name it "Qrtpdflib.lc".<br />
+Name it "Qrtpdflib.livecodescript".<br />
 Replace "&lt;?rev" at the top of the script with:
 </p>
 
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
-
-if gBASEPATH is "gBASEPATH" then
-	put "No direct script access allowed."
-	exit to top
-end if
+<div class="codeSample">
+<pre><code>script "Qrtpdflib"
 </code></pre>
+</div>
 
-<p>
-Insert the following lines right after the license notes:
-</p>
-
-<pre><code class="lang-livecodeserver"># LOGGING
-rigLogMessage "debug", "Qrtpdflib Library Loaded"
-</code></pre>
 
 
 <p>Insert the following lines right before it says "--> library handlers":</p>
 
-<pre><code>command rigRunInitialQrtpdflibConfig pConfig
-	qrtPDF_ResetAll
-end rigRunInitialQrtpdflibConfig	
+<div class="codeSample">
+<pre><code>global gRigA
+
+local sStackInUse
+
+
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target = the short name of me then
+    if sStackInUse <> TRUE then
+      put TRUE into sStackInUse
+
+      # LOGGING
+      if the environment is "server" then
+        rigLogMessage "debug", "Qrtpdflib Library Loaded"
+      end if
+    end if -- if sStackInUse <> TRUE
+    
+  else
+    pass libraryStack
+  end if -- if the short name of the target = the short name of me
+end libraryStack
+
+
+command rigRunInitialQrtpdflibConfig pConfig
+  qrtPDF_ResetAll
+end rigRunInitialQrtpdflibConfig
 </code></pre>
+</div>
 
 <p>The parameter is optional and is used to change settings upon loading the library like: rigLoaderLoadLibrary "Qrtpdflib", mySettingsArray<br />
-	<br />
+  <br />
 Comment out the libraryStack handler.<br />
 Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as qrtPDF_ResetAll is called in rigRunInitialQrtpdflibConfig.
 </p>
@@ -301,13 +448,17 @@ For testing purposes you can use the scripts from <a href="http://quartam.on-rev
 
 <p>For error reporting you should use revIgniter's built in mechanism. To write qrtPDFlib  errors to the error log use:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigLogMessage "error", tError
 </code></pre>
+</div>
 
 <p>To display qrtPDFlib errors use:</p>
 
+<div class="codeSample">
 <pre><code>rigLogMessage "error", rigHtmlSpecialChars(tError), TRUE
 </code></pre>
+</div>
 
 <p>Note: tError is the variable of the try catch statements of the Quartam examples.</p>
 
@@ -325,7 +476,7 @@ For testing purposes you can use the scripts from <a href="http://quartam.on-rev
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="libraries.html">Using revIgniter Libraries</a>
 <span class="separator"> :: </span>
@@ -334,7 +485,7 @@ Previous Topic:&nbsp;&nbsp;<a href="libraries.html">Using revIgniter Libraries</
 Next Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Libraries</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -342,12 +493,14 @@ Next Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Librar
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

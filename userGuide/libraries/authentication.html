@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Authentication : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Authentication</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Authentication</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 <h1>Authentication Library</h1>
@@ -99,12 +99,12 @@
 <li><a href="#emailtemplates">Email Templates</a></li>
 <li><a href="#usage">Usage Example</a>
 
-	<ul>
-		<li><a href="#thecontroller">The Controller</a></li>
-		<li><a href="#thevalidationfile">The Form Validation File</a></li>
-		<li><a href="#theviewfiles">The View Files</a></li>
-		<li><a href="#cssfile">The Css File</a></li>
-	</ul>
+  <ul>
+    <li><a href="#thecontroller">The Controller</a></li>
+    <li><a href="#thevalidationfile">The Form Validation File</a></li>
+    <li><a href="#theviewfiles">The View Files</a></li>
+    <li><a href="#cssfile">The Css File</a></li>
+  </ul>
 </li>
 </ul>
 
@@ -125,17 +125,17 @@
 <p>Following below the features and key points of revIgniter's Authentication library:</p>
 
 <ul>
-	<li>Highly configurable.</li>
-	<li>Support for "hooks" to modify the inner workings of the library.</li>
-	<li>Autonomous encryption settings independent from the core settings.</li>
-	<li>Basic auth options (login, logout, register, change password).</li>
-	<li>Remember me.</li>
-	<li>Login using email address or any other data stored in the Users table (depending on config settings).</li>
-	<li>Forgot password.</li>
-	<li>Logging last login time and IP-address. </li>
-	<li>Email or manual activation.</li>
-	<li>Counting login attempts.</li>
-	<li>Expiring forgotten password requests.</li>
+  <li>Highly configurable.</li>
+  <li>Support for "hooks" to modify the inner workings of the library.</li>
+  <li>Autonomous encryption settings independent from the core settings.</li>
+  <li>Basic auth options (login, logout, register, change password).</li>
+  <li>Remember me.</li>
+  <li>Login using email address or any other data stored in the Users table (depending on config settings).</li>
+  <li>Forgot password.</li>
+  <li>Logging last login time and IP-address. </li>
+  <li>Email or manual activation.</li>
+  <li>Counting login attempts.</li>
+  <li>Expiring forgotten password requests.</li>
 </ul>
 
 
@@ -146,7 +146,7 @@
 <h2>Authentication Configuration</h2>
 
 
-<p>The following is a list of all the preferences that can be set in system/application/config/authentication.lc:</p>
+<p>The following is a list of all the preferences that can be set in application/config/authentication.lc:</p>
 
 <div class="table">
 <table>
@@ -214,7 +214,7 @@
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["emailConfig"]</strong></td><td class="td">mailtype: html, protocol: sendmail</td><td class="td">file or revIgniter's <a href="email.html">Email Library prefs</a></td><td class="td">Use "file" if you want emails to be sent using revIgniter's default configuration or, if present, an email config file. Use an array to manually set your email configuration.</td>
 </tr><tr>
-<td class="td"><strong>sAuthenticationConf["pathToEmailTemplates"]</strong></td><td class="td"></td><td class="td">None</td><td class="td">	Path to your authentication mail templates relative to system/application/views/. Leave this BLANK unless you would like to set something other than the default emailTemplates/ folder.</td>
+<td class="td"><strong>sAuthenticationConf["pathToEmailTemplates"]</strong></td><td class="td"></td><td class="td">None</td><td class="td">  Path to your authentication mail templates relative to application/views/. Leave this BLANK unless you would like to set something other than the default emailTemplates/ folder.</td>
 </tr><tr>
 <td class="td"><strong>sAuthenticationConf["emailActivate"]</strong></td><td class="td">authActivate.lc</td><td class="td">None</td><td class="td">Name of your account activation email template.</td>
 </tr><tr>
@@ -249,30 +249,31 @@
 <p>Logs the user in.</p>
 
 <p>The first parameter is a string to identify the user. Usually this is an email address or a username.<br />
-	The second parameter is a password string.<br />
-	The optional third parameter is a boolean which determines if the user wants to be remembered.</p>
+  The second parameter is a password string.<br />
+  The optional third parameter is a boolean which determines if the user wants to be remembered.</p>
 
 <p>This function returns TRUE if the user was successfully logged in, otherwise it returns FALSE.</p>
 
 
 <p>Example:</p>
 
-
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put FALSE into tRemember
 # CHECK IF THERE IS A POST VARIABLE remember
 put rigVarPost("remember[]") into tPostRemember
 if tPostRemember &lt;> FALSE then
-	# CHECK VALUE
-	if tPostRemember[1] is 1 then
-		put TRUE into tRemember
-	end if
+  # CHECK VALUE
+  if tPostRemember[1] is 1 then
+    put TRUE into tRemember
+  end if
 end if
 
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 </code></pre>
+</div>
 
 
-<p class="important"><strong>Note:</strong> For security reasons think about setting gConfig["sess_expire_on_close"] in system/application/config/config.lc to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the pRemember parameter is not set to TRUE.</p>
+<p class="important"><strong>Note:</strong> For security reasons think about setting <var>gConfig["sess_expire_on_close"]</var> in <dfn>application/config/config.lc</dfn> to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the <var>pRemember</var> parameter is not set to TRUE.</p>
 
 
 <h3>rigAuthLogout</h3>
@@ -282,19 +283,21 @@ get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>command logout
-	# LOG USER OUT
-	rigAuthLogout
+  # LOG USER OUT
+  rigAuthLogout
 
-	# GET AUTHENTICATION MESSAGES
-	put rigAuthMessages() into tMessages
+  # GET AUTHENTICATION MESSAGES
+  put rigAuthMessages() into tMessages
 
-	rigSetSessFlashdata "message", tMessages
-	
-	# REDIRECT TO THE LOGIN PAGE
-	rigRedirect "/auth/login"
+  rigSetSessFlashdata "message", tMessages
+  
+  # REDIRECT TO THE LOGIN PAGE
+  rigRedirect "/auth/login"
 end logout
 </code></pre>
+</div>
 
 
 
@@ -303,24 +306,25 @@ end logout
 <p>Register (create) a new user.</p>
 
 <p>The first parameter is a username.<br />
-	The second parameter is the user's password.<br />
-	The third parameter is the user's email address.<br />
-	The optional fourth parameter is an array containing additional data like first name, last name etc.<br />
-	The optional fifth parameter is a numbered array used to define which groups the user belongs to.</p>
+  The second parameter is the user's password.<br />
+  The third parameter is the user's email address.<br />
+  The optional fourth parameter is an array containing additional data like first name, last name etc.<br />
+  The optional fifth parameter is a numbered array used to define which groups the user belongs to.</p>
 
 <p>This function returns a user ID if the user was successfully created, otherwise it returns FALSE.</p>
 
 
+<div class="codeSample">
 <pre><code># GET ACCOUNT DATA
 if $_POST is an array then
-	put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
-	put rigVarPOST("password") into tPassword
-	put rigVarPOST("email") into tEmail
-	
-	put rigVarPOST("first") into tExtraData["firstName"]
-	put rigVarPOST("last") into tExtraData["lastName"]
-	put rigVarPOST("company") into tExtraData["company"]
-	put rigVarPOST("phone") into tExtraData["phone"]
+  put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
+  
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
 end if
 
 put 2 into tGroups["1"]
@@ -328,6 +332,7 @@ put 3 into tGroups["2"]
 
 put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> The default URI used for activating a new user is "auth/activate". This means you should provide a controller called "auth" including a handler called "activate" to process user activation. To specify your own URI segments you need to set the fourth parameter using the array key "activationLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
@@ -340,30 +345,31 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 
 
 <p>The first parameter is the user's ID.<br />
-	The second parameter is an array containing the update data.</p>
-	
-	<p>This function returns TRUE if the user was successfully updated, otherwise it returns FALSE.</p>
-	
-	
+  The second parameter is an array containing the update data.</p>
+  
+  <p>This function returns TRUE if the user was successfully updated, otherwise it returns FALSE.</p>
+  
+  
 <p>Example:</p>
 
 
-<pre><code># GET USER ID
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tID
 
 # CHECK POST ARRAY DATA
 if $_POST is an array then
-	# VALIDATE THE REQUEST
-	if tID &lt;> rigVarPOST("hiddenUserID") then
-		rigLogMessage "error", "This form post did not pass the security check.", TRUE
-	end if
-	
-	put rigVarPost("phone") into tData["phone"]
-	
-	get rigAuthUpdate(tID, tData)
+  # VALIDATE THE REQUEST
+  if tID &lt;> rigVarPOST("hiddenUserID") then
+    rigLogMessage "error", "This form post did not pass the security check.", TRUE
+  end if
+  
+  put rigVarPost("phone") into tData["phone"]
+  
+  get rigAuthUpdate(tID, tData)
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -378,14 +384,16 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tID
 
 # CHECK THE USER LEVEL
 if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
-	put rigAuthDeleteUser(tID) into tDeleted
+  put rigAuthDeleteUser(tID) into tDeleted
 end if
 </code></pre>
+</div>
 
 
 
@@ -397,24 +405,26 @@ end if
 
 <p>The optional second parameter is an array containing additional data. Currently the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password.</p>
 
-<p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case sAuthenticationConf["sendEmails"] is set to FALSE.</p>
+<p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case <var>sAuthenticationConf["sendEmails"]</var> is set to FALSE.</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
 put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
 
 if tResetPasswordSent is TRUE then
-	put rigAuthMessages() into tMessages
-	
-	rigSetSessFlashdata "message", tMessages
-	rigRedirect "/auth/login"
+  put rigAuthMessages() into tMessages
+  
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth/login"
 else
-	put rigAuthErrors() into tErrors
-	
-	rigSetSessFlashdata "message", tErrors
-	rigRedirect "auth/forgotPassword"
+  put rigAuthErrors() into tErrors
+  
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/forgotPassword"
 end if
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Note:</strong> The default URI used to process forgotten password requests is "auth/resetPassword". This means you should provide a controller called "auth" including a handler called "resetPassword". To specify your own URI segments you need to set the second parameter using the array key "passwordResetLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
@@ -430,12 +440,13 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN
 if rigAuthLoggedIn() is FALSE then
-	rigRedirect "/auth/login"
+  rigRedirect "/auth/login"
 end if
 </code></pre>
-
+</div>
 
 
 <h3>rigAuthIsAdmin( <var>pID</var> )</h3>
@@ -450,12 +461,14 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CHECK THE USER LEVEL
 if rigAuthIsAdmin() is FALSE then
-	# REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
-	rigRedirect "/"
+  # REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
+  rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 <h3>rigAuthInGroup( <var>pGroup</var>, <var>pID</var> )</h3>
@@ -464,51 +477,53 @@ end if
 <p>Check if user is a member of a specific group.</p>
 
 <p>The first parameter is an integer (the group ID) or a string (the group name) or an array of strings and integers.<br />
-	The second optional parameter is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
+  The second optional parameter is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
 
 <p>This function returns TRUE if the user is a member of any given group, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># SINGLE GROUP (BY NAME)
 put "other" into tGroup
 if rigAuthInGroup(tGroup) then
-	rigSetSessFlashdata "message", "You must be a member of group other to view this page."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You must be a member of group other to view this page."
+  rigRedirect "/"
 end if
 
 # SINGLE GROUP (BY ID)
 put 1 into tGroup
 if rigAuthInGroup(tGroup) then
-	rigSetSessFlashdata "message", "You must be a member of group 1 to view this page."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You must be a member of group 1 to view this page."
+  rigRedirect "/"
 end if
 
 # MULTIBLE GROUPS (BY NAME)
 put "members" into tGroups[1]
 put "other" into tGroups[2]
 if rigAuthInGroup(tGroups) then
-	rigSetSessFlashdata "message", "You must be a member of group members or of group other to view this page."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You must be a member of group members or of group other to view this page."
+  rigRedirect "/"
 end if
 
 # MULTIBLE GROUPS (BY ID)
 put 2 into tGroups[1]
 put 3 into tGroups[2]
 if rigAuthInGroup(tGroups) then
-	rigSetSessFlashdata "message", "You must be a member of group 2 or of group 3 to view this page."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You must be a member of group 2 or of group 3 to view this page."
+  rigRedirect "/"
 end if
 
 # MULTIBLE GROUPS (BY NAME AND ID)
 put 2 into tGroups[1]
 put "other" into tGroups[2]
 if rigAuthInGroup(tGroups) then
-	rigSetSessFlashdata "message", "You must be a member of group 2 or of group other to view this page."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You must be a member of group 2 or of group other to view this page."
+  rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 
@@ -523,25 +538,27 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET POST DATA
 if $_POST is an array then
-	put rigVarPOST("username") into tUsername
-	put rigVarPOST("password") into tPassword
-	put rigVarPOST("email") into tEmail
+  put rigVarPOST("username") into tUsername
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
 
-	put rigVarPOST("first") into tExtraData["firstName"]
-	put rigVarPOST("last") into tExtraData["lastName"]
-	put rigVarPOST("company") into tExtraData["company"]
-	put rigVarPOST("phone") into tExtraData["phone"]
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
 end if
 
 put 2 into tGroups["1"]
 put 3 into tGroups["2"]
 
 if rigAuthUsernameCheck(tUsername) is FALSE then
-	put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
+  put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 end if
 </code></pre>
+</div>
 
 
 
@@ -556,25 +573,27 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET POST DATA
 if $_POST is an array then
-	put rigVarPOST("username") into tUsername
-	put rigVarPOST("password") into tPassword
-	put rigVarPOST("email") into tEmail
+  put rigVarPOST("username") into tUsername
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
 
-	put rigVarPOST("first") into tExtraData["firstName"]
-	put rigVarPOST("last") into tExtraData["lastName"]
-	put rigVarPOST("company") into tExtraData["company"]
-	put rigVarPOST("phone") into tExtraData["phone"]
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
 end if
 
 put 2 into tGroups["1"]
 put 3 into tGroups["2"]
 
 if rigAuthUsernameCheck(tEmail) is FALSE then
-	put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
+  put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
 end if
 </code></pre>
+</div>
 
 
 
@@ -589,10 +608,11 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET USER DATA
 put rigAuthUser(tID) into tQueryResult
 if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
-	put rigDbRow() into tUser
+  put rigDbRow() into tUser
 end if
 
 put rigVarPOST("identity") into tData["identity"]
@@ -600,9 +620,10 @@ put rigVarPOST("first") into tData["firstName"]
 put rigVarPOST("last") into tData["lastName"]
 
 if (tData["identity"] is tUser["username"]) or (tData["identity"] is tUser["email"]) or (rigAuthIdentityCheck(tData["identity"]) is FALSE) then
-	get rigAuthUpdate(tUser["id"], tData)
+  get rigAuthUpdate(tUser["id"], tData)
 end if
 </code></pre>
+</div>
 
 
 <h3>rigAuthIsMaxLoginAttemptsExceeded( <var>pIdentity</var> )</h3>
@@ -615,13 +636,15 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "rabit@revigniter.com" into tIdentity
 
 if rigAuthIsMaxLoginAttemptsExceeded(tIdentity) is TRUE then
-	rigSetSessFlashdata "message", "You have too many login attempts."
-	rigRedirect "/"
+  rigSetSessFlashdata "message", "You have too many login attempts."
+  rigRedirect "/"
 end if
 </code></pre>
+</div>
 
 
 
@@ -635,10 +658,12 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>put "rabit@revigniter.com" into tIdentity
 
 put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 </code></pre>
+</div>
 
 
 
@@ -657,8 +682,8 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 <p>Clears all failed login attempt records for this identity or this ip address. This function is automatically called by the rigAuthLogin() function if the login succeeded.</p>
 
 <p>The first parameter is a string which represents the user's identity as defined in the authentication.lc config file.<br />
-	The second optional parameter is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
-	
+  The second optional parameter is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
+  
 
 <h3>rigAuthUser( <var>pID</var> )</h3>
 
@@ -670,10 +695,11 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER DATA
 put rigAuthUser() into tQueryResult
 if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
-	put rigDbRow() into tUser
+  put rigDbRow() into tUser
 end if
 
 # NOW tUser CONTAINS THE USER RECORD
@@ -682,6 +708,7 @@ end if
 # tUser["rememberCode"], tUser["createdOn"], tUser["lastLogin"], tUser["active"],
 # tUser["firstName"], tUser["lastName"], tUser["company"], tUser["phone"]
 </code></pre>
+</div>
 
 
 
@@ -695,6 +722,7 @@ end if
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code># GET ALL ADMINS
 put rigAuthUsers(1) into tAdmins
 
@@ -703,20 +731,21 @@ put rigAuthUsers(1) into tAdmins
 
 put 0 into tCounter
 repeat for each key tRecord in tAdmins
-	add 1 to tCounter
+  add 1 to tCounter
 
-	put tAdmins[tCounter] into tUser
+  put tAdmins[tCounter] into tUser
 
-	put empty into tRowData
+  put empty into tRowData
 
-	put "Username:" && tUser[3] & ", " after tRowData
-	put "First Name:" && tUser[13] & ", " after tRowData
-	put "Last Name:" && tUser[14] & ", " after tRowData
-	delete char -2  to -1 of tRowData
+  put "Username:" && tUser[3] & ", " after tRowData
+  put "First Name:" && tUser[13] & ", " after tRowData
+  put "Last Name:" && tUser[14] & ", " after tRowData
+  delete char -2  to -1 of tRowData
 
-	put tRowData & "&lt;br />" & return after tResultData
+  put tRowData & "&lt;br />" & return after tResultData
 end repeat
 </code></pre>
+</div>
 
 
 <h3>rigAuthGroup( <var>pID</var> )</h3>
@@ -730,6 +759,7 @@ end repeat
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET MEMBERS GROUP
 put rigAuthGroup(2) into tGroup
 
@@ -743,6 +773,7 @@ put "Group Name:" && tGroupRow[2] & ", " after tRowData
 put "Group Description:" && tGroupRow[3] & ", " after tRowData
 delete char -2  to -1 of tRowData
 </code></pre>
+</div>
 
 
 
@@ -755,6 +786,7 @@ delete char -2  to -1 of tRowData
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET GROUPS
 put rigAuthGroups() into tGroups
 
@@ -763,21 +795,21 @@ put rigAuthGroups() into tGroups
 
 put 0 into tCounter
 repeat for each key tRecord in tGroups
-	add 1 to tCounter
+  add 1 to tCounter
 
-	put tGroups[tCounter] into tGroupRow
+  put tGroups[tCounter] into tGroupRow
 
-	put empty into tRowData
+  put empty into tRowData
 
-	put "Group ID:" && tGroupRow[1] & ", " after tRowData
-	put "Group Name:" && tGroupRow[2] & ", " after tRowData
-	put "Group Description:" && tGroupRow[3] & ", " after tRowData
-	delete char -2  to -1 of tRowData
+  put "Group ID:" && tGroupRow[1] & ", " after tRowData
+  put "Group Name:" && tGroupRow[2] & ", " after tRowData
+  put "Group Description:" && tGroupRow[3] & ", " after tRowData
+  delete char -2  to -1 of tRowData
 
-	put tRowData & "&lt;br />" & return after tResultData
+  put tRowData & "&lt;br />" & return after tResultData
 end repeat
 </code></pre>
-
+</div>
 
 
 
@@ -792,6 +824,7 @@ end repeat
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET ALL GROUPS THE ADMIN IS A MEMBER OF
 put rigAuthUserGroups(1) into tUserGroups
 
@@ -800,20 +833,21 @@ put rigAuthUserGroups(1) into tUserGroups
 
 put 0 into tCounter
 repeat for each key tRecord in tUserGroups
-	add 1 to tCounter
+  add 1 to tCounter
 
-	put tUserGroups[tCounter] into tGroupRow
+  put tUserGroups[tCounter] into tGroupRow
 
-	put empty into tRowData
+  put empty into tRowData
 
-	put tGroupRow[2] into tRowData
+  put tGroupRow[2] into tRowData
 
-	put tRowData & "," after tResultData
+  put tRowData & "," after tResultData
 end repeat
 if char -1 of tResultData is "," then
-	delete char -1 of tResultData
+  delete char -1 of tResultData
 end if
 </code></pre>
+</div>
 
 
 
@@ -822,26 +856,27 @@ end if
 <p>Add user to a group.</p>
 
 <p>The first parameter is an integer, the ID of the group a user should be added to.<br />
-	The second parameter is the user's ID.</p>
-	
-	<p>Example:</p>
+  The second parameter is the user's ID.</p>
+  
+  <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># GET USER ID
 put rigFetchSegment(3) into tUserID
 
 # CHECK POST ARRAY DATA
 if $_POST is an array then
-	# VALIDATE THE REQUEST
-	if tUserID &lt;> rigVarPOST("hiddenUserID") then
-		rigLogMessage "error", "This form post did not pass the security check.", TRUE
-	else
-	
-		rigAuthAddToGroup 3, tUserID
-	end if
+  # VALIDATE THE REQUEST
+  if tUserID &lt;> rigVarPOST("hiddenUserID") then
+    rigLogMessage "error", "This form post did not pass the security check.", TRUE
+  else
+  
+    rigAuthAddToGroup 3, tUserID
+  end if
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -850,13 +885,14 @@ end if
 <p>Remove user from group.</p>
 
 <p>The first parameter is an array of group IDs or a single group ID.<br />
-	The second parameter is the user's id.</p>
+  The second parameter is the user's id.</p>
 
 <p>This function returns TRUE if the user was successfully removed from the group(s), otherwise it returns FALSE.</p>
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># PASS AN ARRAY OF GROUP ID's AND A USER ID
 put 2 into tGroups[1]
 put 5 into tGroups[2]
@@ -869,6 +905,7 @@ get rigAuthRemoveFromGroup(tGroupID, tUserID)
 # PASS AN EMPTY GROUP ID TO REMOVE THE USER FROM ALL GROUPS
 get rigAuthRemoveFromGroup(, tUserID)
 </code></pre>
+</div>
 
 
 
@@ -878,21 +915,22 @@ get rigAuthRemoveFromGroup(, tUserID)
 <p>Get authentication messages.</p>
 
 <p>The first optional parameter is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
-	The second optional parameter is a ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-	
+  The second optional parameter is a ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
+  
 <p>This function returns all authentication messages as a string.</p>
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
-if tRegistration &lt;> FALSE then		
-	put rigAuthMessages() into tMessages
-	rigSetSessFlashdata "message", tMessages
-	rigRedirect "/auth"
+if tRegistration &lt;> FALSE then    
+  put rigAuthMessages() into tMessages
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
 end if
 </code></pre>
-
+</div>
 
 
 
@@ -901,20 +939,22 @@ end if
 <p>Set the message delimiters.</p>
 
 <p>The first parameter is the staring delimiter.<br />
-	The second parameter is the ending delimiter.</p>
-	
+  The second parameter is the ending delimiter.</p>
+  
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
 if tRegistration &lt;> FALSE then
-	rigAuthSetMessageDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
-		
-	put rigAuthMessages() into tMessages
-	rigSetSessFlashdata "message", tMessages
-	rigRedirect "/auth"
+  rigAuthSetMessageDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
+    
+  put rigAuthMessages() into tMessages
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
 end if
 </code></pre>
+</div>
 
 
 
@@ -923,20 +963,22 @@ end if
 <p>Get authentication errors.</p>
 
 <p>The optional first parameter is the staring delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
-	The optional second parameter is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-	
+  The optional second parameter is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
+  
 <p>This function returns authentication errors as a string.</p>
 
 
+<div class="codeSample">
 <pre><code>get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
 if it is FALSE then
-	put rigAuthErrors() into tErrors
-	rigSetSessFlashdata "message", tErrors
-	rigRedirect "auth/login"
+  put rigAuthErrors() into tErrors
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/login"
 end if
 </code></pre>
+</div>
 
 
 
@@ -945,22 +987,24 @@ end if
 <p>Set the message delimiters.</p>
 
 <p>The first parameter is the staring delimiter.<br />
-	The second parameter is the ending delimiter.</p>
-	
+  The second parameter is the ending delimiter.</p>
+  
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>rigAuthSetErrorDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
-	
+  
 get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 
 # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
 if it is FALSE then
-	put rigAuthErrors() into tErrors
-	rigSetSessFlashdata "message", tErrors
-	rigRedirect "auth/login"
+  put rigAuthErrors() into tErrors
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/login"
 end if
 </code></pre>
+</div>
 
 
 
@@ -970,11 +1014,12 @@ end if
 <p>Get a value from the configuration settings array.</p>
 
 <p>The first parameter is the array key.<br />
-	The optional second parameter is the second array key.</p>
+  The optional second parameter is the second array key.</p>
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET MIN / MAX PASSWORD LENGTH
 put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
 put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
@@ -987,6 +1032,7 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 # GET THE NAME OF THE USERS TABLE
 put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 </code></pre>
+</div>
 
 
 
@@ -996,13 +1042,14 @@ put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 <p>Activate a user account.</p>
 
 <p>The first parameter is the user's id.<br />
-	The second optional parameter is the activation code.</p>
-	
+  The second optional parameter is the activation code.</p>
+  
 <p>This function returns TRUE in case user activation was successful, otherwise it returns FALSE.</p>
-	
+  
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># GET USER ID AND ACTIVATION CODE
 put rigFetchSegment(3) into tID
 put rigFetchSegment(4) into tCode
@@ -1010,12 +1057,13 @@ put FALSE into tActivation
 
 # ACTIVATE USER
 if tCode &lt;> FALSE then
-	put rigAuthActivate(tID, tCode) into tActivation
-	
+  put rigAuthActivate(tID, tCode) into tActivation
+  
 else if rigAuthIsAdmin() is TRUE then
-	put rigAuthActivate(tID) into tActivation
-end if		
+  put rigAuthActivate(tID) into tActivation
+end if    
 </code></pre>
+</div>
 
 
 
@@ -1030,11 +1078,12 @@ end if
 <p>Example:</p>
 
 
-
+<div class="codeSample">
 <pre><code>if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
-	put rigAuthDeactivate(tID) into tDeactivated
+  put rigAuthDeactivate(tID) into tDeactivated
 end if
 </code></pre>
+</div>
 
 
 
@@ -1049,14 +1098,16 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigFetchSegment(3) into tForgottenPasswordCode
 
 if tForgottenPasswordCode is FALSE then
-	rigShow404
+  rigShow404
 end if
 
 put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 </code></pre>
+</div>
 
 
 
@@ -1072,11 +1123,13 @@ put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>if tUser["id"] &lt;> rigVarPOST("hiddenUserID") then
-	get rigAuthClearForgottenPasswordCode(tForgottenPasswordCode)
-	rigLogMessage "error", "This reset password form post did not pass the security check.", TRUE
+  get rigAuthClearForgottenPasswordCode(tForgottenPasswordCode)
+  rigLogMessage "error", "This reset password form post did not pass the security check.", TRUE
 end if
 </code></pre>
+</div>
 
 
 
@@ -1085,19 +1138,21 @@ end if
 <p>Replace password with a new one.</p>
 
 <p>The first parameter is the user's email address or whatever is used to identify a user.<br />
-	The second parameter is the new password.</p>
-	
+  The second parameter is the new password.</p>
+  
 <p>This function returns TRUE in case the old password was replaced successfully, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code># RESET THE PASSWORD
 put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
 put tUser[tIdentityCol] into tIdentity
 
 put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 </code></pre>
+</div>
 
 
 
@@ -1107,21 +1162,22 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 
 
 <p>The first parameter is the user's email address or whatever is used to identify a user.<br />
-	The second parameter is the old password.<br />
-	The third parameter is the new password.</p>
-	
-<p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>	
+  The second parameter is the old password.<br />
+  The third parameter is the new password.</p>
+  
+<p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>  
 
 
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code>put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
 put rigSessUserdata(tIdentityCol) into tIdentity
 
 put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newPassword")) into tChange
 </code></pre>
-
+</div>
 
 
 
@@ -1150,14 +1206,16 @@ put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newP
 <p>Authentication hooks are defined in the <dfn>application/config/authenticationHooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
 
 
+<div class="codeSample">
 <pre><code># IN THIS CASE THE HOOK POINT IS RIGHT BEFORE UPDATING USER DATA
 put "myHandler" into sAuthenticationHooks["authPreUpdateUser"]["handler"]
-put "myScript.lc" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
+put "myScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"]["filepath"]
 put "beer" into sAuthenticationHooks["authPreUpdateUser"]["params"][1]
 put "wine" into sAuthenticationHooks["authPreUpdateUser"]["params"][2]
 put "snacks" into sAuthenticationHooks["authPreUpdateUser"]["params"][3]
 </code></pre>
+</div>
 
 <p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
 use.  In the above example the hook point is <kbd>authPreUpdateUser</kbd>. A list of hook points is found below.
@@ -1165,33 +1223,37 @@ The following items should be defined in your associative hook array:</p>
 
 <ul>
 <li><strong>handler</strong>&nbsp; The handler name you wish to call. If you call a function, append a pair of brackets to the name like: "myHandler()".</li>
-<li><strong>filename</strong>&nbsp; The file name containing your handler.</li>
-<li><strong>filepath</strong>&nbsp; The name of the directory containing your script.  Note: Your script must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your script is located in <dfn>application/hooks/authenticationHooks</dfn>, you will simply use <samp>hooks/authenticationHooks</samp> as your filepath.  If your script is located in <dfn>application/hooks/authenticationUtilities</dfn> you will use <samp>hooks/authenticationUtilities</samp> as your filepath. No trailing slash.</li>
+<li><strong>filename</strong>&nbsp; The script only stack file name containing your handler.</li>
+<li><strong>filepath</strong>&nbsp; The name of the directory containing your script only stack.  Note: Your stack must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your stack is located in <dfn>application/hooks/authenticationHooks</dfn>, you will simply use <samp>hooks/authenticationHooks</samp> as your filepath.  If your stack is located in <dfn>application/hooks/authenticationUtilities</dfn> you will use <samp>hooks/authenticationUtilities</samp> as your filepath. No trailing slash.</li>
 <li><strong>params</strong>&nbsp; Any parameters you wish to pass to your script. This item is optional.</li>
 </ul>
 
 
-<p class="important"><strong>Note:</strong> The handlers in your hook files have access to all variables declared in the Authentication.lc library.</dfn></p>
+<p class="important"><strong>Note:</strong> The handlers in your hook files have read access to the <var>sAuthUserA</var> array variable declared in the Authentication.lc library using the rigAuthenticationGet(pArrayKey) function. Check the code of the Authentication.lc library for available array key names.</dfn></p>
 
 
 <h2>Multiple Calls to the Same Hook</h2>
 
 <p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
 
+
+<div class="codeSample">
 <pre><code>put "myHandler" into sAuthenticationHooks["authPreUpdateUser"][1]["handler"]
-put "myScript.lc" into sAuthenticationHooks["authPreUpdateUser"][1]["filename"]
+put "myScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"][1]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"][1]["filepath"]
 put "beer" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][1]
 put "wine" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][2]
 put "snacks" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][3]
 
 put "myOtherHandler" into sAuthenticationHooks["authPreUpdateUser"][2]["handler"]
-put "myOtherScript.lc" into sAuthenticationHooks["authPreUpdateUser"][2]["filename"]
+put "myOtherScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"][2]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"][2]["filepath"]
 put "red" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][1]
 put "yellow" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][2]
 put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 </code></pre>
+</div>
+
 
 <p>This permits you to have the same hook point with multiple scripts.  The order you define your array will be the execution order.</p>
 
@@ -1202,128 +1264,128 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 
 
 <ul>
-	<li><strong>authLibraryInitialized</strong><br />
-		Called very early right after the library has been initialized.</li>
-	<li><strong>authPreActivate</strong><br />
-		Called before a user is activated.</li>
-	<li><strong>authPostActivate</strong><br />
-		Called after user activation.</li>
-	<li><strong>authPostActivateUnsuccessful</strong><br />
-		Called after user activation failed.</li>
-	<li><strong>authPostActivateSuccessful</strong><br />
-		Called after successfully activating a user.</li>
-	<li><strong>authExtraWhere</strong><br />
-		Called before any database query.</li>
-	<li><strong>authDeactivate</strong><br />
-		Called before deactivating a user.</li>
-	<li><strong>authCheckLoggedIn</strong><br />
-		Called before checking a user's logged in state.</li>
-	<li><strong>authIsAdmin</strong><br />
-		Called before checking if a particular user is a member of the admin group.</li>
-	<li><strong>authInGroup</strong><br />
-		Called before checking if a particular user is a member of a particular group.</li>
-	<li><strong>authUsers</strong><br />
-		Called before getting all users.</li>
-	<li><strong>authUser</strong><br />
-		Called before getting a particular users.</li>
-	<li><strong>authUserGroups</strong><br />
-		Called before getting the groups a particular user is a member of.</li>
-	<li><strong>authPostLogin</strong><br />
-		Called after logging in.</li>
-	<li><strong>authPostLoginUnsuccessful</strong><br />
-		Called after logging in failed.</li>
-	<li><strong>authPostLoginSuccessful</strong><br />
-		Called after successfully logging in.</li>
-	<li><strong>authLogout</strong><br />
-		Called before logging out.</li>
-	<li><strong>authPreAccountCreation</strong><br />
-		Called before a new user is created.</li>
-	<li><strong>authPostAccountCreation</strong><br />
-		Called after creating a new user.</li>
-	<li><strong>authPostAccountCreationSuccessful</strong><br />
-		Called after successfully creating a new user.</li>	
-	<li><strong>authPostAccountCreationUnsuccessful</strong><br />
-		Called after creating a new user failed.</li>
-	<li><strong>authPActivationEmailSuccessful</strong><br />
-		Called after sending an activation email or after returning activation data in case email activation is turned off.</li>
-	<li><strong>authPActivationEmailUnsuccessful</strong><br />
-		Called after sending an activation email failed.</li>
-	<li><strong>authPreRegister</strong><br />
-		Called registering a user.</li>
-	<li><strong>authExtraSet</strong><br />
-		Called before inserting user data while registering a user.</li>
-	<li><strong>authPostRegister</strong><br />
-		Called after registering a user.</li>
-	<li><strong>authUpdateLastLogin</strong><br />
-		Called before updating the last login time.</li>
-	<li><strong>authPreRememberUser</strong><br />
-		Called before turning on auto login.</li>
-	<li><strong>authPostRememberUser</strong><br />
-		Called after turning on auto login.</li>
-	<li><strong>authRememberUserSuccessful</strong><br />
-		Called after successfully turning on auto login.</li>
-	<li><strong>authRememberUserUnsuccessful</strong><br />
-		Called after turning on auto login failed.</li>	
-	<li><strong>authPreLoginRememberedUser</strong><br />
-		Called before auto login of remembered users.</li>
-	<li><strong>authPostLoginRememberedUser</strong><br />
-		Called after auto login of remembered users.</li>
-	<li><strong>authLoginRememberedUserUnsuccessful</strong><br />
-		Called after auto login failed.</li>
-	<li><strong>authPostLoginRememberedUserSuccessful</strong><br />
-		Called after a successfull auto login of remembered users.</li>
-	<li><strong>authIdentityCheck</strong><br />
-		Called before the identity check for remembered users.</li>
-	<li><strong>authEmailCheck</strong><br />
-		Called before checking if a particular email address exists in the database.</li>
-	<li><strong>authUsernameCheck</strong><br />
-		Called before checking if a particular username exists in the database.</li>
-	<li><strong>authAddToGroup</strong><br />
-		Called before adding a user to a group.</li>
-	<li><strong>authGroups</strong><br />
-		Called before getting all groups.</li>
-	<li><strong>authGroup</strong><br />
-		Called before getting a particular group.</li>
-	<li><strong>authPostFrogottenPassword</strong><br />
-		Called after inserting a forgotten password key in the database.</li>
-	<li><strong>authPostFrogottenPasswordUnsuccessful</strong><br />
-		Called after inserting a forgotten password key in the database failed.</li>
-	<li><strong>authPostFrogottenPasswordSuccessful</strong><br />
-		Called after successfully inserting a forgotten password key in the database.</li>
-	<li><strong>authPreChangePassword</strong><br />
-		Called before replacing a password with a new one.</li>
-	<li><strong>authPostChangePassword</strong><br />
-		Called after replacing a password with a new one.</li>
-	<li><strong>authPostChangePasswordUnsuccessful</strong><br />
-		Called after replacing a password with a new one failed.</li>
-	<li><strong>authPostChangePasswordSuccessful</strong><br />
-		Called after successfully replacing a password with a new one.</li>
-	<li><strong>authPreChangePassword</strong><br />
-		Called before processing a user's change password request.</li>
-	<li><strong>authPostChangePassword</strong><br />
-		Called after processing a user's change password request.</li>
-	<li><strong>authPostChangePasswordUnsuccessful</strong><br />
-		Called after processing a user's change password request failed.</li>
-	<li><strong>authPostChangePasswordSuccessful</strong><br />
-		Called after successfully processing a user's change password request.</li>
-	<li><strong>authPreUpdateUser</strong><br />
-		Called before updating user data.</li>
-	<li><strong>authPostUpdateUser</strong><br />
-		Called after updating user data.</li>
-	<li><strong>authPostUpdateUserUnsuccessful</strong><br />
-		Called after updating user data failed.</li>
-	<li><strong>authPostUpdateUserSuccessful</strong><br />
-		Called after successfully updating user data.</li>
-	<li><strong>authPreDeleteUser</strong><br />
-		Called before deleting a user.</li>
-	<li><strong>authPostDeleteUser</strong><br />
-		Called after deleting a user.</li>
-	<li><strong>authPostDeleteUserUnsuccessful</strong><br />
-		Called after deleting a user failed.</li>
-	<li><strong>authPostDeleteUserSuccessful</strong><br />
-		Called after successfully deleting a user.</li>
-	<li><strong>authRemoveFromGroup</strong><br />
-		Called before removing a user from a group.</li>
+  <li><strong>authLibraryInitialized</strong><br />
+    Called very early right after the library has been initialized.</li>
+  <li><strong>authPreActivate</strong><br />
+    Called before a user is activated.</li>
+  <li><strong>authPostActivate</strong><br />
+    Called after user activation.</li>
+  <li><strong>authPostActivateUnsuccessful</strong><br />
+    Called after user activation failed.</li>
+  <li><strong>authPostActivateSuccessful</strong><br />
+    Called after successfully activating a user.</li>
+  <li><strong>authExtraWhere</strong><br />
+    Called before any database query.</li>
+  <li><strong>authDeactivate</strong><br />
+    Called before deactivating a user.</li>
+  <li><strong>authCheckLoggedIn</strong><br />
+    Called before checking a user's logged in state.</li>
+  <li><strong>authIsAdmin</strong><br />
+    Called before checking if a particular user is a member of the admin group.</li>
+  <li><strong>authInGroup</strong><br />
+    Called before checking if a particular user is a member of a particular group.</li>
+  <li><strong>authUsers</strong><br />
+    Called before getting all users.</li>
+  <li><strong>authUser</strong><br />
+    Called before getting a particular users.</li>
+  <li><strong>authUserGroups</strong><br />
+    Called before getting the groups a particular user is a member of.</li>
+  <li><strong>authPostLogin</strong><br />
+    Called after logging in.</li>
+  <li><strong>authPostLoginUnsuccessful</strong><br />
+    Called after logging in failed.</li>
+  <li><strong>authPostLoginSuccessful</strong><br />
+    Called after successfully logging in.</li>
+  <li><strong>authLogout</strong><br />
+    Called before logging out.</li>
+  <li><strong>authPreAccountCreation</strong><br />
+    Called before a new user is created.</li>
+  <li><strong>authPostAccountCreation</strong><br />
+    Called after creating a new user.</li>
+  <li><strong>authPostAccountCreationSuccessful</strong><br />
+    Called after successfully creating a new user.</li>  
+  <li><strong>authPostAccountCreationUnsuccessful</strong><br />
+    Called after creating a new user failed.</li>
+  <li><strong>authPActivationEmailSuccessful</strong><br />
+    Called after sending an activation email or after returning activation data in case email activation is turned off.</li>
+  <li><strong>authPActivationEmailUnsuccessful</strong><br />
+    Called after sending an activation email failed.</li>
+  <li><strong>authPreRegister</strong><br />
+    Called registering a user.</li>
+  <li><strong>authExtraSet</strong><br />
+    Called before inserting user data while registering a user.</li>
+  <li><strong>authPostRegister</strong><br />
+    Called after registering a user.</li>
+  <li><strong>authUpdateLastLogin</strong><br />
+    Called before updating the last login time.</li>
+  <li><strong>authPreRememberUser</strong><br />
+    Called before turning on auto login.</li>
+  <li><strong>authPostRememberUser</strong><br />
+    Called after turning on auto login.</li>
+  <li><strong>authRememberUserSuccessful</strong><br />
+    Called after successfully turning on auto login.</li>
+  <li><strong>authRememberUserUnsuccessful</strong><br />
+    Called after turning on auto login failed.</li>  
+  <li><strong>authPreLoginRememberedUser</strong><br />
+    Called before auto login of remembered users.</li>
+  <li><strong>authPostLoginRememberedUser</strong><br />
+    Called after auto login of remembered users.</li>
+  <li><strong>authLoginRememberedUserUnsuccessful</strong><br />
+    Called after auto login failed.</li>
+  <li><strong>authPostLoginRememberedUserSuccessful</strong><br />
+    Called after a successfull auto login of remembered users.</li>
+  <li><strong>authIdentityCheck</strong><br />
+    Called before the identity check for remembered users.</li>
+  <li><strong>authEmailCheck</strong><br />
+    Called before checking if a particular email address exists in the database.</li>
+  <li><strong>authUsernameCheck</strong><br />
+    Called before checking if a particular username exists in the database.</li>
+  <li><strong>authAddToGroup</strong><br />
+    Called before adding a user to a group.</li>
+  <li><strong>authGroups</strong><br />
+    Called before getting all groups.</li>
+  <li><strong>authGroup</strong><br />
+    Called before getting a particular group.</li>
+  <li><strong>authPostFrogottenPassword</strong><br />
+    Called after inserting a forgotten password key in the database.</li>
+  <li><strong>authPostFrogottenPasswordUnsuccessful</strong><br />
+    Called after inserting a forgotten password key in the database failed.</li>
+  <li><strong>authPostFrogottenPasswordSuccessful</strong><br />
+    Called after successfully inserting a forgotten password key in the database.</li>
+  <li><strong>authPreChangePassword</strong><br />
+    Called before replacing a password with a new one.</li>
+  <li><strong>authPostChangePassword</strong><br />
+    Called after replacing a password with a new one.</li>
+  <li><strong>authPostChangePasswordUnsuccessful</strong><br />
+    Called after replacing a password with a new one failed.</li>
+  <li><strong>authPostChangePasswordSuccessful</strong><br />
+    Called after successfully replacing a password with a new one.</li>
+  <li><strong>authPreChangePassword</strong><br />
+    Called before processing a user's change password request.</li>
+  <li><strong>authPostChangePassword</strong><br />
+    Called after processing a user's change password request.</li>
+  <li><strong>authPostChangePasswordUnsuccessful</strong><br />
+    Called after processing a user's change password request failed.</li>
+  <li><strong>authPostChangePasswordSuccessful</strong><br />
+    Called after successfully processing a user's change password request.</li>
+  <li><strong>authPreUpdateUser</strong><br />
+    Called before updating user data.</li>
+  <li><strong>authPostUpdateUser</strong><br />
+    Called after updating user data.</li>
+  <li><strong>authPostUpdateUserUnsuccessful</strong><br />
+    Called after updating user data failed.</li>
+  <li><strong>authPostUpdateUserSuccessful</strong><br />
+    Called after successfully updating user data.</li>
+  <li><strong>authPreDeleteUser</strong><br />
+    Called before deleting a user.</li>
+  <li><strong>authPostDeleteUser</strong><br />
+    Called after deleting a user.</li>
+  <li><strong>authPostDeleteUserUnsuccessful</strong><br />
+    Called after deleting a user failed.</li>
+  <li><strong>authPostDeleteUserSuccessful</strong><br />
+    Called after successfully deleting a user.</li>
+  <li><strong>authRemoveFromGroup</strong><br />
+    Called before removing a user from a group.</li>
 </ul>
 
 
@@ -1332,16 +1394,27 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 <p>The following is hardly a real world example but at least it illustrates the concept. Let's say you want to log whenever an admin logs in and out. This can easily be accomplished with the help of authentication hooks.</p>
 
 
-<p>Create a hooks file called authLog.lc. In it, place the code below and save it to your system/application/hooks/authenticationHooks/ folder.</p>
+<p>Create a hooks script only stack file called authLog.livecodescript. In it, place the code below and save it to your application/hooks/authenticationHooks/ folder.</p>
 
 
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
+<div class="codeSample">
+<pre><code>script "authLog"
 
-if gBASEPATH is "gBASEPATH" then
-  put "No direct script access allowed."
-  exit to top
-end if
+
+global gRigA, gAuthUserA
+
+
+
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target &lt;> the short name of me then
+    pass libraryStack
+  end if
+end libraryStack
 
 
 command rigLogAdminLogin
@@ -1360,25 +1433,28 @@ end rigLogAdminLogout
 
 
 
---| END OF authLog.lc
---| Location:  ./system/application/hooks/authenticationHooks/authLog.lc
+--| END OF authLog.livecodescript
+--| Location:  ./application/hooks/authenticationHooks/authLog.livecodescript
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
-<p>The next step is to add the following lines to your authenticationHooks.lc file in <dfn>system/application/config</dfn>:</p>
+<p>The next step is to add the following lines to your authenticationHooks.lc file in <dfn>application/config</dfn>:</p>
 
 
+<div class="codeSample">
 <pre><code>put "rigLogAdminLogin" into sAuthenticationHooks["authPostLoginSuccessful"]["handler"]
-put "authLog.lc" into sAuthenticationHooks["authPostLoginSuccessful"]["filename"]
+put "authLog.livecodescript" into sAuthenticationHooks["authPostLoginSuccessful"]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authPostLoginSuccessful"]["filepath"]
 
 
 put "rigLogAdminLogout" into sAuthenticationHooks["authLogout"]["handler"]
-put "authLog.lc" into sAuthenticationHooks["authLogout"]["filename"]
+put "authLog.livecodescript" into sAuthenticationHooks["authLogout"]["filename"]
 put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepath"]
 </code></pre>
+</div>
 
 
 
@@ -1402,6 +1478,7 @@ put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepat
 <p><strong>The MySQL version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for groups
 # ------------------------------------------------------------
 
@@ -1421,9 +1498,9 @@ LOCK TABLES `groups` WRITE;
 
 INSERT INTO `groups` (`id`, `name`, `description`)
 VALUES
-	(1,'admin','Administrator'),
-	(2,'members','General User'),
-	(3,'other','Other User');
+  (1,'admin','Administrator'),
+  (2,'members','General User'),
+  (3,'other','Other User');
 
 UNLOCK TABLES;
 
@@ -1451,10 +1528,10 @@ CREATE TABLE `users` (
   `username` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
   `password` tinytext character set utf8 collate utf8_unicode_ci NOT NULL,
   `email` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
-  `activationCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
-  `forgottenPasswordCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
+  `activationCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
+  `forgottenPasswordCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
   `forgottenPasswordTime` int(11) unsigned NOT NULL default '0',
-  `rememberCode` varchar(40) character set utf8 collate utf8_unicode_ci default NULL,
+  `rememberCode` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
   `createdOn` int(11) unsigned NOT NULL,
   `lastLogin` int(11) unsigned default NULL,
   `active` tinyint(1) unsigned default NULL,
@@ -1467,7 +1544,7 @@ CREATE TABLE `users` (
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 LOCK TABLES `users` WRITE;
@@ -1477,6 +1554,21 @@ INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`,
 `rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
 `lastName`, `company`, `phone`)
 VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
+
+UNLOCK TABLES;
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+LOCK TABLES `users` WRITE;
+
+INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
+`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
+`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
+`lastName`, `company`, `phone`)
+VALUES (1,'127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
 'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
 
 UNLOCK TABLES;
@@ -1503,16 +1595,18 @@ LOCK TABLES `users_groups` WRITE;
 
 INSERT INTO `users_groups` (`id`, `userId`, `groupId`)
 VALUES
-	(1,1,1),
-	(2,1,2);
+  (1,1,1),
+  (2,1,2);
 
 UNLOCK TABLES;
 </code></pre>
+</div>
 
 
 <p><strong>The PostgreSQL version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for users
 # ------------------------------------------------------------
 
@@ -1522,10 +1616,10 @@ CREATE TABLE "users" (
     "username" varchar(100) NOT NULL,
     "password" text NOT NULL,
     "email" varchar(100) NOT NULL,
-    "activationCode" varchar(40),
-    "forgottenPasswordCode" varchar(40),
+    "activationCode" varchar(70),
+    "forgottenPasswordCode" varchar(70),
     "forgottenPasswordTime" int,
-    "rememberCode" varchar(40),
+    "rememberCode" varchar(50),
     "createdOn" int NOT NULL,
     "lastLogin" int,
     "active" int4,
@@ -1580,7 +1674,7 @@ UNION SELECT
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 INSERT INTO "users" ("ipAddress", username, password, email, 
@@ -1588,6 +1682,18 @@ INSERT INTO "users" ("ipAddress", username, password, email,
 "rememberCode", "createdOn", "lastLogin", active, "firstName", 
 "lastName", company, phone) VALUES 
 ('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
+'Admin','Istrator','ADMIN','0');
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+INSERT INTO "users" ("ipAddress", username, password, email, 
+"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
+"rememberCode", "createdOn", "lastLogin", active, "firstName", 
+"lastName", company, phone) VALUES 
+('127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
 'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
 'Admin','Istrator','ADMIN','0');
 
@@ -1615,31 +1721,33 @@ CREATE TABLE "login_attempts" (
   CONSTRAINT "check_id" CHECK(id >= 0)
 );
 </code></pre>
+</div>
 
 
 <p><strong>The SQLite version:</strong></p>
 
 
+<div class="codeSample">
 <pre><code># Table structure for users
 # ------------------------------------------------------------
 
 CREATE TABLE "users" (
-	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	 "ipAddress" TEXT(16,0) NOT NULL,
-	 "username" TEXT(100,0) NOT NULL,
-	 "password" TEXT NOT NULL,
-	 "email" TEXT(100,0) NOT NULL,
-	 "activationCode" TEXT(40,0) DEFAULT NULL,
-	 "forgottenPasswordCode" TEXT(40,0) DEFAULT NULL,
-	 "forgottenPasswordTime" INTEGER(11,0) NOT NULL DEFAULT 0,
-	 "rememberCode" TEXT(40,0) DEFAULT NULL,
-	 "createdOn" INTEGER(11,0) NOT NULL,
-	 "lastLogin" INTEGER(11,0) DEFAULT NULL,
-	 "active" INTEGER(1,0) DEFAULT NULL,
-	 "firstName" TEXT(50,0) DEFAULT NULL,
-	 "lastName" TEXT(50,0) DEFAULT NULL,
-	 "company" TEXT(100,0) DEFAULT NULL,
-	 "phone" TEXT(20,0) DEFAULT NULL
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "ipAddress" TEXT(16,0) NOT NULL,
+   "username" TEXT(100,0) NOT NULL,
+   "password" TEXT NOT NULL,
+   "email" TEXT(100,0) NOT NULL,
+   "activationCode" TEXT(70,0) DEFAULT NULL,
+   "forgottenPasswordCode" TEXT(70,0) DEFAULT NULL,
+   "forgottenPasswordTime" INTEGER(11,0) NOT NULL DEFAULT 0,
+   "rememberCode" TEXT(50,0) DEFAULT NULL,
+   "createdOn" INTEGER(11,0) NOT NULL,
+   "lastLogin" INTEGER(11,0) DEFAULT NULL,
+   "active" INTEGER(1,0) DEFAULT NULL,
+   "firstName" TEXT(50,0) DEFAULT NULL,
+   "lastName" TEXT(50,0) DEFAULT NULL,
+   "company" TEXT(100,0) DEFAULT NULL,
+   "phone" TEXT(20,0) DEFAULT NULL
 );
 
 
@@ -1648,9 +1756,9 @@ CREATE TABLE "users" (
 # ------------------------------------------------------------
 
 CREATE TABLE "groups" (
-	 "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
-	 "name" TEXT(20,0) NOT NULL,
-	 "description" TEXT(100,0) NOT NULL
+   "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+   "name" TEXT(20,0) NOT NULL,
+   "description" TEXT(100,0) NOT NULL
 );
 
 
@@ -1659,11 +1767,11 @@ CREATE TABLE "groups" (
 # ------------------------------------------------------------
 
 CREATE TABLE "users_groups" (
-	 "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-	 "userId" INTEGER(8,0) NOT NULL,
-	 "groupId" INTEGER(8,0) NOT NULL,
-	CONSTRAINT "Foreign_UsersID" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-	CONSTRAINT "Foreign_GroupsID" FOREIGN KEY ("groupId") REFERENCES "groups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "userId" INTEGER(8,0) NOT NULL,
+   "groupId" INTEGER(8,0) NOT NULL,
+  CONSTRAINT "Foreign_UsersID" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "Foreign_GroupsID" FOREIGN KEY ("groupId") REFERENCES "groups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 
@@ -1679,12 +1787,24 @@ COMMIT;
 
 
 
-# Records of users
+# Records of users (LC server version 8)
 # ------------------------------------------------------------
 
 BEGIN;
 INSERT INTO "users" VALUES 
 (1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
+'Admin', 'Istrator', 'ADMIN', 0);
+COMMIT;
+
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==', 
 'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
 'Admin', 'Istrator', 'ADMIN', 0);
 COMMIT;
@@ -1705,15 +1825,14 @@ COMMIT;
 # ------------------------------------------------------------
 
 CREATE TABLE "login_attempts" (
-	 "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
-	 "ipAddress" TEXT(16,0) NOT NULL,
-	 "login" TEXT(100,0) NOT NULL,
-	 "time" INTEGER(11,0) DEFAULT NULL
+   "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+   "ipAddress" TEXT(16,0) NOT NULL,
+   "login" TEXT(100,0) NOT NULL,
+   "time" INTEGER(11,0) DEFAULT NULL
 );
 </code></pre>
+</div>
 
-
-<p class="important"><strong>Note:</strong> As of server version 7.0.6-rc-1 connecting to a SQLite database on Linux returns an error because revOpenDatabase() using SQLite is still not working in the Linux server engine. On Mac OS X connecting to SQLite should work as expected.</p>
 
 
 <p class="important"><strong>Note:</strong> If, for security reasons, you need to validate session IDs please follow the instructions in the User Guide regarding <a href="sessions.html#savingSessionData">Saving Session Data to a Database</a> and create an additional table to store sessions.</p>
@@ -1725,23 +1844,23 @@ CREATE TABLE "login_attempts" (
 
 <h2>Authentication Email Templates</h2>
 
-<p>There are two email templates in system/application/views/emailTemplates used to send the user the "forgotten password" code, or to send an activation code to new users:</p>
+<p>There are two email templates in application/views/emailTemplates used to send the user the "forgotten password" code, or to send an activation code to new users:</p>
 
 <ul>
-	<li>forgotPassword.lc</li>
-	<li>authActivate.lc</li>
+  <li>forgotPassword.lc</li>
+  <li>authActivate.lc</li>
 </ul>
 
 <p>Customize these templates to best suit your needs. All you have to keep in mind is that the library provides the following variables to be used in your templates:</p>
 
 
 <ul>
-	<li><strong>gData["identity"]</strong><br />
-		This is the user's email address or whatever is used to identify a user.</li>
-	<li><strong>gData["forgottenPasswordCode"]</strong><br />
-		This is the code to be sent to users who want to reset their password.</li>
-	<li><strong>gData["activationCode"]</strong><br />
-		This is the activation code to be sent to new users.</li>
+  <li><strong>gData["identity"]</strong><br />
+    This is the user's email address or whatever is used to identify a user.</li>
+  <li><strong>gData["forgottenPasswordCode"]</strong><br />
+    This is the code to be sent to users who want to reset their password.</li>
+  <li><strong>gData["activationCode"]</strong><br />
+    This is the activation code to be sent to new users.</li>
 </ul>
 
 
@@ -1760,21 +1879,21 @@ CREATE TABLE "login_attempts" (
 <p>Before explaining what is needed to set up the authentication sample, let's describe the scenario:</p>
 
 <ol>
-	<li>There is an admin page which is used to manage user data (example.com/auth/).</li>
-	<li>Opening this page without being logged in as a member of the admin group redirects you to a login page (example.com/auth/login/).</li>
-	<li>A form is displayed on this page requiring you to fill in your credentials.</li>
-	<li>Now if you submit something invalid, the form is redisplayed containing an error message describing the problem.</li>
-	<li>If the verification of the data you supply is successful you will be redirected either to a member's page or to the admin page mentioned earlier, depending on which group you belong to.</li>
-	<li>Then, let's say you forgot your password.</li>
-	<li>Open the "Forgot Password" page, enter your email address and hit the send button (example.com/auth/forgotPassword/).</li>
-	<li>Now, while you are redirected to the login page there is an email waiting for you containing a link to a "Reset Password" page (example.com/auth/resetPassword/).</li>
-	<li>On this page enter a new password, confirm it and hit the submit button.</li>
-	<li>You are redirected to the login page where you can enter your new password.</li>
-	<li>To change your password open the "Change Password" page (example.com/auth/changePassword/), enter your email address and your password. Hit the submit button.</li>
-	<li>The procedure which follows is similar to the forgotten password one.</li>
-	<li>Now, let's say you logged in as a member of the admin group.</li>
-	<li>You will be presented with the administration page (example.com/auth/).</li>
-	<li>There you can create new users, activate / deactivate, edit and delete users.</li>
+  <li>There is an admin page which is used to manage user data (example.com/auth/).</li>
+  <li>Opening this page without being logged in as a member of the admin group redirects you to a login page (example.com/auth/login/).</li>
+  <li>A form is displayed on this page requiring you to fill in your credentials.</li>
+  <li>Now if you submit something invalid, the form is redisplayed containing an error message describing the problem.</li>
+  <li>If the verification of the data you supply is successful you will be redirected either to a member's page or to the admin page mentioned earlier, depending on which group you belong to.</li>
+  <li>Then, let's say you forgot your password.</li>
+  <li>Open the "Forgot Password" page, enter your email address and hit the send button (example.com/auth/forgotPassword/).</li>
+  <li>Now, while you are redirected to the login page there is an email waiting for you containing a link to a "Reset Password" page (example.com/auth/resetPassword/).</li>
+  <li>On this page enter a new password, confirm it and hit the submit button.</li>
+  <li>You are redirected to the login page where you can enter your new password.</li>
+  <li>To change your password open the "Change Password" page (example.com/auth/changePassword/), enter your email address and your password. Hit the submit button.</li>
+  <li>The procedure which follows is similar to the forgotten password one.</li>
+  <li>Now, let's say you logged in as a member of the admin group.</li>
+  <li>You will be presented with the administration page (example.com/auth/).</li>
+  <li>There you can create new users, activate / deactivate, edit and delete users.</li>
 </ol>
 
 <p>&nbsp;</p>
@@ -1782,10 +1901,10 @@ CREATE TABLE "login_attempts" (
 <p>The sample environment consists of the following files:</p>
 
 <ol>
-	<li>A <a href="../general/controllers.html">controller</a> to receive and process the submitted data.</li>
-	<li>A form validation file.</li>
-	<li>Various <a href="../general/views.html">view</a> files containing forms or a users table.</li>
-	<li>A CSS file.</li>
+  <li>A <a href="../general/controllers.html">controller</a> to receive and process the submitted data.</li>
+  <li>A form validation file.</li>
+  <li>Various <a href="../general/views.html">view</a> files containing forms or a users table.</li>
+  <li>A CSS file.</li>
 </ol>
 
 <p>Let's create those files.</p>
@@ -1794,9 +1913,10 @@ CREATE TABLE "login_attempts" (
 
 <h2>The Controller</h2>
 
-<p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your system/application/controllers/ folder.</p>
+<p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your application/controllers/ folder.</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 put "auth,index,login,logout,createUser,activate,deactivate,forgotPassword" & \
 ",resetPassword,changePassword,editUser,deleteUser" into gControllerHandlers
@@ -1905,11 +2025,13 @@ command index
  end if
 end index
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the following code which is needed to create new user data.</p>
 
+<div class="codeSample">
 <pre><code>command createUser
  put "Auth Test Create User" into gData["pageTitle"]
 
@@ -1972,7 +2094,7 @@ end index
   #
 
   # IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
-  if tRegistration &lt;> FALSE then		
+  if tRegistration &lt;> FALSE then    
    put rigAuthMessages() into tMessages
    rigSetSessFlashdata "message", tMessages
    rigRedirect "/auth"
@@ -2043,11 +2165,13 @@ end index
  get rigLoadView("auth/createUserMainView")
 end createUser
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the login handler.</p>
 
+<div class="codeSample">
 <pre><code>command login
  put "Auth Test Login" into gData["pageTitle"]
 
@@ -2074,7 +2198,7 @@ end createUser
  # FORM VALIDATION
  if rigFormValidRun("auth/login") is TRUE then
 
-  # CHECK IF USER IS LOGGING IN		
+  # CHECK IF USER IS LOGGING IN    
   # REMEMBER ME CHECK BOX
   put FALSE into tRemember
   # CHECK IF THERE IS A POST VARIABLE remember
@@ -2134,11 +2258,13 @@ end createUser
  end if -- if rigFormValidRun("auth/login") is TRUE then
 end login
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Of course there is a logout handler.</p>
 
+<div class="codeSample">
 <pre><code>command logout
  # LOG USER OUT
  rigAuthLogout
@@ -2150,11 +2276,13 @@ end login
  rigRedirect "/auth/login"
 end logout
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the following user activation handler.</p>
 
+<div class="codeSample">
 <pre><code>command activate
  # GET USER ID AND ACTIVATION CODE
  put rigFetchSegment(3) into tID
@@ -2182,14 +2310,16 @@ end logout
 
   rigSetSessFlashdata "message", tErrors
   rigRedirect "auth/forgotPassword"
- end if	
+ end if  
 end activate
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the user deactivation handler.</p>
 
+<div class="codeSample">
 <pre><code>command deactivate
  put "Auth Test Deactivate" into gData["pageTitle"]
 
@@ -2274,11 +2404,13 @@ end activate
  end if
 end deactivate
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add the "forgotPassword" handler.</p>
 
+<div class="codeSample">
 <pre><code>command forgotPassword
  put "Auth Test Forgot Password" into gData["pageTitle"]
 
@@ -2317,7 +2449,7 @@ end deactivate
 
    rigSetSessFlashdata "message", tErrors
    rigRedirect "auth/forgotPassword"
-  end if		
+  end if    
 
  else
   put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
@@ -2342,11 +2474,13 @@ end deactivate
  get rigLoadView("auth/forgotPasswordMainView")
 end forgotPassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add code which is used to reset passwords in case a user forgot the password or sent a change password request.</p>
 
+<div class="codeSample">
 <pre><code>command resetPassword
  put "Auth Test Reset Password" into gData["pageTitle"]
 
@@ -2457,12 +2591,14 @@ end forgotPassword
 
 end resetPassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 
 <p>Add a handler which is used to change passwords.</p>
 
+<div class="codeSample">
 <pre><code>command changePassword
  put "Auth Test Change Password" into gData["pageTitle"]
 
@@ -2564,11 +2700,13 @@ end resetPassword
  end if -- if rigFormValidRun("auth/resetPassword") is TRUE then
 end changePassword
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Add a handler which is used to edit user data.</p>
 
+<div class="codeSample">
 <pre><code>command editUser
  put "Auth Test Edit User" into gData["pageTitle"]
 
@@ -2702,11 +2840,13 @@ end changePassword
 
 end editUser
 </code></pre>
+</div>
 
 <a href="#top">Top of Page</a>
 
 <p>Now add the last handler which is needed to delete user data.</p>
 
+<div class="codeSample">
 <pre><code>command deleteUser
  put "Auth Test Delete User" into gData["pageTitle"]
 
@@ -2798,9 +2938,10 @@ end deleteUser
 
 
 --| END OF auth.lc
---| Location: ./system/application/controllers/auth.lc
+--| Location: ./application/controllers/auth.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
@@ -2813,15 +2954,15 @@ end deleteUser
 
 <h2>The Form Validation File</h2>
 
-<p>The rules to validate authentication. Create a file called validation.lc. In it, place the code below and save it to your system/application/config/ folder.</p>
+<p>The rules to validate authentication. Create a file called validation.lc. In it, place the code below and save it to your application/config/ folder.</p>
 
 
-<pre><code>&lt;?rev
-put gBASEPATH into gBASEPATH
+<div class="codeSample">
+<pre><code>&lt;?lc
 
-if gBASEPATH is "gBASEPATH" then
- put "No direct script access allowed."
- exit to top
+if gRigA is not an array then
+  put "No direct script access allowed."
+  exit to top
 end if
 
 
@@ -2952,16 +3093,17 @@ put "requiredR|numericR" into sValidationConf["auth/deleteUser"][2]["rules"]
 
 
 
-function fetchValidationConf
+function rigFetchValidationConf
  return sValidationConf
-end fetchValidationConf
+end rigFetchValidationConf
 
 
 
 --| END OF validation.lc
---| Location: ./system/application/config/validation.lc
+--| Location: ./application/config/validation.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 
@@ -2973,215 +3115,233 @@ end fetchValidationConf
 
 <h2>The View Files</h2>
 
-<p>Create the following view files and save them to a folder called "auth" in your system/application/views/ folder.</p>
+<p>Create the following view files and save them to a folder called "auth" in your application/views/ folder.</p>
 
 <p>We use multiple views nested in a parent view file. The header view, name it "headerView.lc", is included in all parent views (one fits all):</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
 &lt;html>
 &lt;head>
-	&lt;meta charset="utf-8">
+  &lt;meta charset="utf-8">
 
-	&lt;title>[[gData["pageTitle"] ]]&lt;/title>
-	&lt;? return rigCssAsset("authentication.css") ?>
+  &lt;title>[[gData["pageTitle"]]]&lt;/title>
+  &lt;? return rigCssAsset("authentication.css") ?>
 
 &lt;/head>
 </code></pre>
+</div>
 
 
 
 <p>The view which represents the admin page called "authView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="adminPage">
-		&lt;header>
-			&lt;h1>Users&lt;/h1>
-		&lt;/header>
+  &lt;div id="container" class="adminPage">
+    &lt;header>
+      &lt;h1>Users&lt;/h1>
+    &lt;/header>
 
-		&lt;div id="main" role="main">
+    &lt;div id="main" role="main">
 
 
-		&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
-			[[gData["usersTable"] ]]
+      [[gData["usersTable"]]]
 
-			&lt;p>[[gData["newUserLink"] ]]&lt;/p>
+      &lt;p>[[gData["newUserLink"]]]&lt;/p>
 
-			&lt;p>[[gData["logoutLink"] ]]&lt;/p>
+      &lt;p>[[gData["logoutLink"]]]&lt;/p>
 
-		&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
-&lt;/html>	
+&lt;/html>  
 </code></pre>
+</div>
 
 
 <p>The parent view of the admin page called "authMainView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/authView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The view used to change a password. It is called "changePasswordView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="changePassword">
+  &lt;div id="container" class="changePassword">
     &lt;header>
-		&lt;h1>Change Password&lt;/h1>
+    &lt;h1>Change Password&lt;/h1>
     &lt;/header>
 
     &lt;div id="main" role="main">
 
-		&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
 
-		[[gData["formOpen"] ]]
-		[[gData["fsOpen"] ]]
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
 
-		&lt;div>[[gData["oldPasswordLabel"] ]] [[gData["oldPassword"] ]]&lt;/div>
+    &lt;div>[[gData["oldPasswordLabel"]]] [[gData["oldPassword"]]]&lt;/div>
 
-		&lt;div>[[gData["newPasswordLabel"] ]] [[gData["newPassword"] ]]&lt;/div>
+    &lt;div>[[gData["newPasswordLabel"]]] [[gData["newPassword"]]]&lt;/div>
 
-		&lt;div>[[gData["newPasswordConfirmLabel"] ]] [[gData["newPasswordConfirm"] ]]&lt;/div>
+    &lt;div>[[gData["newPasswordConfirmLabel"]]] [[gData["newPasswordConfirm"]]]&lt;/div>
 
-		[[gData["hiddenUserID"] ]]
+    [[gData["hiddenUserID"]]]
 
 
-		&lt;div>[[gData["changeSubmit"] ]]&lt;/div>
+    &lt;div>[[gData["changeSubmit"]]]&lt;/div>
 
-		[[gData["fsClose"] ]]
-		&lt;/form>
+    [[gData["fsClose"]]]
+    &lt;/form>
 
-		&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>"changePasswordMainView.lc", the parent view of the view above:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/changePasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "createUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="createUser">
+  &lt;div id="container" class="createUser">
     &lt;header>
-		&lt;h1>Create User&lt;/h1>
-		&lt;p>Please enter the users information below.&lt;/p>
+    &lt;h1>Create User&lt;/h1>
+    &lt;p>Please enter the users information below.&lt;/p>
     &lt;/header>
 
     &lt;div id="main" role="main">
 
-			&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+      &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
-			[[gData["formOpen"] ]]
-			[[gData["fsOpen"] ]]
+      [[gData["formOpen"]]]
+      [[gData["fsOpen"]]]
 
 
-			&lt;div>[[gData["firstLabel"] ]] [[gData["first"] ]]&lt;/div>
+      &lt;div>[[gData["firstLabel"]]] [[gData["first"]]]&lt;/div>
 
-			&lt;div>[[gData["lastLabel"] ]] [[gData["last"] ]]&lt;/div>
+      &lt;div>[[gData["lastLabel"]]] [[gData["last"]]]&lt;/div>
 
-			&lt;div>[[gData["companyLabel"] ]] [[gData["company"] ]]&lt;/div>
+      &lt;div>[[gData["companyLabel"]]] [[gData["company"]]]&lt;/div>
 
-			&lt;div>[[gData["emailLabel"] ]] [[gData["email"] ]]&lt;/div>
+      &lt;div>[[gData["emailLabel"]]] [[gData["email"]]]&lt;/div>
 
-			&lt;div>[[gData["phoneLabel"] ]] [[gData["phone"] ]]&lt;/div>
+      &lt;div>[[gData["phoneLabel"]]] [[gData["phone"]]]&lt;/div>
 
-			&lt;div>[[gData["passwordLabel"] ]] [[gData["password"] ]]&lt;/div>
+      &lt;div>[[gData["passwordLabel"]]] [[gData["password"]]]&lt;/div>
 
-			&lt;div>[[gData["passwordConfirmLabel"] ]] [[gData["passwordConfirm"] ]]&lt;/div>
+      &lt;div>[[gData["passwordConfirmLabel"]]] [[gData["passwordConfirm"]]]&lt;/div>
 
-			&lt;div>[[gData["createSubmit"] ]]&lt;/div>
+      &lt;div>[[gData["createSubmit"]]]&lt;/div>
 
-		[[gData["fsClose"] ]]
-			&lt;/form>
+    [[gData["fsClose"]]]
+      &lt;/form>
 
-    	&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+      &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>The parent view "createUserMainView.lc":</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/createUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "deactivateUserView.lc" view:</p>
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="deactivate">
-		&lt;header>
-			&lt;h1>Deactivate User&lt;/h1>
-			&lt;p>Are you sure you want to deactivate the user '[[gData["userName"] ]]'&lt;/p>
-		&lt;/header>
+  &lt;div id="container" class="deactivate">
+    &lt;header>
+      &lt;h1>Deactivate User&lt;/h1>
+      &lt;p>Are you sure you want to deactivate the user '[[gData["userName"]]]'&lt;/p>
+    &lt;/header>
 
 
-		&lt;div id="main" role="main">
+    &lt;div id="main" role="main">
 
-		[[gData["formOpen"] ]]
-		[[gData["fsOpen"] ]]
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
 
-			[[gData["hiddenUserID"] ]]
-		&lt;div>[[gData["confirmRadioYesLabel"] ]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"] ]] />&lt;/div>
-		&lt;div>[[gData["confirmRadioNoLabel"] ]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"] ]] />&lt;/div>
+      [[gData["hiddenUserID"]]]
+    &lt;div>[[gData["confirmRadioYesLabel"]]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"]]] />&lt;/div>
+    &lt;div>[[gData["confirmRadioNoLabel"]]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"]]] />&lt;/div>
 
- 		&lt;div>[[gData["deactivateSubmit"] ]]&lt;/div>
+     &lt;div>[[gData["deactivateSubmit"]]]&lt;/div>
 
-		[[gData["fsClose"] ]]
-		&lt;/form>
-		&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+    [[gData["fsClose"]]]
+    &lt;/form>
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "deactivateUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deactivateUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
@@ -3189,245 +3349,265 @@ return tHeader && tContent
 <p>The "deleteUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="delete">
-		&lt;header>
-			&lt;h1>Delete User&lt;/h1>
-			&lt;p>Are you sure you want to delete the user '[[gData["userName"] ]]'&lt;/p>
-		&lt;/header>
+  &lt;div id="container" class="delete">
+    &lt;header>
+      &lt;h1>Delete User&lt;/h1>
+      &lt;p>Are you sure you want to delete the user '[[gData["userName"]]]'&lt;/p>
+    &lt;/header>
 
 
-	&lt;div id="main" role="main">
+  &lt;div id="main" role="main">
 
-	[[gData["formOpen"] ]]
-	[[gData["fsOpen"] ]]
+  [[gData["formOpen"]]]
+  [[gData["fsOpen"]]]
 
-	[[gData["hiddenUserID"] ]]
-	&lt;div>[[gData["confirmRadioYesLabel"] ]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"] ]] />&lt;/div>
-	&lt;div>[[gData["confirmRadioNoLabel"] ]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"] ]] />&lt;/div>
+  [[gData["hiddenUserID"]]]
+  &lt;div>[[gData["confirmRadioYesLabel"]]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"]]] />&lt;/div>
+  &lt;div>[[gData["confirmRadioNoLabel"]]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"]]] />&lt;/div>
 
-	&lt;div>[[gData["deleteSubmit"] ]]&lt;/div>
+  &lt;div>[[gData["deleteSubmit"]]]&lt;/div>
 
-	[[gData["fsClose"] ]]
-	&lt;/form>
-	&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+  [[gData["fsClose"]]]
+  &lt;/form>
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "deleteUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deleteUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "editUserView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
 &lt;div id="container" class="editUser">
    &lt;header>
-		&lt;h1>Edit User&lt;/h1>
-		&lt;p>Please enter the users information below.&lt;/p>
+    &lt;h1>Edit User&lt;/h1>
+    &lt;p>Please enter the users information below.&lt;/p>
    &lt;/header>
 
    &lt;div id="main" role="main">
 
-		&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
-		[[gData["formOpen"] ]]
-		[[gData["fsOpen"] ]]
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
 
 
-		&lt;div>[[gData["firstLabel"] ]] [[gData["first"] ]]&lt;/div>
+    &lt;div>[[gData["firstLabel"]]] [[gData["first"]]]&lt;/div>
 
-		&lt;div>[[gData["lastLabel"] ]] [[gData["last"] ]]&lt;/div>
+    &lt;div>[[gData["lastLabel"]]] [[gData["last"]]]&lt;/div>
 
-		&lt;div>[[gData["companyLabel"] ]] [[gData["company"] ]]&lt;/div>
+    &lt;div>[[gData["companyLabel"]]] [[gData["company"]]]&lt;/div>
 
-		&lt;div>[[gData["phoneLabel"] ]] [[gData["phone"] ]]&lt;/div>
+    &lt;div>[[gData["phoneLabel"]]] [[gData["phone"]]]&lt;/div>
 
-		&lt;div>[[gData["passwordLabel"] ]] [[gData["password"] ]]&lt;/div>
+    &lt;div>[[gData["passwordLabel"]]] [[gData["password"]]]&lt;/div>
 
-		&lt;div>[[gData["passwordConfirmLabel"] ]] [[gData["passwordConfirm"] ]]&lt;/div>
+    &lt;div>[[gData["passwordConfirmLabel"]]] [[gData["passwordConfirm"]]]&lt;/div>
 
-		[[gData["hiddenUserID"] ]]
+    [[gData["hiddenUserID"]]]
 
-		&lt;div>[[gData["editSubmit"] ]]&lt;/div>
+    &lt;div>[[gData["editSubmit"]]]&lt;/div>
 
-		[[gData["fsClose"] ]]
-		&lt;/form>
+    [[gData["fsClose"]]]
+    &lt;/form>
 
     &lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "editUserMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/editUserView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "forgotPasswordView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="forgotPassword">
+  &lt;div id="container" class="forgotPassword">
     &lt;header>
-		&lt;h1>Forgot Password&lt;/h1>
-		&lt;p>Please enter your email address so we can send you an email to reset your password.&lt;/p>
+    &lt;h1>Forgot Password&lt;/h1>
+    &lt;p>Please enter your email address so we can send you an email to reset your password.&lt;/p>
     &lt;/header>
 
     &lt;div id="main" role="main">
 
-		&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
 
-		[[gData["formOpen"] ]]
-		[[gData["fsOpen"] ]]
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
 
-		&lt;div>[[gData["emailLabel"] ]] [[gData["email"] ]]&lt;/div>
+    &lt;div>[[gData["emailLabel"]]] [[gData["email"]]]&lt;/div>
 
-		&lt;div>[[gData["forgotSubmit"] ]]&lt;/div>
+    &lt;div>[[gData["forgotSubmit"]]]&lt;/div>
 
-		[[gData["fsClose"] ]]
-		&lt;/form>
+    [[gData["fsClose"]]]
+    &lt;/form>
 
-	&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 <p>The parent view "forgotPasswordMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/forgotPasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 <p>The "loginView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="login">
-		&lt;header>
-			&lt;h1>Login&lt;/h1>
-			&lt;p>Please login with your email/username and password below.&lt;/p>
-		&lt;/header>
+  &lt;div id="container" class="login">
+    &lt;header>
+      &lt;h1>Login&lt;/h1>
+      &lt;p>Please login with your email/username and password below.&lt;/p>
+    &lt;/header>
 
-		&lt;div id="main" role="main">
-			&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+    &lt;div id="main" role="main">
+      &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
-		[[gData["formOpen"] ]]
-		[[gData["fsOpen"] ]]
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
 
-		&lt;div>[[gData["identityLabel"] ]] [[gData["identity"] ]]&lt;/div>
+    &lt;div>[[gData["identityLabel"]]] [[gData["identity"]]]&lt;/div>
 
-		&lt;div>[[gData["passwordLabel"] ]] [[gData["loginPassword"] ]]&lt;/div>
+    &lt;div>[[gData["passwordLabel"]]] [[gData["loginPassword"]]]&lt;/div>
 
-		&lt;div>[[gData["rememberLabel"] ]] &lt;input type="checkbox" name="remember[]" value="1" [[gData["chbRemember"] ]] />&lt;/div>
+    &lt;div>[[gData["rememberLabel"]]] &lt;input type="checkbox" name="remember[]" value="1" [[gData["chbRemember"]]] />&lt;/div>
 
-		&lt;div>[[gData["loginSubmit"] ]]&lt;/div>
+    &lt;div>[[gData["loginSubmit"]]]&lt;/div>
 
 
-		[[gData["fsClose"] ]]
-		&lt;/form>
-	&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+    [[gData["fsClose"]]]
+    &lt;/form>
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "loginMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/loginView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
 <p>The "resetPasswordView.lc" view:</p>
 
 
+<div class="codeSample">
 <pre><code>&lt;body>
 
-	&lt;div id="container" class="resetPassword">
-    	&lt;header>
-			&lt;h1>Change Password&lt;/h1>
-    	&lt;/header>
+  &lt;div id="container" class="resetPassword">
+      &lt;header>
+      &lt;h1>Change Password&lt;/h1>
+      &lt;/header>
 
     &lt;div id="main" role="main">
 
-	&lt;div id="infoMessage">[[gData["message"] ]]&lt;/div>
+  &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
 
 
-	[[gData["formOpen"] ]]
-	[[gData["fsOpen"] ]]
+  [[gData["formOpen"]]]
+  [[gData["fsOpen"]]]
 
 
-	&lt;div>[[gData["newPasswordLabel"] ]] [[gData["newPassword"] ]]&lt;/div>
+  &lt;div>[[gData["newPasswordLabel"]]] [[gData["newPassword"]]]&lt;/div>
 
-	&lt;div>[[gData["newPasswordConfirmLabel"] ]] [[gData["newPasswordConfirm"] ]]&lt;/div>
+  &lt;div>[[gData["newPasswordConfirmLabel"]]] [[gData["newPasswordConfirm"]]]&lt;/div>
 
-	[[gData["hiddenUserID"] ]]
+  [[gData["hiddenUserID"]]]
 
 
-	&lt;div>[[gData["resetSubmit"] ]]&lt;/div>
+  &lt;div>[[gData["resetSubmit"]]]&lt;/div>
 
-	[[gData["fsClose"] ]]
-	&lt;/form>
+  [[gData["fsClose"]]]
+  &lt;/form>
 
-	&lt;/div>
-	&lt;/div> &lt;!--! end of #container -->
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
 
 &lt;/body>
 &lt;/html>
 </code></pre>
+</div>
 
 
 
 <p>The parent view "resetPasswordMainView.lc":</p>
 
+<div class="codeSample">
 <pre><code>&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/resetPasswordView", TRUE) into tContent
 return tHeader && tContent
 ?>
 </code></pre>
+</div>
 
 
 
@@ -3442,17 +3622,18 @@ return tHeader && tContent
 <p>Create a CSS file called authentication.css, in it place the following code and save it to your assets/css/ folder:</p>
 
 
+<div class="codeSample">
 <pre><code>body {
-	margin: 40px;
-	padding: 0;
-	font-family: "Lucida Grande", Lucida, Verdana, Geneva, Sans-serif;
-	font-size: 12px;
-	color: #888;
-	background-color: #fff;
+  margin: 40px;
+  padding: 0;
+  font-family: "Lucida Grande", Lucida, Verdana, Geneva, Sans-serif;
+  font-size: 12px;
+  color: #888;
+  background-color: #fff;
 }
 #container {
-	margin-left: auto;
-	margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 #container.login,
 #container.editUser,
@@ -3460,41 +3641,42 @@ return tHeader && tContent
 #container.changePassword,
 #container.forgotPassword,
 #container.resetPassword {
-	width: 400px;
+  width: 400px;
 }
 #container.adminPage {
-	width: 610px;
+  width: 610px;
 }
 #container.deactivate, #container.delete {
-	width: 350px;
+  width: 350px;
 }
 .formLabel {
-	display: inline-block;
-	width:	160px;
-	margin-bottom: 10px;
+  display: inline-block;
+  width:  160px;
+  margin-bottom: 10px;
 }
 table {
-	width: 600px;
+  width: 600px;
 }
 th {
-	text-align: left;
+  text-align: left;
 }
 button a {
-	text-decoration: none;
+  text-decoration: none;
 }
 </code></pre>
+</div>
 
 <h2>Try it!</h2>
 
 <p>After having installed all those sample files</p>
 <ul><li>go to your authentication page (yourDomain.com/auth/) and login as admin using "admin@admin.com" as user id and "revigniter" as password.</li>
-	<li>Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected.</li>
-	<li>Log out.</li>
-	<li>Check your email account and activate your test registration.</li>
-	<li>Go to yourDomain.com/auth/logout/ to log out.</li>
-	<li>Go to yourDomain.com/auth/forgotPassword, enter your email address and check your email account again to reset your password.</li>
-	<li>Activate / deactivate users using the admin account.</li>
-	<li>In short: Have fun.</li></ul>
+  <li>Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected.</li>
+  <li>Log out.</li>
+  <li>Check your email account and activate your test registration.</li>
+  <li>Go to yourDomain.com/auth/logout/ to log out.</li>
+  <li>Go to yourDomain.com/auth/forgotPassword, enter your email address and check your email account again to reset your password.</li>
+  <li>Activate / deactivate users using the admin account.</li>
+  <li>In short: Have fun.</li></ul>
 
 
 
@@ -3506,7 +3688,7 @@ button a {
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 <span class="separator"> :: </span>
@@ -3515,7 +3697,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../general/security.html"> Security</a>
 Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -3523,12 +3705,14 @@ Next Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Impossible de d&eacute;terminer les param&egrave;tres de la base de donn&eacute;es avec l'instruction de connection donn&eacute;e." into gLang["db_invalid_connection_str"]
 put "Impossible de se connecter &agrave; la base de donn&eacute;es en utilisant les param&egrave;tres fournis." into gLang["db_unable_to_connect"]

@@ -1,0 +1,37 @@
+<?lc
+
+# PUT ALL HANDLER NAMES WHICH ARE LIKELY TO SERVE AS URI SEGMENTS
+# INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "welcome,index" into gControllerHandlers
+
+
+
+
+# WRITE INITIAL STATEMENTS INTO THE CONTROLLER HANDLER
+command welcome
+	# SAVE PAGE IN CACHE DIRECTORY WITH AN EXPIRATION TIME OF n MINUTES
+	# NOTE: THIS IS NOT MANDATORY, DON'T USE CACHING WHILE WORKING ON THE CODE,
+	# OTHERWISE YOU WON'T SEE YOUR CHANGES IMMEDIATELY
+	rigOutputCache 3
+end welcome
+
+
+# THIS COMMAND WILL BE CALLED IF NONE IS SPECIFYED IN THE URI
+command index
+	# REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
+	# SET PAGE TITLE
+	put "Welcome to revIgniter" into gData["pageTitle"]
+	
+	put RIVERSION && RISTATE into gData["revIgniterVersion"]
+	put the version into gData["serverVersion"]
+	
+	# LOAD THE VIEW FILE
+	get rigLoadView("welcomeMessage")
+end index
+
+
+
+
+--| END OF welcome.lc
+--| Location: ./application/controllers/welcome.lc
+----------------------------------------------------------------------

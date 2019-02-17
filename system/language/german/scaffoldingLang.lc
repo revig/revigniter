@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Datens&auml;tze anzeigen" into gLang["scaff_view_records"]
 put "Neuen Datensatz erzeugen" into gLang["scaff_create_record"]

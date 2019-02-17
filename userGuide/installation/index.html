@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -92,20 +92,21 @@
 <ol>
 <li>Unzip the package.</li>
 <li>Upload the revIgniter folders and files to your server.  Normally the index.lc file will be at your root.</li>
-<li>Open the <dfn>application/config/config.lc</dfn> file with a text editor and set your base URL.  If you intend to use encryption or sessions, set your encryption key.</li>
+<li>Open the <dfn>application/config/config.lc</dfn> file with a text editor and set your base URL.  If you intend to use encryption or sessions, set your encryption key. If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>application/logs</dfn> folder is writable.</li>
+<li>Set the file permissions on your <dfn>application/cache</dfn> folder such that it is writable.</li>
 <li>If you intend to use a database, open the <dfn>application/config/database.lc</dfn> file with a text editor and set your database settings.</li>
 </ol>
 
 <p>If you wish to hide the location of your revIgniter files you can rename the <dfn>system</dfn> folder
-to something more private.  If you do rename it, you must open your main <kbd>index.lc</kbd> file and set the <samp>gSystemFolder</samp>
-variable at the top of the page with the new name you've chosen.</p>
+to something more private.  If you do rename it, you must open your main <kbd>index.lc</kbd> file and set the <samp>gRigA["systemFolder"]</samp>
+variable at the top of the page to the new name you've chosen.</p>
 
 <p>To increase security even further you can move your system and application folder above web root. Before doing so please read the section <a href="../general/managing_apps.html">Managing Your Application</a>.</p>
 
 <p>That's it!</p>
 
 <p>If you're new to revIgniter, please read the <a href="../overview/getting_started.html">Getting Started</a> section of the User Guide to begin learning how
-to build dynamic irev applications. Enjoy!</p>
+to build dynamic LiveCode server applications. Enjoy!</p>
 
 
 

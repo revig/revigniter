@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Impossible de cr&eacute;er le dossier sp&eacute;cifi&eacute;." into gLang["ftp_unable_to_makdir"]
 put "Impossible de changer de r&eacute;pertoire." into gLang["ftp_unable_to_changedir"]

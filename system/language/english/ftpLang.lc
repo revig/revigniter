@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Unable to create the directory you have specified." into gLang["ftp_unable_to_makdir"]
 put "Unable to change directories." into gLang["ftp_unable_to_changedir"]

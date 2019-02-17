@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Captcha Library : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Captcha Library : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
-		
-		<style type="text/css"> 
-		.b { color: black; background-color: #808080; line-height: 14px; font-size: 14px; }
-		.w { color: white; background-color: #FFFFFF; line-height: 14px; font-size: 14px; }
-		</style>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    
+    <style type="text/css"> 
+    .b { color: black; background-color: #C7C7C7; line-height: 14px; font-size: 14px; }
+    .w { color: white; background-color: #2B3137; line-height: 14px; font-size: 14px; }
+    </style>
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -43,43 +43,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Captcha Library</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Captcha Library</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -87,7 +87,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 
@@ -135,6 +135,7 @@ The captcha library provides a means to generate two flavors of captchas. In it'
 <p>Here is a simple example showing how to create a captcha (composed of none breaking spaces) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
@@ -143,6 +144,7 @@ put rigCaptcha() into gData["captcha"]
 # GET CAPTCHA CSS 
 put rigCaptchaStyle() into gData["captchaStyle"]
 </code></pre>
+</div>
 
 
 <p><strong>Note:</strong> Place the <dfn>gData["captchaStyle"]</dfn> variable to be merged in the header of your view file. 
@@ -153,6 +155,7 @@ which is built from the captcha number and a key stored in your <kbd>application
 Then you have to compare the posted data of the hidden field with a hash of the posted number. 
 To retrieve the hash of the displayed captcha your code would look like this:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA, THE HTML CODE WHICH DISPLAYS THE CAPTCHA DIGITS 
@@ -164,15 +167,18 @@ put rigCaptchaStyle() into gData["captchaStyle"]
 # GET CAPTCHA HASH 
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
+</div>
 
 
 
 <p>Here is an example for captcha user input validation:</p>
 
+<div class="codeSample">
 <pre><code>if rigValidCaptchaUserInput(rigVarPost("inputField"), rigVarPost("hiddenHashField")) is TRUE then 
-	get rigLoadView("formSuccess") 
+  get rigLoadView("formSuccess") 
 end if
 </code></pre>
+</div>
 
 <p>Where <dfn>rigVarPost("inputField")</dfn> is the posted captcha user input and <dfn>rigVarPost("hiddenHashField")</dfn> is the captcha hash.</p>
 
@@ -180,6 +186,7 @@ end if
 
 <p>Here is an example:</p>
 
+<div class="codeSample">
 <pre><code># VALIDATION RULES (in your validation config file in system/application/config/validation.lc) 
  
 put "hiddenMonitorField" into sValidationConf["idOfYourForm"][1]["field"] 
@@ -194,32 +201,33 @@ put "trim|requiredR|maxLengthR[4]|integerR" into sValidationConf["idOfYourForm"]
  
 put FALSE into tCaptchaValid 
 if $_POST is an array then 
-	if rigVarPOST("inputField") is not FALSE then 
-		if rigValidCaptchaUserInput(rigVarPOST("inputField"), rigVarPOST("hiddenHashField")) is TRUE then 
-			put TRUE into tCaptchaValid 
-		else 
-			# SET THE INPUT OF THE HIDDEN FIELD TO TRUE, THIS WILL BE THE PARAMETER FOR THE CALLBACK HANDLER 
-			# THE PAGE WILL THEN BE SHOWN AGAIN WITH REPOPULATED FIELDS 
-			put "true" into $_POST["hiddenMonitorField"] 
-		end if 
-	end if 
+  if rigVarPOST("inputField") is not FALSE then 
+    if rigValidCaptchaUserInput(rigVarPOST("inputField"), rigVarPOST("hiddenHashField")) is TRUE then 
+      put TRUE into tCaptchaValid 
+    else 
+      # SET THE INPUT OF THE HIDDEN FIELD TO TRUE, THIS WILL BE THE PARAMETER FOR THE CALLBACK HANDLER 
+      # THE PAGE WILL THEN BE SHOWN AGAIN WITH REPOPULATED FIELDS 
+      put "true" into $_POST["hiddenMonitorField"] 
+    end if 
+  end if 
 end if 
  
 # CALLBACK HANDLER 
  
 command captchaFailed pStr 
-	# pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG 
-	if pStr = "true" then 
-		# SHOW CAPTCHA ERROR 
-		put "Wrong input in field %s." into tCaptchaError 
-		rigSetMessage "captchaFailed", tCaptchaError 
-		# RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED 
-		return FALSE 
-	else 
-		return TRUE 
-	end if 
+  # pStr IS THE HIDDEN FIELD INPUT SET TO TRUE AS SHOWN ABOVE IF USER INPUT FOR CAPTCHA WAS WRONG 
+  if pStr = "true" then 
+    # SHOW CAPTCHA ERROR 
+    put "Wrong input in field %s." into tCaptchaError 
+    rigSetMessage "captchaFailed", tCaptchaError 
+    # RETURN FALSE, SO THAT THE PAGE IS SHOWN AGAIN AND THE FIELDS ARE REPOPULATED 
+    return FALSE 
+  else 
+    return TRUE 
+  end if 
 end captchaFailed
 </code></pre>
+</div>
 
 
 <h2>Example (random math problem)</h2>
@@ -227,6 +235,7 @@ end captchaFailed
 <p>Here is a simple example showing how to create a captcha (displaying a math problem) in one of your <a href="../general/controllers.html">controller</a> handlers:</p>
 
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 # GET CAPTCHA MATH PROBLEM 
@@ -235,6 +244,7 @@ put rigCaptchaMathProblem() into gData["captcha"]
 #GET CAPTCHA HASH 
 put rigGetCaptchaHash() into gData["captchaHash"]
 </code></pre>
+</div>
 
 <p>In order to prevent automated software from posting to your site you need to store a hash of the math problem result 
 which is built from the result number and a key stored in your <kbd>application/config/config.lc</kbd> file, in a hidden field. 
@@ -260,6 +270,7 @@ Then you have to compare the posted data of the hidden field with a hash of the 
 <p>Preferences are set by passing an array of preference values to the captcha <dfn>rigInitCaptcha</dfn> handler.  Here is an example of 
 how you might set preferences:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Captcha" 
  
 put 6 into tConfig["captchaLength"] 
@@ -267,6 +278,7 @@ put "#FFFFFF" into tConfig["captchaBckgndColor"]
 put "#646464" into tConfig["captchaColor"] 
  
 rigInitCaptcha tConfig</code></pre>
+</div>
 
 <p><strong>Note:</strong> To change your secret key change the corresponding entry in the config file. Don't set it manually like other preferences shown above.</p>
 
@@ -289,6 +301,7 @@ rigInitCaptcha tConfig</code></pre>
 
 <p>Use the optional parameter to add a nonce (as used by Content Security Policy headers) to the style tags. Example:</p>
 
+<div class="codeSample">
 <pre><code>put rigNonce() into tNonce
 put "'nonce-" & tNonce & "'" into tSrcNonce
 put rigCaptchaStyle(tNonce) into gData["captchaStyle"]
@@ -300,6 +313,7 @@ put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
 put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 </code></pre>
+</div>
 
 <h3>rigGetCaptchaHash()</h3>
 <p>Get hash from captcha number and a key. You may store this string in a hidden form field:</p>
@@ -312,7 +326,7 @@ put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 <h3>rigValidCaptchaUserInput(<var>pCaptchaInput</var>, <var>pHiddenFieldValue</var>)</h3>
 <p>Validate captcha user input. The first parameter is the posted captcha user input and the second is the captcha hash retrieved from an hidden field. The function returns TRUE or FALSE.</p>
 <pre><code>if rigValidCaptchaUserInput(tInput, tHiddenField) is TRUE then 
-	-- your code here 
+  -- your code here 
 end if
 </code></pre>
 
@@ -332,7 +346,7 @@ end if
 
 
 <div id="footer">
-	<div class="container">
+  <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="calendar.html">Calendaring Library</a>
 <span class="separator"> :: </span>
@@ -341,7 +355,7 @@ Previous Topic:&nbsp;&nbsp;<a href="calendar.html">Calendaring Library</a>
 Next Topic:&nbsp;&nbsp;<a href="config.html">Config Library</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -349,12 +363,14 @@ Next Topic:&nbsp;&nbsp;<a href="config.html">Config Library</a>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

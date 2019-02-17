@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "Debe especificar una imagen de origen en las preferencias." into gLang["imglib_source_image_required"]
 put "Es necesaria ImageMagick para esta característica." into gLang["imglib_im_required"]

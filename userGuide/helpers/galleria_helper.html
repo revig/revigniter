@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Galleria Helper : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all" />
+		<meta name="author" content="Ralf Bitter" />
+		<meta name='description' content='revIgniter User Guide' />
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.nav-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Galleria Helper</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container">
+	
+<div id="content">
+
+
+<h1>Galleria Helper</h1>
+
+<p>The Galleria Helper file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery framework made by <a href="https://galleria.io/" target="_blank">worse is better https://galleria.io/</a>. The helper comes in two flavors. In it's first form the helper generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the helper generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.5.7.</em></p>
+
+
+<h2>Requirements</h2>
+
+<ul>
+	<li>JQuery JavaScript file or a reference to the Google Apis CDN (recommended).</li>
+	<li>The Galleria Javascript file or a reference to the Galleria CDN at <a href="https://cdnjs.com/libraries/galleria"  target="_blank">cdnjs https://cdnjs.com/libraries/galleria</a> (recommended).</li>
+	<li>Galleria theme files (JavaScript and CSS).</li>
+	<li>A folder containing at least your gallery images. Optionally include (in case you use static image meta data) a text file (the meta data file) containing an image file name or a video URL  or an iFrame URL, optional captions (title and description), an optional image link, optional layer data and an optional reference to the original IMG element for each image you provide. Furthermore you may append a file name (a file name prepended with a root relative path for dynamically generated data respectively) for each video or iFrame your gallery supplies.   <strong>Note:</strong> This folder must be writable. See <a href="http://galleria.io/docs/references/data/" target="_blank">Using Image Data http://galleria.io/docs/references/data/</a> for further information regarding image data properties.</li>
+	<li>Optionally you can include in your images folder a folder for thumbnails called "thumb" and a folder for fullscreen mode images called "big". <strong>Note:</strong> If you need to show your own thumbnails for videos or iFrames the thumbnails folder is mandatory.</li>
+</ul>
+
+<h2>Images Folder Structure</h2>
+
+<p>/myImagesFolder<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myGalleriaCaptions.tsv<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage1.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage2.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage3.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/big<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage1.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage2.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage3.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/thumb<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage1.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage2.png<br />
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage3.png<br />
+</p>
+
+<p>The file name for your image data properties ("myGalleriaCaptions.tsv" in this case) is arbitrary but the "tsv" (tab-separated-values) suffix is mandatory. This file is only needed if you don't provide the data programmatically. If you want to provide separate images for thumbnails and fullscreen mode (recommended) include them in a folder called "thumb" and "big" respectively.</p> 
+
+<p class="important"><strong>Note:</strong> This folder must be writable. Use identical file names for standard, thumbnail and fullscreen versions of your images.</p>
+
+
+<h2>Galleria Framework Modification</h2>
+
+<p>There are minor modifications necessary in order for the helper to work properly.</p>
+<ul>
+	<li>Remove the suffix of the css property in the JavaScript file of your theme, for example replace css:"galleria.classic.css" with css:"galleria.classic".</li>
+	<li>Adjust all URLs in the CSS file of your Galleria theme according to where you store theme related images. Remember: Paths in a CSS file are always relative to the CSS file itself. Alternatively you may use full URLs.</li>
+</ul>
+
+
+<h2>The Image Data File</h2>
+
+<p>The image data file you have to provide if you use the helper in it's first form is a simple text file with a "tsv" (tab-separated-values) suffix containing a list of tab delimited Galleria image properties and has the following form for each line:</p>
+<p><strong>image file name or video URL or iFrame URL</strong>&lt;tab><strong>title</strong>&lt;tab><strong>description</strong>&lt;tab><strong>image link URL</strong>&lt;tab><strong>image HTML layer</strong>&lt;tab><strong>IMG element reference</strong>[(for videos and iFrames only)&lt;tab><strong>thumbnail file name</strong>] (for dynamically generated data prepend the thumbnail file name with a root relative path)</p>
+
+
+<h3>Data File Example</h3>
+
+
+<pre><code>
+img1.jpg	Image img1 Title	Image img1 Description			&lt;img src="http://mydomain.com/imgs/test.jpg">
+img2.jpg	Image img2 Title	Image img2 Description			&lt;img src="http://mydomain.com/imgs/test2.jpg">
+img3.jpg	Image img3 Title	Image img3 Description
+http://www.youtube.com/watch?v=GCZrz8siv4Q	Video Title	Youtube video Description
+img4.jpg	Image img4 Title	Image img4 Description
+http://aino.com	iFrame Title	iFrame Description				iFrameThumb.jpg
+img5.jpg	Image img5 Title	Image img5 Description
+</code></pre>
+
+
+<p>Keep in mind that, if you provide a data file, the only mandatory property is the image file name, video URL or iFrame Url respectively. See <a href="http://docs.galleria.io/article/134-using-image-data/" target="_blank">Using Image Data http://docs.galleria.io/article/134-using-image-data/</a> for further information regarding image data properties.</p>
+
+<p class="important"><strong>Note:</strong> Using static meta data gallery images are sorted alphabetically. Videos and iFrames are sorted according to the order determined in your meta data file.</p>
+
+
+<h2>Dynamically Generated Image Data</h2>
+
+<p>In case you don't want to use static image meta data saved on disk you may create the meta data programmatically for example from data stored in a database. Dynamically generated meta data has the same form as the static image data described above with two exception:
+	<ul>
+		<li>The first item in each line of the list is the image file name prepended with a root relative path.</li>
+		<li>The name of the thumbnail for videos and iFrames (item number seven) must be prepended with a root relative path.</li>
+	</ul>
+	</p>
+
+
+<p class="important"><strong>Note:</strong> Using dynamically created meta data gallery images are sorted according to the order determined in your meta data.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code class="lang-livecodeserver">rigLoadHelper "galleria"</code></pre>
+
+
+<br />
+
+<h2>Handler Reference</h2>
+
+<h3>rigGalleriaData(<var>pGalleryPath</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pReplaceDataFile</var>, <var>pReturnReference</var>)</h3>
+
+<ul>
+	<li>The first parameter is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
+	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://docs.galleria.io/category/28-option-list/" target="_blank">List of Options http://docs.galleria.io/category/28-option-list/</a>. The default key value pair is "height" and 420.</li>
+	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
+	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
+	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
+	<li>The optional sixth parameter is a boolean which determines whether the generated JavaScript file should be replaced every time the function is called. Defaults to FALSE.</li>
+	<li>The optional seventh parameter is a boolean which determines whether the helper should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy for example if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
+	</ul>
+	
+	<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
+
+
+<h3>rigDynamicGalleriaData(<var>pMetaData</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>)</h3>
+
+<ul>
+	<li>The first parameter is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
+	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "http://docs.galleria.io/category/28-option-list/" target="_blank">List of Options http://docs.galleria.io/category/28-option-list/</a>. The default key value pair is "height" and 420.</li>
+	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
+	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
+	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
+	</ul>
+	
+	<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.</p>
+
+
+<p class="important"><strong>Note:</strong> If you place more than one gallery on a page you need to include the third and fourth parameter as you need different IDs and variable names for each gallery. This applies to both functions.</p>
+
+
+<p class="important"><strong>Note:</strong> Enclose literal Galleria option values with single quotes and double quotes like: put "'galleriaIn'" into tOptions["easing"]. This applies to both functions.</p>
+
+
+<h2>Gallery Example (Using Static Meta Data)</h2>
+
+<p>For this example put your gallery images and your image properties file in <kbd>assets/img/galleriaPics</kbd>, this path is arbitrary for your own projects though. Download the Galleria framework. Put the file galleria-1.4.7.min.js in <kbd>assets/js</kbd>. Assuming you use the Galleria classic theme put a modified version (see above) of galleria.classic.min.js in <kbd>assets/js</kbd>. Put a modified version (see above) of galleria.classic.css in <kbd>assets/css</kbd>. Create the following view file and let's call it <dfn>galleriaView.lc</dfn>:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
+	&lt;head>
+		&lt;meta charset="utf-8">
+
+		&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+
+		&lt;? return rigCssAsset("galleria.classic.css") ?>
+
+	&lt;/head>
+	&lt;body>
+
+		&lt;div class="content">
+			&lt;div id="galleria">&lt;/div>
+		&lt;/div>
+
+		&lt;? return rigJsAsset("jsGoogleapis-jquery-1.7.1") ?>
+		&lt;? return rigJsAsset("galleria-1.4.7.min.js") ?>
+		&lt;? return rigJsAsset("galleria.classic.min.js") ?>
+		&lt;? return rigGalleriaData("assets/img/galleriaPics") ?>
+
+	&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+<p><strong>Note:</strong> rigGalleriaData("assets/img/galleriaPics") returns a reference to a Galleria JSON array including Galleria initialization code, or false on failure.</p>
+
+<p>Now create a controller called <dfn>galleria.lc</dfn>:</p>
+
+<div class="codeSample">
+<pre><code>&lt;?lc
+
+put "galleria,index" into gControllerHandlers
+
+
+command galleria
+	rigLoadHelper "asset"
+	rigLoadHelper "galleria"
+end galleria
+
+
+command index
+	# SET PAGE TITLE
+	put "Galleria Helper Example" into gData["pageTitle"]
+
+	# LOAD THE VIEW FILE
+	get rigLoadView("galleriaView")
+end index
+
+
+
+--| END OF galleria.lc
+--| Location: ./system/application/controllers/galleria.lc
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+
+<h3>Try it!</h3>
+
+<p>To view your gallery, visit your site using a URL similar to this one:</p>
+
+<pre><code>example.com/index.lc/<var>galleria</var>/</code></pre>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="formmail_helper.html">Form-Mail Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="markdown_helper.html">Markdown Helper</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+	</div>
+</div>
+
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

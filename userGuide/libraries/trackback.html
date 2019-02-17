@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,9 +91,6 @@
 <p>The Trackback Library provides handlers that enable you to send and receive Trackback data. If you are not familiar with Trackbacks you'll find more information <a href="http://en.wikipedia.org/wiki/Trackback" target="_blank">here</a>.</p>
 
 
-<p class="important"><strong>Note:</strong> On Linux this library requires LiveCode server version 7.1.0 RC 1 or higher. On Mac OS X Trackback should work as expected since server version 7.0.1.</p>
-
-
 <h2>Initializing the Library</h2>
 
 <p>Like most other libraries in revIgniter, the Trackback library is initialized in your controller using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
@@ -109,6 +106,7 @@
 
 <p>and code similar to this example:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Trackback"
 
 put "http://example.com/trackback/receive/456" into tTBdataArray["ping_url"]
@@ -125,6 +123,7 @@ else
 end if
 
 </code></pre>
+</div>
 
 
 <p>Description of array data:</p>
@@ -183,6 +182,7 @@ Ping URLs will look something like this:</p>
 
 <p>Before you can receive Trackbacks you must create a table in which to store them.  Here is a basic prototype for such a table:</p>
 
+<div class="codeSample">
 <pre><code># Table structure for trackback
 # ------------------------------------------------------------
 
@@ -199,6 +199,7 @@ CREATE TABLE `trackbacks` (
  KEY `entry_id` (`entry_id`)
 );
 </code></pre>
+</div>
 
 
 <p>The Trackback specification only requires four pieces of information to be sent in a Trackback (url, title, excerpt, blog_name),
@@ -209,6 +210,7 @@ but to make the data more useful we've added a few more fields in the above tabl
 <p>Here is an example showing how you will receive and process a Trackback.  The following
 code is intended for use within the controller handler where you expect to receive Trackbacks.</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Trackback"
 get rigLoadDatabase()
 
@@ -233,6 +235,7 @@ get rigDbQuery(tSQL)
 
 rigTrackbackSendSuccess
 </code></pre>
+</div>
 
 <h4>Notes:</h4>
 
@@ -278,6 +281,7 @@ It returns TRUE on success and FALSE on failure.  If it fails you will issue an 
 
 <p>Example:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Trackback"
 get rigLoadDatabase()
 
@@ -312,7 +316,7 @@ else
   rigTrackbackSendError "The Trackback page has no link to the corresponding blog entry."
 end if
 </code></pre>
-
+</div>
 
 
 </div>
@@ -345,6 +349,8 @@ Next Topic:&nbsp;&nbsp;<a href="uri.html">URI Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

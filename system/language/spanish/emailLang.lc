@@ -1,4 +1,4 @@
-<?rev
+<?lc
 
 put "El método de validación de correo debe ser pasado como un array." into gLang["email_must_be_array"]
 put "Dirección de correo no válida: %s" into gLang["email_invalid_address"]

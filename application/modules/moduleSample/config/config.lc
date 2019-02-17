@@ -1,0 +1,37 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+
+##
+# -------------------------------------------------------------------
+# SETTING A MODULE'S CONFIGURATION VALUE
+# -------------------------------------------------------------------
+#
+# To add configuration data related to your module use
+# the module name as array key.
+##
+
+	put "foo" into gConfig["sampleModule"]["bar"]
+  
+  
+##
+# -------------------------------------------------------------------
+# OVERRIDING A GLOBAL CONFIGURATION VALUE
+# -------------------------------------------------------------------
+#
+# To override global configuration data just omit the
+# module's name as array key.
+##
+
+  put "french" into gConfig["language"]
+  
+  
+
+
+--| END OF config.lc
+--| Location: ./application/modules/sampleModule/config/config.lc
+----------------------------------------------------------------------

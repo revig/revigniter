@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,14 +90,14 @@
 
 <p>The following graphic illustrates how data flows throughout the system:</p>
 
-<div class="clearfix"><img src="../images/appflowchart.jpg" class="img-responsive pull-left" border="0" alt="revIgniter application flow" /></div>
+<div class="clearfix"><img src="../images/appflowchart.png" class="img-responsive pull-left" border="0" alt="revIgniter application flow" /></div>
 
 <ol>
 <li>The index.lc serves as the front controller, initializing the base resources needed to run revIgniter.</li>
 <li>The Router examines the HTTP request to determine what should be done with it.</li>
 <li>If a cache file exists, it is sent directly to the browser, bypassing the normal system execution.</li>
 <li>Security.  Before the application controller is loaded, the HTTP request and any user submitted data is filtered for security.</li>
-<li>The Controller loads the model, core libraries, plugins, helpers, and any other resources needed to process the specific request.</li>
+<li>The Controller loads the model, core libraries, helpers, and any other resources needed to process the specific request.</li>
 <li>The finalized View is rendered then sent to the web browser to be seen. If caching is enabled, the view is cached first so
 that on subsequent requests it can be served.</li>
 </ol>

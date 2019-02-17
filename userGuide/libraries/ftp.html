@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -108,7 +108,7 @@
 
 <p>The FTP Library is initialized in your controller like most other libraries in revIgniter using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 
-<pre><code>rigLoaderLoadLibrary "Ftp"
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Ftp"
 </code></pre>
 
 <h2 id="toc_2">Setting FTP Preferences</h2>
@@ -117,12 +117,14 @@
 
 <p>Preferences are set by passing an array of preference values to the ftp <dfn>rigInitializeFTP</dfn> handler. Following an example of how you might set ftp preferences:</p>
 
+<div class="codeSample">
 <pre><code>put "ftp.example.com/" into tFtpConfA["hostname"]
 put "me" into tFtpConfA["username"]
 put "myPassword" into tFtpConfA["password"]
 put TRUE into tFtpConfA["asyncRequest"]
 
 rigInitializeFTP tFtpConfA</code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> Many preferences have default values that will be used if you do not set them.</p>
 
@@ -134,6 +136,7 @@ At the end of the file write: <dfn>rigRunInitialFtpConfig yourArrayVariableName<
 at <var>config/ftp.lc</var> and it will be used automatically. You will NOT need to use the <dfn>rigInitializeFTP</dfn>
 handler if you save your preferences in a config file. Example:</p>
 
+<div class="codeSample">
 <pre><code>local sFtpConfA
 
 put "ftp.example.com/" into sFtpConfA["hostname"]
@@ -142,6 +145,7 @@ put "myPassword" into sFtpConfA["password"]
 put TRUE into sFtpConfA["asyncRequest"]
 
 rigRunInitialFtpConfig sFtpConfA</code></pre>
+</div>
 
 <h2 id="toc_5">Preferences</h2>
 
@@ -253,6 +257,7 @@ rigRunInitialFtpConfig sFtpConfA</code></pre>
 
 <p>The following example shows how to upload a local file to the FTP server. The file permissions are set to 755.</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Ftp"
 
 put "ftp.example.com/" into tFtpConfA["hostname"]
@@ -267,9 +272,11 @@ put "remotefolder/remotefile.pdf" into tRemPath
 rigFtpUpload tLocPath, tRemPath, FALSE, TRUE, 0755
 
 put the result into gData["responseData"]</code></pre>
+</div>
 
 <p>This example shows how to retrieve a list of files from the server.</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Ftp"
 
 put "ftp.example.com/" into tFtpConfA["hostname"]
@@ -281,9 +288,11 @@ rigInitializeFTP tFtpConfA
 rigFtpListFiles "remote/path"
 
 put the result into gData["responseData"]</code></pre>
+</div>
 
 <p>This example shows how to mirror a local directory on the server.</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Ftp"
 
 put "ftp.example.com/" into tFtpConfA["hostname"]
@@ -298,6 +307,7 @@ put "remote/mirroredDirectory" into tRemPath
 rigFtpMirror tLocPath, tRemPath
 
 put the result into gData["responseData"]</code></pre>
+</div>
 
 <h2 id="toc_7">Handler Reference</h2>
 
@@ -315,7 +325,7 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Add the following to your view file:</p>
 
-<pre><code>[[gData["debugData"] ]]
+<pre><code>[[gData["debugData"]]]
 </code></pre>  
 
 <h3 id="toc_9">rigFtpUpload <var>pLocalPath</var>, <var>pRemotePath</var>, <var>pData</var>, <var>pCreateMissingDirs</var>, <var>pPermissions</var></h3>
@@ -555,6 +565,8 @@ Next Topic:&nbsp;&nbsp;<a href="table.html">HTML Table Library</a></p>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 </body>
 </html>

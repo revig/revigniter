@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -102,6 +102,7 @@
 Note that the first array index will become the table heading (or you can set your own headings using the
 <dfn>rigSetTableHeading</dfn> handler described in the handler reference below).</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Table"
 
 put "Name" into tData[1][1]
@@ -122,11 +123,13 @@ put "Medium" into tData[4][3]
 
 put rigGenerateTable(tData) into gData["testTable"]		
 </code></pre>
+</div>
 
 <p>Here is an example of a table created from a database query result. The Table library will automatically generate the
 headings based on the table names (or you can set your own headings using the <dfn>rigSetTableHeading</dfn> handler described
 in the handler reference below).</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Table"
 
 put rigDbQuery("SELECT * FROM mytable") into tQuery
@@ -134,10 +137,12 @@ put tQuery["resultarray"] into tResult
 
 put rigGenerateTable(tResult) into gData["testTable"]		
 </code></pre>
+</div>
 
 
 <p>Here is an example showing how you might create a table using discrete parameters:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Table"
 
 rigSetTableHeading "Name,Color,Size"
@@ -148,9 +153,11 @@ rigAddTableRow "John,Green,Medium"
 
 put rigGenerateTable() into gData["testTable"]		
 </code></pre>
+</div>
 
 <p>Here is the same example, except instead of individual parameters, arrays are used:</p>
 
+<div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Table"
 
 put "Name" into tHeading[1]
@@ -175,6 +182,7 @@ rigAddTableRow tRow
 
 put rigGenerateTable() into gData["testTable"]		
 </code></pre>
+</div>
 
 
 <h2>Changing the Look of Your Table</h2>
@@ -182,6 +190,7 @@ put rigGenerateTable() into gData["testTable"]
 <p>The Table Library permits you to set a table template with which you can specify the design of your layout.  Here is the template
 prototype:</p>
 
+<div class="codeSample">
 <pre><code>put "&lt;table border=" &amp; quote &amp; "0" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "4" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "0" &amp; quote &amp; ">" into tTmpl["tableOpen"]
 put "&lt;tr>" into tTmpl["headingRowStart"]
 put "&lt;/tr>" into tTmpl["headingRowEnd"]
@@ -202,6 +211,7 @@ put "&lt;/table>" into tTmpl["tableClose"]
 
 rigSetTableTemplate tTmpl
 </code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong>&nbsp; You'll notice there are two sets of "row" blocks in the template.  These permit you to create alternating row colors or design elements that alternate with each
 iteration of the row data.</p>
@@ -209,10 +219,12 @@ iteration of the row data.</p>
 <p>You are NOT required to submit a complete template.  If you only need to change parts of the layout you can simply submit those elements.
 In this example, only the table opening tag is being changed:</p>
 
+<div class="codeSample">
 <pre><code>put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
 
 rigSetTableTemplate tTmpl
 </code></pre>
+</div>
 
 <br />
 <h2>Handler Reference</h2>
@@ -358,6 +370,8 @@ Next Topic:&nbsp;&nbsp;<a href="image_lib.html">Image Manipulation Library</a>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>

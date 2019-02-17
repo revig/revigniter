@@ -1,0 +1,84 @@
+<?lc
+if gRigA is not an array then
+	put "No direct script access allowed."
+	exit to top
+end if
+
+
+##
+#-------------------------------------------------------------------------
+# URI ROUTING
+#-------------------------------------------------------------------------
+# Note: The following applies to modules only if used as application controllers.
+# Routing has no effect on view partials or if modules are used as libraries.
+#
+# This file lets you re-map URI requests to specific controller functions.
+#
+# Typically there is a one-to-one relationship between a module URL string
+# and its corresponding controller page library/handler. The segments in a
+# module URL normally follow this pattern:
+#
+#   example.com/myModule/handler/ID/
+#
+# or in case the name of the page library is not equal to the module name
+#
+#   example.com/myModule/pagelibrary/handler/ID/
+#
+# or using a sub-directory in myModule/controllers
+#
+#   example.com/myModule/sub-directory/pagelibrary/handler/ID/
+#
+# In some instances, however, you may want to remap this relationship
+# so that a different page library/handler is called than the one
+# corresponding to the URL.
+#
+# Please see the user guide for complete details:
+#
+#	http://revigniter.com/user_guide/general/routing.html
+# and
+# http://revigniter.com/user_guide/libraries/modules.html
+#
+#-------------------------------------------------------------------------
+# RESERVED ROUTES
+# -------------------------------------------------------------------------
+#
+# There are only two reserved routes for modules:
+#
+#	put "myModule/pagelibrary" into gRoute["myModule"][1]["defaultController"] 
+#
+# This route indicates which controller page library should be loaded if the
+# URI contains no data. In the above example, the "pagelibrary" page library
+# would be loaded.
+# If the "defaultController" route is empty and there is only one URI segment specifying
+# the name of the module revIgniter expects that there is a controller named after
+# the module and tries to load myModule/myModule.
+# If no handler is specified the module's index handler is called which must be composed
+# of the controller name followed by the word "Index" so that the route would look like:
+# myModule/myModule/myModuleIndex.
+#
+#	put "" into gRoute["myModule"][1]["404Override"]
+#
+# This route will tell the Router what URI segments to use if those
+# provided in the URL cannot be matched to a valid route, in other words if the controller
+# specified is missing. If this route is empty the default 404 error page is provided.
+#
+# Note: Module routes are relative to application/modules/.
+#
+# Note: The gRoute["myModule"] array must be numbered and the key number
+# for reserved routes must be 1. So custom route key numbers start
+# with number 2.
+#
+##
+
+
+
+
+put "" into gRoute["moduleSample"][1]["defaultController"]
+put "" into gRoute["moduleSample"][1]["404Override"]
+
+
+
+
+--| END OF routes.lc
+--| Location: ./application/modules/moduleSample/config/routes.lc
+----------------------------------------------------------------------

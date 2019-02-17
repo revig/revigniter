@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Controllers : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Controllers : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
-		    <script src="../js/respond.min.js"></script>
-		<![endif]-->
+    <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
 
-	</head>
+  </head>
 <body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -38,43 +38,43 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
         </div><!--/.nav-collapse -->
      </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Controllers</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">Controllers</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
   </div>
 <!-- END PAGE HEAD -->
 
@@ -82,7 +82,7 @@
 
 <!-- START CONTENT -->
 <div class="container">
-	
+  
 <div id="content">
 
 <h1>Controllers</h1>
@@ -123,16 +123,17 @@
 
 <p>Let's create a simple controller so you can see it in action.  Using your text editor, create a file called <dfn>blog.lc</dfn>, and put the following code in it:</p>
 
+<div class="codeSample">
+<pre><code>&lt;?lc
 
-<pre><code>&lt;?rev
-
-# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+# PUT YOUR HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index" into gControllerHandlers
 
 command index
-	put "Hello World!"
+  put "Hello World!"
 end index
 </code></pre>
+</div>
 
 
 <p>Then save the file to your <dfn>application/controllers/</dfn> folder.</p>
@@ -147,7 +148,7 @@ end index
 <a name="handlers"></a>
 <h2>Handlers</h2>
 
-<p>In the above example the handler name is <dfn>index()</dfn>.  The "index" handler is always loaded by default if the
+<p>In the above example the handler name is <dfn>index</dfn>.  The "index" handler is always loaded by default if the
 <strong>second segment</strong> of the URI is empty.  Another way to show your "Hello World!" message would be this:</p>
 
 <pre><code>example.com/index.lc/<var>blog</var>/<samp>index</samp>/</code></pre>
@@ -157,19 +158,21 @@ end index
 <p>Let's try it.  Add a new handler to your controller:</p>
 
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,comments" into gControllerHandlers
 
 command index
-	put "Hello World!"
+  put "Hello World!"
 end index
 
 command comments
-	put "Look at this!"
+  put "Look at this!"
 end comments
 </code></pre>
+</div>
 
 
 <p class="important"><strong>Important:</strong>&nbsp; Don't forget to add the name of your new handler to the comma separated list of the variable gControllerHandlers.</p>
@@ -193,15 +196,17 @@ end comments
 
 <p>The function rigFetchSegment(3) will return "sandals" and rigFetchSegment(4) will return "123" (URI segments 3 and 4):</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,shoes" into gControllerHandlers
 
 command shoes
-	put rigFetchSegment(3) && rigFetchSegment(4)
+  put rigFetchSegment(3) && rigFetchSegment(4)
 end shoes
 </code></pre>
+</div>
 
 <p class="important"><strong>Important:</strong>&nbsp; If you are using the <a href="routing.html">URI Routing</a> feature, the re-routed segments
 must be retrieved using the rigFetchRsegment() function.</p>
@@ -214,10 +219,10 @@ must be retrieved using the rigFetchRsegment() function.</p>
 as will be the case when only your site root URL is requested.  To specify a default controller, open
 your <dfn>application/config/routes.lc</dfn> file and set this variable:</p>
 
-<pre><code>put "<var>Blog</var>" into gRoute[1]["defaultController"]</code></pre>
+<pre><code>put "<var>blog</var>" into gRoute[1]["defaultController"]</code></pre>
 
 
-<p>Where <var>Blog</var> is the name of the controller library you want used. If you now load your main index.lc file without
+<p>Where <var>blog</var> is the name of the controller library you want used. If you now load your main index.lc file without
 specifying any URI segments you'll see your Hello World message by default.</p>
 
 
@@ -229,7 +234,7 @@ specifying any URI segments you'll see your Hello World message by default.</p>
 revIgniter permits you to override this behavior through the use of the <kbd>_remap</kbd> handler:</p>
 
 <pre><code>command _remap
-	-- Some code here...
+  -- Some code here...
 end _remap
 </code></pre>
 
@@ -240,11 +245,11 @@ allowing you to define your own handler routing rules.</p>
 <p>The overridden handler call (typically the second segment of the URI) will be passed as a parameter to the _remap handler:</p>
 
 <pre><code>command _remap pHandler
-	if pHandler is "someHandler" then
-		do handler
-	else
-		do defaultHandler
-	end if
+  if pHandler is "someHandler" then
+    do handler
+  else
+    do defaultHandler
+  end if
 end _remap
 </code></pre>
 
@@ -266,7 +271,7 @@ be called by the output library instead of puting the finalized data directly. T
 <p>Here is an example:</p>
 
 <pre><code>command _output pOutput
-	put pOutput
+  put pOutput
 end _output
 </code></pre>
 
@@ -283,7 +288,7 @@ since it will not take into acccount any further processing you do.  For an alte
 underscore as the name prefix and it will not be served via a URL request. For example, if you were to have a handler like this:</p>
 
 <pre><code>command _utility
-	-- some code
+  -- some code
 end _utility
 </code></pre>
 
@@ -328,22 +333,24 @@ See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 <a name="good"></a>
 <h2>Good Practice</h2>
 
-<p>It is good practice, though not mandatory, to load all needed libraries, models, helpers and plugins in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, plugins, models, a database etc.
+<p>It is good practice, though not mandatory, to load all needed libraries, databases, stacks, helpers, extensions, custom config files, 
+language files and models in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, models, a database etc.
 Let's say your controller is called "blog.lc", then your code would look like this:</p>
 
-<pre><code>&lt;?rev
+<div class="codeSample">
+<pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,blog" into gControllerHandlers
 
 
 command blog
-	# LOAD REQUIRED LIBRARIES, MODELS, HELPERS, PLUGINS
+  # LOAD REQUIRED LIBRARIES, MODELS, HELPERS ETC.
 end blog
 
 command index
-	# REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
-	-- do something here
+  # REMEMBER TO PUT ALL THE VARIABLES TO BE MERGED WITH VIEWS INTO THE ARRAY VARIABLE gData
+  -- do something here
 end index
 
 
@@ -352,6 +359,7 @@ end index
 --| Location: ./system/application/controllers/blog.lc
 ----------------------------------------------------------------------
 </code></pre>
+</div>
 
 
 <h2>That's it!</h2>
@@ -367,7 +375,7 @@ end index
 
 
 <div id="footer">
-		<div class="container">
+    <div class="container">
 <p>
 Previous Topic:&nbsp;&nbsp;<a href="urls.html">revIgniter URLs</a>
 <span class="separator"> :: </span>
@@ -375,7 +383,7 @@ Previous Topic:&nbsp;&nbsp;<a href="urls.html">revIgniter URLs</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a></p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
+  </div>
 </div>
 
 <script src="../js/jquery-1.9.1.min.js"></script>
@@ -383,12 +391,14 @@ Next Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a></p>
 
 <script src="../js/highlight.pack.js"></script>
  <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
  </script>
 
 <script src="../js/script-ck.js"></script>
 <script>$(function() { Slidebox.init(); });</script>
+
+<script src="../js/clipboard-ck.js"></script>
 
 
 </body>
