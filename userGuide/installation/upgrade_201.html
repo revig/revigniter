@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Upgrading from 1.5.14b to 1.5.15b : revIgniter User Guide</title>
+		<title>Upgrading from 2.0.0 to 2.0.1 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Upgrading from 1.5.14b to 1.5.15b</li>
+			 		 	<li class="active">Upgrading from 2.0.0 to 2.0.1</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -85,37 +85,31 @@
 	
 <div id="content">
 
-<h1>Upgrading from 1.5.14b to 1.5.15b</h1>
+<h1>Upgrading from 2.0.0 to 2.0.1</h1>
 
 
-<p>Before performing an update you should take your site offline by replacing the index.irev file with a static one.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
 
 <h2>Step 1: Update your revIgniter files</h2>
 
 
-<p>Replace this file in your "system/scaffolding" folder with the new version:</p>
-<a href="upgrade_1516b.html" id="" title="upgrade_1516b">upgrade_1516b</a>
-<ul>
-	<li><dfn>Scaffolding.lc</dfn></li>
-</ul>
-
-<p>Replace this file in your "system/libraries" folder with the new version:</p>
+<p>Replace this file in your <kbd>application/modules/modulesample/config</kbd> folder with the new version:</p>
 
 <ul>
-	<li><dfn>Table.lc</dfn></li>
+	<li><dfn>autoload.lc</dfn></li>
 </ul>
 
+<p>If you modified the autoload file in <kbd>application/config</kbd> add the following variable declaration:</p>
 
+<pre><code class="lang-livecodeserver">global gAutoload</code></pre>
 
-<p>Replace these files in your "system/plugins" folder with the new versions:</p>
+<p>otherwise just replace this file in your <kbd>application/config</kbd> folder with the new version:</p>
 
 <ul>
-	<li><dfn>queryvaluesPi.lc</dfn></li>
-	<li><dfn>querytojsonPi.lc</dfn></li>
+	<li><dfn>autoload.lc</dfn></li>
 </ul>
-
 
 
 <p>Replace this file in your "system/revigniter" folder with the new version:</p>
@@ -123,6 +117,7 @@
 <ul>
 	<li><dfn>RevIgniter.lc</dfn></li>
 </ul>
+
 
 
 <h2>Step 2: Update your user guide</h2>
