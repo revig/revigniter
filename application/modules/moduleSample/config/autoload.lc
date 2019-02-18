@@ -35,6 +35,9 @@ end if
 ##
 
 
+global gModuleAutoload
+
+
 ##
 # -------------------------------------------------------------------
 #  Auto-load Libraries / Database
