@@ -34,7 +34,8 @@ end if
 #
 ##
 
-# DECLARE VARIABLES
+
+global gAutoload
 local sAutoLibraries, sAutoStacks, sAutoHelper, sAutoCustConfigs, sAutoLangFiles, sAutoModels, sAutoExtensions
 
 
