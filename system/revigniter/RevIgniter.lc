@@ -71,7 +71,7 @@ end if
 #------------------------------------------------------
 ##
 
-	start using stack "/Users/rabit/Sites/livecodeServer/system/revigniter/Common.livecodescript"
+	start using stack (gRigA["BASEPATH"] & "revigniter/Common.livecodescript")
 
 
 ##
