@@ -103,10 +103,10 @@
 	put sTempFileName into gRigA["SELF"]
 	put gRigA["systemFolder"] & "/" into gRigA["BASEPATH"]
 
-	if char 1 of gRigA["applicationFolder"] is "/" then
+	if (char 1 of gRigA["applicationFolder"] is "/") or ((sIsWin is TRUE) and (char 2 of gRigA["applicationFolder"] is ":")) then
 		# Absolute path
 		-- constant APPPATH = gRigA["applicationFolder"] & "/"
-		put gRigA["applicationFolder"] into gRigA["APPPATH"]
+		put gRigA["applicationFolder"] & "/" into gRigA["APPPATH"]
 	else
 		# Relative path
 		if gRigA["applicationFolder"] is "" then put "application" into gRigA["applicationFolder"]
