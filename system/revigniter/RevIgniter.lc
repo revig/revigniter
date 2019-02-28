@@ -174,6 +174,7 @@ end if
   put tRigControllerDir & gRigA["controller"] & gRigA["EXT"] into tControllerPath
 	
   if tRigControllerDir is empty then
+	# CONTROLLER DIRECTORY WAS NOT FOUND, COMPOSE PATH TO 404 ERROR FILE
     if gRigA["module"] is empty then 
       put "controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
       put "controllers/" into tRigControllerDir
@@ -328,11 +329,11 @@ end if
 			_remap gRigA["handler"]
 		else
 
-			# CHECK IF gRigA["handler"] IS IN CONTROLLER
+			# CHECK IF HANDLER gRigA["handler"] IS IN CONTROLLER
 			if (gRigA["handler"] <> empty) and ((gRigA["handler"] is not among the items of gControllerHandlers) or (gRigA["handler"] is gRigA["controller"])) then
-				
+				# HANDLER gRigA["handler"] IS NOT DEFINED IN THE CONTROLLER
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
-				if tRig404Override  <> empty then
+				if tRig404Override <> empty then
 
 					put tRig404Override into t404ErrorSegments
 
