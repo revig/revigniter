@@ -175,15 +175,7 @@ end if
 	
   if tRigControllerDir is empty then
 	# CONTROLLER DIRECTORY WAS NOT FOUND, COMPOSE PATH TO 404 ERROR FILE
-    if gRigA["module"] is empty then 
-      put "controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
-      put "controllers/" into tRigControllerDir
-      put gRoute[1]["404Override"] into tRig404Override
-    else
-      put "modules/" & gRigA["module"] & "/controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
-      put "modules/" & gRigA["module"] & "/controllers/" into tRigControllerDir
-      put gRoute[gRigA["module"]][1]["404Override"] into tRig404Override
-    end if
+    _rigPrepare404Error
   end if
 
 	if there is a file (gRigA["APPPATH"] & tControllerPath) then
@@ -235,6 +227,7 @@ end if
 	if (gRigA["controller"] is empty) or (gRigA["handler"] Is "controller") or (gRigA["handler"] begins with "_") or (toLower(gRigA["handler"]) is among the items of toLower(rigFetchControllerLibHandlers())) then
 
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
+		_rigPrepare404Error
 		if tRig404Override <> empty then
 
 			put tRig404Override into t404ErrorSegments
@@ -286,6 +279,7 @@ end if
 	if (the result is not empty) and (gRigA["handler"] is not among the items of gControllerHandlers) then
 		
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
+		_rigPrepare404Error
 		if tRig404Override <> empty then
 			
 			put tRig404Override into t404ErrorSegments
@@ -333,6 +327,7 @@ end if
 			if (gRigA["handler"] <> empty) and ((gRigA["handler"] is not among the items of gControllerHandlers) or (gRigA["handler"] is gRigA["controller"])) then
 				# HANDLER gRigA["handler"] IS NOT DEFINED IN THE CONTROLLER
 				# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF A ROUTING RULE IS DEFINED FOR 404 ERRORS
+				_rigPrepare404Error
 				if tRig404Override <> empty then
 
 					put tRig404Override into t404ErrorSegments
@@ -383,6 +378,27 @@ end if
 
 	# MARK A BENCHMARK END POINT
 	rigTimeMark "controllerExecutionTime_" & gRigA["controller"] &  "/" & gRigA["handler"] & "_end"
+
+
+
+##
+#------------------------------------------------------
+#  Get path to the 404 error file
+#------------------------------------------------------
+##
+
+  command _rigPrepare404Error
+    if gRigA["module"] is empty then 
+      put "controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
+      put "controllers/" into tRigControllerDir
+      put gRoute[1]["404Override"] into tRig404Override
+    else
+      put "modules/" & gRigA["module"] & "/controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
+      put "modules/" & gRigA["module"] & "/controllers/" into tRigControllerDir
+      put gRoute[gRigA["module"]][1]["404Override"] into tRig404Override
+    end if
+  end _rigPrepare404Error
+
 
 
 ##
