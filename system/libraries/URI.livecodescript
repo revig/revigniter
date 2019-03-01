@@ -103,10 +103,11 @@ function _rigFetchUriString
   local tUriString, tPath, tUri
   
 	if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO" then
-		# IF THE URL HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
-		# BUILD THE URI STRING FROM THE ZERO INDEX OF THE $_GET ARRAY.
-		# THIS AVOIDS HAVING TO DEAL WITH $_SERVER VARIABLES, WHICH
-		# CAN BE UNRELIABLE IN SOME ENVIRONMENTS
+		# IF index.lc IS NOT INCLUDED IN THE URL OR IF THE URL
+		# HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
+		# BUILD THE URI STRING FROM INDEX 1 OF THE $_GET ARRAY.
+		# THIS AVOIDS HAVING TO DEAL WITH $_SERVER VARIABLES,
+		# WHICH CAN BE UNRELIABLE IN SOME ENVIRONMENTS
 		if ($_GET is an array) and (the number of lines in the keys of $_GET is 1) then
 			put line 1 of the keys of $_GET into tUriString
 
