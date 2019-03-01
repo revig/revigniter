@@ -533,9 +533,9 @@ end _rigDisplay
 --| COMMAND _rigWriteCache
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-07-25
---| Last Mod: 2019-02-11
+--| Last Mod: 2019-02-28
 --| Requires: rigFetchConfigItem(), rigCanWriteFileTo(), rigHexDigest(), rigLogMessage
 --|
 --| Summary:  Write a cache file.
@@ -573,7 +573,7 @@ private command _rigWriteCache pOutput
   -- open file tCachePath for tCharset text write
   
 	if the result is empty then -- success!
-		put gRigA["BASEPATH"] & "cache/flock.txt" into tFlockPath
+		put gRigA["APPPATH"] & "cache/flock.txt" into tFlockPath
 
 		# CHECK IF CACHE FILE IS LOCKED BY ANOTHER CONNECTION
 		if there is a file tFlockPath then
