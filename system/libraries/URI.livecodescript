@@ -462,9 +462,9 @@ end _rigRemoveUrlSuffix
 --| COMMAND _rigExplodeSegments
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 19-06-09
---| Last Mod: 01-12-15
+--| Version:  1.3
+--| Created: 2009-06-19
+--| Last Mod: 2019-03-01
 --| Requires: rigTrim(), _rigFilterUri(), rigUriString()
 --|
 --| Summary:  Explode the URI Segments. The individual segments will
@@ -497,7 +497,13 @@ command _rigExplodeSegments
 			
 			# FILTER SEGMENTS FOR SECURITY
 			put _rigFilterUri(tTempStr) into tTempStr
-			if tTempStr <> "" then
+
+			# IF index.lc IS INCLUDED IN THE URL THEN sUriString IS
+			# DERIVED FROM A $_SERVER VARIABLE. AS THIS CAN BE
+			# UNRELIABLE IN SOME ENVIRONMENTS tTempStr (item i of sUriString)
+			# MAY INCLUDE index.lc. SO WE ADD tTempStr TO gRigA["segments"]
+			# ONLY IF tTempStr IS NOT index.lc.
+			if tTempStr <> "" and tTempStr <> gConfig["indexPage"] then
 				add 1 to tNumKeys
 				put tTempStr into gRigA["segments"][tNumKeys]
 			end if
