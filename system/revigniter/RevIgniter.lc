@@ -370,7 +370,7 @@ end if
 				_rigDo sHandler
 			else
 				_rigDo gRigA["handler"]
-			end if -- if (the number of lines in the keys of gRSegments) > 2 then
+			end if -- if (the number of lines in the keys of gRigA["rSegments"]) > 2 then
 		end if -- if "_remap" is among the items of gControllerHandlers then
 	
 	end if -- if it is TRUE then
