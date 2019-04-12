@@ -1,12 +1,13 @@
 .DS_Store
 
 .htaccess
+.editorconfig
 
-system/cache/*
-!system/cache/index.html
+application/cache/*
+!application/cache/index.html
 
-system/logs/*
-!system/logs/index.html
+application/logs/*
+!application/logs/index.html
 
 system/temp/*
 !system/temp/index.html
