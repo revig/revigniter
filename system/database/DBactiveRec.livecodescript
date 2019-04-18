@@ -47,12 +47,12 @@ local sActiveRecord, sStackInUse
  --| Requires: _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -62,12 +62,12 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -88,7 +88,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -144,7 +144,7 @@ end _rigSetDefaultValues
 --| Requires: rigSetDBdriverSetting, rigTrim()
 --|
 --| Summary: Generates the SELECT portion of the query.
---| 
+--|
 --| Format:  rigDbSelect param1, param2
 --|
 --| Parameters: mixed <pSelect>, bool <pEscape> should field or table names be protected with backticks
@@ -156,18 +156,18 @@ command rigDbSelect pSelect pEscape
   local tSelect, tKey, tIncr, tVal, tSelectsNum, tNewSelectsNum
   local tCacheSelectsNum, tNewCacheSelectsNum, tCacheExistsNum
   local tNewCacheExistsNum
-  
+
 	if pSelect is empty then
 		put "*" into tSelect
 	else
 		put pSelect into tSelect
 	end if
 
-	# SET THE GLOBAL VALUE IF THIS WAS SEPECIFIED	
+	# SET THE GLOBAL VALUE IF THIS WAS SEPECIFIED
 	if pEscape is a boolean then
 		rigSetDBdriverSetting "protectIdentifiers", pEscape
 	end if
-		
+
 	if tSelect is not an array then
 		split tSelect using comma
 	end if
@@ -214,7 +214,7 @@ end rigDbSelect
 --| Requires: _rigMaxMinAvgSum
 --|
 --| Summary: Generates a SELECT MAX(field) portion of a query.
---| 
+--|
 --| Format:  rigSelectMax param1, param2
 --|
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
@@ -242,7 +242,7 @@ end rigSelectMax
 --| Requires: _rigMaxMinAvgSum
 --|
 --| Summary: Generates a SELECT MIN(field) portion of a query.
---| 
+--|
 --| Format:  rigSelectMin param1, param2
 --|
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
@@ -270,7 +270,7 @@ end rigSelectMin
 --| Requires: _rigMaxMinAvgSum
 --|
 --| Summary: Generates a SELECT AVG(field) portion of a query.
---| 
+--|
 --| Format:  rigSelectAvg param1, param2
 --|
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
@@ -299,7 +299,7 @@ end rigSelectAvg
 --| Requires: _rigMaxMinAvgSum
 --|
 --| Summary: Generates a SELECT SUM(field) portion of a query.
---| 
+--|
 --| Format:  rigSelectSum param1, param2
 --|
 --| Parameters: string<pSelect> the field, string<pAlias> an alias
@@ -332,7 +332,7 @@ end rigSelectSum
 --|                    rigSelectMin
 --|                    rigSelectAvg
 --|                    rigSelectSum
---| 
+--|
 --| Format:  _rigMaxMinAvgSum param1, param2, param3
 --|
 --| Parameters: string<pSelect> the field, string<pAlias> an alias, string <pType>
@@ -344,7 +344,7 @@ private command _rigMaxMinAvgSum pSelect pAlias pType
   local tSelect, tAlias, tType, tTempStr, tSQL, tSelectsNum, tNewSelectsNum
   local tCacheSelectsNum, tNewCacheSelectsNum, tCacheExistsNum
   local tNewCacheExistsNum
-  
+
 	put pSelect into tSelect
 	put pAlias into tAlias
 	if pType is empty then
@@ -399,7 +399,7 @@ end _rigMaxMinAvgSum
 --| Requires: --
 --|
 --| Summary: Determines the alias name based on the table.
---| 
+--|
 --| Format:  _rigCreateAliasFromTable(param1)
 --|
 --| Parameters: string<pItem>
@@ -412,7 +412,7 @@ private function _rigCreateAliasFromTable pItem
 		set the itemdelimiter to "."
 		return item -1 of pItem
 	end if
-		
+
 		return pItem
 end _rigCreateAliasFromTable
 
@@ -430,7 +430,7 @@ end _rigCreateAliasFromTable
 --| Requires: --
 --|
 --| Summary: Sets a flag which tells the query string compiler to add DISTINCT.
---| 
+--|
 --| Format:  rigDbDistinct param1
 --|
 --| Parameters: string<pVal>
@@ -440,10 +440,10 @@ end _rigCreateAliasFromTable
 
 command rigDbDistinct pVal
   local tVal
-  
+
 	if pVal is empty then
 		put TRUE into tVal
-	else	
+	else
 		put pVal into tVal
 	end if
 
@@ -471,7 +471,7 @@ end rigDbDistinct
 --| Requires: _rigTrackAliases(),  _rigProtectIdentifiers(), rigTrim()
 --|
 --| Summary: Generates the FROM portion of the query.
---| 
+--|
 --| Format:  rigDbFrom param1
 --|
 --| Parameters: mixed <pFrom> can be a string or array
@@ -481,7 +481,7 @@ end rigDbDistinct
 
 command rigDbFrom pFrom
   local tFrom, tFromKeyNum, tCachedFromKeyNum, tKey, tVal, tV, tTempFrom
-  
+
 	if pFrom is not an array then
 		put pFrom into tFrom[1]
 	else
@@ -568,7 +568,7 @@ end rigDbFrom
 --|            _rigDbJoinConditionsArray(), _rigEscapeIdentifiers()
 --|
 --| Summary: Generates the JOIN portion of the query.
---| 
+--|
 --| Format:  rigDbJoin param1, param2[, param3][, param4]
 --|
 --| Parameters: string<pTable>, string <pCond>the join condition,
@@ -581,7 +581,7 @@ command rigDbJoin pTable pCond pType pEscape
   local tCond, tType, tEscape, tRegEx, tMatch1, tMatch2, tMatch3, tCondA
   local tCounter, tNewCond, tTable, tJoin, tJoinsNum, tNewJoinsNum
   local tCacheJoinsNum, tNewCacheJoinsNum, tCacheExistsNum, tNewCacheExistsNum
-  
+
   put pCond into tCond
   put pType into tType
 
@@ -710,7 +710,7 @@ end rigDbJoin
 --|
 --| Summary: Generates the WHERE portion of the query. Separates multiple calls with AND.
 --|            Set the third parameter to FALSE with manually written where clauses.
---| 
+--|
 --| Format:  rigDbWhere param1, param2, param3
 --|
 --| Parameters: mixed<pKey>, mixed <pValue>, bool <pEscape>
@@ -720,7 +720,7 @@ end rigDbJoin
 
 command rigDbWhere pKey pValue pEscape
   local tValue, tEscape
-  
+
 	if pValue is empty then
 		put NULL into tValue
 	else
@@ -760,7 +760,7 @@ end rigDbWhere
 --|
 --| Summary: Generates the WHERE portion of the query. Separates
 --|                    multiple calls with OR.
---| 
+--|
 --| Format:  rigDbOrWhere param1, param2, param3
 --|
 --| Parameters: mixed<pKey>, mixed <pValue>, bool <pEscape>
@@ -770,7 +770,7 @@ end rigDbWhere
 
 command rigDbOrWhere pKey pValue pEscape
   local tValue, tEscape
-  
+
 	if pValue is empty then
 		put NULL into tValue
 	else
@@ -806,7 +806,7 @@ end rigDbOrWhere
 --| Summary: Generates the WHERE portion of the query. Separates
 --|          multiple calls with OR. Set the third parameter to FALSE with
 --|          manually wrtitten where clauses.
---| 
+--|
 --| Format:  _rigWhere param1, param2, param3
 --|
 --| Parameters: mixed<pKey>, mixed <pValue>, string <pType>, bool <pEscape>
@@ -818,7 +818,7 @@ private command _rigWhere pKey pValue pType pEscape
   local tKey, tValue, tType, tTemp, tEscape, tK, tV, tPrefix, tWheresNum
   local tNewWheresNum, tLikesNum, tCacheWheresNum, tNewCacheWheresNum
   local tCacheExistsNum, tNewCacheExistsNum
-  
+
 	put pKey into tKey
 
 	if pValue is empty then
@@ -876,7 +876,7 @@ private command _rigWhere pKey pValue pType pEscape
 
 		put the number of lines in the keys of sActiveRecord["where"] into tWheresNum
 		put tWheresNum + 1 into tNewWheresNum
-		
+
 		# SET PARENTHESES
 		#
 		# CHECK IF AN OPEN PARENTHESIS SHOULD BE WRITTEN AND IF THERE IS CURRENTLY NO OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED
@@ -884,7 +884,7 @@ private command _rigWhere pKey pValue pType pEscape
 			put tPrefix & "(" & tK & tV  into sActiveRecord["where"][tNewWheresNum]
 			put empty into sActiveRecord["openParenthesis"]
 			put "Where" into sActiveRecord["openParenthesisSet"]
-			
+
 		# IF THERE IS AN OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED ADD A CLOSE PARENTHESIS BEFORE ADDING AN OPEN PARENTHESIS
 		else if (sActiveRecord["openParenthesis"] is "(") and (sActiveRecord["closeParenthesisWhere"] is ")") then
 			put ")" && tPrefix & "(" & tK & tV  into sActiveRecord["where"][tNewWheresNum]
@@ -892,18 +892,18 @@ private command _rigWhere pKey pValue pType pEscape
 			put empty into sActiveRecord["closeParenthesisWhere"]
 			put "Where" into sActiveRecord["openParenthesisSet"]
 			put "Where" into sActiveRecord["closeParenthesisSet"]
-			
+
 		# CHECK IF A CLOSE PARENTHESIS SHOULD BE ADDED
 		else if sActiveRecord["closeParenthesisWhere"] is ")" then
 			put ")" && tPrefix & tK & tV  into sActiveRecord["where"][tNewWheresNum]
 			put empty into sActiveRecord["closeParenthesisWhere"]
 			put "Where" into sActiveRecord["closeParenthesisSet"]
-			
+
 		# IF THERE IS AN OPEN PARENTHESIS SET IN FRONT OF A LIKE CLAUSE MOVE IT TO THE WHERE CLAUSE AS THE WHERE PORTION
 		# IS WRITTEN BEFORE THE LIKE PORTION WHEN THE SELECT QUERY IS BUILT
 		else if (sActiveRecord["openParenthesisSet"] is "Like") and (sActiveRecord["closeParenthesisSet"] is empty) \
 			and (sActiveRecord["closeParenthesisLike"] <> ")") then
-			
+
 			# REPLACE THE OPEN PARENTHESIS WITH EMPTY
 			put the number of lines in the keys of sActiveRecord["like"] into tLikesNum
 			repeat with tCurrentLikesNum = tLikesNum down to 1
@@ -912,11 +912,11 @@ private command _rigWhere pKey pValue pType pEscape
 					exit repeat
 				end if
 			end repeat
-			
+
 			# ADD THE OPEN PARENTHESIS TO THE CURRENT WHERE CLAUSE
 			put tPrefix & "(" & tK & tV  into sActiveRecord["where"][tNewWheresNum]
 			put "LikeToWhere" into sActiveRecord["openParenthesisSet"]
-			
+
 		else
 			# DO NOT ADD PARENTHESES
 			put tPrefix & tK & tV  into sActiveRecord["where"][tNewWheresNum]
@@ -933,7 +933,7 @@ private command _rigWhere pKey pValue pType pEscape
 			put "where" into sActiveRecord["cacheexists"][tNewCacheExistsNum]
 		end if
 	end repeat
-	
+
 	# THIS IS USED FOR PARENTHESES
 	put "Where" into sActiveRecord["currentClause"]
 end _rigWhere
@@ -953,7 +953,7 @@ end _rigWhere
 --|
 --| Summary: Generates a WHERE field IN ('item', 'item') SQL query joined with
 --|                    AND if appropriate.
---| 
+--|
 --| Format:  rigDbWhereIn param1, param2
 --|
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
@@ -963,7 +963,7 @@ end _rigWhere
 
 command rigDbWhereIn pKey pValues
   local tKey, tValues
-  
+
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -998,7 +998,7 @@ end rigDbWhereIn
 --|
 --| Summary: Generates a WHERE field IN ('item', 'item') SQL query joined with
 --|                    OR if appropriate.
---| 
+--|
 --| Format:  rigDbOrWhereIn param1, param2
 --|
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
@@ -1008,7 +1008,7 @@ end rigDbWhereIn
 
 command rigDbOrWhereIn pKey pValues
   local tKey, tValues
-  
+
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1043,7 +1043,7 @@ end rigDbOrWhereIn
 --|
 --| Summary: Generates a WHERE field NOT IN ('item', 'item') SQL query joined with
 --|                    AND if appropriate.
---| 
+--|
 --| Format:  rigDbWhereNotIn param1, param2
 --|
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
@@ -1053,7 +1053,7 @@ end rigDbOrWhereIn
 
 command rigDbWhereNotIn pKey pValues
   local tKey, tValues
-  
+
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1087,7 +1087,7 @@ end rigDbWhereNotIn
 --|
 --| Summary: Generates a WHERE field NOT IN ('item', 'item') SQL query joined with
 --|                    OR if appropriate.
---| 
+--|
 --| Format:  rigDbOrWhereNotIn param1, param2
 --|
 --| Parameters: string<pKey> the field to search, array <pValues> the values searched on
@@ -1097,7 +1097,7 @@ end rigDbWhereNotIn
 
 command rigDbOrWhereNotIn pKey pValues
   local tKey, tValues
-  
+
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1130,7 +1130,7 @@ end rigDbOrWhereNotIn
 --| Requires: rigDbEscape(), _rigProtectIdentifiers()
 --|
 --| Summary: Called by rigDbWhereIn, rigDbWhereInOr, rigDbWhereNotIn, rigDbOrWhereNotIn.
---| 
+--|
 --| Format:  _rigWhereIn param1, param2
 --|
 --| Parameters: string <pKey> the field to search, array <pValue> the values searched on,
@@ -1142,7 +1142,7 @@ end rigDbOrWhereNotIn
 private command _rigWhereIn pKey pValues pNot pType
   local tKey, tValues, tNot, tType, tWhereInsNum, tK, tVal, tPrefix, tWhereIn
   local tLikesNum, tWheresNum, tCacheWheresNum, tCacheExistsNum
-  
+
 	if pKey is empty then
 		put NULL into tKey
 	else
@@ -1196,7 +1196,7 @@ private command _rigWhereIn pKey pValues pNot pType
 
 	combine sActiveRecord["wherein"] using ","
   replace "," with ", " in sActiveRecord["wherein"]
-	
+
 	# SET PARENTHESES
 	#
 	# CHECK IF AN OPEN PARENTHESIS SHOULD BE WRITTEN AND IF THERE IS CURRENTLY NO OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED
@@ -1204,7 +1204,7 @@ private command _rigWhereIn pKey pValues pNot pType
 		put tPrefix & "(" & _rigProtectIdentifiers(tKey) & tNot && "IN (" & sActiveRecord["wherein"] & ") " into tWhereIn
 		put empty into sActiveRecord["openParenthesis"]
 		put "Where" into sActiveRecord["openParenthesisSet"]
-		
+
 	# IF THERE IS AN OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED ADD A CLOSE PARENTHESIS BEFORE ADDING AN OPEN PARENTHESIS
 	else if (sActiveRecord["openParenthesis"] is "(") and (sActiveRecord["closeParenthesisWhere"] is ")") then
 		put ")" && tPrefix & "(" & _rigProtectIdentifiers(tKey) & tNot && "IN (" & sActiveRecord["wherein"] & ") " into tWhereIn
@@ -1212,18 +1212,18 @@ private command _rigWhereIn pKey pValues pNot pType
 		put empty into sActiveRecord["closeParenthesisWhere"]
 		put "Where" into sActiveRecord["openParenthesisSet"]
 		put "Where" into sActiveRecord["closeParenthesisSet"]
-		
+
 	# CHECK IF A CLOSE PARENTHESIS SHOULD BE ADDED
 	else if sActiveRecord["closeParenthesisWhere"] is ")" then
 		put ")" && tPrefix & _rigProtectIdentifiers(tKey) & tNot && "IN (" & sActiveRecord["wherein"] & ") " into tWhereIn
 		put empty into sActiveRecord["closeParenthesisWhere"]
 		put "Where" into sActiveRecord["closeParenthesisSet"]
-		
+
 	# IF THERE IS AN OPEN PARENTHESIS SET IN FRONT OF A LIKE CLAUSE MOVE IT TO THE WHERE CLAUSE AS THE WHERE PORTION
 	# IS WRITTEN BEFORE THE LIKE PORTION WHEN THE SELECT QUERY IS BUILT
 	else if (sActiveRecord["openParenthesisSet"] is "Like") and (sActiveRecord["closeParenthesisSet"] is empty) \
 		and (sActiveRecord["closeParenthesisLike"] <> ")") then
-	 
+
 	# REPLACE THE OPEN PARENTHESIS WITH EMPTY
 		put the number of lines in the keys of sActiveRecord["like"] into tLikesNum
 		repeat with tCurrentLikesNum = tLikesNum down to 1
@@ -1232,11 +1232,11 @@ private command _rigWhereIn pKey pValues pNot pType
 				exit repeat
 			end if
 		end repeat
-		
+
 		# ADD THE OPEN PARENTHESIS TO THE CURRENT WHERE CLAUSE
 		put tPrefix & "(" & _rigProtectIdentifiers(tKey) & tNot && "IN (" & sActiveRecord["wherein"] & ") " into tWhereIn
 		put "LikeToWhere" into sActiveRecord["openParenthesisSet"]
-		
+
 	else
 		# DO NOT ADD PARENTHESES
 		put tPrefix & _rigProtectIdentifiers(tKey) & tNot && "IN (" & sActiveRecord["wherein"] & ") " into tWhereIn
@@ -1259,7 +1259,7 @@ private command _rigWhereIn pKey pValues pNot pType
 
 	# RESET THE ARRAY FOR MULTIPLE CALLS
 	put empty into sActiveRecord["wherein"]
-	
+
 	# THIS IS USED FOR PARENTHESES
 	put "Where" into sActiveRecord["currentClause"]
 end _rigWhereIn
@@ -1279,7 +1279,7 @@ end _rigWhereIn
 --|
 --| Summary: Generates a %LIKE% portion of the query. Separates
 --|                    multiple calls with AND.
---| 
+--|
 --| Format:  rigDbLike param1, param2, param3
 --|
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
@@ -1289,7 +1289,7 @@ end _rigWhereIn
 
 command rigDbLike pField pMatch pSide
   local tSide
-  
+
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1317,7 +1317,7 @@ end rigDbLike
 --|
 --| Summary: Generates a NOT LIKE portion of the query. Separates
 --|                    multiple calls with AND.
---| 
+--|
 --| Format:  rigDbNotLike param1, param2, param3
 --|
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
@@ -1327,7 +1327,7 @@ end rigDbLike
 
 command rigDbNotLike pField pMatch pSide
   local tSide
-  
+
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1355,7 +1355,7 @@ end rigDbNotLike
 --|
 --| Summary: Generates a %LIKE% portion of the query. Separates
 --|                    multiple calls with OR.
---| 
+--|
 --| Format:  rigDbOrLike param1, param2, param3
 --|
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
@@ -1365,7 +1365,7 @@ end rigDbNotLike
 
 command rigDbOrLike pField pMatch pSide
   local tSide
-  
+
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1393,7 +1393,7 @@ end rigDbOrLike
 --|
 --| Summary: Generates a NOT LIKE portion of the query. Separates
 --|                    multiple calls with OR.
---| 
+--|
 --| Format:  rigDbOrNotLike param1, param2, param3
 --|
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pSide>
@@ -1403,7 +1403,7 @@ end rigDbOrLike
 
 command rigDbOrNotLike pField pMatch pSide
   local tSide
-  
+
 	if pSide is empty then
 		put "both" into tSide
 	else
@@ -1430,7 +1430,7 @@ end rigDbOrNotLike
 --| Requires: rigEscapeLikeStr(), rigFetchDriverSpecificSetting(), _rigProtectIdentifiers()
 --|
 --| Summary: Generates a %LIKE% portion of the query.
---| 
+--|
 --| Format:  _rigLike param1, param2, param3, param4
 --|
 --| Parameters: mixed<pField>, mixed <pMatch>, string <pType>, string <pSide>, string <pNot>
@@ -1442,7 +1442,7 @@ private command _rigLike pField pMatch pType pSide pNot
   local tField, tType, tSide, tTemp, tK, tV, tPrefix, tOpenParenthesis, tCloseParenthesis
   local tLikeStatement, tLikeEscapeStr, tLikesNum, tNewLikesNum, tCacheLikesNum
   local tCacheExistsNum
-  
+
 	put pField into tField
 
 	if pType is empty then
@@ -1461,7 +1461,7 @@ private command _rigLike pField pMatch pType pSide pNot
 		put tField into tTemp
 		delete variable tField
 		put pMatch into tField[tTemp]
-	end if 
+	end if
 
 	repeat for each key tK in tField
 		put tField[tK] into tV
@@ -1482,8 +1482,8 @@ private command _rigLike pField pMatch pType pSide pNot
 			put "(" into tOpenParenthesis
 			put empty into sActiveRecord["openParenthesis"]
 			put "Like" into sActiveRecord["openParenthesisSet"]
-			
-		# IF THERE IS AN OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED ADD A CLOSE PARENTHESIS BEFORE ADDING AN OPEN PARENTHESIS				
+
+		# IF THERE IS AN OPEN PARENTHESIS WHICH NEEDS TO BE CLOSED ADD A CLOSE PARENTHESIS BEFORE ADDING AN OPEN PARENTHESIS
 		else if (sActiveRecord["openParenthesis"] is "(") and (sActiveRecord["closeParenthesisLike"] is ")") then
 			put "(" into tOpenParenthesis
 			put ") " into tCloseParenthesis
@@ -1491,20 +1491,20 @@ private command _rigLike pField pMatch pType pSide pNot
 			put empty into sActiveRecord["closeParenthesisLike"]
 			put "Like" into sActiveRecord["openParenthesisSet"]
 			put "Like" into sActiveRecord["closeParenthesisSet"]
-			
+
 		# CHECK IF A CLOSE PARENTHESIS SHOULD BE ADDED
 		else if sActiveRecord["closeParenthesisLike"] is ")" then
-			put ") " into tCloseParenthesis		
+			put ") " into tCloseParenthesis
 			put empty into sActiveRecord["closeParenthesisLike"]
 			put "Like" into sActiveRecord["closeParenthesisSet"]
 		else
-			
+
 		# IF THERE IS AN OPEN PARENTHESIS SET IN FRONT OF A WHERE CLAUSE MOVE IT TO THE LIKE CLAUSE AS THE LIKE PORTION
 		# IS WRITTEN AFTER THE WHERE PORTION WHEN THE SELECT QUERY IS BUILT
 			if (sActiveRecord["openParenthesisSet"] is "Where") and (sActiveRecord["closeParenthesisWhere"] <> ")") then
 				put "WhereToLike" into sActiveRecord["closeParenthesisSet"]
 			end if
-			
+
 			put empty into tOpenParenthesis
 			put empty into tCloseParenthesis
 		end if
@@ -1521,13 +1521,13 @@ private command _rigLike pField pMatch pType pSide pNot
 		# SOME PLATFORMS REQUIRE AN ESCAPE SEQUENCE DEFINITION FOR LIKE WILDCARDS
 		put rigFetchDriverSpecificSetting("_sLikeEscapeStr") into tLikeEscapeStr
 			if tLikeEscapeStr <> "" then
-			put tLikeStatement & format(tLikeEscapeStr, rigFetchDriverSpecificSetting("_sLikeEscapeChr")) into tLikeStatement		
+			put tLikeStatement & format(tLikeEscapeStr, rigFetchDriverSpecificSetting("_sLikeEscapeChr")) into tLikeStatement
 		end if
 
 		put the number of lines in the keys of sActiveRecord["like"] into tLikesNum
 		put tLikesNum + 1 into tNewLikesNum
 		put tLikeStatement into sActiveRecord["like"][tNewLikesNum]
-		
+
 		if sActiveRecord["caching"] is TRUE then
 			put the number of lines in the keys of sActiveRecord["cachelike"] into tCacheLikesNum
 			add 1 to  tCacheLikesNum
@@ -1538,7 +1538,7 @@ private command _rigLike pField pMatch pType pSide pNot
 			put "like" into sActiveRecord["cacheexists"][tCacheExistsNum]
 		end if
 	end repeat
-	
+
 	# THIS IS USED FOR PARENTHESES
 	put "Like" into sActiveRecord["currentClause"]
 end _rigLike
@@ -1558,7 +1558,7 @@ end _rigLike
 --| Requires: rigTrim(), _rigProtectIdentifiers()
 --|
 --| Summary: Group by.
---| 
+--|
 --| Format:  rigDbGroupBy param1
 --|
 --| Parameters: string<pBy>
@@ -1568,7 +1568,7 @@ end _rigLike
 
 command rigDbGroupBy pBy
   local tBy, tKey, tVal, tGroupBysNum, tCacheGroupBysNum, tCacheExistsNum
-  
+
 	put pBy into tBy
 	if (tBy is not a boolean) and (tBy is not a number) and (tBy is not an array) then
 		split tBy using comma
@@ -1613,7 +1613,7 @@ end rigDbGroupBy
 --| Requires: _rigHaving
 --|
 --| Summary: Sets the HAVING value. Separates multiple calls with AND.
---| 
+--|
 --| Format:  rigDbHaving param1, param2, param3
 --|
 --| Parameters: string<pKey>, string <pValue>, bool <pEscape>
@@ -1623,7 +1623,7 @@ end rigDbGroupBy
 
 command rigDbHaving pKey pValue pEscape
   local tEscape
-  
+
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -1650,7 +1650,7 @@ end rigDbHaving
 --| Requires: _rigHaving
 --|
 --| Summary: Sets the OR HAVING value. Separates multiple calls with OR.
---| 
+--|
 --| Format:  rigDbOrHaving param1, param2, param3
 --|
 --| Parameters: string<pKey>, string <pValue>, bool <pEscape>
@@ -1660,7 +1660,7 @@ end rigDbHaving
 
 command rigDbOrHaving pKey pValue pEscape
   local tEscape
-  
+
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -1688,7 +1688,7 @@ end rigDbOrHaving
 --| Requires: _rigProtectIdentifiers(), _rigHasOperator(), rigEscapeStr()
 --|
 --| Summary: Sets the HAVING values. Called by rigDbHaving or rigDbOrHaving.
---| 
+--|
 --| Format:  _rigHaving param1, param2, param3, param4
 --|
 --| Parameters: string<pKey>, string <pValue>, string <pType>, bool <pEscape>
@@ -1699,21 +1699,21 @@ end rigDbOrHaving
 private command _rigHaving pKey pValue pType pEscape
   local tKey, tValue, tType, tEscape, tTemp, tK, tV, tHavingNum, tPrefix
   local tNewHavingNum, tCacheHavingsNum, tCacheExistsNum
-  
+
 	put pKey into tKey
 	put pValue into tValue
 
 	if pType is empty then
-		put "AND " into tType 
+		put "AND " into tType
 	else
 		put pType into tType
 	end if
 
 	if pEscape is empty then
-		put TRUE into tEscape 
+		put TRUE into tEscape
 	else
 		put pEscape into tEscape
-	end if 
+	end if
 
 	if tKey is not an array then
 		put tKey into tTemp
@@ -1724,10 +1724,10 @@ private command _rigHaving pKey pValue pType pEscape
 	repeat for each key tK in tKey
 		put tKey[tK] into tV
 		put the number of lines in the keys of sActiveRecord["having"] into tHavingNum
-		
+
 		if tHavingNum = 0 then
 			put empty into tPrefix
-		else	
+		else
 			put tType into tPrefix
 		end if
 
@@ -1781,7 +1781,7 @@ end _rigHaving
 --| Requires: rigFetchDriverSpecificSetting(), rigTrim(), _rigProtectIdentifiers()
 --|
 --| Summary: Sets the ORDER BY value.
---| 
+--|
 --| Format:  rigDbOrderBy param1, param2
 --|
 --| Parameters: string<pOrderby>, string <pDirection> direction: asc or desc
@@ -1792,7 +1792,7 @@ end _rigHaving
 command rigDbOrderBy pOrderby pDirection
   local tOrderby, tDirection, tRandomKeyword, tPart, tTemp, tOrderbyStatement
   local tOrderBysNum, tCacheOrderbysNum, tCacheExistsNum
-  
+
 	put pOrderby into tOrderby
 	put pDirection into tDirection
 	put rigFetchDriverSpecificSetting("_sRandomKeyword") into tRandomKeyword
@@ -1803,7 +1803,7 @@ command rigDbOrderBy pOrderby pDirection
 	else if rigTrim(tDirection) is not empty then
 		put toUpper(rigTrim(tDirection)) into tDirection
 		if tDirection is among the items of "ASC,DESC" then
-			put " " & tDirection into tDirection 
+			put " " & tDirection into tDirection
 		else
 			put " ASC" into tDirection
 		end if
@@ -1827,7 +1827,7 @@ command rigDbOrderBy pOrderby pDirection
 	end if
 
 	put tOrderby & tDirection into tOrderbyStatement
-	
+
 	put the number of lines in the keys of sActiveRecord["orderby"] into tOrderBysNum
 	add 1 to tOrderBysNum
 	put tOrderbyStatement into sActiveRecord["orderby"][tOrderBysNum]
@@ -1860,7 +1860,7 @@ end rigDbOrderBy
 --| Requires: --
 --|
 --| Summary: Sets the LIMIT value.
---| 
+--|
 --| Format:  rigDbLimit param1, param2
 --|
 --| Parameters: integer <pLimit>, integer <pOffset>
@@ -1892,7 +1892,7 @@ end rigDbLimit
 --| Requires: --
 --|
 --| Summary: Sets the OFFSET value.
---| 
+--|
 --| Format:  rigDbOffset param1
 --|
 --| Parameters: integer<pOffset> the offset value
@@ -1921,7 +1921,7 @@ end rigDbOffset
 --| Requires: rigFetchConfigItem(), _rigProtectIdentifiers(), rigDbEscape()
 --|
 --| Summary: Allows key/value pairs to be set for inserting or updating.
---| 
+--|
 --| Format:  rigDbValuesSet(param1, param2, param3)
 --|
 --| Parameters: mixed <pKey>, string <pValue>, bool <pEscape>
@@ -1931,7 +1931,7 @@ end rigDbOffset
 
 function rigDbValuesSet pKey pValue pEscape
   local tEscape, tKeyArray, tCSRFprotection, tCSRFtokenName, tK, tKprotected
-  
+
 	if pEscape is empty then
 		put TRUE into tEscape
 	else
@@ -2000,7 +2000,7 @@ end rigDbValuesSet
 --|
 --| Summary: Compiles the select statement based on the other handlers called,
 --|            runs the query or returns the query string if requested.
---| 
+--|
 --| Format:  rigDbGet(param1, param2, param3)
 --|
 --| Parameters: string <pTable> the table, integer <pLimit> the limit clause,
@@ -2011,7 +2011,7 @@ end rigDbValuesSet
 
 function rigDbGet pTable pLimit pOffset pReturnSubqueryString
   local tSQL, tResult
-  
+
 	if pTable <> "" then
 		get _rigTrackAliases(pTable)
 		rigDbFrom pTable
@@ -2022,12 +2022,12 @@ function rigDbGet pTable pLimit pOffset pReturnSubqueryString
 	end if
 
 	put _rigCompileSelect() into tSQL
-	
+
   if pReturnSubqueryString is TRUE then
     _rigResetSelect
     return " (" & tSQL & ")"
   end if
-	
+
 	put rigDbQuery(tSQL) into tResult
 	_rigResetSelect
 
@@ -2049,9 +2049,9 @@ end rigDbGet
 --| Requires: _rigTrackAliases(), rigDbFrom, rigFetchDriverSpecificSetting(), _rigCompileSelect(), _rigProtectIdentifiers()
 --|                  _rigResetSelect, rigDbRow()
 --|
---| Summary: Generates a platform-specific query string that counts all records 
+--| Summary: Generates a platform-specific query string that counts all records
 --|                   returned by an Active Record query.
---| 
+--|
 --| Format:  rigDbCountAllResults(param1)
 --|
 --| Parameters: string<pTable>
@@ -2061,7 +2061,7 @@ end rigDbGet
 
 function rigDbCountAllResults pTable
   local tCountStr, tSql, tQuery, tRow
-  
+
 	if pTable is not empty then
 		get _rigTrackAliases(pTable)
 		rigDbFrom pTable
@@ -2099,7 +2099,7 @@ end rigDbCountAllResults
 --| Requires: rigDbFrom, rigDbWhere, rigDbLimit, _rigCompileSelect(), rigDbQuery(), _rigResetSelect
 --|
 --| Summary: Allows the where clause, limit and offset to be added directly.
---| 
+--|
 --| Format:  rigDbGetWhere(param1, param2, param3, param4)
 --|
 --| Parameters: string<pTable>, string <pWhere> the where clause, string <pLimit> the limit clause, string <pOffset> the offset clause
@@ -2109,7 +2109,7 @@ end rigDbCountAllResults
 
 function rigDbGetWhere pTable pWhere pLimit pOffset
   local tSql, tResult
-  
+
 	if pTable is not "" then
 		rigDbFrom pTable
 	end if
@@ -2147,7 +2147,7 @@ end rigDbGetWhere
 --|           rigArrayKeys(), rigArrayValues(), _rigInsert(), _rigResetWrite, rigDbQuery(), _rigDbLastInsertID(), rigDbRedirectOnError
 --|
 --| Summary: Compiles an insert string and runs the query.
---| 
+--|
 --| Format:  rigDbInsert(param1, param2, param3)
 --|
 --| Parameters: string <pTable> the table to retrieve the results from, array <pInsertVals>
@@ -2160,22 +2160,22 @@ end rigDbGetWhere
 function rigDbInsert pTable pInsertVals pLastInsertID
   local tInsertVals, tLastInsertID, tTable, tArrayKeys
   local tSQL, tArrayValues, tResultVal
-  
+
 	if pInsertVals is an array then
 		put rigDbValuesSet(pInsertVals) into tInsertVals
 	end if
-	
+
 	if pLastInsertID is empty then
 		put FALSE into tLastInsertID
 	else
 		put pLastInsertID into tLastInsertID
 	end if
-	
+
 	if the number of lines in the keys of sActiveRecord["set"] is 0 then
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_must_use_set"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
@@ -2188,7 +2188,7 @@ function rigDbInsert pTable pInsertVals pLastInsertID
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_must_set_table"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -2212,11 +2212,11 @@ function rigDbInsert pTable pInsertVals pLastInsertID
 	_rigResetWrite
 
 	put rigDbQuery(tSQL) into tResultVal
-	
+
 	if tLastInsertID is TRUE then
 		return _rigDbLastInsertID( pTable )
 	end if
-	
+
 	return tResultVal
 end rigDbInsert
 
@@ -2238,7 +2238,7 @@ end rigDbInsert
 --|           _rigUpdate(), _rigResetWrite, rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Compiles an update string and runs the query.
---| 
+--|
 --| Format:  rigDbUpdate(param1, param2, param3, param4)
 --|
 --| Parameters: string<pTable> the table to retrieve the results from, array <pSet> an associative array of update values,
@@ -2249,7 +2249,7 @@ end rigDbInsert
 
 function rigDbUpdate pTable pSet pWhere pLimit
   local tTable, tSql
-  
+
 	# COMBINE ANY CACHED COMPONENTS WITH THE CURRENT STATEMENTS
 	_rigMergeCache
 
@@ -2261,7 +2261,7 @@ function rigDbUpdate pTable pSet pWhere pLimit
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_must_use_set"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
@@ -2274,7 +2274,7 @@ function rigDbUpdate pTable pSet pWhere pLimit
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_must_set_table"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -2319,7 +2319,7 @@ end rigDbUpdate
 --|           _rigDelete(), _rigResetWrite, rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Compiles a delete string and runs "DELETE FROM table".
---| 
+--|
 --| Format:  rigDbEmptyTable(param1)
 --|
 --| Parameters: string<pTable> the table to empty
@@ -2329,13 +2329,13 @@ end rigDbUpdate
 
 function rigDbEmptyTable pTable
   local tTable, tSql
-  
+
 	if pTable is empty then
 		if sActiveRecord["from"] is not an array then
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_must_set_table"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -2373,7 +2373,7 @@ end rigDbEmptyTable
 --|           _rigTruncate(), _rigResetWrite, rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Compiles a delete string and runs "DELETE FROM table".
---| 
+--|
 --| Format:  rigDbTruncate(param1)
 --|
 --| Parameters: string<pTable> the table to empty
@@ -2383,13 +2383,13 @@ end rigDbEmptyTable
 
 function rigDbTruncate pTable
   local tTable, tSql
-  
+
 	if pTable is empty then
 		if sActiveRecord["from"] is not an array then
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_must_set_table"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -2427,7 +2427,7 @@ end rigDbTruncate
 --|           _rigProtectIdentifiers(), rigDbWhere, rigDbLimit, _rigDelete(), rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Compiles a delete string and runs the query.
---| 
+--|
 --| Format:  rigDbDelete(param1, param2, param3, param4)
 --|
 --| Parameters: mixed<pTable> the table(s) to delete from. String or array, mixed <pWhere> the where clause
@@ -2438,7 +2438,7 @@ end rigDbTruncate
 
 function rigDbDelete pTable pWhere pLimit pResetData
   local tTable, tResetData, tSingleTable, tSql
-  
+
 	put pTable into tTable
 	if pResetData is empty then
 		put TRUE into tResetData
@@ -2454,7 +2454,7 @@ function rigDbDelete pTable pWhere pLimit pResetData
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_must_set_table"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -2471,7 +2471,7 @@ function rigDbDelete pTable pWhere pLimit pResetData
 		end repeat
 
 		_rigResetWrite
-		
+
 		return ""
 	else
 		put _rigProtectIdentifiers(tTable, TRUE, "", FALSE) into tTable
@@ -2489,7 +2489,7 @@ function rigDbDelete pTable pWhere pLimit pResetData
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_del_must_use_where"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
@@ -2522,7 +2522,7 @@ end rigDbDelete
 --| Requires: rigDbDisplayError, rigFetchDBdriverSetting()
 --|
 --| Summary: Prepends a database prefix if one exists in configuration.
---| 
+--|
 --| Format:  rigDbPrefix(param1)
 --|
 --| Parameters: string<pTable> the table
@@ -2549,13 +2549,13 @@ end rigDbPrefix
 --| FUNCTION _rigTrackAliases
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 07-07-09
---| Last Mod: 07-07-09
+--| Version:  1.1
+--| Created: 2009-07-07
+--| Last Mod: 2019-04-18
 --| Requires: --
 --|
 --| Summary: Used to track SQL statements written with aliased tables.
---| 
+--|
 --| Format:  _rigTrackAliases(param1)
 --|
 --| Parameters: string <pTable> the table
@@ -2565,7 +2565,7 @@ end rigDbPrefix
 
 private function _rigTrackAliases pTable
   local tTable, tKey, tRegEx, tTableIsInArray, tKeyNum
-  
+
 	put pTable into tTable
 	if tTable is an array then
 		repeat for each key tKey in tTable
@@ -2582,31 +2582,31 @@ private function _rigTrackAliases pTable
 	end if
 
 	# IF A TABLE ALIAS IS USED WE CAN RECOGNIZE IT BY A SPACE
-	if space is in tTable then
-		# IF THE ALIAS IS WRITTEN WITH THE AS KEYWORD, REMOVE IT
-		put "(?i) AS " into tRegEx
-		put replacetext(tTable,tRegEx," ") into tTable
-	end if
+  if space is in tTable then
+    # IF THE ALIAS IS WRITTEN WITH THE AS KEYWORD, REMOVE IT
+    put "(?i) AS " into tRegEx
+    put replacetext(tTable,tRegEx," ") into tTable
 
-	# GRAB THE ALIAS
-	put last word of tTable into tTable
+    # GRAB THE ALIAS
+    put last word of tTable into tTable
 
-	# STORE THE ALIAS, IF IT DOESN'T ALREADY EXIST
-	if sActiveRecord["aliasedtables"] is an array then
-		put FALSE into tTableIsInArray
-		repeat for each element thisElement in sActiveRecord["aliasedtables"]
-			if thisElement is tTable then
-				put TRUE into tTableIsInArray
-				exit repeat
-			end if
-		end repeat
-		if tTableIsInArray is TRUE then
-			put (the number of lines in the keys of sActiveRecord["aliasedtables"]) + 1 into tKeyNum
-			put tTable into sActiveRecord["aliasedtables"][tKeyNum]
-		end if
-	else
-		put tTable into sActiveRecord["aliasedtables"][1]
-	end if
+    # STORE THE ALIAS, IF IT DOESN'T ALREADY EXIST
+    if sActiveRecord["aliasedtables"] is an array then
+      put FALSE into tTableIsInArray
+      repeat for each element thisElement in sActiveRecord["aliasedtables"]
+        if thisElement is tTable then
+          put TRUE into tTableIsInArray
+          exit repeat
+        end if
+      end repeat
+      if tTableIsInArray is TRUE then
+        put (the number of lines in the keys of sActiveRecord["aliasedtables"]) + 1 into tKeyNum
+        put tTable into sActiveRecord["aliasedtables"][tKeyNum]
+      end if
+    else
+		  put tTable into sActiveRecord["aliasedtables"][1]
+    end if -- if sActiveRecord["aliasedtables"] is an array
+  end if -- if space is in tTable
 end _rigTrackAliases
 
 
@@ -2626,7 +2626,7 @@ end _rigTrackAliases
 --|
 --| Summary: Generates a query string based on which handlers were used.
 --|          	Should not be called directly. The rigDbGet() function calls it.
---| 
+--|
 --| Format:  _rigCompileSelect(param1)
 --|
 --| Parameters: string <pSelectOverride>
@@ -2636,7 +2636,7 @@ end _rigTrackAliases
 
 private function _rigCompileSelect pSelectOverride
   local tSelectOverride, tSQL, tIncr, tColNames, tJoin
-  
+
 	if pSelectOverride is empty then
 		put FALSE into tSelectOverride
 	else
@@ -2697,7 +2697,7 @@ private function _rigCompileSelect pSelectOverride
 		put space & LF & "WHERE" after tSQL
 		rigLoadHelper "array"
 		put tSQL && rigImplode(sActiveRecord["where"], LF) into tSQL
-		
+
 		# IF THERE IS AN OPEN PARENTHESIS ADD A CLOSE PARENTHESIS
 		if sActiveRecord["closeParenthesisWhere"] <> empty then
 			put tSQL & ")" into tSQL
@@ -2712,7 +2712,7 @@ private function _rigCompileSelect pSelectOverride
 		end if
 		rigLoadHelper "array"
 		put tSQL && rigImplode(sActiveRecord["like"], LF) into tSQL
-		
+
 		# IF THERE IS AN OPEN PARENTHESIS ADD A CLOSE PARENTHESIS
 		if sActiveRecord["closeParenthesisLike"] <> empty then
 			put tSQL & ")" into tSQL
@@ -2776,7 +2776,7 @@ end _rigCompileSelect
 --| Requires: --
 --|
 --| Summary: Starts AR caching.
---| 
+--|
 --| Format:  rigDbStartCache
 --|
 --| Parameters: --
@@ -2804,7 +2804,7 @@ end rigDbStartCache
 --| Requires: --
 --|
 --| Summary: Stops AR caching.
---| 
+--|
 --| Format:  rigDbStopCache
 --|
 --| Parameters: --
@@ -2834,7 +2834,7 @@ end rigDbStopCache
 --| Requires: --
 --|
 --| Summary: Empties the AR cache.
---| 
+--|
 --| Format:  rigDbFlushCache
 --|
 --| Parameters: --
@@ -2872,9 +2872,9 @@ end rigDbFlushCache
 --| Last Mod: 31-12-09
 --| Requires: _rigARarrayMerge(), rigFetchDBdriverSetting(), _rigTrackAliases()
 --|
---| Summary: When called, this handler merges any cached AR arrays with 
+--| Summary: When called, this handler merges any cached AR arrays with
 --|                    locally called ones.
---| 
+--|
 --| Format:  _rigMergeCache
 --|
 --| Parameters: --
@@ -2884,7 +2884,7 @@ end rigDbFlushCache
 
 private command _rigMergeCache
   local tKey, tLocalKey, tCachedKey, tProtectIdentifiers
-  
+
 	if sActiveRecord["cacheexists"] is not an array then
 		exit _rigMergeCache
 	end if
@@ -2928,7 +2928,7 @@ end _rigMergeCache
 --| Requires: rigLoadHelper, rigElementsList()
 --|
 --| Summary: Merge active record arrays with caching arrays.
---| 
+--|
 --| Format:  _rigARarrayMerge(param1, param2)
 --|
 --| Parameters: array <pArrayA>, array <pArrayB>
@@ -2938,19 +2938,19 @@ end _rigMergeCache
 
 private function _rigARarrayMerge pArrayA pArrayB
   local tElementsList, tElementsToAddList, tKeyNum, tMergedArray
-  
+
 	# CONVERT ARRAYS TO LISTS
 	rigLoadHelper "array"
 	put rigElementsList(pArrayA) into tElementsList
 	put rigElementsList(pArrayB) into tElementsToAddList
-    
+
 	# MERGE KEYS LISTS
 	repeat for each line thisLine in tElementsToAddList
 		if thisLine is not among the lines of tElementsList then
 			put return & thisLine after tElementsList
 		end if
 	end repeat
-    
+
 	# BUILD MERGED ARRAY
 	put 0 into tKeyNum
 	repeat for each line thisLine in tElementsList
@@ -2958,7 +2958,7 @@ private function _rigARarrayMerge pArrayA pArrayB
 		add 1 to tKeyNum
 		put thisLine into tMergedArray[tKeyNum]
 	end repeat
-    
+
 	return tMergedArray
 end _rigARarrayMerge
 
@@ -2976,7 +2976,7 @@ end _rigARarrayMerge
 --| Requires: --
 --|
 --| Summary: Resets the active record values.  Called by the rigDbGet() function.
---| 
+--|
 --| Format:  _rigResetSelect
 --|
 --| Parameters: --
@@ -3015,7 +3015,7 @@ end _rigResetSelect
 --|
 --| Summary: Resets the active record "write" values.
 --|                   Called by the rigDbInsert() rigDbUpdate() and rigDbDelete() functions
---| 
+--|
 --| Format:  _rigResetWrite
 --|
 --| Parameters: --
@@ -3047,7 +3047,7 @@ end _rigResetWrite
 --| Requires: --
 --|
 --| Summary: Fetch setting from active record settings.
---| 
+--|
 --| Format:  rigFetchDBactiveRecSetting(param1)
 --|
 --| Parameters: string<pSettingsKey>
@@ -3075,7 +3075,7 @@ end rigFetchDBactiveRecSetting
 --|
 --| Summary: Define a variable so that an open parenthesis will be added to the
 --|          next SQL portion.
---| 
+--|
 --| Format:  rigDbOpenParenthesis
 --|
 --| Parameters: --
@@ -3104,7 +3104,7 @@ end rigDbOpenParenthesis
 --|
 --| Summary: Define a variable so that a close parenthesis will be added to the
 --|          next SQL portion.
---| 
+--|
 --| Format:  rigDbCloseParenthesis
 --|
 --| Parameters: --
@@ -3114,14 +3114,14 @@ end rigDbOpenParenthesis
 
 command rigDbCloseParenthesis
   local tCloseParenthesisType
-  
+
 	# CHECK IF A PARENTHESIS WAS MOVED
 	if (sActiveRecord["openParenthesisSet"] is "LikeToWhere") or (sActiveRecord["closeParenthesisSet"] is "WhereToLike") then
 		put "closeParenthesisLike" into tCloseParenthesisType
 	else
 		put "closeParenthesis" & sActiveRecord["currentClause"] into tCloseParenthesisType
 	end if
-	
+
 	put ")" into sActiveRecord[tCloseParenthesisType]
 end rigDbCloseParenthesis
 
@@ -3141,7 +3141,7 @@ end rigDbCloseParenthesis
 --| Requires: --
 --|
 --| Summary: Split multiple join conditions and store conditions and operators in an array.
---| 
+--|
 --| Format:  _rigDbJoinConditionsArray(param1)
 --|
 --| Parameters: string <pStr>
@@ -3152,24 +3152,24 @@ end rigDbCloseParenthesis
 private function _rigDbJoinConditionsArray pStr
   local tStrStart, tCounter, tConditionsA, tAndOffset, tOrOffset, tStrCharsNum
   local tOrBeforeAnd
-  
+
   put 1 into tStrStart
   put 0 into tCounter
   put empty into tConditionsA
-   
+
   put offset("AND", pStr) into tAndOffset
   put offset("OR", pStr) into tOrOffset
-   
-   
+
+
   repeat until (tAndOffset + tOrOffset) = 0
 		add 1 to tCounter
-      
+
 		put the number of chars of pStr into tStrCharsNum
-      
+
 		# CHECK IF THERE ARE BOTH OPERATORS AND WHICH ONE IS NEXT
 		if (tAndOffset > 1) and (tOrOffset > 1) then
 			put tAndOffset > tOrOffset into tOrBeforeAnd
-         
+
 			# GET CONDITION AN OPERATOR
 			switch tOrBeforeAnd
 				case true
@@ -3181,14 +3181,14 @@ private function _rigDbJoinConditionsArray pStr
 					put "AND" into tConditionsA[tCounter]["op"]
 					put tAndOffset + 4 into tStrStart
      	 end switch
-         
+
 			 put char tStrStart to tStrCharsNum of pStr into pStr
-			 
+
 			 put offset("AND", pStr) into tAndOffset
 			 put offset("OR", pStr) into tOrOffset
 			 next repeat
 		 end if
-      
+
 		 # GET CONDITION AN OPERATOR
 		 if tAndOffset > 1 then
 			put char 1 to (tAndOffset - 2) of pStr into tConditionsA[tCounter]["cond"]
@@ -3199,19 +3199,19 @@ private function _rigDbJoinConditionsArray pStr
 			put "OR" into tConditionsA[tCounter]["op"]
 			put tOrOffset + 3 into tStrStart
 		end if
-      
+
 		put char tStrStart to tStrCharsNum of pStr into pStr
-      
+
 		put offset("AND", pStr) into tAndOffset
 		put offset("OR", pStr) into tOrOffset
 	end repeat
-   
+
   # GET LAST CONDITION WHICH HAS NO OPERATOR
   add 1 to tCounter
   put the number of chars of pStr into tStrCharsNum
   put char 1 to tStrCharsNum of pStr into tConditionsA[tCounter]["cond"]
   put empty into tConditionsA[tCounter]["op"]
-   
+
   return tConditionsA
 end _rigDbJoinConditionsArray
 
