@@ -1993,23 +1993,24 @@ end rigDbValuesSet
 --| FUNCTION rigDbGet
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 07-07-09
---| Last Mod: 12-11-15
+--| Version:  1.2
+--| Created: 2009-07-07
+--| Last Mod: 2019-04-19
 --| Requires: _rigTrackAliases(), rigDbFrom, rigDbLimit, _rigCompileSelect(), rigDbQuery(), _rigResetSelect
 --|
 --| Summary: Compiles the select statement based on the other handlers called,
 --|            runs the query or returns the query string if requested.
 --|
---| Format:  rigDbGet(param1, param2, param3)
+--| Format:  rigDbGet(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string <pTable> the table, integer <pLimit> the limit clause,
---|						integer <pOffset> the offset clause, bool <pReturnSubqueryString>
+--|						integer <pOffset> the offset clause, bool <pReturnSubqueryString>,
+--|           bool <pReturnQueryString>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigDbGet pTable pLimit pOffset pReturnSubqueryString
+function rigDbGet pTable pLimit pOffset pReturnSubqueryString pReturnQueryString
   local tSQL, tResult
 
 	if pTable <> "" then
@@ -2026,6 +2027,10 @@ function rigDbGet pTable pLimit pOffset pReturnSubqueryString
   if pReturnSubqueryString is TRUE then
     _rigResetSelect
     return " (" & tSQL & ")"
+  end if
+
+  if pReturnQueryString is TRUE then
+    return tSQL
   end if
 
 	put rigDbQuery(tSQL) into tResult
