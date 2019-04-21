@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -108,7 +108,7 @@
 
 <p>&nbsp;</p>
 
-<a name="overview"></a>
+<a id="overview"></a>
 <h1>Overview</h1>
 
 <p>Before explaining revIgniter's approach to jQuery, let's describe how to embed jQuery code in your view file and how this code is built.</p>
@@ -153,7 +153,7 @@ rigLoaderLoadLibrary "Jquery", tJquerySettings
 
 <p>&nbsp;</p>
 
-<a name="tutorial"></a>
+<a id="tutorial"></a>
 <h1>Tutorial: revIgniter's Approach to jQuery</h1>
 
 <p>What follows is a tutorial based on the "Ajax Integration" example published by Runtime Revolution Ltd. at the <a href="http://samples.on-rev.com/ajax.irev" target="_blank">on-rev samples site</a>. It demonstrates how to filter data using text the user types into a form field. Contrary to the on-rev sample you won't write any jQuery / JavaScript code. Now let's see, what you will need:</p>
@@ -197,7 +197,7 @@ INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
 
 <p>Now let's create the irev files.</p>
 
-<a name="controller"></a>
+<a id="controller"></a>
 <h2>Controller</h2>
 
 <p>We start with the basic prototype for a controller script. Create a controller called <dfn>ajax.lc</dfn>. In it, place the code below and save it to your <kbd>system/application/controllers/</kbd> folder. Of course, you may remove the comments.</p>
@@ -354,7 +354,7 @@ end buildTable
 <p>The code of your controller should now look like this:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code class="lang-livecodeserver">&lt;?lc
 
 put "ajax,index,datafilter,buildTable" into gControllerHandlers
 
@@ -406,7 +406,7 @@ end buildTable
 </div>
 
 
-<a name="ajaxview"></a>
+<a id="ajaxview"></a>
 <h2>View "ajaxView"</h2>
 
 <p>Create a view called <dfn>ajaxView.lc</dfn>.  In it, place this code and save it to your <kbd>system/application/views/</kbd> folder:</p>
@@ -444,7 +444,7 @@ end buildTable
 <p>Note: <dfn>rigJQuerySource()</dfn> is a Jquery library function, which returns a html string linking to jQuery.</p>
 
 
-<a name="filteredview"></a>
+<a id="filteredview"></a>
 <h2>View "filteredView"</h2>
 
 <p>Create the view called <dfn>filteredView.lc</dfn>, which is loaded by the <dfn>datafilter</dfn> handler. In it, place just this expression and save it to your <kbd>system/application/views/</kbd> folder: </p>
@@ -455,7 +455,7 @@ end buildTable
 </div>
 
 
-<a name="model"></a>
+<a id="model"></a>
 <h2>Model</h2>
 
 <p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <kbd>system/application/models/</kbd> folder:</p>
@@ -481,7 +481,7 @@ end peopleData
 
 <p>&nbsp;</p>
 
-<a name="principles"></a>
+<a id="principles"></a>
 <h1>Basic Principles</h1>
 
 <p>There is a set of rules you should keep in mind:</p>
@@ -500,7 +500,7 @@ end peopleData
 
 <p>&nbsp;</p>
 
-<a name="reference"></a>
+<a id="reference"></a>
 <h2>Handler Reference</h2>
 
 <p>The following handlers are intended for use in your controller handlers. There are some highly specialized handlers like rigJQajaxForm, rigJQeventAlert, rigJQeventEffect, rigJQeventAnim, rigJQconfirm or rigJQprompt, and others like rigJQset, rigJQgetR or rigJQeventOpen, which are more generic ones.</p>
@@ -708,7 +708,7 @@ rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 <p>Permits you to perform an asynchronous HTTP (Ajax) request. Example:</p>
 
 <div class="codeSample">
-<pre><code>put "ajax/datafilter" into tAjax["url"]
+<pre><code class="lang-livecodeserver">put "ajax/datafilter" into tAjax["url"]
 put "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'") into tAjax["data"]
 put rigJQsetR("'#results'", "html", "data") into tAjax["success"]
 
@@ -744,7 +744,7 @@ rigJQeventClose
 <p>Here is another example, which demonstrates the use of a callback:</p>
 
 <div class="codeSample">
-<pre><code>put rigJQsetR("'#msg'", "html", "data") &amp; return into tCallback
+<pre><code class="lang-livecodeserver">put rigJQsetR("'#msg'", "html", "data") &amp; return into tCallback
 put rigJQalertR("'The data has been loaded'") after tCallback
 rigJQxhRequest "post", "myController", "limit: 25", tCallback
 </code></pre>

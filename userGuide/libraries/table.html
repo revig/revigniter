@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+				<div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
 			</div>
 			<div id="open-button" class="slide-button">Table of Contents</div>
 			<div id="close-button" class="slide-button">Close</div>
@@ -191,7 +191,7 @@ put rigGenerateTable() into gData["testTable"]
 prototype:</p>
 
 <div class="codeSample">
-<pre><code>put "&lt;table border=" &amp; quote &amp; "0" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "4" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "0" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+<pre><code class="lang-livecodeserver">put "&lt;table border=" &amp; quote &amp; "0" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "4" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "0" &amp; quote &amp; ">" into tTmpl["tableOpen"]
 put "&lt;tr>" into tTmpl["headingRowStart"]
 put "&lt;/tr>" into tTmpl["headingRowEnd"]
 put "&lt;th>" into tTmpl["headingCellStart"]
@@ -220,7 +220,7 @@ iteration of the row data.</p>
 In this example, only the table opening tag is being changed:</p>
 
 <div class="codeSample">
-<pre><code>put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+<pre><code class="lang-livecodeserver">put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
 
 rigSetTableTemplate tTmpl
 </code></pre>
@@ -301,7 +301,7 @@ put rigGenerateTable(tNewList) into gData["testTable"]
 
 <p>Permits you to set your template. You can submit a full or partial template.</p>
 
-<pre><code>put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
+<pre><code class="lang-livecodeserver">put "&lt;table border=" &amp; quote &amp; "1" &amp; quote &amp;&amp; "cellpadding=" &amp; quote &amp; "2" &amp; quote &amp;&amp; "cellspacing=" &amp; quote "1" &amp; quote &amp;&amp; "class=" &amp; quote &amp; "mytable" &amp; quote &amp; ">" into tTmpl["tableOpen"]
 
 
 rigSetTableTemplate tTmpl

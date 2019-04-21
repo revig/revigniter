@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -126,7 +126,7 @@
 
 <p>&nbsp;</p>
 
-<a name="overview"></a>
+<a id="overview"></a>
 <h1>Overview</h1>
 
 
@@ -160,7 +160,7 @@ Form validation, while simple to create, is generally very messy and tedious to 
 <p>&nbsp;</p>
 
 
-<a name="tutorial"></a>
+<a id="tutorial"></a>
 <h1>Form Validation Tutorial</h1>
 
 <p>What follows is a "hands on" tutorial for implementing RevIgniters Form Validation.</p>
@@ -178,7 +178,7 @@ Form validation, while simple to create, is generally very messy and tedious to 
 
 
 
-<a name="theform"></a>
+<a id="theform"></a>
 
 <h2>The Form</h2>
 
@@ -219,7 +219,7 @@ folder:</p>
 
 
 
-<a name="thesuccesspage"></a>
+<a id="thesuccesspage"></a>
 <h2>The Success Page</h2>
 
 
@@ -243,7 +243,7 @@ folder:</p>
 </div>
 
 
-<a name="thecontroller"></a>
+<a id="thecontroller"></a>
 <h2>The Controller</h2>
 
 <p>Create a controller called <dfn>form.lc</dfn>.  In it, place this code and save it to your <samp>system/application/controllers/</samp>
@@ -327,7 +327,7 @@ whether the validation was successful it either presents the form or the success
 
 
 
-<a name="validationrules"></a>
+<a id="validationrules"></a>
 
 <h2>Setting Validation Rules</h2>
 
@@ -405,7 +405,7 @@ there is an error.  We'll get to that shortly.</p>
 
 
 
-<a name="validationrulesasarray"></a>
+<a id="validationrulesasarray"></a>
 <h2>Setting Rules Using an Array</h2>
 
 <p>Before moving on, it should be noted that the rule setting function can be passed an array if you prefer to set all your rules in one action.
@@ -436,7 +436,7 @@ rigSetRules tConfig
 
 
 
-<a name="cascadingrules"></a>
+<a id="cascadingrules"></a>
 <h2>Cascading Rules</h2>
 
 <p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of rule setting function, like this:</p>
@@ -462,7 +462,7 @@ There are numerous rules available which you can read about in the validation re
 
 
 
-<a name="preppingdata"></a>
+<a id="preppingdata"></a>
 <h2>Prepping Data</h2>
 
 <p>In addition to the validation functions like the ones we used above, you can also prep your data in various ways.
@@ -486,7 +486,7 @@ the validation rules so if there is an error, the original data will be shown in
 
 
 
-<a name="repopulatingform"></a>
+<a id="repopulatingform"></a>
 <h2>Re-populating the form</h2>
 
 <p>Thus far we have only been dealing with errors.  It's time to repopulate the form field with the submitted data. revIgniter offers several helper functions
@@ -591,7 +591,7 @@ permit you to re-populate &lt;select> menus, radio buttons, and checkboxes.</p>
 
 
 
-<a name="callbacks"></a>
+<a id="callbacks"></a>
 <h2>Callbacks: Your own Validation Handlers</h2>
 
 <p>The validation system supports callbacks to your own validation handlers.  This permits you to extend the validation library
@@ -606,7 +606,7 @@ create a callback handler that does that.  Let's create a example of this.</p>
 <p>Then add a new handler called <dfn>userNameCheck</dfn> to your controller.  Here's how your controller should now look:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code class="lang-livecodeserver">&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,userNameCheck" into gControllerHandlers
@@ -649,12 +649,13 @@ end index
 
 command userNameCheck pStr
   if pStr = "test" then
-    rigSetMessage "userNameCheck", "The %s field can not be the word"  && quote & "test" & quote & "."
+    rigSetMessage "userNameCheck", "The %s field can not be the word" && quote & "test" & quote & "."
     return FALSE
   else
     return TRUE
   end if
 end userNameCheck
+
 </code></pre>
 </div>
 
@@ -674,7 +675,7 @@ it is assumed that the data is your newly processed form data.</p>
 
 
 
-<a name="settingerrors"></a>
+<a id="settingerrors"></a>
 <h2>Setting Error Messages</h2>
 
 
@@ -698,7 +699,7 @@ it is assumed that the data is your newly processed form data.</p>
 
 
 
-<a name="translatingfn"></a>
+<a id="translatingfn"></a>
 <h2>Translating Field Names</h2>
 
 <p>If you would like to store the "human" name you passed to the <dfn>rigSetRules</dfn> handler in a language file, and therefore make the name able to be translated, here's how:</p>
@@ -719,7 +720,7 @@ it is assumed that the data is your newly processed form data.</p>
 <p>See the <a href="language.html">Language Library</a> page for more info regarding language files.</p>
 
 
-<a name="errordelimiters"></a>
+<a id="errordelimiters"></a>
 <h2>Changing the Error Delimiters</h2>
 
 <p>By default, the Form Validation library adds a paragraph tag (&lt;p&gt;) around each error message shown. You can either change these delimiters globally or 
@@ -731,7 +732,7 @@ individually.</p>
 
 <p>To globally change the error delimiters, in your controller handler, just after loading the Form Validation library, add this:</p>
 
-<pre><code>rigSetErrorDelimiters "<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>"</code></pre>
+<pre><code class="lang-livecodeserver">rigSetErrorDelimiters "<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>"</code></pre>
 
 <p>In this example, we've switched to using div tags.</p>
 
@@ -741,11 +742,11 @@ individually.</p>
 
 <p>Each of the two error generating functions shown in this tutorial can be supplied their own delimiters as follows:</p>
 
-<pre><code>put rigFormError("fieldname", "<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>") into gData["fieldNameError"]</code></pre>
+<pre><code class="lang-livecodeserver">put rigFormError("fieldname", "<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>") into gData["fieldNameError"]</code></pre>
 
 <p>Or:</p>
 
-<pre><code>put rigValidationErrors("<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>") into gData["formErrors"]</code></pre>
+<pre><code class="lang-livecodeserver">put rigValidationErrors("<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>") into gData["formErrors"]</code></pre>
 
 </li>
 </ol>
@@ -753,7 +754,7 @@ individually.</p>
 
 
 
-<a name="individualerrors"></a>
+<a id="individualerrors"></a>
 <h2>Showing Errors Individually</h2>
 
 <p>If you prefer to show an error message next to each form field, rather than as a list, you can use the <dfn>rigFormError()</dfn> function.</p>
@@ -805,7 +806,7 @@ put rigFormError("email") into gData["emailError"]
 <p>&nbsp;</p>
 
 
-<a name="savingtoconfig"></a>
+<a id="savingtoconfig"></a>
 <h1>Saving Sets of Validation Rules to a Config File</h1>
 
 <p>A nice feature of the Form Validation library is that it permits you to store all your validation rules for your entire application in a config file.  You
@@ -1083,7 +1084,7 @@ end rigFetchValidationConf
 <p>&nbsp;</p>
 
 
-<a name="arraysasfields"></a>
+<a id="arraysasfields"></a>
 <h1>Using Arrays as Field Names</h1>
 
 <p>The Form Validation library supports the use of arrays as field names.  Consider this example:</p>
@@ -1142,7 +1143,7 @@ POST array:</p>
 <p>&nbsp;</p>
 
 
-<a name="rulereference"></a>
+<a id="rulereference"></a>
 <h1>Rule Reference</h1>
 
 <p>The following is a list of all the native rules that are available to use:</p>
@@ -1319,7 +1320,7 @@ put the result into tStringValidResult
 
 <p>&nbsp;</p>
 
-<a name="preppingreference"></a>
+<a id="preppingreference"></a>
 <h1>Prepping Reference</h1>
 
 <p>The following is a list of all the prepping handlers that are available to use:</p>
@@ -1396,7 +1397,7 @@ put the result into tStringValidResult
 
 <p>&nbsp;</p>
 
-<a name="handlerreference"></a>
+<a id="handlerreference"></a>
 <h2>Handler Reference</h2>
 
 <p>The following handlers are intended for use in your controller handlers.</p>
@@ -1453,7 +1454,7 @@ rigSetPrefilledValues tPrefilledArray
 
 <p>&nbsp;</p>
 
-<a name="helperreference"></a>
+<a id="helperreference"></a>
 <h2>Helper Reference</h2>
 
 <p>The following helper handlers are available for use in the view files containing your forms.</p>

@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -417,7 +417,7 @@ end if
 <p>Now add the following code (mind line breaks) to the <dfn>index</dfn> handler:</p>
 
 <div class="codeSample">
-<pre><code>if tLogin is FALSE then
+<pre><code class="lang-livecodeserver">if tLogin is FALSE then
   # USER SENT A NAME
   rigJQopen
     # LOAD MESSAGES
@@ -480,7 +480,7 @@ get rigLoadView("chatfooter")
 <p>Your <dfn>index</dfn> handler should now look like this:</p>
 
 <div class="codeSample">
-<pre><code>command index
+<pre><code class="lang-livecodeserver">command index
   if rigSessUserdata("name") &lt;> FALSE then
     put rigSessUserdata("name") into gData["user"]
     put FALSE into tLogin
@@ -578,7 +578,7 @@ end view
 <p>The last handler is used to end the chat session. If there is a user name, it sends the user name and a "User has left ..." message to the model to add this data to the database. Then it destroys the session data as it is not needed anymore and loads the appropriate view files to display the login page again. Add the following code to the controller:</p>
 
 <div class="codeSample">
-<pre><code>command logout
+<pre><code class="lang-livecodeserver">command logout
   put rigSessUserdata("name") into tName
   if tName &lt;> FALSE then
     put "User" &amp;&amp; tName &amp;&amp; "has left the chat session." into tMsg
@@ -661,7 +661,7 @@ end getMsgData
 
 <p>Now we loop through the rows of the chat table and build the messages list adding all the necessary html tags. This list will be returned by the function. Complete the function by inserting the following lines right after the code above:</p>
 
-<pre><code>    repeat with i = 1 to tQueryResult["numrows"]
+<pre><code class="lang-livecodeserver">    repeat with i = 1 to tQueryResult["numrows"]
       put rigDbRow(i) into tRowData
       put tRowData["time"] into tTime
       convert tTime to short time
@@ -681,7 +681,7 @@ end getMsgData
 <p>Your <dfn>getMsgData</dfn> function should now look like this: </p>
 
 <div class="codeSample">
-<pre><code>function getMsgData
+<pre><code class="lang-livecodeserver">function getMsgData
   rigDbOrderBy "id", "ASC"
   put rigDbGet("chat") into tQueryResult
 

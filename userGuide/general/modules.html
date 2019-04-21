@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -108,7 +108,7 @@
 </ul>
 
 
-<a name="overview"></a>
+<a id="overview"></a>
 <h2>Overview</h2>
 
 <p>Following below the features and key points of revIgniter's approach to the HMVC pattern:</p>
@@ -130,7 +130,7 @@
 </ul>
 
 
-<a name="structure"></a>
+<a id="structure"></a>
 <h2>Structure of a HMVC Module</h2>
 
 <p>All modules are arranged in their own folder in the application/modules directory and may contain configuration files and sub-directories like the main MVC component in the application directory.</p>
@@ -152,7 +152,7 @@
 <p>Please see as an example the very basic module "moduleSample" in application/modules. You can find a real-world example (a JSON feed module) here: <a href="https://gitlab.com/rabitt/revigniter-jsonfeed-module">https://gitlab.com/rabitt/revigniter-jsonfeed-module</a></p>
 
 
-<a name="controllerSpecifications"></a>
+<a id="controllerSpecifications"></a>
 <h2>Module Controller Specifications</h2>
 
 <p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as uri segments into the  
@@ -213,7 +213,7 @@ end _privatehandler
   Routing has no effect on view partials or if modules are used as libraries. Please see the sample routes file in modules/moduleSample/config.</p>
   
   
-<a name="applicationControllers"></a>
+<a id="applicationControllers"></a>
 <h2>Using Modules as Application Controllers</h2>
 
 <p>To use modules as application controllers specify the controller script to be invoked using URI segments. There is no difference to standard controllers.  
@@ -226,13 +226,13 @@ For example to run the sample module as application controller the appropriate U
   used as widgets only.</p>
 
   
-<a name="widgets"></a>
+<a id="widgets"></a>
 <h2>Using Modules as Libraries or Widgets / View Partials</h2>
 
 <p>Widgets are, in contrast to modules used as app controllers, intrinsically tied to the modules library. So, please see chapter <a href="../libraries/modules.html">Modules Library</a> for further information.</p>
 
 
-<a name="paths"></a>
+<a id="paths"></a>
 <h2>Module Paths</h2>
 
 <p>Module paths and module controller paths are relative to <dfn>application/modules/</dfn>. Keep in mind that module controllers can be located in sub-folders of 
@@ -267,7 +267,7 @@ For example to run the sample module as application controller the appropriate U
 <p class="important"><strong>Note:</strong> Currently "query string" URLs are not compatible with modules. So, always use segment-based URLs.</p>
 
 
-<a name="loadingResources"></a>
+<a id="loadingResources"></a>
 <h2>Loading Module Files and Resources</h2>
 
 <p>You can load models, libraries, helpers etc. like in standard application controllers. To load equivalent module files add the module's name to parameter lists like:</p>
@@ -309,7 +309,7 @@ put sAutoLibraries into gModuleAutoload["libraries"]
   returns data as a string rather than sending it to the browser.</p>
 
 
-<a name="configuration"></a>
+<a id="configuration"></a>
 <h2>Module Configuration</h2>
 
 <p>To configure your module simply add a configuration file "<dfn>config.lc</dfn>" to <dfn>application/modules/myModule/config/</dfn> like the one you find in the config directory of the sample module.</p>
@@ -342,7 +342,7 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 <p>Where <var>itemName</var> is the <var>gConfig</var> array index you want to change, and <var>itemValue</var> is its value, and the third parameter is the name of your module.</p>
 
 
-<a name="routing"></a>
+<a id="routing"></a>
 <h2>URI Routing</h2>
 
 <p>Note, the following applies to modules only if used as application controllers. Routing has no effect on view partials or if modules are used as libraries. In case you use module controllers as application controller you must include a <dfn>routes.lc</dfn> file in the <dfn>yourModule/config directory</dfn>. This file lets you re-map URI requests to specific controller functions. Typically there is a one-to-one relationship between a module URL string and its corresponding controller page library/handler. The segments in a module URL normally follow this pattern:</p>
@@ -384,7 +384,7 @@ put sAutoLibraries into gModuleAutoload["libraries"]
   and the key number for reserved routes must be 1. So custom route key numbers start with number 2.</p>
 
 
-<a name="assets"></a>
+<a id="assets"></a>
 <h2>Module Assets</h2>
   
 <p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files and images is that it simplifies distribution of modules including assets. 

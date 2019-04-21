@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -69,7 +69,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -100,7 +100,7 @@
   Typically you'll use this in a loop, like this:</p>
 
 <div class="codeSample">
-<pre><code>get rigDbQuery("YOUR QUERY")
+<pre><code class="lang-livecodeserver">get rigDbQuery("YOUR QUERY")
   
 put rigDBresult() into tResult
   
@@ -117,7 +117,7 @@ end repeat
 the order of the result values, you need to add an incrementer:</p>
 
 <div class="codeSample">
-<pre><code>get rigDbQuery("YOUR QUERY")
+<pre><code class="lang-livecodeserver">get rigDbQuery("YOUR QUERY")
   
 put rigDBresult() into tResult
   
@@ -137,7 +137,7 @@ end repeat
   <p>You may fetch the values for each row by column name like in the following example:</p>
 
 <div class="codeSample">
-<pre><code>get rigDbQuery("YOUR QUERY")
+<pre><code class="lang-livecodeserver">get rigDbQuery("YOUR QUERY")
   
 put rigDBresult() into tResult
   
@@ -158,7 +158,7 @@ end repeat
   <p>If you run queries that might <strong>not</strong> produce a result, you are encouraged to test the result first:</p>
 
 <div class="codeSample">
-<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbQuery("YOUR QUERY") into tQuery
   
 # CHECK IF THE QUERY RESULT HAS DATA
 if tQuery["numrows"] > 0 then
@@ -183,7 +183,7 @@ end if
   <p>This query result index contains the pure result data as an array. Typically you'll use this in a loop, like this:</p>
 
 <div class="codeSample">
-<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbQuery("YOUR QUERY") into tQuery
   
 repeat for each key tKey in tQuery["resultarray"]
   
@@ -201,12 +201,12 @@ end repeat
   <p>This query result index contains the table field names in a numbered array.</p>
   
   
-  <h3><a name="fieldnumbers">&nbsp;</a>yourQuery["<var>fieldnumbers</var>"]</h3>
+  <h3><a id="fieldnumbers">&nbsp;</a>yourQuery["<var>fieldnumbers</var>"]</h3>
   
   <p>This query result index contains the table field numbers in an associative array where the keys are the field names. Using this array allows you to write the code above referencing field names instead of field numbers like:</p>
 
 <div class="codeSample">
-  <pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+  <pre><code class="lang-livecodeserver">put rigDbQuery("YOUR QUERY") into tQuery
   
 repeat for each key tKey in tQuery["resultarray"]
   
@@ -225,7 +225,7 @@ end repeat
   The result is returned as an <strong>array</strong>.  Here's a usage example:</p>
 
 <div class="codeSample">
-<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbQuery("YOUR QUERY") into tQuery
   
 if tQuery["numrows"] > 0 then
   

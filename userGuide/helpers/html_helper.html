@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -108,7 +108,7 @@
 
 <p>The following handlers are available:</p>
 
-<h3><a name="br"></a>rigHtmlBr()</h3>
+<h3><a id="br"></a>rigHtmlBr()</h3>
 
 <p>Generates line break tags (&lt;br />) based on the number you submit. Example:</p>
 
@@ -116,7 +116,7 @@
 
 <p>The above would produce: &lt;br />&lt;br />&lt;br /></p>
 
-<h3><a name="heading"></a>rigHtmlHeading()</h3>
+<h3><a id="heading"></a>rigHtmlHeading()</h3>
 
 <p>Lets you create HTML &lt;h1> tags.  The first parameter will contain the data, the
 second the size of the heading.  Example:</p>
@@ -125,7 +125,7 @@ second the size of the heading.  Example:</p>
 
 <p>The above would produce:  &lt;h3>Welcome!&lt;/h3></p>
 
-<h3><a name="img"></a>rigHtmlImg()</h3>
+<h3><a id="img"></a>rigHtmlImg()</h3>
 
 <p>Lets you create HTML &lt;img /&gt; tags.  The first parameter  contains the image source. Example:</p>
 
@@ -151,7 +151,7 @@ put "lightbox" into tImgProperties["rel"]
 put rigHtmlImg(tImgProperties) into gData["myPic"]
 -- &lt;img src=&quot;http://site.com/index.lc/images/picture.jpg&quot; alt=&quot;Me, demonstrating how to eat 4 slices of pizza at one time&quot; class=&quot;post_images&quot; width=&quot;200&quot; height=&quot;200&quot; title=&quot;That was quite a night&quot; rel=&quot;lightbox&quot; /&gt;</code></pre>
 
-<h3><a name="link_tag"></a>rigHtmlLinkTag()</h3>
+<h3><a id="link_tag"></a>rigHtmlLinkTag()</h3>
 
 <p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media and indexPage. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates.</p>
 
@@ -178,7 +178,7 @@ put "print" into tLink["media"]
 put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 -- &lt;link href=&quot;http://site.com/css/printer.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;</code></pre>
   
-<h3><a name="nbs"></a>rigHtmlNbs()</h3>
+<h3><a id="nbs"></a>rigHtmlNbs()</h3>
 
 <p>Generates non-breaking spaces (&amp;nbsp;) based on the number you submit. Example:</p>
 
@@ -186,7 +186,7 @@ put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 
 <p>The above would produce: &amp;nbsp;&amp;nbsp;&amp;nbsp;</p>
 
-<h3><a name="ol_and_ul"></a>rigHtmlOL()&nbsp; and&nbsp; rigHtmlUL()</h3>
+<h3><a id="ol_and_ul"></a>rigHtmlOL()&nbsp; and&nbsp; rigHtmlUL()</h3>
 
 <p>Permits you to generate ordered or unordered HTML lists from simple or multi-dimensional arrays. Example:</p>
 
@@ -290,7 +290,7 @@ put rigHtmlUL(tList, tAttributes) into gData["myUL"]</code></pre>
 
 
 
-<h3><a name="meta"></a>rigHtmlMeta()</h3>
+<h3><a id="meta"></a>rigHtmlMeta()</h3>
 
 <p>Helps you generate meta tags.  You can pass strings to the function, or simple arrays, or multidimensional ones. Examples:</p>
 
@@ -334,7 +334,7 @@ put rigHtmlMeta(tMeta) into gData["myMeta"]
 </code></pre>
 
 
-<h3><a name="doctype"></a>rigHtmlDocType()</h3>
+<h3><a id="doctype"></a>rigHtmlDocType()</h3>
 
 <p>Helps you generate document type declarations, or DTD's. XHTML 1.0 Strict is used by default, but many doctypes are available.</p>
 

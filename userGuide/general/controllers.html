@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -105,7 +105,7 @@
 </ul>
 
 
-<a name="what"></a>
+<a id="what"></a>
 <h2>What is a Controller?</h2>
 
 <p><dfn>A Controller is simply a library file that is named in a way that can be associated with a URI.</dfn></p>
@@ -118,7 +118,7 @@
 
 <p><strong>When a controller's name matches the first segment of a URI, it will be loaded.</strong></p>
 
-<a name="hello"></a>
+<a id="hello"></a>
 <h2>Let's try it:&nbsp; Hello World!</h2>
 
 <p>Let's create a simple controller so you can see it in action.  Using your text editor, create a file called <dfn>blog.lc</dfn>, and put the following code in it:</p>
@@ -145,7 +145,7 @@ end index
 <p>If you did it right, you should see <samp>Hello World!</samp>.</p>
 
 
-<a name="handlers"></a>
+<a id="handlers"></a>
 <h2>Handlers</h2>
 
 <p>In the above example the handler name is <dfn>index</dfn>.  The "index" handler is always loaded by default if the
@@ -185,7 +185,7 @@ end comments
 
 <p class="important"><strong>Note:</strong>&nbsp; There is currently a limitation with LiveCode Server which does not allow hyphens in handler names. So, don't use hyphens in your handler names as these yield an error.</p>
 
-<a name="passinguri"></a>
+<a id="passinguri"></a>
 <h2>Passing URI Segments to your Handlers</h2>
 
 <p>If your URI contains more than two segments you can retrieve them using the rigFetchSegment() function.</p>
@@ -197,7 +197,7 @@ end comments
 <p>The function rigFetchSegment(3) will return "sandals" and rigFetchSegment(4) will return "123" (URI segments 3 and 4):</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code class="lang-livecodeserver">&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
 put "index,shoes" into gControllerHandlers
@@ -212,7 +212,7 @@ end shoes
 must be retrieved using the rigFetchRsegment() function.</p>
 
 
-<a name="default"></a>
+<a id="default"></a>
 <h2>Defining a Default Controller</h2>
 
 <p>revIgniter can be told to load a default controller when a URI is not present,
@@ -227,7 +227,7 @@ specifying any URI segments you'll see your Hello World message by default.</p>
 
 
 
-<a name="remapping"></a>
+<a id="remapping"></a>
 <h2>Remapping Handler Calls</h2>
 
 <p>As noted above, the second segment of the URI typically determines which handler in the controller gets called.
@@ -257,7 +257,7 @@ end _remap
 
 
 
-<a name="output"></a>
+<a id="output"></a>
 <h2>Processing Output</h2>
 
 <p>revIgniter has an output library that takes care of sending your final rendered data to the web browser automatically.  More information on this can be found in the
@@ -280,7 +280,7 @@ cache files written (if you have caching enabled), and headers will be sent (if 
 before it is handed off to the _output handler.  If you are using this feature the page execution timer might not be perfectly accurate
 since it will not take into acccount any further processing you do.  For an alternate way to control output <em>before</em> any of the final processing is done, please see the available handlers in the <a href="../libraries/output.html">Output Library</a>.</p>
 
-<a name="private"></a>
+<a id="private"></a>
 <h2>Private Handlers</h2>
 
 
@@ -298,7 +298,7 @@ end _utility
 
 
 
-<a name="subfolders"></a>
+<a id="subfolders"></a>
 <h2>Organizing Your Controllers into Sub-folders</h2>
 
 <p>If you are building a large application you might find it convenient to organize your controllers into sub-folders.  revIgniter permits you to do this.</p>
@@ -322,7 +322,7 @@ called if the URL contains only the sub-folder.  Simply name your default contro
 <p>revIgniter also permits you to remap your URIs using its <a href="routing.html">URI Routing</a> feature.</p>
 
 
-<a name="reserved"></a>
+<a id="reserved"></a>
 <h2>Reserved Handler Names</h2>
 
 <p>Since your controller script will extend the main application controller you
@@ -330,7 +330,7 @@ must be careful not to name your handlers identically to the ones used by that l
 See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 
 
-<a name="good"></a>
+<a id="good"></a>
 <h2>Good Practice</h2>
 
 <p>It is good practice, though not mandatory, to load all needed libraries, databases, stacks, helpers, extensions, custom config files, 
