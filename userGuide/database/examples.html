@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -69,7 +69,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -107,7 +107,7 @@ read the individual pages describing each method.</p>
 <h2>Standard Query With Multiple Results</h2>
 
 <div class="codeSample">
-<pre><code>put rigDbQuery("SELECT name, title, email FROM myTable") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbQuery("SELECT name, title, email FROM myTable") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
   put rigDbRow(i) into tRowData
@@ -126,7 +126,7 @@ end repeat
 
 
 <div class="codeSample">
-<pre><code>put rigDbQuery("YOUR QUERY") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbQuery("YOUR QUERY") into tQuery
 
 # CHECK IF THE QUERY RESULT HAS DATA
 if tQuery["numrows"] > 0 then
@@ -157,7 +157,7 @@ put tRow["name"] into tName
 <h2>Standard Insert</h2>
 
 <div class="codeSample">
-<pre><code>put "INSERT INTO mytable (title, name) VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
+<pre><code class="lang-livecodeserver">put "INSERT INTO mytable (title, name) VALUES (" & rigDbEscape(tTitle) & ", " & rigDbEscape(tName) & ")" into tSQL
 
 get rigDbQuery(tSQL)
 
@@ -173,7 +173,7 @@ put rigDbAffectedRows() into tAffectedRows
 <p>The <a href="active_record.html">Active Record Pattern</a> gives you a simplified means of retrieving data:</p>
 
 <div class="codeSample">
-<pre><code>put rigDbGet("tableName") into tQuery
+<pre><code class="lang-livecodeserver">put rigDbGet("tableName") into tQuery
 
 repeat with i = 1 to tQuery["numrows"]
   put rigDbRow(i) into tRowData

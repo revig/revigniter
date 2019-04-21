@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -112,7 +112,7 @@ that your Javascript folder is called "js". If you don't like that, you can chan
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/js
 </p>
 
-<h2><a name="bustingCaches">&nbsp;</a>Busting Caches</h2>
+<h2><a id="bustingCaches">&nbsp;</a>Busting Caches</h2>
 
 <p>If you are using far future expire headers for static files, which are likely to be modified anytime, you should set
   use_cacheBusters in <dfn>system/application/config/config.lc</dfn> to TRUE to enable a mechanism for automatically updating user's cache. Then whenever you modify static files like images, CSS files, JavaScript files or favicons, browser cached data is refreshed without the need to change file names.<br />

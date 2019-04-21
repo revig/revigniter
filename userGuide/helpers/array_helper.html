@@ -1,109 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Array Helper : revIgniter User Guide</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Array Helper : revIgniter User Guide</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="robots" content="all" />
+        <meta name="author" content="Ralf Bitter" />
+        <meta name="description" content="revIgniter User Guide" />
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		<script src="../js/nav-ck.js"></script>
-		
-		<!-- Touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
+        <!-- Bootstrap -->
+        <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+
+        <script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+        <script src="../js/nav-ck.js"></script>
+
+        <!-- Touch icons -->
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
 		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
 		    <script src="../js/respond.min.js"></script>
 		<![endif]-->
 
-	</head>
-<body>
-	<!-- START PAGE HEAD -->
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+    </head>
+
+    <body>
+        <!-- START PAGE HEAD -->
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
+                </div>
+
+                <div class="collapse navbar-collapse">
+                    <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+                        <div class="form-group">
+                            <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+                            <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+                            &nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
+                        </div>
+                    </form>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+
+            <!-- START BREADCRUMB -->
+            <div id="breadcrumbContainer">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+                        <li><a href="../index.html">User Guide Home</a></li>
+                        <li class="active">Array Helper</li>
+                        <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+                    </ol>
+                </div>
+            </div>
+            <!-- END BREADCRUMB -->
+
+            <!-- START SLIDEBOX -->
+            <div class="slide-panel top">
+                <div class="container">
+                    <div id="panelContent">
+                        <script type="text/javascript">
+                            createMenu('../');
+
+                        </script>
+                    </div>
+                </div>
+                <div id="open-button" class="slide-button">Table of Contents</div>
+                <div id="close-button" class="slide-button">Close</div>
+            </div>
+            <!-- END SLIDEBOX -->
+
         </div>
-
-        <div class="collapse navbar-collapse">
-          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
- 		      <div class="form-group">
- 				<input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
- 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
- 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" alt="Search Go Button" />
- 		      </div>
- 		 	 		</form>
-        </div><!--/.nav-collapse -->
-     </div>
-		 
-		 <!-- START BREADCRUMB -->		 
-		 <div id="breadcrumbContainer">
-			 <div class="container">
-			 		<ol class="breadcrumb">
-			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
-			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Array Helper</li>
-						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
-			 		 </ol>
-				</div>
-		</div>
-		<!-- END BREADCRUMB -->		
-		
-		<!-- START SLIDEBOX -->
-		<div class="slide-panel top">
-			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
-			</div>
-			<div id="open-button" class="slide-button">Table of Contents</div>
-			<div id="close-button" class="slide-button">Close</div>
-		</div>
-		<!-- END SLIDEBOX -->
-	 
-  </div>
-<!-- END PAGE HEAD -->
-
- 
-
-<!-- START CONTENT -->
-<div class="container gridContainer">
-	
-<div id="content">
+        <!-- END PAGE HEAD -->
 
 
-<h1>Array Helper</h1>
 
-<p>The Array Helper file contains handlers that assist in working with arrays.</p>
+        <!-- START CONTENT -->
+        <div class="container gridContainer">
+
+            <div id="content">
 
 
-<h2>Loading this Helper</h2>
+                <h1>Array Helper</h1>
 
-<p>This helper is loaded using the following code:</p>
-<pre><code class="lang-livecodeserver">rigLoadHelper "array"</code></pre>
+                <p>The Array Helper file contains handlers that assist in working with arrays.</p>
 
-<p>The following handlers are available:</p>
 
-<h3>rigArrayElement()</h3>
+                <h2>Loading this Helper</h2>
 
-<p>Lets you fetch an item from an array.  The function tests whether the array index is set and whether it has a value.  If
-a value exists it is returned.  If a value does not exist it returns FALSE, or whatever you've specified as the default value via the third parameter.  Example:</p>
+                <p>This helper is loaded using the following code:</p>
+                <pre><code class="lang-livecodeserver">rigLoadHelper "array"</code></pre>
 
-<pre><code>put "color=red,shape=round,size=" into tArray
+                <p>The following handlers are available:</p>
+
+                <h3>rigArrayElement()</h3>
+
+                <p>Lets you fetch an item from an array. The function tests whether the array index is set and whether it has a value. If
+                    a value exists it is returned. If a value does not exist it returns FALSE, or whatever you've specified as the default value via the third parameter. Example:</p>
+
+                <pre><code>put "color=red,shape=round,size=" into tArray
 split tArray using comma and "="
 
 -- returns "red"
@@ -114,11 +122,11 @@ get rigArrayElement("size", tArray, 0)
 </code></pre>
 
 
-<h3>rigArrayRandElement()</h3>
+                <h3>rigArrayRandElement()</h3>
 
-<p>Takes an array as input and returns a random element from it.  Usage example:</p>
+                <p>Takes an array as input and returns a random element from it. Usage example:</p>
 
-<pre><code>put "I find that the harder I work, the more luck I seem to have. - Thomas Jefferson" into tQuotes[1]
+                <pre><code>put "I find that the harder I work, the more luck I seem to have. - Thomas Jefferson" into tQuotes[1]
 put "Don't stay in bed, unless you can make money in bed. - George Burns" into tQuotes[2]
 put "We didn't lose the game; we just ran out of time. - Vince Lombardi" into tQuotes[3]
 put "If everything seems under control, you're not going fast enough. - Mario Andretti" into tQuotes[4]
@@ -128,16 +136,16 @@ put "Chance favors the prepared mind - Louis Pasteur" into tQuotes[6]
 put rigArrayRandElement(tQuotes) into gData["quoteOfTheDay"]</code></pre>
 
 
-<h3>rigArrayKeys()</h3>
-<p>Takes an array as input and returns the keys of the array as numeric array.</p>
+                <h3>rigArrayKeys()</h3>
+                <p>Takes an array as input and returns the keys of the array as numeric array.</p>
 
-<h3>rigArrayValues()</h3>
-<p>Returns all the values from the input array and indexes the array numerically.</p>
+                <h3>rigArrayValues()</h3>
+                <p>Returns all the values from the input array and indexes the array numerically.</p>
 
-<h3>rigArraySplice(<var>tArray</var>, <var>tOffset</var>, <var>tLength</var>)</h3>
-<p>Retrieve a portion of an array. Example:</p>
+                <h3>rigArraySplice(<var>tArray</var>, <var>tOffset</var>, <var>tLength</var>)</h3>
+                <p>Retrieve a portion of an array. Example:</p>
 
-<pre><code>put "red,blue,green,yellow,violet,black,white" into tArray
+                <pre><code>put "red,blue,green,yellow,violet,black,white" into tArray
 split tArray using comma
 
 put rigArraySplice(tArray, 2, 3) into tSplicedArray
@@ -146,13 +154,13 @@ combine tSplicedArray using comma
 -- Produces: green,yellow,violet
 </code></pre>
 
-<p class="important"><strong>Note:</strong>&nbsp; This works with numbered arrays only as LiveCode's arrays are not ordered.</p>
+                <p class="important"><strong>Note:</strong>&nbsp; This works with numbered arrays only as LiveCode's arrays are not ordered.</p>
 
 
-<h3>rigImplode(<var>tArray</var>, <var>tGlue</var>)</h3>
-<p>Joins array elements with a string. Example:</p>
+                <h3>rigImplode(<var>tArray</var>, <var>tGlue</var>)</h3>
+                <p>Joins array elements with a string. Example:</p>
 
-<pre><code>put "red,yellow,blue,green" into tArray
+                <pre><code>put "red,yellow,blue,green" into tArray
 split tArray using comma
 
 get rigImplode(tArray, " - ")
@@ -161,40 +169,47 @@ get rigImplode(tArray, " - ")
 </code></pre>
 
 
-<h3>rigElementsList(<var>tArray</var>)</h3>
-<p>Returns a list of array elements, each on a seperate line.</p>
+                <h3>rigElementsList(<var>tArray</var>)</h3>
+                <p>Returns a list of array elements, each on a seperate line.</p>
 
 
 
-</div>
-<!-- END CONTENT -->
+            </div>
+            <!-- END CONTENT -->
 
-</div> <!-- /container -->
-
-
-<div id="footer">
-	<div class="container">
-<p>
-Previous Topic:&nbsp;&nbsp; <a href="../libraries/user_agent.html">User Agent Library</a><span class="separator"> :: </span>
-<a href="#top">Top of Page</a><span class="separator"> :: </span>
-<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="asset_helper.html">Asset Helper</a></p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
-	</div>
-</div>
-
-<script src="../js/jquery-1.9.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-
-<script src="../js/highlight.pack.js"></script>
- <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
- </script>
-
-<script src="../js/script-ck.js"></script>
-<script>$(function() { Slidebox.init(); });</script>
+        </div> <!-- /container -->
 
 
-</body>
+        <div id="footer">
+            <div class="container">
+                <p>
+                    Previous Topic:&nbsp;&nbsp; <a href="../libraries/user_agent.html">User Agent Library</a><span class="separator"> :: </span>
+                    <a href="#top">Top of Page</a><span class="separator"> :: </span>
+                    <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+                    Next Topic:&nbsp;&nbsp;<a href="asset_helper.html">Asset Helper</a></p>
+                <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+            </div>
+        </div>
+
+        <script src="../js/jquery-1.9.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <script src="../js/highlight.pack.js"></script>
+        <script>
+            hljs.tabReplace = '    ';
+            hljs.initHighlightingOnLoad();
+
+        </script>
+
+        <script src="../js/script-ck.js"></script>
+        <script>
+            $(function() {
+                Slidebox.init();
+            });
+
+        </script>
+
+
+    </body>
+
 </html>

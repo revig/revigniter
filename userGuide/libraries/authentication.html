@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
-    <meta name='description' content='revIgniter User Guide' />
+    <meta name="description" content="revIgniter User Guide" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
-        <div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
       </div>
       <div id="open-button" class="slide-button">Table of Contents</div>
       <div id="close-button" class="slide-button">Close</div>
@@ -119,7 +119,7 @@
 
 <p>&nbsp;</p>
 
-<a name="overview"></a>
+<a id="overview"></a>
 <h2>Overview</h2>
 
 <p>Following below the features and key points of revIgniter's Authentication library:</p>
@@ -142,7 +142,7 @@
 
 <p>&nbsp;</p>
 
-<a name="configuration"></a>
+<a id="configuration"></a>
 <h2>Authentication Configuration</h2>
 
 
@@ -240,7 +240,7 @@
 
 <a href="#top">Top of Page</a>
 
-<a name="handlerreference"></a>
+<a id="handlerreference"></a>
 <h2>Handler Reference</h2>
 
 
@@ -315,7 +315,7 @@ end logout
 
 
 <div class="codeSample">
-<pre><code># GET ACCOUNT DATA
+<pre><code class="lang-livecodeserver"># GET ACCOUNT DATA
 if $_POST is an array then
   put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
   put rigVarPOST("password") into tPassword
@@ -723,7 +723,7 @@ end if
 <p>Example:</p>
 
 <div class="codeSample">
-<pre><code># GET ALL ADMINS
+<pre><code class="lang-livecodeserver"># GET ALL ADMINS
 put rigAuthUsers(1) into tAdmins
 
 # tAdmins IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
@@ -760,7 +760,7 @@ end repeat
 
 
 <div class="codeSample">
-<pre><code># GET MEMBERS GROUP
+<pre><code class="lang-livecodeserver"># GET MEMBERS GROUP
 put rigAuthGroup(2) into tGroup
 
 # tGroup IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
@@ -787,7 +787,7 @@ delete char -2  to -1 of tRowData
 
 
 <div class="codeSample">
-<pre><code># GET GROUPS
+<pre><code class="lang-livecodeserver"># GET GROUPS
 put rigAuthGroups() into tGroups
 
 # tGroups IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
@@ -825,7 +825,7 @@ end repeat
 
 
 <div class="codeSample">
-<pre><code># GET ALL GROUPS THE ADMIN IS A MEMBER OF
+<pre><code class="lang-livecodeserver"># GET ALL GROUPS THE ADMIN IS A MEMBER OF
 put rigAuthUserGroups(1) into tUserGroups
 
 # tUserGroups IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
@@ -1187,7 +1187,7 @@ put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newP
 
 <p>&nbsp;</p>
 
-<a name="hooks"></a>
+<a id="hooks"></a>
 <h1>Authentication Hooks</h1>
 
 <p>Authentication hooks work similar like those extending the framework core. So, if you want to run your own scripts at a particular stage of the library's execution process, the hooks feature is your friend.</p>
@@ -1468,7 +1468,7 @@ put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepat
 
 <p>&nbsp;</p>
 
-<a name="tables"></a>
+<a id="tables"></a>
 <h1>Authentication Tables</h1>
 
 <p>In order to use revIgniter's authentication library you need 4 database tables.</p>
@@ -1840,7 +1840,7 @@ CREATE TABLE "login_attempts" (
 
 <a href="#top">Top of Page</a>
 
-<a name="emailtemplates"></a>
+<a id="emailtemplates"></a>
 
 <h2>Authentication Email Templates</h2>
 
@@ -1873,7 +1873,7 @@ CREATE TABLE "login_attempts" (
 
 <p>&nbsp;</p>
 
-<a name="usage"></a>
+<a id="usage"></a>
 <h1>Usage Example</h1>
 
 <p>Before explaining what is needed to set up the authentication sample, let's describe the scenario:</p>
@@ -1909,14 +1909,14 @@ CREATE TABLE "login_attempts" (
 
 <p>Let's create those files.</p>
 
-<a name="thecontroller"></a>
+<a id="thecontroller"></a>
 
 <h2>The Controller</h2>
 
 <p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your application/controllers/ folder.</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code class="lang-livecodeserver">&lt;?lc
 
 put "auth,index,login,logout,createUser,activate,deactivate,forgotPassword" & \
 ",resetPassword,changePassword,editUser,deleteUser" into gControllerHandlers
@@ -2032,7 +2032,7 @@ end index
 <p>Add the following code which is needed to create new user data.</p>
 
 <div class="codeSample">
-<pre><code>command createUser
+<pre><code class="lang-livecodeserver">command createUser
  put "Auth Test Create User" into gData["pageTitle"]
 
  # CHECK IF USER IS NOT LOGGED IN OR IF USER IS NOT ADMIN
@@ -2172,7 +2172,7 @@ end createUser
 <p>Add the login handler.</p>
 
 <div class="codeSample">
-<pre><code>command login
+<pre><code class="lang-livecodeserver">command login
  put "Auth Test Login" into gData["pageTitle"]
 
  # FORM OPEN
@@ -2320,7 +2320,7 @@ end activate
 <p>Add the user deactivation handler.</p>
 
 <div class="codeSample">
-<pre><code>command deactivate
+<pre><code class="lang-livecodeserver">command deactivate
  put "Auth Test Deactivate" into gData["pageTitle"]
 
  put rigFetchSegment(3) into tID
@@ -2411,7 +2411,7 @@ end deactivate
 <p>Add the "forgotPassword" handler.</p>
 
 <div class="codeSample">
-<pre><code>command forgotPassword
+<pre><code class="lang-livecodeserver">command forgotPassword
  put "Auth Test Forgot Password" into gData["pageTitle"]
 
  put rigSessFlashdata("message") into gData["message"]
@@ -2481,7 +2481,7 @@ end forgotPassword
 <p>Add code which is used to reset passwords in case a user forgot the password or sent a change password request.</p>
 
 <div class="codeSample">
-<pre><code>command resetPassword
+<pre><code class="lang-livecodeserver">command resetPassword
  put "Auth Test Reset Password" into gData["pageTitle"]
 
  put rigFetchSegment(3) into tForgottenPasswordCode
@@ -2599,7 +2599,7 @@ end resetPassword
 <p>Add a handler which is used to change passwords.</p>
 
 <div class="codeSample">
-<pre><code>command changePassword
+<pre><code class="lang-livecodeserver">command changePassword
  put "Auth Test Change Password" into gData["pageTitle"]
 
  # CHECK IF USER IS LOGGED IN
@@ -2707,7 +2707,7 @@ end changePassword
 <p>Add a handler which is used to edit user data.</p>
 
 <div class="codeSample">
-<pre><code>command editUser
+<pre><code class="lang-livecodeserver">command editUser
  put "Auth Test Edit User" into gData["pageTitle"]
 
  # CHECK IF USER IS NOT LOGGED IN OR IF USER IS NOT ADMIN
@@ -2847,7 +2847,7 @@ end editUser
 <p>Now add the last handler which is needed to delete user data.</p>
 
 <div class="codeSample">
-<pre><code>command deleteUser
+<pre><code class="lang-livecodeserver">command deleteUser
  put "Auth Test Delete User" into gData["pageTitle"]
 
  put rigFetchSegment(3) into tID
@@ -2950,7 +2950,7 @@ end deleteUser
 
 
 
-<a name="thevalidationfile"></a>
+<a id="thevalidationfile"></a>
 
 <h2>The Form Validation File</h2>
 
@@ -3111,7 +3111,7 @@ end rigFetchValidationConf
 <a href="#top">Top of Page</a>
 
 
-<a name="theviewfiles"></a>
+<a id="theviewfiles"></a>
 
 <h2>The View Files</h2>
 
@@ -3170,7 +3170,7 @@ end rigFetchValidationConf
 
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/authView", TRUE) into tContent
 return tHeader && tContent
@@ -3226,7 +3226,7 @@ return tHeader && tContent
 
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/changePasswordView", TRUE) into tContent
 return tHeader && tContent
@@ -3239,7 +3239,7 @@ return tHeader && tContent
 
 
 <div class="codeSample">
-<pre><code>&lt;body>
+<pre><code class="lang-xml">&lt;body>
 
   &lt;div id="container" class="createUser">
     &lt;header>
@@ -3287,7 +3287,7 @@ return tHeader && tContent
 
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/createUserView", TRUE) into tContent
 return tHeader && tContent
@@ -3335,7 +3335,7 @@ return tHeader && tContent
 <p>The parent view "deactivateUserMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deactivateUserView", TRUE) into tContent
 return tHeader && tContent
@@ -3385,7 +3385,7 @@ return tHeader && tContent
 <p>The parent view "deleteUserMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/deleteUserView", TRUE) into tContent
 return tHeader && tContent
@@ -3399,7 +3399,7 @@ return tHeader && tContent
 
 
 <div class="codeSample">
-<pre><code>&lt;body>
+<pre><code class="lang-xml">&lt;body>
 
 &lt;div id="container" class="editUser">
    &lt;header>
@@ -3447,7 +3447,7 @@ return tHeader && tContent
 <p>The parent view "editUserMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/editUserView", TRUE) into tContent
 return tHeader && tContent
@@ -3495,7 +3495,7 @@ return tHeader && tContent
 <p>The parent view "forgotPasswordMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/forgotPasswordView", TRUE) into tContent
 return tHeader && tContent
@@ -3546,7 +3546,7 @@ return tHeader && tContent
 <p>The parent view "loginMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/loginView", TRUE) into tContent
 return tHeader && tContent
@@ -3601,7 +3601,7 @@ return tHeader && tContent
 <p>The parent view "resetPasswordMainView.lc":</p>
 
 <div class="codeSample">
-<pre><code>&lt;?
+<pre><code class="lang-livecodeserver">&lt;?
 put rigLoadView("auth/headerView", TRUE) into tHeader
 put rigLoadView("auth/resetPasswordView", TRUE) into tContent
 return tHeader && tContent
@@ -3614,7 +3614,7 @@ return tHeader && tContent
 
 <a href="#top">Top of Page</a>
 
-<a name="cssfile"></a>
+<a id="cssfile"></a>
 
 <h2>The CSS File</h2>
 
