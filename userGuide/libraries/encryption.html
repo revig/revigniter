@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+				<div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
 			</div>
 			<div id="open-button" class="slide-button">Table of Contents</div>
 			<div id="close-button" class="slide-button">Close</div>
@@ -150,14 +150,14 @@ put rigEncode(tMsg, tKey) into tEncryptedString</code></pre>
 
 <p>Decrypts an encoded string.  Example:</p>
 
-<pre><code>put "U2FsdGVkX180lz6BW4yPRwVGYoGusZ0vX7Qe3wyhcxSdCAwTHUrlGyQPpDZQ0rUX+2qoFvf+" & return & "Vew=" into tEncryptedString
+<pre><code class="lang-livecodeserver">put "U2FsdGVkX180lz6BW4yPRwVGYoGusZ0vX7Qe3wyhcxSdCAwTHUrlGyQPpDZQ0rUX+2qoFvf+" & return & "Vew=" into tEncryptedString
 
 put rigDecode(tEncryptedString) into tPlaintextString</code></pre>
 
 
 <p>You can optionally pass your encryption key via the second parameter if you don't want to use the one in your config file:</p>
 
-<pre><code>put "U2FsdGVkX1+X1ziDFFg/0bkTX9ABsfqoxyWzzhQ3Vlidx9XjCgN6Xd/0Z9G/ZLDJFbFy0KVJ" & return & "eR8=" into tEncryptedString
+<pre><code class="lang-livecodeserver">put "U2FsdGVkX1+X1ziDFFg/0bkTX9ABsfqoxyWzzhQ3Vlidx9XjCgN6Xd/0Z9G/ZLDJFbFy0KVJ" & return & "eR8=" into tEncryptedString
 put "superSecretKey" into tKey
 
 put rigDecode(tEncryptedString, tKey) into tPlaintextString</code></pre>

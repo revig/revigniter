@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>The Database Library : revIgniter User Guide</title>
+		<title>Upgrading from 2.0.3 to 2.0.4 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
@@ -23,7 +23,7 @@
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
 		    <script src="../js/respond.min.js"></script>
 		<![endif]-->
 
@@ -58,7 +58,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="http://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Database Library</li>
+			 		 	<li class="active">Upgrading from 2.0.3 to 2.0.4</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -80,32 +80,41 @@
 
  
 
-
 <!-- START CONTENT -->
 <div class="container gridContainer">
 	
 <div id="content">
 
+<h1>Upgrading from 2.0.3 to 2.0.4</h1>
 
-<h1>The Database Library</h1>
 
-<p>revIgniter comes with a full-featured and very fast abstracted database library that supports both traditional
-structures and Active Record patterns. The database handlers offer clear, simple syntax.</p>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
-	<ul>
-		<li><a href="examples.html">Quick Start:  Usage Examples</a></li>
-		<li><a href="configuration.html">Database Configuration</a></li>
-		<li><a href="connecting.html">Connecting to a Database</a></li>
-		<li><a href="queries.html">Running Queries</a></li>
-		<li><a href="results.html">Generating Query Results</a></li>
-		<li><a href="helpers.html">Query Helper Handlers</a></li>
-		<li><a href="active_record.html">Active Record Library</a></li>
-		<li><a href="transactions.html">Transactions</a></li>
-		<li><a href="table_data.html">Table MetaData</a></li>
-		<li><a href="fields.html">Field MetaData</a></li>
-		<li><a href="caching.html">Query Caching</a></li>
-	</ul>
-	
+
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+
+<p>Replace this file in your "system/database" folder with the new version:</p>
+
+<ul>
+	<li><dfn>DBactiveRec.livecodescript</dfn></li>
+</ul>
+
+
+<p>Replace these files in your "system/revigniter" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Common.livecodescript</dfn></li>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
+
 
 </div>
 <!-- END CONTENT -->
@@ -116,11 +125,11 @@ structures and Active Record patterns. The database handlers offer clear, simple
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="../libraries/config.html">Config Library</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="examples.html">Quick Start: Usage Examples</a>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 </p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>

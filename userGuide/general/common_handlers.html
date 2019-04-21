@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -68,7 +68,7 @@
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('../');</script></div>
+				<div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
 			</div>
 			<div id="open-button" class="slide-button">Table of Contents</div>
 			<div id="close-button" class="slide-button">Close</div>
@@ -119,7 +119,7 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 <br>Example:</p>
 
 <div class="codeSample">
-<pre><code>put "'nonce-" & rigNonce() & "'" into tSrcNonce
+<pre><code class="lang-livecodeserver">put "'nonce-" & rigNonce() & "'" into tSrcNonce
 # GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
 put "Content-Security-Policy" into tCspMetaA["name"]
 put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]

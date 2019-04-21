@@ -43,9 +43,9 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "2.0.3"
+	constant RIVERSION = "2.0.4"
 	constant RISTATE = "final"
-	
+
 # VERSION GETTER
   function rigVersion pWhat
     switch pWhat
@@ -55,8 +55,8 @@ end if
         return RIVERSION
     end switch
   end rigVersion
-	
-	
+
+
 ##
 #------------------------------------------------------
 #  DECLARE ADDITIONAL GLOBAL VARIABLES
@@ -162,7 +162,7 @@ end if
 #  Load the local application controller or a module controller used as app controller
 #------------------------------------------------------
 #
-# Note: The Router library automatically validates the controller path.  If this include fails it 
+# Note: The Router library automatically validates the controller path.  If this include fails it
 # means that the default controller in the routes.lc file is not resolving to something valid.
 #
 ##
@@ -170,9 +170,9 @@ end if
 	put empty into tRig404Override
   put TRUE into tUnableToLaodPage
   put rigFetchDirectory() into tRigControllerDir
-  
+
   put tRigControllerDir & gRigA["controller"] & gRigA["EXT"] into tControllerPath
-	
+
   if tRigControllerDir is empty then
 	# CONTROLLER DIRECTORY WAS NOT FOUND, COMPOSE PATH TO 404 ERROR FILE
     _rigPrepare404Error
@@ -180,13 +180,13 @@ end if
 
 	if there is a file (gRigA["APPPATH"] & tControllerPath) then
 		put FALSE into tUnableToLaodPage
-      
+
 		# CHECK IF WE ARE DEALING WITH A MODULE
 		if gRigA["module"] <> empty then
 
 			# LOAD CONFIG FILE ASSOCIATED WITH MODULE IF AVAILABLE
 			get rigLoadConfigFile(, TRUE, TRUE, gRigA["module"])
-        
+
 			# LOAD AUTOLOAD FILE ASSOCIATED WITH MODULE IF AVAILABLE
 			rigLoadAutoLoad gRigA["module"], TRUE
 		end if
@@ -197,7 +197,7 @@ end if
 			put gModuleHandlers into gControllerHandlers
 		end if
 	end if
-  
+
   if tUnableToLaodPage is TRUE then
     rigShowError "Unable to load your default controller. Please make sure the controller specified in your routes" & gRigA["EXT"] & " file is valid."
   end if
@@ -265,23 +265,23 @@ end if
 
 	#MARK A START POINT SO WE CAN BENCHMARK THE CONTROLLER
 	rigTimeMark "controllerExecutionTime_" & gRigA["controller"] &  "/" & gRigA["handler"] & "_start"
-	
+
 	##
-	
+
 	# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 	put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
-	
+
 	# RUN THE CONTROLLER HANDLER IF HANDLER NAME IS IN GLOBAL gControllerHandlers
 		_rigDo gRigA["controller"]
-		
+
 	# OTHERWISE SOLELY RUN THE DEFAULT index HANDLER PROVIDED
 	# THAT ITS NAME IS IN GLOBAL gControllerHandlers
 	if (the result is not empty) and (gRigA["handler"] is not among the items of gControllerHandlers) then
-		
+
 		# BEFORE SENDING THE DEFAULT 404 ERROR PAGE CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS
 		_rigPrepare404Error
 		if tRig404Override <> empty then
-			
+
 			put tRig404Override into t404ErrorSegments
 
 			split t404ErrorSegments by "/"
@@ -289,12 +289,12 @@ end if
        put t404ErrorSegments[2] into gRigA["handler"]
 
        include gRigA["APPPATH"] & tRigControllerDir & gRigA["controller"] & gRigA["EXT"]
-				
+
 			# REMOVE WHITESPACE FROM gControllerHandlers (A COMMA DELIMITED LIST)
 			put replacetext(gControllerHandlers,"[ ]+","") into gControllerHandlers
-				
+
 		else
-				
+
        put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
        rigShow404 gRigA["errorData"]
 		end if
@@ -309,7 +309,7 @@ end if
 			_rigScaffolding
 		end if
 	else
-	
+
 
 		##
 		#------------------------------------------------------
@@ -348,12 +348,12 @@ end if
 					end if
 
 				else
-				
+
             put gRigA["controller"] & "/" & gRigA["handler"] into gRigA["errorData"]["page"]
             rigShow404 gRigA["errorData"]
 				end if
 			end if
-		
+
 			# CALL THE REQUESTED HANDLER.
 			# ANY URI SEGMENTS PRESENT (BESIDES THE CONTROLLER/HANDLER) WILL BE PASSED TO THE HANDLER FOR CONVENIENCE
 			if (the number of lines in the keys of gRigA["rSegments"]) > 2 then
@@ -370,9 +370,9 @@ end if
 				_rigDo sHandler
 			else
 				_rigDo gRigA["handler"]
-			end if -- if (the number of lines in the keys of gRSegments) > 2 then
+			end if -- if (the number of lines in the keys of gRigA["rSegments"]) > 2 then
 		end if -- if "_remap" is among the items of gControllerHandlers then
-	
+
 	end if -- if it is TRUE then
 
 
@@ -388,7 +388,7 @@ end if
 ##
 
   command _rigPrepare404Error
-    if gRigA["module"] is empty then 
+    if gRigA["module"] is empty then
       put "controllers/" & gRigA["controller"] & gRigA["EXT"] into tControllerPath
       put "controllers/" into tRigControllerDir
       put gRoute[1]["404Override"] into tRig404Override
@@ -419,7 +419,7 @@ end if
       else
         return "Error: handler not found!"
       end if
-      
+
     else
       if word 1 of pHandler is among the items of gControllerHandlers then
         do pHandler

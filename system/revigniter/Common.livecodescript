@@ -2312,9 +2312,9 @@ end _rigStrToArray
 --| FUNCTION rigFileSize
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2014-02-12
---| Last Mod: 2019-01-12
+--| Last Mod: 2019-03-16
 --| Requires: rigIsAbsolutePath()
 --|
 --| Summary: Gets the file size of a given file.
@@ -2327,7 +2327,7 @@ end _rigStrToArray
 ----------------------------------------------------------------------*/
 
 function rigFileSize pFilePath
-  local tFolderName, tFileName, tOldFolder, tFileList, tInfo
+  local tFolderName, tFileName, tFileList, tInfo
   
   if there is a file pFilePath then
   else
@@ -2352,8 +2352,6 @@ function rigFileSize pFilePath
   # GET INFO FOR FILE
   filter tFileList with tFileName & "*"
   put tFileList into tInfo
-   
-  set the directory to tOldFolder
    
   # RETURN FILE SIZE
   return item 2 of tInfo
