@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all" />
 		<meta name="author" content="Ralf Bitter" />
-		<meta name='description' content='revIgniter User Guide' />
+		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="css/bootstrap.min.css">
@@ -68,7 +68,7 @@
 		<!-- START SLIDEBOX -->
 		<div class="slide-panel top">
 			<div class="container">
-				<div id="panelContent"><script type="text/javascript">create_menu('null');</script></div>
+				<div id="panelContent"><script type="text/javascript">createMenu('null');</script></div>
 			</div>
 			<div id="open-button" class="slide-button">Table of Contents</div>
 			<div id="close-button" class="slide-button">Close</div>
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version204">Version 2.0.4</a></li>
 <li><a href="#version203">Version 2.0.3</a></li>
 <li><a href="#version202">Version 2.0.2</a></li>
 <li><a href="#version201">Version 2.0.1</a></li>
@@ -208,10 +209,22 @@
 </ul>
 
 
+<h2><a id="version204">&nbsp;</a>Version 2.0.4</h2>
+<p>Release Date: 2019-04-21</p>
 
-<h2><a name="version203">&nbsp;</a>Version 2.0.3</h2>
+<ul>
+	<li><strong>Added:</strong> Flag to <kbd>system/database/DBactiveRec.livecodescript</kbd> -> <dfn>rigDbGet()</dfn> to return the active record query string without processing the query.</li>
+	<li><strong>Changed:</strong> Replaced highlight.js with a custom version of version 9.15.6. in the User Guide.</li>
+	<li><strong>Changed:</strong> Removed redundant code in <kbd>system/revigniter/Common.livecodescript</kbd> -> <dfn>rigFileSize()</dfn>.</li>
+	<li><strong>Fixed:</strong> Issue with tracking table name aliases in <kbd>system/database/DBactiveRec.livecodescript</kbd> -> <dfn>_rigTrackAliases()</dfn>. So far the function _rigTrackAliases stored every table name in the <var>sActiveRecord["aliasedtables"]</var> array.</li>
+	<li><strong>Fixed:</strong> Code example in chapter “Creating Libraries” of the User Guide.</li>
+	<li><strong>Fixed:</strong> Info about required server engine version in User Guide. Rephrased the server requirements info.</li>
+</ul>
+
+
+
+<h2><a id="version203">&nbsp;</a>Version 2.0.3</h2>
 <p>Release Date: 2019-03-01</p>
-
 
 <ul>
 	<li><strong>Fixed:</strong> Wrong path to cache folder in <kbd>system/libraries/Output.livecodescript</kbd> -> <dfn>_rigWriteCache</dfn>.</li>
@@ -222,7 +235,7 @@
 
 
 
-<h2><a name="version202">&nbsp;</a>Version 2.0.2</h2>
+<h2><a id="version202">&nbsp;</a>Version 2.0.2</h2>
 <p>Release Date: 2019-02-26</p>
 
 
@@ -234,7 +247,7 @@
 
 
 
-<h2><a name="version201">&nbsp;</a>Version 2.0.1</h2>
+<h2><a id="version201">&nbsp;</a>Version 2.0.1</h2>
 <p>Release Date: 2019-02-18</p>
 
 
@@ -244,7 +257,7 @@
 
 
 
-<h2><a name="version200">&nbsp;</a>Version 2.0.0</h2>
+<h2><a id="version200">&nbsp;</a>Version 2.0.0</h2>
 <p>Release Date: 2019-02-16</p>
 
 <h3>General Changes</h3>
@@ -315,7 +328,7 @@
 
 
 
-<h2><a name="version1103">&nbsp;</a>Version 1.10.3</h2>
+<h2><a id="version1103">&nbsp;</a>Version 1.10.3</h2>
 <p>Release Date: 2019-01-04</p>
 
 <p>
@@ -335,7 +348,7 @@
 
 
 
-<h2><a name="version1102">&nbsp;</a>Version 1.10.2</h2>
+<h2><a id="version1102">&nbsp;</a>Version 1.10.2</h2>
 <p>Release Date: 2018-11-12</p>
 
 <p>
@@ -348,7 +361,7 @@
 </p>
 
 
-<h2><a name="version1101">&nbsp;</a>Version 1.10.1</h2>
+<h2><a id="version1101">&nbsp;</a>Version 1.10.1</h2>
 <p>Release Date: 2018-10-29</p>
 
 <p>
@@ -365,7 +378,7 @@
 </p>
 
 
-<h2><a name="version1100">&nbsp;</a>Version 1.10.0</h2>
+<h2><a id="version1100">&nbsp;</a>Version 1.10.0</h2>
 <p>Release Date: 2018-09-24</p>
 
 <p>
@@ -377,7 +390,7 @@
 
 
 
-<h2><a name="version198">&nbsp;</a>Version 1.9.8</h2>
+<h2><a id="version198">&nbsp;</a>Version 1.9.8</h2>
 <p>Release Date: 2018-06-24</p>
 
 <p>
@@ -392,7 +405,7 @@
 
 
 
-<h2><a name="version197">&nbsp;</a>Version 1.9.7</h2>
+<h2><a id="version197">&nbsp;</a>Version 1.9.7</h2>
 <p>Release Date: 2018-04-12</p>
 
 
@@ -415,7 +428,7 @@
 
 
 
-<h2><a name="version196">&nbsp;</a>Version 1.9.6</h2>
+<h2><a id="version196">&nbsp;</a>Version 1.9.6</h2>
 <p>Release Date: 2017-06-27</p>
 
 
@@ -439,7 +452,7 @@
 
 
 
-<h2><a name="version195">&nbsp;</a>Version 1.9.5</h2>
+<h2><a id="version195">&nbsp;</a>Version 1.9.5</h2>
 <p>Release Date: 2017-01-23</p>
 
 
@@ -453,7 +466,7 @@
 
 
 
-<h2><a name="version194">&nbsp;</a>Version 1.9.4</h2>
+<h2><a id="version194">&nbsp;</a>Version 1.9.4</h2>
 <p>Release Date: 2016-11-05</p>
 
 
@@ -465,7 +478,7 @@
 
 
 
-<h2><a name="version193">&nbsp;</a>Version 1.9.3</h2>
+<h2><a id="version193">&nbsp;</a>Version 1.9.3</h2>
 <p>Release Date: 2016-10-18</p>
 
 
@@ -477,7 +490,7 @@
 
 
 
-<h2><a name="version192">&nbsp;</a>Version 1.9.2</h2>
+<h2><a id="version192">&nbsp;</a>Version 1.9.2</h2>
 <p>Release Date: 2016-10-08</p>
 
 
@@ -492,7 +505,7 @@
 </p>
 
 
-<h2><a name="version191">&nbsp;</a>Version 1.9.1</h2>
+<h2><a id="version191">&nbsp;</a>Version 1.9.1</h2>
 <p>Release Date: 2016-08-07</p>
 
 
@@ -507,7 +520,7 @@
 
 
 
-<h2><a name="version19">&nbsp;</a>Version 1.9.0</h2>
+<h2><a id="version19">&nbsp;</a>Version 1.9.0</h2>
 <p>Release Date: 2016-07-19</p>
 
 
@@ -529,7 +542,7 @@
 
 
 
-<h2><a name="version183">&nbsp;</a>Version 1.8.3</h2>
+<h2><a id="version183">&nbsp;</a>Version 1.8.3</h2>
 <p>Release Date: 2016-06-30</p>
 
 
@@ -544,7 +557,7 @@
 </p>
 
 
-<h2><a name="version182">&nbsp;</a>Version 1.8.2</h2>
+<h2><a id="version182">&nbsp;</a>Version 1.8.2</h2>
 <p>Release Date: 2016-06-19</p>
 
 
@@ -560,7 +573,7 @@
 </p>
 
 
-<h2><a name="version181">&nbsp;</a>Version 1.8.1</h2>
+<h2><a id="version181">&nbsp;</a>Version 1.8.1</h2>
 <p>Release Date: 2016-03-09</p>
 
 
@@ -571,7 +584,7 @@
 </p>
 
 
-<h2><a name="version18">&nbsp;</a>Version 1.8</h2>
+<h2><a id="version18">&nbsp;</a>Version 1.8</h2>
 <p>Release Date: 2016-01-04</p>
 
 
@@ -587,7 +600,7 @@
 
 
 
-<h2><a name="version174">&nbsp;</a>Version 1.7.4</h2>
+<h2><a id="version174">&nbsp;</a>Version 1.7.4</h2>
 <p>Release Date: 2015-11-15</p>
 
 
@@ -603,7 +616,7 @@
 
 
 
-<h2><a name="version173">&nbsp;</a>Version 1.7.3</h2>
+<h2><a id="version173">&nbsp;</a>Version 1.7.3</h2>
 <p>Release Date: 2015-10-21</p>
 
 
@@ -617,7 +630,7 @@
 
 
 
-<h2><a name="version172">&nbsp;</a>Version 1.7.2</h2>
+<h2><a id="version172">&nbsp;</a>Version 1.7.2</h2>
 <p>Release Date: 2015-10-02</p>
 
 
@@ -652,7 +665,7 @@
 
 
 
-<h2><a name="version171">&nbsp;</a>Version 1.7.1</h2>
+<h2><a id="version171">&nbsp;</a>Version 1.7.1</h2>
 <p>Release Date: 2015-08-10</p>
 
 
@@ -679,7 +692,7 @@
 
 
 
-<h2><a name="version170">&nbsp;</a>Version 1.7.0</h2>
+<h2><a id="version170">&nbsp;</a>Version 1.7.0</h2>
 <p>Release Date: 2015-06-17</p>
 
 
@@ -700,7 +713,7 @@
 
 
 
-<h2><a name="version1624">&nbsp;</a>Version 1.6.24</h2>
+<h2><a id="version1624">&nbsp;</a>Version 1.6.24</h2>
 <p>Release Date: 2015-05-11</p>
 
 
@@ -716,7 +729,7 @@
 
 
 
-<h2><a name="version1623">&nbsp;</a>Version 1.6.23</h2>
+<h2><a id="version1623">&nbsp;</a>Version 1.6.23</h2>
 <p>Release Date: 2015-05-04</p>
 
 
@@ -735,7 +748,7 @@
 
 
 
-<h2><a name="version1622">&nbsp;</a>Version 1.6.22</h2>
+<h2><a id="version1622">&nbsp;</a>Version 1.6.22</h2>
 <p>Release Date: 2015-04-23</p>
 
 
@@ -754,7 +767,7 @@
 
 
 
-<h2><a name="version1621">&nbsp;</a>Version 1.6.21</h2>
+<h2><a id="version1621">&nbsp;</a>Version 1.6.21</h2>
 <p>Release Date: 2015-02-24</p>
 
 
@@ -767,7 +780,7 @@
 </p>
 
 
-<h2><a name="version1620">&nbsp;</a>Version 1.6.20</h2>
+<h2><a id="version1620">&nbsp;</a>Version 1.6.20</h2>
 <p>Release Date: 2015-02-14</p>
 
 
@@ -785,7 +798,7 @@
 
 
 
-<h2><a name="version1619">&nbsp;</a>Version 1.6.19</h2>
+<h2><a id="version1619">&nbsp;</a>Version 1.6.19</h2>
 <p>Release Date: 2015-02-02</p>
 
 
@@ -803,7 +816,7 @@
 
 
 
-<h2><a name="version1618">&nbsp;</a>Version 1.6.18</h2>
+<h2><a id="version1618">&nbsp;</a>Version 1.6.18</h2>
 <p>Release Date: 2015-01-23</p>
 
 
@@ -816,7 +829,7 @@
 
 
 
-<h2><a name="version1617">&nbsp;</a>Version 1.6.17</h2>
+<h2><a id="version1617">&nbsp;</a>Version 1.6.17</h2>
 <p>Release Date: 2015-01-13</p>
 
 
@@ -829,7 +842,7 @@
 
 
 
-<h2><a name="version1616">&nbsp;</a>Version 1.6.16</h2>
+<h2><a id="version1616">&nbsp;</a>Version 1.6.16</h2>
 <p>Release Date: 2015-01-09</p>
 
 
@@ -848,7 +861,7 @@
 
 
 
-<h2><a name="version1615">&nbsp;</a>Version 1.6.15</h2>
+<h2><a id="version1615">&nbsp;</a>Version 1.6.15</h2>
 <p>Release Date: December 21, 2014</p>
 
 
@@ -861,7 +874,7 @@
 
 
 
-<h2><a name="version1614">&nbsp;</a>Version 1.6.14</h2>
+<h2><a id="version1614">&nbsp;</a>Version 1.6.14</h2>
 <p>Release Date: December 04, 2014</p>
 
 
@@ -877,7 +890,7 @@
 
 
 
-<h2><a name="version1613">&nbsp;</a>Version 1.6.13</h2>
+<h2><a id="version1613">&nbsp;</a>Version 1.6.13</h2>
 <p>Release Date: May 28, 2014</p>
 
 
@@ -893,7 +906,7 @@
 
 
 
-<h2><a name="version1612">&nbsp;</a>Version 1.6.12</h2>
+<h2><a id="version1612">&nbsp;</a>Version 1.6.12</h2>
 <p>Release Date: April 16, 2014</p>
 
 
@@ -905,7 +918,7 @@
 
 
 
-<h2><a name="version1611">&nbsp;</a>Version 1.6.11</h2>
+<h2><a id="version1611">&nbsp;</a>Version 1.6.11</h2>
 <p>Release Date: April 16, 2014</p>
 
 
@@ -917,7 +930,7 @@
 </p>
 
 
-<h2><a name="version1610">&nbsp;</a>Version 1.6.10</h2>
+<h2><a id="version1610">&nbsp;</a>Version 1.6.10</h2>
 <p>Release Date: March 03, 2014</p>
 
 
@@ -931,7 +944,7 @@
 
 
 
-<h2><a name="version169">&nbsp;</a>Version 1.6.9</h2>
+<h2><a id="version169">&nbsp;</a>Version 1.6.9</h2>
 <p>Release Date: February 16, 2014</p>
 
 
@@ -946,7 +959,7 @@
 
 
 
-<h2><a name="version168">&nbsp;</a>Version 1.6.8</h2>
+<h2><a id="version168">&nbsp;</a>Version 1.6.8</h2>
 <p>Release Date: February 02, 2014</p>
 
 
@@ -959,7 +972,7 @@
 
 
 
-<h2><a name="version167">&nbsp;</a>Version 1.6.7</h2>
+<h2><a id="version167">&nbsp;</a>Version 1.6.7</h2>
 <p>Release Date: January 17, 2014</p>
 
 
@@ -973,7 +986,7 @@
 
 
 
-<h2><a name="version166">&nbsp;</a>Version 1.6.6</h2>
+<h2><a id="version166">&nbsp;</a>Version 1.6.6</h2>
 <p>Release Date: November 02, 2013</p>
 
 
@@ -990,7 +1003,7 @@
 
 
 
-<h2><a name="version165">&nbsp;</a>Version 1.6.5</h2>
+<h2><a id="version165">&nbsp;</a>Version 1.6.5</h2>
 <p>Release Date: September 07, 2013</p>
 
 
@@ -1005,7 +1018,7 @@
 </p>
 
 
-<h2><a name="version164">&nbsp;</a>Version 1.6.4</h2>
+<h2><a id="version164">&nbsp;</a>Version 1.6.4</h2>
 <p>Release Date: July 01, 2013</p>
 
 
@@ -1019,7 +1032,7 @@
 
 
 
-<h2><a name="version163">&nbsp;</a>Version 1.6.3</h2>
+<h2><a id="version163">&nbsp;</a>Version 1.6.3</h2>
 <p>Release Date: June 20, 2013</p>
 
 
@@ -1030,7 +1043,7 @@
 </p>
 
 
-<h2><a name="version162">&nbsp;</a>Version 1.6.2</h2>
+<h2><a id="version162">&nbsp;</a>Version 1.6.2</h2>
 <p>Release Date: May 07, 2013</p>
 
 
@@ -1046,7 +1059,7 @@
 
 
 
-<h2><a name="version161">&nbsp;</a>Version 1.6.1</h2>
+<h2><a id="version161">&nbsp;</a>Version 1.6.1</h2>
 <p>Release Date: March 05, 2013</p>
 
 
@@ -1062,7 +1075,7 @@
 
 
 
-<h2><a name="version16">&nbsp;</a>Version 1.6</h2>
+<h2><a id="version16">&nbsp;</a>Version 1.6</h2>
 <p>Release Date: March 01, 2013</p>
 
 
@@ -1077,7 +1090,7 @@
 
 
 
-<h2><a name="version1521b">&nbsp;</a>Version Beta 1.5.21</h2>
+<h2><a id="version1521b">&nbsp;</a>Version Beta 1.5.21</h2>
 <p>Release Date: February 20, 2013</p>
 
 
@@ -1093,7 +1106,7 @@
 
 
 
-<h2><a name="version1520b">&nbsp;</a>Version Beta 1.5.20</h2>
+<h2><a id="version1520b">&nbsp;</a>Version Beta 1.5.20</h2>
 <p>Release Date: February 1, 2013</p>
 
 
@@ -1106,7 +1119,7 @@
 
 
 
-<h2><a name="version1519b">&nbsp;</a>Version Beta 1.5.19</h2>
+<h2><a id="version1519b">&nbsp;</a>Version Beta 1.5.19</h2>
 <p>Release Date: December 1, 2012</p>
 
 
@@ -1118,7 +1131,7 @@
 
 
 
-<h2><a name="version1518b">&nbsp;</a>Version Beta 1.5.18</h2>
+<h2><a id="version1518b">&nbsp;</a>Version Beta 1.5.18</h2>
 <p>Release Date: November 20, 2012</p>
 
 
@@ -1133,7 +1146,7 @@
 
 
 
-<h2><a name="version1517b">&nbsp;</a>Version Beta 1.5.17</h2>
+<h2><a id="version1517b">&nbsp;</a>Version Beta 1.5.17</h2>
 <p>Release Date: October 03, 2012</p>
 
 
@@ -1149,7 +1162,7 @@
 
 
 
-<h2><a name="version1516b">&nbsp;</a>Version Beta 1.5.16</h2>
+<h2><a id="version1516b">&nbsp;</a>Version Beta 1.5.16</h2>
 <p>Release Date: August 25, 2012</p>
 
 
@@ -1164,7 +1177,7 @@
 
 
 
-<h2><a name="version1515b">&nbsp;</a>Version Beta 1.5.15</h2>
+<h2><a id="version1515b">&nbsp;</a>Version Beta 1.5.15</h2>
 <p>Release Date: August 05, 2012</p>
 
 
@@ -1182,7 +1195,7 @@
 
 
 
-<h2><a name="version1514b">&nbsp;</a>Version Beta 1.5.14</h2>
+<h2><a id="version1514b">&nbsp;</a>Version Beta 1.5.14</h2>
 <p>Release Date: August 03, 2012</p>
 
 
@@ -1204,7 +1217,7 @@
 
 
 
-<h2><a name="version1513b">&nbsp;</a>Version Beta 1.5.13</h2>
+<h2><a id="version1513b">&nbsp;</a>Version Beta 1.5.13</h2>
 <p>Release Date: August 02, 2012</p>
 
 
@@ -1218,7 +1231,7 @@
 
 
 
-<h2><a name="version1512b">&nbsp;</a>Version Beta 1.5.12</h2>
+<h2><a id="version1512b">&nbsp;</a>Version Beta 1.5.12</h2>
 <p>Release Date: July 16, 2012</p>
 
 
@@ -1240,7 +1253,7 @@
 
 
 
-<h2><a name="version1511b">&nbsp;</a>Version Beta 1.5.11</h2>
+<h2><a id="version1511b">&nbsp;</a>Version Beta 1.5.11</h2>
 <p>Release Date: July 05, 2012</p>
 
 
@@ -1261,7 +1274,7 @@
 
 
 
-<h2><a name="version1510b">&nbsp;</a>Version Beta 1.5.10</h2>
+<h2><a id="version1510b">&nbsp;</a>Version Beta 1.5.10</h2>
 <p>Release Date: May 20, 2012</p>
 
 
@@ -1274,7 +1287,7 @@
 
 
 
-<h2><a name="version159b">&nbsp;</a>Version Beta 1.5.9</h2>
+<h2><a id="version159b">&nbsp;</a>Version Beta 1.5.9</h2>
 <p>Release Date: April 24, 2012</p>
 
 
@@ -1287,7 +1300,7 @@
 
 
 
-<h2><a name="version158b">&nbsp;</a>Version Beta 1.5.8</h2>
+<h2><a id="version158b">&nbsp;</a>Version Beta 1.5.8</h2>
 <p>Release Date: April 17, 2012</p>
 
 
@@ -1301,7 +1314,7 @@
 
 
 
-<h2><a name="version157b">&nbsp;</a>Version Beta 1.5.7</h2>
+<h2><a id="version157b">&nbsp;</a>Version Beta 1.5.7</h2>
 <p>Release Date: February 25, 2012</p>
 
 
@@ -1316,7 +1329,7 @@
 </p>
 
 
-<h2><a name="version156b">&nbsp;</a>Version Beta 1.5.6</h2>
+<h2><a id="version156b">&nbsp;</a>Version Beta 1.5.6</h2>
 <p>Release Date: February 12, 2012</p>
 
 
@@ -1332,7 +1345,7 @@
 </p>
 
 
-<h2><a name="version155b">&nbsp;</a>Version Beta 1.5.5</h2>
+<h2><a id="version155b">&nbsp;</a>Version Beta 1.5.5</h2>
 <p>Release Date: January 05, 2012</p>
 
 
@@ -1344,7 +1357,7 @@
 </p>
 
 
-<h2><a name="version154b">&nbsp;</a>Version Beta 1.5.4</h2>
+<h2><a id="version154b">&nbsp;</a>Version Beta 1.5.4</h2>
 <p>Release Date: December 28, 2011</p>
 
 
@@ -1356,7 +1369,7 @@
 
 
 
-<h2><a name="version153b">&nbsp;</a>Version Beta 1.5.3</h2>
+<h2><a id="version153b">&nbsp;</a>Version Beta 1.5.3</h2>
 <p>Release Date: December 22, 2011</p>
 
 
@@ -1369,7 +1382,7 @@
 
 
 
-<h2><a name="version152b">&nbsp;</a>Version Beta 1.5.2</h2>
+<h2><a id="version152b">&nbsp;</a>Version Beta 1.5.2</h2>
 <p>Release Date: December 18, 2011</p>
 
 
@@ -1387,7 +1400,7 @@
 </p>
 
 
-<h2><a name="version151b">&nbsp;</a>Version Beta 1.5.1</h2>
+<h2><a id="version151b">&nbsp;</a>Version Beta 1.5.1</h2>
 <p>Release Date: September 9, 2011</p>
 
 
@@ -1400,7 +1413,7 @@
 
 
 
-<h2><a name="version15b">&nbsp;</a>Version Beta 1.5</h2>
+<h2><a id="version15b">&nbsp;</a>Version Beta 1.5</h2>
 <p>Release Date: September 8, 2011</p>
 
 
@@ -1412,7 +1425,7 @@
 
 
 
-<h2><a name="version142b">&nbsp;</a>Version Beta 1.4.2</h2>
+<h2><a id="version142b">&nbsp;</a>Version Beta 1.4.2</h2>
 <p>Release Date: September 6, 2011</p>
 
 
@@ -1429,7 +1442,7 @@
 
 
 
-<h2><a name="version141b">&nbsp;</a>Version Beta 1.4.1</h2>
+<h2><a id="version141b">&nbsp;</a>Version Beta 1.4.1</h2>
 <p>Release Date: August 16, 2011</p>
 
 <p>
@@ -1447,7 +1460,7 @@
 
 
 
-<h2><a name="version14b">&nbsp;</a>Version Beta 1.4</h2>
+<h2><a id="version14b">&nbsp;</a>Version Beta 1.4</h2>
 <p>Release Date: July 19, 2011</p>
 
 <p>
@@ -1464,7 +1477,7 @@
 
 
 
-<h2><a name="version1325b">&nbsp;</a>Version Beta 1.3.25</h2>
+<h2><a id="version1325b">&nbsp;</a>Version Beta 1.3.25</h2>
 <p>Release Date: July 15, 2011</p>
 
 <p>
@@ -1475,7 +1488,7 @@
 
 
 
-<h2><a name="version1324b">&nbsp;</a>Version Beta 1.3.24</h2>
+<h2><a id="version1324b">&nbsp;</a>Version Beta 1.3.24</h2>
 <p>Release Date: June 29, 2011</p>
 
 <p>
@@ -1485,7 +1498,7 @@
 </p>
 
 
-<h2><a name="version1323b">&nbsp;</a>Version Beta 1.3.23</h2>
+<h2><a id="version1323b">&nbsp;</a>Version Beta 1.3.23</h2>
 <p>Release Date: June 11, 2011</p>
 
 <p>
@@ -1496,7 +1509,7 @@
 </p>
 
 
-<h2><a name="version1322b">&nbsp;</a>Version Beta 1.3.22</h2>
+<h2><a id="version1322b">&nbsp;</a>Version Beta 1.3.22</h2>
 <p>Release Date: May 26, 2011</p>
 
 <p>
@@ -1506,7 +1519,7 @@
 </p>
 
 
-<h2><a name="version1321b">&nbsp;</a>Version Beta 1.3.21</h2>
+<h2><a id="version1321b">&nbsp;</a>Version Beta 1.3.21</h2>
 <p>Release Date: May 15, 2011</p>
 
 <p>
@@ -1519,7 +1532,7 @@
 </p>
 
 
-<h2><a name="version1320b">&nbsp;</a>Version Beta 1.3.20</h2>
+<h2><a id="version1320b">&nbsp;</a>Version Beta 1.3.20</h2>
 <p>Release Date: May 10, 2011</p>
 
 <p>
@@ -1529,7 +1542,7 @@
 </p>
 
 
-<h2><a name="version1319b">&nbsp;</a>Version Beta 1.3.19</h2>
+<h2><a id="version1319b">&nbsp;</a>Version Beta 1.3.19</h2>
 <p>Release Date: May 09, 2011</p>
 
 <p>
@@ -1539,7 +1552,7 @@
 </p>
 
 
-<h2><a name="version1318b">&nbsp;</a>Version Beta 1.3.18</h2>
+<h2><a id="version1318b">&nbsp;</a>Version Beta 1.3.18</h2>
 <p>Release Date: May 08, 2011</p>
 
 <p>
@@ -1556,7 +1569,7 @@
 
 
 
-<h2><a name="version1317b">&nbsp;</a>Version Beta 1.3.17</h2>
+<h2><a id="version1317b">&nbsp;</a>Version Beta 1.3.17</h2>
 <p>Release Date: March 14, 2011</p>
 
 <p>
@@ -1568,7 +1581,7 @@
 
 
 
-<h2><a name="version1316b">&nbsp;</a>Version Beta 1.3.16</h2>
+<h2><a id="version1316b">&nbsp;</a>Version Beta 1.3.16</h2>
 <p>Release Date: March 04, 2011</p>
 
 <p>
@@ -1579,7 +1592,7 @@
 </p>
 
 
-<h2><a name="version1315b">&nbsp;</a>Version Beta 1.3.15</h2>
+<h2><a id="version1315b">&nbsp;</a>Version Beta 1.3.15</h2>
 <p>Release Date: February 18, 2011</p>
 
 <p>
@@ -1592,7 +1605,7 @@
 </p>
 
 
-<h2><a name="version1314b">&nbsp;</a>Version Beta 1.3.14</h2>
+<h2><a id="version1314b">&nbsp;</a>Version Beta 1.3.14</h2>
 <p>Release Date: January 31, 2011</p>
 
 <p>
@@ -1602,7 +1615,7 @@
 </p>
 
 
-<h2><a name="version1313b">&nbsp;</a>Version Beta 1.3.13</h2>
+<h2><a id="version1313b">&nbsp;</a>Version Beta 1.3.13</h2>
 <p>Release Date: January 22, 2011</p>
 
 <p>
@@ -1612,7 +1625,7 @@
 </p>
 
 
-<h2><a name="version1312b">&nbsp;</a>Version Beta 1.3.12</h2>
+<h2><a id="version1312b">&nbsp;</a>Version Beta 1.3.12</h2>
 <p>Release Date: December 31, 2010</p>
 
 <p>
@@ -1622,7 +1635,7 @@
 </p>
 
 
-<h2><a name="version1311b">&nbsp;</a>Version Beta 1.3.11</h2>
+<h2><a id="version1311b">&nbsp;</a>Version Beta 1.3.11</h2>
 <p>Release Date: December 2, 2010</p>
 
 <p>
@@ -1633,7 +1646,7 @@
 
 
 
-<h2><a name="version1310b">&nbsp;</a>Version Beta 1.3.10 </h2>
+<h2><a id="version1310b">&nbsp;</a>Version Beta 1.3.10 </h2>
 <p>Release Date: September 20, 2010</p>
 
 <p>
@@ -1647,7 +1660,7 @@
 </p>
 
 
-<h2><a name="version139b">&nbsp;</a>Version Beta 1.3.9 </h2>
+<h2><a id="version139b">&nbsp;</a>Version Beta 1.3.9 </h2>
 <p>Release Date: July 30, 2010</p>
 
 <p>
@@ -1659,7 +1672,7 @@
 
 
 
-<h2><a name="version138b">&nbsp;</a>Version Beta 1.3.8 </h2>
+<h2><a id="version138b">&nbsp;</a>Version Beta 1.3.8 </h2>
 <p>Release Date: July 24, 2010</p>
 
 <p>
@@ -1671,7 +1684,7 @@
 
 
 
-<h2><a name="version137b">&nbsp;</a>Version Beta 1.3.7 </h2>
+<h2><a id="version137b">&nbsp;</a>Version Beta 1.3.7 </h2>
 <p>Release Date: July 21, 2010</p>
 
 <p>
@@ -1687,7 +1700,7 @@
 
 
 
-<h2><a name="version136b">&nbsp;</a>Version Beta 1.3.6 </h2>
+<h2><a id="version136b">&nbsp;</a>Version Beta 1.3.6 </h2>
 <p>Release Date: July 12, 2010</p>
 
 <p>
@@ -1698,7 +1711,7 @@
 </p>
 
 
-<h2><a name="version135b">&nbsp;</a>Version Beta 1.3.5 </h2>
+<h2><a id="version135b">&nbsp;</a>Version Beta 1.3.5 </h2>
 <p>Release Date: July 10, 2010</p>
 
 <p>
@@ -1710,7 +1723,7 @@
 
 
 
-<h2><a name="version134b">&nbsp;</a>Version Beta 1.3.4 </h2>
+<h2><a id="version134b">&nbsp;</a>Version Beta 1.3.4 </h2>
 <p>Release Date: July 4, 2010</p>
 
 <p>
@@ -1723,7 +1736,7 @@
 
 
 
-<h2><a name="version133b">&nbsp;</a>Version Beta 1.3.3 </h2>
+<h2><a id="version133b">&nbsp;</a>Version Beta 1.3.3 </h2>
 <p>Release Date: July 1, 2010</p>
 
 <p>
@@ -1743,7 +1756,7 @@
 
 
 
-<h2><a name="version132b">&nbsp;</a>Version Beta 1.3.2 </h2>
+<h2><a id="version132b">&nbsp;</a>Version Beta 1.3.2 </h2>
 <p>Release Date: May 25, 2010</p>
 
 <p>
@@ -1757,7 +1770,7 @@
 </p>
 
 
-<h2><a name="version131b">&nbsp;</a>Version Beta 1.3.1 </h2>
+<h2><a id="version131b">&nbsp;</a>Version Beta 1.3.1 </h2>
 <p>Release Date: May 16, 2010</p>
 
 <p>
@@ -1767,7 +1780,7 @@
 </p>
 
 
-<h2><a name="version13b">&nbsp;</a>Version Beta 1.3 </h2>
+<h2><a id="version13b">&nbsp;</a>Version Beta 1.3 </h2>
 <p>Release Date: May 01, 2010</p>
 
 <p>
@@ -1783,7 +1796,7 @@
 </ul>
 </p>
 
-<h2><a name="version121b">&nbsp;</a>Version Beta 1.2.1 </h2>
+<h2><a id="version121b">&nbsp;</a>Version Beta 1.2.1 </h2>
 <p>Release Date: March 06, 2010</p>
 
 <p>
@@ -1799,7 +1812,7 @@
 
 
 
-<h2><a name="version12b">&nbsp;</a>Version Beta 1.2 </h2>
+<h2><a id="version12b">&nbsp;</a>Version Beta 1.2 </h2>
 <p>Release Date: January 30, 2010</p>
 
 <p>
@@ -1824,7 +1837,7 @@
 
 
 
-<h2><a name="version11b">&nbsp;</a>Version Beta 1.1 </h2>
+<h2><a id="version11b">&nbsp;</a>Version Beta 1.1 </h2>
 <p>Release Date: January 20, 2010</p>
 
 <p>
@@ -1836,7 +1849,7 @@
 </p>
 
 
-<h2><a name="version101b">&nbsp;</a>Version Beta 1.0.1 </h2>
+<h2><a id="version101b">&nbsp;</a>Version Beta 1.0.1 </h2>
 <p>Release Date: January 18, 2010</p>
 
 <p>
@@ -1846,7 +1859,7 @@
 </p>
 
 
-<h2><a name="version1b">&nbsp;</a>Version Beta 1.0 </h2>
+<h2><a id="version1b">&nbsp;</a>Version Beta 1.0 </h2>
 <p>Release Date: January 17, 2010</p>
 
 <p>
@@ -1857,7 +1870,7 @@
 </p>
 
 
-<h2><a name="version096a">&nbsp;</a>Version Alpha 0.9.6 </h2>
+<h2><a id="version096a">&nbsp;</a>Version Alpha 0.9.6 </h2>
 <p>Release Date: January 3, 2010</p>
 
 <p>
@@ -1884,7 +1897,7 @@
 </p>
 
 
-<h2><a name="version095a">&nbsp;</a>Version Alpha 0.9.5 </h2>
+<h2><a id="version095a">&nbsp;</a>Version Alpha 0.9.5 </h2>
 <p>Release Date: January 3, 2010</p>
 
 <p>
@@ -1896,7 +1909,7 @@
 </p>
 
 
-<h2><a name="version094a">&nbsp;</a>Version Alpha 0.9.4 </h2>
+<h2><a id="version094a">&nbsp;</a>Version Alpha 0.9.4 </h2>
 <p>Release Date: January 2, 2010</p>
 
 <p>
@@ -1925,7 +1938,7 @@
 </p>
 
 
-<h2><a name="version093a">&nbsp;</a>Version Alpha 0.9.3 </h2>
+<h2><a id="version093a">&nbsp;</a>Version Alpha 0.9.3 </h2>
 <p>Release Date: December 16, 2009</p>
 
 <p>
@@ -1945,7 +1958,7 @@
 </p>
 
 
-<h2><a name="version092a">&nbsp;</a>Version Alpha 0.9.2 </h2>
+<h2><a id="version092a">&nbsp;</a>Version Alpha 0.9.2 </h2>
 <p>Release Date: December 8, 2009</p>
 
 <p>
@@ -1956,7 +1969,7 @@
 </p>
 
 
-<h2><a name="version091a">&nbsp;</a>Version Alpha 0.9.1 </h2>
+<h2><a id="version091a">&nbsp;</a>Version Alpha 0.9.1 </h2>
 <p>Release Date: November 27, 2009</p>
 
 <p>
@@ -1970,7 +1983,7 @@
 </p>
 
 
-<h2><a name="version09a">&nbsp;</a>Version Alpha 0.9 </h2>
+<h2><a id="version09a">&nbsp;</a>Version Alpha 0.9 </h2>
 <p>Release Date: November 24, 2009</p>
 <p>Be warned, this is an alpha release. This version is definitely not bug free. So don't expect too much, 
 but be assured,  a stable release will follow.</p>
