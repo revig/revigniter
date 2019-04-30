@@ -543,7 +543,7 @@ end rigSystemURL
 --| Format:  rigSetConfigItem param1, param2[, param3][, param4]
 --|
 --| Parameters: string <pItem> the config item key, string <pValue> the config item value
---|               string <pValue> the custom config filename (optional)
+--|               string <pConfig> the custom config filename (optional)
 --|               string <pModule> the module name (optional)
 --|
 --| Return: empty
