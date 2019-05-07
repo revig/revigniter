@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.4</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.5</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -124,7 +124,7 @@ so you will only need to load a config file if you have created your own.</p>
 
 <p>If you need to load multiple config files normally they will be merged into one master config array.  Name collisions can occur, however, if
 you have identically named array indexes in different config files.  To avoid collisions you can set the second parameter to <kbd>TRUE</kbd>
-and each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
+and the key value pairs of each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
 
 <pre><code class="lang-livecodeserver"># Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
 get rigLoadConfigFile("<var>blogSettings</var>", <kbd>TRUE</kbd>)</code></pre>
@@ -177,6 +177,16 @@ put tBlogConfig["siteName"] into tSiteName</code></pre>
 <pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>"</code></pre>
 
 <p>Where <var>itemName</var> is the gConfig array index you want to change, and <var>itemValue</var> is its value.</p>
+
+<p>Use the optional third parameter to include the name of your custom configuration file in case you stored the data of your config file in an array index named after the config file as explained above, like:</p>
+
+<pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>", "<var>configFileName</var>"</code></pre>
+<p>Where <var>configFileName</var> is the name of your config file, without the .lc file extension.</p>
+
+<p>Use the optional fourth parameter to include the name of your module in case your module provides a configuration file, like:</p>
+
+<pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>", , "<var>moduleName</var>"</code></pre>
+<p>Where <var>moduleName</var> is the name of your module, mind the empty third paramater.</p>
 
 
 <h2>Helper Functions</h2>
