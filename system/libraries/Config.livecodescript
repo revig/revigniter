@@ -47,12 +47,12 @@ local sConfigIsLoaded, sStackInUse
  --| Requires: rigLogMessage, _setBaseURL
  --|
  --| Summary:  Run security check and initial routines.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -67,11 +67,11 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Config Library Loaded"
       end if
-   
+
       # CALL INITIAL HANDLERS
       _setBaseURL
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -91,8 +91,8 @@ end libraryStack
 --| Requires: rigFetchConfigItem(), rigSetConfigItem
 --|
 --| Summary: Set the base URL if none was provided in system/application/config.lc.
---| 
---| Format:  _setBaseURL	
+--|
+--| Format:  _setBaseURL
 --|
 --| Parameters: --
 --|
@@ -101,11 +101,11 @@ end libraryStack
 
 private command _setBaseURL
   local tHTTPhost, tHTTPs, tRequestURI, tBaseURL, tQueryString, tQueryOffset
-  
+
 	if rigFetchConfigItem("baseUrl") is empty then
 
 		put $_SERVER["HTTP_HOST"] into tHTTPhost
-		
+
 		if tHTTPhost <> empty then
 			put $_SERVER["HTTPS"] into tHTTPs
 			put $_SERVER["REQUEST_URI"] into tRequestURI
@@ -115,14 +115,14 @@ private command _setBaseURL
 			else
 				put "http" into tBaseURL
 			end if
-			
+
 			put "://" & tHTTPhost after tBaseURL
 
       if $_SERVER["QUERY_STRING"] <> empty then
-   
+
         put $_SERVER["QUERY_STRING"] into tQueryString
         put replacetext(tQueryString,"[ ]+","%20") into tQueryString
-   
+
         put offset(tQueryString, tRequestURI) into tQueryOffset
         put char 1 to tQueryOffset of tRequestURI after tBaseURL
 
@@ -133,7 +133,7 @@ private command _setBaseURL
 		else
 			put "http://localhost/" into tBaseURL
 		end if -- if tHTTPhost <> empty then
-		
+
 		rigSetConfigItem "baseUrl", tBaseURL
 	end if
 end _setBaseURL
@@ -153,7 +153,7 @@ end _setBaseURL
 --| Requires: rigIsMainConfigLoaded(), rigShowError, rigLogMessage
 --|
 --| Summary: Loads any configuration file.
---| 
+--|
 --| Format:  rigLoadConfigFile(param1, param2, param3, param4)
 --|
 --| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name (optional)
@@ -164,7 +164,7 @@ end _setBaseURL
 function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   local tConfigIsLoadedKeyNum, tConfigFileName, tIsInConfigArray, tModulePath, tFilepath
   local tCurrentConfigItemNum, tNewConfigItemNum, tSectionArray
-  
+
 	if sConfigIsLoaded is an array then
 		put the number of lines in the keys of sConfigIsLoaded into tConfigIsLoadedKeyNum
 	else
@@ -173,23 +173,23 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 
 	if pConfigFile is empty then
     put "config" into tConfigFileName
-    
+
     if pModule is empty then
-	
+
 		  if rigIsMainConfigLoaded() is TRUE then
 			  add 1 to tConfigIsLoadedKeyNum
 			  put "config" into sConfigIsLoaded[tConfigIsLoadedKeyNum]
 		  end if
-      
+
     else -- if pModule is empty then
       put pModule & "/config" into tConfigFileName
 	  end if -- if pModule is empty then
-      
+
   else -- if pConfigFile is empty then
     # REMOVE SUFFIX
     if pModule is empty then
       put pConfigFile into tConfigFileName
-      replace ".livecodescript" with "" in tConfigFileName     
+      replace ".livecodescript" with "" in tConfigFileName
     else
       put pModule & "/" & pConfigFile into tConfigFileName
       replace ".livecodescript" with "" in tConfigFileName
@@ -206,7 +206,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 	 if tIsInConfigArray is TRUE then
 		return TRUE
 	end if
-  
+
   put empty into tModulePath
 
   # CHECK IF WE ARE DEALING WITH A CONFIG FILE OF A MODULE
@@ -219,7 +219,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   set the itemDel to "/"
 	-- put gRigA["APPPATH"] & tModulePath & "config/" & item -1 of tConfigFileName & ".livecodescript" into tFilepath
   put gRigA["APPPATH"] & tModulePath & "config/" & item -1 of tConfigFileName & gRigA["EXT"] into tFilepath
-  
+
 	if there is a file tFilepath then
 	else
 		if pFailGracefully is TRUE then
@@ -242,7 +242,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
       _rigRequire tFilepath
       put the number of lines in the keys of gConfig into tNewConfigItemNum
     end if
-  
+
 		if tNewConfigItemNum = tCurrentConfigItemNum then
 			if pFailGracefully is TRUE then
 				return FALSE
@@ -255,7 +255,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
 		# CHECK IF NEW CONFIGURATION FILE CONTAINS VALID CONFIGURATION DATA
     -- start using stack tFilepath
     _rigRequire tFilepath
-    
+
     if pModule <> empty then
       put gConfig[pModule] into tSectionArray
     else
@@ -280,7 +280,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   else
     rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & gRigA["EXT"]
   end if
-  
+
 	return TRUE
 
 end rigLoadConfigFile
@@ -301,7 +301,7 @@ end rigLoadConfigFile
 --| Requires: --
 --|
 --| Summary: Fetch a config file item.
---| 
+--|
 --| Format:  rigFetchConfigItem(param1, param2)
 --|
 --| Parameters: string <pItem> the config item name, string <pIndex> the index name
@@ -311,7 +311,7 @@ end rigLoadConfigFile
 
 function rigFetchConfigItem pItem pIndex
   local tPref
-  
+
 	if pIndex is empty then
 		if pItem is not among the keys of gConfig then
 			return FALSE
@@ -329,7 +329,7 @@ function rigFetchConfigItem pItem pIndex
 
 		put gConfig[pIndex][pItem] into tPref
 	end if
-	
+
 	return tPref
 end rigFetchConfigItem
 
@@ -349,7 +349,7 @@ end rigFetchConfigItem
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Fetch a config file item - adds slash after item.
---| 
+--|
 --| Format:  rigSlashItem(param1)
 --|
 --| Parameters: string <pItem> the config item name
@@ -359,17 +359,17 @@ end rigFetchConfigItem
 
 function rigSlashItem pItem
   local tPref
-  
+
 	put rigFetchConfigItem(pItem) into tPref
 
 	if tPref is FALSE then
 		return FALSE
 	end if
-    
+
 	if (tPref <> "") and (char -1 of tPref <> "/") then
 		put tPref & "/" into tPref
 	end if
-    
+
 	return tPref
 end rigSlashItem
 
@@ -389,7 +389,7 @@ end rigSlashItem
 --| Requires: rigSlashItem(), rigFetchConfigItem()
 --|
 --| Summary: Site URL
---| 
+--|
 --| Format:  rigSiteURL(param1)
 --|
 --| Parameters: string <pURI> the URI string
@@ -400,12 +400,12 @@ end rigSlashItem
 function rigSiteURL pURI
   local tURI, tStandardURLs, tConfigValue, tSuffix, tRegEx, tFoundString, tC, tH
   local tQueryString, tCurrentKeyNum, tSegment, tKeyNotUsed, tKey, tPrefix
-  
+
   put pURI into tURI
   if tURI is an array then
     combine tURI using "/"
   end if
-    
+
   # CHECK IF STANDARD QUERY STRING BASED URLs ARE ENABLED
   put rigFetchConfigItem("enableQueryStrings") into tStandardURLs -- variance
 
@@ -418,36 +418,36 @@ function rigSiteURL pURI
     else
       put tConfigValue into tSuffix
     end if
-        
+
     put "^/*(.+?)/*$" into tRegEx
-    
-	  put empty into tFoundString -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7  
+
+	  put empty into tFoundString -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
     if matchText(tURI,tRegEx,tFoundString) is TRUE then
       put tFoundString into tURI
     end if
-        
+
     -- variance
-    # QUERY STRING BASED URLs 
-    if tStandardURLs is TRUE then 
+    # QUERY STRING BASED URLs
+    if tStandardURLs is TRUE then
       # GET CONTROLLER TRIGGER
       put rigFetchConfigItem("controllerTrigger") into tC
 
-      if "/" is in tURI then -- controller and handler 
+      if "/" is in tURI then -- controller and handler
         # GET HANDLER TRIGGER
-        put rigFetchConfigItem("handlerTrigger") into tH 
-        -- replace "/" with "&" & tH & "=" in tURI 
+        put rigFetchConfigItem("handlerTrigger") into tH
+        -- replace "/" with "&" & tH & "=" in tURI
 
         set the itemdel to "/"
-        
+
         put item 1 of tURI into tQueryString
-         
+
         # START WITH ASCII VALUE 97 = a (96 +1) FOR QUERY KEYS
         put 96 into tCurrentKeyNum
 
         put 0 into tSegment
         repeat for each item thisItem in tURI
           add 1 to tSegment
-             
+
           if tSegment > 1 then
             # HANDLER SEGMENT
             if tSegment is 2 then
@@ -455,9 +455,9 @@ function rigSiteURL pURI
             else
               # OTHER SEGMENTS
               put tCurrentKeyNum + 1 into tCurrentKeyNum
-                    
+
               put FALSE into tKeyNotUsed
-                    
+
               repeat until tKeyNotUsed is TRUE
                 put numToCodepoint(tCurrentKeyNum) into tKey
                 if (tKey is not tC) and (tKey is not tH) then
@@ -466,12 +466,12 @@ function rigSiteURL pURI
                   put tCurrentKeyNum + 1 into tCurrentKeyNum
                 end if
               end repeat
-                    
+
               put "&" & tKey & "=" & thisItem after tQueryString
             end if
           end if
         end repeat
-	
+
         put "?" & tC & "=" & tQueryString into tURI
       else
         put "?" & tC & "=" into tPrefix
@@ -480,10 +480,10 @@ function rigSiteURL pURI
           put "?" & tC & "=" & tURI into tURI
         end if
 
-      end if 
+      end if
 
     end if
-    -- 
+    --
 
     if tStandardURLs is TRUE then  -- variance
       return rigSlashItem("baseUrl") & rigFetchConfigItem("indexPage") & rigTrim(tURI, "/") & tSuffix  -- variance
@@ -509,7 +509,7 @@ end rigSiteURL
 --| Requires: --
 --|
 --| Summary: Sytem URL
---| 
+--|
 --| Format:  rigSystemURL()
 --|
 --| Parameters: --
@@ -533,26 +533,31 @@ end rigSystemURL
 --| COMMAND rigSetConfigItem
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 10-10-09
---| Last Mod: 18-12-15
+--| Version:  1.2
+--| Created: 2009-10-10
+--| Last Mod: 2019-04-29
 --| Requires: --
 --|
---| Summary: Set a config file item.
---| 
---| Format:  rigSetConfigItem param1, param2[, param3]
+--| Summary: Set the value of a config item.
+--|
+--| Format:  rigSetConfigItem param1, param2[, param3][, param4]
 --|
 --| Parameters: string <pItem> the config item key, string <pValue> the config item value
+--|               string <pConfig> the custom config filename (optional)
 --|               string <pModule> the module name (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetConfigItem pItem pValue pModule
+command rigSetConfigItem pItem pValue pConfig pModule
   if pModule <> empty then
     put pValue into gConfig[pModule][pItem]
   else
-    put pValue into gConfig[pItem]
+    if pConfig is empty then
+      put pValue into gConfig[pItem]
+    else
+      put pValue into gConfig[pConfig][pItem]
+    end if
   end if
 end rigSetConfigItem
 

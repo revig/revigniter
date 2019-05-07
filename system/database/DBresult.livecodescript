@@ -46,12 +46,12 @@ local sDBresult, sStackInUse
  --| Requires: _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -61,12 +61,12 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -85,7 +85,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -120,7 +120,7 @@ end _rigSetDefaultValues
 --|            rigListFields(), rigLogMessage
 --|
 --| Summary: Query result as array.
---| 
+--|
 --| Format:  rigDBresult(param1)
 --|
 --| Parameters: bool <pChangeFieldNamesListDelimiter>
@@ -130,13 +130,13 @@ end _rigSetDefaultValues
 
 function rigDBresult pChangeFieldNamesListDelimiter
   local tResultID, tTemp, tError
-  
+
 	if sDBresult["resultarray"] is an array then
 		return sDBresult["resultarray"]
 	end if
 
-	# IN THE EVENT THAT QUERY CACHING IS ON THE RESULT_ID VARIABLE 
-	# WILL RETURN FALSE SINCE THERE ISN'T A VALID SQL RESOURCE SO 
+	# IN THE EVENT THAT QUERY CACHING IS ON THE RESULT_ID VARIABLE
+	# WILL RETURN FALSE SINCE THERE ISN'T A VALID SQL RESOURCE SO
 	# WE'LL SIMPLY RETURN EMPTY.
 	-- if sDBresult["resultid"] is FALSE or sDBresult["numrows"] is 0 then
 		-- return ""
@@ -165,7 +165,7 @@ function rigDBresult pChangeFieldNamesListDelimiter
 	if tError is not empty then
 		rigLogMessage "error", "Unable to build a query result array!"
 	end if
-	
+
 	return sDBresult["resultarray"]
 end rigDBresult
 
@@ -187,7 +187,7 @@ end rigDBresult
 --| Requires: _rigDbRowArray()
 --|
 --| Summary: Get row data.
---| 
+--|
 --| Format:  rigDbRow(param1)
 --|
 --| Parameters: string <pN>
@@ -197,7 +197,7 @@ end rigDBresult
 
 function rigDbRow pN
   local tN
-  
+
 	if pN is empty then
 		put 1 into tN
 	else
@@ -237,7 +237,7 @@ end rigDbRow
 --| Requires: _rigDbRowArray()
 --|
 --| Summary: Assigns an item into a particular column slot. Needs documentation!!!!!!!!!!
---| 
+--|
 --| Format:  rigDbSetRow param1, param2
 --|
 --| Parameters: mixed <pKey>, string <pValue>
@@ -247,7 +247,7 @@ end rigDbRow
 
 command rigDbSetRow pKey pValue
   local tK, tV
-  
+
 	# WE CACHE THE ROW DATA FOR SUBSEQUENT USES
 	if sDBresult["rowdata"] is not an array then
 		put _rigDbRowArray(0) into sDBresult["rowdata"]
@@ -285,7 +285,7 @@ end rigDbSetRow
 --| Requires: rigFetchDBdriverSetting()
 --|
 --| Summary: Returns a single result row.
---| 
+--|
 --| Format:  _rigDbRowArray(param1)
 --|
 --| Parameters: integer <pN>
@@ -296,7 +296,7 @@ end rigDbSetRow
 private function _rigDbRowArray pN
   local tN, tResult, tRowArray, tResultID, tFieldnamesList
   local tField, tVal, tRowAsocArray
-  
+
 	if pN is empty then
 		put 1 into tN
 	else
@@ -349,7 +349,7 @@ end _rigDbRowArray
 --| Requires: --
 --|
 --| Summary: Returns the "first" row.
---| 
+--|
 --| Format:  rigDbFirstRow()
 --|
 --| Parameters: --
@@ -384,7 +384,7 @@ end rigDbFirstRow
 --| Requires: --
 --|
 --| Summary: Returns the "last" row.
---| 
+--|
 --| Format:  rigDbLastRow()
 --|
 --| Parameters: --
@@ -394,7 +394,7 @@ end rigDbFirstRow
 
 function rigDbLastRow
   local tLastRow
-  
+
 	if sDBresult["resultarray"] is not an array then
 		return sDBresult["resultarray"]
 	end if
@@ -422,7 +422,7 @@ end rigDbLastRow
 --| Requires: --
 --|
 --| Summary: Returns the "next" row.
---| 
+--|
 --| Format:  rigDbNextRow()
 --|
 --| Parameters: --
@@ -432,11 +432,11 @@ end rigDbLastRow
 
 function rigDbNextRow
   local tCurrentRow, tNextRow
-  
+
 	if sDBresult["resultarray"] is not an array then
 		return sDBresult["resultarray"]
 	end if
-	
+
 	put sDBresult["currentrow"] into tCurrentRow
 	put tCurrentRow + 1 into tNextRow
 
@@ -466,7 +466,7 @@ end rigDbNextRow
 --| Requires: --
 --|
 --| Summary: Returns the "previous" row.
---| 
+--|
 --| Format:  rigDbPreviousRow()
 --|
 --| Parameters: --
@@ -476,11 +476,11 @@ end rigDbNextRow
 
 function rigDbPreviousRow
   local tCurrentRow, tPrevRow
-  
+
 	if sDBresult["resultarray"] is not an array then
 		return sDBresult["resultarray"]
 	end if
-	
+
 	put sDBresult["currentrow"] into tCurrentRow
 	put tCurrentRow - 1 into tPrevRow
 
@@ -512,7 +512,7 @@ end rigDbPreviousRow
 --| Requires: --
 --|
 --| Summary: Returns the "current" row.
---| 
+--|
 --| Format:  rigDbCurrentRow()
 --|
 --| Parameters: --
@@ -522,13 +522,13 @@ end rigDbPreviousRow
 
 function rigDbCurrentRow
   local tCurrentRow
-  
+
 	if sDBresult["resultarray"] is not an array then
 		return sDBresult["resultarray"]
 	end if
-	
+
 	put sDBresult["currentrow"] into tCurrentRow
-	
+
 	return sDBresult["resultarray"][tCurrentRow]
 end rigDbCurrentRow
 
@@ -549,7 +549,7 @@ end rigDbCurrentRow
 --| Requires: --
 --|
 --| Summary: Reset sDBresult value.
---| 
+--|
 --| Format:  rigDbResetResultValue param1
 --|
 --| Parameters: string <pKey>
@@ -587,7 +587,7 @@ end rigDbResetResultValue
 --| Requires: --
 --|
 --| Summary: Set sDBresult values to cached values.
---| 
+--|
 --| Format:  rigDbSetResultFromCache param1 param2 param3
 --|
 --| Parameters: array <pResult>, integer <pNumRows>, array <pFieldNames>,
@@ -619,7 +619,7 @@ end rigDbSetResultFromCache
 --|
 --| Summary: Returns an array containing field names as keys
 --|            and field numbers as values.
---| 
+--|
 --| Format:  rigFieldNumbers(param1)
 --|
 --| Parameters: array <pFieldNames>
@@ -629,7 +629,7 @@ end rigDbSetResultFromCache
 
 function rigFieldNumbers pFieldNames
   local tFieldNumbers
-  
+
   repeat for each key tKey in  pFieldNames
     put tKey into tFieldNumbers[pFieldNames[tKey]]
   end repeat
@@ -654,10 +654,10 @@ end rigFieldNumbers
 --| Requires: --
 --|
 --| Summary: Returns the result set as a numeric array. May be this will be changed
---|            to return optionally an associative array in a future version. 
+--|            to return optionally an associative array in a future version.
 --|            This will break the feedjson module!
---| 
---| Format: _rigFetchResultArray param1, param2
+--|
+--| Format: _rigFetchResultArray param1, param2, param3
 --|
 --| Parameters: integer <pRecordSetID>, reference array <@pRefArray>,
 --|               bool <pChangeFieldNamesListDelimiter>
@@ -667,37 +667,37 @@ end rigFieldNumbers
 
 private command _rigFetchResultArray pRecordSetID, @pRefArray, pChangeFieldNamesListDelimiter
   local tFieldNames, tError, tCounter, tFieldCounter
-  
+
 	 put revDatabaseColumnNames(pRecordSetID) into tFieldNames
 
-	if tFieldNames begins with "revdberr," then 
-		put item 2 to -1 of tFieldNames into tError 
-	end if 
-    
+	if tFieldNames begins with "revdberr," then
+		put item 2 to -1 of tFieldNames into tError
+	end if
+
 	if tError is "" then
     # "SELECT IF" and "SELECT GREATEST" QUERIES USE COMMAS TO SEPARATE VALUES TO BE COMPARED
     # FIELD NAMES LISTS USE COMMAS TOO, SO CHANGE THE ITEM DELIMITER
     if pChangeFieldNamesListDelimiter is TRUE then
       set the itemDelimiter to numToCodepoint(0)
     end if
-		
+
 		put 0 into tCounter
-		repeat until revQueryIsAtEnd(pRecordSetID) 
+		repeat until revQueryIsAtEnd(pRecordSetID)
 			add 1 to tCounter
-             	
+
 			put 0 into tFieldCounter
 
 			repeat for each item theField in tFieldNames
 				add 1 to tFieldCounter
 				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][theField]
-				put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter] 
-				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter & "," & theField] 
-			end repeat 
-             
-			revMoveToNextRecord pRecordSetID 
-		end repeat 
-	end if 
-     
+				put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter]
+				-- put revDatabaseColumnNamed(pRecordSetID, theField) into pRefArray[tCounter][tFieldCounter & "," & theField]
+			end repeat
+
+			revMoveToNextRecord pRecordSetID
+		end repeat
+	end if
+
 	return tError
 end _rigFetchResultArray
 
