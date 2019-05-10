@@ -526,9 +526,9 @@ end rigAjaxPagination
 --| FUNCTION rigAjaxPaginationCode
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 28-02-2014
---| Last Mod: 11-04-2015
+--| Version:  1.2
+--| Created: 2014-02-28
+--| Last Mod: 2919-05-09
 --| Requires: --
 --|
 --| Summary: Return AJAX pagination JavaScript code.
