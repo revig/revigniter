@@ -50,12 +50,12 @@ local sCloseEventStatements, sCurrentAnimSelector, sCurrentAnimTarget, sStackInU
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -70,12 +70,12 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "jQuery Library Loaded"
       end if
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -95,7 +95,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -122,13 +122,13 @@ end _rigSetDefaultValues
 --| COMMAND rigRunInitialJqueryConfig
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 22-01-10
---| Last Mod: 22-12-14
---| Requires: rigNumToCodepoint(), _rigInitializeJquery
+--| Version:  1.2
+--| Created: 2010-01-22
+--| Last Mod: 31-05-2019
+--| Requires: _rigInitializeJquery
 --|
 --| Summary: Run initial configuration procedures.
---| 
+--|
 --| Format:  rigRunInitialJqueryConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -138,12 +138,12 @@ end _rigSetDefaultValues
 
 command rigRunInitialJqueryConfig pConfig
   local tConfig
-  
+
 	put pConfig into tConfig
 
 	if tConfig is not an array then
 		if tConfig is not empty then
-			split tConfig using rigNumToCodepoint(1) and rigNumToCodepoint(2)
+			split tConfig using numToCodepoint(1) and numToCodepoint(2)
 		end if
 	end if
 
@@ -170,7 +170,7 @@ end rigRunInitialJqueryConfig
 --| Requires: _rigSetInitialJqueryValue
 --|
 --| Summary: Initialize preferences.
---| 
+--|
 --| Format: _rigInitializeJquery param1
 --|
 --| Parameters: array <pConfig>
@@ -180,13 +180,13 @@ end rigRunInitialJqueryConfig
 
 private command _rigInitializeJquery pConfig
   local tKey, tVal, tMethod
-  
+
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
 
 			## CHECK IF VARIABLE WITH NAME tKey IS SET
-			# 
+			#
 			put "rigSet_s" & tKey into tMethod
 			if tMethod is among the items of sValidJquerySetMethods then
 				do tMethod && tVal
@@ -215,7 +215,7 @@ end _rigInitializeJquery
 --| Requires: --
 --|
 --| Summary: Set initial values.
---| 
+--|
 --| Format: _rigSetInitialJqueryValue param1, param2
 --|
 --| Parameters: string <pVarName>, mixed <pValue>
@@ -225,7 +225,7 @@ end _rigInitializeJquery
 
 private command _rigSetInitialJqueryValue pVarName pValue
   local tVarName
-  
+
 	put "s" & pVarName into tVarName
 
 	switch tVarName
@@ -259,7 +259,7 @@ end _rigSetInitialJqueryValue
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
---| 
+--|
 --| Format:  rigJQuerySource()
 --|
 --| Parameters: --
@@ -269,7 +269,7 @@ end _rigSetInitialJqueryValue
 
 function rigJQuerySource
   local tJqueryPath, tSiteURL
-  
+
 	if sUseJQremotely is not TRUE then
 		if char 1 of sJqueryPath is "/" then
 			put char 2 to (the number of chars of sJqueryPath) of sJqueryPath into tJqueryPath
@@ -278,11 +278,11 @@ function rigJQuerySource
 		end if
 
 		put rigSiteURL() into tSiteURL
-		
+
     if char -8 to -1 of tSiteURL is "index.lc" then
       put char 1 to -9 of tSiteURL into tSiteURL
     end if
-		
+
 		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
 	else
 		if sJqueryCurrentVersion is empty then
@@ -311,7 +311,7 @@ end rigJQuerySource
 --| Requires: _rigJsScriptOpen(), _rigJQreadyOpen
 --|
 --| Summary: Start building jQuery script.
---| 
+--|
 --| Format:  rigJQopen
 --|
 --| Parameters: --
@@ -339,7 +339,7 @@ end rigJQopen
 --| Requires: _rigJQreadyClose(), _rigJsScriptClose
 --|
 --| Summary: Close jQuery script.
---| 
+--|
 --| Format:  rigJQclose
 --|
 --| Parameters: --
@@ -349,7 +349,7 @@ end rigJQopen
 
 command rigJQclose
 	put _rigJQreadyClose() & _rigJsScriptClose() after sJqueryScript
-	
+
 	return sJqueryScript
 end rigJQclose
 
@@ -370,7 +370,7 @@ end rigJQclose
 --| Requires: --
 --|
 --| Summary: Return javascript open tag.
---| 
+--|
 --| Format: _rigJsScriptOpen()
 --|
 --| Parameters: --
@@ -397,7 +397,7 @@ end _rigJsScriptOpen
 --| Requires: --
 --|
 --| Summary: Return javascript close tag.
---| 
+--|
 --| Format: _rigJsScriptClose()
 --|
 --| Parameters: --
@@ -426,7 +426,7 @@ end _rigJsScriptClose
 --| Requires: --
 --|
 --| Summary: Return JQ document ready statement open.
---| 
+--|
 --| Format: _rigJQreadyOpen()
 --|
 --| Parameters: --
@@ -455,7 +455,7 @@ end _rigJQreadyOpen
 --| Requires: --
 --|
 --| Summary: Return JQ document ready statement close.
---| 
+--|
 --| Format: _rigJQreadyClose()
 --|
 --| Parameters: --
@@ -484,7 +484,7 @@ end _rigJQreadyClose
 --| Requires: rigTrim()
 --|
 --| Summary: Process form data using a xmlHTTPrequest.
---| 
+--|
 --| Format:  rigJQajaxForm param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pSubmitBtn>, comma delimited selectors list <pFields>, string <pPostURI>,
@@ -497,7 +497,7 @@ end _rigJQreadyClose
 command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI pDataContainer
   local tPostURI, tPreventDefault, tDataToLoadURI, tFieldName, tCounter
   local tField, tRegEx, tMatch1, tPostKeyValuePairs, tValuesReset
-  
+
 	# PREPARE pPostURI
 	put rigTrim(pPostURI, "'") into tPostURI
 	put rigTrim(tPostURI, "/") into tPostURI
@@ -567,7 +567,7 @@ end rigJQajaxForm
 --| Requires: --
 --|
 --| Summary: Alert on various events.
---| 
+--|
 --| Format:  rigJQeventAlert param1, param2, param3, param4
 --|
 --| Parameters: string <pSelector>, string <pEvent>, string <pAlert>,
@@ -578,7 +578,7 @@ end rigJQajaxForm
 
 command rigJQeventAlert pSelector pEvent pAlert pPreventDefault pEventData
   local tEventData
-  
+
 	if pEventData <> "" then
 		put " {" & pEventData & "}," into tEventData
 	else
@@ -587,7 +587,7 @@ command rigJQeventAlert pSelector pEvent pAlert pPreventDefault pEventData
 
 	put "$(" & pSelector & ").bind(" & pEvent & "," & tEventData && "function(event){" & return & \
 				rigJQalertR(pAlert) & return after sJqueryScript
-				
+
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
 	end if
@@ -612,7 +612,7 @@ end rigJQeventAlert
 --| Requires: rigJQalertR()
 --|
 --| Summary: Write alert statement.
---| 
+--|
 --| Format:  rigJQalert param1
 --|
 --| Parameters: string <pAlert>
@@ -641,7 +641,7 @@ end rigJQalert
 --| Requires: --
 --|
 --| Summary: Return alert statement.
---| 
+--|
 --| Format:  rigJQalertR(param1)
 --|
 --| Parameters: string <pAlert>
@@ -669,7 +669,7 @@ end rigJQalertR
 --| Requires: rigJQconfirmR()
 --|
 --| Summary: Write confirmation box statement.
---| 
+--|
 --| Format:  rigJQconfirm param1, param2, param3
 --|
 --| Parameters: string <pVarName>, string <pString>, bool <pGlobal> optional
@@ -697,7 +697,7 @@ end rigJQconfirm
 --| Requires: --
 --|
 --| Summary: Return confirmation box statement.
---| 
+--|
 --| Format:  rigJQconfirmR(param1, param2, param3)
 --|
 --| Parameters: string <pVarName>, string <pString>, bool <pGlobal> optional
@@ -707,21 +707,21 @@ end rigJQconfirm
 
 function rigJQconfirmR  pVarName pString pGlobal
   local tGlobal, tScript
-  
+
 	if pGlobal is empty then
 		put FALSE into tGlobal
 	else
 		put pGlobal into tGlobal
 	end if
-	
+
 	if tGlobal is FALSE then
 		put "var " into tScript
 	else
 		put "" into tScript
 	end if
-	
+
 	put pVarName && "= confirm(" & pString & ");" & return after tScript
-	
+
 	return tScript
 end rigJQconfirmR
 
@@ -742,7 +742,7 @@ end rigJQconfirmR
 --| Requires: rigJQpromptR()
 --|
 --| Summary: Write prompt box statement.
---| 
+--|
 --| Format:  rigJQprompt param1, param2, param3, param4
 --|
 --| Parameters: string <pVarName>, string <pPrompt>, string <pDefault> optional, bool <pGlobal> optional
@@ -770,7 +770,7 @@ end rigJQprompt
 --| Requires: --
 --|
 --| Summary: Return prompt box statement.
---| 
+--|
 --| Format:  rigJQpromptR(param1, param2, param3, param4)
 --|
 --| Parameters: string <pVarName>, string <pPrompt>, string <pDefault> optional, bool <pGlobal> optional
@@ -780,27 +780,27 @@ end rigJQprompt
 
 function rigJQpromptR  pVarName pPrompt pDefault pGlobal
   local tDefault, tGlobal, tScript
-  
+
 	if pDefault is "" then
 		put "" into tDefault
 	else
 		put "," && pDefault into tDefault
 	end if
-	
+
 	if pGlobal is empty then
 		put FALSE into tGlobal
 	else
 		put pGlobal into tGlobal
 	end if
-	
+
 	if tGlobal is FALSE then
 		put "var " into tScript
 	else
 		put "" into tScript
 	end if
-	
+
 	put pVarName && "= confirm(" & pPrompt & tDefault & ");" & return after tScript
-	
+
 	return tScript
 end rigJQpromptR
 
@@ -821,7 +821,7 @@ end rigJQpromptR
 --| Requires: rigJQsetR()
 --|
 --| Summary: Write jQuery setter statements.
---| 
+--|
 --| Format:  rigJQset param1, param2, param3, param4, param5
 --|
 --| Parameters: string <pSelector>, string <pMethod>, string <pPropertyvalues>, bool <pFunction> optional
@@ -851,7 +851,7 @@ end rigJQset
 --| Requires: rigTrim()
 --|
 --| Summary: Return jQuery setter statements.
---| 
+--|
 --| Format:  rigJQsetR(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string <pSelector>, string <pMethod>, mixed <pPropertyvalues>, bool <pFunction> optional
@@ -863,22 +863,22 @@ end rigJQset
 function rigJQsetR pSelector pMethod pPropertyvalues pFunction pToggleClassSwitch
   local tMethod, tFunction, tToggleClassSwitch, tPropertyvalues, tKey, tVal
   local tAttributeName, tAttributeValueFunction, tScript
-  
+
 	# PREPARE pMethod
 	put rigTrim(pMethod, "'") into tMethod
-	
+
 	if pFunction is empty then
 		put FALSE into tFunction
 	else
 		put pFunction into tFunction
 	end if
-	
+
 	if pToggleClassSwitch is empty then
 		put "" into tToggleClassSwitch
 	else
 		put "," && pToggleClassSwitch into tToggleClassSwitch
 	end if
-	
+
 
 	# KEY VALUE PAIRS
 	if pPropertyvalues is an array then
@@ -888,7 +888,7 @@ function rigJQsetR pSelector pMethod pPropertyvalues pFunction pToggleClassSwitc
 			if tVal is empty then
 				put "''" into tVal
 			end if
-			
+
 			put space & tKey & ":" & tVal & "," after tPropertyvalues
 		end repeat
 		delete char -1 of tPropertyvalues
@@ -909,16 +909,16 @@ function rigJQsetR pSelector pMethod pPropertyvalues pFunction pToggleClassSwitc
 		if comma is in pPropertyvalues then
 			# FUNCTION ARGUMENTS: THE INDEX POSITION OF THE ELEMENT IN THE SET AND
 			# THE OLD ATTRIBUTE/CLASS/HEIGHT/HTML/COORDS/CSS/WIDTH VALUE.
-			put "$(" & pSelector & ")." & tMethod & "(" & tAttributeName & ", function(index, oldVal) {" & return & \ 
-			tAttributeValueFunction & return & \ 
+			put "$(" & pSelector & ")." & tMethod & "(" & tAttributeName & ", function(index, oldVal) {" & return & \
+			tAttributeValueFunction & return & \
 			"}" & tToggleClassSwitch & ");" & return into tScript
 		else
-			put "$(" & pSelector & ")." & tMethod & "(function(index, oldVal) {" & return & \ 
-			tPropertyvalues & return & \ 
+			put "$(" & pSelector & ")." & tMethod & "(function(index, oldVal) {" & return & \
+			tPropertyvalues & return & \
 			"}" & tToggleClassSwitch & ");" & return into tScript
 		end if
 	end if
-	
+
 	return tScript
 end rigJQsetR
 
@@ -940,7 +940,7 @@ end rigJQsetR
 --| Requires: rigTrim()
 --|
 --| Summary: Return information from DOM elements.
---| 
+--|
 --| Format:  rigJQgetR(param1, param2, param3)
 --|
 --| Parameters: string <pSelector>, string <pMethod>, string <pGetterProp> optional
@@ -950,10 +950,10 @@ end rigJQsetR
 
 function rigJQgetR pSelector pMethod pGetterProp
   local tMethod, tGetterProp
-  
+
 	# PREPARE pMethod
 	put rigTrim(pMethod, "'") into tMethod
-	
+
 	if pGetterProp <> "" then
 		if (char 1 of pGetterProp <> "'") and (char -1 of pGetterProp <> "'") then
 			put "'" & pGetterProp & "'" into tGetterProp
@@ -986,10 +986,10 @@ end rigJQgetR
 --| Requires: _rigJQdelegateLiveOneToggleUnbind, _rigJQdieUndelegate, _rigJQhover, _rigJQtriggerTriggerhandler
 --|
 --| Summary: Event open statement.
---| 
+--|
 --| Format:  rigJQeventOpen param1, param2, param3, param4, param5
 --|
---| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData> optional, 
+--| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData> optional,
 --|               string <pEventObject> optional, string <pFunctionArguments> a comma delimited list of
 --|               params to add to the function, optional
 --|
@@ -998,7 +998,7 @@ end rigJQgetR
 
 command rigJQeventOpen pSelector pEvent pPreventDefault pEventData pEventObject pFunctionArguments
   local tEventData, tFunctionArguments
-  
+
 	# CHECK IF EVENT IS ONE OF THOSE, WHICH HAVE A DEDICATED LIBRARY HANDLER
 	switch pEvent
 		case "delegate"
@@ -1082,21 +1082,21 @@ command rigJQeventOpen pSelector pEvent pPreventDefault pEventData pEventObject 
 			exit rigJQeventOpen
 		break
 	end switch
-	
+
 	# PREPARE EVENT DATA
 	if pEventData <> "" then
 		put " {" & pEventData & "}," into tEventData
 	else
 		put "" into tEventData
 	end if
-	
+
 	# PREPARE FUNCTION PARAMETERS
 	if pFunctionArguments is empty then
 		put "" into tFunctionArguments
 	else
 		put "," && pFunctionArguments into tFunctionArguments
 	end if
-	
+
 	# WRITE STATEMENT
 	if pEventObject is empty then
 		put "$(" & pSelector & ").bind(" & pEvent & "," & tEventData && "function(event" & tFunctionArguments & "){" & return after sJqueryScript
@@ -1105,7 +1105,7 @@ command rigJQeventOpen pSelector pEvent pPreventDefault pEventData pEventObject 
 		# IGNORE THE NEXT rigJQeventClose COMMAND
 		put FALSE into sCloseEventStatements
 	end if
-	
+
 	# PREVENT DEFAULT BEHAVIOR
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
@@ -1130,7 +1130,7 @@ end rigJQeventOpen
 --| Requires: --
 --|
 --| Summary: Event close statement.
---| 
+--|
 --| Format:  rigJQeventClose
 --|
 --| Parameters: --
@@ -1190,21 +1190,21 @@ end rigJQeventClose
 
 private command _rigJQdelegateLiveOneToggleUnbind pSelector pEvent pPreventDefault pEventData pEventObject pFunctionArguments
   local tEventData, tFunctionArguments
-  
+
 	# PREPARE EVENT DATA
 	if pEventData <> "" then
 		put pEventData & "," into tEventData
 	else
 		put "" into tEventData
 	end if
-	
+
 	# PREPARE FUNCTION PARAMETERS
 	if pFunctionArguments is empty then
 		put "" into tFunctionArguments
 	else
 		put "," && pFunctionArguments into tFunctionArguments
 	end if
-	
+
 	if pEventObject is empty then
 		put "$(" & pSelector & ")." & pEvent & "(" & tEventData && "function(event" & tFunctionArguments & "){" & return after sJqueryScript
 	else
@@ -1212,7 +1212,7 @@ private command _rigJQdelegateLiveOneToggleUnbind pSelector pEvent pPreventDefau
 		# IGNORE THE NEXT rigJQeventClose COMMAND
 		put FALSE into sCloseEventStatements
 	end if
-	
+
 	# PREVENT DEFAULT BEHAVIOR
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
@@ -1241,7 +1241,7 @@ end _rigJQdelegateLiveOneToggleUnbind
 --|            Undelegate: Write statement to remove a handler from the
 --|            event for all elements which match the current selector,
 --|            now or in the future, based upon a specific set of root elements.
---| 
+--|
 --| Format:  _rigJQdieUndelegate param1, param2, param3, param4
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional,
@@ -1256,10 +1256,10 @@ private command _rigJQdieUndelegate pSelector pEvent pPreventDefault pEventData 
 	else
 		put "$(" & pSelector & ")." & pEvent & "(" & pEventData && "," && pEventObject & ");" & return after sJqueryScript
 	end if
-	
+
 	# IGNORE THE NEXT rigJQeventClose COMMAND
 	put FALSE into sCloseEventStatements
-	
+
 	# PREVENT DEFAULT BEHAVIOR
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
@@ -1284,7 +1284,7 @@ end _rigJQdieUndelegate
 --| Summary: Write statement to bind two handlers to the matched
 --|            elements, to be executed when the mouse pointer enters
 --|            and leaves the elements.
---| 
+--|
 --| Format:  _rigJQhover param1, param2, param3
 --|
 --| Parameters: string <pSelector>, string <pEvent>, bool <pPreventDefault> optional, string <pEventData>
@@ -1294,10 +1294,10 @@ end _rigJQdieUndelegate
 
 private command _rigJQhover pSelector pEvent pPreventDefault pEventData
 	put "$(" & pSelector & ")." & pEvent & "(" & pEventData & ");" & return after sJqueryScript
-	
+
 	# IGNORE THE NEXT rigJQeventClose COMMAND
 	put FALSE into sCloseEventStatements
-	
+
 	# PREVENT DEFAULT BEHAVIOR
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
@@ -1334,7 +1334,7 @@ end _rigJQhover
 
 private command _rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEventData
   local tEventData
-  
+
 	# PREPARE EVENT DATA
 		if comma is in pEventData then
 			put (item 1 of pEventData) & ", [" into tEventData
@@ -1346,12 +1346,12 @@ private command _rigJQtriggerTriggerhandler pSelector pEvent pPreventDefault pEv
 		else
 			put pEventData into tEventData
 		end if
-		
+
 		put "$(" & pSelector & ")." & pEvent & "(" & tEventData & ");" & return after sJqueryScript
-		
+
 		# IGNORE THE NEXT rigJQeventClose COMMAND
 		put FALSE into sCloseEventStatements
-		
+
 		# PREVENT DEFAULT BEHAVIOR
 		if pPreventDefault is TRUE then
 	     		put "event.preventDefault();" & return after sJqueryScript
@@ -1376,7 +1376,7 @@ end _rigJQtriggerTriggerhandler
 --| Requires: rigJQeffectR()
 --|
 --| Summary: Set special effects on various events.
---| 
+--|
 --| Format:  rigJQeventEffect param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pSelector>, string <pTarget>, string <pEvent>, string <pEffect>, string <pParameter> optional,
@@ -1387,7 +1387,7 @@ end _rigJQtriggerTriggerhandler
 
 command rigJQeventEffect pSelector pTarget pEvent pEffect pParameter pPreventDefault pCallback
 	put "$(" & pSelector & ").bind(" & pEvent & ", function(event){" & return after sJqueryScript
-	
+
 	# PREVENT DEFAULT BEHAVIOR
 	if pPreventDefault is TRUE then
      		put "event.preventDefault();" & return after sJqueryScript
@@ -1417,7 +1417,7 @@ end rigJQeventEffect
 --| Requires: rigJQeffectR()
 --|
 --| Summary: Write statement for various effects.
---| 
+--|
 --| Format:  rigJQeffect param1 param2 param3 param 4
 --|
 --| Parameters: string <pSelector>, string <pEffect>, mixed <pDuration> optional,
@@ -1448,7 +1448,7 @@ end rigJQeffect
 --| Requires: --
 --|
 --| Summary: Return statement for various effects.
---| 
+--|
 --| Format:  rigJQeffectR(param1, param2, param3, param4)
 --|
 --| Parameters: string <pSelector>, string <pEffect>, mixed <pEffectData> optional,
@@ -1459,7 +1459,7 @@ end rigJQeffect
 
 function rigJQeffectR pSelector pEffect pEffectData pCallback
   local tEffectData, tScript
-  
+
   # GET EFFECT DURATION
   if pEffectData is empty then
     put "" into tEffectData
@@ -1499,10 +1499,10 @@ end rigJQeffectR
 --|
 --| Summary: Write statements to perform a custom animation of a set of CSS properties
 --|            on various events.
---| 
+--|
 --| Format:  rigJQeventAnim param1, param2, param3, param4, param5, param6
 --|
---| Parameters: string <pSelector>, string <pTarget>, string <pEvent>, array <pProperties>, 
+--| Parameters: string <pSelector>, string <pTarget>, string <pEvent>, array <pProperties>,
 --|               mixed <pDuration> optional, string <pEasing> optional, string <pCallback> optional
 --|
 --| Return: empty
@@ -1518,10 +1518,10 @@ command rigJQeventAnim pSelector pTarget pEvent pProperties pDuration pEasing pC
 		# REMOVE "});"
 		delete line -1 of sJqueryScript
 	end if
-	
+
 	# WRITE ANIMATION STATEMENT
 	put rigJQanimateR(pTarget, pProperties, pDuration, pEasing, pCallback) & return after sJqueryScript
-	
+
 	put "});" & return after sJqueryScript
 end rigJQeventAnim
 
@@ -1543,7 +1543,7 @@ end rigJQeventAnim
 --| Requires: rigJQanimateR
 --|
 --| Summary: Write statement to perform a custom animation of a set of CSS properties.
---| 
+--|
 --| Format:  rigJQanimate param1, param2, param3, param4, param5
 --|
 --| Parameters: string<pSelector>, mixed <pProperties> if you don't use an array use the
@@ -1575,7 +1575,7 @@ end rigJQanimate
 --| Requires: --
 --|
 --| Summary: Return statement to perform a custom animation of a set of CSS properties.
---| 
+--|
 --| Format:  rigJQanimateR(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string<pSelector>, mixed <pProperties> if you don't use an array use the
@@ -1588,7 +1588,7 @@ end rigJQanimate
 
 function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
   local tDuration, tKey, tVal, tEasing, tScript
-  
+
 	# PREPARE DURATION
 
 	# DURATION AS KEY VALUE PAIRS
@@ -1632,7 +1632,7 @@ function rigJQanimateR pSelector pProperties pDuration pEasing pCallback
 			put return & tKey & ":" && tVal & "," after tScript
 		end repeat
 		delete char -1 of tScript
-	
+
 	else
 		put pProperties after tScript
 	end if
@@ -1666,7 +1666,7 @@ end rigJQanimateR
 --|
 --| Summary: Write statement to perform an asynchronous HTTP (Ajax) request.
 --|            Write statement for ajax options.
---| 
+--|
 --| Format:  rigJQajax param1, param2
 --|
 --| Parameters: array <pAjaxOptions>, bool <pSetUpOnly> optional
@@ -1694,7 +1694,7 @@ end rigJQajax
 --| Requires: rigTrim()
 --|
 --| Summary: Return statement to perform an asynchronous HTTP (Ajax) request.
---| 
+--|
 --| Format:  rigJQajaxR(param1, param2)
 --|
 --| Parameters: array <pAjaxOptions>, bool <pSetUpOnly> optional
@@ -1704,7 +1704,7 @@ end rigJQajax
 
 function rigJQajaxR pAjaxOptions pSetUpOnly
   local tSetUpOnly, tScript, tKey, tVal
-  
+
 	if pSetUpOnly is "" then
 		put FALSE into tSetUpOnly
 	else
@@ -1775,7 +1775,7 @@ end rigJQajaxR
 --| Requires: rigJQxhRequestR()
 --|
 --| Summary: Write statement to load data from the server.
---| 
+--|
 --| Format:  rigJQxhRequest param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pType> possible values: get post load getJSON,
@@ -1807,7 +1807,7 @@ end rigJQxhRequest
 --| Requires: rigTrim()
 --|
 --| Summary: Return statement to load data from the server.
---| 
+--|
 --| Format:  rigJQxhRequestR(param1, param2, param3, param4, param5, param6)
 --|
 --| Parameters: string <pType> possible values: get post load getJSON,
@@ -1820,11 +1820,11 @@ end rigJQxhRequest
 
 function rigJQxhRequestR pType pURL pData pCallback pDataType pSelector
   local tURL, tData, tDataType, tScript
-  
+
 	# GET URL
 	put rigTrim(pURL, "/") into tURL
 	put "'" & rigSiteURL(tURL) & "'" into tURL
-	
+
 	# GET DATA
 	if pData is empty then
 		put "" into tData
@@ -1866,7 +1866,7 @@ function rigJQxhRequestR pType pURL pData pCallback pDataType pSelector
 			"}" & tDataType &");" into tScript
 		end if
 	end if
-	
+
 	return tScript
 end rigJQxhRequestR
 
@@ -1888,7 +1888,7 @@ end rigJQxhRequestR
 --| Requires: --
 --|
 --| Summary: Write statement to call any jQuery or any custom function.
---| 
+--|
 --| Format:  rigJQcallFunction param1, param2
 --|
 --| Parameters: string <pSelector> use a comma delimited list if you want
@@ -1899,7 +1899,7 @@ end rigJQxhRequestR
 
 command rigJQcallFunction pSelector pFunctionName pFuntionArguments
   local tScript
-  
+
 	if pSelector <> "" then
 		put "$(" into tScript
 
@@ -1939,7 +1939,7 @@ end rigJQcallFunction
 --| Requires: --
 --|
 --| Summary: Write custom function statement.
---| 
+--|
 --| Format:  rigJQfunctionOpen param1, param2
 --|
 --| Parameters: string <pName>, string <pArguments> comma delimited list
@@ -1966,7 +1966,7 @@ end rigJQfunctionOpen
 --| Requires: --
 --|
 --| Summary: Write closing statement.
---| 
+--|
 --| Format:  rigJQfunctionClose
 --|
 --| Parameters: --
@@ -1994,7 +1994,7 @@ end rigJQfunctionClose
 --| Requires: rigJQconditionR()
 --|
 --| Summary: Write conditional statement.
---| 
+--|
 --| Format:  rigJQcondition param1, param2, param3
 --|
 --| Parameters: string <pCondition>, string <pIfAction>, string <pElseAction> optional
@@ -2022,7 +2022,7 @@ end rigJQcondition
 --| Requires: --
 --|
 --| Summary: Return conditional statement.
---| 
+--|
 --| Format:  rigJQconditionR(param1, param2, param3)
 --|
 --| Parameters: string <pCondition>, string <pIfAction>, string <pElseAction> optional
@@ -2032,7 +2032,7 @@ end rigJQcondition
 
 function rigJQconditionR pCondition pIfAction pElseAction
   local tScript
-  
+
 	if pElseAction is "" then
 		put "if (" & pCondition & ") {" & return & \
 			pIfAction & return & \
@@ -2045,7 +2045,7 @@ function rigJQconditionR pCondition pIfAction pElseAction
 			pElseAction	 & return & \
 			"}" & return into tScript
 	end if
-		
+
 	return tScript
 end rigJQconditionR
 
@@ -2067,7 +2067,7 @@ end rigJQconditionR
 --| Requires: --
 --|
 --| Summary: Write closing curly brace.
---| 
+--|
 --| Format:  rigJQcb
 --|
 --| Parameters: --
@@ -2095,7 +2095,7 @@ end rigJQcb
 --| Requires: rigJQeachOpenR()
 --|
 --| Summary: Write iteration statement.
---| 
+--|
 --| Format:  rigJQeachOpen param1, param2, param3
 --|
 --| Parameters: string <pSelector>, string <pCollection>, string <pCallback>
@@ -2124,7 +2124,7 @@ end rigJQeachOpen
 --| Requires: --
 --|
 --| Summary: Return iteration statement.
---| 
+--|
 --| Format:  rigJQeachOpenR(param1, param2, param3)
 --|
 --| Parameters: string <pSelector>, string <pCollection>, string <pCallback>
@@ -2135,7 +2135,7 @@ end rigJQeachOpen
 
 function rigJQeachOpenR pSelector pCollection pCallback
   local tCollection, tScript
-  
+
 	if pSelector is empty then
 		# ITERATE OVER BOTH OBJECTS AND ARRAYS
 	if ":" is in pCollection then
@@ -2143,7 +2143,7 @@ function rigJQeachOpenR pSelector pCollection pCallback
 	else
 		put pCollection into tCollection
 	end if
-	
+
 	put "$.each(" & tCollection & ", function(index, value){" & return & \
 	   pCallback & return into tScript
 	else
@@ -2151,7 +2151,7 @@ function rigJQeachOpenR pSelector pCollection pCallback
 		put "$(" & pSelector & ").each(function(index, element) {" & return & \
 		   pCallback & return into tScript
 	end if
-	
+
 	return tScript
 end rigJQeachOpenR
 
@@ -2171,7 +2171,7 @@ end rigJQeachOpenR
 --| Requires: --
 --|
 --| Summary: Write closing statement for JQeach.
---| 
+--|
 --| Format:  rigJQeachClose
 --|
 --| Parameters: --
@@ -2199,7 +2199,7 @@ end rigJQeachClose
 --| Requires: rigJQcloseStatementR()
 --|
 --| Summary: Return closing statement for JQeach.
---| 
+--|
 --| Format:  rigJQeachCloseR()
 --|
 --| Parameters: --
@@ -2226,7 +2226,7 @@ end rigJQeachCloseR
 --| Requires: rigJQvarR
 --|
 --| Summary: Write variable statements.
---| 
+--|
 --| Format:  rigJQvar param1
 --|
 --| Parameters: mixed <pVars> use the following form: put "name,value;" into tVarsArray[n]
@@ -2257,7 +2257,7 @@ end rigJQvar
 --| Requires: --
 --|
 --| Summary: Return variable statements.
---| 
+--|
 --| Format:  rigJQvarR(param1)
 --|
 --| Parameters: mixed <pVars> use the following form: put "name,value;" into tVarsArray[n]
@@ -2269,11 +2269,11 @@ end rigJQvar
 
 function rigJQvarR pVars
   local tVars, tNumVars, tVal, tScript
-  
+
 	put pVars into tVars
 	if tVars is an array then
 		put the number of lines in the keys of tVars into tNumVars
-	
+
 		repeat with i = 1 to tNumVars
 			put tVars[i] into tVal
 			put "var" && item 1 of tVal && "=" && item 2 to -1 of tVal & return after tScript
@@ -2281,7 +2281,7 @@ function rigJQvarR pVars
 	else
 		put "var" && item 1 of tVars && "=" && item 2 to -1 of tVars & return into tScript
 	end if
-	
+
 	return tScript
 end rigJQvarR
 
@@ -2303,7 +2303,7 @@ end rigJQvarR
 --| Requires: rigJQaddStatementR()
 --|
 --| Summary: Adds custom jQuery statement.
---| 
+--|
 --| Format:  rigJQaddStatement param1
 --|
 --| Parameters: string <pStatement>
@@ -2330,8 +2330,8 @@ end rigJQaddStatement
 --| Requires: --
 --|
 --| Summary: Write closing statement.
---| 
---| Format:  rigJQcloseStatement 
+--|
+--| Format:  rigJQcloseStatement
 --|
 --| Parameters: --
 --|
@@ -2358,7 +2358,7 @@ end rigJQcloseStatement
 --| Requires: --
 --|
 --| Summary: Return closing statement.
---| 
+--|
 --| Format:  rigJQcloseStatementR()
 --|
 --| Parameters: --
