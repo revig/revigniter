@@ -519,7 +519,7 @@ command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI
 	put "$(" & pSubmitBtn & ").click(function(event) {" & return after sJqueryScript
 
 	# GET FORM KEY VALUE PAIRS
-	put empty into tFieldName -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	put empty into tFieldName -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	put 1 into tCounter
 	repeat for each item tField in pFields
 		put "var fld" & tCounter && "= $(" & tField & ").val();" & return after sJqueryScript

@@ -53,12 +53,12 @@ local _sLikeEscapeStr, _sLikeEscapeChr, sStackInUse
  --| Requires: _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -68,12 +68,12 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -93,7 +93,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -104,7 +104,7 @@ end libraryStack
 private command _rigSetDefaultValues
   put "sqlite" into sDBdriver
 
-  # THE CHARACTER USED FOR ESCAPING  
+  # THE CHARACTER USED FOR ESCAPING
   put quote into _sEscapeChar
 
   # CLAUSE AND CHARACTER USED FOR LIKE ESCAPE SEQUENCES
@@ -137,7 +137,7 @@ end _rigSetDefaultValues
 --| Summary: Non-persistent database connection.
 --|            Set the path to the database file in application/config/database.lc like:
 --|            put gRigA["APPPATH"] & "db/myDatabase.sqlite" into sDB["default"]["hostname"]
---| 
+--|
 --| Format:  rigDbConnect()
 --|
 --| Parameters: --
@@ -162,7 +162,7 @@ function rigDbConnect
 	catch err
 		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
 	end try
-  
+
 	if tDatabaseID is an integer then
 		return tDatabaseID
 	else
@@ -185,7 +185,7 @@ end rigDbConnect
 --| Requires: --
 --|
 --| Summary: Set client character set.
---| 
+--|
 --| Format:  _rigDbSetCharset(param1, param2)
 --|
 --| Parameters: string <pCharset>, string <pCollation>
@@ -197,7 +197,7 @@ function _rigDbSetCharset pCharset pCollation
 	# NOT IMPLEMENTED AS IT IS NOT POSSIBLE TO CHANGE
   # THE TEXT ENCODING OF A DATABASE AFTER IT HAS BEEN
   # CREATED AND ANY ATTEMPT TO DO SO WILL BE SILENTLY IGNORED.
-  
+
   return TRUE
 end _rigDbSetCharset
 
@@ -215,7 +215,7 @@ end _rigDbSetCharset
 --| Requires: --
 --|
 --| Summary: Version number query string.
---| 
+--|
 --| Format:  _rigDbVersion()
 --|
 --| Parameters: --
@@ -240,7 +240,7 @@ end _rigDbVersion
 --| Requires: _rigPrepQuery(), rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Called by the base library (driver).
---| 
+--|
 --| Format:  _rigDbExecute(param1, param2)
 --|
 --| Parameters: string <pSQL> the sql statement, integer <pConnectionID>
@@ -250,7 +250,7 @@ end _rigDbVersion
 
 function _rigDbExecute pSQL pConnectionID
   local tSQL, tIsWriteType, tRecordSetID, tAffectedRows
-  
+
 	put _rigPrepQuery(pSQL) into tSQL
 
 	put rigFetchDBdriverSetting("iswritetype") into tIsWriteType
@@ -296,7 +296,7 @@ end _rigDbExecute
 --| Requires: --
 --|
 --| Summary: Prep the query. If needed, each database adapter can prep the query string.
---| 
+--|
 --| Format:  _rigPrepQuery(param1)
 --|
 --| Parameters: string <pSQL> the sql statement
@@ -322,7 +322,7 @@ end _rigPrepQuery
 --| Requires: rigFetchDBdriverSetting(), rigSetDBdriverSetting, rigDbSimpleQuery()
 --|
 --| Summary: Begin transaction.
---| 
+--|
 --| Format:  rigTransBegin(param1)
 --|
 --| Parameters: bool <pTestMode>
@@ -332,7 +332,7 @@ end _rigPrepQuery
 
 function rigTransBegin pTestMode
   local tVal, tResult
-  
+
 	if rigFetchDBdriverSetting("transenabled") is not TRUE then
 		return TRUE
 	end if
@@ -374,7 +374,7 @@ end rigTransBegin
 --| Requires: rigFetchDBdriverSetting(), rigDbSimpleQuery()
 --|
 --| Summary: Commit transaction.
---| 
+--|
 --| Format:  rigTransCommit
 --|
 --| Parameters: --
@@ -384,7 +384,7 @@ end rigTransBegin
 
 command rigTransCommit
   local tTransEnabled, tTransDepth, tResult
-  
+
 	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
 	if tTransEnabled is not TRUE then
 		exit rigTransCommit
@@ -417,7 +417,7 @@ end rigTransCommit
 --| Requires: rigFetchDBdriverSetting(), rigDbSimpleQuery()
 --|
 --| Summary: Rollback transaction.
---| 
+--|
 --| Format:  rigTransRollback
 --|
 --| Parameters: --
@@ -427,7 +427,7 @@ end rigTransCommit
 
 command rigTransRollback
   local tTransEnabled, tTransDepth, tConnectionID
-  
+
 	put rigFetchDBdriverSetting("transenabled") into tTransEnabled
 	if tTransEnabled is not TRUE then
 		exit rigTransRollback
@@ -469,7 +469,7 @@ end rigTransRollback
 --| Requires: rigEscapeStr()
 --|
 --| Summary: Escapes string.
---| 
+--|
 --| Format:  rigEscapeStr(param1, param2)
 --|
 --| Parameters: string <pStr> , bool <pLike> whether or not the string
@@ -480,7 +480,7 @@ end rigTransRollback
 
 function rigEscapeStr pStr pLike
   local tStr, tLike, tKey
-  
+
 	put pStr into tStr
 	if pLike is empty then
 		put FALSE into tLike
@@ -495,7 +495,7 @@ function rigEscapeStr pStr pLike
 
 		return tStr
 	end if
-	
+
   # ' to ''
   replace numToCodepoint(39) with numToCodepoint(39) & numToCodepoint(39) in tStr
 
@@ -526,7 +526,7 @@ end rigEscapeStr
 --|
 --| Summary: Generates a platform-specific query string that counts all records in
 --|          the specified table.
---| 
+--|
 --| Format:  rigDbCountAll(param1)
 --|
 --| Parameters: string <pTable>
@@ -536,7 +536,7 @@ end rigEscapeStr
 
 function rigDbCountAll pTable
   local tNumrows, tTable, tSql, tQuery, tRow
-  
+
 	if pTable is empty then
 		return 0
 	end if
@@ -573,7 +573,7 @@ end rigDbCountAll
 --| Requires: rigFetchDBdriverSetting(), rigEscapeLikeStr()
 --|
 --| Summary: Generates a platform-specific query string so that the table names can be fetched.
---| 
+--|
 --| Format:  _rigDbListTables(param1)
 --|
 --| Parameters: bool <pPrefixLimit>
@@ -583,7 +583,7 @@ end rigDbCountAll
 
 function _rigDbListTables pPrefixLimit
   local tPrefixLimit, tSql, tPrefix, tEscape
-  
+
 	if pPrefixLimit is empty then
 		put FALSE into tPrefixLimit
 	else
@@ -598,7 +598,7 @@ function _rigDbListTables pPrefixLimit
 		put format(_sLikeEscapeStr, _sLikeEscapeChr) into tEscape
     put " AND name LIKE '" & tPrefix & "%' " & tEscape after tSql
 	end if
-  
+
   put " UNION ALL SELECT name FROM sqlite_temp_master WHERE type IN ('table','view') ORDER BY 1" after tSql
 
 	return tSql
@@ -617,7 +617,7 @@ end _rigDbListTables
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific query string so that the column names can be fetched.
---| 
+--|
 --| Format:  _rigDbListColumns(param1)
 --|
 --| Parameters: string <pTable>
@@ -642,7 +642,7 @@ end _rigDbListColumns
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific query so that the column data can be retrieved.
---| 
+--|
 --| Format:  _rigDbFieldData(param1)
 --|
 --| Parameters: string <pTable> the table name
@@ -667,7 +667,7 @@ end _rigDbFieldData
 --| Requires: rigFetchDBdriverSetting()
 --|
 --| Summary: The error message string.
---| 
+--|
 --| Format:  rigDbErrorMessage()
 --|
 --| Parameters: --
@@ -677,7 +677,7 @@ end _rigDbFieldData
 
 function rigDbErrorMessage
   local tConnectionID
-  
+
 	if gRigA["databaseID"] is "" then
 		put rigFetchDBdriverSetting("connid") into tConnectionID
 		if (tConnectionID <> "") and (tConnectionID is an integer) then
@@ -706,7 +706,7 @@ end rigDbErrorMessage
 --| Requires: rigFetchDBdriverSetting()
 --|
 --| Summary: This function escapes column and table names.
---| 
+--|
 --| Format:  _rigEscapeIdentifiers(param1)
 --|
 --| Parameters: string <pItem>
@@ -716,7 +716,7 @@ end rigDbErrorMessage
 
 function _rigEscapeIdentifiers pItem
   local tReservedIdent, tKey, tStr, tRegEx
-  
+
 	if _sEscapeChar is "" then
 		return pItem
 	end if
@@ -761,7 +761,7 @@ end _rigEscapeIdentifiers
 --|
 --| Summary: This function implicitly groups FROM tables so there is no confusion
 --|            about operator precedence in harmony with SQL standards.
---| 
+--|
 --| Format:  _rigFromTables(param1)
 --|
 --| Parameters: type <pTables>
@@ -771,7 +771,7 @@ end _rigEscapeIdentifiers
 
 function _rigFromTables pTables
   local tTablesArray
-  
+
 	if pTables is not an array then
 		put pTables into tTablesArray[1]
 	else
@@ -780,7 +780,7 @@ function _rigFromTables pTables
 
 	combine tTablesArray using ","
 	replace "," with ", " in tTablesArray
-	
+
 	return "(" & tTablesArray & ")"
 end _rigFromTables
 
@@ -797,7 +797,7 @@ end _rigFromTables
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific insert string from the supplied data.
---| 
+--|
 --| Format:  _rigInsert(param1, param2, param3)
 --|
 --| Parameters: string <pTable> the table name, array <pKeys> the insert keys,
@@ -826,7 +826,7 @@ end _rigInsert
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific update string from the supplied data.
---| 
+--|
 --| Format:  _rigUpdate(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string <pTable> the table name, array <pValues> the update data,
@@ -838,7 +838,7 @@ end _rigInsert
 
 function _rigUpdate pTable pValues pWhere pOrderBy pLimit
   local tOrderBy, tWhere, tLimit, tKeyNum, tKey, tVal, tValstr, tSql
-  
+
 	put pOrderBy into tOrderBy
 	put pWhere into tWhere
 	if pLimit is empty then
@@ -902,7 +902,7 @@ end _rigUpdate
 --| Summary: Generates a platform-specific truncate string from the supplied data
 --|             If the database does not support the truncate() command
 --|             This function maps to "DELETE FROM table".
---| 
+--|
 --| Format:  _rigTruncate(param1)
 --|
 --| Parameters: string <pTable> the table name
@@ -927,7 +927,7 @@ end _rigTruncate
 --| Requires: rigFetchDBactiveRecSetting()
 --|
 --| Summary: Generates a platform-specific delete string from the supplied data.
---| 
+--|
 --| Format:  _rigDelete(param1, param2, param3, param4)
 --|
 --| Parameters: string <pTable> the table name, array <pWhere> the where clause, array <pLike>
@@ -938,7 +938,7 @@ end _rigTruncate
 
 function _rigDelete pTable pWhere pLike pLimit
   local tLike, tLimit, tConditions, tARwhere, tSeparator
-  
+
 	put pLike into tLike
 	if pLimit is empty then
 		put FALSE into tLimit
@@ -953,7 +953,7 @@ function _rigDelete pTable pWhere pLike pLimit
 		combine tARwhere using tSeparator
 		replace tSeparator with LF in tARwhere
 		put tARwhere after tConditions
-		
+
 		if (the number of lines in the keys of pWhere > 0) and (the number of lines in the keys of tLike > 0) then
 			put " AND " after tConditions
 		end if
@@ -961,7 +961,7 @@ function _rigDelete pTable pWhere pLike pLimit
 		combine tLike using comma
 		replace comma with LF in tLike
 		put tLike after tConditions
-	
+
 	end if
 
 	if tLimit is FALSE then
@@ -986,7 +986,7 @@ end _rigDelete
 --| Requires: --
 --|
 --| Summary: Generates a platform-specific LIMIT clause.
---| 
+--|
 --| Format:  _rigLimit(param1, param2, param3)
 --|
 --| Parameters: string <pSQL> the sql query string, integer <pLimit> the number of rows
@@ -997,7 +997,7 @@ end _rigDelete
 
 function _rigLimit pSQL pLimit pOffset
   local tOffset
-  
+
 	if (pOffset is 0) or (pOffset is FALSE) then
 		put "" into tOffset
 	else
@@ -1020,7 +1020,7 @@ end _rigLimit
 --| Requires: rigSetDBdriverSetting
 --|
 --| Summary: Close DB Connection.
---| 
+--|
 --| Format:  _rigDbClose(param1)
 --|
 --| Parameters: integer <pConnectionID>
@@ -1030,7 +1030,7 @@ end _rigLimit
 
 function _rigDbClose pConnectionID
   local tError
-  
+
 	revCloseDatabase pConnectionID
 
 	if item 1 of the result is "revdberr" then
@@ -1062,7 +1062,7 @@ end _rigDbClose
 --| Requires: --
 --|
 --| Summary: Fetch setting from sqlite driver settings.
---| 
+--|
 --| Format:  rigFetchDriverSpecificSetting(param1)
 --|
 --| Parameters: string<pSetting>
@@ -1108,7 +1108,7 @@ end rigFetchDriverSpecificSetting
 --| Requires: --
 --|
 --| Summary: Convert SQL datetime format to Internet date format (RFC 2822).
---| 
+--|
 --| Format:  rigSqlDateTimeToIntDate(param1)
 --|
 --| Parameters: string <pDateTime>
@@ -1118,15 +1118,15 @@ end rigFetchDriverSpecificSetting
 
 function rigSqlDateTimeToIntDate pDateTime
   local tRegEx, tY, tM, tD, tT, tDateTime, tConvertedDate
-  
+
 	put "([0-9]+)-([0-9]+)-([0-9]+)\s([0-9]+\:[0-9]+\:[0-9]+)" into tRegEx
-  
-	put empty into tY -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7        
+
+	put empty into tY -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	put empty into tM
 	put empty into tD
-	put empty into tT         
+	put empty into tT
 	get matchText(pDateTime,tRegEx,tY,tM,tD,tT)
-             
+
 	put tM & "/" & tD & "/" & tY && tT into tDateTime
 
 	convert (tDateTime) to internet date
@@ -1150,7 +1150,7 @@ end rigSqlDateTimeToIntDate
 --| Requires: rigCurrentConnectionID()
 --|
 --| Summary: Get pragma value.
---| 
+--|
 --| Format:  rigDbGetPragma(param1)
 --|
 --| Parameters: string <pPragma>
@@ -1160,19 +1160,19 @@ end rigSqlDateTimeToIntDate
 
 function rigDbGetPragma pPragma
   local tConnectionID, tSQL, tPragmaValue
-  
+
   put rigCurrentConnectionID() into tConnectionID
-  
+
   put "PRAGMA" && pPragma & ";" into tSQL
   get revDataFromQuery(comma, return, tConnectionID, tSQL)
-  
+
   put it into tPragmaValue
-  
+
   # RETURN ERROR
   if item 1 of tPragmaValue is "revdberr" then
      return "Error:" && item 2 of tPragmaValue
   end if
-  
+
   return tPragmaValue
 end rigDbGetPragma
 
@@ -1190,7 +1190,7 @@ end rigDbGetPragma
 --| Requires: rigCurrentConnectionID()
 --|
 --| Summary: Set a pragma value.
---| 
+--|
 --| Format:  rigDbSetPragma param1, param2
 --|
 --| Parameters: string <pPragma>, mixed <pValue>
@@ -1200,20 +1200,20 @@ end rigDbGetPragma
 
 command rigDbSetPragma pPragma pValue
   local tConnectionID, tSQL, tResult
-  
+
   put rigCurrentConnectionID() into tConnectionID
-   
+
   # RUN QUERY
   put "PRAGMA" && pPragma && "=" && pValue &";" into tSQL
   revExecuteSQL tConnectionID, tSQL
-   
+
   put the result into tResult
-   
+
   # RETURN ERROR
   if tResult <> 0 then
     return "Error:" && tResult
   end if
-   
+
   return 0
 end rigDbSetPragma
 

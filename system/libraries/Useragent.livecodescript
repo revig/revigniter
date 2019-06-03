@@ -52,12 +52,12 @@ local sStackInUse, sUseragentA -- array keys are: agent, isBrowser, isRobot, isM
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -72,12 +72,12 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "UserAgent Library Loaded"
       end if
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -96,7 +96,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -124,7 +124,7 @@ end _rigSetDefaultValues
 --| Requires: _rigAgentData
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
---| 
+--|
 --| Format:  rigRunInitialUseragentConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -152,7 +152,7 @@ end rigRunInitialUseragentConfig
 --| Requires: rigTrim(), _rigLoadAgentFile(), _rigCompileData
 --|
 --| Summary: Sets the user agent and runs the compilation routine.
---| 
+--|
 --| Format:  _rigAgentData
 --|
 --| Parameters: --
@@ -186,7 +186,7 @@ end _rigAgentData
 --| Requires: rigLogMessage, rigFetchAgentsData(), rigDeleteAgentsVar
 --|
 --| Summary: Compile the user agent data.
---| 
+--|
 --| Format:  _rigLoadAgentFile()
 --|
 --| Parameters: --
@@ -196,14 +196,14 @@ end _rigAgentData
 
 private function _rigLoadAgentFile
   local tReturn
-  
+
 	if sUseragentA["useragentsFileLoaded"] is not TRUE then
 		try
       _rigRequire gRigA["APPPATH"] & "config/useragents" & gRigA["EXT"]
 		catch err
 			rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gRigA["EXT"]
 			return FALSE
-				
+
 		end try
 		put TRUE into sUseragentA["useragentsFileLoaded"]
 	end if
@@ -233,7 +233,7 @@ private function _rigLoadAgentFile
 		rigDeleteAgentsVar "robots"
 		put TRUE into tReturn
 	end if
-	
+
 	return tReturn
 end _rigLoadAgentFile
 
@@ -252,7 +252,7 @@ end _rigLoadAgentFile
 --| Requires: _rigSetPlatform(), _rigSetBrowser(), _rigSetRobot(), _rigSetMobile()
 --|
 --| Summary: Compile the user agent data.
---| 
+--|
 --| Format:  _rigCompileData
 --|
 --| Parameters: --
@@ -262,12 +262,12 @@ end _rigLoadAgentFile
 
 private command _rigCompileData
   local tFunctions
-  
+
 	get _rigSetPlatform()
 
 	if sUseragentA["platformsA"] is an array then
 		put "_setBrowser,_setRobot,_setMobile" into tFunctions
-		
+
 		repeat for each item thisItem in tFunctions
 			switch thisItem
         			case "_setBrowser"
@@ -308,7 +308,7 @@ end _rigCompileData
 --| Requires: --
 --|
 --| Summary: Set the platform.
---| 
+--|
 --| Format:  _rigSetPlatform()
 --|
 --| Parameters: --
@@ -318,7 +318,7 @@ end _rigCompileData
 
 private function _rigSetPlatform
   local tKey, tVal, tPregQuotedStr
-  
+
 	if sUseragentA["platformsA"] is an array then
 
 	repeat with i = 1 to (item 2 of the extents of sUseragentA["platformsA"])
@@ -329,11 +329,11 @@ private function _rigSetPlatform
 			--put sUseragentA["platformsA"][tKey] into tVal
 
 			put rigPregQuote(tKey) into tPregQuotedStr
-			
+
 			get matchText(sUseragentA["agent"], "(?i)" & tPregQuotedStr)
 			if it is TRUE then
 				put tVal into sUseragentA["platform"]
-	
+
 				return TRUE
 			end if
 		end repeat
@@ -356,7 +356,7 @@ end _rigSetPlatform
 --| Requires: rigPregQuote(), _rigSetMobile()
 --|
 --| Summary: Set the browser.
---| 
+--|
 --| Format:  _rigSetBrowser()
 --|
 --| Parameters: --
@@ -366,10 +366,10 @@ end _rigSetPlatform
 
 private function _rigSetBrowser
   local tMatch1, tKey, tVal, tPregQuotedStr, tRegex, tSafariOffset
-  
+
 	if sUseragentA["browsersA"] is an array then
 
-    put empty into tMatch1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+    put empty into tMatch1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     repeat with i = 1 to (item 2 of the extents of sUseragentA["browsersA"])
       put line 1 in the keys of sUseragentA["browsersA"][i] into tKey
       put sUseragentA["browsersA"][i][tKey] into tVal
@@ -378,8 +378,8 @@ private function _rigSetBrowser
       -- put sUseragentA["browsersA"][tKey] into tVal
 
       put rigPregQuote(tKey) into tPregQuotedStr
-      
-      
+
+
       put ".*?([0-9\.]+)" into tRegex
       -- get matchText(sAgentAgent, "(?i)" & tPregQuotedStr & ".*?([0-9\.]+)", tMatch1)
       get matchText(sUseragentA["agent"], "(?i)" & tPregQuotedStr & tRegex, tMatch1)
@@ -391,7 +391,7 @@ private function _rigSetBrowser
           put offset("Safari/",sUseragentA["agent"]) into tSafariOffset
           put char (tSafariOffset + 7) to (the number of chars in sUseragentA["agent"]) of sUseragentA["agent"] into sUseragentA["version"]
         else
-                 
+
           put tMatch1 into sUseragentA["version"]
         end if
 
@@ -420,7 +420,7 @@ end _rigSetBrowser
 --| Requires: --
 --|
 --| Summary: Set the robot.
---| 
+--|
 --| Format:  _rigSetRobot()
 --|
 --| Parameters: --
@@ -430,7 +430,7 @@ end _rigSetBrowser
 
 private function _rigSetRobot
   local tKey, tVal, tPregQuotedStr
-  
+
 	if sUseragentA["robotsA"] is an array then
 
     repeat with i = 1 to (item 2 of the extents of sUseragentA["robotsA"])
@@ -441,7 +441,7 @@ private function _rigSetRobot
       -- put sUseragentA["robotsA"][tKey] into tVal
 
       put rigPregQuote(tKey) into tPregQuotedStr
-			
+
       get matchText(sUseragentA["agent"], "(?i)" & tPregQuotedStr)
       if it is TRUE then
         put TRUE into sUseragentA["isRobot"]
@@ -469,7 +469,7 @@ end _rigSetRobot
 --| Requires: rigPregQuote()
 --|
 --| Summary: Set the mobile device.
---| 
+--|
 --| Format:  _rigSetMobile()
 --|
 --| Parameters: --
@@ -479,7 +479,7 @@ end _rigSetRobot
 
 private function _rigSetMobile
   local tLowerAgent, tKey, tVal, tPregQuotedStr
-  
+
 	if sUseragentA["mobilesA"] is an array then
 		put toLower(sUseragentA["agent"]) into tLowerAgent
 
@@ -531,7 +531,7 @@ end _rigSetMobile
 --| Requires: rigTrim(), rigPregReplace()
 --|
 --| Summary: Set the accepted languages.
---| 
+--|
 --| Format:  _rigSetLanguages
 --|
 --| Parameters: --
@@ -541,13 +541,13 @@ end _rigSetMobile
 
 private command _rigSetLanguages
   local tAcceptLang, tRegEx
-  
+
 	put $_SERVER["HTTP_ACCEPT_LANGUAGE"] into tAcceptLang
 
 	if (sUseragentA["languagesA"] is not an array) and (tAcceptLang is not empty) then
 		put rigTrim(tAcceptLang) into tAcceptLang
 		put toLower(tAcceptLang) into tAcceptLang
-		
+
 		put "(?i)(;q=[0-9\.]+)" into tRegEx
 		put rigPregReplace(tAcceptLang, tRegEx, "", "") into sUseragentA["languagesA"]
 
@@ -556,7 +556,7 @@ private command _rigSetLanguages
 		if sUseragentA["languagesA"] is not an array then
 			put "Undefined" into sUseragentA["languagesA"][1]
 		end if
-				
+
 	end if
 end _rigSetLanguages
 
@@ -573,7 +573,7 @@ end _rigSetLanguages
 --| Requires: rigTrim(), rigPregReplace()
 --|
 --| Summary: Set the accepted character sets.
---| 
+--|
 --| Format:  _rigSetCharsets
 --|
 --| Parameters: --
@@ -583,13 +583,13 @@ end _rigSetLanguages
 
 private command _rigSetCharsets
   local tAcceptCharset, tRegEx
-  
+
 	put $_SERVER["HTTP_ACCEPT_CHARSET"] into tAcceptCharset
 
 	if (sUseragentA["languagesA"] is not an array) and (tAcceptCharset is not empty) then
 		put rigTrim(tAcceptCharset) into tAcceptCharset
 		put toLower(tAcceptCharset) into tAcceptCharset
-		
+
 		put "(?i)(;q=.+)" into tRegEx
 		put rigPregReplace(tAcceptCharset, tRegEx, "", "") into sUseragentA["charsetsA"]
 
@@ -598,7 +598,7 @@ private command _rigSetCharsets
 		if sUseragentA["charsetsA"] is not an array then
 			put "Undefined" into sUseragentA["charsetsA"][1]
 		end if
-				
+
 	end if
 end _rigSetCharsets
 
@@ -616,7 +616,7 @@ end _rigSetCharsets
 --| Requires: --
 --|
 --| Summary: Is browser
---| 
+--|
 --| Format:  rigIsBrowser()
 --|
 --| Parameters: --
@@ -644,7 +644,7 @@ end rigIsBrowser
 --| Requires: --
 --|
 --| Summary: Is robot
---| 
+--|
 --| Format:  rigIsRobot()
 --|
 --| Parameters: --
@@ -673,7 +673,7 @@ end rigIsRobot
 --| Requires: --
 --|
 --| Summary: Is mobile
---| 
+--|
 --| Format:  rigIsMobile()
 --|
 --| Parameters: --
@@ -701,7 +701,7 @@ end rigIsMobile
 --| Requires: --
 --|
 --| Summary: Is this a referral from another site?
---| 
+--|
 --| Format:  rigIsReferral()
 --|
 --| Parameters: --
@@ -734,7 +734,7 @@ end rigIsReferral
 --| Requires: --
 --|
 --| Summary: Agent string
---| 
+--|
 --| Format:  rigAgentString()
 --|
 --| Parameters: --
@@ -762,7 +762,7 @@ end rigAgentString
 --| Requires: --
 --|
 --| Summary: Get platform
---| 
+--|
 --| Format:  rigAgentPlatform()
 --|
 --| Parameters: --
@@ -790,7 +790,7 @@ end rigAgentPlatform
 --| Requires: --
 --|
 --| Summary: Get browser name
---| 
+--|
 --| Format:  rigBrowser()
 --|
 --| Parameters: --
@@ -825,7 +825,7 @@ end rigBrowser
 --| Requires: --
 --|
 --| Summary: Get browser version
---| 
+--|
 --| Format:  rigBrowserVersion()
 --|
 --| Parameters: --
@@ -854,7 +854,7 @@ end rigBrowserVersion
 --| Requires: --
 --|
 --| Summary: Get robot name
---| 
+--|
 --| Format:  rigRobot()
 --|
 --| Parameters: --
@@ -883,7 +883,7 @@ end rigRobot
 --| Requires: --
 --|
 --| Summary: Get the mobile device
---| 
+--|
 --| Format:  rigMobile()
 --|
 --| Parameters: --
@@ -912,7 +912,7 @@ end rigMobile
 --| Requires: --
 --|
 --| Summary: Get the referrer
---| 
+--|
 --| Format:  rigReferrer()
 --|
 --| Parameters: --
@@ -922,7 +922,7 @@ end rigMobile
 
 function rigReferrer
   local tReferrer
-  
+
 	if $_SERVER["HTTP_REFERER"] is not empty then
 		put rigTrim($_SERVER["HTTP_REFERER"]) into tReferrer
 		return tReferrer
@@ -947,7 +947,7 @@ end rigReferrer
 --| Requires: _rigSetLanguages
 --|
 --| Summary: Get the accepted languages (undocumented).
---| 
+--|
 --| Format:  rigAgentLanguages()
 --|
 --| Parameters: --
@@ -979,7 +979,7 @@ end rigAgentLanguages
 --| Requires: _rigSetCharsets
 --|
 --| Summary: Get the accepted charsets (undocumented).
---| 
+--|
 --| Format:  rigAgentCharSets()
 --|
 --| Parameters: --
@@ -1012,7 +1012,7 @@ end rigAgentCharSets
 --| Requires: _rigSetLanguages
 --|
 --| Summary: Test for a particular language.
---| 
+--|
 --| Format:  rigAcceptLang()
 --|
 --| Parameters: string <pLang>
@@ -1022,7 +1022,7 @@ end rigAgentCharSets
 
 function rigAcceptLang pLang
   local tLang, tK, tV, tCounter, tAgentLanguages
-  
+
 	if pLang is empty then
 		put "en" into tLang
 	else
@@ -1071,7 +1071,7 @@ end rigAcceptLang
 --| Requires: _rigSetCharsets
 --|
 --| Summary: Test for a particular charset.
---| 
+--|
 --| Format:  rigAcceptCharset()
 --|
 --| Parameters: string <pCharset>
@@ -1081,7 +1081,7 @@ end rigAcceptLang
 
 function rigAcceptCharset pCharset
   local tCharset
-  
+
 	if pCharset is empty then
 		put "utf-8" into tCharset
 	else
@@ -1095,7 +1095,7 @@ function rigAcceptCharset pCharset
 	end if
 
 	get rigInArray(sUseragentA["charsetsA"], tCharset)
-		
+
 	return it
 end rigAcceptCharset
 
@@ -1113,7 +1113,7 @@ end rigAcceptCharset
 --| Requires: --
 --|
 --| Summary: Get useragent array variable values.
---| 
+--|
 --| Format: rigUseragentGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -1125,7 +1125,7 @@ function rigUseragentGet pWhat
   if pWhat is among the keys of sUseragentA then
     return sUseragentA[pWhat]
   end if
-   
+
   return empty
 end rigUseragentGet
 
@@ -1142,7 +1142,7 @@ end rigUseragentGet
 --| Requires: --
 --|
 --| Summary: Setter for table variables.
---| 
+--|
 --| Format: rigUseragentSet param1, param2
 --|
 --| Parameters: string <pKey>, sUseragentA array key, mixed <pVal>

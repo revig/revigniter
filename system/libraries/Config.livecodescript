@@ -421,7 +421,7 @@ function rigSiteURL pURI
 
     put "^/*(.+?)/*$" into tRegEx
 
-	  put empty into tFoundString -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	  put empty into tFoundString -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     if matchText(tURI,tRegEx,tFoundString) is TRUE then
       put tFoundString into tURI
     end if
