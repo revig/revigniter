@@ -478,9 +478,9 @@ end _rigJQreadyClose
 --| COMMAND rigJQajaxForm
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2010-02-22
---| Last Mod: 2017-06-27
+--| Last Mod: 2019-06-03
 --| Requires: rigTrim()
 --|
 --| Summary: Process form data using a xmlHTTPrequest.
@@ -520,14 +520,22 @@ command rigJQajaxForm pSubmitBtn pFields pPostURI pPreventDefault pDataToLoadURI
 
 	# GET FORM KEY VALUE PAIRS
 	put empty into tFieldName -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
+  put empty into tMatch1
 	put 1 into tCounter
 	repeat for each item tField in pFields
-		put "var fld" & tCounter && "= $(" & tField & ").val();" & return after sJqueryScript
-		put "'(#|\.)?(.+)'" into tRegEx
-		get matchText(tField, tRegEx, tMatch1, tFieldName)
-		put tFieldName & ":" && "fld" & tCounter & comma after tPostKeyValuePairs
-		put "$(" & tField & ").val('');" & return after tValuesReset
-		add 1 to tCounter
+    put "'(#|\.)?(.+)'" into tRegEx
+    get matchText(tField, tRegEx, tMatch1, tFieldName)
+
+    if tMatch1 is empty then
+      # NO ID OR CLASS SPECIFIED, WE ARE DEALING WITH AN ELEMENT NAME
+      put "'input[name=" & tFieldName & "]'" into tField
+    end if
+
+    put "var fld" & tCounter && "= $(" & tField & ").val();" & return after sJqueryScript
+    put tFieldName & ":" && "fld" & tCounter & comma after tPostKeyValuePairs
+    put "$(" & tField & ").val('');" & return after tValuesReset
+
+    add 1 to tCounter
 	end repeat
 
 	delete char -1 of tPostKeyValuePairs
