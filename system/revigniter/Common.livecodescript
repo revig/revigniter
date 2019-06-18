@@ -2560,6 +2560,35 @@ end rigIsAbsolutePath
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION urlEncodeRFC
+--|
+--| Author: LiveCode Ltd.
+--| Version:  1.0
+--| Created: 2019-06-18
+--| Last Mod: 2019-06-18
+--| Requires: --
+--|
+--| Summary: URL encoding that does conform to RFC3986.
+--|
+--| Format:  urlEncodeRFC(param1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function urlEncodeRFC pStr
+   if pStr is strictly a string then
+      put textEncode(pStr,"UTF-8") into pStr
+   end if
+   put URLEncode(pStr) into pStr
+   replace "+" with "%20" in pStr
+
+   return pStr
+end urlEncodeRFC
+
+
 
 
 function rigQ pText
