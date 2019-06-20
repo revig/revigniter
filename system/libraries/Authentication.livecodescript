@@ -3321,6 +3321,14 @@ function rigAuthGenerateQR pAccount
   local tAlgo, tDigits, tPeriod, tECC, tSize, tMask
   local tImgData, tQRcode, tQRa
 
+  if sAuthOTP <> TRUE then
+    rigLogMessage "error", "Auth OTP: OTP helper not loaded!"
+    put "" into tQRa["qr"]
+    put "" into tQRa["key"]
+
+    return tQRa
+  end if
+
   # GET USER ACCOUNT (NAME OR EMAIL)
   if pAccount is empty then
     put rigAuthUser() into tQueryResult
@@ -3448,6 +3456,12 @@ function rigAuthOTPkeysMatch pChallenge
   local tQueryResult, tUserID, tQuery, tRow, tKey, tRegEx, tMatchStart
   local tAlgo, tAlgoLength, tCryptoType, tCryptoNumBits, tMatchEnd
   local tTokenLength, tTimeStep, tTimeWindow, tMatch, tTableData
+
+  if sAuthOTP <> TRUE then
+    rigLogMessage "error", "Auth OTP: OTP helper not loaded!"
+
+    return FALSE
+  end if
 
   replace " " with empty in pChallenge
 
