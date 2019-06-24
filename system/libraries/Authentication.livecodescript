@@ -3380,11 +3380,11 @@ end rigAuthGenerateQR
 --| COMMAND _rigAuthGenerateOTPuserKey
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-19
---| Last Mod: 2019-06-19
+--| Last Mod: 2019-06-24
 --| Requires: rigDbGet(), _rigAuthEncryptPassword(), rigDbInsert(),
---|            rigDbRow(), _rigAuthDecryptPassword, rigOTPbase32Encode()
+--|            rigDbRow(), _rigAuthDecryptPassword, rigOTPgenerateUserKey
 --|
 --| Summary: Generate random user key used to setup OTP.
 --|
@@ -3396,11 +3396,11 @@ end rigAuthGenerateQR
 ----------------------------------------------------------------------*/
 
 private command _rigAuthGenerateOTPuserKey pUserID
-  local tQuery, tSecret, tEncryptedOTPsecret, tTableData, tRow, tBase32Secret, tRegEx, tMatchStart, tMatchEnd
+  local tQuery, tSecret, tEncryptedOTPsecret, tTableData, tRow, tBase32Secret
 
   # CHECK IF THERE IS AN ENTRY ALREADY
   rigDbWhere "userId", pUserID
-  put rigDbGet("otp") into tQuery
+  put rigDbGet(sAuthConfigA["tables"]["otp"]) into tQuery
 
   if tQuery["numrows"] = 0 then
     put randomBytes(16) into tSecret
@@ -3409,7 +3409,7 @@ private command _rigAuthGenerateOTPuserKey pUserID
     # STORE ENCRYPTED SECRET IN DB
     put pUserID into tTableData["userId"]
     put tEncryptedOTPsecret into tTableData["key"]
-    get rigDbInsert("otp", tTableData)
+    get rigDbInsert(sAuthConfigA["tables"]["otp"], tTableData)
 
   else
     # USE EXISTING SECRET AND DECRYPT IT
@@ -3418,11 +3418,8 @@ private command _rigAuthGenerateOTPuserKey pUserID
   end if
 
   # RETURN DECRYPTED BASE 32 ENCODED SECRET
-  put rigOTPbase32Encode(tSecret) into tBase32Secret
-  # REMOVE TRAILING "=" CHARS
-  put "(=+)" into tRegEx
-  get matchChunk(tBase32Secret,tRegEx,tMatchStart,tMatchEnd)
-  put char 1 to (tMatchStart -1) of tBase32Secret into tBase32Secret
+  rigOTPgenerateUserKey tSecret
+  put the result into tBase32Secret
 
   return tBase32Secret
 end _rigAuthGenerateOTPuserKey
@@ -3436,9 +3433,9 @@ end _rigAuthGenerateOTPuserKey
 --| FUNCTION rigAuthOTPkeysMatch
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-19
---| Last Mod: 2019-06-19
+--| Last Mod: 2019-06-24
 --| Requires: _rigAuthCurrentUserID(), rigDbWhere, rigDbGet(), rigDbRow(),
 --|           _rigAuthDecryptPassword(), rigAuthFetchConfigItem(), rigOTPcompareKeys,
 --|            rigMasterNow(), rigDbUpdate()
@@ -3471,7 +3468,7 @@ function rigAuthOTPkeysMatch pChallenge
 
   # GET DECRYPTED STORED KEY
   rigDbWhere "userId", tUserID
-  put rigDbGet("otp") into tQuery
+  put rigDbGet(sAuthConfigA["tables"]["otp"]) into tQuery
 
   if tQuery["numrows"] > 0 then
     put rigDbRow() into tRow
@@ -3503,7 +3500,7 @@ function rigAuthOTPkeysMatch pChallenge
   if (tMatch is true) and ((tRow["time"] is NULL) or (tRow["time"] is empty)) then
     put rigMasterNow() into tTableData["time"]
     rigDbWhere "userId", tUserID
-    get rigDbUpdate("otp", tTableData)
+    get rigDbUpdate(sAuthConfigA["tables"]["otp"], tTableData)
 
   else
     rigAuthSetMessage "Wrong token!"
@@ -3521,9 +3518,9 @@ end rigAuthOTPkeysMatch
 --| FUNCTION rigAuthUserHasOTP
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-20
---| Last Mod: 2019-06-20
+--| Last Mod: 2019-06-24
 --| Requires: _rigAuthCurrentUserID(), rigDbWhere, rigDbGet(), rigDbRow()
 --|
 --| Summary: Check if user has set up OTP authentication.
@@ -3537,6 +3534,11 @@ end rigAuthOTPkeysMatch
 
 function rigAuthUserHasOTP pUserID
   local tQueryResult, tUser, tUserID, tQuery, tRow
+
+  # CHECK IF THERE IS A OTP TABLE
+  if rigDbTableExists(sAuthConfigA["tables"]["otp"]) is FALSE then
+    return False
+  end if
 
   # GET USER ID
   if (pUserID is empty) or (pUserID is not an integer) then
@@ -3553,7 +3555,7 @@ function rigAuthUserHasOTP pUserID
   if tUserID <> empty then
     # IS THERE AN ENTRY IN THE OTP TABLE
     rigDbWhere "userId", tUserID
-    put rigDbGet("otp") into tQuery
+    put rigDbGet(sAuthConfigA["tables"]["otp"]) into tQuery
 
     if tQuery["numrows"] > 0 then
       put rigDbRow() into tRow
@@ -3578,9 +3580,9 @@ end rigAuthUserHasOTP
 --| FUNCTION rigAuthClearOTP
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-20
---| Last Mod: 2019-06-20
+--| Last Mod: 2019-06-24
 --| Requires: rigAuthLoggedIn(), _rigAuthCurrentUserID(), rigAuthUserHasOTP(),
 --|            rigDbWhere, rigDbDelete()
 --|
@@ -3612,7 +3614,7 @@ function rigAuthClearOTP pUserID
     # CHECK IF USER HAS SETUP OTP AUTHENTICATION
     if rigAuthUserHasOTP(pUserID) is TRUE then
       rigDbWhere "userId", tUserID
-      get rigDbDelete("otp")
+      get rigDbDelete(sAuthConfigA["tables"]["otp"])
 
       return TRUE
     end if
