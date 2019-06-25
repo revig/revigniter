@@ -405,17 +405,22 @@ end rigAuthDeactivate
 --|
 --| Parameters: --
 --|
---| Return: mixed (bool or "pending")
+--| Return: mixed (bool or "pending" or "pendingOTPsetup")
 ----------------------------------------------------------------------*/
 
 function rigAuthLoggedIn
+  local tUserHasOTP
+
 	get _rigAuthCallHook("authCheckLoggedIn")
 
   if rigSessUserdata(sAuthConfigA["identityColumn"]) is not FALSE then
 
     # CHECK IF USER SUPPLIED THE CORRECT ONE-TIME PASSWORD
-    if (rigAuthUserHasOTP() is TRUE) and (rigSessUserdata("otpCheck") <> "success") then
+    put rigAuthUserHasOTP() into tUserHasOTP
+    if (tUserHasOTP is TRUE) and (rigSessUserdata("otpCheck") <> "success") then
       return "pending"
+    else if tUserHasOTP is "pendingOTPsetup" then
+      return "pendingOTPsetup"
     end if
 
     return TRUE
