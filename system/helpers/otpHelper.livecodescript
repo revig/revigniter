@@ -223,7 +223,8 @@ end rigOTPcompareKeys
 --|
 --| Format:  _rigOTPoauthTotp(param1, param2, param3, param4, param5)
 --|
---| Parameters: string <pKey>, integer <pTime>, integer <pDigits>, string <pCryptoType>, integer <pNumBits>
+--| Parameters: string <pKey> the decoded shared secret, integer <pTime>, integer <pDigits>,
+--|               string <pCryptoType>, integer <pNumBits>
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
@@ -276,7 +277,7 @@ end _rigOTPoauthTotp
 --| Version:  1.0
 --| Created: 2019-06-16
 --| Last Mod: 2019-06-16
---| Requires: rigOTPbase32Encode()
+--| Requires: _rigOTPbase32Encode()
 --|
 --| Summary: Generate a base 32 encoded user key providing a secret.
 --|
@@ -290,7 +291,7 @@ end _rigOTPoauthTotp
 command rigOTPgenerateUserKey pSecret
   local tEncodedSecret, tRegEx, tMatchStart, tMatchEnd
 
-  put rigOTPbase32Encode(pSecret) into tEncodedSecret
+  put _rigOTPbase32Encode(pSecret) into tEncodedSecret
   # REMOVE TRAILING "=" CHARS
   put "(=+)" into tRegEx
   get matchChunk(tEncodedSecret,tRegEx,tMatchStart,tMatchEnd)
@@ -306,7 +307,7 @@ end rigOTPgenerateUserKey
 
 
 /*----------------------------------------------------------------------
---| FUNCTION rigOTPbase32Encode
+--| FUNCTION _rigOTPbase32Encode
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -316,14 +317,14 @@ end rigOTPgenerateUserKey
 --|
 --| Summary: Generate a base 32 encoded string (RFC 3548).
 --|
---| Format:  rigOTPbase32Encode(param1)
+--| Format:  _rigOTPbase32Encode(param1)
 --|
 --| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigOTPbase32Encode pStr
+private function _rigOTPbase32Encode pStr
   local tAlphabet, tBinStr, tBinA, tNumChunks, tVal, tChar, tBase32Str
 
   put "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=" into tAlphabet
@@ -360,7 +361,7 @@ function rigOTPbase32Encode pStr
   end repeat
 
   return tBase32Str
-end rigOTPbase32Encode
+end _rigOTPbase32Encode
 
 
 
