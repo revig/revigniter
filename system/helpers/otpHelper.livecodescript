@@ -789,13 +789,15 @@ end _rigOTPSha
 --| Last Mod: 2019-06-18
 --| Requires: --
 --|
---| Summary: Create QR code of OTP URI data.
+--| Summary: Create QR code based on OTP URI data.
 --|
 --| Format:  rigOTPqrCode(param1, param2, param3[, param4][, param5][, param6][, param7][, param8][, param9])
 --|
---| Parameters: string <pKey>, string <pAccount>, string <pIssuer>, string <pAlgo> (optional), integer <pDigits,
+--| Parameters: string <pKey>, string <pAccount>, string <pIssuer>, string <pAlgo> (optional),
+--|               integer <pDigits> (optional), integer <pPeriod> (optional), string <pECC> (optional),
+--|               integer <pSize> (optional), mixed <pMask> (optional)
 --|
---| Return: returnType
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMask
