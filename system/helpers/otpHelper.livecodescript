@@ -83,7 +83,7 @@ end libraryStack
 --| Last Mod: 2019-06-15
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
---| Summary: Get an OTP providing a secret, time step, token length, hash algorithm and OTP type.
+--| Summary: Get an OTP providing a secret, token length, hash algorithm, time step and OTP type.
 --|
 --| Format:  rigOTPgenerate param1[, param2][, param 3][, param4][, param5] [, param6]
 --|
