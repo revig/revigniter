@@ -393,10 +393,10 @@ end rigAuthDeactivate
 --| FUNCTION rigAuthLoggedIn
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 11-09-2012
---| Last Mod: 11-09-2012
---| Requires: _rigAuthCallHook(), rigSessUserdata()
+--| Version:  1.1
+--| Created: 2012-09-11
+--| Last Mod: 2019-06-24
+--| Requires: _rigAuthCallHook(), rigSessUserdata(), rigAuthUserHasOTP(), rigSessUserdata()
 --|
 --| Summary: Check logged in state. Returns FALSE if
 --|            session data item identity is empty.
@@ -405,15 +405,21 @@ end rigAuthDeactivate
 --|
 --| Parameters: --
 --|
---| Return: bool
+--| Return: mixed (bool or "pending")
 ----------------------------------------------------------------------*/
 
 function rigAuthLoggedIn
 	get _rigAuthCallHook("authCheckLoggedIn")
 
-	if rigSessUserdata(sAuthConfigA["identityColumn"]) is not FALSE then
-		return TRUE
-	end if
+  if rigSessUserdata(sAuthConfigA["identityColumn"]) is not FALSE then
+
+    # CHECK IF USER SUPPLIED THE CORRECT ONE-TIME PASSWORD
+    if (rigAuthUserHasOTP() is TRUE) and (rigSessUserdata("otpCheck") <> "success") then
+      return "pending"
+    end if
+
+    return TRUE
+  end if
 
 	return FALSE
 end rigAuthLoggedIn
@@ -814,7 +820,7 @@ end rigAuthUserGroups
 --| FUNCTION rigAuthLogin
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2012-10-10
 --| Last Mod: 2019-06-24
 --| Requires: _rigAuthCallHook(), rigAuthSetError, rigDbSelect, rigDbWhere,
