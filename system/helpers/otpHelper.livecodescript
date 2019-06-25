@@ -878,6 +878,36 @@ end rigOTPqrCode
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION rigOTPvalidBase32Str
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-06-25
+--| Last Mod: 2019-06-25
+--| Requires: --
+--|
+--| Summary: Validate base32 encoding of user keys.
+--|
+--| Format:  rigOTPvalidBase32Str(param1)
+--|
+--| Parameters: string <tBase32Str>
+--|
+--| Return: bool
+----------------------------------------------------------------------*/
+
+function rigOTPvalidBase32Str tBase32Str
+  # USER KEY VALIDATION
+  if matchText(tBase32Str, "^[A-Z2-7]+$") is FALSE then
+    return FALSE
+  end if
+
+  return TRUE
+end rigOTPvalidBase32Str
+
+
+
+
 
 
 --| END OF otpHelper.livecodescript
