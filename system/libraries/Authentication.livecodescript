@@ -815,12 +815,13 @@ end rigAuthUserGroups
 --|
 --| Author: rabit
 --| Version:  1.0
---| Created: 10-10-2012
---| Last Mod: 10-10-2012
+--| Created: 2012-10-10
+--| Last Mod: 2019-06-24
 --| Requires: _rigAuthCallHook(), rigAuthSetError, rigDbSelect, rigDbWhere,
 --|            rigDbLimit, rigDbGet(), rigDbRow(), _rigAuthValidatePassword(),
 --|            _rigAuthUpdateLastLogin(), rigAuthSetMessage, rigAuthClearLoginAttempts(),
---|            rigSetSessUserdata, rigAuthRememberUser(), rigAuthIncreaseLoginAttempts()
+--|            rigAuthUserHasOTP(), rigSetSessUserdata, rigAuthRememberUser(),
+--|            rigAuthIncreaseLoginAttempts()
 --|
 --| Summary: User login.
 --|
@@ -881,6 +882,11 @@ function rigAuthLogin pIdentity pPassword pRemember
 			put tUserA["email"] into tSessionData["email"]
 			put tUserA["id"] into tSessionData["userID"]
 			put tUserA["lastLogin"] into tSessionData["oldLastLogin"]
+
+      if rigAuthUserHasOTP() is TRUE then
+        # USER NEEDS TO SUPPLY A ONE-TIME PASSWORD
+        put "pending" into tSessionData["otpCheck"]
+      end if
 
 			rigSetSessUserdata tSessionData
 
