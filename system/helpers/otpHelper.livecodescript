@@ -650,7 +650,7 @@ end _rigOTPshiftRight
 --|
 --| Format:  _rigOTPcalcHMAChex(param1, param2, param3, param4)
 --|
---| Parameters: --
+--| Parameters: string <pData>, string <pKey> the decoded shared secret, string <pType>, integer <pNumBits>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
