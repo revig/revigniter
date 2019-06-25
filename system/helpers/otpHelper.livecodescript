@@ -87,7 +87,7 @@ end libraryStack
 --|
 --| Format:  rigOTPgenerate param1[, param2][, param 3][, param4][, param5] [, param6]
 --|
---| Parameters: string <pSecret>, integer <pTokenLength> 6 or 8 (optional),
+--| Parameters: string <pSecret> the decoded shared secret, integer <pTokenLength> 6 or 8 (optional),
 --|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
 --|               integer <pTimeStep> (optional), string <pType> hotp or totp (optional)
 --|
@@ -126,13 +126,6 @@ command rigOTPgenerate pSecret pTokenLength pCryptoType pCryptoNumBits pTimeStep
     if (pTimeStep is empty) or (pTimeStep is not an integer) then
       put 30 into pTimeStep
     end if
-
-    # USER KEY VALIDATION
-    -- if matchText(tEncodedSecret, "^[A-Z2-7]+$") is FALSE then
-    --   answer error "Invalid characters in the base32 string."
-    --   exit rigOTPgenerate
-    -- end if
-    #
 
     # GENERATE OTP
     return _rigOTPoauthTotp(pSecret, tTimestamp, pTokenLength, pCryptoType, pCryptoNumBits)
