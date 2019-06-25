@@ -787,7 +787,7 @@ end _rigOTPSha
 --| Version:  1.0
 --| Created: 2019-06-18
 --| Last Mod: 2019-06-18
---| Requires: --
+--| Requires: rigOTPvalidBase32Str(), urlEncodeRFC(), rigLoaderLoadLibrary, rigLogMessage
 --|
 --| Summary: Create QR code based on OTP URI data.
 --|
