@@ -3450,7 +3450,7 @@ end _rigAuthGenerateOTPuserKey
 --| Last Mod: 2019-06-24
 --| Requires: _rigAuthCurrentUserID(), rigDbWhere, rigDbGet(), rigDbRow(),
 --|           _rigAuthDecryptPassword(), rigAuthFetchConfigItem(), rigOTPcompareKeys,
---|            rigMasterNow(), rigDbUpdate()
+--|            rigSetSessUserdata, rigMasterNow(), rigDbUpdate(), rigAuthSetMessage
 --|
 --| Summary: Compare supplied authentication code with generated code.
 --|
@@ -3508,15 +3508,19 @@ function rigAuthOTPkeysMatch pChallenge
 
   put the result into tMatch
 
-  # INSERT TIME ON TWO-FACTOR AUTHENTICATION ACTIVATION
-  if (tMatch is true) and ((tRow["time"] is NULL) or (tRow["time"] is empty)) then
-    put rigMasterNow() into tTableData["time"]
-    rigDbWhere "userId", tUserID
-    get rigDbUpdate(sAuthConfigA["tables"]["otp"], tTableData)
+  if tMatch is true then
+    rigSetSessUserdata "otpCheck", "success"
+
+    # INSERT TIME ON TWO-FACTOR AUTHENTICATION ACTIVATION
+    if (tRow["time"] is NULL) or (tRow["time"] is empty) then
+      put rigMasterNow() into tTableData["time"]
+      rigDbWhere "userId", tUserID
+      get rigDbUpdate(sAuthConfigA["tables"]["otp"], tTableData)
+    end if
 
   else
     rigAuthSetMessage "Wrong token!"
-  end if -- if (tMatch is true) and ((tRow["time"] <> NULL) and (tRow["time"] <> empty))
+  end if -- if tMatch is true
 
   return tMatch
 end rigAuthOTPkeysMatch
