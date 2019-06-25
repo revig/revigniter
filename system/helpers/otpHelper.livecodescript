@@ -803,10 +803,8 @@ end _rigOTPSha
 function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMask
   local tData, tImg, tImgData
 
-  rigLoadStack "squirt"
-
-  if pKey is empty then
-    rigLogMessage "error", "Missing key!"
+  if (pKey is empty) or (rigOTPvalidBase32Str(pKey) is FALSE) then
+    rigLogMessage "error", "OTP: Missing key or base32 string contains invalid characters!"
     return FALSE
   end if
 
@@ -848,6 +846,8 @@ function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMa
   if (pMask is empty) or (pMask is not among the items of "Auto,0,1,2,3,4,5,6,7") then
     put "Auto" into pMask
   end if
+
+  rigLoaderLoadLibrary "QR"
 
   # OTP URI
   put "otpauth://totp/" & pIssuer & ":" & pAccount & "?secret=" & pKey & "&issuer=" & pIssuer & "&algorithm=" & pAlgo & "&digits=" & pDigits & "&period=" & pPeriod into tData
