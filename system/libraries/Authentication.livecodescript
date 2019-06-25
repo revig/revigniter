@@ -3550,7 +3550,7 @@ end rigAuthOTPkeysMatch
 --|
 --| Parameters: integer <pUserID> (otional)
 --|
---| Return: boolean
+--| Return: mixed (boolean or "pendingOTPsetup")
 ----------------------------------------------------------------------*/
 
 function rigAuthUserHasOTP pUserID
@@ -3582,10 +3582,13 @@ function rigAuthUserHasOTP pUserID
       put rigDbRow() into tRow
 
       # CHECK IF THE OTP SETUP IS PENDING
-      if (tRow["time"] <> NULL) and (tRow["time"] <> empty) then
+      if (tRow["time"] is NULL) or (tRow["time"] is empty) then
+        return "pendingOTPsetup"
+      else
         return TRUE
       end if
-    end if
+
+    end if -- if tQuery["numrows"] > 0
   end if -- if tUserID <> empty
 
   return False
