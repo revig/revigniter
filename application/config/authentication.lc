@@ -217,8 +217,8 @@ put "</p>" into sAuthenticationConf["errorSuffix"]
 # 'otpPeriod' = Defines a period that a TOTP code will be valid for. Default value is 30.
 # 'otpTimeWindow' = A delay window to compare OTPs not only in the current period but also with the next and previous time steps. Default is 2.
 # 'otpQRecc' = QR code error correction. Values are L, M, Q, H or X.
-# 'otpQRsize' = Size of the QR code displayed (1,2,3,4,5,6,7,8,9 or 10).
-# 'otpQRmask' = QR code mask pattern (0,1,2,3,4,5,6,7 or Auto).
+# 'otpQRsize' = Size of the QR code displayed (1 to 10 inclusively).
+# 'otpQRmask' = QR code mask pattern (1 to 7 inclusively or Auto).
 #
 ##
 
