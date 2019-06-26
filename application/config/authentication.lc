@@ -210,6 +210,7 @@ put "</p>" into sAuthenticationConf["errorSuffix"]
 # OTP Options
 #--------------------------------------------------------------------------
 #
+# 'otpEnabled' = Determines the activation of OTP features.
 # 'otp' = The name of the table used for storing shared secrets.
 # 'otpIssuer' = A string identifying a provider or service managing the user's account. Used to prevent collisions in case the same account is used for different providers.
 # 'otpAlgo' = The type of cryptographic message digest the OTP algorithm is based on. Values can be SHA1, SHA256 or SHA512.
@@ -222,6 +223,7 @@ put "</p>" into sAuthenticationConf["errorSuffix"]
 #
 ##
 
+put FALSE into sAuthenticationConf["otpEnabled"]
 put "otp" into sAuthenticationConf["tables"]["otp"]
 put "The Issuer" into sAuthenticationConf["otpIssuer"]
 put "SHA1" into sAuthenticationConf["otpAlgo"]
