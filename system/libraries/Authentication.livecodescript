@@ -36,7 +36,7 @@ global gRigA, gData
 
 local sAuthConfigA																																					  --  array containing all config values, see authentication.lc
 local sAuthUserA                                                                                           --  user data like "username", "email" etc., see table "users"
-local sAuthMessagesA, sAuthErrorsA, sActivationCode, sAuthForgottenPasswordCode, sAuthOTP			--  misc
+local sAuthMessagesA, sAuthErrorsA, sActivationCode, sAuthForgottenPasswordCode           			--  misc
 local sAuthHooksA, sAuthHooksEnabled, sAuthHookInProgress, sAuthHooksHandlers, sAuthHooksFiles	-- "hooks" variables
 local sAuthSelect, sAuthWhere, sAuthLike, sAuthLimit, sAuthOffset, sAuthOrderBy, sAuthOrder			--  database related
 local sAuthQuery, sAuthFieldnames, sStackInUse
@@ -196,10 +196,10 @@ end _rigInitializeAuthentication
 --| COMMAND _rigSetInitialAuthenticationValue
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 10-09-2012
---| Last Mod: 10-09-2012
---| Requires: rigLogMessage
+--| Version:  1.1
+--| Created: 2012-09-10
+--| Last Mod: 2019-06-26
+--| Requires: rigLogMessage, rigLoadHelper
 --|
 --| Summary: Set initial values.
 --|
@@ -235,6 +235,12 @@ private command _rigSetInitialAuthenticationValue pVarName pValue
         rigLogMessage "error", "Authentication emailConfig settings must be an array!"
       end if
 
+    break
+    case "otpEnabled"
+      if pValue is TRUE then
+        put pValue into sAuthConfigA["otpEnabled"]
+        rigLoadHelper "otp"
+      end if
     break
 
   default
@@ -3294,10 +3300,10 @@ end rigAuthenticationGet
 --| COMMAND rigAuthUseOTP
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-19
---| Last Mod: 2019-06-19
---| Requires: --
+--| Last Mod: 2019-06-26
+--| Requires: rigLoadHelper
 --|
 --| Summary: Load the OTP helper.
 --|
@@ -3309,7 +3315,7 @@ end rigAuthenticationGet
 ----------------------------------------------------------------------*/
 
 command rigAuthUseOTP
-  put TRUE into sAuthOTP
+  put TRUE into sAuthConfigA["otpEnabled"]
   rigLoadHelper "otp"
 end rigAuthUseOTP
 
@@ -3319,9 +3325,9 @@ end rigAuthUseOTP
 --| FUNCTION rigAuthGenerateQR
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-18
---| Last Mod: 2019-06-18
+--| Last Mod: 2019-06-26
 --| Requires: rigAuthUser(), rigDbRow(), rigAuthFetchConfigItem(), rigOTPqrCode()
 --|
 --| Summary: Return user key and QR code of OTP URI data.
@@ -3338,7 +3344,7 @@ function rigAuthGenerateQR pAccount
   local tAlgo, tDigits, tPeriod, tECC, tSize, tMask
   local tImgData, tQRcode, tQRa
 
-  if sAuthOTP <> TRUE then
+  if sAuthConfigA["otpEnabled"] <> TRUE then
     rigLogMessage "error", "Auth OTP: OTP helper not loaded!"
     put "" into tQRa["qr"]
     put "" into tQRa["key"]
@@ -3450,9 +3456,9 @@ end _rigAuthGenerateOTPuserKey
 --| FUNCTION rigAuthOTPkeysMatch
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2019-06-19
---| Last Mod: 2019-06-24
+--| Last Mod: 2019-06-26
 --| Requires: _rigAuthCurrentUserID(), rigDbWhere, rigDbGet(), rigDbRow(),
 --|           _rigAuthDecryptPassword(), rigAuthFetchConfigItem(), rigOTPcompareKeys,
 --|            rigSetSessUserdata, rigMasterNow(), rigDbUpdate(), rigAuthSetMessage
@@ -3471,7 +3477,7 @@ function rigAuthOTPkeysMatch pChallenge
   local tAlgo, tAlgoLength, tCryptoType, tCryptoNumBits, tMatchEnd
   local tTokenLength, tTimeStep, tTimeWindow, tMatch, tTableData
 
-  if sAuthOTP <> TRUE then
+  if sAuthConfigA["otpEnabled"] <> TRUE then
     rigLogMessage "error", "Auth OTP: OTP helper not loaded!"
 
     return FALSE
