@@ -3545,10 +3545,11 @@ end rigAuthOTPkeysMatch
 --| FUNCTION rigAuthUserHasOTP
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2019-06-20
---| Last Mod: 2019-06-24
---| Requires: _rigAuthCurrentUserID(), rigDbWhere, rigDbGet(), rigDbRow()
+--| Last Mod: 2019-06-27
+--| Requires: rigDbTableExists(), rigLogMessage, _rigAuthCurrentUserID(), rigDbWhere,
+--|            rigDbGet(), rigDbRow()
 --|
 --| Summary: Check if user has set up OTP authentication.
 --|
@@ -3564,6 +3565,7 @@ function rigAuthUserHasOTP pUserID
 
   # CHECK IF THERE IS A OTP TABLE
   if rigDbTableExists(sAuthConfigA["tables"]["otp"]) is FALSE then
+    rigLogMessage "error", "Auth OTP: OTP table missing!"
     return False
   end if
 
