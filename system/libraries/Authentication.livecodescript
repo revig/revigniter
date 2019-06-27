@@ -402,7 +402,7 @@ end rigAuthDeactivate
 --| Version:  1.1
 --| Created: 2012-09-11
 --| Last Mod: 2019-06-24
---| Requires: _rigAuthCallHook(), rigSessUserdata(), rigAuthUserHasOTP(), rigSessUserdata()
+--| Requires: _rigAuthCallHook(), rigSessUserdata(), rigAuthUserHasOTP()
 --|
 --| Summary: Check logged in state. Returns FALSE if
 --|            session data item identity is empty.
