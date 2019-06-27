@@ -834,11 +834,11 @@ end rigAuthUserGroups
 --| Version:  1.1
 --| Created: 2012-10-10
 --| Last Mod: 2019-06-24
---| Requires: _rigAuthCallHook(), rigAuthSetError, rigDbSelect, rigDbWhere,
+--| Requires: rigAuthSetError, _rigAuthCallHook(), rigDbSelect, rigDbWhere,
 --|            rigDbLimit, rigDbGet(), rigDbRow(), _rigAuthValidatePassword(),
---|            _rigAuthUpdateLastLogin(), rigAuthSetMessage, rigAuthClearLoginAttempts(),
+--|            rigAuthSetError, _rigAuthUpdateLastLogin(), rigAuthClearLoginAttempts(),
 --|            rigAuthUserHasOTP(), rigSetSessUserdata, rigAuthRememberUser(),
---|            rigAuthIncreaseLoginAttempts()
+--|            rigAuthSetMessage, rigAuthIncreaseLoginAttempts()
 --|
 --| Summary: User login.
 --|
