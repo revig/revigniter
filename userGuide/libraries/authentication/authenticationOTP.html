@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>OTP Authentication : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.5</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">OTP Authentication</li>
+            <li id="tocListItem" class="pull-right"><a href="../../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>One-Time Password Authentication</h1>
+
+<p>The authentication library incorporates two-factor authentication using OTP (currently TOTP conforming to <a href="https://tools.ietf.org/html/rfc6238">RFC6238</a> TOTP standards is supported) and QR-codes. In case you would like to do without all the library code unrelated to OTP you can load the <a href="../../helpers/otpHelper.html">OTP helper</a> instead and deal with the helper handlers.</p>
+
+<p class="important"><strong>Note:</strong> OTP authentication requires LiveCode's QR Code Generator Library. Please read about integration of the QR code library in chapter <a href="../../helpers/otp_helper.html">OTP Helper</a>.</p>
+
+<h2>Activation</h2>
+<p>To activate two-factor authentication set <var>sAuthenticationConf["otpEnabled"]</var> in <dfn>application/config/authentication.lc</dfn> to TRUE.</p>
+
+
+<h2>OTP Authentication Table</h2>
+
+<p>In order to use two-factor authentication you need one more table in addition to the 4 tables defined in chapter <a href="authenticationTables.html">Authentication Tables</a>. This is a child table of the "users" table. Name this table "otp" according to default settings otherwise you need to adjust the authentication settings.</p>
+
+
+<p><strong>The MySQL version:</strong></p>
+
+<div class="codeSample">
+<pre><code># Table structure for otp
+# ------------------------------------------------------------
+
+CREATE TABLE `otp` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `userId` mediumint(8) unsigned NOT NULL,
+  `key` tinytext character set utf8 collate utf8_unicode_ci NOT NULL,
+  `time` int(11) unsigned default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+</code></pre>
+</div>
+
+
+<p><strong>The PostgreSQL version:</strong></p>
+
+<div class="codeSample">
+<pre><code># Table structure for otp
+# ------------------------------------------------------------
+
+CREATE TABLE "otp" (
+  "id" SERIAL NOT NULL,
+  "userId" integer NOT NULL REFERENCES "users" ON UPDATE CASCADE ON DELETE CASCADE,
+  "key" text NOT NULL,
+  "time" int,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0),
+  CONSTRAINT "check_userId" CHECK("userId" >= 0),
+);
+</code></pre>
+</div>
+
+
+<p><strong>The SQLite version:</strong></p>
+
+<div class="codeSample">
+<pre><code># Table structure for otp
+# ------------------------------------------------------------
+
+CREATE TABLE "otp" (
+  "id" integer NOT NULL ON CONFLICT ABORT PRIMARY KEY AUTOINCREMENT,
+  "userId" integer(8) NOT NULL,
+  "key" text NOT NULL,
+  "time" integer(11) DEFAULT NULL,
+  CONSTRAINT "Foreign_UsersID" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+</code></pre>
+</div>
+
+
+<h2>OTP Authentication Handler Reference</h2>
+
+<h3>rigAuthGenerateQR(<var>pAccount</var>)</h3>
+
+<p>Use this function to create a QR code based on the otpauth:// URI scheme and get the associated base32 encoded shared secret.</p>
+<p>The parameter is optional. It is a string which identifies the user. Usually this is an email address or a username. If no value is provided the identity of the currently logged in user is used.</p>
+<p>The function returns an array with indices: "key" containing the base32 encoded shared secret, and "qr" containing the QR code ready to be displayed in a web page. If QR code generation fails empty array values are returned.</p>
+
+<p>Example:</p>
+
+
+<pre><code class="lang-livecodeserver">put rigAuthGenerateQR() into tQRa
+put tQRa["key"] into gData["key"]
+put tQRa["qr"] into gData["qrCode"]
+</code></pre>
+
+
+<h3>rigAuthOTPkeysMatch(<var>pChallenge</var>)</h3>
+
+<p>This function allows you to compare user supplied authentication code (OTP) with a generated code based on the user's database values.</p>
+<p>The parameter is the one-time password supplied by the user.</p>
+<p>The function returns TRUE in case both codes match, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+<pre><code class="lang-livecodeserver">put rigVarPost("authcode") into tAuthCode
+
+if tAuthCode <> False then
+  # COMPARE tAuthCode WITH GENERATED CODE
+  if rigAuthOTPkeysMatch(tAuthCode) is TRUE then
+    # REDIRECT TO SUCCESS PAGE
+    rigRedirect "otpCheckPassed"
+  else
+    -- your code to display the OTP authentication form again
+  end if
+end if
+</code></pre>
+
+
+<h3>rigAuthUserHasOTP(<var>pUserID</var>)</h3>
+
+<p>Use this function to check if a user has set up OTP authentication.</p>
+
+<p>The parameter is optional. It is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided the ID of the currently logged in user is used.</p>
+
+<p>The function returns "pendingOTPsetup" in case the user has requested a QR code to set up two-factor authentication, but has not yet transferred a valid one-time password. In case the setup was successfully finished the function returns TRUE. If there is no OTP entry for the particular user the function returns FALSE.</p>
+
+<p>Example:</p>
+
+<pre><code class="lang-livecodeserver"># FORM VALIDATION
+if rigFormValidRun("auth/login") is TRUE then
+
+  # CHECK IF USER IS LOGGING IN
+  put FALSE into tRemember
+  # CHECK IF THERE IS A POST VARIABLE remember
+  put rigVarPost("remember[]") into tPostRemember -- remember check box
+
+  if tPostRemember &lt;> FALSE then
+    # CHECK VALUE
+    if tPostRemember[1] is 1 then
+      put TRUE into tRemember
+    end if
+  end if
+
+  get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
+
+  # IF LOGIN IS SUCCESSFUL CHECK IF USER HAS SET UP TWO-FACTOR AUTHENTICATION
+  if it is TRUE then
+    if rigAuthUserHasOTP() is TRUE then
+      # REDIRECT TO OTP FORM
+      rigRedirect "otp"
+    else
+      # REDIRECT TO PROTECTED PAGE
+      put rigAuthMessages() into tMessages
+      rigSetSessFlashdata "message", tMessages
+      rigRedirect "/protected"
+    end if
+
+  else
+    # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
+    put rigAuthErrors() into tErrors
+    rigSetSessFlashdata "message", tErrors
+    rigRedirect "auth/login"
+  end if
+
+else
+  # THE USER IS NOT LOGGING IN, SHOW THE LOGIN PAGE
+  # SHOW VALIDATION ERRORS OR FLASH DATA IF THERE IS ANY
+
+end if
+</code></pre>
+
+
+
+<h3>rigAuthClearOTP(<var>pUserID</var>)</h3>
+
+<p>This function deletes a user's OTP database entry.</p>
+
+<p>The parameter is optional. It is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided the ID of the currently logged in user is used.</p>
+
+<p>The function returns TRUE in case the operation was successful, otherwise it returns FALSE.</p>
+
+<h3>rigAuthLoggedIn()</h3>
+
+<p>Check to see if a user is logged in.</p>
+
+<p>This function returns TRUE if the user is logged in, otherwise it returns FALSE.</p>
+
+<p>In case two-factor authentication is activated the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password the function returns "pendingOTPsetup".</p>
+
+<p>Example:</p>
+
+
+<pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN, CAN BE "pending" IF USER HAS SETUP OTP
+# AND HAS NOT YET SUPPLIED A VALID OTP
+put rigAuthLoggedIn() into tLoggedIn
+
+if tLoggedIn is FALSE then
+  # REDIRECT TO LOGIN PAGE AND KEEP FLASHDATA IN CASE THERE IS ANY
+  if rigSessFlashdata("message") &lt;> FALSE then
+    rigKeepSessFlashdata "message"
+  end if
+
+  rigRedirect "auth/login"
+
+else if rigAuthIsAdmin() is FALSE then
+
+  if (tLoggedIn &lt;> "pending") and (tLoggedIn &lt;> "pendingOTPsetup") then
+    # REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
+    rigRedirect "/"
+  else
+    # USER HAS NOT YET SUPPLIED A VALID OTP
+    if tLoggedIn is "pendingOTPsetup" then
+      # OTP AUTHENTICATION SETUP INCOMPLETE
+      rigRedirect "otp/setup"
+    else
+      rigRedirect "otp/"
+    end if
+  end if
+
+else -- if tLoggedIn is FALSE then
+  # ADMIN CONTENT
+  #
+  if tLoggedIn &lt;> "pending" then
+  -- your code . . .
+  end if
+end if
+</code></pre>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationExample.html"> Authentication Example</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../benchmark.html">Benchmarking Library</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>
