@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -88,7 +88,7 @@
 
 <h1>Session Library</h1>
 
-<p>The Session Library permits you maintain a user's "state" and track their activity while they browse your site.
+<p>The Session Library permits you to maintain a user's "state" and track their activity while they browse your site.
 The Session Library stores session information for each user as serialized (and optionally encrypted) data in a cookie.
 It can also store the session data in a database table or in a plain text file for added security, as this permits the session ID in the
 user's cookie to be matched against the stored session ID. By default only the cookie is saved.  If you choose to
@@ -140,7 +140,7 @@ even add your own data to a user's session, but the process of reading, writing,
 
 <p>The above data is stored in a cookie as a serialized array with this prototype:</p>
 
-<pre><code>tArray["session_id"] -- random hash
+<pre><code class="lang-livecodeserver">tArray["session_id"] -- random hash
 tArray["ip_address"] -- "string - user IP address"
 tArray["user_agent"] -- "string - user agent data"
 tArray["last_activity"] -- timestamp
@@ -224,7 +224,7 @@ rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
 
 <pre><code class="lang-livecodeserver">rigSetSessFlashdata "item", "value"</code></pre>
 
-<p>You can also pass an array to rigSetSessFlashdata, in the same manner as setSessUserdata. </p>
+<p>You can also pass an array to rigSetSessFlashdata, in the same manner as rigSetSessUserdata. </p>
 
 <p>To read a flashdata variable:</p>
 
