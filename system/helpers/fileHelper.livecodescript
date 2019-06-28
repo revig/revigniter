@@ -47,12 +47,12 @@ local sMimesFileLoaded, sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -63,7 +63,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -85,7 +85,7 @@ end libraryStack
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
 --|            with translated end-of-line markers.
---| 
+--|
 --| Format:  rigReadFile(param1)
 --|
 --| Parameters: string <pFilePath>
@@ -95,7 +95,7 @@ end libraryStack
 
 function rigReadFile pFilePath
   local tFileData
-  
+
   if there is a file pFilePath then
     put URL format("file:%s", pFilePath) into tFileData
 
@@ -126,7 +126,7 @@ end rigReadFile
 --|
 --| Summary: Opens the file specfied in the path and returns it as a string
 --|            without translating end-of-line markers.
---| 
+--|
 --| Format:  rigReadBinFile(param1)
 --|
 --| Parameters: string <pFilePath>
@@ -155,7 +155,7 @@ end rigReadBinFile
 --|
 --| Summary: Writes data to the file specified in the path.
 --|            Creates a new file if non-existent.
---| 
+--|
 --| Format:  rigWriteFile(param1, param2)
 --|
 --| Parameters: string <pFile> path to file, string <pData> file data
@@ -192,7 +192,7 @@ end rigWriteFile
 --|            Files must be writable or owned by the system in order to be deleted.
 --|            If the second parameter is set to TRUE, any directories contained
 --|            within the supplied base directory will be nuked as well.
---| 
+--|
 --| Format:  rigDeleteFiles param1, param2, param3
 --|
 --| Parameters: string <pPath> path to file, bool <pDelDir> whether to delete any
@@ -203,7 +203,7 @@ end rigWriteFile
 
 command rigDeleteFiles pPath pDelDir pExclusion
   local tDelDir, tExclusion, tFilesList, tFoldersList, tNumLines, tFolderToDelete
-  
+
 	if pDelDir is not TRUE then
 		put FALSE into tDelDir
 	else
@@ -272,9 +272,9 @@ end rigDeleteFiles
 --| Last Mod: 09-07-09
 --| Requires: rigListFilesWithPaths(), rigListFiles()
 --|
---| Summary: Reads the specified directory and builds an array containing the filenames.  
+--| Summary: Reads the specified directory and builds an array containing the filenames.
 --|            Any sub-folders contained within the specified path are read as well if desired.
---| 
+--|
 --| Format:  rigGetFileNames(param1, param2, param3)
 --|
 --| Parameters: string <pSourceDir> path to source, bool <pIncludePath> whether to include
@@ -285,7 +285,7 @@ end rigDeleteFiles
 
 function rigGetFileNames pSourceDir pIncludePath pRecursion
   local tRecursion, tFilesList, tCount, tFilesListArray
-  
+
 	if pRecursion is TRUE then
 		put TRUE into tRecursion
 	else
@@ -324,9 +324,9 @@ end rigGetFileNames
 --| Last Mod: 09-07-09
 --| Requires: rigListFilesWithPaths(), rigListFiles
 --|
---| Summary: Reads the specified directory and builds an array containing the filenames,  
+--| Summary: Reads the specified directory and builds an array containing the filenames,
 --|            filesize, dates, and permissions.
---| 
+--|
 --| Format:  rigGetDirFileInfo(param1, param2, param3)
 --|
 --| Parameters: string <pSourceDir> path to source, bool <pIncludePath> whether to include
@@ -337,7 +337,7 @@ end rigGetFileNames
 
 function rigGetDirFileInfo pSourceDir pIncludePath pRecursion
   local tRecursion, tFilesList, tCount, tFilesListArray
-  
+
 	if pRecursion is TRUE then
 		put TRUE into tRecursion
 	else
@@ -382,7 +382,7 @@ end rigGetDirFileInfo
 --|            Options are: fileName, serverPath, fileSize, resourceSize, created, lastModified, lastAccessed,
 --|            lastBackedUp, owner, groupOwner, permissions, fileType
 --|            Returns FALSE if the file cannot be found.
---| 
+--|
 --| Format:  rigGetFileInfo(param1, param2)
 --|
 --| Parameters: string <pFile> path to source, string <pReturnedValues> array or comma
@@ -393,7 +393,7 @@ end rigGetDirFileInfo
 
 function rigGetFileInfo pFile pReturnedValues
   local tReturnedValues, tServerPath, tFileData, tRequestedData
-  
+
   put pReturnedValues into tReturnedValues
 
   if there is a file pFile then
@@ -477,9 +477,9 @@ end rigGetFileInfo
 --| Last Mod: 17-09-15
 --| Requires: rigLogMessage, rigFetchMimeType()
 --|
---| Summary: Translates a file extension into a mime type based on config/mimes.lc. 
+--| Summary: Translates a file extension into a mime type based on config/mimes.lc.
 --|             Returns FALSE if it can't determine the type, or open the mime config file.
---| 
+--|
 --| Format:  rigGetMimeByExtension(param1)
 --|
 --| Parameters: string <pFile> path to file
@@ -489,7 +489,7 @@ end rigGetFileInfo
 
 function rigGetMimeByExtension pFile
   local tExtension, tMimeType
-  
+
   set the itemDelimiter to "."
   put item -1 of pFile into tExtension
 
@@ -499,7 +499,7 @@ function rigGetMimeByExtension pFile
     catch err
       rigLogMessage "error", "An error occured while trying to include file:" && "mimes" & gRigA["EXT"]
       return FALSE
-				
+
     end try
     put TRUE into sMimesFileLoaded
   end if
@@ -537,7 +537,7 @@ end rigGetMimeByExtension
 --|
 --| Summary: Takes an octal value representing a file's permissions and returns
 --|             standard symbolic notation representing that value.
---| 
+--|
 --| Format:  rigSymbolicPermissions(param1)
 --|
 --| Parameters: integer <pNumericPerm> numeric permission
@@ -547,7 +547,7 @@ end rigGetMimeByExtension
 
 function rigSymbolicPermissions pNumericPerm
   local tSymbolic
-  
+
   if pNumericPerm is a number and (the number of chars of pNumericPerm is 3) then
     repeat for each char thisNum in pNumericPerm
       switch thisNum
@@ -601,7 +601,7 @@ end rigSymbolicPermissions
 --| Requires:  --
 --|
 --| Summary:  Get file name from a given file path.
---| 
+--|
 --| Format:  rigFileNameFromPath(param1)
 --|
 --| Parameters: string <pPath>
@@ -629,7 +629,7 @@ end rigFileNameFromPath
 --| Requires:  --
 --|
 --| Summary:  Get path of a given file without file name.
---| 
+--|
 --| Format:  rigPathWithoutFileName(param1)
 --|
 --| Parameters: string <pPath>
@@ -656,7 +656,7 @@ end rigPathWithoutFileName
 --| Requires:  rigPathWithoutFileName, rigFileNameFromPath
 --|
 --| Summary:  Get all available information of a given file.
---| 
+--|
 --| Format:  rigFileInfo(param1)
 --|
 --| Parameters: string<pFileName>
@@ -666,11 +666,11 @@ end rigPathWithoutFileName
 
 function rigFileInfo pFileName
   local tFolderName, tFileName, tFileList, tInfo, tFileInfo
-  
+
   put rigPathWithoutFileName(pFileName) into tFolderName
   put rigFileNameFromPath(pFileName) into tFileName
   put urldecode(files(tFolderName, "detailed")) into tFileList
-     
+
   filter tFileList with tFileName & "*"
   put tFileList into tInfo
 
@@ -705,7 +705,7 @@ end rigFileInfo
 --| Requires:  --
 --|
 --| Summary: Filters the strings "." and ".." from a list.
---| 
+--|
 --| Format:  _rigFilterDots(param1, param2)
 --|
 --| Parameters: string <pList>, bool <pDetailed>
@@ -718,7 +718,7 @@ private function _rigFilterDots pList pDetailed
     filter pList without "."
     filter pList without ".."
     filter pList without ".DS_Store" -- Mac only
-        
+
     -----????????????????????
     filter pList without "Icon%0D"
     filter pList without "MACSfdrp" -- remove folder aliases
@@ -749,7 +749,7 @@ end _rigFilterDots
 --| Requires:  _rigFilterDots()
 --|
 --| Summary: Returns a filtered list of files in the current directory.
---| 
+--|
 --| Format:  _rigFilteredFiles(param1)
 --|
 --| Parameters: string <pPath>, bool <pDetailed>
@@ -761,7 +761,7 @@ private function _rigFilteredFiles pPath pDetailed
   if pDetailed is true then
     return _rigFilterDots(files(pPath, "detailed"), pDetailed)
   end if
-  
+
   return _rigFilterDots(files(pPath), pDetailed)
 end _rigFilteredFiles
 
@@ -781,7 +781,7 @@ end _rigFilteredFiles
 --| Requires:  --
 --|
 --| Summary: Filters the strings "." and ".." from a list of folders.
---| 
+--|
 --| Format:  _rigFilterFolderDots(param1)
 --|
 --| Parameters: string <pList>
@@ -791,12 +791,12 @@ end _rigFilteredFiles
 
 private function _rigFilterFolderDots pList
   local tList
-  
+
   put pList into tList
-    
+
   filter tList without "."
   filter tList without ".."
-  
+
   return tList
 end _rigFilterFolderDots
 
@@ -816,7 +816,7 @@ end _rigFilterFolderDots
 --| Requires:  _rigFilterFolderDots()
 --|
 --| Summary: Returns a filtered list of folders in the current directory.
---| 
+--|
 --| Format:  rigFilteredFolders(param1)
 --|
 --| Parameters: string <pPath>, bool <pDetailed>
@@ -849,7 +849,7 @@ end rigFilteredFolders
 --|
 --| Summary: Returns a list of files (optional "the detailed files") in the current directory
 --|            including each file's full path.
---| 
+--|
 --| Format:  _rigFilteredFilesWithPaths()
 --|
 --| Parameters: string <pPath>, bool <pDetailed>
@@ -859,14 +859,14 @@ end rigFilteredFolders
 
 private function _rigFilteredFilesWithPaths pPath pDetailed
   local tFiles, tFilesWithPaths
- 
+
   put _rigFilteredFiles(pPath, pDetailed) into tFiles
- 
+
   repeat for each line tFile in tFiles
     put pPath & slash & tFile & return after tFilesWithPaths
   end repeat
   delete the last char of tFilesWithPaths
- 
+
   return tFilesWithPaths
 end _rigFilteredFilesWithPaths
 
@@ -887,10 +887,10 @@ end _rigFilteredFilesWithPaths
 --|
 --| Summary: Returns a list of files in a given folder, using recursion to include
 --|            files in subfolders if desired.
---| 
+--|
 --| Format:  rigListFiles(param1, param2, param3, param4, param5)
 --|
---| Parameters: string<pFolder>, bool<pRecurse>, bool<pDetailedFil>, bool<pModDate>, 
+--| Parameters: string<pFolder>, bool<pRecurse>, bool<pDetailedFil>, bool<pModDate>,
 --|               bool<pRelPath>
 --|
 --| Return: string
@@ -899,7 +899,7 @@ end _rigFilteredFilesWithPaths
 function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
   local tDetailed, tCurrentFiles, tCurrentFilesWithDate, tTotalFiles
   local tFolders, tCurrentFilesPath
-  
+
   if pDetailedFil is TRUE then
     put TRUE into tDetailed
   else
@@ -914,9 +914,9 @@ function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
    else
       put "/" & pFolder into pFolder
    end if
-   
+
    put _rigFilteredFiles(pFolder, tDetailed) into tCurrentFiles
-     
+
   # ADD MODIFICATION DATES (SECS) TO FILE NAMES
   if tDetailed is true and pModDate is true then
     if tCurrentFiles is not empty then
@@ -928,7 +928,7 @@ function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
     end if
     put tCurrentFilesWithDate into tCurrentFiles
   end if
-    
+
   if not pRecurse then
     if tDetailed is not true then
       return tCurrentFiles
@@ -936,9 +936,9 @@ function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
       return urldecode(tCurrentFiles) -- decode detailed list
     end if
   end if
-    
+
   if tCurrentFiles is not empty then put tCurrentFiles & return after tTotalFiles
-     
+
   put rigFilteredFolders(pFolder) into tFolders
   repeat for each line tFolder in tFolders
 
@@ -951,16 +951,16 @@ function rigListFiles pFolder pRecurse pDetailedFil pModDate pRelPath
     end if
 
     if tCurrentFiles is not empty then
-             
+
       if pRelPath is true then
         put empty into tCurrentFilesPath
         repeat for each line tFile in tCurrentFiles
-          put tFolder & slash & tFile & cr after tCurrentFilesPath 
+          put tFolder & slash & tFile & cr after tCurrentFilesPath
         end repeat
-                 
+
         delete the last char of tCurrentFilesPath
         put tCurrentFilesPath & return after tTotalFiles
-                
+
       else
         put tCurrentFiles & return after tTotalFiles
       end if
@@ -990,7 +990,7 @@ end rigListFiles
 --| Requires: rigTrim(), rigIsAbsolutePath(), _rigFilteredFilesWithPaths(), rigFilteredFolders()
 --|
 --| Summary: Returns a list of files with the full paths.
---| 
+--|
 --| Format:  rigListFilesWithPaths(param1, param2)
 --|
 --| Parameters: string <pFolder>, bool <pRecurse>, bool<pDetailedFil>, bool<pModDate>
@@ -1001,7 +1001,7 @@ end rigListFiles
 function rigListFilesWithPaths pFolder pRecurse pDetailedFil pModDate
   local tDetailed, tCurrentFiles, tItemNums, tFilePart1, tFilePart2
   local tCurrentFilesWithDate, tTotalFiles, tFolders
-  
+
   if pDetailedFil is TRUE then
     put TRUE into tDetailed
   else
@@ -1016,13 +1016,13 @@ function rigListFilesWithPaths pFolder pRecurse pDetailedFil pModDate
    else
       put "/" & pFolder into pFolder
    end if
-   
+
    put _rigFilteredFilesWithPaths(pFolder, tDetailed) into tCurrentFiles
 
   # ADD MODIFICATION DATES (SECS) TO FILE NAMES
   if tDetailed is true and pModDate is true then
     if tCurrentFiles is not empty then
-            
+
       repeat for each line tFile in tCurrentFiles
 
         set the itemdelimiter to "/"
@@ -1050,7 +1050,7 @@ function rigListFilesWithPaths pFolder pRecurse pDetailedFil pModDate
   end if
 
   if tCurrentFiles is not empty then put tCurrentFiles & return after tTotalFiles
-     
+
   put rigFilteredFolders(pFolder) into tFolders
 
   repeat for each line tFolder in tFolders
@@ -1086,7 +1086,7 @@ end rigListFilesWithPaths
 --| Requires:  rigFilteredFolders()
 --|
 --| Summary: Returns a list of folders in the current directory including each folder's full path.
---| 
+--|
 --| Format:  _rigFilteredFoldersWithPaths()
 --|
 --| Parameters: string <pPath>, bool <pDetailed>
@@ -1096,14 +1096,14 @@ end rigListFilesWithPaths
 
 private function _rigFilteredFoldersWithPaths pPath pDetailed
   local tFolders, tFoldersWithPaths
-   
+
   put rigFilteredFolders(pPath, pDetailed) into tFolders
-   
+
   repeat for each line tFolder in tFolders
     put pPath & slash & tFolder & return after tFoldersWithPaths
   end repeat
   delete the last char of tFoldersWithPaths
-   
+
   return tFoldersWithPaths
 end _rigFilteredFoldersWithPaths
 
@@ -1122,7 +1122,7 @@ end _rigFilteredFoldersWithPaths
 --|
 --| Summary: Returns a list of folders with the full paths, using recursion to include
 --|            subfolders if desired.
---| 
+--|
 --| Format:  _rigListFoldersWithPaths(param1, param2, param3)
 --|
 --| Parameters: string <pFolder>, bool <pRecurse>, bool <pDetailed>
@@ -1132,11 +1132,11 @@ end _rigFilteredFoldersWithPaths
 
 private function _rigListFoldersWithPaths pFolder pRecurse pDetailed
   local tCurrentFolders, tTotalFolders, tFolders, tFolder
-     
+
   put _rigFilteredFoldersWithPaths(pFolder, pDetailed) into tCurrentFolders
 
   put URLDecode(tCurrentFolders) into tCurrentFolders
-     
+
   if not pRecurse then
     if pDetailed is not true then
       return tCurrentFolders
@@ -1144,9 +1144,9 @@ private function _rigListFoldersWithPaths pFolder pRecurse pDetailed
       return urldecode(tCurrentFolders) -- decode DETAILED LIST
     end if
   end if
-     
+
   if tCurrentFolders is not empty then put tCurrentFolders & return after tTotalFolders
-     
+
   put rigFilteredFolders(pFolder, false) into tFolders
   repeat for each line tFolder in tFolders
 
@@ -1159,7 +1159,7 @@ private function _rigListFoldersWithPaths pFolder pRecurse pDetailed
     if tCurrentFolders is not empty then put tCurrentFolders & return after tTotalFolders
   end repeat
   delete the last char of tTotalFolders
-     
+
   if pDetailed is not true then
     return tTotalFolders
   else
@@ -1182,7 +1182,7 @@ end _rigListFoldersWithPaths
 --| Requires: --
 --|
 --| Summary: Add trailing slash to path if there is none.
---| 
+--|
 --| Format:  rigAddTrailingSlash(param1)
 --|
 --| Parameters: string <pPath>
@@ -1192,14 +1192,14 @@ end _rigListFoldersWithPaths
 
 function rigAddTrailingSlash pPath
   local tRegEx, tFoundText
-  
+
 	put "(.+?)\/*$" into tRegEx
-	put empty into tFoundText -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	put empty into tFoundText -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	get matchText(pPath,tRegEx,tFoundText)
 	if it is TRUE then
 		return tFoundText & "/"
 	end if
-  
+
   return pPath
 end rigAddTrailingSlash
 

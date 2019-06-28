@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication Tables : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">Tables</li>
+            <li id="tocListItem" class="pull-right"><a href="../../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+
+<h1>Authentication Tables</h1>
+
+<p>In order to use revIgniter's authentication library you need 4 database tables, or 5 in case you enable two-factor authentication (see <a href="authenticationOTP.html">One-Time Password Authentication</a>).</p>
+
+<p class="important"><strong>Note:</strong> The default admin user has the following credentials. Identity: admin@admin.com Password: revigniter. This password works as long as you use the default authentication encryption settings.</p>
+
+<p><strong>The MySQL version:</strong></p>
+
+
+<div class="codeSample">
+<pre><code># Table structure for groups
+# ------------------------------------------------------------
+
+CREATE TABLE `groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `name` varchar(20) NOT NULL,
+  `description` varchar(100) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Records of groups
+# ------------------------------------------------------------
+
+LOCK TABLES `groups` WRITE;
+
+INSERT INTO `groups` (`id`, `name`, `description`)
+VALUES
+  (1,'admin','Administrator'),
+  (2,'members','General User'),
+  (3,'other','Other User');
+
+UNLOCK TABLES;
+
+
+
+# Table structure for login_attempts
+# ------------------------------------------------------------
+
+CREATE TABLE `login_attempts` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `ipAddress` varchar(16) NOT NULL,
+  `login` varchar(100) NOT NULL,
+  `time` int(11) unsigned default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Table structure for users
+# ------------------------------------------------------------
+
+CREATE TABLE `users` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `ipAddress` varchar(16) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `username` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `password` tinytext character set utf8 collate utf8_unicode_ci NOT NULL,
+  `email` varchar(100) character set utf8 collate utf8_unicode_ci NOT NULL,
+  `activationCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
+  `forgottenPasswordCode` varchar(70) character set utf8 collate utf8_unicode_ci default NULL,
+  `forgottenPasswordTime` int(11) unsigned NOT NULL default '0',
+  `rememberCode` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
+  `createdOn` int(11) unsigned NOT NULL,
+  `lastLogin` int(11) unsigned default NULL,
+  `active` tinyint(1) unsigned default NULL,
+  `firstName` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
+  `lastName` varchar(50) character set utf8 collate utf8_unicode_ci default NULL,
+  `company` varchar(100) character set utf8 collate utf8_unicode_ci default NULL,
+  `phone` varchar(20) character set utf8 collate utf8_unicode_ci default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Records of users (LC server version 8)
+# ------------------------------------------------------------
+
+LOCK TABLES `users` WRITE;
+
+INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
+`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
+`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
+`lastName`, `company`, `phone`)
+VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
+
+UNLOCK TABLES;
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+LOCK TABLES `users` WRITE;
+
+INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
+`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
+`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
+`lastName`, `company`, `phone`)
+VALUES (1,'127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
+'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
+
+UNLOCK TABLES;
+
+
+# Table structure for users_groups
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users_groups`;
+
+CREATE TABLE `users_groups` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `userId` mediumint(8) unsigned NOT NULL,
+  `groupId` mediumint(8) unsigned NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+
+# Records of users_groups
+# ------------------------------------------------------------
+
+LOCK TABLES `users_groups` WRITE;
+
+INSERT INTO `users_groups` (`id`, `userId`, `groupId`)
+VALUES
+  (1,1,1),
+  (2,1,2);
+
+UNLOCK TABLES;
+</code></pre>
+</div>
+
+
+<p><strong>The PostgreSQL version:</strong></p>
+
+
+<div class="codeSample">
+<pre><code># Table structure for users
+# ------------------------------------------------------------
+
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "ipAddress" varchar(16) NOT NULL,
+    "username" varchar(100) NOT NULL,
+    "password" text NOT NULL,
+    "email" varchar(100) NOT NULL,
+    "activationCode" varchar(70),
+    "forgottenPasswordCode" varchar(70),
+    "forgottenPasswordTime" int,
+    "rememberCode" varchar(50),
+    "createdOn" int NOT NULL,
+    "lastLogin" int,
+    "active" int4,
+    "firstName" varchar(50),
+    "lastName" varchar(50),
+    "company" varchar(100),
+    "phone" varchar(20),
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0),
+  CONSTRAINT "check_active" CHECK(active >= 0)
+);
+
+
+
+# Table structure for groups
+# ------------------------------------------------------------
+
+CREATE TABLE "groups" (
+    "id" SERIAL NOT NULL,
+    "name" varchar(20) NOT NULL,
+    "description" varchar(100) NOT NULL,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0)
+);
+
+
+
+# Table structure for users_groups
+# ------------------------------------------------------------
+
+CREATE TABLE "users_groups" (
+    "id" SERIAL NOT NULL,
+    "userId" integer NOT NULL REFERENCES "users" ON UPDATE CASCADE ON DELETE CASCADE,
+    "groupId" integer NOT NULL REFERENCES "groups" ON UPDATE CASCADE ON DELETE RESTRICT,
+  PRIMARY KEY("id"),
+  CONSTRAINT "users_groups_check_id" CHECK(id >= 0),
+  CONSTRAINT "users_groups_check_userId" CHECK("userId" >= 0),
+  CONSTRAINT "users_groups_check_groupId" CHECK("groupId" >= 0)
+);
+
+
+
+# Records of groups
+# ------------------------------------------------------------
+
+INSERT INTO "groups" (id, name, description)
+SELECT 1,'admin','Administrator'
+UNION SELECT
+2,'members','General User'
+UNION SELECT
+3,'other','Other User';
+
+
+
+# Records of users (LC server version 8)
+# ------------------------------------------------------------
+
+INSERT INTO "users" ("ipAddress", username, password, email, 
+"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
+"rememberCode", "createdOn", "lastLogin", active, "firstName", 
+"lastName", company, phone) VALUES 
+('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
+'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
+'Admin','Istrator','ADMIN','0');
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+INSERT INTO "users" ("ipAddress", username, password, email, 
+"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
+"rememberCode", "createdOn", "lastLogin", active, "firstName", 
+"lastName", company, phone) VALUES 
+('127.0.0.1','admin','U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==',
+'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
+'Admin','Istrator','ADMIN','0');
+
+
+
+# Records of users_groups
+# ------------------------------------------------------------
+
+INSERT INTO "users_groups" ("userId", "groupId")
+SELECT 1, 1
+UNION SELECT
+1, 2;
+
+
+
+# Table structure for login_attempts
+# ------------------------------------------------------------
+
+CREATE TABLE "login_attempts" (
+    "id" SERIAL NOT NULL,
+    "ipAddress" varchar(16) NOT NULL,
+    "login" varchar(100) NOT NULL,
+    "time" int,
+  PRIMARY KEY("id"),
+  CONSTRAINT "check_id" CHECK(id >= 0)
+);
+</code></pre>
+</div>
+
+
+<p><strong>The SQLite version:</strong></p>
+
+
+<div class="codeSample">
+<pre><code># Table structure for users
+# ------------------------------------------------------------
+
+CREATE TABLE "users" (
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "ipAddress" TEXT(16,0) NOT NULL,
+   "username" TEXT(100,0) NOT NULL,
+   "password" TEXT NOT NULL,
+   "email" TEXT(100,0) NOT NULL,
+   "activationCode" TEXT(70,0) DEFAULT NULL,
+   "forgottenPasswordCode" TEXT(70,0) DEFAULT NULL,
+   "forgottenPasswordTime" INTEGER(11,0) NOT NULL DEFAULT 0,
+   "rememberCode" TEXT(50,0) DEFAULT NULL,
+   "createdOn" INTEGER(11,0) NOT NULL,
+   "lastLogin" INTEGER(11,0) DEFAULT NULL,
+   "active" INTEGER(1,0) DEFAULT NULL,
+   "firstName" TEXT(50,0) DEFAULT NULL,
+   "lastName" TEXT(50,0) DEFAULT NULL,
+   "company" TEXT(100,0) DEFAULT NULL,
+   "phone" TEXT(20,0) DEFAULT NULL
+);
+
+
+
+# Table structure for groups
+# ------------------------------------------------------------
+
+CREATE TABLE "groups" (
+   "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+   "name" TEXT(20,0) NOT NULL,
+   "description" TEXT(100,0) NOT NULL
+);
+
+
+
+# Table structure for users_groups
+# ------------------------------------------------------------
+
+CREATE TABLE "users_groups" (
+   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   "userId" INTEGER(8,0) NOT NULL,
+   "groupId" INTEGER(8,0) NOT NULL,
+  CONSTRAINT "Foreign_UsersID" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT "Foreign_GroupsID" FOREIGN KEY ("groupId") REFERENCES "groups" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+
+
+# Records of groups
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "groups" VALUES (1, 'admin', 'Administrator');
+INSERT INTO "groups" VALUES (2, 'members', 'General User');
+INSERT INTO "groups" VALUES (3, 'other', 'Other User');
+COMMIT;
+
+
+
+# Records of users (LC server version 8)
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
+'Admin', 'Istrator', 'ADMIN', 0);
+COMMIT;
+
+
+
+# Records of users (LC server version 9 or higher)
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users" VALUES 
+(1, '127.0.0.1', 'admin', 'U2FsdGVkX1+F3hUUeIgHdj0Qx2XGvMlrkQeuDS2PwofAXf9KhPznBw==', 
+'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
+'Admin', 'Istrator', 'ADMIN', 0);
+COMMIT;
+
+
+
+# Records of users_groups
+# ------------------------------------------------------------
+
+BEGIN;
+INSERT INTO "users_groups" VALUES (1, 1, 1);
+INSERT INTO "users_groups" VALUES (2, 1, 2);
+COMMIT;
+
+
+
+# Table structure for login_attempts
+# ------------------------------------------------------------
+
+CREATE TABLE "login_attempts" (
+   "id" INTEGER NOT NULL DEFAULT 0 PRIMARY KEY AUTOINCREMENT,
+   "ipAddress" TEXT(16,0) NOT NULL,
+   "login" TEXT(100,0) NOT NULL,
+   "time" INTEGER(11,0) DEFAULT NULL
+);
+</code></pre>
+</div>
+
+
+
+<p class="important"><strong>Note:</strong> If, for security reasons, you need to validate session IDs please follow the instructions in the User Guide regarding <a href="../sessions.html#savingSessionData">Saving Session Data to a Database</a> and create an additional table to store sessions.</p>
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationHooks.html"> Authentication Hooks</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="authenticationEmail.html">Email Templates</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

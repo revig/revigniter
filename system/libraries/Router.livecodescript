@@ -46,12 +46,12 @@ local sStackInUse, sRouterA -- array keys are: routes, defaultController, direct
  --| Requires: rigLogMessage, _rigSetRouting
  --|
  --| Summary:  Run security check and initial routines.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -66,11 +66,11 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Router Library Loaded"
       end if
-   
+
       # CALL INITIAL HANDLERS
       _rigSetRouting
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -89,12 +89,12 @@ end libraryStack
  --| Requires: --
  --|
  --| Summary:  Run farewell routines.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 -- on releaseStack
 --   if the short name of the target = the short name of me then
 --     -- PUT CLEANUP STUFF HERE
@@ -103,10 +103,10 @@ end libraryStack
 --     pass releaseStack
 --   end if
 -- end releaseStack
-   
-   
-   
-   
+
+
+
+
  /*----------------------------------------------------------------------
  --| COMMAND _rigSetRouting
  --|
@@ -121,18 +121,18 @@ end libraryStack
  --| Summary:  Set the route mapping
  --|             This command determines what should be served based on the URI request,
  --|             as well as any "routes" that have been set in the routing config file.
- --| 
+ --|
  --| Format:  _rigSetRouting
  --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 private command _rigSetRouting
   local tFilteredStrippedString, tUriString, tModule, tX, tController, tTempArray
   local tRoutesFilePath
-  
+
   ## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
   ## IF SO, WE'RE DONE SINCE SEGMENT BASED URIS ARE NOT USED WITH QUERY STRINGS.
   if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
@@ -155,11 +155,11 @@ private command _rigSetRouting
     get _rigValidateQueryRequest(gRigA["controller"], gRigA["handler"])
 
     # COMPILE THE URI KEY VALUE PAIRS INTO AN ARRAY -- variance
-    _rigExplodeSegments			
+    _rigExplodeSegments
 
     exit _rigSetRouting
   end if
- 
+
   # FETCH THE COMPLETE URI STRING
   put _rigFetchUriString() into tUriString
   put rigTrim(tUriString, "/") into tUriString
@@ -167,7 +167,7 @@ private command _rigSetRouting
   put empty into gRigA["module"]
   put empty into tModule
   set the itemDelimiter to "/"
-      
+
    # ARE WE DEALING WITH A MODULE?
    if there is a folder (gRigA["APPPATH"] & "modules/" & item 1 of tUriString) then
      put item 1 of tUriString into tModule
@@ -194,7 +194,7 @@ private command _rigSetRouting
   if tModule <> empty then
     if sRouterA["moduleRoutes"] is an array then
       if sRouterA["moduleRoutes"][1]["defaultController"] is "" then
-      
+
         if item -1 of tUriString is tModule then
           put tUriString into sRouterA["defaultController"]
         else
@@ -250,7 +250,7 @@ private command _rigSetRouting
 
   # COMPILE THE SEGMENTS INTO AN ARRAY
   _rigExplodeSegments
-	
+
   # PARSE ANY CUSTOM ROUTING THAT MAY EXIST
   _rigParseRoutes
 
@@ -270,7 +270,7 @@ end _rigSetRouting
 --| Requires: --
 --|
 --| Summary: Return rigScaffolding request flag.
---| 
+--|
 --| Format:  rigScaffoldingRequest()
 --|
 --| Parameters: --
@@ -301,7 +301,7 @@ end rigScaffoldingRequest
 --| Summary:  Set the Route.
 --|             This handler takes an array of URI segments as
 --|             input, and sets the current controller/handler
---| 
+--|
 --| Format:  _rigSetRequest param1
 --|
 --| Parameters: array <pSegmentsArray>
@@ -311,9 +311,9 @@ end rigScaffoldingRequest
 
 private command _rigSetRequest pSegmentsArray
   local tSegmentsArray
-  
+
 	put _rigValidateRequest(pSegmentsArray) into tSegmentsArray
-	
+
 	if (the number of lines in the keys of tSegmentsArray) = 0 then
 		exit _rigSetRequest
 	end if
@@ -340,7 +340,7 @@ private command _rigSetRequest pSegmentsArray
           # CONTROLLER NAME IS IDENTICAL WITH MODULE NAME
           rigSetController tSegmentsArray[1]
         end if
-        
+
         if tSegmentsArray[3] is empty then
           if sRouterA["moduleMainController"] <> TRUE then
             # NO HANDLER SPECIFIED, USE DEFAULT CONTROLLER, PREFIX index WITH CONTROLLER NAME
@@ -400,7 +400,7 @@ end _rigSetRequest
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
 --|          	to the controller.
---| 
+--|
 --| Format:  _rigValidateRequest(param1)
 --|
 --| Parameters: array <pSegmentsArray>
@@ -410,7 +410,7 @@ end _rigSetRequest
 
 private function _rigValidateRequest pSegmentsArray
   local tDirectory, tSegments, t404ErrorSegments, tErrMsg, tTemp, tModule, tSegmentTwo
-  
+
 	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
 	if there is a file (gRigA["APPPATH"] & "controllers/" & pSegmentsArray[1] & gRigA["EXT"]) then
     rigSetDirectory "controllers"
@@ -434,7 +434,7 @@ private function _rigValidateRequest pSegmentsArray
 			if there is a file (gRigA["APPPATH"] & rigFetchDirectory() & tSegments[1] & gRigA["EXT"]) then
 			else
 
-				# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS OTHERWISE SEND THE DEFAULT 404 ERROR PAGE 
+				# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS OTHERWISE SEND THE DEFAULT 404 ERROR PAGE
 				if gRoute[1]["404Override"] <> empty then
 					put gRoute[1]["404Override"] into t404ErrorSegments
 
@@ -442,9 +442,9 @@ private function _rigValidateRequest pSegmentsArray
 
 					rigSetDirectory "controllers"
 					rigLogMessage "error", "404 Page Not Found -->" && tSegments[1]
-					
+
 					rigSetStatusHeader "404"
-					
+
 					return t404ErrorSegments
 				else
 
@@ -473,7 +473,7 @@ private function _rigValidateRequest pSegmentsArray
   put _rigValidateModuleRequest(pSegmentsArray) into tSegments
   if tSegments is an array then
       return tSegments
-  end if  
+  end if
 
 	# THE URI DOES NOT CORRELATE TO A VALID CONTROLLER
 	# CHECK IF THERE IS A ROUTING RULE FOR 404 ERRORS BEFORE SENDING THE DEFAULT 404 ERROR PAGE
@@ -481,7 +481,7 @@ private function _rigValidateRequest pSegmentsArray
   if there is a folder (gRigA["APPPATH"] & "modules/" & pSegmentsArray[1]) then
     put pSegmentsArray[1] into tModule
   end if
-	
+
  	put empty into t404ErrorSegments
 	if (gRoute[1]["404Override"] <> empty) and (tModule is empty) then
 		put gRoute[1]["404Override"] into t404ErrorSegments
@@ -492,21 +492,21 @@ private function _rigValidateRequest pSegmentsArray
 			end if
 		end if
 	end if
-  
+
   if t404ErrorSegments <> empty then
 		split t404ErrorSegments by "/"
-		
+
 		if tModule <> empty then
 			rigSetDirectory "modules/" & tModule & "/controllers"
 		end if
-		
+
 		# ACTUALLY THIS IS A HACK TO GET THE CORRECT PATH TO THE ROUTED ERROR CONTROLLER
 		put TRUE into sRouterA["moduleMainController"]
 		#
 		rigLogMessage "error", "404 Page Not Found -->" && pSegmentsArray[1]
-		
+
 		rigSetStatusHeader "404"
-		
+
 		return t404ErrorSegments
   end if
 
@@ -538,7 +538,7 @@ end _rigValidateRequest
 --|
 --| Summary: Validates the supplied module segments. Attempts to determine the path
 --|             to the module controller.
---| 
+--|
 --| Format:  _rigValidateModuleRequest(param1)
 --|
 --| Parameters: array <pSegmentsArray>
@@ -548,9 +548,9 @@ end _rigValidateRequest
 
 function _rigValidateModuleRequest pSegmentsArray
   local tSubfolder, tControllerFound, tDirectory, tSegments
-  
+
   put FALSE into tSubfolder
- 
+
   # IS THE CONTROLLER IN A SUB-FOLDER?
   if ((the number of lines in the keys of pSegmentsArray) > 1) and \
     (there is a folder (gRigA["APPPATH"] & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[2])) then
@@ -569,12 +569,12 @@ function _rigValidateModuleRequest pSegmentsArray
         put TRUE into sRouterA["moduleMainController"]
         put TRUE into tControllerFound
       end if
-      
+
     else if there is a file (gRigA["APPPATH"] & "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[1] & gRigA["EXT"]) then
       put TRUE into sRouterA["moduleMainController"]
       put TRUE into tControllerFound
     end if
-    
+
     if tControllerFound is TRUE then
       # SET THE DIRECTORY
       put "modules/" & pSegmentsArray[1] & "/controllers" into tDirectory
@@ -587,13 +587,13 @@ function _rigValidateModuleRequest pSegmentsArray
     put "modules/" & pSegmentsArray[1] & "/controllers/" & pSegmentsArray[2] into tDirectory
     rigSetDirectory tDirectory
     put pSegmentsArray into tSegments
-    
+
     combine tSegments using "/"
     set the itemdelimiter to "/"
     put item 3 to -1 of tSegments into tSegments
-    
+
     split tSegments by "/"
-    
+
     if (the number of lines in the keys of tSegments) > 0 then
       # DOES THE REQUESTED CONTROLLER EXIST IN THE SUB-FOLDER?
       if there is a file (gRigA["APPPATH"] & rigFetchDirectory() & tSegments[1] & gRigA["EXT"]) then
@@ -605,7 +605,7 @@ function _rigValidateModuleRequest pSegmentsArray
 
     return tSegments
   end if -- if tSubfolder is FALSE then
-  
+
   return FALSE
 end _rigValidateModuleRequest
 
@@ -627,7 +627,7 @@ end _rigValidateModuleRequest
 --| Summary:  This handler matches any routes that may exist in
 --|             the config/routes.lc file against the URI to
 --|             determine if the controller/handler needs to be remapped.
---| 
+--|
 --| Format:  _rigParseRoutes
 --|
 --| Parameters: --
@@ -639,7 +639,7 @@ private command _rigParseRoutes
   local tRoutes, tUri, tRoutesKeys, tNewRoute, tReplacement1, tReplacement2, tReplacement3
   local tReplacement4, tReplacement5, tReplacement6, tReplacement7, tReplacement8
   local tReplacement9, tReplacement10, tRouteString, tRegEx
-  
+
   if sRouterA["moduleRoutes"] is an array then
     put sRouterA["moduleRoutes"] into tRoutes
   else
@@ -660,14 +660,14 @@ private command _rigParseRoutes
   put the keys of tRoutes into tRoutesKeys
   sort lines of tRoutesKeys ascending
   replace return with comma in tRoutesKeys
- 
+
   repeat for each item keyNum in tRoutesKeys
     if (keyNum is an integer) and (keyNum > 1) then
 
       if tRoutes[keyNum][tUri] <> "" then
         put tRoutes[keyNum][tUri] into tNewRoute
         split tNewRoute by "/"
-        _rigSetRequest tNewRoute	
+        _rigSetRequest tNewRoute
         exit _rigParseRoutes
       end if
 
@@ -675,7 +675,7 @@ private command _rigParseRoutes
   end repeat
 
   # LOOP THROUGH THE ROUTE ARRAY LOOKING FOR WILD-CARDS
-	put empty into tReplacement1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	put empty into tReplacement1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	put empty into tReplacement2
 	put empty into tReplacement3
 	put empty into tReplacement4
@@ -702,7 +702,7 @@ private command _rigParseRoutes
           if ("$" is in tRouteString) and ("(" is in tKey) then
             get matchText(tUri,tRegEx,tReplacement1,tReplacement2,tReplacement3,\
             tReplacement4,tReplacement5,tReplacement6,tReplacement7,tReplacement8,tReplacement9,tReplacement10)
-              
+
             if "$1" is in tRouteString then
               replace "$1" with tReplacement1 in tRouteString
             end if
@@ -748,7 +748,7 @@ private command _rigParseRoutes
   # IF WE GOT THIS FAR IT MEANS WE DIDN'T ENCOUNTER A
   # MATCHING ROUTE SO WE'LL SET THE SITE DEFAULT ROUTE
   _rigSetRequest gRigA["segments"]
-end _rigParseRoutes 
+end _rigParseRoutes
 
 
 
@@ -764,7 +764,7 @@ end _rigParseRoutes
 --| Requires: --
 --|
 --| Summary:  Store controller name in global.
---| 
+--|
 --| Format:  rigSetController param1
 --|
 --| Parameters: string <pController>
@@ -793,7 +793,7 @@ end rigSetController
 --| Requires: --
 --|
 --| Summary: Fetch the current controller.
---| 
+--|
 --| Format:  rigFetchController()
 --|
 --| Parameters: --
@@ -821,7 +821,7 @@ end rigFetchController
 --| Requires: --
 --|
 --| Summary:  Set the handler name.
---| 
+--|
 --| Format:  rigSetHandler param1
 --|
 --| Parameters: string <pHandler>
@@ -849,7 +849,7 @@ end rigSetHandler
 --| Requires: --
 --|
 --| Summary: Fetch the current controller handler.
---| 
+--|
 --| Format:  rigFetchControllerHandler()
 --|
 --| Parameters: --
@@ -882,7 +882,7 @@ end rigFetchControllerHandler
 --| Requires: --
 --|
 --| Summary:  Set the directory name.
---| 
+--|
 --| Format:  rigSetDirectory param1
 --|
 --| Parameters: string <pDir>
@@ -909,7 +909,7 @@ end rigSetDirectory
 --| Requires: --
 --|
 --| Summary: Fetch the sub-directory (if any) that contains the requested controller library.
---| 
+--|
 --| Format:  rigFetchDirectory()
 --|
 --| Parameters: --
@@ -939,7 +939,7 @@ end rigFetchDirectory
 --|
 --| Summary: Validates the supplied query request.  Attempts to determine the path to
 --|                    the controller.
---| 
+--|
 --| Format:  _rigValidateQueryRequest(param1, param2)
 --|
 --| Parameters: string <pController>, string <pHandler>
@@ -949,7 +949,7 @@ end rigFetchDirectory
 
 private function _rigValidateQueryRequest pController pHandler
   local tErrMsg
-  
+
 	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
 	if there is a file (gRigA["APPPATH"] & "controllers/" & pController & gRigA["EXT"]) then
 		return TRUE
@@ -981,7 +981,7 @@ end _rigValidateQueryRequest
 --| Requires: --
 --|
 --| Summary: Parse an URL and return its components.
---| 
+--|
 --| Format:  _rigParseURL(param1)
 --|
 --| Parameters: string <pURL>
@@ -994,81 +994,81 @@ function _rigParseURL pURL
   local tHostname, tUsernameOffsetEnd, tUsername, tPasswordOffsetStart, tPasswordOffsetEnd, tPassword
   local tPathOffsetStart, tPathOffsetEnd, tPath, tQueryOffset, tQueryString, tFragmentOffset, tQuery
   local tFragment
-  
+
     put pURL into tURL
-    ## 
+    ##
     # DSNs MUST HAVE THIS PROTOTYPE:
     # DSN = 'DRIVER://USERNAME:PASSWORD@HOSTNAME/DATABASE';
     ##
-    
+
     # GET SCHEME
     put offset("://",tURL) into tSchemeOffset
-    
+
     if tSchemeOffset is 0 then
         put "" into tScheme
     else
         put char 1 to (tSchemeOffset - 1) of tURL into tScheme
-        
+
         # REMOVE SCHEME PART
         put the number of chars of tScheme into tSchemeLength
         put tSchemeLength + 3 into tSchemeLength
         put char (tSchemeLength + 1) to -1 of tURL into tURL
     end if
     put tScheme into tURLarray["scheme"]
-    
+
     # GET HOSTNAME
     put offset("@",tURL) into tHostnameOffsetStart
     put offset("/",tURL) into tHostnameOffsetEnd
-    
+
     if tHostnameOffsetStart is 0 or tHostnameOffsetEnd is 0 then
         put "" into tHostname
     else
         put char (tHostnameOffsetStart + 1) to (tHostnameOffsetEnd - 1) of tURL into tHostname
     end if
-    
+
     # THIS IS NOT A DSN, SECOND TRY TO GET THE HOSTNAME
     if tHostname <> "" then
       put tHostname into tURLarray["host"]
-    
+
       # GET USER NAME
       put offset(":",tURL) into tUsernameOffsetEnd
-    
+
       if tUsernameOffsetEnd is 0 then
         put "" into tUsername
       else
         put char 1 to (tUsernameOffsetEnd - 1) of tURL into tUsername
       end if
       put tUsername into tURLarray["user"]
-    
+
       # GET PASSWORD
       put offset(":",tURL) into tPasswordOffsetStart
       put offset("@",tURL) into tPasswordOffsetEnd
-    
+
       if tPasswordOffsetStart is 0 or tPasswordOffsetEnd is 0 then
         put "" into tPassword
       else
         put char (tPasswordOffsetStart + 1) to (tPasswordOffsetEnd - 1) of tURL into tPassword
       end if
       put tPassword into tURLarray["pass"]
-    
+
     else -- if tHostname <> "" then
       put char 1 to (offset("/",tURL) - 1) of tURL into tURLarray["host"]
     end if -- if tHostname <> "" then
-    
+
     # GET PATH
     put offset("/",tURL) into tPathOffsetStart
     put offset("?",tURL) into tPathOffsetEnd
-    
+
     if tPathOffsetStart is 0 or tPathOffsetEnd is 0 then
         put "" into tPath
     else
         put char tPathOffsetStart to (tPathOffsetEnd - 1) of tURL into tPath
     end if
     put tPath into tURLarray["path"]
-    
+
     # GET QUERY
     put offset("?",tURL) into tQueryOffset
-    
+
     if tQueryOffset is 0 then
         put "" into tQueryString
     else
@@ -1079,7 +1079,7 @@ function _rigParseURL pURL
         end if
     end if
     put tQuery into tURLarray["query"]
-    
+
     # GET FRAGMENT
     if tFragmentOffset is 0 then
         put "" into tFragment
@@ -1087,7 +1087,7 @@ function _rigParseURL pURL
         put char (tFragmentOffset + 1) to -1 of tQueryString into tFragment
     end if
     put tFragment into tURLarray["fragment"]
-     
+
     return tURLarray
 end _rigParseURL
 
@@ -1104,7 +1104,7 @@ end _rigParseURL
 --| Requires: --
 --|
 --| Summary: Parse an URL query string and return its components as array.
---| 
+--|
 --| Format:  _rigParseQueryStr(param1)
 --|
 --| Parameters: string <pStr>
@@ -1114,7 +1114,7 @@ end _rigParseURL
 
 function _rigParseQueryStr pStr
   local tStr
-  
+
   put pStr into tStr
   split tStr by "&" and "="
   return tStr
@@ -1134,7 +1134,7 @@ end _rigParseQueryStr
 --| Requires: --
 --|
 --| Summary: Get router array variable value.
---| 
+--|
 --| Format: rigRouterGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -1146,7 +1146,7 @@ function rigRouterGet pWhat
   if pWhat is among the keys of sRouterA then
     return sRouterA[pWhat]
   end if
-   
+
   return empty
 end rigRouterGet
 
@@ -1163,7 +1163,7 @@ end rigRouterGet
 --| Requires: --
 --|
 --| Summary: Setter for router variables.
---| 
+--|
 --| Format: rigRouterSet param1, param2
 --|
 --| Parameters: string <pKey> sRouterA array key, mixed <pVal>

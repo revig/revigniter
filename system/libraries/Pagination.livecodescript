@@ -51,12 +51,12 @@ local sStackInUse, sPagArrayKeys, sPaginationA -- array keys are: perPage, numLi
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -71,12 +71,12 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Pagination Library Loaded"
       end if
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -95,7 +95,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -137,9 +137,9 @@ private command _rigSetDefaultValues
   put "paginationData" into sPaginationA["dataElementID"]    -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
   put 10000 into sPaginationA["ajaxServerTimeout"]           -- Delay to trigger an error while making an AJAX request (milliseconds)
   put "PaginationWidget" into sPaginationA["widgetName"]    -- Name of Ajax pagination JavaScript object
-  
+
   put "perPage,numLinks,curPage,firstLink,nextLink,prevLink,lastLink,uriSegment,firstTagClose,lastTagOpen,curTagOpen,curTagClose,nextTagOpen,nextTagClose,prevTagOpen,numTagOpen,pageQueryString,queryStringSegment,linksElementID,dataElementID,ajaxServerTimeout,widgetName,baseUrl,totalRows,ajax,fullTagOpen,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sPagArrayKeys
-  
+
   put "baseUrl,totalRows,fullTagOpen,ajax,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sVarsNoDefaults
 end _rigSetDefaultValues
 
@@ -157,7 +157,7 @@ end _rigSetDefaultValues
 --| Requires: rigInitializePagination
 --|
 --| Summary: Run initial configuration procedures.
---| 
+--|
 --| Format:  rigRunInitialPaginationConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -167,7 +167,7 @@ end _rigSetDefaultValues
 
 command rigRunInitialPaginationConfig pConfig
   local tConfig
-  
+
 	put pConfig into tConfig
 
 	if tConfig is not an array then
@@ -198,7 +198,7 @@ end rigRunInitialPaginationConfig
 --| Requires: rigSetInitialPaginationValue
 --|
 --| Summary: Initialize preferences.
---| 
+--|
 --| Format:  rigInitializePagination param1
 --|
 --| Parameters: array <pConfig>
@@ -208,7 +208,7 @@ end rigRunInitialPaginationConfig
 
 command rigInitializePagination pConfig
   local tKey, tVal
-  
+
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
@@ -236,7 +236,7 @@ end rigInitializePagination
 --| Requires: --
 --|
 --| Summary: Set initial values.
---| 
+--|
 --| Format:  rigSetInitialPaginationValue param1, param2
 --|
 --| Parameters: string <pKey>, mixed <pValue>
@@ -267,7 +267,7 @@ end rigSetInitialPaginationValue
 --| Requires: rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
---| 
+--|
 --| Format:  rigCreatePaginationLinks()
 --|
 --| Parameters: --
@@ -279,7 +279,7 @@ function rigCreatePaginationLinks
   local tNumPages, tQuerySeg, tUriSeg, tUriPageNumber, tStart, tEnd
   local tAriaLabel, tOutput, tCounter, tI, tN, tJ, tRegEx
   local tReplacementtStrToReplaceInFoundStr, tReplacement, tStrToReplaceInFoundStr
-  
+
 	# IF OUR ITEM COUNT OR PER-PAGE TOTAL IS ZERO THERE IS NO NEED TO CONTINUE
 	if (sPaginationA["totalRows"] = 0) or (sPaginationA["perPage"] = 0) then
 		return ""
@@ -397,13 +397,13 @@ function rigCreatePaginationLinks
 				else
 					put tI into tN
 				end if
-        
+
         if sPaginationA["ajax"] is TRUE then
           put sPaginationA["numTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tN & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
         else
           put sPaginationA["numTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tN & quote & ">" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
         end if
-  
+
 			end if
 		end if
 	end repeat
@@ -447,7 +447,7 @@ function rigCreatePaginationLinks
 
 	# KILL DOUBLE SLASHES.  NOTE: SOMETIMES WE CAN END UP WITH A DOUBLE SLASH
 	# IN THE PENULTIMATE LINK SO WE'LL KILL ALL DOUBLE SLASHES.
-	 put "([^:]//+)" into tRegEx   
+	 put "([^:]//+)" into tRegEx
     	put "//" into tStrToReplaceInFoundStr
     	put "/" into tReplacement
 
@@ -474,7 +474,7 @@ end rigCreatePaginationLinks
 --| Requires: rigFetchSegment(), rigTotalRsegments(), rigLogMessage, rigElapsedTime()
 --|
 --| Summary: Build and send JSON data used by AJAX pagination script.
---| 
+--|
 --| Format:  rigAjaxPagination param1, param2
 --|
 --| Parameters: string <pPaginationData>, string <pPaginationLinks>
@@ -484,13 +484,13 @@ end rigCreatePaginationLinks
 
 command rigAjaxPagination pPaginationData pPaginationLinks
   local tAjax, tJSONpaginationData, tElapsed
-  
+
   # CHECK IF PAGE REQUEST IS AN XMLHTTP REQUEST
   put (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") into tAjax
   if (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") or (rigFetchSegment(rigTotalRsegments()) is "ajaxrequest") then
     put TRUE into tAjax
   end if
-  
+
 
   if tAjax is TRUE then
     # PREPARE QUOTES TO CONFORM WITH JSON
@@ -508,9 +508,9 @@ command rigAjaxPagination pPaginationData pPaginationLinks
     # SEND JSON OBJECT TO BROWSER
     put header "Content-Type: application/json"
     put tJSONpaginationData
-    
+
     rigLogMessage "debug", "Final AJAX pagination output sent to browser."
-    
+
   	# PARSE OUT THE ELAPSED TIME AND WE ARE DONE
   	put rigElapsedTime("totalExecutionTime_start", "totalExecutionTime_end", 4) into tElapsed
     rigLogMessage "debug", "Total execution time: " & tElapsed
@@ -526,13 +526,13 @@ end rigAjaxPagination
 --| FUNCTION rigAjaxPaginationCode
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 28-02-2014
---| Last Mod: 11-04-2015
+--| Version:  1.2
+--| Created: 2014-02-28
+--| Last Mod: 2919-05-09
 --| Requires: --
 --|
 --| Summary: Return AJAX pagination JavaScript code.
---| 
+--|
 --| Format:  rigAjaxPaginationCode()
 --|
 --| Parameters: --
@@ -541,7 +541,7 @@ end rigAjaxPagination
 ----------------------------------------------------------------------*/
 
 function rigAjaxPaginationCode
-	return "<script>var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };</script>"
+	return "<script>/* @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt */var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };/* @license-end */</script>"
 end rigAjaxPaginationCode
 
 
@@ -558,7 +558,7 @@ end rigAjaxPaginationCode
 --| Requires: --
 --|
 --| Summary: Get pagination array variable value.
---| 
+--|
 --| Format: rigPaginationGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -570,7 +570,7 @@ function rigPaginationGet pWhat
   if pWhat is among the keys of sPaginationA then
     return sPaginationA[pWhat]
   end if
-   
+
   return empty
 end rigPaginationGet
 
@@ -587,7 +587,7 @@ end rigPaginationGet
 --| Requires: --
 --|
 --| Summary: Setter for pagination variables.
---| 
+--|
 --| Format: rigPaginationSet param1, param2
 --|
 --| Parameters: string <pKey> sPaginationA array key, mixed <pVal>

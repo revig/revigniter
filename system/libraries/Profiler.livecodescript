@@ -47,25 +47,25 @@ local sProfilerTemplateA, sStackInUse
  --| Requires: rigLangLoadLang()
  --|
  --| Summary:  Run security check, set initial values and load language file.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
     exit to top
   end if
 
-  if the short name of the target = the short name of me then 
+  if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       get rigLangLoadLang("profiler")
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -85,7 +85,7 @@ end libraryStack
 --| Requires: rigSetProfilerTableTemplate
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
---| 
+--|
 --| Format:  rigRunInitialProfilerConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -95,10 +95,10 @@ end libraryStack
 
 command rigRunInitialProfilerConfig pConfig
   local tName, tItem, tTableTemplate, tTemplateData
-  
+
   if pConfig is not an array then
     if pConfig is not empty then
-          
+
       # BUILD TEMPLATE ARRAYS
       split pConfig using numToCodepoint(1) and numToCodepoint(2)
 
@@ -106,7 +106,7 @@ command rigRunInitialProfilerConfig pConfig
         put item 1 of tKey into tName
         put item 2 of tKey into tItem
         put pConfig[tKey] into tTableTemplate[tName][tItem]
-             
+
         put tTableTemplate[tName] into tTableTemplate[tName]
       end repeat
 
@@ -142,7 +142,7 @@ end rigRunInitialProfilerConfig
 --|                    matches any two points that are named identically (ending in "_start"
 --|                    and "_end" respectively).  It then compiles the execution times for
 --|                    all points and returns it as an array.
---| 
+--|
 --| Format:  _rigCompileBenchmarks()
 --|
 --| Parameters: --
@@ -152,7 +152,7 @@ end rigRunInitialProfilerConfig
 
 private function _rigCompileBenchmarks
   local tMarkers, tRegEx, tMatch, tKey, tVal, tProfile, tOutput, tTableBody, tTempTableBody
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "benchmark"
 
@@ -160,8 +160,8 @@ private function _rigCompileBenchmarks
 	put rigFetchMarkers() into tMarkers
 
 	put "(?i)(.+?)_end" into tRegEx
-	
-	put empty into tMatch -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+
+	put empty into tMatch -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	repeat for each key tKey in tMarkers
 		put tMarkers[tKey] into tVal
 
@@ -199,7 +199,7 @@ replace "{langBenchmarks}" with rigLangLangLine("profiler_benchmarks") in tOutpu
 
 		put tTempTableBody after tOutput
 	end repeat
-	
+
 	put "</table>" & return & "</fieldset>" after tOutput
 
 	return tOutput
@@ -219,7 +219,7 @@ end _rigCompileBenchmarks
 --| Requires: rigCompileProfilerTemplate, rigFetchDBlibLoaded, rigFetchDBdriverSetting(), rigLangLangLine()
 --|
 --| Summary: Compile queries.
---| 
+--|
 --| Format:  _rigCompileQueries()
 --|
 --| Parameters: --
@@ -230,7 +230,7 @@ end _rigCompileBenchmarks
 private function _rigCompileQueries
   local tDatabaseID, tOutput, tDatabase, tQueries, tQueriesNum, tTotalElapsedTime
   local tQueryTimes, tVal, tTime, tBody
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "queries"
 
@@ -267,7 +267,7 @@ private function _rigCompileQueries
 	else
 		put 0 into tQueriesNum
 	end if
-	
+
 	put rigFetchDBdriverSetting("benchmark") into tTotalElapsedTime
 
 	put sProfilerTemplateA["queries"]["legend"] after tOutput
@@ -293,15 +293,15 @@ private function _rigCompileQueries
 
 			put tBody after tOutput
 		end repeat
-		
+
 		put sProfilerTemplateA["queries"]["body"] into tBody
 		replace "{time}" with tTotalElapsedTime in tBody
 		replace "{val}" with rigLangLangLine("profiler_db_elapsed") in tBody
 
 		put tBody after tOutput
-		
+
 	end if
-	
+
 	put "</table>" & return & "</fieldset>" after tOutput
 
 	replace "'" with quote in tOutput
@@ -323,7 +323,7 @@ end _rigCompileQueries
 --|            rigLangLangLine()
 --|
 --| Summary: Compile $_GET Data.
---| 
+--|
 --| Format:  _rigCompileGet()
 --|
 --| Parameters: --
@@ -333,7 +333,7 @@ end _rigCompileQueries
 
 private function _rigCompileGet
   local tOutput, tKey, tVal, tTemp, tValVal, tNewKey, tNewVal
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "get"
 
@@ -354,13 +354,13 @@ private function _rigCompileGet
 
 			if tKey is not a number then
 				put "'" & tKey & "'" into tKey
-			end if	
+			end if
 
 			put sProfilerTemplateA["get"]["body"] into tTemp
 			replace "'" with quote in tTemp
 			put tTemp after tOutput
 			replace "{key}" with tKey in tOutput
-			
+
 			if tVal is an array then
 				repeat for each key tValKey in tVal
 					put tVal[tValKey] into tValVal
@@ -370,7 +370,7 @@ private function _rigCompileGet
 				combine tNewVal using numToCodepoint(1) and numToCodepoint(2)
 				replace numToCodepoint(1) with ", " in tNewVal
 				replace numToCodepoint(2) with " => " in tNewVal
-				
+
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal
 
@@ -379,7 +379,7 @@ private function _rigCompileGet
 			else
 				put rigStripSlashes(tVal) into tVal
 				put rigHtmlSpecialChars(tVal) into tVal
-			
+
 				put tVal after tOutput
 			end if
 
@@ -409,7 +409,7 @@ end _rigCompileGet
 --|            rigLangLangLine()
 --|
 --| Summary: Compile $_POST Data.
---| 
+--|
 --| Format:  _rigCompilePost()
 --|
 --| Parameters: --
@@ -419,7 +419,7 @@ end _rigCompileGet
 
 private function _rigCompilePost
   local tOutput, tKey, tVal, tTemp, tValKey, tValVal, tNewKey, tNewVal
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "post"
 
@@ -440,13 +440,13 @@ private function _rigCompilePost
 
 			if tKey is not a number then
 				put "'" & tKey & "'" into tKey
-			end if	
+			end if
 
 			put sProfilerTemplateA["post"]["body"] into tTemp
 			replace "'" with quote in tTemp
 			put tTemp after tOutput
 			replace "{key}" with tKey in tOutput
-			
+
 			if tVal is an array then
 				repeat for each key tValKey in tVal
 					put tVal[tValKey] into tValVal
@@ -456,7 +456,7 @@ private function _rigCompilePost
 				combine tNewVal using numToCodepoint(1) and numToCodepoint(2)
 				replace numToCodepoint(1) with ", " in tNewVal
 				replace numToCodepoint(2) with " => " in tNewVal
-				
+
 				put rigStripSlashes(tNewVal) into tNewVal
 				put rigHtmlSpecialChars(tNewVal) into tNewVal
 
@@ -465,7 +465,7 @@ private function _rigCompilePost
 			else
 				put rigStripSlashes(tVal) into tVal
 				put rigHtmlSpecialChars(tVal) into tVal
-			
+
 				put tVal after tOutput
 			end if
 
@@ -495,7 +495,7 @@ end _rigCompilePost
 --| Requires: rigCompileProfilerTemplate, rigUriString(), rigLangLangLine()
 --|
 --| Summary: Show query string.
---| 
+--|
 --| Format:  _rigCompileURIstring()
 --|
 --| Parameters: --
@@ -505,7 +505,7 @@ end _rigCompilePost
 
 private function _rigCompileURIstring
   local tOutput, tURIstring
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "uri"
 
@@ -542,7 +542,7 @@ end _rigCompileURIstring
 --| Requires: rigCompileProfilerTemplate, rigLangLangLine()
 --|
 --| Summary: Show the controller and handler that were called.
---| 
+--|
 --| Format:  _rigCompileControllerInfo()
 --|
 --| Parameters: --
@@ -552,7 +552,7 @@ end _rigCompileURIstring
 
 private function _rigCompileControllerInfo
   local tOutput
-  
+
 	# COMPILE BENCHMARKS PROFILE TEMPLATE
 	rigCompileProfilerTemplate "info"
 
@@ -585,7 +585,7 @@ end _rigCompileControllerInfo
 --| Requires: --
 --|
 --| Summary: Set the template.
---| 
+--|
 --| Format:  rigSetProfilerTableTemplate param1
 --|
 --| Parameters: string <pName>, array <pTemplate>
@@ -618,7 +618,7 @@ end rigSetProfilerTableTemplate
 --| Requires: _rigDefaultProfilerTemplate
 --|
 --| Summary: Compile template.
---| 
+--|
 --| Format:  rigCompileProfilerTemplate
 --|
 --| Parameters: string <pName>
@@ -648,7 +648,7 @@ end rigCompileProfilerTemplate
 --| Requires: --
 --|
 --| Summary: Default template.
---| 
+--|
 --| Format:  _rigDefaultProfilerTemplate()
 --|
 --| Parameters: string <pName>
@@ -658,14 +658,14 @@ end rigCompileProfilerTemplate
 
 private function _rigDefaultProfilerTemplate pName
   local tTemplate
-  
+
 	# BENCHMARK TABLE
 	if pName is "benchmark" then
 		# LEGEND
 		put return & "<fieldset style='border:1px solid #8498B4;padding:6px 10px 10px 10px;margin:0 0 20px 0;background-color:#F2F2F2'>" & return & \
 		\
 		"<legend style='color:#8498B4;'>&nbsp;&nbsp;{langBenchmarks}&nbsp;&nbsp;</legend>" & return & \
-		\		
+		\
 		return & return & "<table cellpadding='4' cellspacing='1' border='0' width='100%'>" & return into tTemplate["legend"]
 
 		# BODY
@@ -699,7 +699,7 @@ private function _rigDefaultProfilerTemplate pName
 		put "<tr><td width='1%' valign='top' style='color:#FF0E00;font-weight:normal;background-color:#ddd;'>{time}&nbsp;&nbsp;</td><td style='color:#2B4662;font-weight:normal;background-color:#ddd;'>{val}</td></tr>" & return into tTemplate["body"]
 	end if
 
-	
+
 	# GET TABLE
 	if pName is "get" then
 		# LEGEND
@@ -744,10 +744,10 @@ private function _rigDefaultProfilerTemplate pName
 
 		# BODY
 		put "<div style='color:#2B4662;font-weight:normal;padding:4px 0 4px 0'>{uriString}</div>" into tTemplate["body"]
-		
+
 	end if
 
-	
+
 	# CONTROLLER INFO TABLE
 	if pName is "info" then
 		# LEGEND
@@ -757,7 +757,7 @@ private function _rigDefaultProfilerTemplate pName
 
 		# BODY
 		put "<div style='color:#2B4662;font-weight:normal;padding:4px 0 4px 0'>{controller}/{handler}</div>" into tTemplate["body"]
-	
+
 	end if
 
 	return tTemplate
@@ -777,7 +777,7 @@ end _rigDefaultProfilerTemplate
 --| Requires: --
 --|
 --| Summary: Run the profiler.
---| 
+--|
 --| Format:  rigProfilerOutput()
 --|
 --| Parameters: --
@@ -787,7 +787,7 @@ end _rigDefaultProfilerTemplate
 
 function rigProfilerOutput
   local tOutput
-  
+
 	put "<div id=" & quote & "revIgniterProfiler" & quote && "style=" & quote & "clear:both;background-color:#fff;padding:10px;" & quote & ">" into tOutput
 
 	put _rigCompileBenchmarks() after tOutput
@@ -816,7 +816,7 @@ end rigProfilerOutput
 --| Requires: --
 --|
 --| Summary: Get profiler array variable value.
---| 
+--|
 --| Format: rigProfilerGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -828,7 +828,7 @@ function rigProfilerGet pWhat
   if pWhat is among the keys of sProfilerTemplateA then
     return sProfilerTemplateA[pWhat]
   end if
-   
+
   return empty
 end rigProfilerGet
 
@@ -845,7 +845,7 @@ end rigProfilerGet
 --| Requires: --
 --|
 --| Summary: Setter for profiler variable.
---| 
+--|
 --| Format: rigProfilerSet param1, param2
 --|
 --| Parameters: string <pKey>, sProfilerTemplateA array key, mixed <pVal>

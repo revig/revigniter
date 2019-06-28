@@ -50,12 +50,12 @@ local sDBdriverSettings, sCacheLibLoaded, sResultDriversLoaded, sStackInUse
  --| Requires: _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -65,12 +65,12 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -91,7 +91,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -161,7 +161,7 @@ end _rigSetDefaultValues
 --|
 --| Summary: Sets the library variables values. Accepts one parameter
 --|            containing the database connection settings.
---| 
+--|
 --| Format:  rigDbDriver param1
 --|
 --| Parameters: array <pParams>
@@ -199,7 +199,7 @@ end rigDbDriver
 --| Requires: --
 --|
 --| Summary: Fetch setting from DB driver settings.
---| 
+--|
 --| Format:  rigFetchDBdriverSetting(param1)
 --|
 --| Parameters: string<pSettingsKey>
@@ -227,7 +227,7 @@ end rigFetchDBdriverSetting
 --| Requires: --
 --|
 --| Summary: Set driver values.
---| 
+--|
 --| Format:  rigSetDBdriverSetting param1, param2
 --|
 --| Parameters: string <pKey>, mixed <pValue>
@@ -257,7 +257,7 @@ end rigSetDBdriverSetting
 --| Requires:  rigLogMessage, rigDbDisplayError, rigDbRedirectOnError
 --|
 --| Summary: Initialize Database Settings.
---| 
+--|
 --| Format:  rigDbInitialize()
 --|
 --| Parameters: --
@@ -288,7 +288,7 @@ function rigDbInitialize
 		# ERROR HANDLING
 		if sDBdriverSettings["dbdebug"] is TRUE then
 			rigDbDisplayError "db_unable_to_connect"
-			
+
 			else if sDBdriverSettings["dbRedirectOnError"] <> empty then
 				rigDbRedirectOnError
 		end if
@@ -323,7 +323,7 @@ end rigDbInitialize
 --| Requires:  _rigDbSetCharset, rigLogMessage, rigDbDisplayError, rigDbRedirectOnError
 --|
 --| Summary: Set client character set.
---| 
+--|
 --| Format:  rigDbSetCharset(param1, param2)
 --|
 --| Parameters: string <pCharset>, string <pCollation>
@@ -338,7 +338,7 @@ function rigDbSetCharset pCharset pCollation
 
 		if sDBdriverSettings["dbdebug"] is TRUE then
 			rigDbDisplayError "db_unable_to_set_charset", sDBdriverSettings["charset"]
-			
+
 			else if sDBdriverSettings["dbRedirectOnError"] <> empty then
 				rigDbRedirectOnError
 		end if
@@ -365,7 +365,7 @@ end rigDbSetCharset
 --| Requires: --
 --|
 --| Summary: The name of the platform in use (mysql, postgresql, etc...).
---| 
+--|
 --| Format:  rigDbPlatform()
 --|
 --| Parameters: --
@@ -396,7 +396,7 @@ end rigDbPlatform
 --|
 --| Summary: Database Version Number.  Returns a string containing the
 --|            version of the database being used.
---| 
+--|
 --| Format:  rigDbVersion()
 --|
 --| Parameters: --
@@ -406,14 +406,14 @@ end rigDbPlatform
 
 function rigDbVersion
   local tSql, tQuery
-  
+
 	put _rigDbVersion() into tSql
 
 	if tSql is FALSE then
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_unsupported_function"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
@@ -426,7 +426,7 @@ function rigDbVersion
 	end if
 
 	put rigDbQuery(tSql) into tQuery
-	
+
 	return rigDbRow("ver")
 end rigDbVersion
 
@@ -452,7 +452,7 @@ end rigDbVersion
 --|            upon successful execution of a "write" type query. Returns boolean
 --|            FALSE upon failure, and if the dbdebug variable in the database config file is set to TRUE
 --|            will raise an error.
---| 
+--|
 --| Format:  rigDbQuery(param1, param2)
 --|
 --| Parameters: string <pSQL> the sql query string, array <pBinds> array of binding data
@@ -466,7 +466,7 @@ function rigDbQuery pSQL pBinds
   local tQueryResult, tQueryTimesNum, tNewQueryTimesNum, tErrorMessage
   local tErrorArray, tTimeEnd, tCacheInit, tRES, tChangeFieldNamesListDelimiter
   local tCR, tSerializedResultArray
-  
+
 	if pBinds is not an array and pBinds is "" then
 		put FALSE into tBinds
 	else
@@ -479,7 +479,7 @@ function rigDbQuery pSQL pBinds
 		if sDBdriverSettings["dbdebug"] is TRUE then
 			rigLogMessage "error", "Invalid query:" && tSQL
 			rigDbDisplayError "db_invalid_query"
-			
+
 			else if sDBdriverSettings["dbRedirectOnError"] <> empty then
 				rigLogMessage "error", "Invalid query:" && tSQL
 				rigDbRedirectOnError
@@ -490,13 +490,13 @@ function rigDbQuery pSQL pBinds
 	# VERIFY TABLE PREFIX AND REPLACE IF NECESSARY
 	if ((sDBdriverSettings["dbprefix"]) <> "" and (sDBdriverSettings["swappre"] <> "")) and (sDBdriverSettings["dbprefix"] <> sDBdriverSettings["swappre"]) then
 		put TRUE into tStrFound
-		
-		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+
+		put empty into tFoundVar1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 		put empty into tFoundVar2
 		repeat until tStrFound is not TRUE
         		put "(\W)" & sDBdriverSettings["swappre"] & "(\S+?)" into tRegEx
         		get matchText(tSQL,tRegEx, tFoundVar1, tFoundVar2)
-        
+
         		if it is TRUE then
             			put tFoundVar1 & sDBdriverSettings["swappre"] & tFoundVar2 into tStrToSwap
             			put tFoundVar1 & sDBdriverSettings["dbprefix"] & tFoundVar2 into tReplacementStr
@@ -589,17 +589,17 @@ function rigDbQuery pSQL pBinds
 
 			# WE CALL THIS FUNCTION IN ORDER TO ROLL-BACK QUERIES
 			# IF TRANSACTIONS ARE ENABLED.  IF WE DON'T CALL THIS HERE
-			# THE ERROR MESSAGE WILL TRIGGER AN EXIT, CAUSING THE 
+			# THE ERROR MESSAGE WILL TRIGGER AN EXIT, CAUSING THE
 			# TRANSACTIONS TO REMAIN IN LIMBO.
 			get rigTransComplete()
 
 			# LOG AND DISPLAY ERRORS
 			rigLogMessage "error", "Query error:" & tErrorMessage
-		
+
 			put tErrorMessage into tErrorArray[1]
 			put tSQL into tErrorArray[2]
 			rigDbDisplayError tErrorArray
-			
+
 			else if sDBdriverSettings["dbRedirectOnError"] <> empty then
 				rigDbRedirectOnError
 		end if
@@ -643,13 +643,13 @@ function rigDbQuery pSQL pBinds
 	put sDBdriverSettings["resultid"] into tRES["resultid"]
 	# CLEAR RESULT ARRAY
 	rigDbResetResultValue "resultarray"
-	
+
   # CHECK IF IT IS A "SELECT IF" OR A "SELECT GREATEST" QUERY
   put FALSE into tChangeFieldNamesListDelimiter
   if ("SELECT GREATEST" is in tSQL) or ("SELECT IF" is in tSQL) then
     put TRUE into tChangeFieldNamesListDelimiter
   end if
-	
+
 	put rigDBresult(tChangeFieldNamesListDelimiter) into tRES["resultarray"]
 
 	if sDBdriverSettings["dbdriver"] is "oci8" then
@@ -662,12 +662,12 @@ function rigDbQuery pSQL pBinds
 	# OCI8 VARS MUST BE SET BEFORE CALLING THIS
 	put rigNumRows(sDBdriverSettings["resultid"]) into tRES["numrows"]
 
-	
+
 	# EXTRA BONUS
 	put rigListFields(sDBdriverSettings["resultid"]) into tRES["fieldnames"]
 	put rigFieldNumbers(tRES["fieldnames"]) into tRES["fieldnumbers"]
-	
-	
+
+
 	# IS QUERY CACHING ENABLED?  IF SO, WE'LL SERIALIZE THE
 	# RESULT ARRAY AND SAVE IT TO A CACHE FILE.
 	put _rigCacheInit() into tCacheInit
@@ -707,7 +707,7 @@ end rigDbQuery
 --| Requires: --
 --|
 --| Summary: Load the result drivers.
---| 
+--|
 --| Format:  _rigLoadRdriver
 --|
 --| Parameters: --
@@ -743,7 +743,7 @@ end _rigLoadRdriver
 --| Summary: This is a simplified version of the rigDbQuery() function.  Internally
 --|             we only use it when running transaction commands since they do
 --|             not require all the features of the main query() function.
---| 
+--|
 --| Format:  rigDbSimpleQuery(param1)
 --|
 --| Parameters: string <pSQL> the sql statement
@@ -776,7 +776,7 @@ end rigDbSimpleQuery
 --| Requires: --
 --|
 --| Summary: This permits transactions to be disabled at run-time.
---| 
+--|
 --| Format:  rigDbTransOff
 --|
 --| Parameters: --
@@ -807,7 +807,7 @@ end rigDbTransOff
 --|            transactions, if one group fails all groups will be rolled back.
 --|            If strict mode is disabled, each group is treated autonomously, meaning
 --|            a failure of one group will not affect any others.
---| 
+--|
 --| Format:  rigDbTransStrict param1
 --|
 --| Parameters: bool <pMode>
@@ -817,7 +817,7 @@ end rigDbTransOff
 
 command rigDbTransStrict pMode
   local tMode
-  
+
 	if pMode is empty then
 		put TRUE into tMode
 	else
@@ -848,7 +848,7 @@ end rigDbTransStrict
 --| Requires: rigTransBegin()
 --|
 --| Summary: Start transaction.
---| 
+--|
 --| Format:  rigDbTransStart param1
 --|
 --| Parameters: bool <pTestMode>
@@ -858,7 +858,7 @@ end rigDbTransStrict
 
 command rigDbTransStart pTestMode
   local tTestMode, tResult
-  
+
 	if pTestMode is empty then
 		put FALSE into tTestMode
 	else
@@ -899,7 +899,7 @@ end rigDbTransStart
 --| Requires: rigTransRollback, rigLogMessage, rigTransCommit
 --|
 --| Summary: Complete transaction.
---| 
+--|
 --| Format:  rigTransComplete()
 --|
 --| Parameters: --
@@ -959,7 +959,7 @@ end rigTransComplete
 --| Requires: --
 --|
 --| Summary: Lets you retrieve the transaction flag to determine if it has failed.
---| 
+--|
 --| Format:  rigDbTransStatus()
 --|
 --| Parameters: --
@@ -987,7 +987,7 @@ end rigDbTransStatus
 --| Requires: rigDbEscape()
 --|
 --| Summary: Compile bindings. pBinds must be a comma separated list or a numbered array.
---| 
+--|
 --| Format:  rigCompileBinds(param1, param2)
 --|
 --| Parameters: string <pSQL> the sql statement, mixed <pBinds> an array or a
@@ -998,7 +998,7 @@ end rigDbTransStatus
 
 function rigCompileBinds pSQL pBinds
   local tSQl, tBinds, tNumOfBinds, tBindsEscaped
-  
+
 	if ":1" is not in pSQL then
 		return pSQL
 	end if
@@ -1046,7 +1046,7 @@ end rigCompileBinds
 --| Requires: --
 --|
 --| Summary: Determines if a query is a "write" type.
---| 
+--|
 --| Format:  rigIsWriteType()
 --|
 --| Parameters: string <pSQL> the sql statement
@@ -1056,9 +1056,9 @@ end rigCompileBinds
 
 function rigIsWriteType pSQL
   local tRegEx
-  
+
 	put "(?i)^\s*" & quote & "?(SET|INSERT|UPDATE|DELETE|REPLACE|CREATE|DROP|TRUNCATE|LOAD DATA|COPY|ALTER|GRANT|REVOKE|LOCK|UNLOCK)\s+" into tRegEx
-  
+
 	get matchText(pSQL,tRegEx)
 
 	return it
@@ -1081,7 +1081,7 @@ end rigIsWriteType
 --| Requires: rigNumber_format()
 --|
 --| Summary: Calculate the aggregate query elapsed time.
---| 
+--|
 --| Format:  rigDbElapsedTime(param1)
 --|
 --| Parameters: integer <pDecimals> the number of decimal places
@@ -1091,7 +1091,7 @@ end rigIsWriteType
 
 function rigDbElapsedTime pDecimals
   local tDecimals
-  
+
 	if pDecimals is empty then
 		put 6 into tDecimals
 	else
@@ -1117,7 +1117,7 @@ end rigDbElapsedTime
 --| Requires: --
 --|
 --| Summary: Returns the total number of queries.
---| 
+--|
 --| Format:  rigDbTotalQueries()
 --|
 --| Parameters: --
@@ -1145,7 +1145,7 @@ end rigDbTotalQueries
 --| Requires: --
 --|
 --| Summary: Returns the last query that was executed.
---| 
+--|
 --| Format:  rigDbLastQuery()
 --|
 --| Parameters: --
@@ -1155,7 +1155,7 @@ end rigDbTotalQueries
 
 function rigDbLastQuery
   local tKey
-  
+
 	put line -1 in the keys of sDBdriverSettings["queries"] into tKey
 
 	return sDBdriverSettings["queries"][tKey]
@@ -1177,10 +1177,10 @@ end rigDbLastQuery
 --| Requires: --
 --|
 --| Summary: Escapes data based on type. Sets boolean and null types.
---| 
+--|
 --| Format:  rigDbEscape(param1)
 --|
---| Parameters: string <pStr> 
+--| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
@@ -1219,15 +1219,15 @@ end rigDbEscape
 --|
 --| Summary: Calls the individual driver for platform
 --|                   specific escaping for LIKE conditions.
---| 
+--|
 --| Format:  rigEscapeLikeStr(param1)
 --|
---| Parameters: string <pStr> 
+--| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigEscapeLikeStr pStr   
+function rigEscapeLikeStr pStr
     	return rigEscapeStr(pStr, TRUE)
 end rigEscapeLikeStr
 
@@ -1249,7 +1249,7 @@ end rigEscapeLikeStr
 --|
 --| Summary: Retrieves the primary key.  It assumes that the row in the first
 --|            position is the primary key.
---| 
+--|
 --| Format:  rigPrimary(param1)
 --|
 --| Parameters: string <pTable>	the table name
@@ -1259,7 +1259,7 @@ end rigEscapeLikeStr
 
 function rigPrimary pTable
   local tFields
-  
+
 	put rigDbListFields(pTable) into tFields
 
 	if tFields is not an array then
@@ -1287,7 +1287,7 @@ end rigPrimary
 --|           rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Returns an array of table names.
---| 
+--|
 --| Format:  rigDbListTables(param1)
 --|
 --| Parameters: bool <pConstrainByPrefix>
@@ -1298,7 +1298,7 @@ end rigPrimary
 function rigDbListTables pConstrainByPrefix
   local tConstrainByPrefix, tRetval, tGetFailed, tSql, tQuery
   local tCounter, tKey, tRow, tK, tVal
-  
+
 	if pConstrainByPrefix is empty then
 		put FALSE into tConstrainByPrefix
 	else
@@ -1326,17 +1326,17 @@ function rigDbListTables pConstrainByPrefix
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_unsupported_function"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
 
 			return FALSE
 		end if
-	
+
 		put empty into tRetval
 		put rigDbQuery(tSql) into tQuery
-	
+
 		if tQuery["numrows"] > 0 then
 			put 0 into tCounter
 			repeat for each key tKey in tQuery["resultarray"]
@@ -1344,7 +1344,7 @@ function rigDbListTables pConstrainByPrefix
 				put tQuery["resultarray"][tKey] into tRow
 				put line 1 in the keys of tRow into tK
 				put tRow[tK] into tVal
-			
+
 				put tVal into tRetval[tCounter]
 			end repeat
 		end if
@@ -1372,7 +1372,7 @@ end rigDbListTables
 --| Requires: _rigProtectIdentifiers(), rigDbListTables(), rigInArray()
 --|
 --| Summary: Determine if a particular table exists.
---| 
+--|
 --| Format:  rigDbTableExists(param1)
 --|
 --| Parameters: string <pTableName>
@@ -1382,7 +1382,7 @@ end rigDbListTables
 
 function rigDbTableExists pTableName
   local tTableName, tTables
-  
+
 	put _rigProtectIdentifiers(pTableName, TRUE, FALSE, FALSE) into tTableName
 	put rigDbListTables() into tTables
 
@@ -1406,7 +1406,7 @@ end rigDbTableExists
 --|           _rigDbListColumns(), rigDbRedirectOnError
 --|
 --| Summary: Fetch MySQL Field Names.
---| 
+--|
 --| Format:  rigDbListFields(param1)
 --|
 --| Parameters: string <pTable> the table name
@@ -1417,7 +1417,7 @@ end rigDbTableExists
 function rigDbListFields pTable
   local tTable, tRetval, tGetFailed, tSql, tDriver, tQuery, tCounter
   local tKey, tRow, tVal, tK
-  
+
 	# IS THERE A CACHED RESULT?
 	if sDBdriverSettings["datacache"]["fieldnames"][pTable] is an array then
 		return sDBdriverSettings["datacache"]["fieldnames"][pTable]
@@ -1427,7 +1427,7 @@ function rigDbListFields pTable
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_field_param_missing"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
@@ -1446,7 +1446,7 @@ function rigDbListFields pTable
 		split tRetval using comma
 	end if
 
-	# GET COLUMN NAMES USING QUERY	
+	# GET COLUMN NAMES USING QUERY
 	if tGetFailed is TRUE then
 		put empty into tRetval
 		put _rigDbListColumns(tTable) into tSql
@@ -1455,7 +1455,7 @@ function rigDbListFields pTable
 			# ERROR HANDLING
 			if rigFetchDBdriverSetting("dbdebug") is TRUE then
 				rigDbDisplayError "db_unsupported_function"
-				
+
 				else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 					rigDbRedirectOnError
 			end if
@@ -1465,25 +1465,25 @@ function rigDbListFields pTable
 
     # CHECK IF DRIVER IS SQLITE
     put rigFetchDBdriverSetting("dbdriver") into tDriver
-		
+
 		put rigDbQuery(tSql) into tQuery
 
 		put 0 into tCounter
 		repeat for each key tKey in tQuery["resultarray"]
 			add 1 to tCounter
 			put tQuery["resultarray"][tKey] into tRow
-			
+
       # THE SQLITE QUERY RETURNS A COMPREHENSIVE TABLE INFO
       # SO, WE JUST PICK THE VALUE OF THE COLUMN NAME FIELD
       if tDriver is "sqlite" then
         put tRow[tQuery["fieldnumbers"]["name"]] into tVal
       else
-      
+
         # THIS IS THE PostgreSQL / MySQL VERSION
 				put line 1 in the keys of tRow into tK
 				put tRow[tK] into tVal
 			end if
-			
+
 			put tVal into tRetval[tCounter]
 		end repeat
 	end if
@@ -1510,7 +1510,7 @@ end rigDbListFields
 --| Requires: rigDbListFields(), rigInArray()
 --|
 --| Summary: Determine if a particular field exists.
---| 
+--|
 --| Format:  rigDbFieldExists(param1, param2)
 --|
 --| Parameters: string <pFieldName> string <pTableName>
@@ -1520,7 +1520,7 @@ end rigDbListFields
 
 function rigDbFieldExists pFieldName pTableName
   local tFields
-  
+
 	put rigDbListFields(pTableName) into tFields
 
 	return rigInArray(tFields, pFieldName)
@@ -1544,7 +1544,7 @@ end rigDbFieldExists
 --|           _rigDbFieldData(), rigDbQuery(), rigDbRedirectOnError
 --|
 --| Summary: Returns an array with field data.
---| 
+--|
 --| Format:  rigDbFieldData(param1)
 --|
 --| Parameters: string <pTable> the table name
@@ -1554,19 +1554,19 @@ end rigDbFieldExists
 
 function rigDbFieldData pTable
   local tTable, tSql
-  
+
 	if pTable is empty then
 		# ERROR HANDLING
 		if rigFetchDBdriverSetting("dbdebug") is TRUE then
 			rigDbDisplayError "db_field_param_missing"
-			
+
 			else if rigFetchDBdriverSetting("dbRedirectOnError") <> empty then
 				rigDbRedirectOnError
 		end if
 
 		return FALSE
 	end if
-	
+
 	put _rigProtectIdentifiers(pTable, TRUE, NULL, FALSE) into tTable
 	put _rigDbFieldData(tTable) into tSql
 
@@ -1592,7 +1592,7 @@ end rigDbFieldData
 --| Requires: _rigEscapeIdentifiers(), rigDbEscape(), _rigProtectIdentifiers(), _rigInsert()
 --|
 --| Summary: Generate an insert string.
---| 
+--|
 --| Format:  rigDbInsertString(param1, param2)
 --|
 --| Parameters: string <pTable> the table upon which the query will be performed,
@@ -1603,7 +1603,7 @@ end rigDbFieldData
 
 function rigDbInsertString pTable pData
   local tCounter, tKey, tVal, tFields, tValues, tTable
-  
+
 	put 0 into tCounter
 	repeat for each key tKey in pData
 		add 1 to tCounter
@@ -1614,7 +1614,7 @@ function rigDbInsertString pTable pData
 	end repeat
 
 	put _rigProtectIdentifiers(pTable, TRUE, NULL, FALSE) into tTable
-	
+
 	return _rigInsert(tTable, tFields, tValues)
 end rigDbInsertString
 
@@ -1635,7 +1635,7 @@ end rigDbInsertString
 --| Requires: _rigProtectIdentifiers(), rigDbEscape(), _rigHasOperator(), rigDbEscape(), _rigUpdate()
 --|
 --| Summary: Generate an update string.
---| 
+--|
 --| Format:  rigDbUpdateString(param1, param2)
 --|
 --| Parameters: string <pTable> the table upon which the query will be performed,
@@ -1647,7 +1647,7 @@ end rigDbInsertString
 
 function rigDbUpdateString pTable pData pWhere
   local tKey, tVal, tK, tFields, tDest, tCounter, tPrefix, tTable
-  
+
 	if (pWhere is not an array) and (pWhere is empty) then
 		return FALSE
 	end if
@@ -1709,7 +1709,7 @@ end rigDbUpdateString
 --| Requires: rigTrim()
 --|
 --| Summary: Tests whether the string has an SQL operator.
---| 
+--|
 --| Format:  _rigHasOperator(param1)
 --|
 --| Parameters: string <pStr>
@@ -1737,7 +1737,7 @@ end _rigHasOperator
 --| Requires: --
 --|
 --| Summary: Set cache directory path.
---| 
+--|
 --| Format:  rigDbCacheSetPath param1
 --|
 --| Parameters: string <pPath> the path to the cache directory
@@ -1765,7 +1765,7 @@ end rigDbCacheSetPath
 --| Requires: --
 --|
 --| Summary: Enable query caching.
---| 
+--|
 --| Format:  rigDbCacheOn()
 --|
 --| Parameters: --
@@ -1796,7 +1796,7 @@ end rigDbCacheOn
 --| Requires: --
 --|
 --| Summary: Disable query caching.
---| 
+--|
 --| Format:  rigDbCacheOff()
 --|
 --| Parameters: --
@@ -1827,7 +1827,7 @@ end rigDbCacheOff
 --| Requires: _rigCacheInit(), rigDeleteDBcacheFiles
 --|
 --| Summary: Delete the cache files associated with a particular URI.
---| 
+--|
 --| Format:  rigDbCacheDelete param1, param2
 --|
 --| Parameters: string <pSegmentOne>, string <pSegmentTwo>
@@ -1859,7 +1859,7 @@ end rigDbCacheDelete
 --| Requires: _rigCacheInit(), rigDeleteAllDBcacheFiles
 --|
 --| Summary: Delete all cache files.
---| 
+--|
 --| Format:  rigDbCacheDeleteAll param1
 --|
 --| Parameters: string <pExclusion> file name to exclude (optional)
@@ -1891,7 +1891,7 @@ end rigDbCacheDeleteAll
 --| Requires: rigLogMessage, rigDbCacheOff()
 --|
 --| Summary: Initialize the cache library.
---| 
+--|
 --| Format:  _rigCacheInit()
 --|
 --| Parameters: --
@@ -1929,7 +1929,7 @@ end _rigCacheInit
 --| Requires: _rigDbClose()
 --|
 --| Summary: This handler closes the database connection.
---| 
+--|
 --| Format:  _rigCloseDB()
 --|
 --| Parameters: --
@@ -1939,7 +1939,7 @@ end _rigCacheInit
 
 function _rigCloseDB
   local tResult
-  
+
 	if sDBdriverSettings["connid"] is an integer then
 		put _rigDbClose(sDBdriverSettings["connid"]) into tResult
 	end if
@@ -1962,7 +1962,7 @@ end _rigCloseDB
 --| Requires: rigLoadLibrary, rigLangLoadLang, rigLangLangLine()
 --|
 --| Summary: Display an error message.
---| 
+--|
 --| Format:  rigDbDisplayError param1, param2, param3
 --|
 --| Parameters: string <pError> the error message, string <pSwap> any "swap" values,
@@ -1973,7 +1973,7 @@ end _rigCloseDB
 
 command rigDbDisplayError pError pSwap pNative
   local tResult, tMessage, tError, tHeading
-  
+
 	rigLoadLibrary "Language"
 	get rigLangLoadLang("dbLang")
 
@@ -1989,9 +1989,9 @@ command rigDbDisplayError pError pSwap pNative
 			put tError into tMessage
 		else
 			put pError into tMessage
-		end if		
+		end if
 	end if
-  
+
   put "Database Error" into tHeading
 
 	rigLoadLibrary "Exceptions"
@@ -2016,7 +2016,7 @@ end rigDbDisplayError
 --|
 --| Summary: Redirect to an URI of your choice in case a database error occurs.
 --|            Specify the controller/handler to redirect to in your database configuration.
---| 
+--|
 --| Format:  rigDbRedirectOnError
 --|
 --| Parameters: --
@@ -2026,7 +2026,7 @@ end rigDbDisplayError
 
 command rigDbRedirectOnError
 	rigLoadHelper "url"
-	rigRedirect sDBdriverSettings["dbRedirectOnError"] 
+	rigRedirect sDBdriverSettings["dbRedirectOnError"]
 end rigDbRedirectOnError
 
 
@@ -2045,7 +2045,7 @@ end rigDbRedirectOnError
 --| Requires: --
 --|
 --| Summary: The number of affected rows.
---| 
+--|
 --| Format:  rigDbAffectedRows()
 --|
 --| Parameters: --
@@ -2074,7 +2074,7 @@ end rigDbAffectedRows
 --| Requires: _rigProtectIdentifiers()
 --|
 --| Summary: This function adds backticks if appropriate based on DB type.
---| 
+--|
 --| Format:  rigProtectIdentifiers(param1, param2)
 --|
 --| Parameters: mixed <pItem> the item to escape, bool <pPrefixSingle>
@@ -2084,7 +2084,7 @@ end rigDbAffectedRows
 
 function rigProtectIdentifiers pItem pPrefixSingle
   local tPrefixSingle
-  
+
 	if pPrefixSingle is empty then
 		put FALSE into tPrefixSingle
 	else
@@ -2111,7 +2111,7 @@ end rigProtectIdentifiers
 --| Requires: --
 --|
 --| Summary: This function is used extensively by the Active Record library, and by
---|             a couple handlers in this library. 
+--|             a couple handlers in this library.
 --|             It takes a column or table name (optionally with an alias) and inserts
 --|             the table prefix onto it.  Some logic is necessary in order to deal with
 --|             column names that include the path.  Consider a query like this:
@@ -2126,7 +2126,7 @@ end rigProtectIdentifiers
 --|             or also have an alias prefix, we need to do a bit of work to figure this out and
 --|             insert the table prefix (if it exists) in the proper position, and escape only
 --|             the correct identifiers.
---| 
+--|
 --| Format:  _rigProtectIdentifiers(param1, param2, param3, param4)
 --|
 --| Parameters: mixed <pItem>, bool <pPrefixsingle>,  mixed <pProtectidentifiers>, bool <pFieldexists>
@@ -2138,7 +2138,7 @@ function _rigProtectIdentifiers pItem pPrefixsingle pProtectidentifiers pFieldex
   local tItem, tProtectidentifiers, tKey, tEscapedKey, tEscapedVal, tEscapedArray
   local tRegEx, tAlias, tParts, tAliasedTables, tPartIsInArray, tReservedIdent
   local tEscapedPart, ti, tPrefixCharsNum
-  
+
 	put pItem into tItem
 	put pProtectidentifiers into tProtectidentifiers
 	if tProtectidentifiers is not a boolean then
@@ -2164,20 +2164,20 @@ function _rigProtectIdentifiers pItem pPrefixsingle pProtectidentifiers pFieldex
 if tProtectidentifiers is TRUE then
         split tItem using "="
         put the number of lines in the keys of tItem into tKeysNum
-         
+
         put 0 into tCounter
         repeat for each key tKey in tItem
             add 1 to tCounter
-            
+
             if tCounter is 1 then
 			put _rigEscapeIdentifiers(tItem[tKey]) & "=" into tEscapedStr
             end if
-            
+
             if (tCounter <> 1) and (tCounter < tKeysNum) then
                 put word 1 to ((the number of words of tItem[tKey]) - 1) of tItem[tKey] after tEscapedStr
 			put space & _rigEscapeIdentifiers(word -1 of tItem[tKey]) & "=" after tEscapedStr
             end if
-            
+
             if tCounter = tKeysNum then
                 put tItem[tKey] after tEscapedStr
             end if
@@ -2200,7 +2200,7 @@ return tItem
 	end if
 
 	# THIS IS BASICALLY A BUG FIX FOR QUERIES THAT USE MAX, MIN, ETC.
-	# IF A PARENTHESIS IS FOUND WE KNOW THAT WE DO NOT NEED TO 
+	# IF A PARENTHESIS IS FOUND WE KNOW THAT WE DO NOT NEED TO
 	# ESCAPE THE DATA OR ADD A PREFIX.
 	if "(" is in tItem then
 		return tItem & tAlias
@@ -2233,18 +2233,18 @@ return tItem
 					combine tReservedIdent using space
 
 					 repeat for each key tKey in tParts
-						
+
 							if tParts[tKey] is not among the words of tReservedIdent then
 								put _rigEscapeIdentifiers(tParts[tKey]) into tEscapedPart
 								put tEscapedPart into tParts[tKey]
 							end if
-						
+
 					end repeat
 
 					combine tParts using "."
 					put tParts into tItem
 				end if
-			
+
 				return tItem & tAlias
 			end if
 		end if
@@ -2265,7 +2265,7 @@ return tItem
 			else
 				put 1 into ti
 			end if
-			
+
 			# THIS FLAG IS SET WHEN THE SUPPLIED $ITEM DOES NOT CONTAIN A FIELD NAME.
 			# THIS CAN HAPPEN WHEN THIS FUNCTION IS BEING CALLED FROM A JOIN.
 			if pFieldexists is FALSE then
@@ -2297,7 +2297,7 @@ return tItem
 		put the number of chars of sDBdriverSettings["dbprefix"] into tPrefixCharsNum
 		if (pPrefixsingle is TRUE) and (char 1 to tPrefixCharsNum of tItem is not sDBdriverSettings["dbprefix"]) then
 			put sDBdriverSettings["dbprefix"] & tItem into tItem
-		end if	
+		end if
 	end if
 
 	put sDBdriverSettings["reservedIdentifiers"] into tReservedIdent
@@ -2305,7 +2305,7 @@ return tItem
 	if (tProtectidentifiers is TRUE) and (tItem is not among the words of tReservedIdent) then
 		put _rigEscapeIdentifiers(tItem) into tItem
 	end if
-	
+
 	return tItem & tAlias
 end _rigProtectIdentifiers
 
@@ -2323,7 +2323,7 @@ end _rigProtectIdentifiers
 --| Requires:  --
 --|
 --| Summary: Escapes special characters in a string for use in a SQL statement.
---| 
+--|
 --| Format:  rigDbEscapeString(param1)
 --|
 --| Parameters: string <pString>
@@ -2333,14 +2333,14 @@ end _rigProtectIdentifiers
 
 function rigDbEscapeString pString
   local tString
-  
+
 	put pString into tString
 	replace "\" with "\\" in tString
 	replace "NUL" with "\NUL" in tString
 	replace "\n" with "\\n" in tString
 	replace "\r" with "\\r" in tString
 	replace quote with "\" & quote in tString
-	
+
 	return tString
 end rigDbEscapeString
 

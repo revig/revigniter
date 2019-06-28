@@ -52,12 +52,12 @@ local sPrefilledValues, sGroupName, sRulesIndex, sGroupRulesIndex, sStackInUse
  --| Requires: rigLogMessage, _rigSetDefaultValues, rigLoadHelper
  --|
  --| Summary:  Run security check, set initial values and load additional files.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -72,7 +72,7 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Formvalidation Library Loaded"
       end if
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
 
@@ -80,7 +80,7 @@ on libraryStack
       rigLoadHelper "form"
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -99,7 +99,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -133,7 +133,7 @@ end _rigSetDefaultValues
 --| Requires: --
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
---| 
+--|
 --| Format:  rigRunInitialFormvalidationConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -160,7 +160,7 @@ end rigRunInitialFormvalidationConfig
 --| Requires: --
 --|
 --| Summary: Store form validation rules in sConfigRules variable.
---| 
+--|
 --| Format:  rigSetConfigRules param1
 --|
 --| Parameters: array <pRules>
@@ -190,7 +190,7 @@ end rigSetConfigRules
 --|
 --| Summary: This handler takes an array of field names and validation
 --|            rules as input, validates the info, and stores it.
---| 
+--|
 --| Format:  rigSetRules param1, param2, param3
 --|
 --| Parameters: mixed <pField>, string <pLabel>, string <pRules>
@@ -200,7 +200,7 @@ end rigSetConfigRules
 
 command rigSetRules pField, pLabel, pRules
   local tField, tKey, tLabel, tIndexes, tIsArray
-  
+
 	put pField into tField
 
 	# NO REASON TO SET RULES IF WE HAVE NO POST DATA
@@ -282,9 +282,9 @@ end rigSetRules
 --| Last Mod: 2018-12-29
 --| Requires: rigArrayMerge()
 --|
---| Summary: Set error message. Lets users set their own error messages on the fly. 
+--| Summary: Set error message. Lets users set their own error messages on the fly.
 --|            Note:  The key name has to match the  function name that it corresponds to.
---| 
+--|
 --| Format:  rigSetMessage param1, param2
 --|
 --| Parameters: string <pLang>, string <pVal>
@@ -294,7 +294,7 @@ end rigSetRules
 
 command rigSetMessage pLang pVal
   local tLang
-  
+
   if pLang is not an array then
     put pVal into tLang[pLang]
   else
@@ -323,7 +323,7 @@ end rigSetMessage
 --| Requires: --
 --|
 --| Summary: Set the error delimiter. Permits a prefix/suffix to be added to each error message.
---| 
+--|
 --| Format:  rigSetErrorDelimiters param1, param2
 --|
 --| Parameters: string <pPrefix>, string <pSuffix>
@@ -333,7 +333,7 @@ end rigSetMessage
 
 command rigSetErrorDelimiters pPrefix pSuffix
   local tPrefix, tSuffix
-  
+
 	if pPrefix is empty then
 		put "<p>" into tPrefix
 	else
@@ -366,7 +366,7 @@ end rigSetErrorDelimiters
 --| Summary: Store prefilled values of form fields in a variable for later
 --|            use with rigRequiredR. rigRequiredR then checks if a field value
 --|            is among the items of the variable.
---| 
+--|
 --| Format:  rigSetPrefilledValues param1
 --|
 --| Parameters: mixed <pFieldValuesPrefilled> strings used in prefilled form fields as
@@ -377,7 +377,7 @@ end rigSetErrorDelimiters
 
 command rigSetPrefilledValues pFieldValuesPrefilled
   local tTempDel, tCurrentDel, tKey
-  
+
 	put empty into sPrefilledValues
 	put numToCodepoint(2) into tTempDel
 
@@ -385,13 +385,13 @@ command rigSetPrefilledValues pFieldValuesPrefilled
 
 	if pFieldValuesPrefilled is an array then
 		set the itemDel to tTempDel
-		
+
 		repeat for each key tKey in pFieldValuesPrefilled
 			put pFieldValuesPrefilled[tKey] & tTempDel after sPrefilledValues
 		end repeat
 
 	else
-		
+
 		repeat for each item thisItem in pFieldValuesPrefilled
 			put thisItem & tTempDel after sPrefilledValues
 		end repeat
@@ -416,7 +416,7 @@ end rigSetPrefilledValues
 --| Requires: --
 --|
 --| Summary: Gets the error message associated with a particular field.
---| 
+--|
 --| Format:  rigFormValidError(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pPrefix>, string <pSuffix>
@@ -426,7 +426,7 @@ end rigSetPrefilledValues
 
 function rigFormValidError pField pPrefix pSuffix
   local tField, tPrefix, tSuffix
-  
+
 	put pField into tField
 	put pPrefix into tPrefix
 	put pSuffix into tSuffix
@@ -462,7 +462,7 @@ end rigFormValidError
 --| Requires: --
 --|
 --| Summary: Returns the error messages as a string, wrapped in the error delimiters.
---| 
+--|
 --| Format:  rigFormValidErrorString(param1, param2)
 --|
 --| Parameters: string <pPrefix>, string <pSuffix>
@@ -472,7 +472,7 @@ end rigFormValidError
 
 function rigFormValidErrorString pPrefix pSuffix
   local tPrefix, tSuffix, tStr
-  
+
 	put pPrefix into tPrefix
 	put pSuffix into tSuffix
 
@@ -517,7 +517,7 @@ end rigFormValidErrorString
 --| Requires: rigSetRules, rigLogMessage, _rigReduceArray()
 --|
 --| Summary: Run the validator. This function does all the work.
---| 
+--|
 --| Format: rigFormValidRun(param1)
 --|
 --| Parameters: array <pGroup>
@@ -528,7 +528,7 @@ end rigFormValidErrorString
 function rigFormValidRun pGroup
   local tValidationConfig, tConfigArray, tURI, tRow, tRules
   local tTotalErrors
-  
+
 	if pGroup is an array then
 		rigSetConfigRules pGroup
 	else
@@ -570,7 +570,7 @@ function rigFormValidRun pGroup
 				put pGroup into tURI
 			end if
 		end if
-		
+
 		-- if (tURI is not empty) and (tURI is among the keys of sConfigRules) then
 		if ((tURI is not an array) and (tURI is not empty)) and (tURI is among the keys of sConfigRules) then
 			rigSetRules sConfigRules[tURI]
@@ -589,7 +589,7 @@ function rigFormValidRun pGroup
 	# LOAD THE LANGUAGE FILE CONTAINING ERROR MESSAGES
 	get rigLangLoadLang("formvalidation")
 
-	# CYCLE THROUGH THE RULES FOR EACH FIELD, MATCH THE 
+	# CYCLE THROUGH THE RULES FOR EACH FIELD, MATCH THE
 	# CORRESPONDING $_POST ITEM AND TEST FOR ERRORS
 	repeat for each key tField in sFormValidA["fieldData"]
 		put sFormValidA["fieldData"][tField] into tRow
@@ -628,7 +628,7 @@ function rigFormValidRun pGroup
 		if tTotalErrors > 0 then
 			put TRUE into sSafeFormData
 		end if
-	
+
 		# NOW WE NEED TO RE-SET THE POST DATA WITH THE NEW, PROCESSED DATA
 		_rigResetPostArray
 
@@ -657,7 +657,7 @@ end rigFormValidRun
 --| Requires: --
 --|
 --| Summary: Traverse a multidimensional $_POST array index until the data is found.
---| 
+--|
 --| Format: _rigReduceArray(param1, param2, param3)
 --|
 --| Parameters: array <pArray>, array <pKeys>, integer <pInt>
@@ -667,7 +667,7 @@ end rigFormValidRun
 
 private function _rigReduceArray pArray pKeys pInt
   local tInt, tArray, tCurrentKeyVal
-  
+
 	if pInt is empty then
 		put 1 into tInt
 	else
@@ -683,7 +683,7 @@ private function _rigReduceArray pArray pKeys pInt
 		put pKeys[tInt] into tCurrentKeyVal
 		if quote is in tCurrentKeyVal then
 			replace quote with "" in tCurrentKeyVal
-		end if 
+		end if
 
 			--if pKeys[tInt] is among the keys of tArray then
 			if tCurrentKeyVal is among the keys of tArray then
@@ -718,7 +718,7 @@ end _rigReduceArray
 --| Requires: _rigPrepForForm
 --|
 --| Summary: Re-populate the $_POST array with our finalized and processed data.
---| 
+--|
 --| Format:  _rigResetPostArray
 --|
 --| Parameters: --
@@ -728,12 +728,12 @@ end _rigReduceArray
 
 private command _rigResetPostArray
   local tPostTemp, tField, tRow, tVal, tV, tArray
-  
+
 	put $_POST into tPostTemp
 
 	repeat for each key tField in sFormValidA["fieldData"]
 		put sFormValidA["fieldData"][tField] into tRow
-		
+
 			if tRow["postdata"] is not empty then
 				if tRow["isArray"] is FALSE then
 					if tRow["field"] is in the keys of $_POST then
@@ -744,7 +744,7 @@ private command _rigResetPostArray
 
 				else
 					--put $_POST into tPostTemp
-					
+
 					if the number of lines in the keys of tRow["keys"] is 1 then
 						put tRow["keys"] into tPostTemp[tRow["keys"]]
 					else
@@ -795,7 +795,7 @@ end _rigResetPostArray
 --|           _rigExceptionHandler(), rigLogException
 --|
 --| Summary: Executes the validation routines.
---| 
+--|
 --| Format:  _rigFormValidExecute param1, param2, param3, param4
 --|
 --| Parameters: array <pRow>, array <pRules>, mixed <pPostdata>, integer <pCycles>
@@ -809,7 +809,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
   local tMessage, tFoundTextVar1, tFoundTextVar2, tRule, tInArray
   local tParam, tResult, tCurrentFile, tCurrentMethod, tErrorData
   local tDisplayError, tPostdataTemp, tTranslatedParam
-  
+
 	put pRules into tRules
 	put tRules into tRulesList
 	combine tRulesList using comma
@@ -842,8 +842,8 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 		combine tRules using " "
 
 		put "(callback_\w+)" into tRegEx
-    
-     put empty into tFoundTextVar -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+
+     put empty into tFoundTextVar -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
      put matchText(tRules,tRegEx,tFoundTextVar) into tTextFound
 		if tTextFound is TRUE then
 			put TRUE into tCallback
@@ -887,15 +887,15 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 			if pRow["field"] is not among the keys of sErrorArray then
 				put tMessage into sErrorArray[pRow["field"]]
 			end if
-			
-		end if		
+
+		end if
 
 		exit _rigFormValidExecute
 	end if
 
 	## --------------------------------------------------------------------
 	# CYCLE THROUGH EACH RULE AND RUN IT
-	put empty into tFoundTextVar1 -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	put empty into tFoundTextVar1 -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	put empty into tFoundTextVar2
 	repeat for each key tKey in tRules
 
@@ -931,7 +931,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 		put FALSE into tParam
 
 		 put "(.*?)\[(.*?)\]" into tRegEx
-    
+
     		if matchText(tRule,tRegEx,tFoundTextVar1,tFoundTextVar2) is TRUE then
     			put tFoundTextVar1 into tRule
 			put tFoundTextVar2 into tParam
@@ -942,7 +942,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 			if tRule is not among the items of gControllerHandlers then
 				next repeat
 			end if
-		
+
 			# RUN THE FUNCTION AND GRAB THE RESULT
 			try
 				--do tRule && tPostdata & "," & tParam
@@ -963,7 +963,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 				put "_formValidExecute" into tCurrentMethod
 
 				put _rigExceptionHandler(tContexts) into tErrorData
-				
+
 				if rigConfigItem("logThreshold") > 1 then
 					put TRUE into tDisplayError
 				else
@@ -986,7 +986,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 					put tResult into sFormValidA["fieldData"][pRow["field"]]["postdata"]
 				end if
 			end if
-			
+
 			# IF THE FIELD ISN'T REQUIRED AND WE JUST PROCESSED A CALLBACK WE'LL MOVE ON...
 			if ("requiredR" is among the items of tRulesList) and (tResult <> FALSE) then
 				next repeat
@@ -1011,7 +1011,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
        do "rig" & tRule && quote & tPostdataTemp & quote & "," & tParam
 			put the result into tResult
 			#
-			
+
 			# SET QUOTES AGAIN
 			if "__[quote]__" is in tResult then
 				replace "__[quote]__" with quote in tResult
@@ -1065,7 +1065,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 			if pRow["field"] is not among the keys of sErrorArray then
 				put tMessage into sErrorArray[pRow["field"]]
 			end if
-		
+
 			exit _rigFormValidExecute
 		end if
 	end repeat
@@ -1085,7 +1085,7 @@ end _rigFormValidExecute
 --| Requires: rigLangLangLine()
 --|
 --| Summary: Translate a field name.
---| 
+--|
 --| Format: _rigTranslateFieldname(param1)
 --|
 --| Parameters: string <pFieldName>
@@ -1095,7 +1095,7 @@ end _rigFormValidExecute
 
 private function _rigTranslateFieldname pFieldName
   local tFieldName, tLine
-  
+
 	put pFieldName into tFieldName
 
 	# DO WE NEED TO TRANSLATE THE FIELD NAME?
@@ -1110,7 +1110,7 @@ private function _rigTranslateFieldname pFieldName
 		if tFieldName is FALSE then
 			return tLine
 		end if
-		
+
 	end if
 
 	return tFieldName
@@ -1132,7 +1132,7 @@ end _rigTranslateFieldname
 --|
 --| Summary: Get the value from a form. Permits you to repopulate a form field with
 --|            the value it was submitted with, or, if that value doesn't exist, with the default.
---| 
+--|
 --| Format:  rigFormValidSetValue(param1, param2)
 --|
 --| Parameters: string <pField>, string <pDefault>
@@ -1165,7 +1165,7 @@ end rigFormValidSetValue
 --|
 --| Summary: Enables pull-down lists to be set to the value the user
 --|            selected in the event of an error.
---| 
+--|
 --| Format:  rigFormValidSetSelect(param1, param2)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1175,7 +1175,7 @@ end rigFormValidSetValue
 
 function rigFormValidSetSelect pField pValue pDefault
   local tStatusMarker
-  
+
 	put "selected" into tStatusMarker
 	return rigFormValidSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker)
 end rigFormValidSetSelect
@@ -1198,7 +1198,7 @@ end rigFormValidSetSelect
 --|
 --| Summary: Enables checkboxes to be set to the value the user
 --|                   selected in the event of an error.
---| 
+--|
 --| Format:  rigFormValidSetCheckbox(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1208,7 +1208,7 @@ end rigFormValidSetSelect
 
 function rigFormValidSetCheckbox pField pValue pDefault
   local tStatusMarker
-  
+
 	put "checked" into tStatusMarker
 	return rigFormValidSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker)
 end rigFormValidSetCheckbox
@@ -1231,7 +1231,7 @@ end rigFormValidSetCheckbox
 --|
 --| Summary: Enables checkboxes to be set to the value the user
 --|            selected in the event of an error.
---| 
+--|
 --| Format:  rigFormValidSetRadio(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1241,7 +1241,7 @@ end rigFormValidSetCheckbox
 
 function rigFormValidSetRadio pField pValue pDefault
   local tStatusMarker
-  
+
 	put "checked" into tStatusMarker
 	return rigFormValidSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker)
 end rigFormValidSetRadio
@@ -1265,7 +1265,7 @@ end rigFormValidSetRadio
 --| Summary: Helper function used by some of the functions in this library.
 --|            Enables pull-down lists, checkboxes and radio buttons to be set to the value
 --|            the user selected in the event of an error.
---| 
+--|
 --| Format: rigFormValidSelectCheckboxRadio(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1275,7 +1275,7 @@ end rigFormValidSetRadio
 
 function rigFormValidSelectCheckboxRadio pField pValue pDefault pStatusMarker
   local tField, tDefault, tFieldAsElementsList
-  
+
 	put pField into tField
 
 	if pDefault is empty then
@@ -1331,7 +1331,7 @@ end rigFormValidSelectCheckboxRadio
 --| Requires: rigTrim()
 --|
 --| Summary: Required.
---| 
+--|
 --| Format: rigRequiredR param1
 --|
 --| Parameters: mixed <pFormValue>
@@ -1341,16 +1341,16 @@ end rigFormValidSelectCheckboxRadio
 
 command rigRequiredR pFormValue
   local tCurrentDel
-  
+
 	put the itemDel into tCurrentDel
 	set the itemDel to numToCodepoint(2)
-	
+
 	if pFormValue is not an array then
 		if rigTrim(pFormValue) is empty then
 			return FALSE
 		else
 			if sPrefilledValues <> empty then
-				
+
 				if pFormValue is among the items of sPrefilledValues then
 					set the itemDel to tCurrentDel
 					return FALSE
@@ -1395,7 +1395,7 @@ end rigRequiredR
 --| Requires: --
 --|
 --| Summary: Match one field to another.
---| 
+--|
 --| Format: rigMatchesR param1, param2
 --|
 --| Parameters: string <pStr>, field <pField>
@@ -1405,7 +1405,7 @@ end rigRequiredR
 
 command rigMatchesR pStr, pField
   local tField
-  
+
 	put pField into tField
 
 	if tField is not in the keys of $_POST then
@@ -1436,7 +1436,7 @@ end rigMatchesR
 --| Requires: --
 --|
 --| Summary: Minimum length.
---| 
+--|
 --| Format: rigMinLengthR param1, param2
 --|
 --| Parameters: string <pStr>, value <pVal>
@@ -1446,7 +1446,7 @@ end rigMatchesR
 
 command rigMinLengthR pStr, pVal
   local tRegEx, tMatchFound
-  
+
 	put "[^0-9]" into tRegEx
 
 	put matchtext(pVal,tRegEx) into tMatchFound
@@ -1476,7 +1476,7 @@ end rigMinLengthR
 --| Requires: --
 --|
 --| Summary: Maximum length.
---| 
+--|
 --| Format: rigMaxLengthR param1, param2
 --|
 --| Parameters: string <pStr>, value <pVal>
@@ -1486,7 +1486,7 @@ end rigMinLengthR
 
 command rigMaxLengthR pStr, pVal
   local tRegEx, tMatchFound
-  
+
 	put "[^0-9]" into tRegEx
 
 	put matchtext(pVal,tRegEx) into tMatchFound
@@ -1515,7 +1515,7 @@ end rigMaxLengthR
 --| Requires: --
 --|
 --| Summary: Exact length.
---| 
+--|
 --| Format: rigExactLengthR param1, param2
 --|
 --| Parameters: string <pStr>, value <pVal>
@@ -1525,7 +1525,7 @@ end rigMaxLengthR
 
 command rigExactLengthR pStr, pVal
   local tRegEx, tMatchFound
-  
+
 	put "[^0-9]" into tRegEx
 
 	put matchtext(pVal,tRegEx) into tMatchFound
@@ -1554,7 +1554,7 @@ end rigExactLengthR
 --| Requires: --
 --|
 --| Summary: Valid email.
---| 
+--|
 --| Format: rigValidEmailR param1
 --|
 --| Parameters: string <pStr>
@@ -1583,7 +1583,7 @@ end rigValidEmailR
 --| Requires: rigTrim(), rigValidEmailR
 --|
 --| Summary: Valid email.
---| 
+--|
 --| Format: rigValidEmailsR param1
 --|
 --| Parameters: string <pStr>
@@ -1593,13 +1593,13 @@ end rigValidEmailR
 
 command rigValidEmailsR pStr
   local tStr, tEmail
-  
+
 	put pStr into tStr
 
 	if the number of items of pStr is 1 then
 		put rigTrim(tStr) into tStr
 		rigValidEmailR tStr
-		
+
 		return the result
 	end if
 
@@ -1633,7 +1633,7 @@ end rigValidEmailsR
 --| Requires: --
 --|
 --| Summary: Validate IP address.
---| 
+--|
 --| Format: rigValidIpR param1, param2
 --|
 --| Parameters: string <pIP>, string <pWhich> "ipv4" or "ipv6" to
@@ -1660,7 +1660,7 @@ end rigValidIpR
 --| Requires: --
 --|
 --| Summary: Alpha.
---| 
+--|
 --| Format: rigAlphaR param1
 --|
 --| Parameters: string <pStr>
@@ -1670,10 +1670,10 @@ end rigValidIpR
 
 command rigAlphaR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([a-z])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaR
 
@@ -1691,7 +1691,7 @@ end rigAlphaR
 --| Requires: --
 --|
 --| Summary: Alpha numeric.
---| 
+--|
 --| Format: rigAlphaNumericR param1
 --|
 --| Parameters: string <pStr>
@@ -1701,10 +1701,10 @@ end rigAlphaR
 
 command rigAlphaNumericR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([a-z0-9])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaNumericR
 
@@ -1722,7 +1722,7 @@ end rigAlphaNumericR
 --| Requires: --
 --|
 --| Summary: Alpha numeric with underscores and dashes.
---| 
+--|
 --| Format: rigAlphaDashR param1
 --|
 --| Parameters: string <pStr>
@@ -1732,10 +1732,10 @@ end rigAlphaNumericR
 
 command rigAlphaDashR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([-a-z0-9_-])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaDashR
 
@@ -1753,7 +1753,7 @@ end rigAlphaDashR
 --| Requires: --
 --|
 --| Summary: Alpha and accented characters.
---| 
+--|
 --| Format: rigAlphaAccentR param1
 --|
 --| Parameters: string <pStr>
@@ -1763,10 +1763,10 @@ end rigAlphaDashR
 
 command rigAlphaAccentR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([a-zàèòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜåÅçÇß])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaAccentR
 
@@ -1784,7 +1784,7 @@ end rigAlphaAccentR
 --| Requires: --
 --|
 --| Summary: Alpha numeric and accented characters.
---| 
+--|
 --| Format: rigAlphaNumericAccentR param1
 --|
 --| Parameters: string <pStr>
@@ -1794,10 +1794,10 @@ end rigAlphaAccentR
 
 command rigAlphaNumericAccentR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([a-z0-9àèòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜåÅçÇß])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaNumericAccentR
 
@@ -1815,7 +1815,7 @@ end rigAlphaNumericAccentR
 --| Requires: --
 --|
 --| Summary: Alpha numeric with underscores, dashes and accented characters.
---| 
+--|
 --| Format: rigAlphaDashAccentR param1
 --|
 --| Parameters: string <pStr>
@@ -1825,10 +1825,10 @@ end rigAlphaNumericAccentR
 
 command rigAlphaDashAccentR pStr
   local tRegEx, tMatchFound
-  
+
 	put "(?i)^([-a-z0-9_-àèòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜåÅçÇß])+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigAlphaDashAccentR
 
@@ -1846,7 +1846,7 @@ end rigAlphaDashAccentR
 --| Requires: --
 --|
 --| Summary: Numeric.
---| 
+--|
 --| Format: rigNumericR param1
 --|
 --| Parameters: string <pStr>
@@ -1856,11 +1856,11 @@ end rigAlphaDashAccentR
 
 command rigNumericR pStr
   local tRegEx, tMatchFound
-  
+
 	-- put "^[\-+]?[0-9]*\.?[0-9]+$" into tRegEx
 	put "^[\-+]?[0-9]*[,\.]?[0-9]+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigNumericR
 
@@ -1878,7 +1878,7 @@ end rigNumericR
 --|
 --| Summary: Is numeric if it consists of digits, optional leading minus sign, optional decimal point,
 --|            and optional "E" or "e" (scientific notation) and !!!!!!!  optional comma.
---| 
+--|
 --| Format: rigIsNumericR param1
 --|
 --| Parameters: string <pStr>
@@ -1888,7 +1888,7 @@ end rigNumericR
 
 command rigIsNumericR pStr
   local tStr
-  
+
 	put pStr into tStr
 
 	if "," is in tStr then
@@ -1913,7 +1913,7 @@ end rigIsNumericR
 --| Requires: --
 --|
 --| Summary: Integer.
---| 
+--|
 --| Format: rigIntegerR param1
 --|
 --| Parameters: string <pStr>
@@ -1924,7 +1924,7 @@ end rigIsNumericR
 command rigIntegerR pStr
 	-- put "^[\-+]?[0-9]+$" into tRegEx
 	-- put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	-- return tMatchFound
 	return pStr is an integer
 end rigIntegerR
@@ -1943,7 +1943,7 @@ end rigIntegerR
 --| Requires: --
 --|
 --| Summary: Decimal number.
---| 
+--|
 --| Format: rigDecimalR param1
 --|
 --| Parameters: string <pStr>
@@ -1953,10 +1953,10 @@ end rigIntegerR
 
 command rigDecimalR pStr
   local tRegEx, tMatchFound
-  
+
 	put "^[\-+]?[0-9]+\.|,[0-9]+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigDecimalR
 
@@ -1974,7 +1974,7 @@ end rigDecimalR
 --| Requires: --
 --|
 --| Summary: Greater than.
---| 
+--|
 --| Format: rigGreaterThanR param1, param2
 --|
 --| Parameters: string <pStr>, number <pMin>
@@ -1986,7 +1986,7 @@ command rigGreaterThanR pStr pMin
 	if isNumber(pStr) is FALSE then
 		return FALSE
 	end if
-	
+
 	return (pStr > pMin)
 end rigGreaterThanR
 
@@ -2004,7 +2004,7 @@ end rigGreaterThanR
 --| Requires: --
 --|
 --| Summary: Less than.
---| 
+--|
 --| Format: rigLessThanR param1, param2
 --|
 --| Parameters: string <pStr>, number <pMax>
@@ -2016,7 +2016,7 @@ command rigLessThanR pStr pMax
 	if isNumber(pStr) is FALSE then
 		return FALSE
 	end if
-	
+
 	return (pStr < pMax)
 end rigLessThanR
 
@@ -2034,7 +2034,7 @@ end rigLessThanR
 --| Requires: --
 --|
 --| Summary: Is a Natural number  (0,1,2,3, etc.).
---| 
+--|
 --| Format: rigIsNaturalR param1
 --|
 --| Parameters: string <pStr>
@@ -2044,10 +2044,10 @@ end rigLessThanR
 
 command rigIsNaturalR pStr
   local tRegEx, tMatchFound
-  
+
 	put "^[0-9]+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	return tMatchFound
 end rigIsNaturalR
 
@@ -2065,7 +2065,7 @@ end rigIsNaturalR
 --| Requires: --
 --|
 --| Summary: Is a Natural number, but not a zero  (1,2,3, etc.).
---| 
+--|
 --| Format: rigIsNaturalNoZeroR param1
 --|
 --| Parameters: string <pStr>
@@ -2075,14 +2075,14 @@ end rigIsNaturalR
 
 command rigIsNaturalNoZeroR pStr
   local tRegEx, tMatchFound
-  
+
 	put "^[0-9]+$" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
 
 	if tMatchFound is not TRUE then
 		return FALSE
 	end if
-	
+
 	if pStr is 0 then
 		return FALSE
 	end if
@@ -2105,7 +2105,7 @@ end rigIsNaturalNoZeroR
 --|
 --| Summary: Tests a string for characters outside of the Base64 alphabet
 --|            as defined by RFC 2045 http://www.faqs.org/rfcs/rfc2045.
---| 
+--|
 --| Format: rigValidBase64R param1
 --|
 --| Parameters: string <pStr>
@@ -2115,10 +2115,10 @@ end rigIsNaturalNoZeroR
 
 command rigValidBase64R pStr
   local tRegEx, tMatchFound
-  
+
 	put "[^a-zA-Z0-9\/\+=]" into tRegEx
 	put matchText(pStr, tRegEx) into tMatchFound
-	
+
 	if tMatchFound is TRUE then
 		return FALSE
 	else
@@ -2140,7 +2140,7 @@ end rigValidBase64R
 --| Requires: rigTrim()
 --|
 --| Summary: Trim whitespace at the start and at the end of a string to validate.
---| 
+--|
 --| Format: rigTrim param1
 --|
 --| Parameters: string <pStr>
@@ -2168,7 +2168,7 @@ end rigTrim
 --|
 --| Summary: This will convert the 128-bit value that Rev returns to a hex format
 --|            similiar to that returned by PHP and other languages.
---| 
+--|
 --| Format: rigMd5 param1
 --|
 --| Parameters: string <pStr>
@@ -2178,9 +2178,9 @@ end rigTrim
 
 command rigMd5 pStr
   local tMD5str, tBinDecodeMD5str
-  
+
   put md5digest(pStr) into tMD5str
-  get binarydecode("H*",tMD5str,tBinDecodeMD5str) 
+  get binarydecode("H*",tMD5str,tBinDecodeMD5str)
   return tBinDecodeMD5str
 end rigMd5
 
@@ -2197,7 +2197,7 @@ end rigMd5
 --| Requires: --
 --|
 --| Summary: Returns a base64 encoded SHA-1 digest of a block of data.
---| 
+--|
 --| Format:  rigSha1 param1
 --|
 --| Parameters: string <pStr>
@@ -2222,7 +2222,7 @@ end rigSha1
 --| Requires: --
 --|
 --| Summary: Returns a base64 encoded SHA3-384 digest of a block of data.
---| 
+--|
 --| Format:  rigSha3 param1
 --|
 --| Parameters: string <pStr>
@@ -2232,12 +2232,12 @@ end rigSha1
 
 command rigSha3 pStr
   set the itemdel to "."
-  
+
   # FALLBACK
 	if (item 1 of the version < 9) then
     return base64Encode(sha1Digest(pStr))
   end if
-  
+
   return base64Encode(messageDigest(pStr, "SHA3-384"))
 end rigSha3
 
@@ -2255,7 +2255,7 @@ end rigSha3
 --|
 --| Summary: This handler allows HTML to be safely shown in a form.
 --|            Special characters are converted.
---| 
+--|
 --| Format: _rigPrepForForm param1
 --|
 --| Parameters: string <pData>
@@ -2265,7 +2265,7 @@ end rigSha3
 
 private command _rigPrepForForm pData
   local tData, tKey, tVal
-  
+
 	put pData into tData
 
 	if tData is an array then
@@ -2307,7 +2307,7 @@ end _rigPrepForForm
 --| Requires: --
 --|
 --| Summary: Prep URL.
---| 
+--|
 --| Format: rigPrepURL param1
 --|
 --| Parameters: string <pStr>
@@ -2317,7 +2317,7 @@ end _rigPrepForForm
 
 command rigPrepURL pStr
   local tStr
-  
+
 	put pStr into tStr
 
 	if (tStr is "http://") or (tStr is empty) then
@@ -2345,7 +2345,7 @@ end rigPrepURL
 --| Requires: rigStripImgTags()
 --|
 --| Summary: Strip image tags. Calls function in Input lib.
---| 
+--|
 --| Format: rigStripImageTags param1
 --|
 --| Parameters: string <pStr>
@@ -2372,7 +2372,7 @@ end rigStripImageTags
 --| Requires: rigXssClean()
 --|
 --| Summary: XSS clean.
---| 
+--|
 --| Format: rigXssClean param1
 --|
 --| Parameters: string <pStr>
@@ -2397,7 +2397,7 @@ end rigXssClean
 --| Requires: --
 --|
 --| Summary: Convert REV / LC tags to entities.
---| 
+--|
 --| Format: rigEncodeRevTags param1
 --|
 --| Parameters: string <pStr>
@@ -2407,7 +2407,7 @@ end rigXssClean
 
 command rigEncodeRevTags pStr
   local tStr
-  
+
 	put pStr into tStr
 
 	replace "<?rev" with "&lt;?rev" in tStr
@@ -2434,7 +2434,7 @@ end rigEncodeRevTags
 --| Requires: rigHtmlSpecialChars()
 --|
 --| Summary: Convert special characters to HTML entities.
---| 
+--|
 --| Format: rigHtmlSpecialChars param1
 --|
 --| Parameters: string <pStr>
@@ -2444,14 +2444,14 @@ end rigEncodeRevTags
 
 command rigHtmlSpecialChars pStr
   local tStr, tModStr
-  
+
 	put pStr into tStr
 
 	if numToCodepoint(2) is in tStr then
 		replace numToCodepoint(2) with quote in tStr
 	end if
 
-	put rigHtmlSpecialChars(tStr) into tModStr	
+	put rigHtmlSpecialChars(tStr) into tModStr
 
 	if quote is in tModStr then
 		replace quote with numToCodepoint(2) in tModStr
@@ -2476,7 +2476,7 @@ end rigHtmlSpecialChars
 --| Requires: --
 --|
 --| Summary: Define a group name for a set o of validation rules.
---| 
+--|
 --| Format: rigAddValidationGrp [param1]
 --|
 --| Parameters: string <pGroup> (optional)
@@ -2486,7 +2486,7 @@ end rigHtmlSpecialChars
 
 command rigAddValidationGrp pGroup
   put pGroup into sGroupName
-  
+
   if pGroup <> empty then
     put 0 into sGroupRulesIndex
   end if
@@ -2507,7 +2507,7 @@ end rigAddValidationGrp
 --| Requires: --
 --|
 --| Summary: Add rules to array in validation configuration file.
---| 
+--|
 --| Format: rigAddValidationRules param1, param2, param3, param4
 --|
 --| Parameters: string <pField> the field name, string <pLabel> the field label,
@@ -2545,7 +2545,7 @@ end rigAddValidationRules
 --| Requires: --
 --|
 --| Summary: Get rule names, prep methods, field data.
---| 
+--|
 --| Format:  rigFormvalidationGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -2557,7 +2557,7 @@ function rigFormvalidationGet pWhat
   if pWhat is among the keys of sFormValidA then
     return sFormValidA[pWhat]
   end if
-   
+
   return empty
 end rigFormvalidationGet
 
@@ -2575,7 +2575,7 @@ end rigFormvalidationGet
 --| Requires: --
 --|
 --| Summary: Setter for rule names, prep methods.
---| 
+--|
 --| Format:  rigFormvalidationSet param1, param2
 --|
 --| Parameters: string <pKey> sFormValidA array key, mixed <pVal>

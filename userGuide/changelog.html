@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version210">Version 2.1.0</a></li>
 <li><a href="#version205">Version 2.0.5</a></li>
 <li><a href="#version204">Version 2.0.4</a></li>
 <li><a href="#version203">Version 2.0.3</a></li>
@@ -207,6 +208,23 @@
 <li><a href="#version092a">Version Alpha 0.9.2</a></li>
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
+</ul>
+
+
+
+<h2><a id="version210">&nbsp;</a>Version 2.1.0</h2>
+<p>Release Date: 2019-06-28</p>
+
+
+<ul>
+	<li><strong>Added:</strong> One-time password helper used for two-factor authentication.</li>
+	<li><strong>Added:</strong> Two-factor authentication integrated in system/libraries/Authentication.livecodescript.</li>
+	<li><strong>Added:</strong> OTP options to the authentication settings in application/config/authentication.lc.</li>
+	<li><strong>Added:</strong> urlEncodeRFC function to system/revigniter/Common.livecodescript.</li>
+	<li><strong>Changed:</strong> Function rigAuthLoggedIn() in systen/libraries/Authentication.livecodescript. The function now conforms to the needs of two-factor authentication.</li>
+	<li><strong>Changed:</strong> Added license to pagination JS code in system/libraries/Pagination.livecodescript -> rigAjaxPaginationCode.</li>
+	<li><strong>Fixed:</strong> Processing form elements missing id or class name in system/libraries/Jquery.livecodescript -> rigJQajaxForm. This is especially important when CSRF protection is set to TRUE, because the hidden field has a name and no id or class name.</li>
+	<li><strong>Fixed:</strong> Replaced calls to deprecated handlers in system/libraries/Jquery.livecodescript -> rigRunInitialJqueryConfig.</li>
 </ul>
 
 
@@ -1062,7 +1080,7 @@
 <p>
 	<ul>
 		<li>Modified the database library (system/database/DBactiveRec.lc, system/database/DBdriver.lc and system/application/config/database.lc). Now the database settings allow you to specify a local URI used for redirects in case a database error occurs. Please see the <a href="database/configuration.html">Database Configuration</a> section of the User Guide and search for "dbRedirectOnError".</li>
-		<li>Modified system/libraries/Authentication.lc -> rigAuthRegister() and rigAuthForgottenPassword(). Now you can specify custom URI segments used to process user activation and forgotten password requests. Please see the <a href="libraries/authentication.html#handlerreference">Authentication</a> section of the User Guide and search for "rigAuthRegister" and "rigAuthForgottenPassword".</li>
+		<li>Modified system/libraries/Authentication.lc -> rigAuthRegister() and rigAuthForgottenPassword(). Now you can specify custom URI segments used to process user activation and forgotten password requests. Please see the <a href="libraries/authentication/authenticationRef.html">Authentication Handler Reference</a> section of the User Guide and search for "rigAuthRegister" and "rigAuthForgottenPassword".</li>
 		<li>Modified the structure of the PostgreSQL table "users_groups" in the "Authentication" section of the User Guide.</li>
 		<li>Fixed bug in system/libraries/Session.lc -> rigSessDestroy  which caused a database error on calling rigAuthLogout while sessions were set to store data in a database.</li>
 	</ul>
@@ -1093,7 +1111,7 @@
 
 <p>
 	<ul>
-	<li>Added an authentication library. Please see the <a href="libraries/authentication.html">Authentication</a> section of the User Guide.</li>
+	<li>Added an authentication library. Please see the <a href="libraries/authentication/index.html">Authentication</a> section of the User Guide.</li>
 	<li>Finally removed the beta label given that revIgniter has been thoroughly tested long enough since the first alpha release and given that many websites have been successfully built with revIgniter including the presumably largest Hindu website in existence. So, this is the first general release.</li>
 	</ul>
 </p>

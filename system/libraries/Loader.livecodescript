@@ -48,12 +48,12 @@ local sLoaderA, sStackInUse
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -68,12 +68,12 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Loader Library Loaded"
       end if
-      
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -92,7 +92,7 @@ end libraryStack
 --| Requires: rigFetchDirectory()
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -128,7 +128,7 @@ end _rigSetDefaultValues
 --|
 --| Summary: This handler lets users load libraries.
 --|            It is designed to be called from a user's app / module controllers.
---| 
+--|
 --| Format:  rigLoaderLoadLibrary param1[, param2][, param3]
 --|
 --| Parameters: mixed <pLibrary> the names of the libraries to load as array or comma separated list
@@ -139,7 +139,7 @@ end _rigSetDefaultValues
 
 command rigLoaderLoadLibrary pLibrary pParams pModule
   local tParams
-  
+
 	if (pLibrary is not an array) and (pLibrary is "") then
 		return FALSE
 	end if
@@ -182,7 +182,7 @@ end rigLoaderLoadLibrary
 --| Requires: rigShowError, rigLoadDatabase()
 --|
 --| Summary: This handler lets users load models.
---| 
+--|
 --| Format:  rigLoadModel param1[, param2][, param3]
 --|
 --| Parameters: string <pModel> the names of the models to load as array or comma separated list,
@@ -194,7 +194,7 @@ end rigLoaderLoadLibrary
 command rigLoadModel pModel pDBconn pModule
   local tModelsKeyNum, tDBconn, tModel, tModulePath, tFilePrefix, tPath
   local tModelIsInArray, tModelToLoad, tNameLower, tFirstCharUpper
-  
+
   if sLoaderA["riModels"] is an array then
     put the number of lines in the keys of sLoaderA["riModels"] into tModelsKeyNum
   else
@@ -206,7 +206,7 @@ command rigLoadModel pModel pDBconn pModule
   else
     put pDBconn into tDBconn
   end if
-  
+
   put pModel into tModel
   if tModel is an array then
     repeat for each key tKey in tModel
@@ -225,10 +225,10 @@ command rigLoadModel pModel pDBconn pModule
   if tModel is "" then
     exit rigLoadModel
   end if
-  
+
   put empty into tModulePath
   put empty into tFilePrefix
-  
+
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
       # GET PATH TO models FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
@@ -237,7 +237,7 @@ command rigLoadModel pModel pDBconn pModule
   end if
 
   set the itemDelimiter to "/"
-  
+
   # IS THE MODEL IN A SUB-FOLDER? IF SO, PARSE OUT THE FILENAME AND PATH.
   if "/" is in tModel then
     put tModel into tPath
@@ -309,7 +309,7 @@ end rigLoadModel
 --| Requires: rigDB()
 --|
 --| Summary: Database Loader
---| 
+--|
 --| Format:  rigLoadDatabase(param1, param2, param3)
 --|
 --| Parameters: string <pParams> the DB credentials, bool <pReturn>,  bool <pActiveRecord> whether to
@@ -320,7 +320,7 @@ end rigLoadModel
 
 function rigLoadDatabase pParams pReturn pActiveRecord
   local tActiveRecord, tDBresult
-  
+
 	if pActiveRecord is empty then
 		put FALSE into tActiveRecord
 	else
@@ -341,7 +341,7 @@ function rigLoadDatabase pParams pReturn pActiveRecord
 	if pReturn is TRUE then
 		return tDBresult
 	end if
-  
+
 end rigLoadDatabase
 
 
@@ -361,7 +361,7 @@ end rigLoadDatabase
 --| Requires: _rigLoad()
 --|
 --| Summary: This function is used to load views and files.
---| 
+--|
 --| Format:  rigLoadView(param1, param2)
 --|
 --| Parameters: string <pView>, bool <pReturn>
@@ -371,7 +371,7 @@ end rigLoadDatabase
 
 function rigLoadView pView pReturn
   local tReturn, tDataA
-  
+
 	if pReturn is empty then
     set the itemDel to "/"
     # SET TO TRUE FOR MODULES LOADED BY APPLICATION CONTROLLERS
@@ -405,7 +405,7 @@ end rigLoadView
 --| Requires: _rigLoad()
 --|
 --| Summary: This is a generic file loader.
---| 
+--|
 --| Format:  rigLoadFile(param1, param2)
 --|
 --| Parameters: string <pPath>, bool <pReturn>
@@ -415,7 +415,7 @@ end rigLoadView
 
 function rigLoadFile pPath pReturn
   local tReturn, tDataA, tOutput
-  
+
 	if pReturn is empty then
 		put FALSE into tReturn
 	else
@@ -444,7 +444,7 @@ end rigLoadFile
 --| Requires: rigShowError, rigLogMessage
 --|
 --| Summary: This function loads the specified helper file.
---| 
+--|
 --| Format:  rigLoadHelper param1, param2
 --|
 --| Parameters: mixed <pHelpers> helper names as array or a comma separated list, string <pModule> the module name (optional)
@@ -455,7 +455,7 @@ end rigLoadFile
 command rigLoadHelper pHelpers pModule
   local tHelpers, tModulePath, tFilePrefix, tTempHelpers, tExtHelper
   local tBaseHelper, tNumHelpers, tNewHelperKey
-  
+
 	put pHelpers into tHelpers
 	if tHelpers is not an array then
 		if comma is in tHelpers then
@@ -465,10 +465,10 @@ command rigLoadHelper pHelpers pModule
 			put tHelpers into tHelpers[1]
 		end if
 	end if
-  
+
   put empty into tModulePath
   put empty into tFilePrefix
-  
+
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
     # GET PATH TO helpers FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
@@ -517,7 +517,7 @@ command rigLoadHelper pHelpers pModule
     put tNumHelpers + 1 into tNewHelperKey
     put tFilePrefix & tHelper into sLoaderA["riHelpers"][tNewHelperKey]
 
-    rigLogMessage "debug", "Helper loaded: " & tHelper	
+    rigLogMessage "debug", "Helper loaded: " & tHelper
   end repeat
 end rigLoadHelper
 
@@ -538,7 +538,7 @@ end rigLoadHelper
 --|
 --| Summary: This is simply an alias to the above handler in case the
 --|             user has written the plural form of this handler.
---| 
+--|
 --| Format:  rigLoadHelpers param1, param2
 --|
 --| Parameters: mixed <pHelpers>, string <pModule> the module name (optional)
@@ -566,7 +566,7 @@ end rigLoadHelpers
 --| Requires: rigLoadHelper
 --|
 --| Summary: This function redirects legacy rigLoadPlugin calls to handler rigLoadHelper.
---| 
+--|
 --| Format:  rigLoadPlugin param1, param2
 --|
 --| Parameters: mixed <pPlugins> plugin names as array or a comma separated list, string <pModule> the module name (optional)
@@ -595,7 +595,7 @@ end rigLoadPlugin
 --| Summary: This is simply an alias to the above handler in case the
 --|            user has written the plural form of this handler which
 --|            redirects legacy rigLoadPlugin calls to handler rigLoadHelper.
---| 
+--|
 --| Format:  rigLoadPlugins param1, param2
 --|
 --| Parameters: mixed <pPlugins>, string <pModule> the module name (optional)
@@ -622,7 +622,7 @@ end rigLoadPlugins
 --|           _rigExtensionsArrayToList()
 --|
 --| Summary: This function loads the specified LiveCode Builder extension (library).
---| 
+--|
 --| Format:  rigLoadExtension param1[, param2]
 --|
 --| Parameters: mixed <pExtensions> extension names (and optional resource paths relative to
@@ -636,7 +636,7 @@ command rigLoadExtension pExtensions pModule
   local tExtensions, tModulePath, tFolderPrefix, tExtension, tExtExists
   local tExtensionsItem, tExtToLoad, tTempExtensions, tExtExtension
   local tSysExtension, tResourcePath, tNumExtensions, tNewExtensionKey
-	
+
   put pExtensions into tExtensions
   if tExtensions is not an array then
     if comma is in tExtensions then
@@ -646,7 +646,7 @@ command rigLoadExtension pExtensions pModule
       put tExtensions into tExtensions[1]
     end if
   end if
-	
+
   _rigPrepareExtensionsArray tExtensions
 
   put empty into tModulePath
@@ -681,12 +681,12 @@ command rigLoadExtension pExtensions pModule
     else if there is a file tSysExtension then
       put gRigA["BASEPATH"] & "extensions/" & tExtension["extension"] & tExtension["resourcePath"] into tResourcePath
       put tSysExtension into tExtToLoad
-			
+
     else
       put FALSE into tExtExists
       rigShowError "Unable to load the requested file:" && tFolderPrefix & "extensions/" & tExtension["extension"] & "/module.lcm"
     end if
-    
+
     if tExtExists is TRUE then
       if tExtension["resourcePath"] is empty then
         load extension from file tExtToLoad
@@ -720,7 +720,7 @@ end rigLoadExtension
 --|
 --| Summary: This is simply an alias to the above handler in case the
 --|            user has written the plural form of this handler.
---| 
+--|
 --| Format:  rigLoadExtensions param1[, param2]
 --|
 --| Parameters: mixed <pExtensions>, string <pModule> the module name (optional)
@@ -747,7 +747,7 @@ end rigLoadExtensions
 --| Requires: --
 --|
 --| Summary: Prepare array including extensions folder names and resource paths.
---| 
+--|
 --| Format:  _rigPrepareExtensionsArray param1
 --|
 --| Parameters: array <pExtensions>
@@ -757,9 +757,9 @@ end rigLoadExtensions
 
 private command _rigPrepareExtensionsArray @pExtensions
   local tKey, tArrayDataAtIndex
-  
+
   set the itemDel to "/"
-  
+
   repeat for each key tKey in pExtensions
     if "/" is in pExtensions[tKey] then
       put pExtensions[tKey] into tArrayDataAtIndex
@@ -786,7 +786,7 @@ end _rigPrepareExtensionsArray
 --| Requires: --
 --|
 --| Summary: Convert extensions array to a comma delimited list.
---| 
+--|
 --| Format:  _rigExtensionsArrayToList(param1)
 --|
 --| Parameters: array <pExtensions>
@@ -796,14 +796,14 @@ end _rigPrepareExtensionsArray
 
 private function _rigExtensionsArrayToList pExtensions
   local tExtensionsList
-  
+
    repeat for each element tExtension in pExtensions
       put tExtension["extension"] & tExtension["resourcePath"] & comma after tExtensionsList
    end repeat
-   
+
    delete char -1 of tExtensionsList
-   
-   return tExtensionsList 
+
+   return tExtensionsList
 end _rigExtensionsArrayToList
 
 
@@ -821,7 +821,7 @@ end _rigExtensionsArrayToList
 --| Requires: rigLangLoadLang()
 --|
 --| Summary: Loads a language file.
---| 
+--|
 --| Format:  rigLoadLanguage param1, param2, param3
 --|
 --| Parameters: mixed <pFiles>, string <pLang>, string <pModule> the module name (optional)
@@ -831,7 +831,7 @@ end _rigExtensionsArrayToList
 
 command rigLoadLanguage pFiles pLang pModule
   local tFiles
-  
+
 	put pFiles into tFiles
 	if tFiles is not an array then
 		if comma is in tFiles then
@@ -864,7 +864,7 @@ end rigLoadLanguage
 --| Requires: rigLangLoadLang()
 --|
 --| Summary: Loads language files for scaffolding.
---| 
+--|
 --| Format:  rigLoadScaffoldingLanguage(param1, param2, param3)
 --|
 --| Parameters: string <pFile>, string <pLang>, bool <pReturn>
@@ -874,13 +874,13 @@ end rigLoadLanguage
 
 function rigLoadScaffoldingLanguage pFile pLang pReturn
   local tReturn
-  
+
 	if pReturn is empty then
 		put FALSE into tReturn
 	else
 		put pReturn into tReturn
 	end if
-	
+
   # THIRD PARAMETER IS A MODULE NAME (NOT NEEDED WITH SCAFFOLDING)
   get rigLangLoadLang(pFile, pLang, "", tReturn)
 end rigLoadScaffoldingLanguage
@@ -905,7 +905,7 @@ end rigLoadScaffoldingLanguage
 --| Requires: rigLoadConfigFile()
 --|
 --| Summary: Loads a config file.
---| 
+--|
 --| Format:  rigLoadConfig param1, param2, param3, param4
 --|
 --| Parameters: string <pFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name (optional)
@@ -915,7 +915,7 @@ end rigLoadScaffoldingLanguage
 
 command rigLoadConfig pFile pUseSections pFailGracefully pModule
   local tUseSections, tFailGracefully
-  
+
 	if pUseSections is empty then
 		put FALSE into tUseSections
 	else
@@ -924,7 +924,7 @@ command rigLoadConfig pFile pUseSections pFailGracefully pModule
 
 	if pFailGracefully is empty then
 		put FALSE into tFailGracefully
-	else 
+	else
 		put pFailGracefully into tFailGracefully
 	end if
 
@@ -953,7 +953,7 @@ end rigLoadConfig
 --|                    called by the front controller based on whether the
 --|                    second segment of the URL matches the "secret" scaffolding
 --|                    word stored in the application/config/routes.lc.
---| 
+--|
 --| Format:  rigLoadScaffolding param1
 --|
 --| Parameters: string <pTable>
@@ -965,7 +965,7 @@ command rigLoadScaffolding pTable
 	if pTable is FALSE then
 		rigShowError "You must include the name of the table you would like to access when you initialize scaffolding"
 	end if
-	
+
 	_rigSetScaffolding TRUE
 
 	if pTable is "" then
@@ -988,7 +988,7 @@ end rigLoadScaffolding
 --| Requires: _rigLoadStack
 --|
 --| Summary: Load stack files.
---| 
+--|
 --| Format:  rigLoadstack param1[, param2][, param3][, param4]
 --|
 --| Parameters: mixed <pStack> the names of the stacks to load as array or comma separated list
@@ -1001,11 +1001,11 @@ end rigLoadScaffolding
 
 command rigLoadstack pStack pParams pPosition pModule
   local tParams, tPosition, tKey
-  
+
 	if (pStack is not an array) and (pStack is "") then
 		return FALSE
 	end if
-	
+
 	if pParams is not an array then
 		put empty into tParams
 	else
@@ -1019,7 +1019,7 @@ command rigLoadstack pStack pParams pPosition pModule
 	else
 		put "behind" into tPosition
 	end if
-	
+
 	if pStack is an array then
 		repeat for each key tKey in pStack
 			_rigLoadStack pStack[tKey], tParams, tPosition
@@ -1049,7 +1049,7 @@ end rigLoadstack
 --|
 --| Summary: This is simply an alias to the above handler in case the
 --|            user has written the plural form of this handler.
---| 
+--|
 --| Format:  rigLoadstacks param1, param2, param3, param4
 --|
 --| Parameters: mixed <pStack> the names of the stacks to load as array or comma separated list
@@ -1077,7 +1077,7 @@ end rigLoadstacks
 --| Requires: rigShowError, rigLogMessage, rigAppendOutput
 --|
 --| Summary: This function is used to load views and files.
---| 
+--|
 --| Format:  _rigLoad(param1)
 --|
 --| Parameters: array <pDataArray>
@@ -1088,7 +1088,7 @@ end rigLoadstacks
 private function _rigLoad pDataArray
   local tRiView, tRiPath, tRiReturn, tExtension, tExtFound, tRiFile
   local tPageBuffer, tBuffer
-  
+
 	# SET THE DEFAULT DATA VARIABLES
 	repeat for each line tKey in the keys of pDataArray
 		if tKey is "riView" then
@@ -1105,7 +1105,7 @@ private function _rigLoad pDataArray
 
 	# SET THE PATH TO THE REQUESTED FILE
 	if tRiPath is "" then
-		put empty into tExtension -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+		put empty into tExtension -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 		put matchText(tRiView,".+(\.[^\.\/].+)$",tExtension) into tExtFound
 		if tExtFound is TRUE then
 			put tRiView into tRiFile
@@ -1123,20 +1123,20 @@ private function _rigLoad pDataArray
 	else
 		rigShowError "Unable to load the requested file: " & tRiFile
 	end if
-	
+
 	##
 	# MERGING VIEWS
 	#
 	# ALL VIEWS AND NESTED VIEWS ARE MERGED SEPARATELY INTO
 	# THE FINAL OUTPUT DATA WHICH CAN THEN BE POST-PROCESSED
-	# BY THE OUTPUT LIBRARY.  WHY DO WE NEED POST PROCESSING? 
+	# BY THE OUTPUT LIBRARY.  WHY DO WE NEED POST PROCESSING?
 	# FOR ONE THING, IN ORDER TO SHOW THE ELAPSED PAGE LOAD TIME.
 	# UNLESS WE CAN INTERCEPT THE CONTENT RIGHT BEFORE IT'S
 	# SENT TO THE BROWSER AND THEN STOP THE TIMER IT WON'T
 	# BE ACCURATE.
 	##
 	put URL format("binfile:%s", tRiPath) into tPageBuffer
-		
+
   if the result <> empty then
 		rigLogMessage "error", "Failed to read file! System error:" && the sysError
 	else
@@ -1168,7 +1168,7 @@ end _rigLoad
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitLibrary
 --|
 --| Summary: This handler loads the requested library.
---| 
+--|
 --| Format:  _rigLoadLibrary param1, param2, param3
 --|
 --| Parameters: string <pLibrary> the item that is being loaded, array <pParams> any additional parameters,
@@ -1182,7 +1182,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
   local tFirstCharUpper, tNameUCfirst, tNameVariants, tLib, tPrefix
   local tSubLib, tBaseLib, tLibInArray, tIsDuplicate, tPathVariants, tKey
   local tPathVar, tFilePath, tFileIsInArray, tPathNotSpecified
-  
+
 	if sLoaderA["riLoadedFiles"] is an array then
 		put the number of lines in the keys of sLoaderA["riLoadedFiles"] into tLoadedFilesKeyNum
 	else
@@ -1190,22 +1190,22 @@ private command _rigLoadLibrary pLibrary pParams pModule
 	end if
 
 	put pLibrary into tLibrary
-	# GET THE LIBRARY NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.  
-	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE LIBRARY NAME, 
+	# GET THE LIBRARY NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.
+	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE LIBRARY NAME,
 	# BUT WE DON'T WANT A LEADING SLASH
 	if char 1 of tLibrary is "/" then
 		put char 2 to -1 of tLibrary into tLibrary
 	end if
 	replace ".livecodescript" with "" in tLibrary
-  
+
   put empty into tModulePath
-  
+
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
       # GET PATH TO models FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
       put "modules/" & pModule & "/" into tModulePath
   end if
-  
+
 	# WAS THE PATH INCLUDED WITH THE LIBRARY NAME?
 	# WE LOOK FOR A SLASH TO DETERMINE THIS
 	put "" into tSubdir
@@ -1230,7 +1230,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
 
 	repeat for each key tKey in tNameVariants
 		put tNameVariants[tKey] into tLib
-		
+
     # GET PREFIX
     put empty into tPrefix
     # CONSIDER MODULE SETTINGS TOO IF AVAILABLE
@@ -1240,7 +1240,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
     if (tPrefix is empty) or (tPrefix is FALSE) then
       put rigFetchConfigItem("sublibraryPrefix") into tPrefix
     end if
-    
+
 		put gRigA["APPPATH"] & tModulePath & "libraries/" & tSubdir & tPrefix & tLib & ".livecodescript" into tSubLib
 
 		# IS THIS A LIBRARY EXTENSION REQUEST?
@@ -1278,7 +1278,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
 			put tBaseLib into sLoaderA["riLoadedFiles"][tLoadedFilesKeyNum]
 			add 1 to tLoadedFilesKeyNum
 			put tSubLib into sLoaderA["riLoadedFiles"][tLoadedFilesKeyNum]
-		
+
       # WE LEAVE THE PREFIX PARAMETER EMPTY BECAUSE WE SOLELY STORE BASE LIBRARIES IN THE sLoaderA["riLibs"] ARRAY
       _rigRiInitLibrary tLib, "", pParams, pModule
 			exit _rigLoadLibrary
@@ -1292,7 +1292,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
 
 		repeat for each key tKey in tPathVariants
 			put tPathVariants[tKey] into tPathVar
-      
+
       if tKey is 1 then
         put tPathVar & tModulePath & "libraries/" & tSubdir & tLib & ".livecodescript" into tFilePath
       else
@@ -1331,7 +1331,7 @@ private command _rigLoadLibrary pLibrary pParams pModule
 		end repeat
 	end repeat -- for each key tKey in tNameVariants
 
-	# ONE LAST ATTEMPT.  MAYBE THE LIBRARY IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?	
+	# ONE LAST ATTEMPT.  MAYBE THE LIBRARY IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?
 	if tSubdir is "" then
 		put toLower(tLibrary) & "/" & tLib into tPathNotSpecified
 		_rigLoadLibrary tPathNotSpecified, pParams, pModule
@@ -1363,7 +1363,7 @@ end _rigLoadLibrary
 --|
 --| Summary: The config/autoload.lc file contains an array that permits libraries, stacks, a database,
 --|             helpers, extensions, config files, language files and modules to be loaded automatically.
---| 
+--|
 --| Format:  _rigAutoloader param1
 --|
 --| Parameters: string <pModule> the module name (optional)
@@ -1373,13 +1373,13 @@ end _rigLoadLibrary
 
 command _rigAutoloader pModule
   local tAutoload, tConfigToLoad, tLibrariesList, tItemNum, tStacksList
-  
+
  # DON'T LOAD config/autoload.lc file IF A MODULE CONTROLLER IS USED
  # AS APPLICATION CONTROLLER, INSTEAD THE MODULE'S OWN AUTOLOAD FILE WILL BE LOADED
  if (gRigA["module"] <> empty) and (pModule is empty) then
    exit _rigAutoloader
  end if
- 
+
   if pModule is empty then
     -- start using stack (gRigA["APPPATH"] & "config/autoload.livecodescript")
     _rigRequire gRigA["APPPATH"] & "config/autoload" & gRigA["Ext"]
@@ -1388,7 +1388,7 @@ command _rigAutoloader pModule
     # THE MODULE'S AUTOLOAD FILE IS ALREADY LOADED
     put gModuleAutoload into tAutoload
   end if
-  
+
 	if tAutoload is not an array then
 		return FALSE
 	end if
@@ -1397,7 +1397,7 @@ command _rigAutoloader pModule
 	if the number of lines in the keys of tAutoload["config"] > 0 and tAutoload["config"][1] is not "" then
 		repeat for each key tKey in tAutoload["config"]
       put tAutoload["config"][tKey] into tConfigToLoad
-      
+
       if pModule is empty then
         get rigLoadConfigFile(tConfigToLoad)
       else
@@ -1410,7 +1410,7 @@ command _rigAutoloader pModule
 	if tAutoload["helper"] is an array and tAutoload["helper"][1] is not "" then
 		rigLoadHelper tAutoload["helper"], pModule
 	end if
-	
+
 	if tAutoload["extension"] is an array and tAutoload["extension"][1] is not "" then
 		rigLoadExtension tAutoload["extension"], pModule
 	end if
@@ -1457,7 +1457,7 @@ command _rigAutoloader pModule
 		end repeat
 
 	end if
-	
+
 	# LOAD STACKS
 	if tAutoload["stacks"] is an array and tAutoload["stacks"][1] is not "" then
 		put tAutoload["stacks"] into tStacksList
@@ -1488,7 +1488,7 @@ end _rigAutoloader
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
 --|
 --| Summary: This handler loads the requested stack.
---| 
+--|
 --| Format:  _rigLoadStack param1, param2, param3, param4
 --|
 --| Parameters: string <pStack> the stack that is being loaded,
@@ -1506,23 +1506,23 @@ private command _rigLoadStack pStack pParams pPosition pModule
   local tBaseStack, tStackInArray, tIsDuplicate, tPathVariants, tPathVar
   local tFilePath, tFilePathTempA, tFilePathTempB, tFilePathExists
   local tFileIsInArray, tPathNotSpecified
-  
+
 	if sLoaderA["riLoadedStackFiles"] is an array then
 		put the number of lines in the keys of sLoaderA["riLoadedStackFiles"] into tNumLoadedStacks
 	else
 		put 0 into tNumLoadedStacks
 	end if
-	
+
 	put pStack into tStack
-	# GET THE STACK NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.  
-	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE STACK NAME, 
+	# GET THE STACK NAME, AND WHILE WE'RE AT IT TRIM ANY SLASHES.
+	# THE DIRECTORY PATH CAN BE INCLUDED AS PART OF THE STACK NAME,
 	# BUT WE DON'T WANT A LEADING SLASH
 	if char 1 of tStack is "/" then
 		put char 2 to -1 of tStack into tStack
 	end if
-  
+
   put empty into tModulePath
-  
+
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
       # GET PATH TO stacks FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
@@ -1542,7 +1542,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 		# GET PATH SANS FILENAME
 		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
 	end if
-	
+
 	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
 	put toLower(tStack) into tNameLower
 	put toupper(char 1 of tNameLower) into tFirstCharUpper
@@ -1563,13 +1563,13 @@ private command _rigLoadStack pStack pParams pPosition pModule
     if (tPrefix is empty) or (tPrefix is FALSE) then
       put rigFetchConfigItem("sublibraryPrefix") into tPrefix
     end if
-    
+
 		put gRigA["APPPATH"] & tModulePath & "stacks/" & tSubdir & tPrefix & tStackToLoad into tSubStack
-		
+
 		if (char -9 to -1 of tSubStack <> ".livecode") and (char -4 to -1 of tSubStack <> ".rev") then
 			put tSubStack & ".livecode" into tSubStackTempA
 			put tSubStack & ".rev" into tSubStackTempB
-			
+
 			if there is a file tSubStackTempA then
 				put tSubStackTempA into tSubStack
 				put TRUE into tSubStackExists
@@ -1577,21 +1577,21 @@ private command _rigLoadStack pStack pParams pPosition pModule
 				put tSubStackTempB into tSubStack
 				put TRUE into tSubStackExists
 			end	if
-			
+
 		else if there is a file tSubStack then
 			put TRUE into tSubStackExists
 		end if
-	
+
 		# IS THIS A STACK EXTENSION REQUEST?
 		if tSubStackExists is TRUE then
-				
+
 			# CHECK AND CHANGE FILE EXTENSION AS CORE STACKS SOLELY USE "livecode"
 			if (char -4 to -1 of tNameUCfirst is ".rev") then
 				put (char 1 to -5 of tNameUCfirst) & ".livecode" into tNameUCfirst
 			else if (char -9 to -1 of tNameUCfirst <> ".livecode") then
 				put tNameUCfirst & ".livecode" into tNameUCfirst
 			end if
-			
+
 			put gRigA["BASEPATH"] & "stacks/" & tNameUCfirst into tBaseStack
 
 			if there is a file tBaseStack then
@@ -1630,7 +1630,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 			else
 				start using stack tSubStack
 			end if
-		
+
 			add 1 to tNumLoadedStacks
 			put tSubStack into sLoaderA["riLoadedStackFiles"][tNumLoadedStacks]
 
@@ -1653,11 +1653,11 @@ private command _rigLoadStack pStack pParams pPosition pModule
       else
         put tPathVar & "stacks/" & tSubdir & tStackToLoad into tFilePath
       end if
-			
+
 			if (char -9 to -1 of tFilePath <> ".livecode") and (char -4 to -1 of tFilePath <> ".rev") then
 				put tFilePath & ".livecode" into tFilePathTempA
 				put tFilePath & ".rev" into tFilePathTempB
-				
+
 				if there is a file tFilePathTempA then
 					put tFilePathTempA into tFilePath
 					put TRUE into tFilePathExists
@@ -1665,7 +1665,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 					put tFilePathTempB into tFilePath
 					put TRUE into tFilePathExists
 				end	if
-				
+
 			else if there is a file tFilePath then
 				put TRUE into tFilePathExists
 			end if
@@ -1673,7 +1673,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 			if tFilePathExists <> TRUE then
 				next repeat
 			end if
-			
+
 			# SAFETY:  WAS THE STACK ALREADY LOADED BY A PREVIOUS CALL?
 			if sLoaderA["riLoadedStackFiles"] is an array then
 
@@ -1701,7 +1701,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 			else
 				start using stack tFilePath
 			end if
-			
+
 			add 1 to tNumLoadedStacks
 			put tFilePath into sLoaderA["riLoadedStackFiles"][tNumLoadedStacks]
 
@@ -1711,7 +1711,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 		end repeat
 	end repeat -- for each key tKey in tNameVariants
 
-	# ONE LAST ATTEMPT.  MAYBE THE STACK IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?	
+	# ONE LAST ATTEMPT.  MAYBE THE STACK IS IN A SUBDIRECTORY, BUT IT WASN'T SPECIFIED?
 	if tSubdir is "" then
 		put toLower(tStack) & "/" & tStackToLoad into tPathNotSpecified
 		_rigLoadStack tPathNotSpecified, pPosition, pModule
@@ -1740,7 +1740,7 @@ end _rigLoadStack
 --| Requires: --
 --|
 --| Summary: Check if a given library is loaded.
---| 
+--|
 --| Format:  rigLibIsLoaded(param1)
 --|
 --| Parameters: string <pName>
@@ -1750,7 +1750,7 @@ end _rigLoadStack
 
 function rigLibIsLoaded pName
   local tLoadedLibs
-  
+
 	if sLoaderA["riLibs"] is not an array then
 		return FALSE
 	end if
@@ -1777,7 +1777,7 @@ end rigLibIsLoaded
 --| Requires: --
 --|
 --| Summary: Check if a given helper is loaded.
---| 
+--|
 --| Format:  rigHelperIsLoaded(param1)
 --|
 --| Parameters: string <pName>
@@ -1787,7 +1787,7 @@ end rigLibIsLoaded
 
 function rigHelperIsLoaded pName
   local tLoadedHelpers
-  
+
 	if sLoaderA["riHelpers"] is not an array then
 		return FALSE
 	end if
@@ -1814,7 +1814,7 @@ end rigHelperIsLoaded
 --| Requires: --
 --|
 --| Summary: Load config file associated with loaded library.
---| 
+--|
 --| Format:  _rigRiInitLibrary param1, param2, param3
 --|
 --| Parameters: string <pLib> the item that is being loaded, string <pPrefix> (optional),
@@ -1826,7 +1826,7 @@ end rigHelperIsLoaded
 private command _rigRiInitLibrary pLib pPrefix pConfig pModule
   local tConfigFileFound, tLibsKeyNum, tModulePath, tNameLower
   local tFirstCharUpper, tNameUCfirst, tPath, tLibName, tHandler
-  
+
 	put FALSE into tConfigFileFound
 
 	if sLoaderA["riLibs"] is an array then
@@ -1834,7 +1834,7 @@ private command _rigRiInitLibrary pLib pPrefix pConfig pModule
 	else
 		put 0 into tLibsKeyNum
 	end if
-	
+
   # CHECK IF WE ARE DEALING WITH A REQUEST FROM A MODULE
   if pModule <> empty then
       # GET PATH TO models FOLDER OF MODULE RELATIVE TO gRigA["APPPATH"]
@@ -1871,7 +1871,7 @@ private command _rigRiInitLibrary pLib pPrefix pConfig pModule
 	else
 		put pPrefix & pLib into tLibName
 	end if
-	
+
 	add 1 to tLibsKeyNum
 	put tLibName into sLoaderA["riLibs"][tLibsKeyNum]
 
@@ -1899,7 +1899,7 @@ end _rigRiInitLibrary
 --| Requires: --
 --|
 --| Summary: Load config file associated with loaded stack.
---| 
+--|
 --| Format:  _rigRiInitStack param1, param2, param3
 --|
 --| Parameters: string <pStack> the item that is being loaded, string <pPrefix>, array <pConfig>
@@ -1910,7 +1910,7 @@ end _rigRiInitLibrary
 private command _rigRiInitStack pStack pPrefix pConfig
   local tConfigFileFound, tStacksKeyNum, tNameLower, tFirstCharUpper
   local tNameUCfirst, tPath, tStackName, tHandler
-  
+
 	put FALSE into tConfigFileFound
 
 	if sLoaderA["riStacks"] is an array then
@@ -1945,7 +1945,7 @@ private command _rigRiInitStack pStack pPrefix pConfig
 	end if
 
 	put pPrefix & pStack into tStackName
-	
+
 	add 1 to tStacksKeyNum
 	put tStackName into sLoaderA["riStacks"][tStacksKeyNum]
 
@@ -1974,7 +1974,7 @@ end _rigRiInitStack
 --| Requires: --
 --|
 --| Summary: This function checks if the database libraries are loaded.
---| 
+--|
 --| Format:  rigFetchDBlibLoaded()
 --|
 --| Parameters: --
@@ -2009,7 +2009,7 @@ end rigFetchDBlibLoaded
 --| Requires: --
 --|
 --| Set path to view files (needed by Scaffolding.lc and modules).
---| 
+--|
 --| Format:  _rigSetViewPath param1
 --|
 --| Parameters: string <pPath>
@@ -2038,7 +2038,7 @@ end _rigSetViewPath
 --| Requires: --
 --|
 --| Summary: Get path to view files (needed by modules).
---| 
+--|
 --| Format:  _rigGetViewPath()
 --|
 --| Parameters: --
@@ -2066,7 +2066,7 @@ end _rigGetViewPath
 --| Requires: rigShowError, rigLogMessage
 --|
 --| Summary: Load a modules autoload file.
---| 
+--|
 --| Format:  rigLoadAutoLoad param1, param2
 --|
 --| Parameters: string <pModule>, bool <pFailGracefully>
@@ -2076,18 +2076,18 @@ end _rigGetViewPath
 
 command rigLoadAutoLoad pModule pFailGracefully
   local tFailGracefully, tFilepath
-  
+
   if pFailGracefully is empty then
     put FALSE into tFailGracefully
-  else 
+  else
     put pFailGracefully into tFailGracefully
   end if
-  
+
   # CHECK IF autoload FILE EXISTS
   set the itemDel to "/"
   -- put gRigA["APPPATH"] & "modules/" & pModule & "/config/autoload" & ".livecodescript" into tFilepath
   put gRigA["APPPATH"] & "modules/" & pModule & "/config/autoload" & gRigA["EXT"] into tFilepath
-  
+
   if there is a file tFilepath then
   else
     if pFailGracefully is TRUE then
@@ -2104,7 +2104,7 @@ command rigLoadAutoLoad pModule pFailGracefully
 
   -- _rigModuleAutoloader pModule
   _rigAutoloader pModule
-  
+
   return the result
 end rigLoadAutoLoad
 
@@ -2122,7 +2122,7 @@ end rigLoadAutoLoad
 --| Requires: --
 --|
 --| Summary: Get loader array variable value.
---| 
+--|
 --| Format:  rigLoaderGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -2134,7 +2134,7 @@ function rigLoaderGet pWhat
   if pWhat is among the keys of sLoaderA then
     return sLoaderA[pWhat]
   end if
-   
+
   return empty
 end rigLoaderGet
 
@@ -2151,7 +2151,7 @@ end rigLoaderGet
 --| Requires: --
 --|
 --| Summary: Setter for loader variables.
---| 
+--|
 --| Format:  rigLoaderSet param1, param2
 --|
 --| Parameters: string <pKey> sLoaderA array key, mixed <pVal>

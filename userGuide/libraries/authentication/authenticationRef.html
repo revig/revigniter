@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication Handler Reference : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">Handler Reference</li>
+            <li id="tocListItem" class="pull-right"><a href="../../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>Authentication Handler Reference</h1>
+
+<p>Please find OTP specific handlers in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
+
+<h3>rigAuthLogin( <var>pIdentity</var>, <var>pPassword</var>, <var>pRemember</var> )</h3>
+
+<p>Logs the user in.</p>
+
+<p>pIdentity is a string to identify the user. Usually this is an email address or a username.<br />
+  pPassword is a password string.<br />
+  pRemember (optional) is a boolean which determines if the user wants to be remembered.</p>
+
+<p>This function returns TRUE if the user was successfully logged in, otherwise it returns FALSE.</p>
+
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">put FALSE into tRemember
+# CHECK IF THERE IS A POST VARIABLE remember
+put rigVarPost("remember[]") into tPostRemember
+if tPostRemember &lt;> FALSE then
+  # CHECK VALUE
+  if tPostRemember[1] is 1 then
+    put TRUE into tRemember
+  end if
+end if
+
+get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
+</code></pre>
+</div>
+
+
+<p class="important"><strong>Note:</strong> For security reasons think about setting <var>gConfig["sess_expire_on_close"]</var> in <dfn>application/config/config.lc</dfn> to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the <var>pRemember</var> parameter is not set to TRUE.</p>
+
+
+<h3>rigAuthLogout</h3>
+
+<p>Logs the user out.</p>
+
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code>command logout
+  # LOG USER OUT
+  rigAuthLogout
+
+  # GET AUTHENTICATION MESSAGES
+  put rigAuthMessages() into tMessages
+
+  rigSetSessFlashdata "message", tMessages
+  
+  # REDIRECT TO THE LOGIN PAGE
+  rigRedirect "/auth/login"
+end logout
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthRegister( <var>pUsername</var>, <var>pPassword</var>, <var>pEmail</var>, <var>pExtraData</var>, <var>pGroupname</var> )</h3>
+
+<p>Register (create) a new user.</p>
+
+<p>pUsername is a username.<br />
+  pPassword is the user's password.<br />
+  pEmail is the user's email address.<br />
+  pExtraData (optional) is an array containing additional data like first name, last name etc.<br />
+  pGroupname (optional) is a numbered array used to define which groups the user belongs to.</p>
+
+<p>This function returns a user ID if the user was successfully created, otherwise it returns FALSE.</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET ACCOUNT DATA
+if $_POST is an array then
+  put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
+  
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
+end if
+
+put 2 into tGroups["1"]
+put 3 into tGroups["2"]
+
+put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
+</code></pre>
+</div>
+
+
+<p class="important"><strong>Note:</strong> The default URI used for activating a new user is "auth/activate". This means you should provide a controller called "auth" including a handler called "activate" to process user activation. To specify your own URI segments you need to set the fourth parameter using the array key "activationLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
+
+
+
+<h3>rigAuthUpdate( <var>pID</var>, <var>pData</var> )</h3>
+
+<p>Update user data.</p>
+
+
+<p>pID is the user's ID.<br />
+  pData is an array containing the update data.</p>
+  
+  <p>This function returns TRUE if the user was successfully updated, otherwise it returns FALSE.</p>
+  
+  
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET USER ID
+put rigFetchSegment(3) into tID
+
+# CHECK POST ARRAY DATA
+if $_POST is an array then
+  # VALIDATE THE REQUEST
+  if tID &lt;> rigVarPOST("hiddenUserID") then
+    rigLogMessage "error", "This form post did not pass the security check.", TRUE
+  end if
+  
+  put rigVarPost("phone") into tData["phone"]
+  
+  get rigAuthUpdate(tID, tData)
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthDeleteUser( <var>pID</var> )</h3>
+
+<p>Delete a user.</p>
+
+<p>The parameter is the user's ID.</p>
+
+<p>This function returns TRUE if the user was successfully deleted, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET USER ID
+put rigFetchSegment(3) into tID
+
+# CHECK THE USER LEVEL
+if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
+  put rigAuthDeleteUser(tID) into tDeleted
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthForgottenPassword( <var>pIdentity</var>, <var>pExtraData</var> )</h3>
+
+<p>Resets the user's password by emailing the user a reset code.</p>
+
+<p>pIdentity is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+
+<p>pExtraData (optional) is an array containing additional data. Currently the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password.</p>
+
+<p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case <var>sAuthenticationConf["sendEmails"]</var> is set to FALSE.</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
+put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
+
+if tResetPasswordSent is TRUE then
+  put rigAuthMessages() into tMessages
+  
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth/login"
+else
+  put rigAuthErrors() into tErrors
+  
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/forgotPassword"
+end if
+</code></pre>
+</div>
+
+
+<p class="important"><strong>Note:</strong> The default URI used to process forgotten password requests is "auth/resetPassword". This means you should provide a controller called "auth" including a handler called "resetPassword". To specify your own URI segments you need to set the second parameter using the array key "passwordResetLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
+
+
+
+<h3>rigAuthLoggedIn()</h3>
+
+<p>Check to see if a user is logged in.</p>
+
+<p>This function returns TRUE if the user is logged in, otherwise it returns FALSE.</p>
+
+<p>In case two-factor authentication is activated the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password the function returns "pendingOTPsetup". Please read about OTP in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN
+if rigAuthLoggedIn() is FALSE then
+  rigRedirect "/auth/login"
+end if
+</code></pre>
+</div>
+
+
+<h3>rigAuthIsAdmin( <var>pID</var> )</h3>
+
+
+<p>Check to see if the currently logged in user is an administrator.</p>
+
+<p>The optional parameter is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
+
+<p>This function returns TRUE if the user is an admin, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># CHECK THE USER LEVEL
+if rigAuthIsAdmin() is FALSE then
+  # REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
+  rigRedirect "/"
+end if
+</code></pre>
+</div>
+
+
+<h3>rigAuthInGroup( <var>pGroup</var>, <var>pID</var> )</h3>
+
+
+<p>Check if user is a member of a specific group.</p>
+
+<p>pGroup is an integer (the group ID) or a string (the group name) or an array of strings and integers.<br />
+  pID (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
+
+<p>This function returns TRUE if the user is a member of any given group, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># SINGLE GROUP (BY NAME)
+put "other" into tGroup
+if rigAuthInGroup(tGroup) then
+  rigSetSessFlashdata "message", "You must be a member of group other to view this page."
+  rigRedirect "/"
+end if
+
+# SINGLE GROUP (BY ID)
+put 1 into tGroup
+if rigAuthInGroup(tGroup) then
+  rigSetSessFlashdata "message", "You must be a member of group 1 to view this page."
+  rigRedirect "/"
+end if
+
+# MULTIBLE GROUPS (BY NAME)
+put "members" into tGroups[1]
+put "other" into tGroups[2]
+if rigAuthInGroup(tGroups) then
+  rigSetSessFlashdata "message", "You must be a member of group members or of group other to view this page."
+  rigRedirect "/"
+end if
+
+# MULTIBLE GROUPS (BY ID)
+put 2 into tGroups[1]
+put 3 into tGroups[2]
+if rigAuthInGroup(tGroups) then
+  rigSetSessFlashdata "message", "You must be a member of group 2 or of group 3 to view this page."
+  rigRedirect "/"
+end if
+
+# MULTIBLE GROUPS (BY NAME AND ID)
+put 2 into tGroups[1]
+put "other" into tGroups[2]
+if rigAuthInGroup(tGroups) then
+  rigSetSessFlashdata "message", "You must be a member of group 2 or of group other to view this page."
+  rigRedirect "/"
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthUsernameCheck( <var>pUsername</var> )</h3>
+
+
+<p>Check if there is an entry in the DB regarding the username provided.</p>
+
+<p>The parameter is the user's username.</p>
+
+<p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code># GET POST DATA
+if $_POST is an array then
+  put rigVarPOST("username") into tUsername
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
+
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
+end if
+
+put 2 into tGroups["1"]
+put 3 into tGroups["2"]
+
+if rigAuthUsernameCheck(tUsername) is FALSE then
+  put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthEmailCheck( <var>pEmail</var> )</h3>
+
+<p>Check if there is an entry in the DB regarding the email address provided.</p>
+
+<p>The parameter is the user's email address.</p>
+
+<p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># GET POST DATA
+if $_POST is an array then
+  put rigVarPOST("username") into tUsername
+  put rigVarPOST("password") into tPassword
+  put rigVarPOST("email") into tEmail
+
+  put rigVarPOST("first") into tExtraData["firstName"]
+  put rigVarPOST("last") into tExtraData["lastName"]
+  put rigVarPOST("company") into tExtraData["company"]
+  put rigVarPOST("phone") into tExtraData["phone"]
+end if
+
+put 2 into tGroups["1"]
+put 3 into tGroups["2"]
+
+if rigAuthUsernameCheck(tEmail) is FALSE then
+  put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tRegistration
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthIdentityCheck( <var>pIdentity</var> )</h3>
+
+
+<p>Identity check for remembered users (auto-login).</p>
+
+<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+
+<p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code># GET USER DATA
+put rigAuthUser(tID) into tQueryResult
+if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+  put rigDbRow() into tUser
+end if
+
+put rigVarPOST("identity") into tData["identity"]
+put rigVarPOST("first") into tData["firstName"]
+put rigVarPOST("last") into tData["lastName"]
+
+if (tData["identity"] is tUser["username"]) or (tData["identity"] is tUser["email"]) or (rigAuthIdentityCheck(tData["identity"]) is FALSE) then
+  get rigAuthUpdate(tUser["id"], tData)
+end if
+</code></pre>
+</div>
+
+
+<h3>rigAuthIsMaxLoginAttemptsExceeded( <var>pIdentity</var> )</h3>
+
+<p>If login attempt tracking is enabled, checks to see if the number of failed login attempts for this identity or ip address has been exceeded. Login attempt limits are not enforced in the library.</p>
+
+<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+
+<p>This function returns TRUE if maximum login attempts is exceeded, FALSE if not or if login attempts not tracked.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code>put "rabit@revigniter.com" into tIdentity
+
+if rigAuthIsMaxLoginAttemptsExceeded(tIdentity) is TRUE then
+  rigSetSessFlashdata "message", "You have too many login attempts."
+  rigRedirect "/"
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthGetAttemptsNum( <var>pIdentity</var> )</h3>
+
+<p>Get number of login attempts from a given ipAddress or identity.</p>
+
+<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+
+<p>This function returns the number of failed login attempts for this identity or ip address.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code>put "rabit@revigniter.com" into tIdentity
+
+put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthIncreaseLoginAttempts( <var>pIdentity</var> )</h3>
+
+<p>If login attempt tracking is enabled, records another failed login attempt for this identity or ip address. This function is automatically called by the rigAuthLogin() function in case the login failed.</p>
+
+<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+
+<p>This function returns TRUE if increasing the number was successful, otherwise it returns FALSE.</p>
+
+
+
+<h3>rigAuthClearLoginAttempts( <var>pIdentity</var>, <var>pExpirePeriod</var> )</h3>
+
+<p>Clears all failed login attempt records for this identity or this ip address. This function is automatically called by the rigAuthLogin() function if the login succeeded.</p>
+
+<p>pIdentity is a string which represents the user's identity as defined in the authentication.lc config file.<br />
+  pExpirePeriod (optional) is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
+  
+
+<h3>rigAuthUser( <var>pID</var> )</h3>
+
+<p>Get a particular user.</p>
+
+<p>The optional parameter is the user's id (integer). If a user id is not passed the id of the currently logged in user will be used.</p>
+
+<p>This function returns FALSE in case there is no user data with the given id, otherwise it returns the result of the database query as an array.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET USER DATA
+put rigAuthUser() into tQueryResult
+if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+  put rigDbRow() into tUser
+end if
+
+# NOW tUser CONTAINS THE USER RECORD
+# tUser["id"], tUser["ipAddress"], tUser["username"], tUser["password"], tUser["email"],
+# tUser["activationCode"], tUser["forgottenPasswordCode"], tUser["forgottenPasswordTime"],
+# tUser["rememberCode"], tUser["createdOn"], tUser["lastLogin"], tUser["active"],
+# tUser["firstName"], tUser["lastName"], tUser["company"], tUser["phone"]
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthUsers( <var>pGroupIDs</var> )</h3>
+
+<p>Get the users.</p>
+
+<p>The optional parameter is an array of group IDs or a single ID.</p>
+
+<p>This function returns FALSE in case there is no user data with the given group id, otherwise it returns the users who are members of the groups specified by the parameter or all users if the parameter is empty.</p>
+
+<p>Example:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET ALL ADMINS
+put rigAuthUsers(1) into tAdmins
+
+# tAdmins IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
+# CONTAINING ALL USERS WHO ARE A MEMBER OF THE ADMIN GROUP
+
+put 0 into tCounter
+repeat for each key tRecord in tAdmins
+  add 1 to tCounter
+
+  put tAdmins[tCounter] into tUser
+
+  put empty into tRowData
+
+  put "Username:" && tUser[3] & ", " after tRowData
+  put "First Name:" && tUser[13] & ", " after tRowData
+  put "Last Name:" && tUser[14] & ", " after tRowData
+  delete char -2  to -1 of tRowData
+
+  put tRowData & "&lt;br />" & return after tResultData
+end repeat
+</code></pre>
+</div>
+
+
+<h3>rigAuthGroup( <var>pID</var> )</h3>
+
+<p>Get a specific group.</p>
+
+<p>The parameter is a group id.</p>
+
+<p>This function returns FALSE in case there is no group data with the given id, otherwise it returns a group, the result of the database query as a numbered array.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET MEMBERS GROUP
+put rigAuthGroup(2) into tGroup
+
+# tGroup IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
+# CONTAINING 1 GROUP RECORD
+
+put tGroup[1] into tGroupRow
+
+put "Group ID:" && tGroupRow[1] & ", " after tRowData
+put "Group Name:" && tGroupRow[2] & ", " after tRowData
+put "Group Description:" && tGroupRow[3] & ", " after tRowData
+delete char -2  to -1 of tRowData
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthGroups()</h3>
+
+<p>Get the groups.</p>
+
+<p>This function returns FALSE in case there are no groups, otherwise it returns all groups, the result of the database query as a numbered array.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET GROUPS
+put rigAuthGroups() into tGroups
+
+# tGroups IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
+# CONTAINING ALL GROUP RECORDS
+
+put 0 into tCounter
+repeat for each key tRecord in tGroups
+  add 1 to tCounter
+
+  put tGroups[tCounter] into tGroupRow
+
+  put empty into tRowData
+
+  put "Group ID:" && tGroupRow[1] & ", " after tRowData
+  put "Group Name:" && tGroupRow[2] & ", " after tRowData
+  put "Group Description:" && tGroupRow[3] & ", " after tRowData
+  delete char -2  to -1 of tRowData
+
+  put tRowData & "&lt;br />" & return after tResultData
+end repeat
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthUserGroups( <var>pID</var> )</h3>
+
+<p>Get groups of a specific user.</p>
+
+<p>The optional parameter is a user's id.</p>
+
+<p>This function returns FALSE in case the user with the given id is not a member of any group, otherwise it returns all groups the user is a member of, the result of the database query as a numbered array.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET ALL GROUPS THE ADMIN IS A MEMBER OF
+put rigAuthUserGroups(1) into tUserGroups
+
+# tUserGroups IS NOW A MULTIDIMENSIONAL NUMBERED ARRAY
+# CONTAINING GROUP RECORDS
+
+put 0 into tCounter
+repeat for each key tRecord in tUserGroups
+  add 1 to tCounter
+
+  put tUserGroups[tCounter] into tGroupRow
+
+  put empty into tRowData
+
+  put tGroupRow[2] into tRowData
+
+  put tRowData & "," after tResultData
+end repeat
+if char -1 of tResultData is "," then
+  delete char -1 of tResultData
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthAddToGroup <var>pGroupID</var>, <var>pUserID</var></h3>
+
+<p>Add user to a group.</p>
+
+<p>pGroupID is an integer, the ID of the group a user should be added to.<br />
+  pUserID is the user's ID.</p>
+  
+  <p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># GET USER ID
+put rigFetchSegment(3) into tUserID
+
+# CHECK POST ARRAY DATA
+if $_POST is an array then
+  # VALIDATE THE REQUEST
+  if tUserID &lt;> rigVarPOST("hiddenUserID") then
+    rigLogMessage "error", "This form post did not pass the security check.", TRUE
+  else
+  
+    rigAuthAddToGroup 3, tUserID
+  end if
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthRemoveFromGroup( <var>pGroupIDs</var>, <var>pUserID</var> )</h3>
+
+<p>Remove user from group.</p>
+
+<p>pGroupIDs is an array of group IDs or a single group ID.<br />
+  pUserID is the user's id.</p>
+
+<p>This function returns TRUE if the user was successfully removed from the group(s), otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># PASS AN ARRAY OF GROUP ID's AND A USER ID
+put 2 into tGroups[1]
+put 5 into tGroups[2]
+put 7 into tGroups[3]
+get rigAuthRemoveFromGroup(tGroupIDs, tUserID)
+
+# PASS A SINGLE ID AND USER ID
+get rigAuthRemoveFromGroup(tGroupID, tUserID)
+
+# PASS AN EMPTY GROUP ID TO REMOVE THE USER FROM ALL GROUPS
+get rigAuthRemoveFromGroup(, tUserID)
+</code></pre>
+</div>
+
+
+
+
+<h3>rigAuthMessages( <var>pPrefix</var>, <var>pSuffix</var> )</h3>
+
+<p>Get authentication messages.</p>
+
+<p>pPrefix (optional) is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
+  pSuffix (optional) is an ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
+  
+<p>This function returns all authentication messages as a string.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
+if tRegistration &lt;> FALSE then    
+  put rigAuthMessages() into tMessages
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthSetMessageDelimiters <var>pStartDelimiter</var>, <var>pEndDelimiter</var></h3>
+
+<p>Set the message delimiters.</p>
+
+<p>pStartDelimiter is the starting delimiter.<br />
+  pEndDelimiter is the ending delimiter.</p>
+  
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
+if tRegistration &lt;> FALSE then
+  rigAuthSetMessageDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
+    
+  put rigAuthMessages() into tMessages
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthErrors( <var>pPrefix</var>, <var>pSuffix</var> )</h3>
+
+<p>Get authentication errors.</p>
+
+<p>pPrefix (optional) is the starting delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
+  pSuffix (optional) is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
+  
+<p>This function returns authentication errors as a string.</p>
+
+
+<div class="codeSample">
+<pre><code>get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
+
+# IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
+if it is FALSE then
+  put rigAuthErrors() into tErrors
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/login"
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthSetErrorDelimiters <var>pStartDelimiter</var>, <var>pEndDelimiter</var></h3>
+
+<p>Set the message delimiters.</p>
+
+<p>pStartDelimiter is the starting delimiter.<br />
+  pEndDelimiter is the ending delimiter.</p>
+  
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code>rigAuthSetErrorDelimiters "&lt;p>&lt;strong>", "&lt;/strong>&lt;/p>"
+  
+get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
+
+# IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
+if it is FALSE then
+  put rigAuthErrors() into tErrors
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/login"
+end if
+</code></pre>
+</div>
+
+
+
+
+<h3>rigAuthFetchConfigItem( <var>pItem</var>, <var>pIndex</var> )</h3>
+
+<p>Get a value from the configuration settings array.</p>
+
+<p>pItem is the array key.<br />
+  pIndex (optional) is the second array key.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># GET MIN / MAX PASSWORD LENGTH
+put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
+put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
+
+# CHANGE PASSWORD
+put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
+put tUser[tIdentityCol] into tIdentity
+put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
+
+# GET THE NAME OF THE USERS TABLE
+put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
+</code></pre>
+</div>
+
+
+
+
+<h3>rigAuthActivate( <var>pID</var>, <var>pCode</var> )</h3>
+
+<p>Activate a user account.</p>
+
+<p>pID is the user's id.<br />
+  pCode (optional) is the activation code.</p>
+  
+<p>This function returns TRUE in case user activation was successful, otherwise it returns FALSE.</p>
+  
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># GET USER ID AND ACTIVATION CODE
+put rigFetchSegment(3) into tID
+put rigFetchSegment(4) into tCode
+put FALSE into tActivation
+
+# ACTIVATE USER
+if tCode &lt;> FALSE then
+  put rigAuthActivate(tID, tCode) into tActivation
+  
+else if rigAuthIsAdmin() is TRUE then
+  put rigAuthActivate(tID) into tActivation
+end if    
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthDeactivate( <var>pID</var> )</h3>
+
+<p>Deactivate a user.</p>
+
+<p>The parameter is the user's id.</p>
+
+<p>This function returns TRUE in case user deactivation was successful, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code>if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
+  put rigAuthDeactivate(tID) into tDeactivated
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthForgottenPasswordCheck( <var>pCode</var> )</h3>
+
+<p>Check the code used to reset a password.</p>
+
+<p>The parameter is the "forgotten password" code.</p>
+
+<p>This function returns user data as an array in case the provided code was checked successfully, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code>put rigFetchSegment(3) into tForgottenPasswordCode
+
+if tForgottenPasswordCode is FALSE then
+  rigShow404
+end if
+
+put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthClearForgottenPasswordCode( <var>pCode</var> )</h3>
+
+<p>Delete the forgotten password code.</p>
+
+<p>The parameter is the code used to reset a password.</p>
+
+<p>This function returns TRUE in case the code used to reset a password was deleted successfully, otherwise it returns FALSE.</p>
+
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code>if tUser["id"] &lt;> rigVarPOST("hiddenUserID") then
+  get rigAuthClearForgottenPasswordCode(tForgottenPasswordCode)
+  rigLogMessage "error", "This reset password form post did not pass the security check.", TRUE
+end if
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthResetPassword( <var>pIdentity</var>, <var>pNewPassword</var> )</h3>
+
+<p>Replace password with a new one.</p>
+
+<p>pIdentity is the user's email address or whatever is used to identify a user.<br />
+  pNewPassword is the new password.</p>
+  
+<p>This function returns TRUE in case the old password was replaced successfully, otherwise it returns FALSE.</p>
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code># RESET THE PASSWORD
+put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
+put tUser[tIdentityCol] into tIdentity
+
+put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
+</code></pre>
+</div>
+
+
+
+<h3>rigAuthChangePassword( <var>pIdentity</var>, <var>pOldPassword</var>, <var>pNewPassword</var> )</h3>
+
+<p>Validate and change a password.</p>
+
+
+<p>pIdentity is the user's email address or whatever is used to identify a user.<br />
+  pOldPassword is the old password.<br />
+  pNewPassword is the new password.</p>
+  
+<p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>  
+
+
+<p>Example:</p>
+
+
+<div class="codeSample">
+<pre><code>put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
+put rigSessUserdata(tIdentityCol) into tIdentity
+
+put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newPassword")) into tChange
+</code></pre>
+</div>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationConfig.html"> Authentication Configuration</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="authenticationHooks.html">Authentication Hooks</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

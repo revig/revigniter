@@ -96,7 +96,7 @@ put TRUE into sAuthenticationConf["useAuthEncryptionKey"]
 #
 # NOTE: If you make changes to the settings above please adjust your
 # form validation accordingly.
-# 
+#
 # 'emailActivation' = Email activation for registration.
 # 'manualActivation' = Manual activation for registration.
 # 'defaultGroup' = Name of default group.
@@ -135,7 +135,7 @@ put FALSE into sAuthenticationConf["enableAuthenticationHooks"]
 #--------------------------------------------------------------------------
 #
 # 'sendEmails' = Send emails using revIgniters Email.lc library. False means: Return identity,
-# user id, email address and activation code. 
+# user id, email address and activation code.
 # 'emailConfig' = Use 'file' if you want emails to be sent using revIgniter's default
 # configuration or, if present, an email config file. Use an array to manually set your email configuration.
 #
@@ -205,6 +205,39 @@ put "</p>" into sAuthenticationConf["errorSuffix"]
 
 
 
+##
+#--------------------------------------------------------------------------
+# OTP Options
+#--------------------------------------------------------------------------
+#
+# 'otpEnabled' = Determines the activation of OTP features.
+# 'otp' = The name of the table used for storing shared secrets.
+# 'otpIssuer' = A string identifying a provider or service managing the user's account. Used to prevent collisions in case the same account is used for different providers.
+# 'otpAlgo' = The type of cryptographic message digest the OTP algorithm is based on. Values can be SHA1, SHA256 or SHA512.
+# 'otpDigits' = Determines the length of an OTP. Usually this is 6 or 8.
+# 'otpPeriod' = Defines a period that a TOTP code will be valid for. Default value is 30.
+# 'otpTimeWindow' = A delay window to compare OTPs not only in the current period but also with the next and previous time steps. Default is 2.
+# 'otpQRecc' = QR code error correction. Values are L, M, Q, H or X.
+# 'otpQRsize' = Size of the QR code displayed (1 to 10 inclusively).
+# 'otpQRmask' = QR code mask pattern (1 to 7 inclusively or Auto).
+#
+##
+
+put FALSE into sAuthenticationConf["otpEnabled"]
+put "otp" into sAuthenticationConf["tables"]["otp"]
+put "The Issuer" into sAuthenticationConf["otpIssuer"]
+put "SHA1" into sAuthenticationConf["otpAlgo"]
+put 6 into sAuthenticationConf["otpDigits"]
+put 30 into sAuthenticationConf["otpPeriod"]
+put 2 into sAuthenticationConf["otpTimeWindow"]
+
+put "M" into sAuthenticationConf["otpQRecc"]
+put 4 into sAuthenticationConf["otpQRsize"]
+put "Auto" into sAuthenticationConf["otpQRmask"]
+
+
+
+
 /*----------------------------------------------------------------------
 --| FUNCTION rigAuthFetchConfigItem
 --|
@@ -215,7 +248,7 @@ put "</p>" into sAuthenticationConf["errorSuffix"]
 --| Requires: --
 --|
 --| Summary: Fetch an authentication config file item.
---| 
+--|
 --| Format:  rigAuthFetchConfigItem(param1, param2)
 --|
 --| Parameters: string <pItem> the config item name, string <pIndex> the index name (optional)
@@ -241,7 +274,7 @@ function rigAuthFetchConfigItem pItem pIndex
 
 		put sAuthenticationConf[pIndex][pItem] into tPref
 	end if
-	
+
 	return tPref
 end rigAuthFetchConfigItem
 

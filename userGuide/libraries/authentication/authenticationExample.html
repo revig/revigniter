@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication Example : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">Example</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>Usage Example</h1>
+
+
+<p>Before explaining what is needed to set up the authentication sample, let's describe the scenario:</p>
+
+<ol>
+  <li>There is an admin page which is used to manage user data (example.com/auth/).</li>
+  <li>Opening this page without being logged in as a member of the admin group redirects you to a login page (example.com/auth/login/).</li>
+  <li>A form is displayed on this page requiring you to fill in your credentials.</li>
+  <li>Now if you submit something invalid, the form is redisplayed containing an error message describing the problem.</li>
+  <li>If the verification of the data you supply is successful you will be redirected either to a member's page or to the admin page mentioned earlier, depending on which group you belong to.</li>
+  <li>Then, let's say you forgot your password.</li>
+  <li>Open the "Forgot Password" page, enter your email address and hit the send button (example.com/auth/forgotPassword/).</li>
+  <li>Now, while you are redirected to the login page there is an email waiting for you containing a link to a "Reset Password" page (example.com/auth/resetPassword/).</li>
+  <li>On this page enter a new password, confirm it and hit the submit button.</li>
+  <li>You are redirected to the login page where you can enter your new password.</li>
+  <li>To change your password open the "Change Password" page (example.com/auth/changePassword/), enter your email address and your password. Hit the submit button.</li>
+  <li>The procedure which follows is similar to the forgotten password one.</li>
+  <li>Now, let's say you logged in as a member of the admin group.</li>
+  <li>You will be presented with the administration page (example.com/auth/).</li>
+  <li>There you can create new users, activate / deactivate, edit and delete users.</li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>The sample environment consists of the following files:</p>
+
+<ol>
+  <li>A <a href="../../general/controllers.html">controller</a> to receive and process the submitted data.</li>
+  <li>A form validation file.</li>
+  <li>Various <a href="../../general/views.html">view</a> files containing forms or a users table.</li>
+  <li>A CSS file.</li>
+</ol>
+
+<p>Let's create those files.</p>
+
+  <ul>
+    <li><a href="#thecontroller">The Controller</a></li>
+    <li><a href="#thevalidationfile">The Form Validation File</a></li>
+    <li><a href="#theviewfiles">The View Files</a></li>
+    <li><a href="#cssfile">The Css File</a></li>
+  </ul>
+
+<a id="thecontroller"></a>
+
+<h2>The Controller</h2>
+
+<p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your application/controllers/ folder.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?lc
+
+put "auth,index,login,logout,createUser,activate,deactivate,forgotPassword" & \
+",resetPassword,changePassword,editUser,deleteUser" into gControllerHandlers
+
+
+command auth
+ # LOAD HELPERS
+ put "form,url,asset" into tHelpers
+ rigLoadHelper tHelpers
+
+ # LOAD LIBRARIES
+ rigLoaderLoadLibrary "Formvalidation"
+ rigLoaderLoadLibrary "Table"
+ rigLoaderLoadLibrary "Authentication"
+end auth
+
+
+
+command index
+ # SET PAGE TITLE
+ put "Auth Test Admin Page" into gData["pageTitle"]
+
+ # CHECK IF USER IS LOGGED IN
+ if rigAuthLoggedIn() is FALSE then
+  # REDIRECT TO LOGIN PAGE AND KEEP FLASHDATA IN CASE THERE IS ANY
+  if rigSessFlashdata("message") &lt;> FALSE then
+   rigKeepSessFlashdata "message"
+  end if
+
+  rigRedirect "auth/login"
+
+ else if rigAuthIsAdmin() is FALSE then
+  # REDIRECT TO HOME PAGE BECAUSE USER IS NOT ALLOWED TO VIEW ADMIN CONTENT
+  rigRedirect "/"
+
+ else
+  # ADMIN CONTENT
+  #
+  # SHOW VALIDATION ERRORS OR FLASH DATA IN CASE THERE IS ANY
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # BUILD USERS LIST
+  put rigAuthUsers() into tResult -- gData["users"]
+
+  if tResult &lt;> FALSE then
+
+   # BUILD MODIFIED RESULT ARRAY
+   put 0 into tIncr
+   repeat for each key tKey in tResult
+    add 1 to tIncr
+
+    put tResult[tIncr] into tRow
+    # GET FIRST, LAST NAME AND EMAIL
+    put tRow[13] into tResultData[tIncr][1]
+    put tRow[14] into tResultData[tIncr][2]
+    put tRow[5] into tResultData[tIncr][3]
+
+    # GET USERS GROUPS
+    put rigAuthUserGroups(tRow[1]) into tGroupsResult
+
+    if tGroupsResult &lt;> FALSE then
+     repeat for each key tKey in tGroupsResult
+      put tGroupsResult[tKey] into tGroupsRow
+      # GET NAME OF GROUP
+      put tGroupsRow[2] & ", " after tResultData[tIncr][4]
+     end repeat
+     delete char -2 to -1 of tResultData[tIncr][4]
+    end if
+
+    # GET STATUS
+    if tRow[12] is 1 then
+     put rigAnchor("auth/deactivate/" & tRow[1], "Active") into tResultData[tIncr][5]
+    else
+     put rigAnchor("auth/activate/" & tRow[1], "Inactive") into tResultData[tIncr][5]
+    end if
+
+    # LINK TO EDIT USER
+    put rigAnchor("auth/editUser/" & tRow[1], "Edit") into tResultData[tIncr][6]
+
+    # LINK TO DELETE USER
+    put rigAnchor("auth/deleteUser/" & tRow[1], "Delete") into tResultData[tIncr][7]
+   end repeat
+
+   # NOW GENERATE A USERS TABLE
+   put "First Name", "Last Name", "Email", "Groups", "Status", "Edit, Delete" into tFieldnames
+   rigSetTableHeading tFieldnames
+   put rigGenerateTable(tResultData) into gData["usersTable"]
+  end if
+
+  # LINK TO LOGOUT
+  put rigAnchor("auth/logout/", "Logout") into gData["logoutLink"]
+
+  # LINK TO CREATE NEW USER
+  put rigAnchor("auth/createUser/", "Create New User.") into gData["newUserLink"]
+
+  # LOAD THE VIEW FILE
+  get rigLoadView("auth/authMainView")
+ end if
+end index
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add the following code which is needed to create new user data.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command createUser
+ put "Auth Test Create User" into gData["pageTitle"]
+
+ # CHECK IF USER IS NOT LOGGED IN OR IF USER IS NOT ADMIN
+ if (rigAuthLoggedIn() is not TRUE) or (rigAuthIsAdmin() is not TRUE) then
+  # REDIRECT TO ADMIN (LOGIN) PAGE
+  rigRedirect "auth/"
+ end if
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/createUser", tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("User Data") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("First Name:", "first", tLabelAttr) into gData["firstLabel"]
+ put rigFormLabel("Last Name:", "last", tLabelAttr) into gData["lastLabel"]
+ put rigFormLabel("Company:", "company", tLabelAttr) into gData["companyLabel"]
+ put rigFormLabel("Email:", "email", tLabelAttr) into gData["emailLabel"]
+ put rigFormLabel("Phone:", "phone", tLabelAttr) into gData["phoneLabel"]
+ put rigFormLabel("Password:", "password", tLabelAttr) into gData["passwordLabel"]
+ put rigFormLabel("Confirm Password:", "passwordConfirm", tLabelAttr) into gData["passwordConfirmLabel"]
+
+ # SUBMIT
+ put "createSubmit" into tSubmitArr["name"]
+ put "Create User" into tSubmitArr["value"]
+ put "createBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["createSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/createUser") is TRUE then
+  # GET ACCOUNT DATA
+  if $_POST is an array then
+   put toLower(rigVarPOST("first")) && toLower(rigVarPOST("last")) into tUserName
+   put rigVarPOST("password") into tPassword
+   put rigVarPOST("email") into tEmail
+
+   put rigVarPOST("first") into tExtraData["firstName"]
+   put rigVarPOST("last") into tExtraData["lastName"]
+   put rigVarPOST("company") into tExtraData["company"]
+   put rigVarPOST("phone") into tExtraData["phone"]
+  end if
+
+  put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData) into tRegistration
+
+  # CHECK REGISTRATION DATA
+  if tRegistration is an array then
+   rigLogMessage "debug", "identity:" && tRegistration["identity"]
+   rigLogMessage "debug", "id:" && tRegistration["id"]
+   rigLogMessage "debug", "email:" && tRegistration["email"]
+   rigLogMessage "debug", "activationCode:" && tRegistration["activationCode"]
+  else
+   rigLogMessage "debug", "tRegistration:" && tRegistration
+  end if
+  rigLogMessage "debug", "messages:" && rigAuthMessages()
+  #
+
+  # IF REGISTRATION WAS SUCCESSFUL REDIRECT TO AUTHENTICATION PAGE
+  if tRegistration &lt;> FALSE then    
+   put rigAuthMessages() into tMessages
+   rigSetSessFlashdata "message", tMessages
+   rigRedirect "/auth"
+  else
+   # LOAD VIEW
+   put rigAuthErrors() into tErrors
+   rigSetSessFlashdata "message", tErrors
+   rigRedirect "auth/createUser"
+  end if
+
+ else -- if rigFormValidRun("auth/createUser") is TRUE then
+
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # INPUT FIELDS
+  put "first" into tInFirstArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("first") into tInFirstArr["value"]
+  put "50" into tInFirstArr["maxlength"]
+  put rigFormInput(tInFirstArr) into gData["first"]
+
+  put "last" into tInLastArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("last") into tInLastArr["value"]
+  put "50" into tInLastArr["maxlength"]
+  put rigFormInput(tInLastArr) into gData["last"]
+
+  put "company" into tInCompArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("company") into tInCompArr["value"]
+  put "100" into tInCompArr["maxlength"]
+  put rigFormInput(tInCompArr) into gData["company"]
+
+  put "email" into tInMailArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("email") into tInMailArr["value"]
+  put "50" into tInMailArr["maxlength"]
+  put rigFormInput(tInMailArr) into gData["email"]
+
+  put "phone" into tInPhoneArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("phone") into tInPhoneArr["value"]
+  put "50" into tInPhoneArr["maxlength"]
+  put rigFormInput(tInPhoneArr) into gData["phone"]
+
+  put "password" into tInPassArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("password") into tInPassArr["value"]
+  put "50" into tInPassArr["maxlength"]
+  put rigFormInput(tInPassArr) into gData["password"]
+
+  put "passwordConfirm" into tInPassConfArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("passwordConfirm") into tInPassConfArr["value"]
+  put "50" into tInPassConfArr["maxlength"]
+  put rigFormInput(tInPassConfArr) into gData["passwordConfirm"]
+ end if
+
+ # LOAD VIEW
+ get rigLoadView("auth/createUserMainView")
+end createUser
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add the login handler.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command login
+ put "Auth Test Login" into gData["pageTitle"]
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/login", tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Login Form") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("Email/Username:", "identity", tLabelAttr) into gData["identityLabel"]
+ put rigFormLabel("Password:", "password", tLabelAttr) into gData["passwordLabel"]
+ put rigFormLabel("Remember me:", "remember", tLabelAttr) into gData["rememberLabel"]
+
+ # SUBMIT
+ put "loginSubmit" into tSubmitArr["name"]
+ put "Login" into tSubmitArr["value"]
+ put "loginBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["loginSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/login") is TRUE then
+
+  # CHECK IF USER IS LOGGING IN    
+  # REMEMBER ME CHECK BOX
+  put FALSE into tRemember
+  # CHECK IF THERE IS A POST VARIABLE remember
+  put rigVarPost("remember[]") into tPostRemember
+  if tPostRemember &lt;> FALSE then
+   # CHECK VALUE
+   if tPostRemember[1] is 1 then
+    put TRUE into tRemember
+   end if
+  end if
+
+  get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
+
+  # IF LOGIN IS SUCCESSFUL REDIRECT BACK TO HOME PAGE, auth IN THIS CASE
+  if it is TRUE then
+   put rigAuthMessages() into tMessages
+   rigSetSessFlashdata "message", tMessages
+   rigRedirect "/auth"
+
+  else
+   # IF LOGIN IS UNSUCCESSFUL REDIRECT BACK TO THE LOGIN PAGE
+   put rigAuthErrors() into tErrors
+   rigSetSessFlashdata "message", tErrors
+   rigRedirect "auth/login"
+  end if
+
+
+ else
+  # THE USER IS NOT LOGGING IN, SHOW THE LOGIN PAGE
+  # SHOW VALIDATION ERRORS OR FLASH DATA IF THERE IS ANY
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # INPUT FIELDS
+  put "identity" into tInIdentArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("identity") into tInIdentArr["value"]
+  put "100" into tInIdentArr["maxlength"]
+  put rigFormInput(tInIdentArr) into gData["identity"]
+
+  put "password" into tInPwArr["name"]
+  put "40" into tInPwArr["maxlength"]
+  put rigFormInput(tInPwArr) into gData["loginPassword"]
+
+  # CHECKBOX
+  put rigSetCheckbox("remember[]", "1", TRUE) into gData["chbRemember"]
+
+  get rigLoadView("auth/loginMainView")
+
+ end if -- if rigFormValidRun("auth/login") is TRUE then
+end login
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Of course there is a logout handler.</p>
+
+<div class="codeSample">
+<pre><code>command logout
+ # LOG USER OUT
+ rigAuthLogout
+
+ # REDIRECT TO THE LOGIN PAGE
+ put rigAuthMessages() into tMessages
+
+ rigSetSessFlashdata "message", tMessages
+ rigRedirect "/auth/login"
+end logout
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add the following user activation handler.</p>
+
+<div class="codeSample">
+<pre><code>command activate
+ # GET USER ID AND ACTIVATION CODE
+ put rigFetchSegment(3) into tID
+ put rigFetchSegment(4) into tCode
+ put FALSE into tActivation
+
+ # ACTIVATE USER
+ if tCode &lt;> FALSE then
+  put rigAuthActivate(tID, tCode) into tActivation
+
+ else if rigAuthIsAdmin() is TRUE then
+  put rigAuthActivate(tID) into tActivation
+ end if
+
+ # CHECK IF ACTIVATION WAS SUCCESSFUL AND ACT ACCORDINGLY
+ if tActivation is TRUE then
+  # REDIRECT TO THE AUTH PAGE
+  put rigAuthMessages() into tMessages
+
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
+
+ else
+  put rigAuthErrors() into tErrors
+
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/forgotPassword"
+ end if  
+end activate
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add the user deactivation handler.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command deactivate
+ put "Auth Test Deactivate" into gData["pageTitle"]
+
+ put rigFetchSegment(3) into tID
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/deactivate/" & tID, tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Deactivate User Form") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("Yes:", "confirm", tLabelAttr) into gData["confirmRadioYesLabel"]
+ put rigFormLabel("No:", "confirm", tLabelAttr) into gData["confirmRadioNoLabel"]
+
+ # SUBMIT
+ put "deactivateSubmit" into tSubmitArr["name"]
+ put "Submit" into tSubmitArr["value"]
+ put "submitBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["deactivateSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/deactivate") is TRUE then
+  put FALSE into tDeactivated
+
+  # CHECK IF DEACTIVATION WAS CONFIRMED
+  if rigVarPOST("confirm") is "yes" then
+
+   # VALIDATE THE REQUEST
+   if tID &lt;> rigVarPOST("id") then
+    rigLogMessage "error", "This user deactivation form post did not pass the security check.", TRUE
+   end if
+
+   # CHECK THE USER LEVEL
+   if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
+    put rigAuthDeactivate(tID) into tDeactivated
+   end if
+
+  end if
+
+  # GET AUTH MESSAGES AND REDIRECT TO THE AUTH PAGE
+  if tDeactivated is TRUE then
+   put rigAuthMessages() into tMessages
+  else
+   put rigAuthErrors() into tMessages
+  end if
+
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
+
+ else
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # HIDDEN USER ID FIELD
+  put rigAuthUser(tID) into tQueryResult
+  if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+   put rigDbRow() into tUserRow
+   put tUserRow["id"] into tUserID
+   put tUserRow["username"] into gData["userName"]
+  else
+   put empty into tUserID
+  end if
+  put rigFormHidden("id", tUserID) into gData["hiddenUserID"]
+
+  # RADIO BUTTONS
+  put rigSetRadio("confirm", "yes") into gData["confirmYes"]
+  put rigSetRadio("confirm", "no", TRUE) into gData["confirmNo"]
+
+  # LOAD VIEWS
+  get rigLoadView("auth/deactivateUserMainView")
+ end if
+end deactivate
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add the "forgotPassword" handler.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command forgotPassword
+ put "Auth Test Forgot Password" into gData["pageTitle"]
+
+ put rigSessFlashdata("message") into gData["message"]
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/forgotPassword/", tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Forgot Password Form") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("Email:", "email", tLabelAttr) into gData["emailLabel"]
+
+ # SUBMIT
+ put "forgotSubmit" into tSubmitArr["name"]
+ put "Submit" into tSubmitArr["value"]
+ put "forgotBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["forgotSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/forgotPassword") is TRUE then
+  # CALL THE rigAuthForgottenPassword FUNCTION TO SEND A RESET CODE TO THE USER
+  put rigAuthForgottenPassword(rigVarPOST("email")) into tResetPasswordSent
+
+  if tResetPasswordSent is TRUE then
+   put rigAuthMessages() into tMessages
+
+   rigSetSessFlashdata "message", tMessages
+   rigRedirect "/auth/login"
+  else
+   put rigAuthErrors() into tErrors
+
+   rigSetSessFlashdata "message", tErrors
+   rigRedirect "auth/forgotPassword"
+  end if    
+
+ else
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # INPUT FIELDS
+  put "email" into tInMailArr["name"]
+  # RE-POPULATE THE FIELD
+  put rigSetValue("email") into tInMailArr["value"]
+  put "50" into tInMailArr["maxlength"]
+  put rigFormInput(tInMailArr) into gData["email"]
+ end if
+
+ # LOAD VIEW
+ get rigLoadView("auth/forgotPasswordMainView")
+end forgotPassword
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add code which is used to reset passwords in case a user forgot the password or sent a change password request.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command resetPassword
+ put "Auth Test Reset Password" into gData["pageTitle"]
+
+ put rigFetchSegment(3) into tForgottenPasswordCode
+
+ if tForgottenPasswordCode is FALSE then
+  rigShow404
+ end if
+
+ put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
+
+ if tUser &lt;> FALSE then
+  put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
+  put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
+
+  # FORM OPEN
+  put "authForm" into tFormAttr["id"]
+  put rigFormOpen("auth/resetPassword/" & tForgottenPasswordCode, tFormAttr) into gData["formOpen"]
+
+  # FIELD SET
+  put rigFormFieldset("Reset Password Form") into gData["fsOpen"]
+  put rigFormFieldsetClose() into gData["fsClose"]
+
+  # FORM LABELS
+  put "formLabel" into tLabelAttr["class"]
+  put rigFormLabel("New Password (at least" && tMinPasswordLength && "characters long):", \
+"newPassword", tLabelAttr) into gData["newPasswordLabel"]
+  put rigFormLabel("Confirm New Password:", "newPasswordConfirm", tLabelAttr) into gData["newPasswordConfirmLabel"]
+
+  # SUBMIT
+  put "resetSubmit" into tSubmitArr["name"]
+  put "Change" into tSubmitArr["value"]
+  put "resetBtn" into tSubmitArr["id"]
+  put rigSubmitButton(tSubmitArr) into gData["resetSubmit"]
+
+  # IF THE CODE IS VALID DISPLAY THE PASSWORD RESET FORM
+  # FORM VALIDATION
+  if rigFormValidRun("auth/resetPassword") is TRUE then
+
+   # VALIDATE THE REQUEST
+   if tUser["id"] &lt;> rigVarPOST("hiddenUserID") then
+    get rigAuthClearForgottenPasswordCode(tForgottenPasswordCode)
+    rigLogMessage "error", "This reset password form post did not pass the security check.", TRUE
+
+   else
+    # CHANGE THE PASSWORD
+    put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
+    put tUser[tIdentityCol] into tIdentity
+
+    put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
+
+    if tChange is TRUE then
+     # THE PASSWORD WAS SUCCESSFULLY CHANGED
+     put rigAuthMessages() into tMessages
+
+     rigSetSessFlashdata "message", tMessages
+     logout
+
+    else
+     put rigAuthErrors() into tErrors
+
+     rigSetSessFlashdata "message", tErrors
+     rigRedirect "auth/resetPassword/" & tForgottenPasswordCode
+    end if
+
+   end if
+
+  else
+   # DISPLAY THE FORM
+   # SET THE FLASH DATA ERROR MESSAGE IF THERE IS ONE
+   put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+   if tErrors &lt;> empty then
+    put tErrors into gData["message"]
+   else
+    put rigSessFlashdata("message") into gData["message"]
+    if gData["message"] is FALSE then
+     put empty into gData["message"]
+    end if
+   end if
+
+   # INPUT FIELDS
+   put "newPassword" into tInPassArr["name"]
+   put tMaxPasswordLength into tInPassArr["maxlength"]
+   put "password" into tInPassArr["type"]
+   put rigFormInput(tInPassArr) into gData["newPassword"]
+
+   put "newPasswordConfirm" into tInPassConfArr["name"]
+   put tMaxPasswordLength into tInPassConfArr["maxlength"]
+   put "password" into tInPassConfArr["type"]
+   put rigFormInput(tInPassConfArr) into gData["newPasswordConfirm"]
+
+   put "hiddenUserID" into tInUserIdArr["name"]
+   put tUser["id"] into tInUserIdArr["value"]
+   put "hidden" into tInUserIdArr["type"]
+   put rigFormInput(tInUserIdArr) into gData["hiddenUserID"]
+
+   # LOAD VIEW
+   get rigLoadView("auth/resetPasswordMainView")
+
+  end if -- if rigFormValidRun("auth/forgotPassword") is TRUE then
+
+ else  -- if tUser &lt;> FALSE then
+  put rigAuthErrors() into tErrors
+
+  rigSetSessFlashdata "message", tErrors
+  rigRedirect "auth/forgotPassword"
+ end if -- if tUser &lt;> FALSE then
+
+end resetPassword
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+
+<p>Add a handler which is used to change passwords.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command changePassword
+ put "Auth Test Change Password" into gData["pageTitle"]
+
+ # CHECK IF USER IS LOGGED IN
+ if rigAuthLoggedIn() is FALSE then
+  rigRedirect "/auth/login"
+ end if
+
+ # GET USER DATA
+ put rigAuthUser() into tQueryResult
+
+ if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+  put rigDbRow() into tUser
+ end if
+
+ # GET MIN / MAX PASSWORD LENGTH
+ put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
+ put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/changePassword/", tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Change Password Form") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("Old Password:", "oldPassword", tLabelAttr) into gData["oldPasswordLabel"]
+ put rigFormLabel("New Password (at least" && tMinPasswordLength && "characters long):", \
+"newPassword", tLabelAttr) into gData["newPasswordLabel"]
+ put rigFormLabel("Confirm New Password:", "newPasswordConfirm", tLabelAttr) into gData["newPasswordConfirmLabel"]
+
+ # SUBMIT
+ put "changeSubmit" into tSubmitArr["name"]
+ put "Change" into tSubmitArr["value"]
+ put "changeBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["changeSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/changePassword") is TRUE then
+  put rigAuthFetchConfigItem("identityColumn") into tIdentityCol
+  put rigSessUserdata(tIdentityCol) into tIdentity
+
+  put rigAuthChangePassword(tIdentity, rigVarPOST("oldPassword"), rigVarPOST("newPassword")) into tChange
+
+  if tChange is TRUE then
+   # THE PASSWORD WAS SUCCESSFULLY CHANGED
+   put rigAuthMessages() into tMessages
+
+   rigSetSessFlashdata "message", tMessages
+   logout
+
+  else
+   put rigAuthErrors() into tErrors
+
+   rigSetSessFlashdata "message", tErrors
+   rigRedirect "auth/changePassword/" & tForgottenPasswordCode
+  end if
+
+ else
+  # DISPLAY THE FORM
+  # SET THE FLASH DATA ERROR MESSAGE IF THERE IS ONE
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # INPUT FIELDS
+  put "oldPassword" into tInOldPassArr["name"]
+  put tMaxPasswordLength into tInOldPassArr["maxlength"]
+  put "password" into tInOldPassArr["type"]
+  put rigFormInput(tInOldPassArr) into gData["oldPassword"]
+
+  put "newPassword" into tInPassArr["name"]
+  put tMaxPasswordLength into tInPassArr["maxlength"]
+  put "password" into tInPassArr["type"]
+  put rigFormInput(tInPassArr) into gData["newPassword"]
+
+  put "newPasswordConfirm" into tInPassConfArr["name"]
+  put tMaxPasswordLength into tInPassConfArr["maxlength"]
+  put "password" into tInPassConfArr["type"]
+  put rigFormInput(tInPassConfArr) into gData["newPasswordConfirm"]
+
+  put "hiddenUserID" into tInUserIdArr["name"]
+  put tUser["id"] into tInUserIdArr["value"]
+  put "hidden" into tInUserIdArr["type"]
+  put rigFormInput(tInUserIdArr) into gData["hiddenUserID"]
+
+  # LOAD VIEW
+  get rigLoadView("auth/changePasswordMainView")
+
+ end if -- if rigFormValidRun("auth/resetPassword") is TRUE then
+end changePassword
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Add a handler which is used to edit user data.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command editUser
+ put "Auth Test Edit User" into gData["pageTitle"]
+
+ # CHECK IF USER IS NOT LOGGED IN OR IF USER IS NOT ADMIN
+ if (rigAuthLoggedIn() is not TRUE) or (rigAuthIsAdmin() is not TRUE) then
+  # REDIRECT TO AUTH PAGE
+  rigRedirect "auth/"
+ end if
+
+ # GET MIN / MAX PASSWORD LENGTH
+ put rigAuthFetchConfigItem("minLengthPassword") into tMinPasswordLength
+ put rigAuthFetchConfigItem("maxLengthPassword") into tMaxPasswordLength
+
+ # GET USER ID
+ put rigFetchSegment(3) into tID
+
+ # GET STORED USER DATA
+ put rigAuthUser(tID) into tQueryResult
+ if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+  put rigDbRow() into tUser
+ end if
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/editUser/" & tID, tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Edit User") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("First Name:", "first", tLabelAttr) into gData["firstLabel"]
+ put rigFormLabel("Last Name:", "last", tLabelAttr) into gData["lastLabel"]
+ put rigFormLabel("Company:", "company", tLabelAttr) into gData["companyLabel"]
+ put rigFormLabel("Phone:", "phone", tLabelAttr) into gData["phoneLabel"]
+ put rigFormLabel("Password:", "password", tLabelAttr) into gData["passwordLabel"]
+ put rigFormLabel("Confirm Password:", "passwordConfirm", tLabelAttr) into gData["passwordConfirmLabel"]
+
+ # SUBMIT
+ put "editSubmit" into tSubmitArr["name"]
+ put "Save User" into tSubmitArr["value"]
+ put "editBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["editSubmit"]
+
+ # CHECK POST ARRAY DATA
+ if $_POST is an array then
+  # VALIDATE THE REQUEST
+  if tID &lt;> rigVarPOST("hiddenUserID") then
+   rigLogMessage "error", "This form post did not pass the security check.", TRUE
+  end if
+
+  put rigVarPost("first") into tData["firstName"]
+  put rigVarPost("last") into tData["lastName"]
+  put rigVarPost("company") into tData["company"]
+  put rigVarPost("phone") into tData["phone"]
+
+  # UPDATE PASSWORD IF IT WAS POSTED
+  if rigVarPost("password") &lt;> empty then
+   rigSetRules "password", "Password", \
+"requiredR|minLengthR[" & tMinPasswordLength & "]|maxLengthR[" & tMaxPasswordLength & "]|matchesR[passwordConfirm]|xssClean"
+   rigSetRules "passwordConfirm", "Confirm Password", "requiredR"
+
+   put rigVarPost("password") into tData["password"]
+  end if
+
+  # FORM VALIDATION
+  if rigFormValidRun("auth/editUser") is TRUE then
+   get rigAuthUpdate(tUser["id"], tData)
+
+   rigSetSessFlashdata "message", "User saved."
+   # REDIRECT TO AUTH PAGE
+   rigRedirect "auth/"
+  end if
+
+ end if -- if $_POST is an array then
+ put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+ if tErrors &lt;> empty then
+  put tErrors into gData["message"]
+ else
+  put rigSessFlashdata("message") into gData["message"]
+  if gData["message"] is FALSE then
+   put empty into gData["message"]
+  end if
+ end if
+
+ # INPUT FIELDS
+ put "first" into tInFirstArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("first", tUser["firstName"]) into tInFirstArr["value"]
+ put "50" into tInFirstArr["maxlength"]
+ put rigFormInput(tInFirstArr) into gData["first"]
+
+ put "last" into tInLastArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("last", tUser["lastName"]) into tInLastArr["value"]
+ put "50" into tInLastArr["maxlength"]
+ put rigFormInput(tInLastArr) into gData["last"]
+
+ put "company" into tInCompArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("company", tUser["company"]) into tInCompArr["value"]
+ put "100" into tInCompArr["maxlength"]
+ put rigFormInput(tInCompArr) into gData["company"]
+
+ put "phone" into tInPhoneArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("phone", tUser["phone"]) into tInPhoneArr["value"]
+ put "50" into tInPhoneArr["maxlength"]
+ put rigFormInput(tInPhoneArr) into gData["phone"]
+
+ put "password" into tInPassArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("password") into tInPassArr["value"]
+ put "50" into tInPassArr["maxlength"]
+ put rigFormInput(tInPassArr) into gData["password"]
+
+ put "passwordConfirm" into tInPassConfArr["name"]
+ # RE-POPULATE THE FIELD
+ put rigSetValue("passwordConfirm") into tInPassConfArr["value"]
+ put "50" into tInPassConfArr["maxlength"]
+ put rigFormInput(tInPassConfArr) into gData["passwordConfirm"]
+
+ put "hiddenUserID" into tInUserIdArr["name"]
+ put tID into tInUserIdArr["value"]
+ put "hidden" into tInUserIdArr["type"]
+ put rigFormInput(tInUserIdArr) into gData["hiddenUserID"]
+
+ # LOAD VIEW
+ get rigLoadView("auth/editUserMainView")
+
+end editUser
+</code></pre>
+</div>
+
+<a href="#top">Top of Page</a>
+
+<p>Now add the last handler which is needed to delete user data.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command deleteUser
+ put "Auth Test Delete User" into gData["pageTitle"]
+
+ put rigFetchSegment(3) into tID
+
+ # FORM OPEN
+ put "authForm" into tFormAttr["id"]
+ put rigFormOpen("auth/deleteUser/" & tID, tFormAttr) into gData["formOpen"]
+
+ # FIELD SET
+ put rigFormFieldset("Delete User Form") into gData["fsOpen"]
+ put rigFormFieldsetClose() into gData["fsClose"]
+
+ # FORM LABELS
+ put "formLabel" into tLabelAttr["class"]
+ put rigFormLabel("Yes:", "confirm", tLabelAttr) into gData["confirmRadioYesLabel"]
+ put rigFormLabel("No:", "confirm", tLabelAttr) into gData["confirmRadioNoLabel"]
+
+ # SUBMIT
+ put "deleteSubmit" into tSubmitArr["name"]
+ put "Submit" into tSubmitArr["value"]
+ put "submitBtn" into tSubmitArr["id"]
+ put rigSubmitButton(tSubmitArr) into gData["deleteSubmit"]
+
+ # FORM VALIDATION
+ if rigFormValidRun("auth/deleteUser") is TRUE then
+  put FALSE into tDeleted
+
+  # CHECK IF DEACTIVATION WAS CONFIRMED
+  if rigVarPOST("confirm") is "yes" then
+
+   # VALIDATE THE REQUEST
+   if tID &lt;> rigVarPOST("id") then
+    rigLogMessage "error", "This form post did not pass the security check.", TRUE
+   end if
+
+   # CHECK THE USER LEVEL
+   if (rigAuthLoggedIn() is TRUE) and (rigAuthIsAdmin() is TRUE) then
+    put rigAuthDeleteUser(tID) into tDeleted
+   end if
+
+  end if
+
+  # GET AUTH MESSAGES AND REDIRECT TO THE AUTH PAGE
+  if tDeleted is TRUE then
+   put rigAuthMessages() into tMessages
+  else
+   put rigAuthErrors() into tMessages
+  end if
+
+  rigSetSessFlashdata "message", tMessages
+  rigRedirect "/auth"
+
+ else
+  put rigValidationErrors("&lt;div class=" & quote & "error" & quote & ">", "&lt;/div>") into tErrors
+  if tErrors &lt;> empty then
+   put tErrors into gData["message"]
+  else
+   put rigSessFlashdata("message") into gData["message"]
+   if gData["message"] is FALSE then
+    put empty into gData["message"]
+   end if
+  end if
+
+  # HIDDEN USER ID FIELD
+  put rigAuthUser(tID) into tQueryResult
+
+  if (tQueryResult &lt;> FALSE) and (tQueryResult is an array) then
+   put rigDbRow() into tUserRow
+   put tUserRow["id"] into tUserID
+   put tUserRow["username"] into gData["userName"]
+  else
+   put empty into tUserID
+  end if
+  put rigFormHidden("id", tUserID) into gData["hiddenUserID"]
+
+  # RADIO BUTTONS
+  put rigSetRadio("confirm", "yes") into gData["confirmYes"]
+  put rigSetRadio("confirm", "no", TRUE) into gData["confirmNo"]
+
+  # LOAD VIEW
+  get rigLoadView("auth/deleteUserMainView")
+ end if
+end deleteUser
+
+
+
+
+
+
+--| END OF auth.lc
+--| Location: ./application/controllers/auth.lc
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+
+
+<a href="#top">Top of Page</a>
+
+
+
+
+<a id="thevalidationfile"></a>
+
+<h2>The Form Validation File</h2>
+
+<p>The rules to validate authentication. Create a file called validation.lc. In it, place the code below and save it to your application/config/ folder.</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;?lc
+
+if gRigA is not an array then
+  put "No direct script access allowed."
+  exit to top
+end if
+
+
+local sValidationConf
+
+
+# AUTHENTICATION VALIDATION
+# LOGIN
+put "identity" into sValidationConf["auth/login"][1]["field"]
+put "Email" into sValidationConf["auth/login"][1]["label"]
+put "trim|requiredR|validEmailR|maxLengthR[100]|xssClean" into sValidationConf["auth/login"][1]["rules"]
+
+put "password" into sValidationConf["auth/login"][2]["field"]
+put "Password" into sValidationConf["auth/login"][2]["label"]
+put "requiredR|alphaDashR|maxLengthR[40]|xssClean" into sValidationConf["auth/login"][2]["rules"]
+
+put "remember[]" into sValidationConf["auth/login"][3]["field"]
+put "Remember me" into sValidationConf["auth/login"][3]["label"]
+put "numericR" into sValidationConf["auth/login"][3]["rules"]
+
+
+# CREATE USER
+put "first" into sValidationConf["auth/createUser"][1]["field"]
+put "First Name" into sValidationConf["auth/createUser"][1]["label"]
+put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][1]["rules"]
+
+put "last" into sValidationConf["auth/createUser"][2]["field"]
+put "Last Name" into sValidationConf["auth/createUser"][2]["label"]
+put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][2]["rules"]
+
+put "company" into sValidationConf["auth/createUser"][3]["field"]
+put "Company" into sValidationConf["auth/createUser"][3]["label"]
+put "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][3]["rules"]
+
+put "email" into sValidationConf["auth/createUser"][4]["field"]
+put "Email" into sValidationConf["auth/createUser"][4]["label"]
+put "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean" into sValidationConf["auth/createUser"][4]["rules"]
+
+put "phone" into sValidationConf["auth/createUser"][5]["field"]
+put "Phone" into sValidationConf["auth/createUser"][5]["label"]
+put "trim|alphaDashR|maxLengthR[20]" into sValidationConf["auth/createUser"][5]["rules"]
+
+put "password" into sValidationConf["auth/createUser"][6]["field"]
+put "Password" into sValidationConf["auth/createUser"][6]["label"]
+put "requiredR|minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean" into sValidationConf["auth/createUser"][6]["rules"]
+
+put "passwordConfirm" into sValidationConf["auth/createUser"][7]["field"]
+put "Confirm Password" into sValidationConf["auth/createUser"][7]["label"]
+put "requiredR" into sValidationConf["auth/createUser"][7]["rules"]
+
+
+# DEACTIVATE USER
+put "confirm" into sValidationConf["auth/deactivate"][1]["field"]
+put "Confirmation" into sValidationConf["auth/deactivate"][1]["label"]
+put "requiredR|alphaR" into sValidationConf["auth/deactivate"][1]["rules"]
+
+put "id" into sValidationConf["auth/deactivate"][2]["field"]
+put "User ID" into sValidationConf["auth/deactivate"][2]["label"]
+put "requiredR|numericR" into sValidationConf["auth/deactivate"][2]["rules"]
+
+
+# FORGOT PASSWORD
+put "email" into sValidationConf["auth/forgotPassword"][1]["field"]
+put "Email" into sValidationConf["auth/forgotPassword"][1]["label"]
+put "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean" into sValidationConf["auth/forgotPassword"][1]["rules"]
+
+
+# RESET PASSWORD
+put "newPassword" into sValidationConf["auth/resetPassword"][1]["field"]
+put "New Password" into sValidationConf["auth/resetPassword"][1]["label"]
+put "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean" into sValidationConf["auth/resetPassword"][1]["rules"]
+
+put "newPasswordConfirm" into sValidationConf["auth/resetPassword"][2]["field"]
+put "Confirm New Password" into sValidationConf["auth/resetPassword"][2]["label"]
+put "requiredR" into sValidationConf["auth/resetPassword"][2]["rules"]
+
+
+# CHANGE PASSWORD
+put "oldPassword" into sValidationConf["auth/changePassword"][1]["field"]
+put "Old Password" into sValidationConf["auth/changePassword"][1]["label"]
+put "requiredR" into sValidationConf["auth/changePassword"][1]["rules"]
+
+put "newPassword" into sValidationConf["auth/changePassword"][2]["field"]
+put "New Password" into sValidationConf["auth/changePassword"][2]["label"]
+put "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean" into sValidationConf["auth/changePassword"][2]["rules"]
+
+put "newPasswordConfirm" into sValidationConf["auth/changePassword"][3]["field"]
+put "Confirm New Password" into sValidationConf["auth/changePassword"][3]["label"]
+put "requiredR" into sValidationConf["auth/changePassword"][3]["rules"]
+
+
+# EDIT USER
+put "first" into sValidationConf["auth/editUser"][1]["field"]
+put "First Name" into sValidationConf["auth/editUser"][1]["label"]
+put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][1]["rules"]
+
+put "last" into sValidationConf["auth/editUser"][2]["field"]
+put "Last Name" into sValidationConf["auth/editUser"][2]["label"]
+put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][2]["rules"]
+
+put "company" into sValidationConf["auth/editUser"][3]["field"]
+put "Company" into sValidationConf["auth/editUser"][3]["label"]
+put "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][3]["rules"]
+
+put "phone" into sValidationConf["auth/editUser"][4]["field"]
+put "Phone" into sValidationConf["auth/editUser"][4]["label"]
+put "trim|alphaDashR|maxLengthR[20]" into sValidationConf["auth/editUser"][4]["rules"]
+
+put "password" into sValidationConf["auth/editUser"][5]["field"]
+put "Password" into sValidationConf["auth/editUser"][5]["label"]
+put "minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean" into sValidationConf["auth/editUser"][5]["rules"]
+
+put "passwordConfirm" into sValidationConf["auth/editUser"][6]["field"]
+put "Confirm Password" into sValidationConf["auth/editUser"][6]["label"]
+put "minLengthR[8]" into sValidationConf["auth/editUser"][6]["rules"]
+
+
+# DELETE USER
+put "confirm" into sValidationConf["auth/deleteUser"][1]["field"]
+put "Confirmation" into sValidationConf["auth/deleteUser"][1]["label"]
+put "requiredR|alphaR" into sValidationConf["auth/deleteUser"][1]["rules"]
+
+put "id" into sValidationConf["auth/deleteUser"][2]["field"]
+put "User ID" into sValidationConf["auth/deleteUser"][2]["label"]
+put "requiredR|numericR" into sValidationConf["auth/deleteUser"][2]["rules"]
+
+
+
+
+
+function rigFetchValidationConf
+ return sValidationConf
+end rigFetchValidationConf
+
+
+
+--| END OF validation.lc
+--| Location: ./application/config/validation.lc
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+
+
+
+<a href="#top">Top of Page</a>
+
+
+<a id="theviewfiles"></a>
+
+<h2>The View Files</h2>
+
+<p>Create the following view files and save them to a folder called "auth" in your application/views/ folder.</p>
+
+<p>We use multiple views nested in a parent view file. The header view, name it "headerView.lc", is included in all parent views (one fits all):</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+  &lt;meta charset="utf-8">
+
+  &lt;title>[[gData["pageTitle"]]]&lt;/title>
+  &lt;? return rigCssAsset("authentication.css") ?>
+
+&lt;/head>
+</code></pre>
+</div>
+
+
+
+<p>The view which represents the admin page called "authView.lc":</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="adminPage">
+    &lt;header>
+      &lt;h1>Users&lt;/h1>
+    &lt;/header>
+
+    &lt;div id="main" role="main">
+
+
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+      [[gData["usersTable"]]]
+
+      &lt;p>[[gData["newUserLink"]]]&lt;/p>
+
+      &lt;p>[[gData["logoutLink"]]]&lt;/p>
+
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>  
+</code></pre>
+</div>
+
+
+<p>The parent view of the admin page called "authMainView.lc":</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/authView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+<p>The view used to change a password. It is called "changePasswordView.lc":</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="changePassword">
+    &lt;header>
+    &lt;h1>Change Password&lt;/h1>
+    &lt;/header>
+
+    &lt;div id="main" role="main">
+
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
+
+    &lt;div>[[gData["oldPasswordLabel"]]] [[gData["oldPassword"]]]&lt;/div>
+
+    &lt;div>[[gData["newPasswordLabel"]]] [[gData["newPassword"]]]&lt;/div>
+
+    &lt;div>[[gData["newPasswordConfirmLabel"]]] [[gData["newPasswordConfirm"]]]&lt;/div>
+
+    [[gData["hiddenUserID"]]]
+
+
+    &lt;div>[[gData["changeSubmit"]]]&lt;/div>
+
+    [[gData["fsClose"]]]
+    &lt;/form>
+
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+<p>"changePasswordMainView.lc", the parent view of the view above:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/changePasswordView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+<p>The "createUserView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-xml">&lt;body>
+
+  &lt;div id="container" class="createUser">
+    &lt;header>
+    &lt;h1>Create User&lt;/h1>
+    &lt;p>Please enter the users information below.&lt;/p>
+    &lt;/header>
+
+    &lt;div id="main" role="main">
+
+      &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+      [[gData["formOpen"]]]
+      [[gData["fsOpen"]]]
+
+
+      &lt;div>[[gData["firstLabel"]]] [[gData["first"]]]&lt;/div>
+
+      &lt;div>[[gData["lastLabel"]]] [[gData["last"]]]&lt;/div>
+
+      &lt;div>[[gData["companyLabel"]]] [[gData["company"]]]&lt;/div>
+
+      &lt;div>[[gData["emailLabel"]]] [[gData["email"]]]&lt;/div>
+
+      &lt;div>[[gData["phoneLabel"]]] [[gData["phone"]]]&lt;/div>
+
+      &lt;div>[[gData["passwordLabel"]]] [[gData["password"]]]&lt;/div>
+
+      &lt;div>[[gData["passwordConfirmLabel"]]] [[gData["passwordConfirm"]]]&lt;/div>
+
+      &lt;div>[[gData["createSubmit"]]]&lt;/div>
+
+    [[gData["fsClose"]]]
+      &lt;/form>
+
+      &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+<p>The parent view "createUserMainView.lc":</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/createUserView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+<p>The "deactivateUserView.lc" view:</p>
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="deactivate">
+    &lt;header>
+      &lt;h1>Deactivate User&lt;/h1>
+      &lt;p>Are you sure you want to deactivate the user '[[gData["userName"]]]'&lt;/p>
+    &lt;/header>
+
+
+    &lt;div id="main" role="main">
+
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
+
+      [[gData["hiddenUserID"]]]
+    &lt;div>[[gData["confirmRadioYesLabel"]]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"]]] />&lt;/div>
+    &lt;div>[[gData["confirmRadioNoLabel"]]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"]]] />&lt;/div>
+
+     &lt;div>[[gData["deactivateSubmit"]]]&lt;/div>
+
+    [[gData["fsClose"]]]
+    &lt;/form>
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+
+<p>The parent view "deactivateUserMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/deactivateUserView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+
+<p>The "deleteUserView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="delete">
+    &lt;header>
+      &lt;h1>Delete User&lt;/h1>
+      &lt;p>Are you sure you want to delete the user '[[gData["userName"]]]'&lt;/p>
+    &lt;/header>
+
+
+  &lt;div id="main" role="main">
+
+  [[gData["formOpen"]]]
+  [[gData["fsOpen"]]]
+
+  [[gData["hiddenUserID"]]]
+  &lt;div>[[gData["confirmRadioYesLabel"]]] &lt;input type="radio" name="confirm" value="yes" [[gData["confirmYes"]]] />&lt;/div>
+  &lt;div>[[gData["confirmRadioNoLabel"]]] &lt;input type="radio" name="confirm" value="no" [[gData["confirmNo"]]] />&lt;/div>
+
+  &lt;div>[[gData["deleteSubmit"]]]&lt;/div>
+
+  [[gData["fsClose"]]]
+  &lt;/form>
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+
+<p>The parent view "deleteUserMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/deleteUserView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+<p>The "editUserView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code class="lang-xml">&lt;body>
+
+&lt;div id="container" class="editUser">
+   &lt;header>
+    &lt;h1>Edit User&lt;/h1>
+    &lt;p>Please enter the users information below.&lt;/p>
+   &lt;/header>
+
+   &lt;div id="main" role="main">
+
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
+
+
+    &lt;div>[[gData["firstLabel"]]] [[gData["first"]]]&lt;/div>
+
+    &lt;div>[[gData["lastLabel"]]] [[gData["last"]]]&lt;/div>
+
+    &lt;div>[[gData["companyLabel"]]] [[gData["company"]]]&lt;/div>
+
+    &lt;div>[[gData["phoneLabel"]]] [[gData["phone"]]]&lt;/div>
+
+    &lt;div>[[gData["passwordLabel"]]] [[gData["password"]]]&lt;/div>
+
+    &lt;div>[[gData["passwordConfirmLabel"]]] [[gData["passwordConfirm"]]]&lt;/div>
+
+    [[gData["hiddenUserID"]]]
+
+    &lt;div>[[gData["editSubmit"]]]&lt;/div>
+
+    [[gData["fsClose"]]]
+    &lt;/form>
+
+    &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+
+<p>The parent view "editUserMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/editUserView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+<p>The "forgotPasswordView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="forgotPassword">
+    &lt;header>
+    &lt;h1>Forgot Password&lt;/h1>
+    &lt;p>Please enter your email address so we can send you an email to reset your password.&lt;/p>
+    &lt;/header>
+
+    &lt;div id="main" role="main">
+
+    &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
+
+    &lt;div>[[gData["emailLabel"]]] [[gData["email"]]]&lt;/div>
+
+    &lt;div>[[gData["forgotSubmit"]]]&lt;/div>
+
+    [[gData["fsClose"]]]
+    &lt;/form>
+
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+<p>The parent view "forgotPasswordMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/forgotPasswordView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+<p>The "loginView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="login">
+    &lt;header>
+      &lt;h1>Login&lt;/h1>
+      &lt;p>Please login with your email/username and password below.&lt;/p>
+    &lt;/header>
+
+    &lt;div id="main" role="main">
+      &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+    [[gData["formOpen"]]]
+    [[gData["fsOpen"]]]
+
+    &lt;div>[[gData["identityLabel"]]] [[gData["identity"]]]&lt;/div>
+
+    &lt;div>[[gData["passwordLabel"]]] [[gData["loginPassword"]]]&lt;/div>
+
+    &lt;div>[[gData["rememberLabel"]]] &lt;input type="checkbox" name="remember[]" value="1" [[gData["chbRemember"]]] />&lt;/div>
+
+    &lt;div>[[gData["loginSubmit"]]]&lt;/div>
+
+
+    [[gData["fsClose"]]]
+    &lt;/form>
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+
+<p>The parent view "loginMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/loginView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+<p>The "resetPasswordView.lc" view:</p>
+
+
+<div class="codeSample">
+<pre><code>&lt;body>
+
+  &lt;div id="container" class="resetPassword">
+      &lt;header>
+      &lt;h1>Change Password&lt;/h1>
+      &lt;/header>
+
+    &lt;div id="main" role="main">
+
+  &lt;div id="infoMessage">[[gData["message"]]]&lt;/div>
+
+
+  [[gData["formOpen"]]]
+  [[gData["fsOpen"]]]
+
+
+  &lt;div>[[gData["newPasswordLabel"]]] [[gData["newPassword"]]]&lt;/div>
+
+  &lt;div>[[gData["newPasswordConfirmLabel"]]] [[gData["newPasswordConfirm"]]]&lt;/div>
+
+  [[gData["hiddenUserID"]]]
+
+
+  &lt;div>[[gData["resetSubmit"]]]&lt;/div>
+
+  [[gData["fsClose"]]]
+  &lt;/form>
+
+  &lt;/div>
+  &lt;/div> &lt;!--! end of #container -->
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+
+
+<p>The parent view "resetPasswordMainView.lc":</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("auth/headerView", TRUE) into tHeader
+put rigLoadView("auth/resetPasswordView", TRUE) into tContent
+return tHeader && tContent
+?>
+</code></pre>
+</div>
+
+
+
+
+<a href="#top">Top of Page</a>
+
+<a id="cssfile"></a>
+
+<h2>The CSS File</h2>
+
+
+<p>Create a CSS file called authentication.css, in it place the following code and save it to your assets/css/ folder:</p>
+
+
+<div class="codeSample">
+<pre><code>body {
+  margin: 40px;
+  padding: 0;
+  font-family: "Lucida Grande", Lucida, Verdana, Geneva, Sans-serif;
+  font-size: 12px;
+  color: #888;
+  background-color: #fff;
+}
+#container {
+  margin-left: auto;
+  margin-right: auto;
+}
+#container.login,
+#container.editUser,
+#container.createUser,
+#container.changePassword,
+#container.forgotPassword,
+#container.resetPassword {
+  width: 400px;
+}
+#container.adminPage {
+  width: 610px;
+}
+#container.deactivate, #container.delete {
+  width: 350px;
+}
+.formLabel {
+  display: inline-block;
+  width:  160px;
+  margin-bottom: 10px;
+}
+table {
+  width: 600px;
+}
+th {
+  text-align: left;
+}
+button a {
+  text-decoration: none;
+}
+</code></pre>
+</div>
+
+<h2>Try it!</h2>
+
+<p>After having installed all those sample files</p>
+<ul><li>go to your authentication page (yourDomain.com/auth/) and login as admin using "admin@admin.com" as user id and "revigniter" as password.</li>
+  <li>Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected.</li>
+  <li>Log out.</li>
+  <li>Check your email account and activate your test registration.</li>
+  <li>Go to yourDomain.com/auth/logout/ to log out.</li>
+  <li>Go to yourDomain.com/auth/forgotPassword, enter your email address and check your email account again to reset your password.</li>
+  <li>Activate / deactivate users using the admin account.</li>
+  <li>In short: Have fun.</li></ul>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationEmail.html"> Authentication Email Templates</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="authenticationOTP.html">OTP Authentication</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

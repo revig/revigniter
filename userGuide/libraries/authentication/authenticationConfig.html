@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication Configuration : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">Configuration</li>
+            <li id="tocListItem" class="pull-right"><a href="../../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>Authentication Configuration</h1>
+
+
+<p>The following is a list of all the preferences that can be set in application/config/authentication.lc:</p>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["tables"]["users"]</strong></td><td class="td">Users</td><td class="td">None</td><td class="td">The table name to use for the users table.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["tables"]["groups"]</strong></td><td class="td">Groups</td><td class="td">None</td><td class="td">The table name to use for the groups table.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["tables"]["usersGroups"]</strong></td><td class="td">UsersGroups</td><td class="td">None</td><td class="td">The table name to use for the users groups table.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["tables"]["loginAttempts"]</strong></td><td class="td">LoginAttempts</td><td class="td">None</td><td class="td">The table name to use for the login attempts table.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["join"]["users"]</strong></td><td class="td">userId</td><td class="td">None</td><td class="td">Users table column you want to join WITH.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["join"]["groups"]</strong></td><td class="td">groupId</td><td class="td">None</td><td class="td">Group table column you want to join WITH.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["cipher"]</strong></td><td class="td">bf</td><td class="td">See LiveCode's cipherNames() function.</td><td class="td">Cipher used to encrypt passwords (see revIgniter's <a href="../encryption.html">Encryption Library</a>).</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["hashType"]</strong></td><td class="td"></td><td class="td">SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384, SHA3-512. Note: All types but SHA-1 require LC server 9.0.0 dp 7 or higher.</td><td class="td">Hash type to be used by the encryption library (see revIgniter's <a href="../encryption.html">Encryption Library</a>). The default value is empty which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please chose a more secure flavor.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["keyLength"]</strong></td><td class="td">128</td><td class="td">See LiveCode's cipherNames() function.</td><td class="td">Key length used to encrypt passwords (see revIgniter's <a href="../encryption.html">Encryption Library</a>).</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["authEncryptionKey"]</strong></td><td class="td">myKey</td><td class="td">None</td><td class="td">Authentication encryption key (see revIgniter's <a href="../encryption.html">Encryption Library</a>).</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["useAuthEncryptionKey"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Set this to FALSE if you prefere to use revIgniter's universal encryption key as set in config.lc.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["siteTitle"]</strong></td><td class="td">Example.com</td><td class="td">None</td><td class="td">The title of your site, used for email.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["adminEmail"]</strong></td><td class="td">admin@example.com</td><td class="td">None</td><td class="td">Your administrator email address.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["minLengthPassword"]</strong></td><td class="td">8</td><td class="td">None</td><td class="td">Minimum required password length.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["maxLengthPassword"]</strong></td><td class="td">20</td><td class="td">None</td><td class="td">Maximum allowed password length.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["emailActivation"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Sets whether to require email user activation or not.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["manualActivation"]</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Sets whether to require manual user activation or not.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["identityColumn"]</strong></td><td class="td">email</td><td class="td">None</td><td class="td">Column to use for uniquely identifing users logging in etc. You should add an index in the users table for whatever you set this option to.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["defaultGroup"]</strong></td><td class="td">members</td><td class="td">None</td><td class="td">Name of the default user group.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["defaultAdminGroup"]</strong></td><td class="td">admin</td><td class="td">None</td><td class="td">Name of the admin group.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["rememberUsers"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Allow users to be remembered and enable auto-login.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["autoLoginExpire"]</strong></td><td class="td">129600</td><td class="td">None</td><td class="td">How long to remember the user for in seconds. Set to zero for no expiration.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["userExtendOnLogin"]</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Extend the users session expiration everytime they auto-login.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["trackLoginAttempts"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Track the number of failed login attempts for each user or ip.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["maxLoginAttempts"]</strong></td><td class="td">3</td><td class="td">None</td><td class="td">The maximum number of failed login attempts. This maximum is not enforced by the library. If set to 0, there is no maximum.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["forgotPasswordExpiration"]</strong></td><td class="td">0</td><td class="td">None</td><td class="td">The number of seconds after which a forgot password request will expire. If set to 0, forgot password requests will not expire.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["enableAuthenticationHooks"]</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Enable / disable authentication "hooks".</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["sendEmails"]</strong></td><td class="td">TRUE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Send emails using revIgniters Email.lc library. False means: The library returns identity, user id, email address and activation code.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["emailConfig"]</strong></td><td class="td">mailtype: html, protocol: sendmail</td><td class="td">file or revIgniter's <a href="../email.html">Email Library prefs</a></td><td class="td">Use "file" if you want emails to be sent using revIgniter's default configuration or, if present, an email config file. Use an array to manually set your email configuration.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["pathToEmailTemplates"]</strong></td><td class="td"></td><td class="td">None</td><td class="td">  Path to your authentication mail templates relative to application/views/. Leave this BLANK unless you would like to set something other than the default emailTemplates/ folder.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["emailActivate"]</strong></td><td class="td">authActivate.lc</td><td class="td">None</td><td class="td">Name of your account activation email template.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["emailForgotPassword"]</strong></td><td class="td">forgotPassword.lc</td><td class="td">None</td><td class="td">Name of your forgotten password email template.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["messagePrefix"]</strong></td><td class="td">&lt;p></td><td class="td">None</td><td class="td">Starting delimiter for authentication related messages.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["messageSuffix"]</strong></td><td class="td">&lt;/p></td><td class="td">None</td><td class="td">Ending delimiter for authentication related messages.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["errorPrefix"]</strong></td><td class="td">&lt;p></td><td class="td">None</td><td class="td">Starting delimiter for authentication related error messages.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["errorSuffix"]</strong></td><td class="td">&lt;/p></td><td class="td">None</td><td class="td">Ending delimiter for authentication related error messages.</td>
+</tr>
+</table>
+</div>
+
+<p><br><strong>OTP preferences used for two-factor authentication:</strong></p>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpEnabled"]</strong></td><td class="td">FALSE</td><td class="td">TRUE or FALSE (boolean)</td><td class="td">Determines the activation of OTP features.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["tables"]["otp"]</strong></td><td class="td">otp</td><td class="td">None</td><td class="td">The name of the table used for storing shared secrets.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpIssuer"]</strong></td><td class="td">The Issuer</td><td class="td">None</td><td class="td">A string identifying a provider or service managing the user's account. Used to prevent collisions in case the same account is used for different providers.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpAlgo"]</strong></td><td class="td">SHA1</td><td class="td">SHA1, SHA256 or SHA512</td><td class="td">The type of cryptographic message digest the OTP algorithm is based on.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpDigits"]</strong></td><td class="td">6</td><td class="td">6 or 8</td><td class="td">Determines the length of an OTP.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpPeriod"]</strong></td><td class="td">30</td><td class="td">None</td><td class="td">Defines a period that a TOTP code will be valid for.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpTimeWindow"]</strong></td><td class="td">2</td><td class="td">None</td><td class="td">A delay window to compare OTPs not only in the current period but also with the next and previous time steps.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpQRecc"]</strong></td><td class="td">M</td><td class="td">L, M, Q, H or X</td><td class="td">QR code error correction.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpQRsize"]</strong></td><td class="td">4</td><td class="td">1 to 10 inclusively</td><td class="td">Size of the QR code displayed.</td>
+</tr><tr>
+<td class="td"><strong>sAuthenticationConf["otpQRmask"]</strong></td><td class="td">Auto</td><td class="td">1 to 7 inclusively or Auto</td><td class="td">QR code mask pattern.</td>
+</tr>
+</table>
+</div>
+
+
+<p class="important"><strong>Note:</strong> If security is essential think about enabling CSRF cookies in <dfn>application/config/config.lc</dfn></p>
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationOverview.html"> Authentication Overview</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="authenticationRef.html">Authentication Handler Reference</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

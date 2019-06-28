@@ -47,12 +47,12 @@ local sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -63,7 +63,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -85,7 +85,7 @@ end libraryStack
 --|
 --| Summary: Create a local URL based on your basepath. Segments can be passed via the
 --|            first parameter either as a string or an array.
---| 
+--|
 --| Format: rigASiteURL(param1)
 --|
 --| Parameters: string <pURI>
@@ -113,7 +113,7 @@ end rigASiteURL
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Returns the "base_url" item from your config file.
---| 
+--|
 --| Format: rigBaseURL()
 --|
 --| Parameters: --
@@ -141,9 +141,9 @@ end rigBaseURL
 --| Last Mod: 05-10-09
 --| Requires: rigUriString()
 --|
---| Summary: Returns the full URL (including segments) of the page where this 
+--| Summary: Returns the full URL (including segments) of the page where this
 --|            function is placed.
---| 
+--|
 --| Format: rigCurrentURL()
 --|
 --| Parameters: --
@@ -153,7 +153,7 @@ end rigBaseURL
 
 function rigCurrentURL
   local tUriStr
-  
+
 	put rigUriString() into tUriStr
 
 	return rigSiteURL(tUriStr)
@@ -175,7 +175,7 @@ end rigCurrentURL
 --| Requires: rigUriString()
 --|
 --| Summary: Returns the URI segments.
---| 
+--|
 --| Format: rigCurrentURIstring()
 --|
 --| Parameters: --
@@ -203,7 +203,7 @@ end rigCurrentURIstring
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Returns the "indexPage" item from your config file.
---| 
+--|
 --| Format: rigIndexPage()
 --|
 --| Parameters: --
@@ -231,7 +231,7 @@ end rigIndexPage
 --| Requires: rigSiteURL(), _rigParseAttributes()
 --|
 --| Summary: Creates an anchor based on the local URL.
---| 
+--|
 --| Format: rigAnchor(param1, param2, param3)
 --|
 --| Parameters: mixed <pURI>, string <pTitle> the link title, mixed <pAttributes> any attributes
@@ -241,12 +241,12 @@ end rigIndexPage
 
 function rigAnchor pURI pTitle pAttributes
   local tRegEx, tSiteURL, tTitle, tAttributes
-  
+
 	if pURI is not an array then
 		put "^\w+://" into tRegEx
 
     		get matchtext(pURI,tRegEx)
-    
+
 		if it is TRUE then
 			put pURI into tSiteURL
 		else
@@ -289,7 +289,7 @@ end rigAnchor
 --|
 --| Summary: Creates an anchor based on the local URL. The link
 --|            opens a new window based on the attributes specified.
---| 
+--|
 --| Format: rigAnchorPopUp(param1, param2, param3)
 --|
 --| Parameters: mixed <pURI>, string <pTitle> the link title, mixed <pAttributes> any attributes
@@ -299,7 +299,7 @@ end rigAnchor
 
 function rigAnchorPopUp pURI pTitle pAttributes
   local tAttributes, tRegEx, tSiteURL, tTitle, tAtts, tKey
-  
+
 	if pAttributes is not an array then
 		put FALSE into tAttributes
 	else
@@ -308,7 +308,7 @@ function rigAnchorPopUp pURI pTitle pAttributes
 
 	put "^\w+://" into tRegEx
     	get matchtext(pURI,tRegEx)
-    
+
 	if it is TRUE then
 		put pURI into tSiteURL
 	else
@@ -371,7 +371,7 @@ end rigAnchorPopUp
 --| Requires: _rigParseAttributes()
 --|
 --| Summary: rigMailTo link
---| 
+--|
 --| Format: rigMailToLink(param1, param2, param3)
 --|
 --| Parameters: string <pEmail>, string <pTitle> the link title, mixed <pAttributes> any attributes
@@ -381,7 +381,7 @@ end rigAnchorPopUp
 
 function rigMailToLink pEmail pTitle pAttributes
   local tTitle, tAttributes
-  
+
 	if pTitle is empty then
 		put pEmail into tTitle
 	else
@@ -411,7 +411,7 @@ end rigMailToLink
 --| Requires: rigArrayReverse()
 --|
 --| Summary: Create a spam-protected mailTo link written in Javascript.
---| 
+--|
 --| Format: rigSafeMailToLink(param1, param2, param3)
 --|
 --| Parameters: string <pEmail>, string <pTitle> the link title, mixed <pAttributes> any attributes
@@ -423,7 +423,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
   local tTitle, tStr, tCharsNum, tChar, tX, tKey, tVal, tTemp
   local tTempCounter, tOrdinal, tCount, tNumber, tItemDelimiter
   local tOutput, tNum, tV
-  
+
   if pTitle is empty then
     put pEmail into tTitle
   else
@@ -449,16 +449,16 @@ function rigSafeMailToLink pEmail pTitle pAttributes
     if pAttributes is an array then
       repeat for each key tKey in pAttributes
         put pAttributes[tKey] into tVal
-				
+
         add 1 to tCharsNum
         put " " & tKey & "=" & quote into tX[tCharsNum]
-				
+
         repeat with i = 1 to (the number of chars in tVal)
           add 1 to tCharsNum
           put char i of tVal into tChar
           put "|" & codepointToNum(tChar) into tX[tCharsNum]
         end repeat
-				
+
         add 1 to tCharsNum
         put quote into tX[tCharsNum]
       end repeat
@@ -483,7 +483,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
     put char i of tTitle into tChar
     put codepointToNum(tChar) into tOrdinal
 
-		
+
     if tOrdinal < 128 then
       put "|" & tOrdinal into tX[tCharsNum]
     else
@@ -540,7 +540,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
     put "l[" & tNum & "]='" & tV & "';" after tOutput
     add 1 to tNum
   end repeat
-	
+
   put return & "for (var i = l.length-1; i >= 0; i=i-1)" & return & \
   "{" & return & \
   "if (l[i].substring(0, 1) == '|') document.write(" & quote & "&#" & quote & "+unescape(l[i].substring(1))+" & quote & ";" & quote & ");" & return & \
@@ -572,7 +572,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
 --|            Note: There's a bit of extra code here to deal with
 --|            URLs or emails that end in a period. We'll strip these
 --|            off and add them after the link.
---| 
+--|
 --| Format: rigAutoLink(param1, param2, param3)
 --|
 --| Parameters: string <pStr>, string <pType> the type: email, url, or both, bool <pPopUp> whether to create pop-up links
@@ -601,32 +601,32 @@ function rigAutoLink pStr pType pPopUp
 
   if tType is not "email" then
     put "(?i)(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)" into tRegEx
-  
+
     put TRUE into tMatchFound
-  
+
     repeat until tMatchFound is FALSE
-       
+
       get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3,tMS4,tME4,tMS5,tME5,tMS6,tME6)
-      
+
       if it is TRUE then
         put char tMS2 to tME6 of tStr into tLink
-          
+
         if char -1 of tLink is "." then
           delete char -1 of tLink
         end if
-          
+
         put tLink into tReplacement
-           
+
         if (char 1 of tLink is "w") or (char 1 of tLink is "W") then
           put "<a href=" & quote & "http://" before tReplacement
         else
           put "<a href=" & quote before tReplacement
         end if
-           
+
         put quote & tPopUp & ">" & tLink & "</a>" after tReplacement
-           
+
         replace tLink with tReplacement in tStr
-           
+
       else
         put FALSE into tMatchFound
       end if
@@ -635,13 +635,13 @@ function rigAutoLink pStr pType pPopUp
 
   if tType is not "url" then
     put "(?i)([a-zA-Z0-9_\.\-\+]+)@([a-zA-Z0-9\-]+)\.([a-zA-Z0-9\-\.]*)" into tRegEx
-  
+
     put TRUE into tMatchFound
-  
+
     repeat until tMatchFound is FALSE
-       
+
       get matchchunk(tStr,tRegEx,tMS1,tME1,tMS2,tME2,tMS3,tME3)
-       
+
       if it is TRUE then
         put char tMS1 to tME3 of tStr into tEmail
 
@@ -652,7 +652,7 @@ function rigAutoLink pStr pType pPopUp
         put rigSafeMailToLink(tEmail) into tReplacement
 
         replace tEmail with tReplacement in tStr
-           
+
       else
         put FALSE into tMatchFound
       end if
@@ -678,7 +678,7 @@ end rigAutoLink
 --| Requires: --
 --|
 --| Summary: Simply adds the http:// or https:// part if missing.
---| 
+--|
 --| Format: rigUrlPrep(param1[, param2])
 --|
 --| Parameters: string <pStr> the URL, bool <pSecure> use https (optional)
@@ -688,7 +688,7 @@ end rigAutoLink
 
 function rigUrlPrep pStr pSecure
   local tStr
-  
+
 	if (pStr is "http://") or (pStr is "https://") or (pStr is empty) then
 		return ""
 	end if
@@ -724,7 +724,7 @@ end rigUrlPrep
 --| Summary: Takes a "title" string as input and creates a
 --|             human-friendly URL string with either a dash
 --|             or an underscore as the word separator.
---| 
+--|
 --| Format: rigUrlTitle(param1, param2, param3)
 --|
 --| Parameters: string <pStr>, char <pSeparator> the separator: dash, underscore, -, or _, bool <pLowercase>
@@ -735,30 +735,30 @@ end rigUrlPrep
 function rigUrlTitle pStr pSeparator pLowercase
   local tSeparator, tReplace, tLowercase, tTransA, tTemp, tStr
   local tTransAitemNum, tCounter, tTransItemA, tKey, tVal, tRegEx
-  
+
    if pSeparator is among the items of "dash,underscore,-,_" then
       put pSeparator into tSeparator
    end if
-   
+
    if tSeparator is "dash" then
       put "-" into tSeparator
    end if
    if tSeparator is "underscore" then
       put "_" into tSeparator
    end if
-   
+
    if tSeparator is empty then
       put "-" into tReplace
    else
       put tSeparator into tReplace
    end if
-   
+
    if pLowercase is empty then
       put FALSE into tLowercase
    else
       put pLowercase into tLowercase
    end if
-   
+
    # BUILD REGULAR EXPRESSIONS
    put "" into tTransA[1]["(&\#\d+?;)"]
    put "" into tTransA[2]["(&\S+?;)"]
@@ -771,36 +771,36 @@ function rigUrlTitle pStr pSeparator pLowercase
    put "(^" & tReplace & ")" into tTemp
    put tReplace into tTransA[7][tTemp]
    put "" into tTransA[8]["(\.+$)"]
-   
+
    # STRIP HTML TAGS
    put rigStripHTML(pStr) into tStr
-   
+
    put the number of lines in the keys of tTransA into tTransAitemNum
-   
-   put 0 into tCounter 
-   
+
+   put 0 into tCounter
+
    # REPLACE SPACES AND OTHER CHARACTERS
    repeat forever
       add 1 to tCounter
-      
+
       put tTransA[tCounter] into tTransItemA
       put line 1 in the keys of tTransItemA into tKey
-      
+
       put tTransItemA[tKey] into tVal
-      
+
       put "(?i)" & tKey into tRegEx
       put rigPregReplace(tStr, tRegEx, "", tVal) into tStr
       if tCounter is tTransAitemNum then
          exit repeat
       end if
    end repeat
-   
+
    if tLowercase is TRUE then
       put toLower(tStr) into tStr
    end if
-   
+
    put rigStripSlashes(tStr) into tStr
-   	
+
    return rigTrim(tStr)
 end rigUrlTitle
 
@@ -823,7 +823,7 @@ end rigUrlTitle
 --| Summary: Header redirect in two flavors.
 --|            For very fine grained control over headers, you could use the Output
 --|            library's rigSetHeader command.
---| 
+--|
 --| Format: rigRedirect param1, param2, param3
 --|
 --| Parameters: string <pUri>, string <pMethod> the method: location or redirect, integer <pHttpResponseCode>
@@ -833,7 +833,7 @@ end rigUrlTitle
 
 command rigRedirect pUri pMethod pHttpResponseCode
   local tMethod, tHttpResponseCode, tUri, tRegEx
-  
+
 	if pMethod is empty then
 		put "location" into tMethod
 	else
@@ -881,7 +881,7 @@ end rigRedirect
 --| Requires: --
 --|
 --| Summary: Parse out the attributes.
---| 
+--|
 --| Format: _rigParseAttributes(param1, param2)
 --|
 --| Parameters: array <pAttributes>, bool <pJavascript>
@@ -891,7 +891,7 @@ end rigRedirect
 
 private function _rigParseAttributes pAttributes pJavascript
   local tAttributes, tJavascript, tAtt, tKey, tVal
-  
+
 	put pAttributes into tAttributes
 
 	if pJavascript is empty then
@@ -909,7 +909,7 @@ private function _rigParseAttributes pAttributes pJavascript
 	end if
 
 	put empty into tAtt
-	
+
 	repeat for each key tKey in tAttributes
 		put tAttributes[tKey] into tVal
 
@@ -942,7 +942,7 @@ end _rigParseAttributes
 --| Requires: --
 --|
 --| Summary: Remove or replace whitespace in URLs.
---| 
+--|
 --| Format:  rigURLstripSpace(param1[, param2])
 --|
 --| Parameters: string <pURL>, string <pSeparator> (optional)
@@ -952,28 +952,28 @@ end _rigParseAttributes
 
 function rigURLstripSpace pURL pSeparator
   local tRegExWS, tCleanURL, tTopLevel, tTopLevelOffset, tDomain, tSegments
-  
+
   if pURL <> empty then
     # TRIM WHITESPACE AT THE START AND AT THE END
     put "(^\s+)|(\s+$)" into tRegExWS
     put replacetext(pURL,tRegExWS,empty) into tCleanURL
-      
+
     # GET DOMAIN, DON'T APPLY SEPARATORS TO DOMAIN
-	  put empty into tTopLevel -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	  put empty into tTopLevel -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
     get matchText(tCleanURL,"(\.[a-zA-Z\s]*/)",tTopLevel)
     put (offset(tTopLevel, tCleanURL)) + (the number of chars of tTopLevel) into tTopLevelOffset
     put char 1 to tTopLevelOffset of tCleanURL into tDomain
     put char tTopLevelOffset to -1 of tCleanURL into tSegments
-      
+
     # REMOVE WHITESPACE IN DOMAIN
     put replacetext(tDomain,"[ ]+", "") into tDomain
-      
+
     # REPLACE WHITESPACE
     put replacetext(tSegments,"[ ]+", pSeparator) into tSegments
-      
+
     return tDomain & tSegments
   end if
-   
+
   return false
 end rigURLstripSpace
 

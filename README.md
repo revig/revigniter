@@ -29,13 +29,10 @@ See the [guidelines for contributing to revIgniter](CONTRIBUTING.md).
 ### Community
 
 To join the discussion relating to using revIgniter subscribe and review archives from [this page](http://lists.livecodejournal.com/listinfo.cgi/revigniter-livecodejournal.com).
-	
 
 ### Meta
 
-- Version: 2.0.5
-- Web Site: https://revigniter.com/
-- User Guide: https://revigniter.com/userGuide/index.html
-- Author:  [Ralf Bitter](mailto:rabit@revigniter.com)
-
-
+-   Version: 2.1.0
+-   Web Site: <https://revigniter.com/>
+-   User Guide: <https://revigniter.com/userGuide/index.html>
+-   Author:  [Ralf Bitter](mailto:rabit@revigniter.com)

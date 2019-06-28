@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Authentication Hooks : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all" />
+    <meta name="author" content="Ralf Bitter" />
+    <meta name="description" content="revIgniter User Guide" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../../css/bootstrap.min.css">
+
+    <script src="../../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="../../js/nav-ck.js"></script>
+    
+    <!-- Touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="//www.google.com/search">
+           <div class="form-group">
+         <input type="hidden" name="as_sitesearch" id="as_sitesearch" value="revigniter.com/userGuide/" />
+             <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search ..." name="q" id="q" class="revignitorsearch" accesskey="s" autosave="bsn_srch" results="5" />
+         &nbsp;<input type="image" id="submitSearch" src="../../images/searchGo.png" alt="Search Go Button" />
+           </div>
+             </form>
+        </div><!--/.nav-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../../index.html">User Guide Home</a></li>
+						<li><a href="index.html">Authentication</a></li>
+              <li class="active">Hooks</li>
+            <li id="tocListItem" class="pull-right"><a href="../../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>Authentication Hooks</h1>
+
+<p>Authentication hooks work similar like those extending the framework core. So, if you want to run your own scripts at a particular stage of the library's execution process, the hooks feature is your friend.</p>
+
+
+<h2>Enabling Authentication Hooks</h2>
+
+<p>The authentication hooks feature can be enabled/disabled by setting the following item in the <dfn>application/config/authentication.lc</dfn> file:</p>
+
+
+<pre><code>put TRUE into sAuthenticationConf["enableAuthenticationHooks"]</code></pre>
+
+
+<h2>Defining an Authentication Hook</h2>
+
+<p>Authentication hooks are defined in the <dfn>application/config/authenticationHooks.lc</dfn> file.  Each hook is specified as an array with this prototype:</p>
+
+
+<div class="codeSample">
+<pre><code># IN THIS CASE THE HOOK POINT IS RIGHT BEFORE UPDATING USER DATA
+put "myHandler" into sAuthenticationHooks["authPreUpdateUser"]["handler"]
+put "myScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"]["filename"]
+put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"]["filepath"]
+put "beer" into sAuthenticationHooks["authPreUpdateUser"]["params"][1]
+put "wine" into sAuthenticationHooks["authPreUpdateUser"]["params"][2]
+put "snacks" into sAuthenticationHooks["authPreUpdateUser"]["params"][3]
+</code></pre>
+</div>
+
+<p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
+use.  In the above example the hook point is <kbd>authPreUpdateUser</kbd>. A list of hook points is found below.
+The following items should be defined in your associative hook array:</p>
+
+<ul>
+<li><strong>handler</strong>&nbsp; The handler name you wish to call. If you call a function, append a pair of brackets to the name like: "myHandler()".</li>
+<li><strong>filename</strong>&nbsp; The script only stack file name containing your handler.</li>
+<li><strong>filepath</strong>&nbsp; The name of the directory containing your script only stack.  Note: Your stack must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your stack is located in <dfn>application/hooks/authenticationHooks</dfn>, you will simply use <samp>hooks/authenticationHooks</samp> as your filepath.  If your stack is located in <dfn>application/hooks/authenticationUtilities</dfn> you will use <samp>hooks/authenticationUtilities</samp> as your filepath. No trailing slash.</li>
+<li><strong>params</strong>&nbsp; Any parameters you wish to pass to your script. This item is optional.</li>
+</ul>
+
+
+<p class="important"><strong>Note:</strong> The handlers in your hook files have read access to the <var>sAuthUserA</var> array variable declared in the Authentication.lc library using the rigAuthenticationGet(pArrayKey) function. Check the code of the Authentication.lc library for available array key names.</dfn></p>
+
+
+<h2>Multiple Calls to the Same Hook</h2>
+
+<p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
+
+
+<div class="codeSample">
+<pre><code>put "myHandler" into sAuthenticationHooks["authPreUpdateUser"][1]["handler"]
+put "myScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"][1]["filename"]
+put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"][1]["filepath"]
+put "beer" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][1]
+put "wine" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][2]
+put "snacks" into sAuthenticationHooks["authPreUpdateUser"][1]["params"][3]
+
+put "myOtherHandler" into sAuthenticationHooks["authPreUpdateUser"][2]["handler"]
+put "myOtherScript.livecodescript" into sAuthenticationHooks["authPreUpdateUser"][2]["filename"]
+put "hooks/authenticationHooks" into sAuthenticationHooks["authPreUpdateUser"][2]["filepath"]
+put "red" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][1]
+put "yellow" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][2]
+put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
+</code></pre>
+</div>
+
+
+<p>This permits you to have the same hook point with multiple scripts.  The order you define your array will be the execution order.</p>
+
+
+<h2>Authentication hook Points</h2>
+
+<p>The following is a list of available hook points.</p>
+
+
+<ul>
+  <li><strong>authLibraryInitialized</strong><br />
+    Called very early right after the library has been initialized.</li>
+  <li><strong>authPreActivate</strong><br />
+    Called before a user is activated.</li>
+  <li><strong>authPostActivate</strong><br />
+    Called after user activation.</li>
+  <li><strong>authPostActivateUnsuccessful</strong><br />
+    Called after user activation failed.</li>
+  <li><strong>authPostActivateSuccessful</strong><br />
+    Called after successfully activating a user.</li>
+  <li><strong>authExtraWhere</strong><br />
+    Called before any database query.</li>
+  <li><strong>authDeactivate</strong><br />
+    Called before deactivating a user.</li>
+  <li><strong>authCheckLoggedIn</strong><br />
+    Called before checking a user's logged in state.</li>
+  <li><strong>authIsAdmin</strong><br />
+    Called before checking if a particular user is a member of the admin group.</li>
+  <li><strong>authInGroup</strong><br />
+    Called before checking if a particular user is a member of a particular group.</li>
+  <li><strong>authUsers</strong><br />
+    Called before getting all users.</li>
+  <li><strong>authUser</strong><br />
+    Called before getting a particular users.</li>
+  <li><strong>authUserGroups</strong><br />
+    Called before getting the groups a particular user is a member of.</li>
+  <li><strong>authPostLogin</strong><br />
+    Called after logging in.</li>
+  <li><strong>authPostLoginUnsuccessful</strong><br />
+    Called after logging in failed.</li>
+  <li><strong>authPostLoginSuccessful</strong><br />
+    Called after successfully logging in.</li>
+  <li><strong>authLogout</strong><br />
+    Called before logging out.</li>
+  <li><strong>authPreAccountCreation</strong><br />
+    Called before a new user is created.</li>
+  <li><strong>authPostAccountCreation</strong><br />
+    Called after creating a new user.</li>
+  <li><strong>authPostAccountCreationSuccessful</strong><br />
+    Called after successfully creating a new user.</li>  
+  <li><strong>authPostAccountCreationUnsuccessful</strong><br />
+    Called after creating a new user failed.</li>
+  <li><strong>authPActivationEmailSuccessful</strong><br />
+    Called after sending an activation email or after returning activation data in case email activation is turned off.</li>
+  <li><strong>authPActivationEmailUnsuccessful</strong><br />
+    Called after sending an activation email failed.</li>
+  <li><strong>authPreRegister</strong><br />
+    Called registering a user.</li>
+  <li><strong>authExtraSet</strong><br />
+    Called before inserting user data while registering a user.</li>
+  <li><strong>authPostRegister</strong><br />
+    Called after registering a user.</li>
+  <li><strong>authUpdateLastLogin</strong><br />
+    Called before updating the last login time.</li>
+  <li><strong>authPreRememberUser</strong><br />
+    Called before turning on auto login.</li>
+  <li><strong>authPostRememberUser</strong><br />
+    Called after turning on auto login.</li>
+  <li><strong>authRememberUserSuccessful</strong><br />
+    Called after successfully turning on auto login.</li>
+  <li><strong>authRememberUserUnsuccessful</strong><br />
+    Called after turning on auto login failed.</li>  
+  <li><strong>authPreLoginRememberedUser</strong><br />
+    Called before auto login of remembered users.</li>
+  <li><strong>authPostLoginRememberedUser</strong><br />
+    Called after auto login of remembered users.</li>
+  <li><strong>authLoginRememberedUserUnsuccessful</strong><br />
+    Called after auto login failed.</li>
+  <li><strong>authPostLoginRememberedUserSuccessful</strong><br />
+    Called after a successfull auto login of remembered users.</li>
+  <li><strong>authIdentityCheck</strong><br />
+    Called before the identity check for remembered users.</li>
+  <li><strong>authEmailCheck</strong><br />
+    Called before checking if a particular email address exists in the database.</li>
+  <li><strong>authUsernameCheck</strong><br />
+    Called before checking if a particular username exists in the database.</li>
+  <li><strong>authAddToGroup</strong><br />
+    Called before adding a user to a group.</li>
+  <li><strong>authGroups</strong><br />
+    Called before getting all groups.</li>
+  <li><strong>authGroup</strong><br />
+    Called before getting a particular group.</li>
+  <li><strong>authPostFrogottenPassword</strong><br />
+    Called after inserting a forgotten password key in the database.</li>
+  <li><strong>authPostFrogottenPasswordUnsuccessful</strong><br />
+    Called after inserting a forgotten password key in the database failed.</li>
+  <li><strong>authPostFrogottenPasswordSuccessful</strong><br />
+    Called after successfully inserting a forgotten password key in the database.</li>
+  <li><strong>authPreChangePassword</strong><br />
+    Called before replacing a password with a new one.</li>
+  <li><strong>authPostChangePassword</strong><br />
+    Called after replacing a password with a new one.</li>
+  <li><strong>authPostChangePasswordUnsuccessful</strong><br />
+    Called after replacing a password with a new one failed.</li>
+  <li><strong>authPostChangePasswordSuccessful</strong><br />
+    Called after successfully replacing a password with a new one.</li>
+  <li><strong>authPreChangePassword</strong><br />
+    Called before processing a user's change password request.</li>
+  <li><strong>authPostChangePassword</strong><br />
+    Called after processing a user's change password request.</li>
+  <li><strong>authPostChangePasswordUnsuccessful</strong><br />
+    Called after processing a user's change password request failed.</li>
+  <li><strong>authPostChangePasswordSuccessful</strong><br />
+    Called after successfully processing a user's change password request.</li>
+  <li><strong>authPreUpdateUser</strong><br />
+    Called before updating user data.</li>
+  <li><strong>authPostUpdateUser</strong><br />
+    Called after updating user data.</li>
+  <li><strong>authPostUpdateUserUnsuccessful</strong><br />
+    Called after updating user data failed.</li>
+  <li><strong>authPostUpdateUserSuccessful</strong><br />
+    Called after successfully updating user data.</li>
+  <li><strong>authPreDeleteUser</strong><br />
+    Called before deleting a user.</li>
+  <li><strong>authPostDeleteUser</strong><br />
+    Called after deleting a user.</li>
+  <li><strong>authPostDeleteUserUnsuccessful</strong><br />
+    Called after deleting a user failed.</li>
+  <li><strong>authPostDeleteUserSuccessful</strong><br />
+    Called after successfully deleting a user.</li>
+  <li><strong>authRemoveFromGroup</strong><br />
+    Called before removing a user from a group.</li>
+</ul>
+
+
+<h2>Hook Example Using authPostLoginSuccessful and authLogout as Hook Point</h2>
+
+<p>The following is hardly a real world example but at least it illustrates the concept. Let's say you want to log whenever an admin logs in and out. This can easily be accomplished with the help of authentication hooks.</p>
+
+
+<p>Create a hooks script only stack file called authLog.livecodescript. In it, place the code below and save it to your application/hooks/authenticationHooks/ folder.</p>
+
+
+<div class="codeSample">
+<pre><code>script "authLog"
+
+
+global gRigA, gAuthUserA
+
+
+
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target &lt;> the short name of me then
+    pass libraryStack
+  end if
+end libraryStack
+
+
+command rigLogAdminLogin
+  # sAuthUser IS A VARIABLE DECLARED IN THE AUTHENTICATION LIBRARY
+  if sAuthUser["username"] is "admin" then
+    rigLogMessage "info", "Admin logged in."
+  end if
+end rigLogAdminLogin
+
+
+command rigLogAdminLogout
+  if rigSessUserdata("username") is "admin" then
+    rigLogMessage "info", "Admin logged out."
+  end if
+end rigLogAdminLogout
+
+
+
+--| END OF authLog.livecodescript
+--| Location:  ./application/hooks/authenticationHooks/authLog.livecodescript
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+
+
+<p>The next step is to add the following lines to your authenticationHooks.lc file in <dfn>application/config</dfn>:</p>
+
+
+<div class="codeSample">
+<pre><code>put "rigLogAdminLogin" into sAuthenticationHooks["authPostLoginSuccessful"]["handler"]
+put "authLog.livecodescript" into sAuthenticationHooks["authPostLoginSuccessful"]["filename"]
+put "hooks/authenticationHooks" into sAuthenticationHooks["authPostLoginSuccessful"]["filepath"]
+
+
+put "rigLogAdminLogout" into sAuthenticationHooks["authLogout"]["handler"]
+put "authLog.livecodescript" into sAuthenticationHooks["authLogout"]["filename"]
+put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepath"]
+</code></pre>
+</div>
+
+
+
+<p>Now enable authentication hooks in <dfn>application/config/authentication.lc</dfn> and your are done.</p>
+
+
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="authenticationRef.html"> Authentication Handler Reference</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="authenticationTables.html">Authentication Tables</a>
+</p>
+<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2019<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+  </div>
+</div>
+
+<script src="../../js/jquery-1.9.1.min.js"></script>
+<script src="../../js/bootstrap.min.js"></script>
+
+<script src="../../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../../js/script-ck.js"></script>
+<script>$(function() { Slidebox.init(); });</script>
+
+<script src="../../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.0.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -119,7 +119,7 @@ query string based URLs by setting <samp>gConfig["enableQueryStrings"]</samp> in
 Keep in mind, that using return statements enclosed in "&lt;?" and "?>" is the only way to include LiveCode in your view files like in the following example:
 </p>
 
-<pre><code>&lt;? put "&lt;ul>" into tToDo
+<pre><code class="lang-livecodeserver">&lt;? put "&lt;ul>" into tToDo
 repeat for each item thisItem in gData["toDoList"]
   put "&lt;li>" & thisItem & "&lt;/li>" after tToDo
 end repeat

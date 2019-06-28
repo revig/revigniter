@@ -50,12 +50,12 @@ local sCalendarA, sCalTemp, sStackInUse
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -70,12 +70,12 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "Calendar Library Loaded"
       end if
-    
+
       # SET INITIAL VALUES
       _rigSetDefaultValues
       #
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -95,7 +95,7 @@ end libraryStack
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
---| 
+--|
 --| Format:  _rigSetDefaultValues
 --|
 --| Parameters: --
@@ -126,7 +126,7 @@ end _rigSetDefaultValues
 --| Requires: rigLangLoadLang(), _rigInitializeCalendar
 --|
 --| Summary: Run initial configuration procedures.
---| 
+--|
 --| Format:  rigRunInitialCalendarConfig param1
 --|
 --| Parameters: array <pConfig>
@@ -136,7 +136,7 @@ end _rigSetDefaultValues
 
 command rigRunInitialCalendarConfig pConfig
   local tConfig
-  
+
 	put pConfig into tConfig
 
 	get rigLangLoadLang("calendar")
@@ -171,7 +171,7 @@ end rigRunInitialCalendarConfig
 --| Requires: _rigSetInitialCalendarValue
 --|
 --| Summary: Initialize preferences.
---| 
+--|
 --| Format:  _rigInitializeCalendar param1
 --|
 --| Parameters: array <pConfig>
@@ -181,7 +181,7 @@ end rigRunInitialCalendarConfig
 
 private command _rigInitializeCalendar pConfig
   local tKey, tVal
-  
+
 	if pConfig is an array then
 		repeat for each key tKey in pConfig
 			put pConfig[tKey] into tVal
@@ -211,7 +211,7 @@ end _rigInitializeCalendar
 --| Requires: --
 --|
 --| Summary: Set initial values.
---| 
+--|
 --| Format:  _rigSetInitialCalendarValue param1, param2
 --|
 --| Parameters: string <pKey>, mixed <pValue>
@@ -226,7 +226,7 @@ private command _rigSetInitialCalendarValue pKey pVal
     replace "'" with quote in sCalendarA["template"]
     exit _rigSetInitialCalendarValue
   end if -- if pKey is "template"
-  
+
   put pVal into sCalendarA[pKey]
 end _rigSetInitialCalendarValue
 
@@ -249,7 +249,7 @@ end _rigSetInitialCalendarValue
 --|            _rigGetDayNames(), rigLangLangLine()
 --|
 --| Summary: Generate the calendar.
---| 
+--|
 --| Format:  rigCalGenerate(param1, param2, param3)
 --|
 --| Parameters: integer <pYear>, integer <pMonth>, array <pData> the data to be shown
@@ -264,7 +264,7 @@ function rigCalGenerate pYear pMonth pData
   local tCurDay, tIsCurrentMonth, tOut, tStandardURLs, tTempHeadingPrevCell
   local tColSpan, tMonthName, tTempHeadingNextCell, tDayNames
   local tTempWeekDayCell, tDayNum, tTemp
-  
+
 	# SET AND VALIDATE THE SUPPLIED MONTH/YEAR
 	put sCalendarA["localTime"] into tLocalTime
    	convert tLocalTime to dateItems
@@ -339,7 +339,7 @@ function rigCalGenerate pYear pMonth pData
 	put sCalTemp["table_open"] & return & return into tOut
 
 	put sCalTemp["heading_row_start"] & return after tOut
-	
+
 	# "PREVIOUS" MONTH LINK
 	if sCalendarA["showNextPrev"] is TRUE then
 
@@ -352,7 +352,7 @@ function rigCalGenerate pYear pMonth pData
 				put sCalendarA["nextPrevURL"] & "/" into sCalendarA["nextPrevURL"]
 			end if
 		end if
-		
+
 		put _rigAdjustDate((tMonth - 1), tYear) into tAdjustedDate
 
 		put sCalTemp["heading_previous_cell"] into tTempHeadingPrevCell
@@ -439,7 +439,7 @@ function rigCalGenerate pYear pMonth pData
 					replace "{content}" with pData[tDay] in tTemp
 					replace "{day}" with tDay in tTemp
 					put tTemp after tOut
-				
+
 				else
 					# CELLS WITH NO CONTENT
 					if (tIsCurrentMonth is TRUE) and (tDay is tCurDay) then
@@ -456,13 +456,13 @@ function rigCalGenerate pYear pMonth pData
 				# BLANK CELLS
 				put sCalTemp["cal_cell_blank"] after tOut
 			end if
-		
+
 			if (tIsCurrentMonth is TRUE) and (tDay is tCurDay) then
 				put sCalTemp["cal_cell_end_today"] after tOut
 			else
 				put sCalTemp["cal_cell_end"] after tOut
-			end if			
-			
+			end if
+
 			add 1 to tDay
 		end repeat
 
@@ -492,7 +492,7 @@ end rigCalGenerate
 --|
 --| Summary: Generates a textual month name based on the numeric
 --|            month provided.
---| 
+--|
 --| Format:  _rigGetMonthName(param1)
 --|
 --| Parameters: integer <pMonth>
@@ -503,7 +503,7 @@ end rigCalGenerate
 private function _rigGetMonthName pMonth
   local tAbbrMonthsList, tCounter, tMonthNames, tLongMonthsList
   local tMonth, tLangLineMonth, tFirstCharUpper
-  
+
 	if sCalendarA["monthType"] is "short" then
 		put the abbreviated english monthNames into tAbbrMonthsList
 
@@ -518,7 +518,7 @@ private function _rigGetMonthName pMonth
 			put "cal_" & toLower(thisLine) into tMonthNames[tCounter]
 		end repeat
 	else
-		
+
 		put the long english monthNames into tLongMonthsList
 
 		put 0 into tCounter
@@ -564,7 +564,7 @@ end _rigGetMonthName
 --|
 --| Summary: Returns an array of day names (Sunday, Monday, etc.) based
 --|            on the type.  Options: long, short, abbrev.
---| 
+--|
 --| Format:  _rigGetDayNames(param1)
 --|
 --| Parameters: string <pDayType
@@ -574,7 +574,7 @@ end _rigGetMonthName
 
 private function _rigGetDayNames pDayType
   local tDayNames, tCounter, tLangLine, tFirstCharUpper, tName, tDays
-  
+
 	if pDayType is not empty then
 		put pDayType into sCalendarA["dayType"]
 	end if
@@ -590,7 +590,7 @@ private function _rigGetDayNames pDayType
 	put 0 into tCounter
 	repeat for each item thisItem in tDayNames
 		add 1 to tCounter
-		
+
 		put rigLangLangLine("cal_" & thisItem) into tLangLine
 		if tLangLine is FALSE then
 			put toupper(char 1 of thisItem) into tFirstCharUpper
@@ -623,7 +623,7 @@ end _rigGetDayNames
 --| Summary: This function makes sure that we have a valid month/year.
 --|            For example, if you submit 13 as the month, the year will
 --|            increment and the month will become January.
---| 
+--|
 --| Format:  _rigAdjustDate(param1, param2)
 --|
 --| Parameters: integer <pMonth>, integer <pYear>
@@ -633,7 +633,7 @@ end _rigGetDayNames
 
 private function _rigAdjustDate pMonth, pYear
   local tDateA
-  
+
 	put pMonth into tDateA["month"]
 	put pYear into tDateA["year"]
 
@@ -671,7 +671,7 @@ end _rigAdjustDate
 --| Requires: --
 --|
 --| Summary: Total days in a given month.
---| 
+--|
 --| Format:  _rigGetTotalDays(param1, param2)
 --|
 --| Parameters: integer <pMonth>, integer <pYear>
@@ -681,7 +681,7 @@ end _rigAdjustDate
 
 private function _rigGetTotalDays pMonth pYear
   local tDaysInMonth
-  
+
 	if pMonth is not an integer then
 		return 0
 	else
@@ -698,7 +698,7 @@ private function _rigGetTotalDays pMonth pYear
 			return 29
 		end if
 	end if
-	
+
 	return item  pMonth of tDaysInMonth
 end _rigGetTotalDays
 
@@ -721,7 +721,7 @@ end _rigGetTotalDays
 --| Summary: Set Default Template Data.
 --|            This is used in the event that the user
 --|            has not created their own template.
---| 
+--|
 --| Format:  _rigDefaultCalTemplate()
 --|
 --| Parameters: --
@@ -731,7 +731,7 @@ end _rigGetTotalDays
 
 private function _rigDefaultCalTemplate
   local tTemplateArray
-  
+
 	put "<table border=" & quote & "0" & quote && "cellpadding=" & quote & "4" & quote && "cellspacing=" & quote & "0" & quote & ">" into tTemplateArray["table_open"]
 	put "<tr>" into tTemplateArray["heading_row_start"]
 	put "<th><a href=" & quote & "{previous_url}" & quote & ">&lt;&lt;</a></th>" into tTemplateArray["heading_previous_cell"]
@@ -775,7 +775,7 @@ end _rigDefaultCalTemplate
 --|
 --| Summary: Harvests the data within the template {pseudo-variables}
 --|            used to display the calendar.
---| 
+--|
 --| Format:  _rigParseCalTemplate
 --|
 --| Parameters: --
@@ -785,7 +785,7 @@ end _rigDefaultCalTemplate
 
 private command _rigParseCalTemplate
   local tToday, tPseudoVars, tMatch, tRegEx, tTempPseudoVar
-  
+
 	put _rigDefaultCalTemplate() into sCalTemp
 
 	if sCalendarA["template"] is empty then
@@ -796,7 +796,7 @@ private command _rigParseCalTemplate
 
 	put "table_open,table_close,heading_row_start,heading_previous_cell,heading_title_cell,heading_next_cell,heading_row_end,week_row_start,week_day_cell,week_row_end,cal_row_start,cal_cell_start,cal_cell_content,cal_cell_no_content,cal_cell_blank,cal_cell_end,cal_row_end,cal_cell_start_today,cal_cell_content_today,cal_cell_no_content_today,cal_cell_end_today" into tPseudoVars
 
-	put empty into tMatch -- needs to be declared before calling matchText since LC <a class="navbar-brand" href="#">revIgniter User Guide Version 1.10.3</a>.1.5 and 9.0.0 dp 7
+	put empty into tMatch -- needs to be declared before calling matchText since LC version 8.1.5 and 9.0.0 dp 7
 	repeat for each item pseudoVar in tPseudoVars
 		put "(?i)\{" & pseudoVar & "\}(.*?)\{\/" & pseudoVar & "\}" into tRegEx
 		get matchText(sCalendarA["template"], tRegEx, tMatch)
@@ -826,7 +826,7 @@ end _rigParseCalTemplate
 --| Requires: --
 --|
 --| Summary: Get calendar variable value.
---| 
+--|
 --| Format:  rigCalendarGet(param)
 --|
 --| Parameters: string <pWhat>
@@ -838,7 +838,7 @@ function rigCalendarGet pWhat
   if pWhat is among the keys of sCalendarA then
     return sCalendarA[pWhat]
   end if
-   
+
   return empty
 end rigCalendarGet
 
@@ -855,7 +855,7 @@ end rigCalendarGet
 --| Requires: --
 --|
 --| Summary: Setter for calendar variables.
---| 
+--|
 --| Format:  rigCalendarSet param1, param2
 --|
 --| Parameters: string <pKey> sCalendarA array key, mixed <pVal>
