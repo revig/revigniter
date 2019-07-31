@@ -1719,9 +1719,9 @@ end rigCheckType
 --| FUNCTION rigRandomNum
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 14-10-09
---| Last Mod: 21-03-14
+--| Version:  1.3
+--| Created: 2009-10-14
+--| Last Mod: 2019-07-31
 --| Requires: --
 --|
 --| Summary: Get the random number used for encryption and to build a session id.
@@ -1738,14 +1738,14 @@ function rigRandomNum
 
   put "" into tSessID
 
+  put 2147483647 into tUpperLimit
+  put 0 into tLowerLimit
+
   put 1 into tCounter
 
   repeat while (the length of tSessID) < 32
     put (char -8 to -1 of the millisecs) + tCounter into tSeed
     set the randomSeed to tSeed
-
-    put 2147483647 into tUpperLimit
-    put 0 into tLowerLimit
 
     put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after tSessID
 
