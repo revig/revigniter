@@ -2591,6 +2591,35 @@ end urlEncodeRFC
 
 
 
+/*----------------------------------------------------------------------
+--| FUNCTION urlDecodeRFC
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-08-01
+--| Last Mod: 2019-08-01
+--| Requires: --
+--|
+--| Summary: URL decoding that does conform to RFC3986.
+--|
+--| Format:  urlDecodeRFC(params1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function urlDecodeRFC pStr
+    replace "%20" with "+" in pStr
+    put URLDecode(pStr) into pStr
+    put textDecode(pStr,"UTF-8") into pStr
+
+    return pStr
+end urlDecodeRFC
+
+
+
+
 function rigQ pText
     return quote & pText & quote
 end rigQ
