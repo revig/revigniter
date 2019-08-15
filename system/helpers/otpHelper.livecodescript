@@ -121,11 +121,11 @@ command rigOTPgenerate pSecret pTokenLength pCryptoType pCryptoNumBits pTimeStep
   end if
 
   if pType is "totp" then
-    put floor(the seconds / pTimeStep) into tTimestamp
-
     if (pTimeStep is empty) or (pTimeStep is not an integer) then
       put 30 into pTimeStep
     end if
+
+    put floor(the seconds / pTimeStep) into tTimestamp
 
     # GENERATE OTP
     return _rigOTPoauthTotp(pSecret, tTimestamp, pTokenLength, pCryptoType, pCryptoNumBits)
