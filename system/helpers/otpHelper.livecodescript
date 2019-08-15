@@ -78,9 +78,9 @@ end libraryStack
 --| COMMAND rigOTPgenerate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-15
---| Last Mod: 2019-06-15
+--| Last Mod: 2019-08-15
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Get an OTP providing a secret, token length, hash algorithm, time step and OTP type.
