@@ -91,7 +91,7 @@ end libraryStack
 --|
 --| Format:  rigLoadLibrary param1
 --|
---| Parameters: string <pName> the library being requested
+--| Parameters: string <pLibName> the library being requested
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
