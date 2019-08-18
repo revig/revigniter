@@ -615,9 +615,9 @@ end rigCanWriteFileTo
 --|
 --| Author: Dave Cragg
 --| Modification: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created:  --
---| Last Mod: 2019-01-05
+--| Last Mod: 2019-08-18
 --| Requires: --
 --|
 --| Summary: This will convert the 128-bit value that md5digest() returns, or the 256-bit
@@ -632,7 +632,7 @@ end rigCanWriteFileTo
 ----------------------------------------------------------------------*/
 
 function rigHexDigest pStr
-  local tDigestStr, tBinDecodetDigestStr
+  local tDigestStr, tBinDecodedDigestStr
 
 	set the itemDel to "."
 
@@ -642,9 +642,9 @@ function rigHexDigest pStr
     put messageDigest(pStr, "SHA3-256") into tDigestStr
   end if
 
-  get binarydecode("H*",tDigestStr,tBinDecodetDigestStr)
+  get binarydecode("H*",tDigestStr,tBinDecodedDigestStr)
 
-  return tBinDecodetDigestStr
+  return tBinDecodedDigestStr
 end rigHexDigest
 
 
