@@ -2592,7 +2592,7 @@ end rigUrlEncodeRFC
 
 
 /*----------------------------------------------------------------------
---| FUNCTION urlDecodeRFC
+--| FUNCTION rigUrlDecodeRFC
 --|
 --| Author: rabit
 --| Version:  1.0
@@ -2602,20 +2602,20 @@ end rigUrlEncodeRFC
 --|
 --| Summary: URL decoding that does conform to RFC3986.
 --|
---| Format:  urlDecodeRFC(params1)
+--| Format:  rigUrlDecodeRFC(params1)
 --|
 --| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function urlDecodeRFC pStr
+function rigUrlDecodeRFC pStr
     replace "%20" with "+" in pStr
     put URLDecode(pStr) into pStr
     put textDecode(pStr,"UTF-8") into pStr
 
     return pStr
-end urlDecodeRFC
+end rigUrlDecodeRFC
 
 
 
