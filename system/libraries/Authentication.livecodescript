@@ -24,7 +24,7 @@ script "Authentication"
 # @subpackage	Libraries
 # @category	  Authentication
 # @author		  rabit@revigniter.com
-# @link		    https://revigniter.com/userGuide/libraries/authentication.html
+# @link		    https://revigniter.com/userGuide/libraries/authentication/index.html
 ##
 
 ## ------------------------------------------------------------------------

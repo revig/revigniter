@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -145,6 +145,12 @@ return tToDo ?>
 
 <p>Asynchronous requests are currently (up to LC server version 9.0.1) not working, presumably this is due to a bug in tsNet, <a href="http://quality.livecode.com/show_bug.cgi?id=18961">see bug 18961.</a></p>
 
+
+<h2>Output Compression</h2>
+
+<p>Gzip output compression does not work with 32bit Linux LC server versions 9.0.5 and 9.5.0. So, if you set gConfig["compress_output"] in config.lc to TRUE you need to use either a 64bit server or the 32bit flavor of version 9.0.4.</p>
+
+<p>See <a href="https://quality.livecode.com/show_bug.cgi?id=22098">LC server bug (22098)</a></p>
 
 
 </div>

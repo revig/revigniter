@@ -45,12 +45,12 @@ global gRigA
  --| Requires: rigLogMessage
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -70,15 +70,15 @@ end libraryStack
 --| FUNCTION rigGalleriaData
 --|
 --| Author: rabit
---| Version:  1.8
---| Created: 11-12-2011
---| Last Mod: 02-02-2015
+--| Version:  1.9
+--| Created: 2011-12-11
+--| Last Mod: 2019-08-28
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
 --| Summary: Write Galleria image and initialization data, return a reference to it or the data itself.
 --| 				  The Galleria version currently supported is 1.5.7, see https://galleria.io/.
---| 
+--|
 --| Format:  rigGalleriaData(param1, param2, param3, param4, param5, param6)
 --|
 --| Parameters: mixed <pGalleryPath> root relative path to Galleria folder,
@@ -105,7 +105,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
   local tCurrentImageName, tCurrentImageSuffix, tInfoArray, tLastMod
   local tCurrentImageCB, tThumb, tThumbURL, tImageURL, tBig, tBigURL
   local tCurrentMetaLineNum, tGalleriaDataOptions
-  
+
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pGalleryPath is an array then
 		put pGalleryPath into tGalleriaParams
@@ -121,7 +121,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	# PREPARE PARAMETER VALUES
 	# GALLERIA FOLDER PATH
 	put rigTrim(pGalleryPath, "/") into tGalleryPath
-	
+
 	# GALLERIA OPTIONS
 	# SET DEFAULT VALUE FOR HEIGHT
 	if pOptions is not an array then
@@ -132,7 +132,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			put "420" into tOptions["height"]
 		end if
 	end if
-	
+
 	# ID
 	# SET DEFAULT VALUE
 	if pContainerID <> empty then
@@ -156,7 +156,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	else
 		put TRUE into tCacheBuster
 	end if
-	
+
 	# REPLACE DATA FILE FLAG
 	# SET DEFAULT VALUE
 	if pReplaceDataFile <> "" then
@@ -164,19 +164,27 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	else
 		put FALSE into tReplaceDataFile
 	end if
-	
+
 	# RETURN REFERENCE FLAG
 	if pReturnReference <> "" then
 		put pReturnReference into tReturnReference
 	else
 		put TRUE into tReturnReference
 	end if
-	
+
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
 	put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
-	# REMOVE index.lc
+
 	set the itemDel to "/"
+
+  # FIX FOR RARE CASES WHERE THE SERVER GLOBAL GIVES
+  # THE WRONG PATH TO THE CURRENT SCRIPT (index.lc)
+  if "index" is not in item -1 of tPathTranslated then
+    put gRigA["pathTranslated"] into tPathTranslated
+  end if
+
+  # REMOVE index.lc
 	put (item 1 to - 2 of tPathTranslated) & "/" into tPathTranslated
 
 	# IS A CACHE BUSTER REQUESTED?
@@ -190,7 +198,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	# GET BASE URL
 	put rigFetchConfigItem("baseUrl") into tURLbase
 
-	# GET FULL PATHS TO FILES 
+	# GET FULL PATHS TO FILES
 	rigLoadHelper "file"
 	if there is a folder (tPathTranslated & tGalleryPath) then
 		put rigGetFileNames((tPathTranslated & tGalleryPath), TRUE,) into tFileNamesArray
@@ -198,27 +206,27 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 		rigLogMessage "error", "Missing galleria folder."
 		return FALSE
 	end if
-	
+
 	# GET SORTED LIST OF FILES
 	repeat for each key tKey in tFileNamesArray
 		put tFileNamesArray[tKey] & return after tFileNamesList
 	end repeat
 	delete char -1 of tFileNamesList
 	sort lines of tFileNamesList ascending text by item -1 of each
-	
+
 	# CHECK IF JSON FILE EXISTS ALREADY
 	put tDataVariableName & ".js" into tJSONfile
 	repeat for each key tKey in tFileNamesArray
 		put tFileNamesArray[tKey] into tCurrentVal
 		if item -1 of tCurrentVal is tJSONfile then
-			
+
 			# CHECK FOR CACHE BUSTING ON LAST SAVE
 			put URL format("file:%s", tCurrentVal) into tJSONfileContent
-			
+
       	if the result <> empty then
         	rigLogMessage "error", "Failed to read file! System error:" && the sysError
       	end if
-			
+
 			if "creationDate" is among the words of line 1 of tJSONfileContent then
 				put TRUE into tCbJSONfile
 				set the itemDel to "="
@@ -227,12 +235,12 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 				put FALSE into tCbJSONfile
 				put the secs into tCreationDate
 			end if
-			
+
 			# ADD TIMESTAMP TO NAME
 			if tDoCacheBusting is TRUE then
 				put tDataVariableName & "-cb" & tCreationDate & "." & "js" into tJSONfile
 			end if
-			
+
 			# DELETE FILE IF CACHE BUSTING SETTING HAS CHANGED
 			# OR REPLACE FILE IF FLAG IS TRUE
 			# OTHERWISE RETURN EXISTING SOURCE
@@ -292,7 +300,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	repeat for each line thisLine in tFileNamesList
 		set the itemDel to "/"
 		# GET IMAGE NAME AND SUFFIX
-		put thisLine into tCurrentImagePath	
+		put thisLine into tCurrentImagePath
 		put item -1 of tCurrentImagePath into tCurrentImage
 		set the itemDel to "."
 		put item 1 to -2 of tCurrentImage into tCurrentImageName
@@ -333,7 +341,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			end if
 			replace "/" with ("\/" ) in tThumbURL
 			put "thumb: '" & tThumbURL & "'," & return after tGalleriaData
-			
+
 
 			#IMAGE
 			put tURLbase & tGalleryPath & "/" & tCurrentImageCB into tImageURL
@@ -351,7 +359,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 					end if
 				end repeat
 			end if
-			
+
 			if tBig is TRUE then
 				put tURLbase & tGalleryPath & "/big/" & tCurrentImageCB into tBigURL
 			else
@@ -359,7 +367,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			end if
 			replace "/" with ("\/" ) in tBigURL
 			put "big: '" & tBigURL & "'," & return after tGalleriaData
-			
+
 
 			# META DATA
 			put lineOffset(tCurrentImage, tMetaData) into tCurrentMetaLineNum
@@ -376,17 +384,17 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 
 		end if -- if tCurrentImageSuffix is among the words of "jpg jpeg png gif" then
 	end repeat
-	
-	
+
+
 	# ADD VIDEO AND IFRAME DATA
 	put rigGalleriaVideoIframeData(tMetaData, tGalleriaData, tURLbase, tGalleryPath) into tGalleriaData
-	
+
 
 	delete char -4 to -1 of tGalleriaData
-	
+
 	# BUILD GALLERIA OPTIONS DATA
 	put rigGalleriaOptions(tOptions) into tGalleriaDataOptions
-	
+
 	# BUILD INITIALIZATION CODE
 	put tGalleriaData & return & "];" & return & "Galleria.run('#" & tContainerID & "', {" & return & "dataSource:" && \
 			tDataVariableName & "," & tGalleriaDataOptions & return & "});" into tGalleriaData
@@ -399,7 +407,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 		put (tURLbase & tGalleryPath & "/" & tJSONfile) into tJSONurl
 		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tJSONurl & quote & "></script>"
 	end if
-	
+
 	return tGalleriaData
 
 end rigGalleriaData
@@ -413,15 +421,15 @@ end rigGalleriaData
 --| FUNCTION rigDynamicGalleriaData
 --|
 --| Author: rabit
---| Version:  1.5
---| Created: 27-12-2011
---| Last Mod: 21-03-2014
+--| Version:  1.6
+--| Created: 2011-12-27
+--| Last Mod: 2019-08-28
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
---| 					rigGetFileInfo()
+--| 					 rigGetFileInfo()
 --|
 --| Summary: Return Galleria initialisation code and JSON data based on dynamically generated meta data.
---| 				  The Galleria version currently supported is 1.2.7, see http://galleria.io/.
---| 
+--| 				   The Galleria version currently supported is 1.2.7, see http://galleria.io/.
+--|
 --| Format:  rigDynamicGalleriaData(param1, param2, param3, param4, param5, param6)
 --|
 --| Parameters: mixed <pMetaData> tab delimeted list of Galleria meta data,
@@ -440,7 +448,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
   local tBigNamesArray, tCurrentImage, tCurrentImageName, tCurrentImageSuffix
   local tInfoArray, tLastMod, tCurrentImageCB, tThumb, tThumbURL, tImageURL
   local tBig, tBigURL, tGalleriaDataOptions
-  
+
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pMetaData is an array then
 		put pMetaData into tGalleriaParams
@@ -450,12 +458,12 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 		put tGalleriaParams["dataVariableName"] into pDataVariableName
 		put tGalleriaParams["cacheBuster"] into pCacheBuster
 	end if
-	
+
 	if pMetaData is empty then
 		rigLogMessage "error", "No Galleria meta data specified."
 		return FALSE
 	end if
-	
+
 	# PREPARE PARAMETER VALUES
 	# GALLERIA OPTIONS
 	# SET DEFAULT VALUE FOR HEIGHT
@@ -467,7 +475,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 			put "420" into tOptions["height"]
 		end if
 	end if
-	
+
 	# ID
 	# SET DEFAULT VALUE
 	if pContainerID <> empty then
@@ -494,8 +502,16 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
 	put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
-	# REMOVE index.lc
+
 	set the itemDel to "/"
+
+  # FIX FOR RARE CASES WHERE THE SERVER GLOBAL GIVES
+  # THE WRONG PATH TO THE CURRENT SCRIPT (index.lc)
+  if "index" is not in item -1 of tPathTranslated then
+    put gRigA["pathTranslated"] into tPathTranslated
+  end if
+
+  # REMOVE index.lc
 	put (item 1 to - 2 of tPathTranslated) & "/" into tPathTranslated
 
 	# IS A CACHE BUSTER REQUESTED?
@@ -508,16 +524,16 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 
 	# GET BASE URL
 	put rigFetchConfigItem("baseUrl") into tURLbase
-	
+
 	# START BUILDING GALLERIA JSON DATA
 	put "var" &&  tDataVariableName && "= [" & return & "{" & return into tGalleriaData
-	
+
 	rigLoadHelper "file"
 
 	repeat for each line dataLine in pMetaData
 
 		set the itemDel to "."
-		
+
 		# DON'T PROCESS LINE IF IT IS VIDEO OR IFRAME DATA
 		if (item 2 of dataLine <> "youtube") and (item 2 of dataLine <> "dailymotion") and (char -5 to -1 of item 1 of dataLine <> "vimeo") then
 
@@ -544,7 +560,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 				put rigGetFileNames(tGalleryPath & "/big", TRUE,) into tBigNamesArray
 			end if
 
-			# GET IMAGE NAME AND SUFFIX	
+			# GET IMAGE NAME AND SUFFIX
 			put item -1 of tCurrentImagePath into tCurrentImage
 			set the itemDel to "."
 			put item 1 to -2 of tCurrentImage into tCurrentImageName
@@ -634,14 +650,14 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 
 	# ADD VIDEO AND IFRAME DATA
 	put rigGalleriaVideoIframeData(pMetaData, tGalleriaData, tURLbase, tGalleryPath, TRUE) into tGalleriaData
-		
+
 
 	delete char -4 to -1 of tGalleriaData
 
-	
+
 	# BUILD GALLERIA OPTIONS DATA
 	put rigGalleriaOptions(tOptions) into tGalleriaDataOptions
-	
+
 	# BUILD INITIALIZATION CODE
 	put tGalleriaData & return & "];" & return & "Galleria.run('#" & tContainerID & "', {" & return & "dataSource:" && \
 			tDataVariableName & "," & tGalleriaDataOptions & return & "});" into tGalleriaData
@@ -665,7 +681,7 @@ end rigDynamicGalleriaData
 --| Requires: --
 --|
 --| Summary: Build JSON data for a given line of the tsv file.
---| 
+--|
 --| Format:  rigGalleriaItemData(param1)
 --|
 --| Parameters: string <pDatastring>
@@ -675,9 +691,9 @@ end rigDynamicGalleriaData
 
 function rigGalleriaItemData pDatastring
   local tTitle, tGalleriaData, tDescription, tLink, tLayer, tOriginal
-  
+
 	set the itemDel to tab
-	
+
 	# TITLE
 	put item 2 of pDatastring into tTitle
 	if tTitle <> empty then
@@ -701,13 +717,13 @@ function rigGalleriaItemData pDatastring
 	if tLayer <> empty then
 		put "layer:" && "'" & tLayer & "'," & return after tGalleriaData
 	end if
-	
+
 	# ORIGINAL
 	put item 6 of pDatastring into tOriginal
 	if tOriginal <> empty then
 		put "original:" && "'" & tOriginal & "'" & return after tGalleriaData
 	end if
-	
+
 	return tGalleriaData
 end rigGalleriaItemData
 
@@ -727,7 +743,7 @@ end rigGalleriaItemData
 --| Requires: --
 --|
 --| Summary: Build Galleria options data.
---| 
+--|
 --| Format:  rigGalleriaOptions(param1)
 --|
 --| Parameters: array <pOptions>
@@ -737,14 +753,14 @@ end rigGalleriaItemData
 
 function rigGalleriaOptions pOptions
   local tKey, tVal, tGalleriaDataOptions
-  
+
 	repeat for each key tKey in pOptions
 		put pOptions[tKey] into tVal
 		put return & tKey & ":" && tVal & "," after tGalleriaDataOptions
 	end repeat
-	
+
 	delete char -1 of tGalleriaDataOptions
-	
+
 	return tGalleriaDataOptions
 end rigGalleriaOptions
 
@@ -763,7 +779,7 @@ end rigGalleriaOptions
 --| Requires: rigGalleriaItemData()
 --|
 --| Summary: Get video and iFrame data from tsv file.
---| 
+--|
 --| Format:  rigGalleriaVideoIframeData(param1, param2, param3, param4)
 --|
 --| Parameters: string <pMetadata>, string <pGalleriaData>, string <pURLbase>,
@@ -776,7 +792,7 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
   local tImageDataExists, tLineCount, tItemType, tCurrentDataSection
   local tSectionStartLineNum, tOffsetLineNum, tTotalOffsetLines, tTempGalleriaData
   local tItemThumb, tThumbURL
-  
+
 	# CHECK IF THERE IS IMAGE DATA OR IF THE DATA IS DYNAMICALLY GENERATED
 	if (the number of lines of pGalleriaData > 3) or (pDynamicData is TRUE) then
 		put TRUE into tImageDataExists
@@ -786,7 +802,7 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 	put 1 into tLineCount
 	repeat for each line thisLine in pMetaData
 		set the itemDel to "."
-		
+
 		# CHECK IF THERE IS VIDEO OR IFRAME DATA
 		if (item 2 of thisLine is "youtube") or (item 2 of thisLine is "dailymotion") or (char -5 to -1 of item 1 of thisLine is "vimeo") then
 			put "video" into tItemType
@@ -795,7 +811,7 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 		else
 			put "image" into tItemType
 		end if
-		
+
 		if (tItemType is "video") or (tItemType is "iFrame") then
 
 			# GET THE LINE NUMBER TO APPEND THE DATA TO
@@ -806,10 +822,10 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 			  put 0 into tTotalOffsetLines
 				repeat until tCurrentDataSection is (tLineCount)
 					put lineOffset("{", pGalleriaData, tSectionStartLineNum) into tOffsetLineNum
-					
+
 					add tOffsetLineNum to tTotalOffsetLines
 		      put tTotalOffsetLines into tSectionStartLineNum
-					
+
 					if tOffsetLineNum <> 0 then
 						add 1 to tCurrentDataSection
 					else
@@ -817,14 +833,14 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 					end if
 				end repeat
 			end if
-			
+
 			# META DATA
 			set the itemDel to tab
 			put tItemType & ": '" & item 1 of thisLine & "'," & return into tTempGalleriaData
-			
+
 			# ADDITIONAL META DATA FOR CURRENT ITEM
 			put rigGalleriaItemData(thisLine) after tTempGalleriaData
-			
+
 			# THUMB DATA
 			set the itemDel to tab
 			put item 7 of thisLine into tItemThumb
@@ -844,7 +860,7 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 			end if
 
 			put "}," & return & "{" & return after tTempGalleriaData
-			
+
 			# APPEND OR INSERT DATA
 			if tImageDataExists then
 				# REMOVE RETURN CHARACTER
@@ -853,12 +869,12 @@ function rigGalleriaVideoIframeData pMetadata pGalleriaData pURLbase pGalleryPat
 			else
 				put tTempGalleriaData after pGalleriaData
 			end if
-			
-			
+
+
 		end if
 		add 1 to tLineCount
 	end repeat
-	
+
 	return pGalleriaData
 end rigGalleriaVideoIframeData
 
@@ -876,7 +892,7 @@ end rigGalleriaVideoIframeData
 --| Requires: --
 --|
 --| Summary: Return JSON compatible escaped string.
---| 
+--|
 --| Format:  rigGalleriaDataEscape(param1)
 --|
 --| Parameters: string <pData>
@@ -889,7 +905,7 @@ function rigGalleriaDataEscape pData
 	replace "\" with ("\\" ) in pData
 	replace "/" with ("\/" ) in pData
 	replace "'" with ("\'" ) in pData
-	
+
 	return pData
 end rigGalleriaDataEscape
 

@@ -91,7 +91,7 @@ end libraryStack
 --|
 --| Format:  rigLoadLibrary param1
 --|
---| Parameters: string <pName> the library being requested
+--| Parameters: string <pLibName> the library being requested
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -615,9 +615,9 @@ end rigCanWriteFileTo
 --|
 --| Author: Dave Cragg
 --| Modification: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created:  --
---| Last Mod: 2019-01-05
+--| Last Mod: 2019-08-18
 --| Requires: --
 --|
 --| Summary: This will convert the 128-bit value that md5digest() returns, or the 256-bit
@@ -632,7 +632,7 @@ end rigCanWriteFileTo
 ----------------------------------------------------------------------*/
 
 function rigHexDigest pStr
-  local tDigestStr, tBinDecodetDigestStr
+  local tDigestStr, tBinDecodedDigestStr
 
 	set the itemDel to "."
 
@@ -642,9 +642,9 @@ function rigHexDigest pStr
     put messageDigest(pStr, "SHA3-256") into tDigestStr
   end if
 
-  get binarydecode("H*",tDigestStr,tBinDecodetDigestStr)
+  get binarydecode("H*",tDigestStr,tBinDecodedDigestStr)
 
-  return tBinDecodetDigestStr
+  return tBinDecodedDigestStr
 end rigHexDigest
 
 
@@ -1719,9 +1719,9 @@ end rigCheckType
 --| FUNCTION rigRandomNum
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 14-10-09
---| Last Mod: 21-03-14
+--| Version:  1.3
+--| Created: 2009-10-14
+--| Last Mod: 2019-07-31
 --| Requires: --
 --|
 --| Summary: Get the random number used for encryption and to build a session id.
@@ -1738,14 +1738,14 @@ function rigRandomNum
 
   put "" into tSessID
 
+  put 2147483647 into tUpperLimit
+  put 0 into tLowerLimit
+
   put 1 into tCounter
 
   repeat while (the length of tSessID) < 32
     put (char -8 to -1 of the millisecs) + tCounter into tSeed
     set the randomSeed to tSeed
-
-    put 2147483647 into tUpperLimit
-    put 0 into tLowerLimit
 
     put random(tUpperLimit - tLowerLimit + 1) + tLowerLimit -1 after tSessID
 
@@ -2561,24 +2561,24 @@ end rigIsAbsolutePath
 
 
 /*----------------------------------------------------------------------
---| FUNCTION urlEncodeRFC
+--| FUNCTION rigUrlEncodeRFC
 --|
 --| Author: LiveCode Ltd.
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-18
---| Last Mod: 2019-06-18
+--| Last Mod: 2019-08-22
 --| Requires: --
 --|
 --| Summary: URL encoding that does conform to RFC3986.
 --|
---| Format:  urlEncodeRFC(param1)
+--| Format:  rigUrlEncodeRFC(param1)
 --|
 --| Parameters: string <pStr>
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function urlEncodeRFC pStr
+function rigUrlEncodeRFC pStr
    if pStr is strictly a string then
       put textEncode(pStr,"UTF-8") into pStr
    end if
@@ -2586,7 +2586,36 @@ function urlEncodeRFC pStr
    replace "+" with "%20" in pStr
 
    return pStr
-end urlEncodeRFC
+end rigUrlEncodeRFC
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigUrlDecodeRFC
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2019-08-01
+--| Last Mod: 2019-08-01
+--| Requires: --
+--|
+--| Summary: URL decoding that does conform to RFC3986.
+--|
+--| Format:  rigUrlDecodeRFC(params1)
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+function rigUrlDecodeRFC pStr
+    replace "%20" with "+" in pStr
+    put URLDecode(pStr) into pStr
+    put textDecode(pStr,"UTF-8") into pStr
+
+    return pStr
+end rigUrlDecodeRFC
 
 
 

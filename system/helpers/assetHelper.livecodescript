@@ -49,12 +49,12 @@ local sImageFolder, sJavascriptFolder, sCSSfolder, sCacheBusterList, sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -64,14 +64,14 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # SET INITIAL VALUES
       put "img" into sImageFolder
       put "js" into sJavascriptFolder
       put "css" into sCSSfolder
       #
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -93,7 +93,7 @@ end libraryStack
 --|
 --| Summary: General Asset Helper - Helps generate links to asset files of any sort.
 --|            Asset type should be the name of the folder they are stored in.
---| 
+--|
 --| Format:  _rigOtherAssetURL(param1, param2, param3, param4)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, string <pType> the asset type (name of folder),
@@ -106,26 +106,26 @@ end libraryStack
 private function _rigOtherAssetURL pAsset pType pModule pCacheBuster
   local tCacheBuster, tModulesPath, tBaseURL, tAssetsLoc, tDoCacheBusting
   local tTempAssetsLoc, tAsset
-  
+
 	if pCacheBuster <> "" then
 		put pCacheBuster into tCacheBuster
 	else
 		put TRUE into tCacheBuster
 	end if
-	
+
 	if pModule is not empty then
 		put "modules/" & pModule into tModulesPath
 	else
 		put "" into tModulesPath
 	end if
-	
+
 	put rigFetchConfigItem("baseUrl") into tBaseURL
 	put rigFetchConfigItem("assetsLocation") into tAssetsLoc
 
 	if tAssetsLoc is empty then
 		put "assets" into tAssetsLoc
 	end if
-	
+
 	# IS A CACHE BUSTER REQUESTED?
 	put rigFetchConfigItem("use_cacheBusters") into tDoCacheBusting
 	if (tDoCacheBusting is TRUE) and (tCacheBuster is TRUE) then
@@ -134,7 +134,7 @@ private function _rigOtherAssetURL pAsset pType pModule pCacheBuster
 		else
 			put tAssetsLoc into tTempAssetsLoc
 		end if
-		
+
 		put _rigCbName(pAsset, pType, tTempAssetsLoc) into tAsset
 	else
 		put pAsset into tAsset
@@ -169,7 +169,7 @@ end _rigOtherAssetURL
 --| Requires: --
 --|
 --| Summary: Turns an array of attributes into a string.
---| 
+--|
 --| Format:  _rigParseAssetHTML(param1)
 --|
 --| Parameters: array <pAttributes> attributes to be parsed
@@ -179,7 +179,7 @@ end _rigOtherAssetURL
 
 private function _rigParseAssetHTML pAttributes
   local tKey, tVal, tAttributeStr
-  
+
 	if pAttributes is an array then
 		repeat for each key tKey in pAttributes
 			put pAttributes[tKey] into tVal
@@ -206,7 +206,7 @@ end _rigParseAssetHTML
 --| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate CSS asset locations.
---| 
+--|
 --| Format:  _rigCssAssetURL(param1, param2)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, string <pModule> optional module name
@@ -236,7 +236,7 @@ end _rigCssAssetURL
 --| Requires: _rigParseAssetHTML(), _rigCssAssetURL()
 --|
 --| Summary: Generate css asset location html code.
---| 
+--|
 --| Format:  rigCssAsset(param1, param2, param3, param4)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, array <pAttributes> optional extra attributes
@@ -248,7 +248,7 @@ end _rigCssAssetURL
 
 function rigCssAsset pAsset pAttributes pModule pCacheBuster
   local tAttributeStr, tAssetUrl
-  
+
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
 	put _rigCssAssetURL(pAsset, pModule, pCacheBuster) into tAssetUrl
 
@@ -271,10 +271,10 @@ end rigCssAsset
 --|
 --| Summary: Simple CSS preprocessor which dynamically generates CSS files using the
 --|            gData array variable and a raw css file. File name prototype: <filename>.css.lc
---| 
+--|
 --| Format:  rigDynamicCssAsset(param1, param2, param3, param4)
 --|
---| Parameters: string <pRawCSS> the name of the raw css file to be processed, 
+--| Parameters: string <pRawCSS> the name of the raw css file to be processed,
 --|               array <pAttributes> optional extra attributes, string <pModule> optional module name
 --|               bool <pCacheBuster> compose cache buster file names (optional)
 --|
@@ -284,9 +284,9 @@ end rigCssAsset
 function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
   local tAttributeStr, tCurrentItemDel, tCSS, tModulesPath, tBasePath
   local tAssetsLoc, tRawCssPath, tCssPath, tCSSdata, tAssetUrl
-  
+
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
-	
+
 	# SET NAME OF CSS FILE TO BE GENERATED
 	put the itemDel into tCurrentItemDel
 	set the itemDel to "."
@@ -299,14 +299,14 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
 	else
 		put "" into tModulesPath
 	end if
-	
+
 	put item 1 to -2 of gRigA["BASEPATH"] into tBasePath
 	put rigFetchConfigItem("assetsLocation") into tAssetsLoc
 
 	if tAssetsLoc is empty then
 		put "assets" into tAssetsLoc
 	end if
-	
+
 	put tBasePath & tAssetsLoc & "/" into tAssetsLoc
 
 	if tModulesPath is not empty then
@@ -314,30 +314,30 @@ function rigDynamicCssAsset pRawCSS pAttributes pModule pCacheBuster
 	end if
 
 	put sCSSfolder & "/" after tAssetsLoc
-	
+
 	put tAssetsLoc & pRawCSS into tRawCssPath
 	put tAssetsLoc & tCSS into tCssPath
 
 	# MERGE RAW FILE AND SAVE CSS TO BE LINKED TO
 	if there is a file tRawCssPath then
   	put URL ("binfile:" & tRawCssPath) into tCSSdata
-		
+
     if the result is empty then
       put merge(tCSSdata) into tCSSdata
       put tCSSdata into URL ("binfile:" & tCssPath)
-			
+
 		  if the result <> empty then
 		    rigLogMessage "error", "Failed to write file! System error:" && the sysError
 		  end if
-			
+
     else
       rigLogMessage "error", "Failed to read file! System error:" && the sysError
     end if
-		
+
 	else
 		rigLogMessage "error", "Raw CSS file" && quote & tRawCssPath & quote && "missing!"
 	end if
-	
+
 	put _rigCssAssetURL(tCSS, pModule, pCacheBuster) into tAssetUrl
 
 	return "<link href=" & quote & tAssetUrl & quote && "rel=" & quote & "stylesheet" & quote && "type=" & quote & "text/css" & quote && tAttributeStr && "/>"
@@ -358,7 +358,7 @@ end rigDynamicCssAsset
 --| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate image asset locations.
---| 
+--|
 --| Format:  rigImgAssetURL(param1, param2, param3)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, string <pModule> optional module name,
@@ -388,7 +388,7 @@ end rigImgAssetURL
 --| Requires: _rigParseAssetHTML(), rigImgAssetURL()
 --|
 --| Summary: Generate image asset location html code.
---| 
+--|
 --| Format:  rigImageAsset(param1, param2, param3, param4)
 --|
 --| Parameters: string <pAsset> the name of the file or asset, array <pAttributes> optional extra attributes
@@ -400,7 +400,7 @@ end rigImgAssetURL
 
 function rigImageAsset pAsset pAttributes pModule pCacheBuster
   local tAttributeStr, tAssetUrl
-  
+
 	put _rigParseAssetHTML(pAttributes) into tAttributeStr
 	put rigImgAssetURL(pAsset, pModule, pCacheBuster) into tAssetUrl
 
@@ -424,7 +424,7 @@ end rigImageAsset
 --| Requires: _rigOtherAssetURL()
 --|
 --| Summary: Helps generate JavaScript asset locations.
---| 
+--|
 --| Format:  rigJsAssetURL(param1, param2, param3)
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
@@ -436,14 +436,14 @@ end rigImageAsset
 
 function rigJsAssetURL pAsset pModule pCacheBuster
   local tURL
-  
+
 	put _rigOtherAssetURL(pAsset, sJavascriptFolder, pModule, pCacheBuster) into tURL
-	
+
 	if char 1 to 4 of tURL is "http" then
 		set the itemDel to "/"
 		put "//" & item 3 to -1 of tURL into tURL
 	end if
-	
+
 	return tURL
 end rigJsAssetURL
 
@@ -470,7 +470,7 @@ end rigJsAssetURL
 --|            Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
 --|            For a list of available libraries see:
 --|            http://code.google.com/apis/libraries/devguide.html
---| 
+--|
 --| Format:  rigJsAsset(param1, param2, param3)
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
@@ -484,21 +484,21 @@ end rigJsAssetURL
 
 function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
   local tAttribute, tAssetUrl, tLib, tVersion, tLibName, tObject, tScriptReference
-  
+
 	put empty into tAttribute
 	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
 		put " " & pAttribute into tAttribute
 	end if
-	
+
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
-      
+
       return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
    else
       set the itemDelimiter to "-"
       put item 2 of pAsset into tLib
       put item 3 of pAsset into tVersion
-      
+
       switch tLib
          case "dojo"
             put "dojo.xd.js" into tLibName
@@ -543,7 +543,7 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
          default
             put "NA" into tLibName
       end switch
-      
+
 			if pCacheBusterOrFallbackAsset is empty then
   			return "<script" && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
 			end if
@@ -552,7 +552,7 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
 
 						put "<script" && tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
 			& "<script>window." & tObject && "|| document.write(" & quote & "<script" && tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
-			
+
 			return tScriptReference
 		end if
 end rigJsAsset
@@ -574,7 +574,7 @@ end rigJsAsset
 --| Requires: rigFetchConfigItem(), _rigCbName()
 --|
 --| Summary: Generates a link tag using the base url that points to favicon.
---| 
+--|
 --| Format:  rigAddFavicon(param1, param2)
 --|
 --| Parameters: string <pModule> optional module name,
@@ -586,13 +586,13 @@ end rigJsAsset
 function rigAddFavicon pModule pCacheBuster
   local tCacheBuster, tAsset, tBase, tAssetsLoc, tModulesPath, tDoCacheBusting
   local tTempAssetsLoc
-  
+
 	if pCacheBuster <> "" then
 		put pCacheBuster into tCacheBuster
 	else
 		put TRUE into tCacheBuster
 	end if
-	
+
 	put "favicon.ico" into tAsset
 	put rigFetchConfigItem("baseUrl") into tBase
 	put rigFetchConfigItem("assetsLocation") into tAssetsLoc
@@ -606,7 +606,7 @@ function rigAddFavicon pModule pCacheBuster
 	if tAssetsLoc is empty then
 		put "assets" into tAssetsLoc
 	end if
-	
+
 	# IS A CACHE BUSTER REQUESTED?
 	put rigFetchConfigItem("use_cacheBusters") into tDoCacheBusting
 	if tDoCacheBusting is TRUE then
@@ -615,7 +615,7 @@ function rigAddFavicon pModule pCacheBuster
 		else
 			put tAssetsLoc into tTempAssetsLoc
 		end if
-		
+
 		put _rigCbName(tAsset, sImageFolder, tTempAssetsLoc) into tAsset
 	end if
 
@@ -647,7 +647,7 @@ end rigAddFavicon
 --| Summary: Includes the modification time with the name of a given file
 --|            <name>-cb<lastModified>.<suffix>
 --|            Note: A mod_rewrite RewriteRule is needed to redirect to the original file!
---| 
+--|
 --| Format:  _rigCbName(param1, param2, param3)
 --|
 --| Parameters: string <pAsset>, string <pType>, string <pAssetsLoc>
@@ -658,7 +658,7 @@ end rigAddFavicon
 private function _rigCbName pAsset pType pAssetsLoc
   local tRootPath, tAssetFilter, tAssetPath, tFolder, tFileList, tInfo
   local tLastMod, tAssetName, tAssetSuffix, tAssetCB
-  
+
 	# GET SERVER PATH TO THE ROOT DIRECTORY
 	set the itemDelimiter to "/"
 	put (item 1 to -2 of gRigA["BASEPATH"]) & "/" into tRootPath
@@ -670,10 +670,10 @@ private function _rigCbName pAsset pType pAssetsLoc
 		put item -1 of pAsset into tAssetFilter
 		put (item 1 to -2 of pAsset) & "/" into tAssetPath
 	end if
-	
+
 	# COMPOSE SERVER PATH TO LOCATION OF ASSET
 	put tRootPath & pAssetsLoc & "/" & pType & "/" & tAssetPath into tFolder
-	
+
 	# GET FILE LIST OF FOLDER
   put urldecode(files(tFolder, "detailed")) into tFileList
 
@@ -711,14 +711,14 @@ end _rigCbName
 --| COMMAND rigWriteManifest
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 05-10-2011
---| Last Mod: 21-03-2014
+--| Version:  1.3
+--| Created: 2011-10-05
+--| Last Mod: 2019-08-28
 --| Requires: rigTrim() (in Common.lc), rigLoadHelper, rigGetFileNames(),
 --|					rigWriteFile(), rigHexDigest() (in Common.lc), rigGetFileInfo()
 --|
 --| Summary: Write a manifest file used to store resources in the HTML5 application cache.
---| 
+--|
 --| Format:  rigWriteManifest param1, param2, param3, param4, param5, param6
 --|
 --| Parameters: string <pResourcesDir> root relative path to resources to be cached,
@@ -740,11 +740,11 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
   local tOnlineResource, tOnlineAsset, tOnlineResourceInfoArray, tOnlineAssetLastMod
   local tOnlineAssetName, tOnlineAssetSuffix, tOnlineAssetCB, tModDates
   local tProcessedFallbackItems, tNetworkWildcardSet
-  
+
 	# PREPARE PARAMETER VALUES
 	put rigTrim(pResourcesDir, "/") into tResourcesDir
 	put rigTrim(pDirToIgnore, "/") into tDirToIgnore
-	
+
 	if pUseAbsoluteURI is empty then
 		put FALSE into tUseAbsoluteURI
 	else
@@ -771,19 +771,26 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 			end if
 		end repeat
 	end if
-	
+
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
 	put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
+
+  # FIX FOR RARE CASES WHERE THE SERVER GLOBAL GIVES
+  # THE WRONG PATH TO THE CURRENT SCRIPT (index.lc)
+  if "index" is not in item -1 of tPathTranslated then
+    put gRigA["pathTranslated"] into tPathTranslated
+  end if
+
 	# REMOVE index.lc
 	put (item 1 to - 2 of tPathTranslated) & "/" into tPathTranslated
 
 	# IS A CACHE BUSTER REQUESTED?
 	put rigFetchConfigItem("use_cacheBusters") into tDoCacheBusting
-	
+
 	# GET BASE URL
 	put rigFetchConfigItem("baseUrl") into tURLbase
 
-	# GET FULL PATHS TO FILES 
+	# GET FULL PATHS TO FILES
 	rigLoadHelper "file"
 	put rigGetFileNames(tResourcesDir, TRUE, TRUE) into tFileNamesArray
 
@@ -807,21 +814,21 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 			else
 				put item tDirNameOffset to -1 of tCurrentVal into tFile
 			end if
-			
+
 			# GET MODIFICATION DATE
-			put tPathTranslated & (item tDirNameOffset to -1 of tCurrentVal) into tAbsoulteFilePath			
+			put tPathTranslated & (item tDirNameOffset to -1 of tCurrentVal) into tAbsoulteFilePath
 			put rigGetFileInfo(tAbsoulteFilePath, "lastModified") into tInfoArray
 
 			put tInfoArray["lastModified"] into tLastMod
 
 			put item -1 of tFile into tAsset
-			
+
 			# CHECK IF CURRENT ITEM IS A FALLBACK ONLINE RESOURCE
 			put FALSE into tIsFallbackOnlineResource
 			set the itemDelimiter to ","
 			if tAsset is among the items of tFallbackOnlineResourcesList then
 				put TRUE into tIsFallbackOnlineResource
-			end if		
+			end if
 
 			# BUILD CACHE BUSTER FILE NAME
 			if (tDoCacheBusting is TRUE) and (tIsFallbackOnlineResource is FALSE) then
@@ -867,8 +874,8 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 								else
 									put tKey into tOnlineResource
 								end if
-							
-													
+
+
 							# BUILD CACHE BUSTER FILE NAME
 							if ("." is in tOnlineResource) and (tDoCacheBusting is TRUE) then
 								put item -1 of tOnlineResource into tOnlineAsset
@@ -946,7 +953,7 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 			set the itemDel to "/"
 		end if
 	end repeat
-	
+
 	# COMPLEMENT FALLBACK LIST
 	if pFallbackResources is an array then
 		if tProcessedFallbackItems is not empty then
@@ -959,11 +966,11 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 
 			if tKey is not among the items of tProcessedFallbackItems then
 				put pFallbackResources[tKey] into tOfflineResource
-				
+
 				if char 1 of tOfflineResource is "/" then
 					delete char 1 of tOfflineResource
 				end if
-				
+
 				put tKey into tOnlineResource
 
 				if tKey <> "/" then
@@ -992,7 +999,7 @@ command rigWriteManifest pResourcesDir pManifestName pUseAbsoluteURI pResourcesO
 			end repeat
 		end if -- if pFallbackResources is an array
 
-	
+
 	# APPAND NETWORK AND FALLBACK RESOURCES TO MANIFEST
 	put tManifest & tNETWORKitems & tFallbackResources into tManifest
 

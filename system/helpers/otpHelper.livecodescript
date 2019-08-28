@@ -78,9 +78,9 @@ end libraryStack
 --| COMMAND rigOTPgenerate
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-15
---| Last Mod: 2019-06-15
+--| Last Mod: 2019-08-15
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Get an OTP providing a secret, token length, hash algorithm, time step and OTP type.
@@ -121,11 +121,11 @@ command rigOTPgenerate pSecret pTokenLength pCryptoType pCryptoNumBits pTimeStep
   end if
 
   if pType is "totp" then
-    put floor(the seconds / pTimeStep) into tTimestamp
-
     if (pTimeStep is empty) or (pTimeStep is not an integer) then
       put 30 into pTimeStep
     end if
+
+    put floor(the seconds / pTimeStep) into tTimestamp
 
     # GENERATE OTP
     return _rigOTPoauthTotp(pSecret, tTimestamp, pTokenLength, pCryptoType, pCryptoNumBits)
@@ -784,10 +784,10 @@ end _rigOTPSha
 --| FUNCTION rigOTPqrCode
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-06-18
---| Last Mod: 2019-06-18
---| Requires: rigOTPvalidBase32Str(), urlEncodeRFC(), rigLoaderLoadLibrary, rigLogMessage
+--| Last Mod: 2019-08-22
+--| Requires: rigOTPvalidBase32Str(), rigUrlEncodeRFC(), rigLoaderLoadLibrary, rigLogMessage
 --|
 --| Summary: Create QR code based on OTP URI data.
 --|
@@ -812,14 +812,14 @@ function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMa
     rigLogMessage "error", "OTP: Missing issuer!"
     return FALSE
   else
-    put urlEncodeRFC(pIssuer) into pIssuer
+    put rigUrlEncodeRFC(pIssuer) into pIssuer
   end if
 
   if pAccount is empty then
     rigLogMessage "error", "OTP: Missing account!"
     return FALSE
   else
-    put urlEncodeRFC(pAccount) into pAccount
+    put rigUrlEncodeRFC(pAccount) into pAccount
     replace "%40" with "@" in pAccount
   end if
 

@@ -25,7 +25,7 @@
 #---------------------------------------------------------------
 #
 # If you want this front controller to use a different "application"
-# folder then the default one you can set its name here. The folder 
+# folder then the default one you can set its name here. The folder
 # can also be renamed or relocated anywhere on your server.
 # For more info please see the user guide:
 # http://www.revigniter.com/userGuide/general/managing_apps.html
@@ -51,23 +51,30 @@
 #
 # Let's attempt to determine the full-server path to the "system"
 # folder in order to reduce the possibility of path problems.
-# Note: We only attempt this if the user hasn't specified a 
+# Note: We only attempt this if the user hasn't specified a
 # full server path.
 #
 ##
 
 	put $_SERVER["PATH_TRANSLATED"] into sTempPath
 
-  put (the platform is "Win32") into sIsWin
-  if sIsWin is TRUE then
-    replace "\" with "/" in sTempPath
-  end if
-  
+ 	put (the platform is "Win32") into sIsWin
+ 	if sIsWin is TRUE then
+		replace "\" with "/" in sTempPath
+ 	end if
+
   set the itemdel to "/"
-  
-  if ((sIsWin is FALSE) and (char 1 of gRigA["systemFolder"] is not "/")) or ((sIsWin is TRUE) and (char 2 of gRigA["systemFolder"] is not ":")) then
-    put item 1 to -2 of sTempPath & "/" & gRigA["systemFolder"] into gRigA["systemFolder"]
-  end if
+# IN RARE CASES THE SERVER GLOBAL GIVES THE WRONG PATH
+# TO THE CURRENT SCRIPT (index.lc). SO, REMOVE URI SEGMENT STRINGS
+# AND STORE THE CORRECT PATH IN gRigA TO BE USED BY OTHER SCRIPTS
+	if "index" is not in item -1 of sTempPath then
+		put (char 1 to (offset("index.lc", sTempPath ) - 1) of sTempPath) & "index.lc" into sTempPath
+	end if
+	put sTempPath into gRigA["pathTranslated"]
+
+ 	if ((sIsWin is FALSE) and (char 1 of gRigA["systemFolder"] is not "/")) or ((sIsWin is TRUE) and (char 2 of gRigA["systemFolder"] is not ":")) then
+   	put item 1 to -2 of sTempPath & "/" & gRigA["systemFolder"] into gRigA["systemFolder"]
+ 	end if
 
 ##
 #---------------------------------------------------------------
@@ -98,7 +105,7 @@
 	--constant BASEPATH = "[[gRigA["systemFolder"]" && quote & "/" & quote & "]]"
 
 	put "." & item -1 of sTempFileName into gRigA["EXT"]
-	
+
 	put sTempPath into gRigA["FCPATH"]
 	put sTempFileName into gRigA["SELF"]
 	put gRigA["systemFolder"] & "/" into gRigA["BASEPATH"]
@@ -110,7 +117,7 @@
 	else
 		# Relative path
 		if gRigA["applicationFolder"] is "" then put "application" into gRigA["applicationFolder"]
-		
+
 		set the itemDel to slash
 		# look for app folder relative to the index folder
 		if there is a folder (item 1 to -2 of sTempPath & "/" & gRigA["applicationFolder"]) then
@@ -125,7 +132,7 @@
 
 
 	set the itemDel to comma
-	
+
   delete variable sTempPath
   delete variable sIsWin
   delete variable sTempFileName

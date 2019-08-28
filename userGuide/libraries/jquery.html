@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -200,7 +200,7 @@ INSERT INTO `people` (`id`, `name`, `age`, `email`) VALUES
 <a id="controller"></a>
 <h2>Controller</h2>
 
-<p>We start with the basic prototype for a controller script. Create a controller called <dfn>ajax.lc</dfn>. In it, place the code below and save it to your <kbd>system/application/controllers/</kbd> folder. Of course, you may remove the comments.</p>
+<p>We start with the basic prototype for a controller script. Create a controller called <dfn>ajax.lc</dfn>. In it, place the code below and save it to your <kbd>application/controllers/</kbd> folder. Of course, you may remove the comments.</p>
 
 
 <div class="codeSample">
@@ -223,7 +223,7 @@ end index
 
 
 --| END OF ajax.lc
---| Location: ./system/application/controllers/ajax.lc
+--| Location: ./application/controllers/ajax.lc
 ----------------------------------------------------------------------
 </code></pre>
 </div>
@@ -400,7 +400,7 @@ end buildTable
 
 
 --| END OF ajax.lc
---| Location: ./system/application/controllers/ajax.lc
+--| Location: ./application/controllers/ajax.lc
 ----------------------------------------------------------------------
 </code></pre>
 </div>
@@ -409,7 +409,7 @@ end buildTable
 <a id="ajaxview"></a>
 <h2>View "ajaxView"</h2>
 
-<p>Create a view called <dfn>ajaxView.lc</dfn>.  In it, place this code and save it to your <kbd>system/application/views/</kbd> folder:</p>
+<p>Create a view called <dfn>ajaxView.lc</dfn>.  In it, place this code and save it to your <kbd>application/views/</kbd> folder:</p>
 
 <div class="codeSample">
 <pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -447,7 +447,7 @@ end buildTable
 <a id="filteredview"></a>
 <h2>View "filteredView"</h2>
 
-<p>Create the view called <dfn>filteredView.lc</dfn>, which is loaded by the <dfn>datafilter</dfn> handler. In it, place just this expression and save it to your <kbd>system/application/views/</kbd> folder: </p>
+<p>Create the view called <dfn>filteredView.lc</dfn>, which is loaded by the <dfn>datafilter</dfn> handler. In it, place just this expression and save it to your <kbd>application/views/</kbd> folder: </p>
 
 <div class="codeSample">
 <pre><code>[[gData["peopleTable"]]]
@@ -458,7 +458,7 @@ end buildTable
 <a id="model"></a>
 <h2>Model</h2>
 
-<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <kbd>system/application/models/</kbd> folder:</p>
+<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <kbd>application/models/</kbd> folder:</p>
 
 <div class="codeSample">
 <pre><code>&lt;?lc
