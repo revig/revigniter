@@ -48,30 +48,30 @@ local sUriString, sKeyVal, sStackInUse
  --| Requires: rigLogMessage, rigLoadLibrary
  --|
  --| Summary:  Run security check, set initial values and load Config library.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
     exit to top
   end if
 
-  if the short name of the target = the short name of me then 
+  if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       # LOGGING
       if the environment is "server" then
         rigLogMessage "debug", "URI Library Loaded"
       end if
-      
+
       rigLoadLibrary "Config"
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -85,13 +85,13 @@ end libraryStack
 --| FUNCTION _rigFetchUriString
 --|
 --| Author: rabit
---| Version:  1.5
---| Created: 19-06-09
---| Last Mod: 15-07-11
+--| Version:  1.6
+--| Created: 2009-06-19
+--| Last Mod: 2019-08-27
 --| Requires: rigFetchConfigItem(), rigUriAdjusted(), rigParseRequestUri()
 --|
 --| Summary: Get the URI String.
---| 
+--|
 --| Format:  _rigFetchUriString()
 --|
 --| Parameters: --
@@ -101,7 +101,7 @@ end libraryStack
 
 function _rigFetchUriString
   local tUriString, tPath, tUri
-  
+
 	if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO" then
 		# IF index.lc IS NOT INCLUDED IN THE URL OR IF THE URL
 		# HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
@@ -112,7 +112,7 @@ function _rigFetchUriString
 			put line 1 of the keys of $_GET into tUriString
 
 			if tUriString is "/" then
-				put "" into tUriString				
+				put "" into tUriString
 				return tUriString
 			end if
 
@@ -133,14 +133,14 @@ function _rigFetchUriString
 					put "?" & sUriString into sUriString
 
 				else
-					put line 1 of the keys of $_GET into sUriString 
+					put line 1 of the keys of $_GET into sUriString
 				end if
 				--
 
 				return sUriString
 			end if
 		end if
-		
+
 		# IS THERE A PATH_INFO VARIABLE?
 		if $_SERVER["PATH_INFO"] is not empty then
 			put $_SERVER["PATH_INFO"] into tPath
@@ -173,11 +173,11 @@ function _rigFetchUriString
 				put tPath into sUriString
 
 				put rigUriAdjusted(sUriString) into sUriString
-	
+
 				return sUriString
 			end if
 		end if
-		
+
 		# No QUERY_STRING?... Maybe the ORIG_PATH_INFO variable exists?
 		if $_SERVER["ORIG_PATH_INFO"] is not empty then
 			put $_SERVER["ORIG_PATH_INFO"] into tPath
@@ -219,11 +219,30 @@ function _rigFetchUriString
 			# IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
 			if sUriString is "/" then
 				put "" into sUriString
-			end if			
+			end if
 			put rigUriAdjusted(sUriString) into sUriString
 			return sUriString
 		end if
-		
+
+    if tUri is "PATH_TRANSLATED" then
+      put $_SERVER["PATH_TRANSLATED"] into sUriString
+
+      if the platform is "Win32" then
+        replace "\" with "/" in sUriString
+      end if
+
+      put char offset("index" & gRigA["EXT"], sUriString) to -1 of sUriString into sUriString
+
+      set the itemDel to "/"
+      put item 2 to -1 of sUriString into sUriString
+      # IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
+      if sUriString is "/" then
+        put "" into sUriString
+      end if
+      put rigUriAdjusted(sUriString) into sUriString
+      return sUriString
+    end if
+
 		put $_SERVER[tUri] into sUriString
 		# IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
 		if sUriString is "/" then
@@ -232,7 +251,6 @@ function _rigFetchUriString
 		put rigUriAdjusted(sUriString) into sUriString
 		return sUriString
 	end if
-
 end _rigFetchUriString
 
 
@@ -252,7 +270,7 @@ end _rigFetchUriString
 --|                   Due to the way REQUEST_URI works it usually contains path info
 --|                   that makes it unusable as URI data.  We'll trim off the unnecessary
 --|                   data, hopefully arriving at a valid URI that we can use.
---| 
+--|
 --| Format:  rigParseRequestUri()
 --|
 --| Parameters: --
@@ -262,11 +280,11 @@ end _rigFetchUriString
 
 function rigParseRequestUri
   local tRequestUri, tFcpath, tParsedUri, tCount, i
-  
+
 	if $_SERVER["REQUEST_URI"] is empty then
 		return ""
 	end if
-	
+
 	put $_SERVER["REQUEST_URI"] into tRequestUri
 	replace "\\" with "/" in tRequestUri
 	if char 1 of tRequestUri is "/" then
@@ -283,7 +301,7 @@ function rigParseRequestUri
 	end if
 
 	put tRequestUri into tParsedUri
-	split tParsedUri by "/" 
+	split tParsedUri by "/"
 
 	split tFcpath by "/"
 	put 0 into tCount
@@ -321,7 +339,7 @@ end rigParseRequestUri
 --| Requires: --
 --|
 --| Summary: Truncate URI in case revIgniter is placed in a subfolder of root.
---| 
+--|
 --| Format:  rigUriAdjusted(param1)
 --|
 --| Parameters: string <pURIstring>
@@ -332,12 +350,12 @@ end rigParseRequestUri
 function rigUriAdjusted pURIstring
   local tURIstring, tBaseURL, tRegEx, tMatchStart, tMatchEnd, tBytesToRemoveFromURI
   local tIndexPage
-  
+
 	put pURIstring into tURIstring
 
 	# GET BASE URL
     put rigFetchConfigItem("baseUrl") into tBaseURL
-    
+
     # GET CHAR POSITION OF TOP LEVEL DOMAIN
     put "(?i)(\.[a-z]+/)" into tRegEx
     get matchchunk(tBaseURL,tRegEx,tMatchStart,tMatchEnd)
@@ -346,20 +364,20 @@ function rigUriAdjusted pURIstring
     # GET URI RELATIV TO SYSTEM ROOT
     if the number of chars of tBaseURL > tMatchEnd then
         put char tMatchEnd to (the number of chars of tBaseURL) of tBaseURL into tBytesToRemoveFromURI
-         
-         
+
+
         if the number of chars of tURIstring >= the number of chars of tBytesToRemoveFromURI then
             if (char 1 to (the number of chars of tBytesToRemoveFromURI) of tURIstring) is tBytesToRemoveFromURI then
                 put char (the number of chars of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
             end if
-             
+
         else
-             
+
             if (char 1 to ((the number of chars of tBytesToRemoveFromURI) -1) of tURIstring) is (char 1 to ((the number of chars of tBytesToRemoveFromURI) -1) of tBytesToRemoveFromURI) then
                 put char (the number of chars of tBytesToRemoveFromURI) to -1 of tURIstring into tURIstring
             end if
         end if
-         
+
     end if
 
 	# GET NAME OF INDEX PAGE
@@ -371,7 +389,7 @@ function rigUriAdjusted pURIstring
 	if (tURIstring is "/" & tIndexPage) or (tURIstring is "/" & tIndexPage & "/") then
 		return ""
 	end if
-     
+
     return tURIstring
 end rigUriAdjusted
 
@@ -393,7 +411,7 @@ end rigUriAdjusted
 --| Requires: rigShowError
 --|
 --| Summary: Filter segments for malicious characters.
---| 
+--|
 --| Format:  _rigFilterUri(param1)
 --|
 --| Parameters: string <pStr>
@@ -403,19 +421,19 @@ end rigUriAdjusted
 
 function _rigFilterUri pStr
   local tBad, tGood, i, tStr
-  
+
 	if pStr <> "" and rigFetchConfigItem("permittedUriChars") <> "" and rigFetchConfigItem("enableQueryStrings") is FALSE then
 		if matchchunk(pStr, "(?i)^[" & rigFetchConfigItem("permittedUriChars") & "]+$") is FALSE then
 			# CHARS NOT PERMITTED FOUND
 			put new header "HTTP/1.1 400 Bad Request"
-			rigShowError "The URI you submitted has disallowed characters." 
+			rigShowError "The URI you submitted has disallowed characters."
 		end if
 	end if
 
 	# CONVERT PROGRAMATIC CHARACTERS TO ENTITIES
 	put "$,(,),%28,%29" into tBad
 	put "&#36;,&#40;,&#41;,&#40;,&#41;" into tGood
-	
+
 	put pStr into tStr
 	repeat with i = 1 to the number of items of tBad
 		replace item i of tBad with item i of tGood in tStr
@@ -436,7 +454,7 @@ end _rigFilterUri
 --| Requires: --
 --|
 --| Summary:  Remove the suffix from the URL if needed.
---| 
+--|
 --| Format:  _rigRemoveUrlSuffix
 --|
 --| Parameters: --
@@ -446,7 +464,7 @@ end _rigFilterUri
 
 command _rigRemoveUrlSuffix
   local tCharCount
-  
+
 	if rigFetchConfigItem("urlSuffix") <> "" then
 		 if matchchunk(sUriString, (rigFetchConfigItem("urlSuffix") & "$")) then
          		put the number of chars of rigFetchConfigItem("urlSuffix") into tCharCount
@@ -469,7 +487,7 @@ end _rigRemoveUrlSuffix
 --|
 --| Summary:  Explode the URI Segments. The individual segments will
 --|             be stored in the gRigA["segments"] array.
---| 
+--|
 --| Format:  _rigExplodeSegments
 --|
 --| Parameters: --
@@ -479,9 +497,9 @@ end _rigRemoveUrlSuffix
 
 command _rigExplodeSegments
   local tNumKeys, tTempStr, tTempStr1, tTempStr2
-  
+
 	put the number of lines in the keys of gRigA["segments"] into tNumKeys
-	
+
 	# SEGMENT BASED URLs
 	if gConfig["enableQueryStrings"] is not TRUE then
 		replace "\\" with "/" in sUriString
@@ -491,10 +509,10 @@ command _rigExplodeSegments
 		set the itemDelimiter to "/"
 		repeat with i = 1 to the number of items of sUriString
 			put item i of sUriString into tTempStr
-			
+
 			# TRIM WHITESPACE
 			put rigTrim(tTempStr) into tTempStr
-			
+
 			# FILTER SEGMENTS FOR SECURITY
 			put _rigFilterUri(tTempStr) into tTempStr
 
@@ -527,11 +545,11 @@ command _rigExplodeSegments
 		put rigTrim(item 2 of tTempStr) into tTempStr2
 
 		set the itemdel to "&"
-		
+
 		# FILTER SEGMENTS FOR SECURITY
 		put _rigFilterUri(tTempStr1) into tTempStr1
 		put _rigFilterUri(tTempStr2) into tTempStr2
-		
+
 		put tTempStr1 & "=" & tTempStr2 into tTempStr
 
 		if tTempStr <> "" then
@@ -554,7 +572,7 @@ end _rigExplodeSegments
 --| Requires: --
 --|
 --| Summary: This function returns the URI segment, or URI value based on the number provided.
---| 
+--|
 --| Format:  rigFetchSegment(param1, param2)
 --|
 --| Parameters: integer <pSegmentNum>, string <pNoResult>
@@ -564,12 +582,12 @@ end _rigExplodeSegments
 
 function rigFetchSegment pSegmentNum pNoResult
   local tNoResult, tURIstring, tKeyVal, tVal
-  
+
 	if pNoResult is "" then
 		put FALSE into tNoResult
 	else
 		put pNoResult into tNoResult
-	end if 
+	end if
 
 	if gConfig["enableQueryStrings"] is not TRUE then
 		# SEGMENT BASED URLs
@@ -585,7 +603,7 @@ function rigFetchSegment pSegmentNum pNoResult
 	put rigUriString() into tURIstring
 
 	set the itemdel to "&"
-    
+
 	if pSegmentNum <= the number of items of tURIstring then
     		put item pSegmentNum of tURIstring into tKeyVal
     		set the itemdel to "="
@@ -593,7 +611,7 @@ function rigFetchSegment pSegmentNum pNoResult
 	else
 		put FALSE into tVal
 	end if
-    
+
     	return tVal
 end rigFetchSegment
 
@@ -615,7 +633,7 @@ end rigFetchSegment
 --| Summary: This function returns the re-routed URI segment (assuming routing rules are used)
 --|                    based on the number provided.  If there is no routing this function returns the
 --|                    same result as rigFetchSegment().
---| 
+--|
 --| Format:  rigFetchRsegment(param1, param2)
 --|
 --| Parameters: integer <pSegmentNum>, string <pNoResult>
@@ -625,12 +643,12 @@ end rigFetchSegment
 
 function rigFetchRsegment pSegmentNum pNoResult
   local tNoResult, tURIstring, tKeyVal, tVal
-  
+
 	if pNoResult is "" then
 		put FALSE into tNoResult
 	else
 		put pNoResult into tNoResult
-	end if 
+	end if
 
 	if gConfig["enableQueryStrings"] is not TRUE then
 		# SEGMENT BASED URLs
@@ -645,7 +663,7 @@ function rigFetchRsegment pSegmentNum pNoResult
 	put rigUriString() into tURIstring
 
 	set the itemdel to "&"
-    
+
 	if pSegmentNum <= the number of items of tURIstring then
     		put item pSegmentNum of tURIstring into tKeyVal
     		set the itemdel to "="
@@ -653,7 +671,7 @@ function rigFetchRsegment pSegmentNum pNoResult
 	else
 		put FALSE into tVal
 	end if
-    
+
     	return tVal
 end rigFetchRsegment
 
@@ -687,7 +705,7 @@ end rigFetchRsegment
 --|                  tArray["name] =>value = "joe"
 --|                  tArray["location] =>value = "UK"
 --|                  tArray["gender] =>value = "male"
---| 
+--|
 --| Format:  rigUriToAssoc(param1, param2)
 --|
 --| Parameters: integer <pN> the starting segment number, array <pDefault> an array of default values
@@ -697,7 +715,7 @@ end rigFetchRsegment
 
 function rigUriToAssoc pN pDefault
   local tN
-  
+
 	if pN is empty then
 		put 3 into tN
 	else
@@ -725,7 +743,7 @@ end rigUriToAssoc
 --| Requires: _rigUriToAssoc()
 --|
 --| Summary: Identical to above only it uses the re-routed segment array.
---| 
+--|
 --| Format:  rigRuriToAssoc(param1, param2)
 --|
 --| Parameters: integer <pN> the starting segment number, array <pDefault> an array of default values
@@ -735,7 +753,7 @@ end rigUriToAssoc
 
 function rigRuriToAssoc pN pDefault
   local tN
-  
+
 	if pN is empty then
 		put 3 into tN
 	else
@@ -762,7 +780,7 @@ end rigRuriToAssoc
 --| Requires: rigTotalSegments(), rigSegmentArray(), rigTotalRsegments(), rigRSegmentArray()
 --|
 --| Summary: Generate a key value pair from the URI string or Re-routed URI string.
---| 
+--|
 --| Format:  _rigUriToAssoc(param1, param2, param3)
 --|
 --| Parameters: integer <pN> the starting segment number, array <pDefault> an array of default values
@@ -774,7 +792,7 @@ end rigRuriToAssoc
 private function _rigUriToAssoc pN pDefault pWhich
   local tN, tWhich, tTotalSegments, tSegmentArray, tVal, tRetval, tSegmNum, tK
   local tSlicedArray, tIncr, tI, tLastVal, tKeyValPair
-  
+
 	if pN is empty then
 		put 3 into tN
 	else
@@ -805,7 +823,7 @@ private function _rigUriToAssoc pN pDefault pWhich
 
 	# SEGMENT BASED URLs
 	if gConfig["enableQueryStrings"] is not TRUE then
-		
+
 		if tTotalSegments < tN then
 			if pDefault is not an array then
 				return ""
@@ -830,10 +848,10 @@ private function _rigUriToAssoc pN pDefault pWhich
 		put 0 into tIncr
 		put 0 into tI
 		put "" into tLastVal
-		
+
 		repeat for each key tKey in tSlicedArray
       add 1 to tIncr
-			
+
 			put tSlicedArray[tIncr] into tVal
 
 			if (tI mod 2) is not 0 then
@@ -843,7 +861,7 @@ private function _rigUriToAssoc pN pDefault pWhich
 				put tVal into tLastVal
 			end if
 			add 1 to tI
-		end repeat	
+		end repeat
 
 		if (the number of lines in the keys of pDefault) > 0 then
 			repeat for each key tKey in pDefault
@@ -854,7 +872,7 @@ private function _rigUriToAssoc pN pDefault pWhich
 				end if
 			end repeat
 		end if
-	
+
 		# CACHE THE ARRAY FOR REUSE
 		put tRetval into sKeyVal[tN]
 
@@ -896,7 +914,7 @@ private function _rigUriToAssoc pN pDefault pWhich
 			end if
 		end repeat
 	end if
-	
+
 	# CACHE THE ARRAY FOR REUSE
 	put tRetval into sKeyVal[tN]
 
@@ -917,7 +935,7 @@ end _rigUriToAssoc
 --| Requires: --
 --|
 --| Summary: Generate an URI string from an associative array.
---| 
+--|
 --| Format:  rigAssocToURI(param1)
 --|
 --| Parameters: array <pArray> an associative array of key/values
@@ -927,10 +945,10 @@ end _rigUriToAssoc
 
 function rigAssocToURI pArray
   local tVal, tKey, tURI
-  
+
 	repeat for each key tKey in pArray
          	put pArray[tKey] into tVal
-         
+
 		if gConfig["enableQueryStrings"] is not TRUE then
 			# SEGMENT BASED URLs
          		put tKey & "/" & tVal & "/" after tURI
@@ -939,9 +957,9 @@ function rigAssocToURI pArray
 			put tKey & "=" & tVal & "&" after tURI
 		end if
     	end repeat
-    
+
     	delete char -1 of tURI
-    
+
     	return tURI
 end rigAssocToURI
 
@@ -963,7 +981,7 @@ end rigAssocToURI
 --| Requires: --
 --|
 --| Summary: Fetch a URI Segment and add a trailing slash.
---| 
+--|
 --| Format:  rigSlashSegment(param1, param2)
 --|
 --| Parameters: integer <pN>, string <pWhere>
@@ -973,7 +991,7 @@ end rigAssocToURI
 
 function rigSlashSegment pN pWhere
   local tWhere
-  
+
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -1000,7 +1018,7 @@ end rigSlashSegment
 --| Requires: --
 --|
 --| Summary: Fetch a URI Segment and add a trailing slash.
---| 
+--|
 --| Format:  rigSlashRsegment(param1, param2)
 --|
 --| Parameters: integer <pN>, string <pWhere>
@@ -1010,7 +1028,7 @@ end rigSlashSegment
 
 function rigSlashRsegment pN pWhere
   local tWhere
-  
+
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -1037,7 +1055,7 @@ end rigSlashRsegment
 --| Requires: --
 --|
 --| Summary: Fetch a URI Segment and add a trailing slash - helper function.
---| 
+--|
 --| Format:  _rigSlashSegment(param1, param2)
 --|
 --| Parameters: integer <pN>, string <pWhere>, string <pWhich>
@@ -1047,7 +1065,7 @@ end rigSlashRsegment
 
 private function _rigSlashSegment pN pWhere pWhich
   local tWhere, tWhich, tTrailing, tLeading, tSegment
-  
+
 	if pWhere is empty then
 		put "trailing" into tWhere
 	else
@@ -1099,7 +1117,7 @@ end _rigSlashSegment
 --| Requires: --
 --|
 --| Summary: Segment array
---| 
+--|
 --| Format:  rigSegmentArray()
 --|
 --| Parameters: --
@@ -1128,7 +1146,7 @@ end rigSegmentArray
 --| Requires: --
 --|
 --| Summary: Routed segment array
---| 
+--|
 --| Format:  rigRSegmentArray()
 --|
 --| Parameters: --
@@ -1156,7 +1174,7 @@ end rigRSegmentArray
 --| Requires: --
 --|
 --| Summary: Total number of segments
---| 
+--|
 --| Format:  rigTotalSegments()
 --|
 --| Parameters: --
@@ -1184,7 +1202,7 @@ end rigTotalSegments
 --| Requires: --
 --|
 --| Summary: Total number of routed segments
---| 
+--|
 --| Format:  rigTotalRsegments()
 --|
 --| Parameters: --
@@ -1212,7 +1230,7 @@ end rigTotalRsegments
 --| Requires: --
 --|
 --| Summary: Fetch the entire URI string.
---| 
+--|
 --| Format:  rigUriString()
 --|
 --| Parameters: --
@@ -1244,7 +1262,7 @@ end rigUriString
 --| Requires: --
 --|
 --| Summary: Fetch the entire Re-routed URI string.
---| 
+--|
 --| Format:  rigRuriString()
 --|
 --| Parameters: --
@@ -1254,7 +1272,7 @@ end rigUriString
 
 function rigRuriString
   local tRsegments
-  
+
 	put rigRSegmentArray() into tRsegments
 	combine tRsegments using "/"
 

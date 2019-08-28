@@ -55,6 +55,7 @@ end if
 # "QUERY_STRING"	Uses the QUERY_STRING
 # "REQUEST_URI"		Uses the REQUEST_URI
 # "ORIG_PATH_INFO"	Uses the ORIG_PATH_INFO
+# "PATH_TRANSLATED"  As a last resort: Uses filesystem based path to current script
 #
 ##
 
@@ -196,8 +197,8 @@ end if
 # Error Logging Threshold
 #--------------------------------------------------------------------------
 #
-# If you have enabled error logging, you can set an error threshold to 
-# determine what gets logged. 
+# If you have enabled error logging, you can set an error threshold to
+# determine what gets logged.
 # You can enable error logging by setting a threshold over zero. The
 # threshold determines what gets logged. Threshold options are:
 #
@@ -379,7 +380,7 @@ end if
 # Enables Gzip output compression for faster page loads.
 # Keep in mind that not all browsers support compression
 # so enable only if you are reasonably sure your visitors can handle it.
-#	
+#
 # NOTE: Setting the engin's outputTextEncoding or outputLineEndings property
 # does not affect compressed output.
 #
@@ -402,8 +403,8 @@ end if
 # Output Character Set
 #--------------------------------------------------------------------------
 #
-# This determines the character set to be used to send as header to override 
-# the charset header sent by the engine which represents the native text 
+# This determines the character set to be used to send as header to override
+# the charset header sent by the engine which represents the native text
 # encoding for the platform.
 #
 # Samples: "UTF-8", "ISO-8859-15", "macintosh"
@@ -414,7 +415,7 @@ end if
 ##
 
 	put "" into gConfig["charset"]
-		
+
 
 
 ##
@@ -432,9 +433,9 @@ end if
 ##
 
   put "UTF-8" into gConfig["defaultCharset"]
-		
-		
-		
+
+
+
 ##
 #--------------------------------------------------------------------------
 # Browser Cache Busting
@@ -462,7 +463,7 @@ end if
 ##
 
 	put FALSE into gConfig["use_cacheBusters"]
-		
+
 
 
 ##
@@ -529,7 +530,7 @@ end if
 ##
 
 	put "" into gConfig["proxyIPs"]
-	
+
 
 ##
 #--------------------------------------------------------------------------
