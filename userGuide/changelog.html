@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version211">Version 2.1.1</a></li>
 <li><a href="#version210">Version 2.1.0</a></li>
 <li><a href="#version205">Version 2.0.5</a></li>
 <li><a href="#version204">Version 2.0.4</a></li>
@@ -212,19 +213,33 @@
 
 
 
+<h2><a id="version211">&nbsp;</a>Version 2.1.1</h2>
+<p>Release Date: 2019-08-28</p>
+
+
+<ul>
+	<li><strong>Added:</strong> Implemented an extra variant to retrieve URI strings. This may serve those who develop web apps using XAMPP.</li>
+	<li><strong>Added:</strong> URL decoding function rigUrlDecodeRFC() conforming to RFC 3986 (see <kbd>system/revigniter/Common.livecodescript</kbd>).</li>
+	<li><strong>Changed:</strong> Renamed function urlEncodeRFC() to rigUrlEncodeRFC() in <kbd>system/revigniter/Common.livecodescript</kbd>.</li>
+	<li><strong>Fixed:</strong> Issue which occurred when parameter pTimeStep was empty in <kbd>system/helpers/otpHelper.livecodescript</kbd> -> <dfn>rigOTPgenerate</dfn> (thanks Andrés).</li>
+</ul>
+
+
+
+
 <h2><a id="version210">&nbsp;</a>Version 2.1.0</h2>
 <p>Release Date: 2019-06-28</p>
 
 
 <ul>
 	<li><strong>Added:</strong> One-time password helper used for two-factor authentication.</li>
-	<li><strong>Added:</strong> Two-factor authentication integrated in system/libraries/Authentication.livecodescript.</li>
-	<li><strong>Added:</strong> OTP options to the authentication settings in application/config/authentication.lc.</li>
-	<li><strong>Added:</strong> urlEncodeRFC function to system/revigniter/Common.livecodescript.</li>
-	<li><strong>Changed:</strong> Function rigAuthLoggedIn() in systen/libraries/Authentication.livecodescript. The function now conforms to the needs of two-factor authentication.</li>
-	<li><strong>Changed:</strong> Added license to pagination JS code in system/libraries/Pagination.livecodescript -> rigAjaxPaginationCode.</li>
-	<li><strong>Fixed:</strong> Processing form elements missing id or class name in system/libraries/Jquery.livecodescript -> rigJQajaxForm. This is especially important when CSRF protection is set to TRUE, because the hidden field has a name and no id or class name.</li>
-	<li><strong>Fixed:</strong> Replaced calls to deprecated handlers in system/libraries/Jquery.livecodescript -> rigRunInitialJqueryConfig.</li>
+	<li><strong>Added:</strong> Two-factor authentication integrated in <kbd>system/libraries/Authentication.livecodescript</kbd>.</li>
+	<li><strong>Added:</strong> OTP options to the authentication settings in <kbd>application/config/authentication.lc</kbd>.</li>
+	<li><strong>Added:</strong> urlEncodeRFC function to <kbd>system/revigniter/Common.livecodescript</kbd>.</li>
+	<li><strong>Changed:</strong> Function rigAuthLoggedIn() in <kbd>systen/libraries/Authentication.livecodescript</kbd>. The function now conforms to the needs of two-factor authentication.</li>
+	<li><strong>Changed:</strong> Added license to pagination JS code in <kbd>system/libraries/Pagination.livecodescript</kbd> -> <dfn>rigAjaxPaginationCode</dfn>.</li>
+	<li><strong>Fixed:</strong> Processing form elements missing id or class name in <kbd>system/libraries/Jquery.livecodescript</kbd> -> <dfn>rigJQajaxForm</dfn>. This is especially important when CSRF protection is set to TRUE, because the hidden field has a name and no id or class name.</li>
+	<li><strong>Fixed:</strong> Replaced calls to deprecated handlers in <kbd>system/libraries/Jquery.livecodescript</kbd> -> <dfn>rigRunInitialJqueryConfig</dfn>.</li>
 </ul>
 
 
