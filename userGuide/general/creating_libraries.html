@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -164,10 +164,10 @@ end _rigSetDefaultValues
 
 
 
-# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial&lt;library name>Config
-command rigRunInitialLibrary_NameConfig
+# PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial[name of your library]Config
+command rigRunInitial[name of your library]Config
   --Run initial configuration procedures. Don't remove this handler, even if it does nothing.
-end rigRunInitialLibrary_NameConfig
+end rigRunInitial[name of your library]Config
 
 
 command someHandler
@@ -209,8 +209,8 @@ rigLoaderLoadLibrary "Somelibrary", <kbd>tParamsA</kbd>
 <p>If you use this feature you must set up your initialization handler to expect data:</p>
 
 <div class="codeSample">
-<pre><code># PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial&lt;library name>Config
-command rigRunInitialLibrary_NameConfig pParamsA
+<pre><code># PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial[name of your library]Config
+command rigRunInitial[name of your library]Config pParamsA
   if pParamsA is not an array then
     if pParamsA is not empty then
       split pParamsA using numToCodepoint(1) and numToCodepoint(2)
@@ -220,7 +220,7 @@ command rigRunInitialLibrary_NameConfig pParamsA
   if pParamsA is an array then
     -- do something with pParamsA
   end if
-end rigRunInitialLibrary_NameConfig
+end rigRunInitial[name of your library]Config
 </code></pre>
 </div>
 
@@ -436,7 +436,7 @@ Comment out the libraryStack handler.<br />
 Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as qrtPDF_ResetAll is called in rigRunInitialQrtpdflibConfig.
 </p>
 
-<p><strong>Step 3</strong>: Place the PDF library into system/application/libraries, the dedicated location for your own libraries.</p>
+<p><strong>Step 3</strong>: Place the PDF library into application/libraries, the dedicated location for your own libraries.</p>
 
 <p><strong>Step 4</strong>: Load the PDF library in your controller like: rigLoaderLoadLibrary "Qrtpdflib"</p>
 

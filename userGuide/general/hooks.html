@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -180,7 +180,7 @@ The following items should be defined in your associative hook array:</p>
   
   <p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
   
-  <p>First you need a script only stack which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>system/application/hooks/overrideOutput.livecodescript</dfn> for your convenience:</p>
+  <p>First you need a script only stack which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>application/hooks/overrideOutput.livecodescript</dfn> for your convenience:</p>
 
 <div class="codeSample">
 <pre><code>script "overrideOutput"
@@ -277,7 +277,7 @@ end rigMinifyOutput
 
 <p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build hooks, models, libraries, helpers etc.</p>
 
-<p>The next step is to add the following lines to your hooks.lc file in <dfn>system/application/config</dfn>:</p>
+<p>The next step is to add the following lines to your hooks.lc file in <dfn>application/config</dfn>:</p>
 
 
 <div class="codeSample">
@@ -289,7 +289,7 @@ put "hooks" into gHooksA["displayOverride"]["filepath"]
 </div>
   
 
-<p>Now enable hooks in <dfn>system/application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
+<p>Now enable hooks in <dfn>application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
 
   
 </div>

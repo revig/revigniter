@@ -40,7 +40,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
                 </div>
 
                 <div class="collapse navbar-collapse">
@@ -107,7 +107,7 @@
                 <h2>Assets Location</h2>
 
                 <p>To use this helper you should store your assets in a folder called "assets" at your root. You can change this
-                    path in your <dfn>system/application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css" and
+                    path in your <dfn>application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css" and
                     that your Javascript folder is called "js". If you don't like that, you can change the corresponding variables at the top of the helper script. The same folder structure applies if you store your files in an arbitrary named folder
                     in assets/modules/ like:<br />
                     /assets<br />
@@ -124,7 +124,7 @@
                 <h2><a id="bustingCaches">&nbsp;</a>Busting Caches</h2>
 
                 <p>If you are using far future expire headers for static files, which are likely to be modified anytime, you should set
-                    use_cacheBusters in <dfn>system/application/config/config.lc</dfn> to TRUE to enable a mechanism for automatically updating user's cache. Then whenever you modify static files like images, CSS files, JavaScript files or favicons,
+                    use_cacheBusters in <dfn>application/config/config.lc</dfn> to TRUE to enable a mechanism for automatically updating user's cache. Then whenever you modify static files like images, CSS files, JavaScript files or favicons,
                     browser cached data is refreshed without the need to change file names.<br />
                     If use_cacheBusters is set to TRUE, asset file names are translated by the asset helper to &lt;name&gt;-cb&lt;lastModified&gt;.suffix,
                     so you need to include the following mod_rewrite RewriteRule either in a .htaccess file or in httpd.conf:<br /></p>
@@ -197,7 +197,7 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 
                 <p>Assumed the raw CSS file is called myCSS.css.lc, then the name of the generated CSS file sent to the browser is myCSS.css</p>
 
-                <p>This is an abstract of the generated CSS file, assumed use_cacheBusters in <dfn>system/application/config/config.lc</dfn> is set to TRUE:</p>
+                <p>This is an abstract of the generated CSS file, assumed use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE:</p>
 
                 <pre><code>#mastHead {
   height:480px;
@@ -355,7 +355,7 @@ end index
 
 
 --| END OF manifestexample.lc
---| Location: ./system/application/controllers/manifestexample.lc
+--| Location: ./application/controllers/manifestexample.lc
 ----------------------------------------------------------------------
 </code></pre>
                 </div>

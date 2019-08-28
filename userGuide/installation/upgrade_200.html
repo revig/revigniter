@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -121,9 +121,13 @@ end if
 
 <p>If you use the <kbd>Authentication</kbd> library in your current application you should set the <var>gRigA["useLegacyCode"]</var> variable to TRUE in your controller, otherwise you need to renew all passwords in your database.</p>
 
-<p>If you use any of the following globals in your own scripts replace them with the <var>gRigA</var> array variable by using the global variable name excluding the leading "g" as array index name like for example:</p>
+<p>If you use any of the following globals in your own scripts replace them with the <var>gRigA</var> array variable by using the global variable name excluding the leading "g" as array index name like for example replace:</p>
 
+<pre><code class="lang-livecodeserver">gBASEPATH</code></pre>
+<p>with</p>
 <pre><code class="lang-livecodeserver">gRigA["BASEPATH"]</code></pre>
+
+<p>(If you are courageous, use your favorite text and source code editor to handle them all at once and on all the files.)</p>
 
 <p>The variables in question are: <var>gSystemFolder</var>, <var>gEXT</var>, <var>gFCPATH</var>, <var>gSELF</var>, <var>gBASEPATH</var>, <var>gAPPPATH</var>, <var>gErrorData</var>, <var>gDocTypes</var>, <var>gController</var>, <var>gHandler</var>, <var>gModule</var>, <var>gDatabaseID</var>, <var>gCOOKIE</var>, <var>gSegments</var>, <var>gRSegments</var>, <var>gApplicationFolder</var>, <var>gActiveRecord</var>.</p>
 
