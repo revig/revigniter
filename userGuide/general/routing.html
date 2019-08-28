@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -186,9 +186,9 @@ are encouraged to always have a default route otherwise a 404 page will appear b
 
 <p>This route indicates which controller should be loaded if the requested controller is not found. It will override
 the default 404 error page. It won't affect to the rigShow404 handler, which will continue loading the default <dfn>error404.lc</dfn>
-file at <dfn>system/application/errors/error404.lc</dfn>. This way you can write your own 404 error controller. But there are two things you should keep in mind:</p>
+file at <dfn>application/errors/error404.lc</dfn>. This way you can write your own 404 error controller. But there are two things you should keep in mind:</p>
 
-<p class="important"><strong>Important:</strong>&nbsp; Do <strong>not</strong> name any handler in your error controller "index". Place your error controller in system/application/controllers, do <strong>not</strong> place it in any subfolder of system/application/controllers.</p>
+<p class="important"><strong>Important:</strong>&nbsp; Do <strong>not</strong> name any handler in your error controller "index". Place your error controller in application/controllers, do <strong>not</strong> place it in any subfolder of application/controllers.</p>
 
 <pre><code>put "scaffolding" into gRoute[1]["scaffoldingTrigger"]</code></pre>
 

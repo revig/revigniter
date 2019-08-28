@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -102,7 +102,7 @@
 
 
 <h2>The Key</h2>
-<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <dfn>system/application/config</dfn>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you using the LiveCode randomBytes(64) function and saved to <dfn>system/application/config/jwt.lc</dfn> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
+<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <dfn>application/config</dfn>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you using the LiveCode randomBytes(64) function and saved to <dfn>application/config/jwt.lc</dfn> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
 
 <h2>Handler Reference</h2>
 
