@@ -1485,9 +1485,9 @@ end _rigAutoloader
 --| COMMAND _rigLoadStack
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 30-07-2011
---| Last Mod: 08-012-2015
+--| Version:  1.3
+--| Created: 2011-07-30
+--| Last Mod: 2019-09-01
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
 --|
 --| Summary: This handler loads the requested stack.
@@ -1546,13 +1546,16 @@ private command _rigLoadStack pStack pParams pPosition pModule
 		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
 	end if
 
-	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+  # FIRST TEST THE FILE NAME AS PROVIDED
+  put tStack into tNameVariants[1]
+
+  # THEN WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
 	put toLower(tStack) into tNameLower
 	put toupper(char 1 of tNameLower) into tFirstCharUpper
 	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
 
-	put tNameLower into tNameVariants[1]
-	put tNameUCfirst into tNameVariants[2]
+	put tNameLower into tNameVariants[2]
+	put tNameUCfirst into tNameVariants[3]
 
 	repeat for each key tKey in tNameVariants
 		put tNameVariants[tKey] into tStackToLoad
