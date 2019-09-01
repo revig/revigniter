@@ -1220,13 +1220,16 @@ private command _rigLoadLibrary pLibrary pParams pModule
 		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
 	end if
 
-	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+  # FIRST TEST THE FILE NAME AS PROVIDED
+  put tLibrary into tNameVariants[1]
+
+  # THEN WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
 	put toLower(tLibrary) into tNameLower
 	put toupper(char 1 of tNameLower) into tFirstCharUpper
 	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
 
-	put tNameLower into tNameVariants[1]
-	put tNameUCfirst into tNameVariants[2]
+	put tNameLower into tNameVariants[2]
+	put tNameUCfirst into tNameVariants[3]
 
   # GET PREFIX
   put empty into tPrefix
