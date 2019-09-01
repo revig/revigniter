@@ -1162,9 +1162,9 @@ end _rigLoad
 --| COMMAND _rigLoadLibrary
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 2009-07-07
---| Last Mod: 2018-02-22
+--| Last Mod: 2019-09-01
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitLibrary
 --|
 --| Summary: This handler loads the requested library.
@@ -1228,18 +1228,18 @@ private command _rigLoadLibrary pLibrary pParams pModule
 	put tNameLower into tNameVariants[1]
 	put tNameUCfirst into tNameVariants[2]
 
+  # GET PREFIX
+  put empty into tPrefix
+  # CONSIDER MODULE SETTINGS TOO IF AVAILABLE
+  if pModule <> empty then
+    put rigFetchConfigItem("sublibraryPrefix", pModule) into tPrefix
+  end if
+  if (tPrefix is empty) or (tPrefix is FALSE) then
+    put rigFetchConfigItem("sublibraryPrefix") into tPrefix
+  end if
+
 	repeat for each key tKey in tNameVariants
 		put tNameVariants[tKey] into tLib
-
-    # GET PREFIX
-    put empty into tPrefix
-    # CONSIDER MODULE SETTINGS TOO IF AVAILABLE
-    if pModule <> empty then
-      put rigFetchConfigItem("sublibraryPrefix", pModule) into tPrefix
-    end if
-    if (tPrefix is empty) or (tPrefix is FALSE) then
-      put rigFetchConfigItem("sublibraryPrefix") into tPrefix
-    end if
 
 		put gRigA["APPPATH"] & tModulePath & "libraries/" & tSubdir & tPrefix & tLib & ".livecodescript" into tSubLib
 
