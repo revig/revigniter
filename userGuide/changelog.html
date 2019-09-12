@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version212">Version 2.1.2</a></li>
 <li><a href="#version211">Version 2.1.1</a></li>
 <li><a href="#version210">Version 2.1.0</a></li>
 <li><a href="#version205">Version 2.0.5</a></li>
@@ -210,6 +211,19 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+
+<h2><a id="version212">&nbsp;</a>Version 2.1.2</h2>
+<p>Release Date: 2019-09-12</p>
+
+<ul>
+	<li><strong>Changed:</strong> Empty data is now removed in function <kbd>system/database/DBactiveRec.livecodescript</kbd> -> <dfn>rigDbValuesSet()</dfn> before invoking database insert or update queries, i.e. inserts and updates no longer set table fields to empty if the corresponding array element passed to the active record library is empty. These fields are now left untouched pretty much as if the corresponding array element was absent. Keep this in mind if your current code depends on distinguishing e.g. NULL from empty. From now on using the active record library there is no way to turn NULL (or whatever the default value is) or any other field value to empty. This goes conform to how empty values passed to the active record library are treated to construct where clauses.</li>
+	<li><strong>Changed:</strong> Added library file name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadLibrary</dfn>. So, restrictions regarding library names no longer exist with one exception: Don't use dashes.</li>
+	<li><strong>Changed:</strong> Added stack name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadStack</dfn>. So, restrictions regarding stack names no longer exist with one exception: Don't use dashes.</li>
+	<li><strong>Changed:</strong> Changed: Tweaked code of handler <dfn>_rigLoadLibrary</dfn> in <kbd>system/libraries/Loader.livecodescript</kbd>.</li>
+</ul>
+
 
 
 
@@ -440,7 +454,7 @@
 
 <p>
 	<ul>
-		<li><strong>Changed:</strong> Modified DB handlers <kbd>system/database/DBresult.lc</kbd> -> <dfn>rigDBresult()</dfn>, <dfn>_rigFetchResultArray()</dfn> and <kbd>system/database/DBdriver.lc</kbd> -> <dfn>rigDBquery()</dfn> so that "SELECT IF" and “SELECT GREATEST” queries work as expected as long as you don’t use rigDBrow() to retrieve result data. Use something like tQueryResult["resultarray"][1][1] instead. Actually this is a fix for an issue of LiveCode’s built in database handlers.</li>
+		<li><strong>Changed:</strong> Modified DB handlers <kbd>system/database/DBresult.lc</kbd> -> <dfn>rigDBresult()</dfn>, <dfn>_rigFetchResultArray()</dfn> and <kbd>system/database/DBdriver.lc</kbd> -> <dfn>rigDBquery()</dfn> so that "SELECT IF" and “SELECT GREATEST” queries work as expected as long as you don’t use <dfn>rigDBrow()</dfn> to retrieve result data. Use something like tQueryResult["resultarray"][1][1] instead. Actually this is a fix for an issue of LiveCode’s built in database handlers.</li>
 		<li><strong>Fixed:</strong> Formatting of dates in <kbd>system/helpers/dateHelper.lc</kbd> -> <dfn>rigTranslateDateItem()</dfn>, added format RFC2822.</li>
 		<li><strong>Fixed:</strong> Date formats in chapter “Date Helper” of the User Guide.</li>
 		<li><strong>Fixed:</strong> Bug in <kbd>system/revigniter/Common.lc</kbd> -> <dfn>rigStripHTML()</dfn>.</li>
@@ -480,11 +494,11 @@
 <p>
 <ul>
 	<li><strong>Added:</strong> Hash type preference to <kbd>system/application/config/authentication.lc</kbd>.</li>
-	<li><strong>Added:</strong> Instructions to the User Guide for handler rigSetHash of the encryption library.</li>
+	<li><strong>Added:</strong> Instructions to the User Guide for handler <dfn>rigSetHash</dfn> of the encryption library.</li>
 	<li><strong>Changed:</strong> Minor tweaks in <kbd>system/helpers/jwtHelper.lc</kbd> -> <dfn>rigJWTencode()</dfn> and <dfn>_rigJWTverifySig()</dfn>.</li>
 	<li><strong>Changed:</strong> <kbd>system/libraries/Encrypt.lc</kbd>, implemented new digest types introduced in server 9.0.0 DP7.</li>
 	<li><strong>Changed:</strong> <kbd>system/libraries/Authentication.lc</kbd>, implemented new digest types introduced in server 9.0.0 DP7. Added a key “hashType” to the sAuthentification Array in <kbd>system/application/config/authentication.lc</kbd>.</li>
-	<li><strong>Changed:</strong> Adjusted matchText() calls to requirements of LC version &gt; 8.1.4 and LC version &gt; 9.0.0dp7. Since LC version 8.1.5 and 9.0.0 dp 7 variables in the “foundTextVarsList” must be declared before calling the matchText() function. Affected files: DBactiveRec.lc, DBdriver.lc, mysqlDriver.lc, postgreDriver.lc, sqliteDriver.lc, emailHelper.lc, fileHelper.lc, urlHelper.lc, Calendar.lc, Config.lc, Email.lc, Formvalidation.lc, Input.lc, Jquery.lc, Loader.lc, Output.lc, Profile.lc, Router.lc, Trackback.lc, Upload.lc and Useragent.lc.</li>
+	<li><strong>Changed:</strong> Adjusted <dfn>matchText()</dfn> calls to requirements of LC version &gt; 8.1.4 and LC version &gt; 9.0.0dp7. Since LC version 8.1.5 and 9.0.0 dp 7 variables in the “foundTextVarsList” must be declared before calling the <dfn>matchText()</dfn> function. Affected files: DBactiveRec.lc, DBdriver.lc, mysqlDriver.lc, postgreDriver.lc, sqliteDriver.lc, emailHelper.lc, fileHelper.lc, urlHelper.lc, Calendar.lc, Config.lc, Email.lc, Formvalidation.lc, Input.lc, Jquery.lc, Loader.lc, Output.lc, Profile.lc, Router.lc, Trackback.lc, Upload.lc and Useragent.lc.</li>
 	<li><strong>Changed:</strong> Moved handler _rigFetchAssoc from DB drivers to <kbd>system/database/DBresult.lc</kbd> -> <dfn>_rigFetchResultArray</dfn>, thanks Bob.</li>
 	<li><strong>Changed:</strong> <kbd>system/libraries/Session.lc</kbd> and <kbd>system/application/config/config.lc</kbd>, implemented new digest types introduced in server 9.0.0 DP7.</li>
 	<li><strong>Fixed:</strong> Redundant line of code in <kbd>system/Database/DBdriver.lc</kbd> -> <dfn>rigDBquery()</dfn> and rigCompileBinds().</li>
