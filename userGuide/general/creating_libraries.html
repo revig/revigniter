@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -115,6 +115,14 @@ All other libraries are able to be extended.</p>
 they are initialized.</p>
 
 
+<h2>Naming Conventions</h2>
+
+<ul>
+<li>The library name can be titelcase, lowercase, camelcase or pascalcase.</li>
+<li>The library name can include underscores.</li>
+<li>The library name should <strong>not</strong> include dashes.</li>
+</ul>
+
 
 <h2>The Library File</h2>
 
@@ -186,9 +194,6 @@ end someHandler
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Somelibrary"</code></pre>
 
 <p>Where <em>Somelibrary</em> is the file name, without the ".livecodescript" file extension.</p>
-
-<p class="important"><strong>Note:</strong> You can submit the file name capitalized or lower case,
-revIgniter doesn't care, but do not use compound words like camel case or pascal case.</p>
 
 <p>Once loaded you can access the handlers of your library.</p>
 

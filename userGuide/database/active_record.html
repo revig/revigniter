@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -655,6 +655,8 @@ get rigDbInsert("mytable", tData)
 
 <p class="important"><strong>Note:</strong> All values are escaped automatically producing safer queries.</p>
 
+<p class="important"><strong>Note:</strong> If an array element is empty the corresponding table field is left untouched pretty much as if the corresponding array element was absent. Using the active record library there is no way to turn NULL (or whatever the default value is) to empty. This goes conform to how empty values passed to the active record library are treated to construct where clauses.</p>
+
 <p>If you set the optional third parameter to TRUE the function returns the last automatically generated ID value for an AUTO_INCREMENT column as a result of the most recently executed INSERT statement. Example:</p>
 
 <pre><code>put rigDbInsert("mytable", tData, TRUE) into tLastInsertID
@@ -733,6 +735,8 @@ get rigDbUpdate("mytable", tData)
 
 
 <p class="important"><strong>Note:</strong> All values are escaped automatically producing safer queries.</p>
+
+<p class="important"><strong>Note:</strong> If an array element is empty the corresponding table field is left untouched pretty much as if the corresponding array element was absent. Using the active record library there is no way to turn NULL (or whatever the default value is) or any other field value to empty. This goes conform to how empty values passed to the active record library are treated to construct where clauses.</p>
 	
 <p>You'll notice the use of the <dfn>rigDbWhere</dfn> handler, enabling you to set the WHERE clause.
 You can optionally pass this information directly into the update function as a string:</p>

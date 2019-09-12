@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -121,6 +121,7 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">put "'nonce-" & rigNonce() & "'" into tSrcNonce
 # GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
+rigLoadHelper "html"
 put "Content-Security-Policy" into tCspMetaA["name"]
 put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
 put "equiv" into tCspMetaA["type"]
