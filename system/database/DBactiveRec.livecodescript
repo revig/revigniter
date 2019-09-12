@@ -1915,10 +1915,10 @@ end rigDbOffset
 --| FUNCTION rigDbValuesSet
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 21-07-09
---| Last Mod: 02-08-12
---| Requires: rigFetchConfigItem(), _rigProtectIdentifiers(), rigDbEscape()
+--| Version:  1.4
+--| Created: 2009-07-21
+--| Last Mod: 2019-09-10
+--| Requires: rigFetchConfigItem(), rigGetCSRFtokenName(), _rigProtectIdentifiers(), rigDbEscape()
 --|
 --| Summary: Allows key/value pairs to be set for inserting or updating.
 --|
@@ -1952,31 +1952,35 @@ function rigDbValuesSet pKey pValue pEscape
 
 	repeat for each key tK in tKeyArray
 
-		if tCSRFprotection is TRUE then
-			# IGNORE VALUE OF CSRF FIELD
-			if tK <> tCSRFtokenName then
+    if tKeyArray[tK] <> empty then
 
-				if tEscape is not TRUE then
-					put _rigProtectIdentifiers(tK) into tKprotected
-					put tKeyArray[tK] into sActiveRecord["set"][tKprotected]
-				else
-					put _rigProtectIdentifiers(tK) into tKprotected
-					put rigDbEscape(tKeyArray[tK]) into sActiveRecord["set"][tKprotected]
-				end if
+		  if tCSRFprotection is TRUE then
+			  # IGNORE VALUE OF CSRF FIELD
+			  if tK <> tCSRFtokenName then
 
-			end if
+				  if tEscape is not TRUE then
+					  put _rigProtectIdentifiers(tK) into tKprotected
+					  put tKeyArray[tK] into sActiveRecord["set"][tKprotected]
+				  else
+					  put _rigProtectIdentifiers(tK) into tKprotected
+					  put rigDbEscape(tKeyArray[tK]) into sActiveRecord["set"][tKprotected]
+				  end if
 
-		else
+			  end if -- if tK <> tCSRFtokenName
 
-			if tEscape is not TRUE then
-				put _rigProtectIdentifiers(tK) into tKprotected
-				put tKeyArray[tK] into sActiveRecord["set"][tKprotected]
-			else
-				put _rigProtectIdentifiers(tK) into tKprotected
-				put rigDbEscape(tKeyArray[tK]) into sActiveRecord["set"][tKprotected]
-			end if
+		  else -- if tCSRFprotection is TRUE
 
-		end if
+			  if tEscape is not TRUE then
+				  put _rigProtectIdentifiers(tK) into tKprotected
+				  put tKeyArray[tK] into sActiveRecord["set"][tKprotected]
+			  else
+				  put _rigProtectIdentifiers(tK) into tKprotected
+				  put rigDbEscape(tKeyArray[tK]) into sActiveRecord["set"][tKprotected]
+			  end if
+
+		  end if -- if tCSRFprotection is TRUE
+
+    end if -- if tKeyArray[tK] <> empty
 
 	end repeat
 

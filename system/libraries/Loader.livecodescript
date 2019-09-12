@@ -1162,9 +1162,9 @@ end _rigLoad
 --| COMMAND _rigLoadLibrary
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 2009-07-07
---| Last Mod: 2018-02-22
+--| Last Mod: 2019-09-01
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitLibrary
 --|
 --| Summary: This handler loads the requested library.
@@ -1220,26 +1220,29 @@ private command _rigLoadLibrary pLibrary pParams pModule
 		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
 	end if
 
-	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+  # FIRST TEST THE FILE NAME AS PROVIDED
+  put tLibrary into tNameVariants[1]
+
+  # THEN WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
 	put toLower(tLibrary) into tNameLower
 	put toupper(char 1 of tNameLower) into tFirstCharUpper
 	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
 
-	put tNameLower into tNameVariants[1]
-	put tNameUCfirst into tNameVariants[2]
+	put tNameLower into tNameVariants[2]
+	put tNameUCfirst into tNameVariants[3]
+
+  # GET PREFIX
+  put empty into tPrefix
+  # CONSIDER MODULE SETTINGS TOO IF AVAILABLE
+  if pModule <> empty then
+    put rigFetchConfigItem("sublibraryPrefix", pModule) into tPrefix
+  end if
+  if (tPrefix is empty) or (tPrefix is FALSE) then
+    put rigFetchConfigItem("sublibraryPrefix") into tPrefix
+  end if
 
 	repeat for each key tKey in tNameVariants
 		put tNameVariants[tKey] into tLib
-
-    # GET PREFIX
-    put empty into tPrefix
-    # CONSIDER MODULE SETTINGS TOO IF AVAILABLE
-    if pModule <> empty then
-      put rigFetchConfigItem("sublibraryPrefix", pModule) into tPrefix
-    end if
-    if (tPrefix is empty) or (tPrefix is FALSE) then
-      put rigFetchConfigItem("sublibraryPrefix") into tPrefix
-    end if
 
 		put gRigA["APPPATH"] & tModulePath & "libraries/" & tSubdir & tPrefix & tLib & ".livecodescript" into tSubLib
 
@@ -1482,9 +1485,9 @@ end _rigAutoloader
 --| COMMAND _rigLoadStack
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 30-07-2011
---| Last Mod: 08-012-2015
+--| Version:  1.3
+--| Created: 2011-07-30
+--| Last Mod: 2019-09-01
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
 --|
 --| Summary: This handler loads the requested stack.
@@ -1543,13 +1546,16 @@ private command _rigLoadStack pStack pParams pPosition pModule
 		put (item 1 to (the number of items of tPath - 1) of tPath) & "/" into tSubdir
 	end if
 
-	# WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
+  # FIRST TEST THE FILE NAME AS PROVIDED
+  put tStack into tNameVariants[1]
+
+  # THEN WE'LL TEST FOR BOTH LOWERCASE AND CAPITALIZED VERSIONS OF THE FILE NAME
 	put toLower(tStack) into tNameLower
 	put toupper(char 1 of tNameLower) into tFirstCharUpper
 	put tFirstCharUpper & (char 2 to -1 of tNameLower) into tNameUCfirst
 
-	put tNameLower into tNameVariants[1]
-	put tNameUCfirst into tNameVariants[2]
+	put tNameLower into tNameVariants[2]
+	put tNameUCfirst into tNameVariants[3]
 
 	repeat for each key tKey in tNameVariants
 		put tNameVariants[tKey] into tStackToLoad
