@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.2</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,6 +91,7 @@
 
 
 <ul>
+<li><a href="#version213">Version 2.1.3</a></li>
 <li><a href="#version212">Version 2.1.2</a></li>
 <li><a href="#version211">Version 2.1.1</a></li>
 <li><a href="#version210">Version 2.1.0</a></li>
@@ -214,13 +215,22 @@
 
 
 
+<h2><a id="version213">&nbsp;</a>Version 2.1.3</h2>
+<p>Release Date: 2019-09-23</p>
+
+<ul>
+	<li><strong>Fixed:</strong> Bug in function <kbd>system/libraries/Authentication.livecodescript</kbd> -> <dfn>_rigAuthRegisterUser()</dfn> which prevented new users to be registered.</li>
+</ul>
+
+
+
 <h2><a id="version212">&nbsp;</a>Version 2.1.2</h2>
 <p>Release Date: 2019-09-12</p>
 
 <ul>
 	<li><strong>Changed:</strong> Empty data is now removed in function <kbd>system/database/DBactiveRec.livecodescript</kbd> -> <dfn>rigDbValuesSet()</dfn> before invoking database insert or update queries, i.e. inserts and updates no longer set table fields to empty if the corresponding array element passed to the active record library is empty. These fields are now left untouched pretty much as if the corresponding array element was absent. Keep this in mind if your current code depends on distinguishing e.g. NULL from empty. From now on using the active record library there is no way to turn NULL (or whatever the default value is) or any other field value to empty. This goes conform to how empty values passed to the active record library are treated to construct where clauses.</li>
-	<li><strong>Changed:</strong> Added library file name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadLibrary</dfn>. So, restrictions regarding library names no longer exist with one exception: Don't use dashes.</li>
-	<li><strong>Changed:</strong> Added stack name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadStack</dfn>. So, restrictions regarding stack names no longer exist with one exception: Don't use dashes.</li>
+	<li><strong>Changed:</strong> Added library file name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadLibrary</dfn>. So, restrictions regarding library names no longer exist with one exception: Don't use hyphens.</li>
+	<li><strong>Changed:</strong> Added stack name as passed to the loader library to the list of allowed name variants in handler <kbd>system/libraries/Loader.livecodescript</kbd> -> <dfn>_rigLoadStack</dfn>. So, restrictions regarding stack names no longer exist with one exception: Don't use hyphens.</li>
 	<li><strong>Changed:</strong> Changed: Tweaked code of handler <dfn>_rigLoadLibrary</dfn> in <kbd>system/libraries/Loader.livecodescript</kbd>.</li>
 </ul>
 

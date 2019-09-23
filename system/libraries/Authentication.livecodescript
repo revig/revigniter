@@ -1134,9 +1134,9 @@ end rigAuthRegister
 --| FUNCTION _rigAuthRegisterUser
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 08-02-2013
---| Last Mod: 12-09-2015
+--| Version:  1.4
+--| Created: 2013-02-08
+--| Last Mod: 2019-09-23
 --| Requires: _rigAuthCallHook(), rigAuthEmailCheck(), rigAuthSetError, rigAuthUsernameCheck(),
 --|            _rigAuthEncryptPassword(), rigIpAddress(), rigMasterNow(), _rigAuthFilteredData(),
 --|            rigDbInsert(), _rigAuthWhere, rigAuthUsers(), rigDbRow(),
@@ -1187,7 +1187,7 @@ private function _rigAuthRegisterUser pUsername pPassword pEmail pExtraData pGro
 	end if
 
 	# ENCRYPT PASSWORD
-	put rigAuthEncryptPassword(pPassword) into pPassword
+	put _rigAuthEncryptPassword(pPassword) into pPassword
 
 	# USER DATA
 	put pUsername into tData["username"]
