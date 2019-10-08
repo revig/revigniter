@@ -10,9 +10,9 @@
 		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		
 		<script src="../js/nav-ck.js"></script>
 		
 		<!-- Touch icons -->
@@ -134,11 +134,15 @@ Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 	</div>
 </div>
 
-<script src="../js/jquery-1.9.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+
 
 <script src="../js/script-ck.js"></script>
-<script>$(function() { Slidebox.init(); });</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
 
 
 </body>
