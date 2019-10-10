@@ -123,7 +123,10 @@ put "sub, jwt test, name," && tUsername & ", admin, true, iat," && tIAT & ", nbf
 put rigJWTencode( , tJWTpayload) into tJWT
 
 put tJWT into tTokenA["jwt"]
-rigSetHeader "Content-type: application/json"
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -136,7 +139,7 @@ put JsonExport(tTokenA)
 put tIAT + 10 into tNBF
 put tIAT + 60 into tEXP
 
--- Note: Seconds need to be a string, otherwise the data of JsonExport is not valid.
+# NOTE: SECONDS NEED TO BE A STRING, OTHERWISE THE DATA OF JSONEXPORT IS NOT VALID.
 put tIAT & "" into tJWTpayloadA["iat"]
 put tNBF & "" into tJWTpayloadA["nbf"]
 put tEXP & "" into tJWTpayloadA["exp"]
@@ -148,7 +151,10 @@ put uuid() into tJWTpayloadA["jti"]
 put rigJWTencode( , tJWTpayloadA) into tJWT
 
 put tJWT into tTokenA["jwt"]
-rigSetHeader "Content-type: application/json"
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -165,27 +171,37 @@ put JsonExport(tTokenA)
 <pre><code>put "The secret data." into tSecretData
 
 put rigJWTdecode() into tJWTA
-  
-put the seconds into tCurrentTime
-put TRUE into tTimeValid
 
-if tCurrentTime &lt; tJWTA["payload"]["nbf"] then
-  put "Token not yet valid." into tA["responsedata"]
-  put FALSE into tTimeValid
-else if tCurrentTime > tJWTA["payload"]["exp"] then
-  put "Token expired." into tA["responsedata"]
-  put FALSE into tTimeValid
-end if
+if tJWTA["valid"] is TRUE then
   
-if tTimeValid is TRUE then
-  if tJWTA["valid"] then
-    put tSecretData into tA["responsedata"]
-  else
-    put tJWTA["response"] into tA["responsedata"]
+  put the seconds into tCurrentTime
+  put TRUE into tTimeValid
+
+  if tCurrentTime &lt; tJWTA["payload"]["nbf"] then
+    put "Token not yet valid." into tA["responsedata"]
+    put FALSE into tTimeValid
+  else if tCurrentTime > tJWTA["payload"]["exp"] then
+    put "Token expired." into tA["responsedata"]
+    put FALSE into tTimeValid
   end if
-end if
   
-rigSetHeader "Content-type: application/json"
+  if tTimeValid is TRUE then
+    if tJWTA["valid"] then
+      put tSecretData into tA["responsedata"]
+    else
+      put tJWTA["response"] into tA["responsedata"]
+    end if
+  end if
+	
+else-- if tJWTA["valid"] is TRUE
+  # RESPONSE IS ERROR "HTTP/1.0 400 Bad Request" OR "HTTP/1.0 401 Unauthorized"
+  put tJWTA["response"] into tA["secretstring"]
+  rigSetStatusHeader word 2 of tJWTA["response"]
+end if -- if tJWTA["valid"] is TRUE
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tA)
 </code></pre>
 </div>
