@@ -307,6 +307,8 @@ end if
 # 'cookieDomain' = Set to .your-domain.com for site-wide cookies
 # 'cookiePath'   =  Typically will be a forward slash
 # 'cookie_secure' =  Cookies will only be set if a secure HTTPS connection exists.
+# 'cookie_samesite' = Attribute providing some protection against CSRF attacks. Values are:
+# "Strict", "Lax", "None" or empty. Default value is "Strict".
 #
 ##
 
@@ -314,6 +316,7 @@ end if
 	put "" into gConfig["cookie_domain"]
 	put "/" into gConfig["cookie_path"]
 	put FALSE into gConfig["cookie_secure"]
+   put "Strict" into gConfig["cookie_samesite"]
 
 
 

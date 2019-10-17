@@ -45,12 +45,12 @@ local sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -61,7 +61,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -75,25 +75,26 @@ end libraryStack
 --| COMMAND rigSetCookie
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 30-05-09
---| Last Mod: 02-07-13
+--| Version:  1.5
+--| Created: 2009-05-30
+--| Last Mod: 2019-10-17
 --| Requires: Input.lc, _rigInputSetCookie
 --|
---| Summary: Wrapper for _rigInputSetCookie in Input library. Accepts nine parameters, or you
---| 	       can submit an associative array in the first parameter containing all the values.
---| 				 Please see the User Guide for key names or _rigInputSetCookie in Input.lc.
---| 
---| Format:  rigSetCookie param1, param2, param3, param4, param5, param6, param7, param8, param9
+--| Summary: Wrapper for _rigInputSetCookie in Input library. Accepts ten parameters, or you
+--| 	         can submit an associative array in the first parameter containing all the values.
+--| 				   Please see the User Guide for key names or _rigInputSetCookie in Input.lc.
 --|
---| Parameters: string <pName>, mixed <pValue> can be a string or an array, integer <pExp>, string <pDomain> usually: .yourdomain.com,
---|               string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
+--| Format:  rigSetCookie param1, param2[, param3][, param4][, param5][, param6][, param7][, param8][, param9][, param10]
+--|
+--| Parameters: string <pName>, mixed <pValue> can be a string or an array, integer <pExp> (optional), string <pDomain> usually: .yourdomain.com (optional),
+--|               string <pPath> (optional), string <pPrefix> (optional), bool <pReplace> (optional), bool <pSecure> (optional), bool <pHttpOnly> (optional),
+--|               string <pSameSite> "Strict", "Lax" or "None" (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
-	_rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
+command rigSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly, pSameSite
+	_rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly, pSameSite
 end rigSetCookie
 
 
@@ -113,7 +114,7 @@ end rigSetCookie
 --| Requires: Input.lc, _rigGetCookies(), rigConfigItem(), rigVarCookie()
 --|
 --| Summary: Fetch an item from the COOKIE array.
---| 
+--|
 --| Format:  rigGetCookie(param1, param2)
 --|
 --| Parameters: string <pName>, bool <pXssFlag>
@@ -124,7 +125,7 @@ end rigSetCookie
 function rigGetCookie pName pXssFlag
   local tXssFlag, tPrefix, tCookiesArray, tCookieVal, tURLdecodedCookieVal
   local tDecodedCookieVal
-  
+
 	if pXssFlag is empty then
 		put FALSE into tXssFlag
 	else
@@ -135,11 +136,11 @@ function rigGetCookie pName pXssFlag
 	put _rigGetCookies() into tCookiesArray
 
 	if (pName is not among the keys of tCookiesArray) and (rigConfigItem("cookiePrefix") is not empty) then
-		put rigConfigItem("cookiePrefix") into tPrefix 
+		put rigConfigItem("cookiePrefix") into tPrefix
 	end if
 
 	put rigVarCookie(tPrefix & pName, pXssFlag) into tCookieVal
-	
+
   put urlDecode(tCookieVal) into tURLdecodedCookieVal
   if tURLdecodedCookieVal <> false then
     put base64Decode(tURLdecodedCookieVal) into tDecodedCookieVal
@@ -172,7 +173,7 @@ end rigGetCookie
 --| Requires: --
 --|
 --| Summary: Fetch all cookies stored for this site / page.
---| 
+--|
 --| Format:  _rigGetCookies()
 --|
 --| Parameters: --
@@ -182,7 +183,7 @@ end rigGetCookie
 
 private function _rigGetCookies
   local tCookiesRaw, tCookieName, tCookiesA
-  
+
 	if gRigA["COOKIE"] is not empty then
 		put gRigA["COOKIE"] into tCookiesRaw
 	else
@@ -196,7 +197,7 @@ private function _rigGetCookies
 		  put item 1 of cookie into tCookieName
 			if char 1 of tCookieName = space then delete char 1 of tCookieName
         put base64Decode(urlDecode(item 2 of cookie)) into tCookiesA[tCookieName]
-      
+
 		end repeat
 	else
 		put item 1 of tCookiesRaw into tCookieName
@@ -224,7 +225,7 @@ end _rigGetCookies
 --| Requires: --
 --|
 --| Summary: Same as rigSetCookie with value and expiration set to empty
---| 
+--|
 --| Format:  rigDeleteCookie param1, param2, param3, param4
 --|
 --| Parameters: string <pName>, string <pDomain> usually: .yourdomain.com, string <pPath>, string <pPrefix>

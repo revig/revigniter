@@ -2444,23 +2444,24 @@ end rigStripImgTags
 --| COMMAND _rigInputSetCookie
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 15-07-12
---| Last Mod: 03-07-16
---| Requires: _rigCookieExpirationDate(), rigSetHeader
+--| Version:  1.4
+--| Created: 2012-07-15
+--| Last Mod: 2019-10-17
+--| Requires: rigFetchConfigItem(), _rigCookieExpirationDate(), rigSetHeader
 --|
---| Summary: Accepts nine parameters, or you can submit an associative
---| 	       array in the first parameter containing all the values.
+--| Summary: Accepts ten parameters, or you can submit an associative
+--| 	         array in the first parameter containing all the values.
 --|
---| Format:  _rigInputSetCookie param1, param2, param3, param4, param5, param6, param7, param8, param9
+--| Format:  _rigInputSetCookie param1, param2[, param3][, param4][, param5][, param6][, param7][, param8][, param9][, param10]
 --|
---| Parameters: string <pName>, mixed <pValue> can be a string or an array, integer <pExp>, string <pDomain> usually: .yourdomain.com,
---|               string <pPath>, string <pPrefix>, bool <pReplace>, bool <pSecure>, bool <pHttpOnly>
+--| Parameters: string <pName>, mixed <pValue> can be a string or an array, integer <pExp> (optional), string <pDomain> usually: .yourdomain.com (optional),
+--|               string <pPath> (optional), string <pPrefix> (optional), bool <pReplace> (optional), bool <pSecure> (optional), bool <pHttpOnly> (optional),
+--|               string <pSameSite> "Strict", "Lax" or "None" (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly
+command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly, pSameSite
   local tCookieArray, tConfigCookieSecure, tSecure, tReq, tHeaderString
 
 	if pName is an array then
@@ -2475,6 +2476,7 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 		put tCookieArray["replace"] into pReplace
 		put tCookieArray["secure"] into pSecure
 		put tCookieArray["httponly"] into pHttpOnly
+    put tCookieArray["samesite"] into pSameSite
 	end if
 
 	# ARRAYS NEED TO BE MARKED SO THAT THEY CAN BE RECOGNIZED
@@ -2533,12 +2535,26 @@ command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplac
 		put empty into pHttpOnly
 	end if
 
+  if (pSameSite is not empty) and (pSameSite is among the items of "Strict,Lax,None") then
+    # USE pSameSite
+	else
+    put empty into pSameSite
+    put rigFetchConfigItem("cookie_samesite") into tConfigCookieSamesite
+    if (tConfigCookieSamesite is not empty) and (tConfigCookieSamesite is among the items of "Strict,Lax,None") then
+      put tConfigCookieSamesite into pSameSite
+    end if
+	end if
+  if pSameSite is not empty then
+    # SET THE SameSite VALUE
+    put  "; SameSite=" & pSameSite into pSameSite
+  end if
+
 	if pExp is not empty then
-    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & "; expires=" & _rigCookieExpirationDate(pExp) & pDomain & pHttpOnly into tHeaderString
+    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & "; expires=" & _rigCookieExpirationDate(pExp) & pDomain & pHttpOnly & pSameSite into tHeaderString
 	  rigSetHeader tHeaderString, pReplace
 
 	else
-    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & pDomain & pHttpOnly into tHeaderString
+    put "Set-Cookie: " && pName & "=" & urlEncode(base64Encode(pValue)) & pPath & pDomain & pHttpOnly & pSameSite into tHeaderString
 	  rigSetHeader tHeaderString, pReplace
 	end if
 end _rigInputSetCookie
