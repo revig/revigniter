@@ -2462,7 +2462,7 @@ end rigStripImgTags
 ----------------------------------------------------------------------*/
 
 command _rigInputSetCookie pName, pValue, pExp, pDomain, pPath, pPrefix, pReplace, pSecure, pHttpOnly, pSameSite
-  local tCookieArray, tConfigCookieSecure, tSecure, tReq, tHeaderString
+  local tCookieArray, tConfigCookieSecure, tSecure, tReq, tHeaderString, tConfigCookieSamesite
 
 	if pName is an array then
 		put pName into tCookieArray
