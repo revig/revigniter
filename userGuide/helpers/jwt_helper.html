@@ -10,9 +10,9 @@
 		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		
 		<script src="../js/nav-ck.js"></script>
 		
 		<!-- Touch icons -->
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,7 +90,7 @@
 
 <p>The JSON Web Token Helper contains handlers which allows you to generate, decode and verify JSON Web Tokens. It follows the industry standard RFC 7519 which is a means for representing claims as a JSON object to be transferred between two parties. The JWT helper uses the HMAC SHA256, SHA384 or SHA512 hashing algorithm to sign tokens, RSA public/private key pairs are currently not supported. If you are not familiar with JSON Web Tokens you can read about the concept at <a href="https://jwt.io">https://jwt.io</a>.</p>
 
-<p class="important"><strong>Note:</strong> This helper requires the LiveCode Builder (library) extension com.livecode.library.json which needs to be stored in <dfn>application/extensions</dfn>. So, the path to the extension is <dfn>application/extensions/com.livecode.library.json/module.lcm</dfn>. Please read about how to include/load the LiveCode JSON extension in chapter <a href="../general/extensions.html">"Extensions"</a>.</p>
+<p class="important"><strong>Note:</strong> This helper requires the LiveCode Builder (library) extension com.livecode.library.json which needs to be stored in <kbd>application/extensions</kbd>. So, the path to the extension is <kbd>application/extensions/com.livecode.library.json/module.lcm</kbd>. Please read about how to include/load the LiveCode JSON extension in chapter <a href="../general/extensions.html">"Extensions"</a>.</p>
 
 <p class="important"><strong>Note:</strong> HMAC SHA384 and SHA512 hashing algorithms are not supported on LiveCode server prior to version 9.</p>
 
@@ -102,7 +102,7 @@
 
 
 <h2>The Key</h2>
-<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <dfn>application/config</dfn>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you using the LiveCode randomBytes(64) function and saved to <dfn>application/config/jwt.lc</dfn> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
+<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <kbd>application/config</kbd>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you using the LiveCode <dfn>randomBytes(64)</dfn> function and saved to <kbd>application/config/jwt.lc</kbd> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
 
 <h2>Handler Reference</h2>
 
@@ -123,7 +123,10 @@ put "sub, jwt test, name," && tUsername & ", admin, true, iat," && tIAT & ", nbf
 put rigJWTencode( , tJWTpayload) into tJWT
 
 put tJWT into tTokenA["jwt"]
-rigSetHeader "Content-type: application/json"
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -136,7 +139,7 @@ put JsonExport(tTokenA)
 put tIAT + 10 into tNBF
 put tIAT + 60 into tEXP
 
--- Note: Seconds need to be a string, otherwise the data of JsonExport is not valid.
+# NOTE: SECONDS NEED TO BE A STRING, OTHERWISE THE DATA OF JSONEXPORT IS NOT VALID.
 put tIAT & "" into tJWTpayloadA["iat"]
 put tNBF & "" into tJWTpayloadA["nbf"]
 put tEXP & "" into tJWTpayloadA["exp"]
@@ -148,7 +151,10 @@ put uuid() into tJWTpayloadA["jti"]
 put rigJWTencode( , tJWTpayloadA) into tJWT
 
 put tJWT into tTokenA["jwt"]
-rigSetHeader "Content-type: application/json"
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -165,27 +171,37 @@ put JsonExport(tTokenA)
 <pre><code>put "The secret data." into tSecretData
 
 put rigJWTdecode() into tJWTA
-  
-put the seconds into tCurrentTime
-put TRUE into tTimeValid
 
-if tCurrentTime &lt; tJWTA["payload"]["nbf"] then
-  put "Token not yet valid." into tA["responsedata"]
-  put FALSE into tTimeValid
-else if tCurrentTime > tJWTA["payload"]["exp"] then
-  put "Token expired." into tA["responsedata"]
-  put FALSE into tTimeValid
-end if
+if tJWTA["valid"] is TRUE then
   
-if tTimeValid is TRUE then
-  if tJWTA["valid"] then
-    put tSecretData into tA["responsedata"]
-  else
-    put tJWTA["response"] into tA["responsedata"]
+  put the seconds into tCurrentTime
+  put TRUE into tTimeValid
+
+  if tCurrentTime &lt; tJWTA["payload"]["nbf"] then
+    put "Token not yet valid." into tA["responsedata"]
+    put FALSE into tTimeValid
+  else if tCurrentTime > tJWTA["payload"]["exp"] then
+    put "Token expired." into tA["responsedata"]
+    put FALSE into tTimeValid
   end if
-end if
   
-rigSetHeader "Content-type: application/json"
+  if tTimeValid is TRUE then
+    if tJWTA["valid"] then
+      put tSecretData into tA["responsedata"]
+    else
+      put tJWTA["response"] into tA["responsedata"]
+    end if
+  end if
+	
+else-- if tJWTA["valid"] is TRUE
+  # RESPONSE IS ERROR "HTTP/1.0 400 Bad Request" OR "HTTP/1.0 401 Unauthorized"
+  put tJWTA["response"] into tA["secretstring"]
+  rigSetStatusHeader word 2 of tJWTA["response"]
+end if -- if tJWTA["valid"] is TRUE
+
+# rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
+# GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
+put header "Content-type: application/json"
 put JsonExport(tA)
 </code></pre>
 </div>
@@ -222,8 +238,7 @@ Next Topic:&nbsp;&nbsp;<a href="language_helper.html">Language Helper</a></p>
 	</div>
 </div>
 
-<script src="../js/jquery-1.9.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+
 
 <script src="../js/highlight.pack.js"></script>
  <script>
@@ -232,7 +247,12 @@ Next Topic:&nbsp;&nbsp;<a href="language_helper.html">Language Helper</a></p>
  </script>
 
 <script src="../js/script-ck.js"></script>
-<script>$(function() { Slidebox.init(); });</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
 
 <script src="../js/clipboard-ck.js"></script>
 

@@ -32,7 +32,7 @@ To join the discussion relating to using revIgniter subscribe and review archive
 
 ### Meta
 
--   Version: 2.1.3
+-   Version: 2.1.4
 -   Web Site: <https://revigniter.com/>
 -   User Guide: <https://revigniter.com/userGuide/index.html>
 -   Author:  [Ralf Bitter](mailto:rabit@revigniter.com)

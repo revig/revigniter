@@ -10,9 +10,9 @@
 		<meta name="description" content="revIgniter User Guide" />
 
 		<!-- Bootstrap -->
-		<link rel="stylesheet" media="screen" href="../css/bootstrap.min.css">
+		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
 
-		<script src="../js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		
 		<script src="../js/nav-ck.js"></script>
 		
 		<!-- Touch icons -->
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -108,39 +108,43 @@ Array Method, and Discrete Parameters:</p>
 <p>Using this method, an associative array is passed to the first parameter:</p>
 
 <div class="codeSample">
-<pre><code>put "The Cookie Name" into tCookie["name"]
-put "The Value" into tCookie["value"]
-put 86500 into tCookie["expire"]
-put ".some-domain.com" into tCookie["domain"]
-put "/" into tCookie["path"]
-put "myprefix" into tCookie["prefix"]
-put FALSE into tCookie["replace"] -- set to TRUE, if you want to overwrite the most recent cookie header
-put TRUE into tCookie["secure"]
-put FALSE into tCookie["httponly"]
+<pre><code>put "The Cookie Name" into tCookieA["name"]
+put "The Value" into tCookieA["value"]
+put 86500 into tCookieA["expire"]
+put ".some-domain.com" into tCookieA["domain"]
+put "/" into tCookieA["path"]
+put "myprefix" into tCookieA["prefix"]
+put FALSE into tCookieA["replace"] -- set to TRUE, if you want to overwrite the most recent cookie header
+put TRUE into tCookieA["secure"]
+put FALSE into tCookieA["httponly"]
+put "Lax" into tCookieA["samesite"]
 
-rigSetCookie tCookie
+rigSetCookie tCookieA
 </code></pre>
 </div>
 
 <p><strong>Notes:</strong></p>
 
-<p>Only the <strong>name</strong> and <strong>value</strong> are required. To delete a cookie set it with the expiration blank.</p>
-<p>Although cookie <strong>values</strong> need to be strings revIgniter optionally allows to use arrays as <strong>value</strong>.</p>
-<p>The <strong>expiration</strong> is set in <strong>seconds</strong>, which will be added to the current time.  Do not include the time, but rather only the
+<ul>
+<li>Only the <strong>name</strong> and <strong>value</strong> are required. All other parameters are optional. To delete a cookie set it with the expiration blank.</li>
+<li>Although cookie <strong>values</strong> need to be strings revIgniter optionally allows to use arrays as <strong>value</strong>.</li>
+<li>The <strong>expiration</strong> is set in <strong>seconds</strong>, which will be added to the current time.  Do not include the time, but rather only the
 number of seconds from <em>now</em> that you wish the cookie to be valid.  If the expiration is set to
-zero the cookie will only last as long as the browser is open.</p>
-<p>For site-wide cookies regardless of how your site is requested, add your URL to the <strong>domain</strong> starting with a period, like this:  .your-domain.com</p>
-<p>The <strong>path</strong> is usually not needed since the handler sets a root path.</p>
-<p>The <strong>prefix</strong> is only needed if you need to avoid name collisions with other identically named cookies for your server.</p>
-<p>Set the <strong>replace</strong> boolean to TRUE, if you want to overwrite the most recent cookie header</p>
-<p>The <strong>secure</strong> boolean is only needed if you want to make it a secure cookie by setting it to TRUE (Cookies will only be set if a secure HTTPS connection exists).</p>
-<p>Use the <strong>httponly</strong> boolean to unset the HttpOnly flag. This flag is set by default so that the cookie can't be read locally via JavaScript.</p>
+zero the cookie will only last as long as the browser is open.</li>
+<li>For site-wide cookies regardless of how your site is requested, add your URL to the <strong>domain</strong> starting with a period, like this:  .your-domain.com The domain can also be set in <kbd>application/config/config.lc</kbd></li>
+<li>The <strong>path</strong> is usually not needed since the handler sets a root path. The path can be set in <kbd>application/config/config.lc</kbd> too.</li>
+<li>The <strong>prefix</strong> is only needed if you need to avoid name collisions with other identically named cookies for your server. This value can be set in <kbd>application/config/config.lc</kbd> too.</li>
+<li>Set the <strong>replace</strong> boolean to TRUE, if you want to overwrite the most recent cookie header</li>
+<li>The <strong>secure</strong> boolean is only needed if you want to make it a secure cookie by setting it to TRUE (Cookies will only be set if a secure HTTPS connection exists). This boolean can be set in <kbd>application/config/config.lc</kbd> too.</li>
+<li>Use the <strong>httponly</strong> boolean to unset the HttpOnly flag. This flag is set by default so that the cookie can't be read locally via JavaScript.</li>
+<li>The <strong>samesite</strong> attribute provides some protection against CSRF attacks. Values are: "Strict", "Lax" or "None". If you do not include this parameter it is provided by <kbd>application/config/config.lc</kbd></li>
+</ul>
 
 <h4>Discrete Parameters</h4>
 
 <p>If you prefer, you can set the cookie by passing data using individual parameters:</p>
 
-<pre><code class="lang-livecodeserver">rigSetCookie tName, tValue, tExp, tDomain, tPath, tPrefix, tReplace, pSecure, pHttpOnly</code></pre>
+<pre><code class="lang-livecodeserver">rigSetCookie tName, tValue, tExp, tDomain, tPath, tPrefix, tReplace, pSecure, pHttpOnly, pSameSite</code></pre>
 
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
 
@@ -168,6 +172,9 @@ of values in the first parameter or you can set discrete parameters.</p>
 <pre><code class="lang-livecodeserver">rigDeleteCookie tName, tDomain, tPath, tPrefix</code></pre>
 
 
+<p class="important"><strong>Note:</strong> See cookie related settings in <kbd>application/config/config.lc</kbd>.</p>
+
+
 </div>
 <!-- END CONTENT -->
 
@@ -186,8 +193,7 @@ Next Topic:&nbsp;&nbsp;<a href="date_helper.html">Date Helper</a></p>
 	</div>
 </div>
 
-<script src="../js/jquery-1.9.1.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+
 
 <script src="../js/highlight.pack.js"></script>
  <script>
@@ -196,7 +202,12 @@ Next Topic:&nbsp;&nbsp;<a href="date_helper.html">Date Helper</a></p>
  </script>
 
 <script src="../js/script-ck.js"></script>
-<script>$(function() { Slidebox.init(); });</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
 
 <script src="../js/clipboard-ck.js"></script>
 
