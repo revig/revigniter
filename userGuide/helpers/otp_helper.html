@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -217,6 +217,7 @@ end rigRunInitialQRConfig
 <p>Returns FALSE in the result in case an error occurred, otherwise the result contains the base64 encoded image data of the QR code. Here is an example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">rigOTPgenerateUserKey tSecret
 put the result into tKey
 put "user@example.com" into tAccount
@@ -231,6 +232,7 @@ put rigOTPqrCode(tKey, tAccount, tIssuer, tAlgo, tDigits, tPeriod, tECC, tSize) 
 
 put "&lt;img src='data:image/png;base64," & tImgData & "' /&gt;" into gData["qrCode"]
 </code></pre>
+</div>
 
 
 </div>

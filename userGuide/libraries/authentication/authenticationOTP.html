@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -165,10 +165,12 @@ CREATE TABLE "otp" (
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put rigAuthGenerateQR() into tQRa
 put tQRa["key"] into gData["key"]
 put tQRa["qr"] into gData["qrCode"]
 </code></pre>
+</div>
 
 
 <h3>rigAuthOTPkeysMatch(<var>pChallenge</var>)</h3>
@@ -179,6 +181,8 @@ put tQRa["qr"] into gData["qrCode"]
 
 <p>Example:</p>
 
+
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">put rigVarPost("authcode") into tAuthCode
 
 if tAuthCode <> False then
@@ -191,6 +195,7 @@ if tAuthCode <> False then
   end if
 end if
 </code></pre>
+</div>
 
 
 <h3>rigAuthUserHasOTP(<var>pUserID</var>)</h3>
@@ -203,6 +208,8 @@ end if
 
 <p>Example:</p>
 
+
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># FORM VALIDATION
 if rigFormValidRun("auth/login") is TRUE then
 
@@ -245,6 +252,7 @@ else
 
 end if
 </code></pre>
+</div>
 
 
 
@@ -267,6 +275,7 @@ end if
 <p>Example:</p>
 
 
+<div class="codeSample">
 <pre><code class="lang-livecodeserver"># CHECK IF USER IS LOGGED IN, CAN BE "pending" IF USER HAS SETUP OTP
 # AND HAS NOT YET SUPPLIED A VALID OTP
 put rigAuthLoggedIn() into tLoggedIn
@@ -302,6 +311,7 @@ else -- if tLoggedIn is FALSE then
   end if
 end if
 </code></pre>
+</div>
 
 
 
