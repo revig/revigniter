@@ -459,9 +459,9 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 2009-10-06
---| Last Mod: 2018-01-25
+--| Last Mod: 2020-01-11
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
@@ -493,7 +493,7 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
 
-      return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
+      return "<script" & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
    else
       set the itemDelimiter to "-"
       put item 2 of pAsset into tLib
