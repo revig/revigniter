@@ -459,31 +459,33 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 2009-10-06
---| Last Mod: 2020-01-11
+--| Last Mod: 2020-01-14
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
---|            the Google Apis CDN to serve an open-source JavaScript library you
---|            can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
---|            Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
---|            For a list of available libraries see:
---|            http://code.google.com/apis/libraries/devguide.html
+--|          the Google Apis CDN to serve an open-source JavaScript library you
+--|          can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
+--|          Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
+--|          For a list of available libraries see:
+--|          http://code.google.com/apis/libraries/devguide.html
 --|
---| Format:  rigJsAsset(param1, param2, param3)
+--| Format:  rigJsAsset(param1[, param2][, param3][, param4][, param5])
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
---|               string <pModule> optional module name,
---|               bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names
---|              (optional) / fallback asset in case a request to jsGoogleapis is not possible (optional),
---|					  string <pAttribute> async and / or defer attribute (optional)
+--|             string <pModule> optional module name,
+--|             bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names
+--|             (optional) / fallback asset in case a request to jsGoogleapis is not possible (optional),
+--|					    string <pAttribute> async and / or defer attribute (optional)
+--|             string <pNonce> CSP nonce (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
-  local tAttribute, tAssetUrl, tLib, tVersion, tLibName, tObject, tScriptReference
+function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute pNonce
+  local tAttribute, tAssetUrl, tLib, tVersion
+  local tLibName, tObject, tScriptReference, tNonce
 
 	put empty into tAttribute
 	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
@@ -493,7 +495,11 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
 
-      return "<script" & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
+      if pNonce <> empty then
+        put " nonce='" & pNonce & "'" into tNonce
+      end if
+
+      return "<script" & tAttribute & tNonce && "src=" & quote & tAssetUrl & quote & "></script>"
    else
       set the itemDelimiter to "-"
       put item 2 of pAsset into tLib
