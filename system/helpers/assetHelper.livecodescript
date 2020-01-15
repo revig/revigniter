@@ -487,17 +487,16 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute pNonce
   local tAttribute, tAssetUrl, tLib, tVersion
   local tLibName, tObject, tScriptReference, tNonce
 
-	put empty into tAttribute
 	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
 		put " " & pAttribute into tAttribute
 	end if
 
+  if pNonce <> empty then
+    put " nonce='" & pNonce & "'" into tNonce
+  end if
+
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
-
-      if pNonce <> empty then
-        put " nonce='" & pNonce & "'" into tNonce
-      end if
 
       return "<script" & tAttribute & tNonce && "src=" & quote & tAssetUrl & quote & "></script>"
    else
@@ -551,13 +550,13 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute pNonce
       end switch
 
 			if pCacheBusterOrFallbackAsset is empty then
-  			return "<script" && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
+  			return "<script" & tAttribute & tNonce && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
 			end if
 
 			put rigJsAssetURL(pCacheBusterOrFallbackAsset, pModule) into tAssetUrl
 
-						put "<script" && tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
-			& "<script>window." & tObject && "|| document.write(" & quote & "<script" && tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
+						put "<script" & tAttribute & tNonce && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
+			& "<script>window." & tObject && "|| document.write(" & quote & "<script" & tAttribute & tNonce && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
 
 			return tScriptReference
 		end if
