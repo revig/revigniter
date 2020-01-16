@@ -235,7 +235,7 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 <h3>Notes:</h3>
 
 <ul>
-  <li>Add the AJAX pagination script like [[gData["ajaxCode"]]] to your view file preferably at the bottom just before the closing body tag.</li>
+  <li>Add the AJAX pagination script like <dfn>[[gData["ajaxCode"]]]</dfn> to your view file preferably at the bottom just before the closing body tag.</li>
   <li>The AJAX pagination code adds a segment named "ajaxrequest" to pagination links. This allows us with the help of the <dfn>rigFetchSegment()</dfn> function or the <dfn>reigFetchRsegment()</dfn> function respectively to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard http request.</li>
   <li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
 </ul>
@@ -246,6 +246,16 @@ put "myPaginationDataID" into tConfig["dataElementID"]
 </code></pre>
 </div>
 
+<ul>
+<li>You can easily add a Content Security Policy nonce to the AJAX script tag like:</li>
+</ul>
+
+<div class="codeSample">
+<pre><code>put rigNonce() into tNonce
+# GET AJAX PAGINATION SCRIPT
+put rigAjaxPaginationCode(tNonce) into gData["ajaxCode"]
+</code></pre>
+</div>
 
 <p class="important"><strong>Note:</strong> revIgniter's AJAX pagination is not compatible with Internet Explorer 7 and below.</p>
 
@@ -261,7 +271,13 @@ will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save 
 <p>Example:</p>
 
 <div class="codeSample">
-<pre><code class="lang-livecodeserver">local sConfig
+<pre><code class="lang-livecodeserver">&lt;?lc
+if gRigA is not an array then
+  put "No direct script access allowed."
+  exit to top
+end if
+
+local sConfig
 
 put "http://example.com/index.lc/test/page/" into sConfig["baseUrl"]
 put 200 into sConfig["totalRows"]
@@ -487,9 +503,9 @@ rigRunInitialPaginationConfig sConfig
 <p>Build and send JSON data used by the AJAX pagination script. The fist parameter contains the current data to be displayed. The second parameter contains the current pagination links.</p>
 
 
-<h3>rigAjaxPaginationCode()</h3>
+<h3>rigAjaxPaginationCode(<var>pNonce</var>)</h3>
 
-<p>Generates and returns the AJAX pagination JavaScript code.</p>
+<p>Generates and returns the AJAX pagination JavaScript code. The parameter, a Content Security Policy nonce, is optional.</p>
 
 
 </div>
