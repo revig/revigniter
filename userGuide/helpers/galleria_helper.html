@@ -188,32 +188,35 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <h2>Handler Reference</h2>
 
-<h3>rigGalleriaData(<var>pGalleryPath</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pReplaceDataFile</var>, <var>pReturnReference</var>)</h3>
+<h3>rigGalleriaData(<var>pGalleryPath</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pReplaceDataFile</var>, <var>pReturnReference</var>, <var>pNonce</var>)</h3>
+
+<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
 
 <ul>
-	<li>The first parameter is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
-	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleria.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleria.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
-	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
-	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
-	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
-	<li>The optional sixth parameter is a boolean which determines whether the generated JavaScript file should be replaced every time the function is called. Defaults to FALSE.</li>
-	<li>The optional seventh parameter is a boolean which determines whether the helper should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy for example if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
+	<li>The first parameter (<var>pGalleryPath</var>) is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
+	<li>The second parameter (<var>pOptions</var>) is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleria.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleria.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
+	<li>The optional third parameter (<var>pContainerID</var>) is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
+	<li>The optional fourth parameter (<var>pDataVariableName</var>) is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
+	<li>The optional fifth parameter (<var>pCacheBuster</var>) is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
+	<li>The optional sixth parameter (<var>pReplaceDataFile</var>) is a boolean which determines whether the generated JavaScript file should be replaced every time the function is called. Defaults to FALSE.</li>
+	<li>The optional seventh parameter (<var>pReturnReference</var>) is a boolean which determines whether the helper should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy for example if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
+	<li> The optional eighth parameter (<var>pNonce</var>) is a Content Security Policy nonce.</li>
 	</ul>
 	
-	<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
 
+<h3>rigDynamicGalleriaData(<var>pMetaData</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pNonce</var>)</h3>
 
-<h3>rigDynamicGalleriaData(<var>pMetaData</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>)</h3>
+<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.</p>
 
 <ul>
-	<li>The first parameter is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
-	<li>The second parameter is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleria.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleria.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
-	<li>The optional third parameter is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
-	<li>The optional fourth parameter is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
-	<li>The optional fifth parameter is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
+	<li>The first parameter (<var>pMetaData</var>) is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
+	<li>The second parameter (<var>pOptions</var>) is optional and is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleria.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleria.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
+	<li>The optional third parameter (<var>pContainerID</var>) is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
+	<li>The optional fourth parameter (<var>pDataVariableName</var>) is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
+	<li>The optional fifth parameter (<var>pCacheBuster</var>) is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
+	<li> The optional sixth parameter (<var>pNonce</var>) is a Content Security Policy nonce.</li>
 	</ul>
 	
-	<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.</p>
 
 
 <p class="important"><strong>Note:</strong> If you place more than one gallery on a page you need to include the third and fourth parameter as you need different IDs and variable names for each gallery. This applies to both functions.</p>
