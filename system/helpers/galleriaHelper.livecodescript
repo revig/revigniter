@@ -8,7 +8,7 @@ script "galleriaHelper"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -70,16 +70,16 @@ end libraryStack
 --| FUNCTION rigGalleriaData
 --|
 --| Author: rabit
---| Version:  1.9
+--| Version:  1.10
 --| Created: 2011-12-11
---| Last Mod: 2019-08-28
+--| Last Mod: 2020-01-13
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
 --| Summary: Write Galleria image and initialization data, return a reference to it or the data itself.
---| 				  The Galleria version currently supported is 1.5.7, see https://galleria.io/.
+--| 				  The Galleria version currently supported is 1.6.1, see https://galleria.io/.
 --|
---| Format:  rigGalleriaData(param1, param2, param3, param4, param5, param6)
+--| Format:  rigGalleriaData(param1[, param2][, param3][, param4][, param5][, param6][, parmam7][, param8])
 --|
 --| Parameters: mixed <pGalleryPath> root relative path to Galleria folder,
 --| 						array <pOptions> Galleria options array (optional),
@@ -89,12 +89,12 @@ end libraryStack
 --| 						bool <pReplaceDataFile> flag for replacing the data file every
 --| 						time the function is called (optional), bool <pReturnReference> flag
 --| 						for either returning a reference to the data file or for returning the
---| 						the data itself
+--| 						the data itself (optional), string <pNonce> CSP nonce (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pCacheBuster pReplaceDataFile pReturnReference
+function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pCacheBuster pReplaceDataFile pReturnReference pNonce
   local tGalleriaParams, tGalleryPath, tOptions, tContainerID
   local tDataVariableName, tCacheBuster, tReplaceDataFile
   local tReturnReference, tPathTranslated, tDoCacheBusting
@@ -104,7 +104,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
   local tMetaData, tGalleriaData, tCurrentImagePath, tCurrentImage
   local tCurrentImageName, tCurrentImageSuffix, tInfoArray, tLastMod
   local tCurrentImageCB, tThumb, tThumbURL, tImageURL, tBig, tBigURL
-  local tCurrentMetaLineNum, tGalleriaDataOptions
+  local tCurrentMetaLineNum, tGalleriaDataOptions, tNonce
 
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pGalleryPath is an array then
@@ -172,6 +172,10 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 		put TRUE into tReturnReference
 	end if
 
+  # CSP
+  if pNonce <> empty then
+    put "nonce='" & pNonce & "' " into tNonce
+  end if
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
 	put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
@@ -254,7 +258,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 			else
 				# RETURN SOURCE
 				put tURLbase & tGalleryPath & "/" & tJSONfile into tJSONurl
-				return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tJSONurl & quote & "></script>"
+				return "<script" && tNonce & "src=" & quote & tJSONurl & quote & "></script>"
 			end if
 
 			exit repeat
@@ -405,7 +409,7 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 	# RETURN SOURCE / DATA
 	if tReturnReference is TRUE then
 		put (tURLbase & tGalleryPath & "/" & tJSONfile) into tJSONurl
-		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tJSONurl & quote & "></script>"
+		return "<script" && tNonce & "src=" & quote & tJSONurl & quote & "></script>"
 	end if
 
 	return tGalleriaData
@@ -421,33 +425,34 @@ end rigGalleriaData
 --| FUNCTION rigDynamicGalleriaData
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 2011-12-27
---| Last Mod: 2019-08-28
+--| Last Mod: 2020-01-13
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
---| 					 rigGetFileInfo()
+--| 					rigGetFileInfo()
 --|
 --| Summary: Return Galleria initialisation code and JSON data based on dynamically generated meta data.
---| 				   The Galleria version currently supported is 1.2.7, see http://galleria.io/.
+--| 				 The Galleria version currently supported is 1.6.1, see https://galleria.io/.
 --|
---| Format:  rigDynamicGalleriaData(param1, param2, param3, param4, param5, param6)
+--| Format:  rigDynamicGalleriaData(param1[, param2][, param3][, param4][, param5][, param6])
 --|
 --| Parameters: mixed <pMetaData> tab delimeted list of Galleria meta data,
 --| 						array <pOptions> Galleria options array (optional),
 --| 						string <pContainerID> ID of gallery container (optional),
 --| 						string <pDataVariableName> name of JavaScript variable (optional),
---| 						bool <pCacheBuster> compose cache buster file names (optional)
+--| 						bool <pCacheBuster> compose cache buster file names (optional),
+--|             string <pNonce> CSP nonce (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableName pCacheBuster
+function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableName pCacheBuster pNonce
   local tGalleriaParams, tOptions, tContainerID, tDataVariableName
   local tCacheBuster, tPathTranslated, tDoCacheBusting, tURLbase
   local tGalleriaData, tCurrentImagePath, tGalleryPath, tThumbNamesArray
   local tBigNamesArray, tCurrentImage, tCurrentImageName, tCurrentImageSuffix
   local tInfoArray, tLastMod, tCurrentImageCB, tThumb, tThumbURL, tImageURL
-  local tBig, tBigURL, tGalleriaDataOptions
+  local tBig, tBigURL, tGalleriaDataOptions, tNonce
 
 	# GET PARAMS FROM FIRST PARAM IF IT IS AN ARRAY
 	if pMetaData is an array then
@@ -499,6 +504,11 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 	else
 		put TRUE into tCacheBuster
 	end if
+
+  # CSP
+  if pNonce <> empty then
+    put " nonce='" & pNonce & "' " into tNonce
+  end if
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
 	put $_SERVER["PATH_TRANSLATED"] into tPathTranslated
@@ -663,8 +673,7 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 			tDataVariableName & "," & tGalleriaDataOptions & return & "});" into tGalleriaData
 
 	# RETURN JSON DATA AND INITIALIZATION CODE
-	return "<script>" & tGalleriaData & "</script>"
-
+	return "<script" & tNonce & ">" & tGalleriaData & "</script>"
 end rigDynamicGalleriaData
 
 

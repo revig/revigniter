@@ -8,7 +8,7 @@ script "Pagination"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -261,9 +261,9 @@ end rigSetInitialPaginationValue
 --| FUNCTION rigCreatePaginationLinks
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 22-09-09
---| Last Mod: 12-04-15
+--| Version:  1.3
+--| Created: 2009-09-22
+--| Last Mod: 2020-01-13
 --| Requires: rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
@@ -350,16 +350,12 @@ function rigCreatePaginationLinks
 	if  sPaginationA["curPage"] > (sPaginationA["numLinks"] + 1) then
 		# ARIA
 		if sPaginationA["firstLink"] contains "&lsaquo;" then
-			put "aria-label=" & quote & "First" & quote into tAriaLabel
+      put "aria-label='First'" into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
-    if sPaginationA["ajax"] is TRUE then
-      put sPaginationA["firstTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
-    else
-      put sPaginationA["firstTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & quote && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
-    end if
+    put sPaginationA["firstTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & "'" && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
 	end if
   #
 
@@ -367,7 +363,7 @@ function rigCreatePaginationLinks
 	if sPaginationA["curPage"] <> 1 then
 			# ARIA
 			if sPaginationA["prevLink"] contains "&lt;" then
-				put "aria-label=" & quote & "Previous" & quote into tAriaLabel
+        put "aria-label='Previous'" into tAriaLabel
 			else
 				put empty into tAriaLabel
 			end if
@@ -376,11 +372,8 @@ function rigCreatePaginationLinks
 		if tCounter = 0 then
 			put empty into tCounter
 		end if
-    if sPaginationA["ajax"] is TRUE then
-      put sPaginationA["prevTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tCounter & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
-    else
-      put sPaginationA["prevTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tCounter & quote && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
-    end if
+
+    put sPaginationA["prevTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tCounter & "'" && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
 	end if
   #
 
@@ -398,12 +391,7 @@ function rigCreatePaginationLinks
 					put tI into tN
 				end if
 
-        if sPaginationA["ajax"] is TRUE then
-          put sPaginationA["numTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tN & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'>" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
-        else
-          put sPaginationA["numTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tN & quote & ">" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
-        end if
-
+        put sPaginationA["numTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tN & "'>" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
 			end if
 		end if
 	end repeat
@@ -413,17 +401,14 @@ function rigCreatePaginationLinks
 	if sPaginationA["curPage"] < tNumPages then
 		# ARIA
 		if sPaginationA["nextLink"] contains "&gt;" then
-			put "aria-label=" & quote & "Next" & quote into tAriaLabel
+      put "aria-label='Next'" into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
 		put sPaginationA["curPage"] * sPaginationA["perPage"] into tJ
-    if sPaginationA["ajax"] is TRUE then
-      put sPaginationA["nextTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tJ & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
-    else
-      put sPaginationA["nextTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tJ & quote && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
-    end if
+
+    put sPaginationA["nextTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tJ & "'" && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
 	end if
   #
 
@@ -431,17 +416,14 @@ function rigCreatePaginationLinks
 	if (sPaginationA["curPage"] + sPaginationA["numLinks"]) < tNumPages then
 		# ARIA
 		if sPaginationA["lastLink"] contains "&raquo;" then
-			put "aria-label=" & quote & "Last" & quote into tAriaLabel
+      put "aria-label='Last'" into tAriaLabel
 		else
 			put empty into tAriaLabel
 		end if
 		#
 		put (tNumPages * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
-    if sPaginationA["ajax"] is TRUE then
-      put sPaginationA["lastTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tI & "'" && "onClick='" & sPaginationA["widgetName"] & ".clickListener(event,&quot;" & sPaginationA["linksElementID"] & "&quot;,&quot;" & sPaginationA["dataElementID"] & "&quot;)" & "'" && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
-    else
-      put sPaginationA["lastTagOpen"] & "<a href=" & quote & sPaginationA["baseUrl"] & tI & quote && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
-    end if
+
+    put sPaginationA["lastTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tI & "'" && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
 	end if
   #
 
@@ -526,22 +508,26 @@ end rigAjaxPagination
 --| FUNCTION rigAjaxPaginationCode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2014-02-28
---| Last Mod: 2919-05-09
+--| Last Mod: 2020-01-13
 --| Requires: --
 --|
 --| Summary: Return AJAX pagination JavaScript code.
 --|
---| Format:  rigAjaxPaginationCode()
+--| Format:  rigAjaxPaginationCode([param1])
 --|
---| Parameters: --
+--| Parameters: string <pNonce> used by CSP headers (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigAjaxPaginationCode
-	return "<script>/* @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt */var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };/* @license-end */</script>"
+function rigAjaxPaginationCode pNonce
+  if pNonce <> empty then
+    put " nonce='" & pNonce & "'" into tNonce
+  end if
+
+	return "<script" & tNonce & ">/* @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt */function switchPage(t){" & quote & "use strict" & quote & ";" & quote & "A" & quote & "!==(t=t||window.event).target.nodeName&&" & quote & "A" & quote & "!==t.target.parentNode.nodeName||" & sPaginationA["widgetName"] & ".clickListener(t," & quote & sPaginationA["linksElementID"] & quote & "," & quote & sPaginationA["dataElementID"] & quote & ")}document.addEventListener(" & quote & "DOMContentLoaded" & quote & ",(function(){" & quote & "use strict" & quote & ";var t=document.getElementById(" & quote & sPaginationA["linksElementID"] & quote & ");t.addEventListener?t.addEventListener(" & quote & "click" & quote & ",switchPage,!1):t.attachEvent&&t.attachEvent(" & quote & "onclick" & quote & ",switchPage)}));var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };/* @license-end */</script>"
 end rigAjaxPaginationCode
 
 

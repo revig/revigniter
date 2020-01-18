@@ -8,7 +8,7 @@ script "assetHelper"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -459,41 +459,46 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.8
 --| Created: 2009-10-06
---| Last Mod: 2018-01-25
+--| Last Mod: 2020-01-14
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
---|            the Google Apis CDN to serve an open-source JavaScript library you
---|            can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
---|            Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
---|            For a list of available libraries see:
---|            http://code.google.com/apis/libraries/devguide.html
+--|          the Google Apis CDN to serve an open-source JavaScript library you
+--|          can do so by naming the asset (the first parameter) like: jsGoogleapis-<name>-<version>
+--|          Example: rigJsAsset("jsGoogleapis-jquery-1.4.2") or rigJsAsset("jsGoogleapis-dojo-1.5")
+--|          For a list of available libraries see:
+--|          http://code.google.com/apis/libraries/devguide.html
 --|
---| Format:  rigJsAsset(param1, param2, param3)
+--| Format:  rigJsAsset(param1[, param2][, param3][, param4][, param5])
 --|
 --| Parameters: string <pAsset> the name of the file or asset,
---|               string <pModule> optional module name,
---|               bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names
---|              (optional) / fallback asset in case a request to jsGoogleapis is not possible (optional),
---|					  string <pAttribute> async and / or defer attribute (optional)
+--|             string <pModule> optional module name,
+--|             bool or string <pCacheBusterOrFallbackAsset> compose cache buster file names
+--|             (optional) / fallback asset in case a request to jsGoogleapis is not possible (optional),
+--|					    string <pAttribute> async and / or defer attribute (optional)
+--|             string <pNonce> CSP nonce (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
-  local tAttribute, tAssetUrl, tLib, tVersion, tLibName, tObject, tScriptReference
+function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute pNonce
+  local tAttribute, tAssetUrl, tLib, tVersion
+  local tLibName, tObject, tScriptReference, tNonce
 
-	put empty into tAttribute
 	if (pAttribute is "async") or (pAttribute is "defer") or (pAttribute is "async defer") then
 		put " " & pAttribute into tAttribute
 	end if
 
+  if pNonce <> empty then
+    put " nonce='" & pNonce & "'" into tNonce
+  end if
+
    if char 1 to 12 of pAsset <> "jsGoogleapis" then
       put rigJsAssetURL(pAsset, pModule, pCacheBusterOrFallbackAsset) into tAssetUrl
 
-      return "<script type=" & quote & "text/javascript" & quote & tAttribute && "src=" & quote & tAssetUrl & quote & "></script>"
+      return "<script" & tAttribute & tNonce && "src=" & quote & tAssetUrl & quote & "></script>"
    else
       set the itemDelimiter to "-"
       put item 2 of pAsset into tLib
@@ -545,13 +550,13 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute
       end switch
 
 			if pCacheBusterOrFallbackAsset is empty then
-  			return "<script" && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
+  			return "<script" & tAttribute & tNonce && "src=" & quote & "//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & quote && tAttribute & "></script>"
 			end if
 
 			put rigJsAssetURL(pCacheBusterOrFallbackAsset, pModule) into tAssetUrl
 
-						put "<script" && tAttribute && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
-			& "<script>window." & tObject && "|| document.write(" & quote & "<script" && tAttribute && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
+						put "<script" & tAttribute & tNonce && "src='//ajax.googleapis.com/ajax/libs/" & tLib & "/" & tVersion & "/" & tLibName & "'></script>" & return \
+			& "<script>window." & tObject && "|| document.write(" & quote & "<script" & tAttribute & tNonce && "src='" & tAssetUrl & "'>\x3C/script>" & quote & ")</script>" into tScriptReference
 
 			return tScriptReference
 		end if
