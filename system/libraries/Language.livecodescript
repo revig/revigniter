@@ -8,7 +8,7 @@ script "Language"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2019, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
