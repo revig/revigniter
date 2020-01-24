@@ -1,34 +1,70 @@
+<!doctype html>
 <html>
 <head>
+<meta charset="utf-8">
 <title>404 Page Not Found</title>
-<style type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+html {
+color: #888;
+font-family: sans-serif;
+line-height: 1.5;
+}
 
 body {
 background-color:	#fff;
-margin:				40px;
-font-family:		Lucida Grande, Verdana, Sans-serif;
-font-size:			12px;
-color:				#000;
+font-size:			1.2em;
 }
 
 #content  {
-border:				#999 1px solid;
-background-color:	#fff;
-padding:			20px 20px 12px 20px;
+display: grid;
+grid-template-rows: 100%;
+grid-template-columns: 1fr;
+justify-items: center;
+align-items: center;
+height: 100vh;
+}
+
+#errorMsg {
+border: #888 1px solid;
+text-align: center;
 }
 
 h1 {
 font-weight:		normal;
-font-size:			14px;
+font-size:			1em;
 color:				#990000;
+padding: 10px 10px 0;
 margin: 			0 0 4px 0;
+}
+
+p {
+padding: 0 10px 10px;
+margin: 0;
+}
+
+@media only screen and (max-width: 375px) {
+html {
+line-height: 1.2;
+}
+body {
+font-size: 1.0em;
+}
+}
+
+@media only screen and (max-width: 320px) {
+body {
+font-size: 0.8em;
+}
 }
 </style>
 </head>
 <body>
-	<div id="content">
-		<h1>[[gRigA["errorData"]["heading"] ]]</h1>
-		[[gRigA["errorData"]["message"] ]]
+  <div id="content">
+    <div id="errorMsg">
+      <h1>[[gRigA["errorData"]["heading"] ]]</h1>
+      [[gRigA["errorData"]["message"] ]]
+    </div>
 	</div>
 </body>
 </html>
