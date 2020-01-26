@@ -23,7 +23,7 @@ script "Exceptions"
 # @subpackage	Libraries
 # @category	  Exceptions
 # @author		  rabit@revigniter.com
-# @link		    https://revigniter.com/userGuide/general/controllers.html
+# @link		    --
 ##
 
 

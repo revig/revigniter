@@ -1959,7 +1959,7 @@ end _rigCloseDB
 --| Version:  1.3
 --| Created: 2009-07-06
 --| Last Mod: 2018-12-17
---| Requires: rigLoadLibrary, rigLangLoadLang, rigLangLangLine()
+--| Requires: rigLoadLibrary, rigLangLoadLang, rigLangLangLine(), rigShowErrorPage()
 --|
 --| Summary: Display an error message.
 --|
