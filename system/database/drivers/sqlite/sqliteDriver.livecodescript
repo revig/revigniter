@@ -129,14 +129,14 @@ end _rigSetDefaultValues
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 10-04-14
---| Last Mod: 28-05-14
+--| Version:  1.3
+--| Created: 2014-04-10
+--| Last Mod: 2020-03-04
 --| Requires: rigFetchDBdriverSetting(), rigLogMessage
 --|
 --| Summary: Non-persistent database connection.
---|            Set the path to the database file in application/config/database.lc like:
---|            put gRigA["APPPATH"] & "db/myDatabase.sqlite" into sDB["default"]["hostname"]
+--|          Set the path to the database file in application/config/database.lc like:
+--|          put gRigA["APPPATH"] & "db/myDatabase.sqlite" into sDB["default"]["hostname"]
 --|
 --| Format:  rigDbConnect()
 --|
@@ -146,21 +146,20 @@ end _rigSetDefaultValues
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
-  local tHostname, tDatabase, tOptions, tDatabaseID
+  local tSettingsKeys, tSettingsA, tDatabaseID
 
-	put rigFetchDBdriverSetting("hostname") into tHostname
-	put rigFetchDBdriverSetting("database") into tDatabase
-	put rigFetchDBdriverSetting("options") into tOptions
+  put "hostname,database,options" into tSettingsKeys
+  put rigFetchDBdriverSetting(tSettingsKeys) into tSettingsA
 
 	put FALSE into tDatabaseID
 
 	try
 		# FOR BACKWARD COMPATIBILITY REASONS THE FOLLOWING LINE
 		# IS LEGACY SYNTAX OF ENGINE VERSIONS PRIOR TO 6.6.0
-		get revOpenDatabase("sqlite", tHostname, tOptions, , )
+		get revOpenDatabase("sqlite", tSettingsA["hostname"], tSettingsA["options"], , )
 		put it into tDatabaseID
 	catch err
-		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
+		rigLogMessage "error", "An error occured while trying to open database:" && tSettingsA["database"]
 	end try
 
 	if tDatabaseID is an integer then
