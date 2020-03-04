@@ -28,7 +28,7 @@ h1 {
 	font-size: 150%;
 	font-weight: normal;
 	margin: 0;
-	padding: 0 0 6px 0;	
+	padding: 0 0 6px 0;
 }
 
 code {
@@ -50,10 +50,10 @@ code {
 <p>The page you are looking at is being generated dynamically by revIgniter.</p>
 
 <p>If you would like to edit this page you'll find it located at:</p>
-<code>system/application/views/welcomeMessage.lc</code>
+<code>application/views/welcomeMessage.lc</code>
 
 <p>The corresponding controller for this page is found at:</p>
-<code>system/application/controllers/welcome.lc</code>
+<code>application/controllers/welcome.lc</code>
 
 <p>If you are exploring revIgniter for the very first time, you should start by reading the <a href="userGuide/index.html">User Guide</a>.</p>
 
