@@ -101,6 +101,8 @@
 
 <p class="important"><strong>Note:</strong> The default admin user has the following credentials. Identity: admin@admin.com Password: revigniter. This password works as long as you use the default authentication encryption settings.</p>
 
+<p class="important"><strong>Note:</strong> The authentication library automatically connects to your database using the connection group specified in your database config file. So, you don’t need to auto-load your database, nor do you need to connect to it manually.</p>
+
 <p><strong>The MySQL version:</strong></p>
 
 
@@ -170,22 +172,7 @@ CREATE TABLE `users` (
 
 
 
-# Records of users (LC server version 8)
-# ------------------------------------------------------------
-
-LOCK TABLES `users` WRITE;
-
-INSERT INTO `users` (`id`, `ipAddress`, `username`, `password`, `email`, 
-`activationCode`, `forgottenPasswordCode`, `forgottenPasswordTime`, 
-`rememberCode`, `createdOn`, `lastLogin`, `active`, `firstName`, 
-`lastName`, `company`, `phone`)
-VALUES (1,'127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
-'admin@admin.com','',NULL,0,NULL,1361712014,1361732014,1,'Admin','Istrator','ADMIN','0');
-
-UNLOCK TABLES;
-
-
-# Records of users (LC server version 9 or higher)
+# Records of users
 # ------------------------------------------------------------
 
 LOCK TABLES `users` WRITE;
@@ -300,19 +287,7 @@ UNION SELECT
 
 
 
-# Records of users (LC server version 8)
-# ------------------------------------------------------------
-
-INSERT INTO "users" ("ipAddress", username, password, email, 
-"activationCode", "forgottenPasswordCode", "forgottenPasswordTime", 
-"rememberCode", "createdOn", "lastLogin", active, "firstName", 
-"lastName", company, phone) VALUES 
-('127.0.0.1','admin','U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==',
-'admin@admin.com','',NULL,'0',NULL,'1361712014','1361732014','1',
-'Admin','Istrator','ADMIN','0');
-
-
-# Records of users (LC server version 9 or higher)
+# Records of users
 # ------------------------------------------------------------
 
 INSERT INTO "users" ("ipAddress", username, password, email, 
@@ -413,19 +388,7 @@ COMMIT;
 
 
 
-# Records of users (LC server version 8)
-# ------------------------------------------------------------
-
-BEGIN;
-INSERT INTO "users" VALUES 
-(1, '127.0.0.1', 'admin', 'U2FsdGVkX1/HRLAXNh9nUG3k6qJU5OeE9rACvDBL5WLsD7vPB9S44w==', 
-'admin@admin.com', '', null, 0, null, 1361712014, 1361712014, 1, 
-'Admin', 'Istrator', 'ADMIN', 0);
-COMMIT;
-
-
-
-# Records of users (LC server version 9 or higher)
+# Records of users
 # ------------------------------------------------------------
 
 BEGIN;
