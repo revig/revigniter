@@ -371,7 +371,7 @@ end if
 	put FALSE into gConfig["csrf_protection"]
 	put "csrfTokenName" into gConfig["csrf_token_name"]
 	put "csrfCookieName" into gConfig["csrf_cookie_name"]
-	put 7200 into gConfig["csrf_expire"]
+	put 90000 into gConfig["csrf_expire"]
 
 
 
