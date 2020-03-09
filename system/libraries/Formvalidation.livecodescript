@@ -959,7 +959,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 				end if
 
 			catch tContexts
-				put tContexts into gData["errornumbers"]
+				put tContexts into gData["formValidErrornumbers"]
 				put "Formavalidation.livecodescript" into tCurrentFile
 				put "_formValidExecute" into tCurrentMethod
 
