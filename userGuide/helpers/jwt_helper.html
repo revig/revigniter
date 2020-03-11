@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -134,7 +134,7 @@ put tJWT into tTokenA["jwt"]
 
 # rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
 # GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
-put header "Content-type: application/json"
+put header "Content-type: application/json; charset=UTF-8"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -162,7 +162,7 @@ put tJWT into tTokenA["jwt"]
 
 # rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
 # GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
-put header "Content-type: application/json"
+put header "Content-type: application/json; charset=UTF-8"
 put JsonExport(tTokenA)
 </code></pre>
 </div>
@@ -209,7 +209,7 @@ end if -- if tJWTA["valid"] is TRUE
 
 # rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
 # GENERATES AN OBJECT ON CLIENT SIDE. SO, DON'T USE JSON.parse() TO PROCESS THE DATA
-put header "Content-type: application/json"
+put header "Content-type: application/json; charset=UTF-8"
 put JsonExport(tA)
 </code></pre>
 </div>
