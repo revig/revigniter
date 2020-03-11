@@ -23,7 +23,7 @@ script "Exceptions"
 # @subpackage	Libraries
 # @category	  Exceptions
 # @author		  rabit@revigniter.com
-# @link		    https://revigniter.com/userGuide/general/controllers.html
+# @link		    --
 ##
 
 
@@ -46,12 +46,12 @@ local sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -62,7 +62,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -83,7 +83,7 @@ end libraryStack
 --| Requires: rigFetchControllerHandler(), rigLogMessage
 --|
 --| Summary:  This command logs Rev error messages.
---| 
+--|
 --| Format:  rigLogException param1, param2, param3, param4
 --|
 --| Parameters: string <pErrorData>, bool <pDisplayError>, string <pFile>, string <pHandler>
@@ -93,7 +93,7 @@ end libraryStack
 
 command rigLogException pErrorData pDisplayError pFile pHandler
   local tFile, tHandler, tErrorData
-  
+
 	if pFile is empty then
 		put gRigA["controller"] into tFile
 	else
@@ -120,13 +120,13 @@ end rigLogException
 --| COMMAND rigShow404Page
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 29-06-09
---| Last Mod: 13-09-09
+--| Version:  1.2
+--| Created: 2009-06-29
+--| Last Mod: 2020-01-24
 --| Requires: rigLogMessage, rigShowErrorPage
 --|
 --| Summary:  404 Page Not Found Handler.
---| 
+--|
 --| Format:  rigShow404Page param1
 --|
 --| Parameters: mixed <pPage>
@@ -136,7 +136,7 @@ end rigLogException
 
 command rigShow404Page pPage
   local tPage, tHeading, tMessage
-  
+
 	if pPage is an array then
 		put pPage["page"] into tPage
 	else
@@ -144,7 +144,7 @@ command rigShow404Page pPage
 	end if
 
 	put  "404 Page Not Found" into tHeading
-	put "The page you requested was not found." into tMessage
+	put "Sorry, but the page you were trying to view does not exist." into tMessage
 
 	rigLogMessage "error", "404 Page Not Found --> " & tPage
 	put rigShowErrorPage(tHeading, tMessage, "error404", 404)
@@ -170,7 +170,7 @@ end rigShow404Page
 --|            This function takes an error message as input
 --|            (either as a string or an array) and displays
 --|            it using the specified template.
---| 
+--|
 --| Format:  rigShowErrorPage(param1, param2, param3)
 --|
 --| Parameters: string <pHeading>, string <pMessage>, string <pTemplate>, integer <pStatusCode>
@@ -181,7 +181,7 @@ end rigShow404Page
 function rigShowErrorPage pHeading pMessage pTemplate pStatusCode
   local tMessage, tTemplate, tStatusCode, tErrorMsg, tErrorFilePath
   local tBuffer, tOutput
-  
+
 	put pHeading into gRigA["errorData"]["heading"]
 	put pMessage into tMessage
 
@@ -213,7 +213,7 @@ function rigShowErrorPage pHeading pMessage pTemplate pStatusCode
 
   put gRigA["APPPATH"] & "errors/" & tTemplate & gRigA["EXT"] into tErrorFilePath
   put URL format("binfile:%s", tErrorFilePath) into tBuffer
-  
+
   if the result <> empty then
     rigLogMessage "error", "Failed to read file! System error:" && the sysError
     put "Failed to read error file." into tBuffer

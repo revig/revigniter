@@ -111,16 +111,16 @@ end libraryStack
  --| COMMAND _rigSetRouting
  --|
  --| Author: rabit
- --| Version:  1.8
+ --| Version:  1.9
  --| Created: 2009-06-19
- --| Last Mod: 2019-02-08
+ --| Last Mod: 2020-03-11
  --| Requires: rigFetchConfigItem(), _rigFilterUri, rigTrim(), rigSetController, rigSetHandler, _rigExplodeSegments,
- --|            _rigSetRouting, _rigValidateQueryRequest(), _rigFetchUriString, rigShowError, _rigSetRequest,
- --|					rigLogMessage, _rigRemoveUrlSuffix, _rigParseRoutes
+ --|           _rigSetRouting, _rigValidateQueryRequest(), _rigFetchUriString, rigShowError, _rigSetRequest,
+ --|					 rigLogMessage, _rigRemoveUrlSuffix, _rigParseRoutes
  --|
  --| Summary:  Set the route mapping
- --|             This command determines what should be served based on the URI request,
- --|             as well as any "routes" that have been set in the routing config file.
+ --|           This command determines what should be served based on the URI request,
+ --|           as well as any "routes" that have been set in the routing config file.
  --|
  --| Format:  _rigSetRouting
  --|
@@ -135,7 +135,9 @@ private command _rigSetRouting
 
   ## ARE QUERY STRINGS ENABLED IN THE CONFIG FILE?
   ## IF SO, WE'RE DONE SINCE SEGMENT BASED URIS ARE NOT USED WITH QUERY STRINGS.
-  if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
+  if (rigFetchConfigItem("enableQueryStrings") is TRUE) \
+    and ($_GET[rigFetchConfigItem("controllerTrigger")] is not empty) \
+    and (gRigA["CLI"] <> TRUE) then
     put _rigFilterUri($_GET[rigFetchConfigItem("controllerTrigger")]) into tFilteredStrippedString
 
     # TRIM WHITESPACE

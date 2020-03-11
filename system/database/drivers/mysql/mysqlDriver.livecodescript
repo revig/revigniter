@@ -130,9 +130,9 @@ end _rigSetDefaultValues
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 06-07-09
---| Last Mod: 09-09-11
+--| Version:  1.2
+--| Created: 2009-07-06
+--| Last Mod: 2020-03-04
 --| Requires: rigFetchDBdriverSetting(), rigSetDBdriverSetting, rigLogMessage
 --|
 --| Summary: Non-persistent database connection.
@@ -145,31 +145,25 @@ end _rigSetDefaultValues
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
-  local tPort, tHostname, tDatabase, tUsername, tPassword, tUseSSL
-  local tSocket, tTimeout, tAutoReconnect, tDatabaseID
+  local tSettingsKeys, tSettingsA, tDatabaseID
 
-	put rigFetchDBdriverSetting("port") into tPort
-	put rigFetchDBdriverSetting("hostname") into tHostname
-	put rigFetchDBdriverSetting("database") into tDatabase
-	put rigFetchDBdriverSetting("username") into tUsername
-	put rigFetchDBdriverSetting("password") into tPassword
-	put rigFetchDBdriverSetting("useSSL") into tUseSSL
-	put rigFetchDBdriverSetting("dbSocket") into tSocket
-	put rigFetchDBdriverSetting("dbTimeout") into tTimeout
-	put rigFetchDBdriverSetting("dbAutoReconnect") into tAutoReconnect
+  put "port,hostname,database,username,password,useSSL,dbSocket,dbTimeout,dbAutoReconnect" into tSettingsKeys
+  put rigFetchDBdriverSetting(tSettingsKeys) into tSettingsA
 
-	if tPort <> "" then
-		put tHostname & ":" & tPort into tHostname
-		rigSetDBdriverSetting "hostname", tHostname
+  if tSettingsA["port"] <> "" then
+		put tSettingsA["hostname"] & ":" & tSettingsA["port"] into tSettingsA["hostname"]
+		rigSetDBdriverSetting "hostname", tSettingsA["hostname"]
 	end if
 
 	put FALSE into tDatabaseID
 
 	try
-		get revOpenDatabase("mysql", tHostname, tDatabase, tUsername, tPassword, tUseSSL, tSocket, tTimeout, tAutoReconnect)
+    get revOpenDatabase("mysql", tSettingsA["hostname"], tSettingsA["database"], tSettingsA["username"], \
+    tSettingsA["password"], tSettingsA["useSSL"], tSettingsA["dbSocket"], tSettingsA["dbTimeout"], \
+    tSettingsA["dbAutoReconnect"])
 		put it into tDatabaseID
 	catch err
-		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
+		rigLogMessage "error", "An error occured while trying to open database:" && tSettingsA["database"]
 	end try
 
 	if tDatabaseID is an integer then

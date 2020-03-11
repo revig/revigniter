@@ -58,6 +58,19 @@
 
 	put $_SERVER["PATH_TRANSLATED"] into sTempPath
 
+# CHECK IF THE APPLICATION IS LOADED VIA THE CLI
+#
+  if sTempPath is empty then
+    put TRUE into gRigA["CLI"]
+
+    if the outputLineEndings = "cr" then
+      set the outputLineEndings to "lf"
+    end if
+
+    put the defaultFolder & "/index.lc" into sTempPath
+  end if -- if sTempPath is empty
+##
+
  	put (the platform is "Win32") into sIsWin
  	if sIsWin is TRUE then
 		replace "\" with "/" in sTempPath

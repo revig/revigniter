@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Scaffolding : revIgniter User Guide</title>
+    <title>Running revIgniter via the CLI : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all" />
     <meta name="author" content="Ralf Bitter" />
@@ -23,7 +23,7 @@
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/html5shiv.js"></script>
         <script src="../js/respond.min.js"></script>
     <![endif]-->
 
@@ -66,7 +66,7 @@
            <ol class="breadcrumb">
              <li><a href="http://revigniter.com/">revIgniter Home</a></li>
               <li><a href="../index.html">User Guide Home</a></li>
-              <li class="active">Scaffolding</li>
+              <li class="active">CLI</li>
             <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
             </ol>
         </div>
@@ -93,96 +93,88 @@
   
 <div id="content">
 
-<h1>Scaffolding</h1>
+<h1>Running revIgniter via the CLI</h1>
 
-<p>revIgniter's Scaffolding feature provides a fast and very convenient way to add, edit, or delete information in your database
-during development.</p>
+<p>Controllers can also be loaded via the command-line interface (CLI). That's handy for:</p>
 
-<p class="important"><strong>Very important:</strong>  Scaffolding is intended for development use only.  It provides very little
-security other than a "secret" word, so anyone who has access to your revIgniter site can potentially edit or delete your information.
-If you use Scaffolding make sure you disable it immediately after you are through using it.  DO NOT leave it enabled on a live site.
-And please, set a secret word before you use it.</p>
-
-<h2>Why would someone use scaffolding?</h2>
-
-<p>Here's a typical scenario:  You create a new database table during development and you'd like a quick way to insert some data
-into it to work with.  Without Scaffolding your choices are either to write some inserts using the command line or to use a
-database management tool like phpMyAdmin.  With revIgniter's Scaffolding feature you can quickly add some data using its browser
-interface.  And when you are through using the data you can easily delete it.</p>
-
-<h2>Setting a Secret Word</h2>
-
-<p>Before enabling Scaffolding please take a moment to set a secret word.  This word, when encountered in your URL,
-will launch the Scaffolding interface, so please pick something obscure that no one is likely to guess.</p>
-
-<p>To set a secret word, open your <kbd>application/config/routes.lc</kbd> file and look for this item:</p>
-
-<pre><code>put "" into gRoute["scaffoldingTrigger"]</code></pre>
-
-<p>Once you've found it add your own unique word.</p>
-
-<p class="important"><strong>Note:</strong> The Scaffolding word can <strong>not</strong> start with an underscore.</p>
+<ul>
+	<li>Running cron-jobs while making the executing controllers inaccessible from being loaded in the URL.</li>
+	<li>Implenenting interactive tasks like running backups, pruning cache folders, setting permissions etc.</li>
+	<li>Integrating revIgniter with other applications in other languages.</li>
+</ul>
 
 
-<h2>Enabling Scaffolding</h2>
+<h2>Hello World Example</h2>
 
-<p>Note: The information on this page assumes you already know how <a href="controllers.html">controllers</a> work, and that you have
-a working one available.  It also assumes you have configured revIgniter to auto-connect to your <a href="../database/index.html">database</a>.
-If not, the information here won't be very relevant, so you are encouraged to go through those sections first.
-</p>
-
-<p>To enable Scaffolding you will initialize it in your controller with just one line of code like this:</p>
+<p>Following is a simple example demonstrating revIgniter's CGI capability. Create a file called <dfn>hello.lc</dfn>, and put the following code in it:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code class="lang-livecodeserver">&lt;?lc
 
-# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
-put "blog,index" into gControllerHandlers
+put "index,hello,message" into gControllerHandlers
 
-command blog
-  <kbd>rigLoadScaffolding "tableName"</kbd>
-end blog
+
+command hello
+  # MAKE SURE THAT THE CONTROLLER IS ONLY ACCESSIBLE VIA COMMAND LINE
+  if $_SERVER["PATH_TRANSLATED"] <> empty then
+    put "This script can only be accessed via the command line."
+    exit to top
+  end if
+end hello
 
 
 command index
-  -- Your code here …
-
-  get rigLoadView("blogview.lc")
+  put "Hello World!" & return
 end index
 
 
+command message
+  put rigFetchSegment(3) into tTo
+  
+  if tTo is FALSE then
+    put "Jane Doe" into tTo
+  end if
+  
+  put "Hello" && tTo & "!" & return
+end message
 
---| END OF blog.lc
---| Location: ./application/controllers/blog.lc
-----------------------------------------------------------------------
 </code></pre>
 </div>
 
-<p>Where <kbd>tableName</kbd> is the name of the table (table, not database) you wish to work with.</p>
-
-<p class="important"><strong>Note:</strong> The rigLoadScaffolding handler must be called before anything else. 
-So, in the example above rigLoadScaffolding is in the blog handler as it is run before the index handler. </p>
-
-<p>Once you've initialized Scaffolding, you will access it with this URL prototype:</p>
-
-<pre><code>example.com/index.lc/<var>controller</var>/<dfn>secret_word</dfn>/</code></pre>
-
-<p>For example, using a controller named <var>Blog</var>, and <dfn>abracadabra</dfn> as the secret word,
-you would access Scaffolding like this:</p>
-
-<pre><code>example.com/index.lc/<var>blog</var>/<dfn>abracadabra</dfn>/</code></pre>
-
-<p>The Scaffolding interface should be self-explanatory.  You can add, edit or delete records.</p>
-
-<p>To change the number of records displayed open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
-
-<pre><code>put 10 into gConfig["scaffNumRecords"]</code></pre>
 
 
-<h2>A Final Note:</h2>
+<p>Save the file to your <dfn>application/controllers/</dfn> folder. Normally you would load the controller using a URL similar to this:</p>
 
-<p>The Scaffolding feature will only work with tables that contain a primary key, as this information is needed to perform the various
-database functions.</p>
+<pre><code>example.com/index.lc/<var>hello</var></code></pre>
+
+<p>Instead, we are going to open the terminal and navigate to our revIgniter project.</p>
+
+<pre><code>$ cd /path/to/project
+$ path/to/LiveCode/executable index.lc hello
+</code></pre>
+
+<p>If you did it right, the terminal should print "Hello World!".</p>
+
+<p class="important"><strong>Note:</strong>&nbsp; To avoid always having to write the complete path to the LC server executable, consider adding the location of LC server to the PATH environment variable.</p>
+
+<p>Now add a third argument "message" to the command like:</p>
+
+<pre><code>$ path/to/LiveCode/executable index.lc hello message</code></pre>
+
+<p>This calls the "message" handler instead of the default handler (index). The output should be "Hello Jane Doe!"</p>
+
+<p>You could replace "Jane Doe" by adding your name in a fourth argument like:</p>
+
+<pre><code>$ path/to/LiveCode/executable index.lc hello message "Your Name"</code></pre>
+
+<p>This should print "Hello Your Name!"</p>
+
+
+
+<h2>That's it!</h2>
+
+<p>That, in a nutshell, is all there is to know about controllers on the command line.</p>
+
 
 
 </div>
@@ -192,12 +184,13 @@ database functions.</p>
 
 
 <div id="footer">
-  <div class="container">
+    <div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="common_handlers.html">Common Handlers</a><span class="separator"> :: </span>
+Previous Topic:&nbsp;&nbsp;<a href="security.html">Security</a>
+<span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="routing.html">URI Routing</a></p>
+Next Topic:&nbsp;&nbsp;<a href="../libraries/authentication/index.html">Authentication Library</a></p>
 <p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2020<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
   </div>
 </div>

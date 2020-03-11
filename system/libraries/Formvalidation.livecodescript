@@ -512,9 +512,10 @@ end rigFormValidErrorString
 --|
 --| Author: rabit
 --| Version:  1.3
---| Created: 30-07-09
---| Last Mod: 17-09-15
---| Requires: rigSetRules, rigLogMessage, _rigReduceArray()
+--| Created: 2009-07-30
+--| Last Mod: 2015-09-17
+--| Requires: rigSetConfigRules, _rigRequire, rigFetchValidationConf(), rigTrim, rigSetRules
+--|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute, _rigResetPostArray
 --|
 --| Summary: Run the validator. This function does all the work.
 --|
@@ -958,7 +959,7 @@ private command _rigFormValidExecute pRow, pRules, pPostdata, pCycles
 				end if
 
 			catch tContexts
-				put tContexts into gData["errornumbers"]
+				put tContexts into gData["formValidErrornumbers"]
 				put "Formavalidation.livecodescript" into tCurrentFile
 				put "_formValidExecute" into tCurrentMethod
 

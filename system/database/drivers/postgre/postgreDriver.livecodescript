@@ -169,9 +169,9 @@ end _rigConnectString
 --| FUNCTION rigDbConnect
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 06-07-09
---| Last Mod: 06-07-09
+--| Version:  1.1
+--| Created: 2009-07-06
+--| Last Mod: 2020-03-04
 --| Requires: rigFetchDBdriverSetting(), rigSetDBdriverSetting, rigLogMessage
 --|
 --| Summary: Non-persistent database connection.
@@ -180,30 +180,28 @@ end _rigConnectString
 --|
 --| Parameters: --
 --|
---| Return: string
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigDbConnect
-  local tPort, tHostname, tDatabase, tUsername, tPassword, tDatabaseID
+  local tSettingsKeys, tSettingsA, tDatabaseID
 
-	put rigFetchDBdriverSetting("port") into tPort
-	put rigFetchDBdriverSetting("hostname") into tHostname
-	put rigFetchDBdriverSetting("database") into tDatabase
-	put rigFetchDBdriverSetting("username") into tUsername
-	put rigFetchDBdriverSetting("password") into tPassword
+  put "port,hostname,database,username,password" into tSettingsKeys
+  put rigFetchDBdriverSetting(tSettingsKeys) into tSettingsA
 
-	if tPort <> "" then
-		put tHostname & ":" & tPort into tHostname
-		rigSetDBdriverSetting "hostname", tHostname
+  if tSettingsA["port"] <> "" then
+		put tSettingsA["hostname"] & ":" & tSettingsA["port"] into tSettingsA["hostname"]
+		rigSetDBdriverSetting "hostname", tSettingsA["hostname"]
 	end if
 
 	put FALSE into tDatabaseID
 
 	try
-		get revOpenDatabase("postgresql", tHostname, tDatabase, tUsername, tPassword)
+		get revOpenDatabase("postgresql", tSettingsA["hostname"], tSettingsA["database"], \
+    tSettingsA["username"], tSettingsA["password"])
 		put it into tDatabaseID
 	catch err
-		rigLogMessage "error", "An error occured while trying to open database:" && tDatabase
+		rigLogMessage "error", "An error occured while trying to open database:" && tSettingsA["database"]
 	end try
 
 	if tDatabaseID is an integer then

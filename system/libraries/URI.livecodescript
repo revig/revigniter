@@ -85,9 +85,9 @@ end libraryStack
 --| FUNCTION _rigFetchUriString
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 2009-06-19
---| Last Mod: 2019-08-27
+--| Last Mod: 2020-03-11
 --| Requires: rigFetchConfigItem(), rigUriAdjusted(), rigParseRequestUri()
 --|
 --| Summary: Get the URI String.
@@ -100,157 +100,174 @@ end libraryStack
 ----------------------------------------------------------------------*/
 
 function _rigFetchUriString
-  local tUriString, tPath, tUri
+  local tArgs, tArgsNum, tUriString, tPath, tUri
 
-	if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO" then
-		# IF index.lc IS NOT INCLUDED IN THE URL OR IF THE URL
-		# HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
-		# BUILD THE URI STRING FROM INDEX 1 OF THE $_GET ARRAY.
-		# THIS AVOIDS HAVING TO DEAL WITH $_SERVER VARIABLES,
-		# WHICH CAN BE UNRELIABLE IN SOME ENVIRONMENTS
-		if ($_GET is an array) and (the number of lines in the keys of $_GET is 1) then
-			put line 1 of the keys of $_GET into tUriString
+  # IN CASE THE APPLICATION IS LOADED VIA THE CLI
+  if gRigA["CLI"] is TRUE then
+    put the commandArguments into tArgs
+    put the number of lines in the keys of tArgs into tArgsNum
 
-			if tUriString is "/" then
-				put "" into tUriString
-				return tUriString
-			end if
+    # commandArguments IS A 1-BASED NUMERIC ARRAY,
+    # THE VALUE OF THE FIRST ARGUMENT IS THE FRONT CONTROLLER (index.lc)
+    # SO, WE ONLY NEED VALUES OF KEY 2 AND ABOVE TO BUILD THE URI STRING
+    repeat with tIndex = 2 to tArgsNum
+      put tArgs[tIndex] & "/" after sUriString
+    end repeat
+    delete char -1 of sUriString
 
-			# TRIM SLASHES
-			put replacetext(tUriString,"(^\/+)|(\/+$)",empty) into tUriString
+    return sUriString
+  else -- if gRigA["CLI"] is TRUE
 
-			if tUriString <> "" then
-				-- put line 1 of the keys of $_GET into sUriString -- -------------- this is Codeigniter
+    if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO" then
+      # IF index.lc IS NOT INCLUDED IN THE URL OR IF THE URL
+      # HAS A QUESTION MARK THEN IT'S SIMPLEST TO JUST
+      # BUILD THE URI STRING FROM INDEX 1 OF THE $_GET ARRAY.
+      # THIS AVOIDS HAVING TO DEAL WITH $_SERVER VARIABLES,
+      # WHICH CAN BE UNRELIABLE IN SOME ENVIRONMENTS
+      if ($_GET is an array) and (the number of lines in the keys of $_GET is 1) then
+        put line 1 of the keys of $_GET into tUriString
 
-				-- this is revigniter
-				if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
-					# QUERY STRINGS ARE ENABLED
+        if tUriString is "/" then
+          put "" into tUriString
+          return tUriString
+        end if
 
-					put $_GET into sUriString
-					if sUriString is an array then
-						combine sUriString using "&" and "="
-					end if
-					put "?" & sUriString into sUriString
+        # TRIM SLASHES
+        put replacetext(tUriString,"(^\/+)|(\/+$)",empty) into tUriString
 
-				else
-					put line 1 of the keys of $_GET into sUriString
-				end if
-				--
+        if tUriString <> "" then
+          -- put line 1 of the keys of $_GET into sUriString -- -------------- this is Codeigniter
 
-				return sUriString
-			end if
-		end if
+          -- this is revigniter
+          if rigFetchConfigItem("enableQueryStrings") is TRUE AND $_GET[rigFetchConfigItem("controllerTrigger")] is not empty then
+            # QUERY STRINGS ARE ENABLED
 
-		# IS THERE A PATH_INFO VARIABLE?
-		if $_SERVER["PATH_INFO"] is not empty then
-			put $_SERVER["PATH_INFO"] into tPath
-			# TRIM SLASHES
-			put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
-			if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
-				put tPath into sUriString
+            put $_GET into sUriString
+            if sUriString is an array then
+              combine sUriString using "&" and "="
+            end if
+            put "?" & sUriString into sUriString
 
-				# NEEDED IF REVIGNITER IS PLACED IN A SUBFOLDER OF ROOT
-				# THIS NEEDS TO BE FIXED IN CODEIGNITER TOO, WHERE THIS FUNCTION MAY FAIL DEPENDING ON THE URI PROTOCOL
-				put rigUriAdjusted(sUriString) into sUriString
+          else
+            put line 1 of the keys of $_GET into sUriString
+          end if
+          --
 
-				return sUriString
-			end if
-		end if
-
-		# No PATH_INFO?... What about QUERY_STRING?
-		if $_SERVER["QUERY_STRING"] is not empty then
-			put $_SERVER["QUERY_STRING"] into tPath
-			# TRIM SLASHES
-			put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
-			if tPath <> "" then
-
-				-- this is revigniter
-				if rigFetchConfigItem("enableQueryStrings") is TRUE then
-					put "?" & tPath into tPath
-				end if
-				--
-
-				put tPath into sUriString
-
-				put rigUriAdjusted(sUriString) into sUriString
-
-				return sUriString
-			end if
-		end if
-
-		# No QUERY_STRING?... Maybe the ORIG_PATH_INFO variable exists?
-		if $_SERVER["ORIG_PATH_INFO"] is not empty then
-			put $_SERVER["ORIG_PATH_INFO"] into tPath
-			# TRIM SLASHES
-			put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
-			if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
-				replace $_SERVER["SCRIPT_NAME"] with "" in tPath
-				put tPath into sUriString
-
-				put rigUriAdjusted(sUriString) into sUriString
-
-				return sUriString
-			end if
-		end if
-
-		# TRY REQUEST_URI
-		if ($_SERVER["REQUEST_URI"] is not empty) and ("~" is not in $_SERVER["REQUEST_URI"]) then
-			put rigParseRequestUri() into sUriString
-
-			put rigUriAdjusted(sUriString) into sUriString
-
-			# IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
-			if sUriString is "/" then
-				put "" into sUriString
-			end if
-
-			return sUriString
-		end if
-
-
-		# WE'VE EXHAUSTED ALL OUR OPTIONS...
-		put "" into sUriString
-		return sUriString
-
-	else
-		put toUpper(rigFetchConfigItem("uriProtocol")) into tUri
-		if tUri is "REQUEST_URI" then
-			put rigParseRequestUri() into sUriString
-			# IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
-			if sUriString is "/" then
-				put "" into sUriString
-			end if
-			put rigUriAdjusted(sUriString) into sUriString
-			return sUriString
-		end if
-
-    if tUri is "PATH_TRANSLATED" then
-      put $_SERVER["PATH_TRANSLATED"] into sUriString
-
-      if the platform is "Win32" then
-        replace "\" with "/" in sUriString
+          return sUriString
+        end if
       end if
 
-      put char offset("index" & gRigA["EXT"], sUriString) to -1 of sUriString into sUriString
+      # IS THERE A PATH_INFO VARIABLE?
+      if $_SERVER["PATH_INFO"] is not empty then
+        put $_SERVER["PATH_INFO"] into tPath
+        # TRIM SLASHES
+        put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
+        if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
+          put tPath into sUriString
 
-      set the itemDel to "/"
-      put item 2 to -1 of sUriString into sUriString
+          # NEEDED IF REVIGNITER IS PLACED IN A SUBFOLDER OF ROOT
+          # THIS NEEDS TO BE FIXED IN CODEIGNITER TOO, WHERE THIS FUNCTION MAY FAIL DEPENDING ON THE URI PROTOCOL
+          put rigUriAdjusted(sUriString) into sUriString
+
+          return sUriString
+        end if
+      end if
+
+      # No PATH_INFO?... What about QUERY_STRING?
+      if $_SERVER["QUERY_STRING"] is not empty then
+        put $_SERVER["QUERY_STRING"] into tPath
+        # TRIM SLASHES
+        put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
+        if tPath <> "" then
+
+          -- this is revigniter
+          if rigFetchConfigItem("enableQueryStrings") is TRUE then
+            put "?" & tPath into tPath
+          end if
+          --
+
+          put tPath into sUriString
+
+          put rigUriAdjusted(sUriString) into sUriString
+
+          return sUriString
+        end if
+      end if
+
+      # No QUERY_STRING?... Maybe the ORIG_PATH_INFO variable exists?
+      if $_SERVER["ORIG_PATH_INFO"] is not empty then
+        put $_SERVER["ORIG_PATH_INFO"] into tPath
+        # TRIM SLASHES
+        put replacetext(tPath,"(^\/+)|(\/+$)",empty) into tPath
+        if tPath <> "" and tPath <> ("/" & gRigA["SELF"]) then
+          replace $_SERVER["SCRIPT_NAME"] with "" in tPath
+          put tPath into sUriString
+
+          put rigUriAdjusted(sUriString) into sUriString
+
+          return sUriString
+        end if
+      end if
+
+      # TRY REQUEST_URI
+      if ($_SERVER["REQUEST_URI"] is not empty) and ("~" is not in $_SERVER["REQUEST_URI"]) then
+        put rigParseRequestUri() into sUriString
+
+        put rigUriAdjusted(sUriString) into sUriString
+
+        # IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
+        if sUriString is "/" then
+          put "" into sUriString
+        end if
+
+        return sUriString
+      end if
+
+
+      # WE'VE EXHAUSTED ALL OUR OPTIONS...
+      put "" into sUriString
+      return sUriString
+
+    else -- if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO"
+      put toUpper(rigFetchConfigItem("uriProtocol")) into tUri
+      if tUri is "REQUEST_URI" then
+        put rigParseRequestUri() into sUriString
+        # IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
+        if sUriString is "/" then
+          put "" into sUriString
+        end if
+        put rigUriAdjusted(sUriString) into sUriString
+        return sUriString
+      end if
+
+      if tUri is "PATH_TRANSLATED" then
+        put $_SERVER["PATH_TRANSLATED"] into sUriString
+
+        if the platform is "Win32" then
+          replace "\" with "/" in sUriString
+        end if
+
+        put char offset("index" & gRigA["EXT"], sUriString) to -1 of sUriString into sUriString
+
+        set the itemDel to "/"
+        put item 2 to -1 of sUriString into sUriString
+        # IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
+        if sUriString is "/" then
+          put "" into sUriString
+        end if
+        put rigUriAdjusted(sUriString) into sUriString
+        return sUriString
+      end if
+
+      put $_SERVER[tUri] into sUriString
       # IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
       if sUriString is "/" then
         put "" into sUriString
       end if
       put rigUriAdjusted(sUriString) into sUriString
       return sUriString
-    end if
-
-		put $_SERVER[tUri] into sUriString
-		# IF THE URI CONTAINS ONLY A SLASH WE'LL KILL IT
-		if sUriString is "/" then
-			put "" into sUriString
-		end if
-		put rigUriAdjusted(sUriString) into sUriString
-		return sUriString
-	end if
+    end if -- if toUpper(rigFetchConfigItem("uriProtocol")) is "AUTO"
+  end if -- if gRigA["CLI"] is TRUE
 end _rigFetchUriString
 
 

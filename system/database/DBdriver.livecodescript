@@ -193,22 +193,32 @@ end rigDbDriver
 --| FUNCTION rigFetchDBdriverSetting
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 06-07-09
---| Last Mod: 06-07-09
+--| Version:  1.1
+--| Created: 2009-07-06
+--| Last Mod: 2020-03-04
 --| Requires: --
 --|
---| Summary: Fetch setting from DB driver settings.
+--| Summary: Fetch setting(s) from DB driver settings.
 --|
 --| Format:  rigFetchDBdriverSetting(param1)
 --|
---| Parameters: string<pSettingsKey>
+--| Parameters: string <pSettingsKey>
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigFetchDBdriverSetting pSettingsKey
-	return sDBdriverSettings[pSettingsKey]
+  local tKey, tSettingsA
+
+  if comma is in pSettingsKey then
+    repeat for each item tKey in pSettingsKey
+      put sDBdriverSettings[tKey] into tSettingsA[tKey]
+    end repeat
+
+  	return tSettingsA
+  end if
+
+  return sDBdriverSettings[pSettingsKey]
 end rigFetchDBdriverSetting
 
 
@@ -1959,7 +1969,7 @@ end _rigCloseDB
 --| Version:  1.3
 --| Created: 2009-07-06
 --| Last Mod: 2018-12-17
---| Requires: rigLoadLibrary, rigLangLoadLang, rigLangLangLine()
+--| Requires: rigLoadLibrary, rigLangLoadLang, rigLangLangLine(), rigShowErrorPage()
 --|
 --| Summary: Display an error message.
 --|
