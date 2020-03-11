@@ -99,6 +99,7 @@
 
 
 <ul>
+<li><a href="#version216">Version 2.1.6</a></li>
 <li><a href="#version215">Version 2.1.5</a></li>
 <li><a href="#version214">Version 2.1.4</a></li>
 <li><a href="#version213">Version 2.1.3</a></li>
@@ -223,6 +224,21 @@
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
 
+
+<h2><a id="version216">&nbsp;</a>Version 2.1.6</h2>
+<p>Release Date: 2020-03-11</p>
+
+
+<ul>
+	<li><strong>Added:</strong> Controllers can now be run via the command-line interface.</li>
+	<li><strong>Added:</strong> Info regarding CSRF protection errors in <kbd>userGuide/installation/troubleshooting.html</kbd>.</li>
+	<li><strong>Changed:</strong> Increased the default life time of CSRF cookies in <kbd>application/config.config.lc</kbd>.</li>
+	<li><strong>Changed:</strong> Removed LC server version 8 sample records and added authentication library database connection info  in <kbd>userGuide/libraries/authentication/authenticationTables.html</kbd>.</li>
+	<li><strong>Changed:</strong> Tweaked retrieval of database settings in <kbd>system/database/DBdriver.livecodescript</kbd> -> <dfn>rigFetchDBdriverSetting()</dfn>, <kbd>system/database/drivers/mysql/mysqlDriver.livecodescript</kbd> -> <dfn>rigDBconnect()</dfn>, <kbd>system/database/drivers/postgre/postgreDriver.livecodescript</kbd> -> <dfn>rigDBconnect()</dfn> and in <kbd>system/database/drivers/sqlite/sqliteDriver.livecodescript</kbd> -> <dfn>rigDBconnect()</dfn>.</li>
+	<li><strong>Changed:</strong> Streamlined error pages <dfn>error404.lc</dfn>, <dfn>errorDB.lc</dfn> and <dfn>errorGeneral.lc</dfn> in <kbd>application/errors</kbd>.</li>
+	<li><strong>Changed:</strong> Rephrased the 404 error message in <kbd>system/libraries/Exceptions.livecodescript</kbd> -> <dfn>rigShow404Page</dfn>.</li>
+	<li><strong>Fixed:</strong> Info on welcome page.</li>
+</ul>
 
 
 <h2><a id="version215">&nbsp;</a>Version 2.1.5</h2>
@@ -368,7 +384,7 @@
 
 <p>
 	<ul>
-		<li><strong>Changed:</strong> revIgniter now requires LiveCode server engine version 8.1 or higher.</li>
+		<li><strong>Changed:</strong> revIgniter now requires LiveCode server engine version 9.0 or higher.</li>
 		<li><strong>Changed:</strong> Converted Libraries, Helpers, Plugins (now Helpers) and Drivers to script only stacks.</li>
 		<li><strong>Changed:</strong> Models and Hooks need to be script only stacks too from now on. Note: Use the .livecodescript file extension for your own script only stacks.</li>
 		<li><strong>Changed:</strong> Most libraries provide a getter function and a setter command so that native library script variables can be accessed. Read about library getters and setters in chapter <a href="general/creating_libraries.html">"Creating Libraries"</a>.</li>
