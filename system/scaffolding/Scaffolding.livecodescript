@@ -47,12 +47,12 @@ local sScaffCurrentTable, sScaffBaseURL, sScaffBaseURI, sScaffLang
  --| Requires: --
  --|
  --| Summary:  Run security check and set initial values.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -62,7 +62,7 @@ on libraryStack
   if the short name of the target = the short name of me then
     # PUT SCAFFOLDING HANDLER NAMES INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
     put "rigScaffolding,rigScaffAdd,rigScaffInsert,rigScaffEdit,rigScaffUpdate,rigScaffView,rigScaffDelete,rigScaffDoDelete" into gControllerHandlers
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -77,15 +77,15 @@ end libraryStack
 --| COMMAND rigScaffolding
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 25-01-10
---| Last Mod: 05-08-12
---| Requires: rigLoaderLoadLibrary, rigDbCacheOff(), _rigSetViewPath, rigSiteURL(), rigFetchSegment(), 
---|            rigSystemURL(), rigLoadScaffoldingLanguage(), rigLoadHelper, rigLogMessage
+--| Version:  1.3
+--| Created: 2010-01-25
+--| Last Mod: 2020-04-27
+--| Requires: rigLoaderLoadLibrary, rigDbCacheOff(), _rigSetViewPath, rigSiteURL(), rigFetchSegment(),
+--|           rigSystemURL(), rigLoadScaffoldingLanguage(), rigLoadHelper, rigLogMessage
 --|
 --| Summary: Run initial procedures.
---| 
---| Format:  rigScaffolding param1
+--|
+--| Format: rigScaffolding param1
 --|
 --| Parameters: string <pDBtable>
 --|
@@ -94,7 +94,7 @@ end libraryStack
 
 command rigScaffolding pDBtable
   local tSiteURL, tIndexPage, tHelpers
-  
+
 	get rigLoadDatabase("", FALSE, TRUE)
 
 	rigLoaderLoadLibrary "Pagination"
@@ -115,16 +115,16 @@ command rigScaffolding pDBtable
 	# CHECK IF mod_rewrite IS USED TO REMOVE THE INDEX PAGE
 	put rigSiteURL() into tSiteURL
 	put FALSE into tIndexPage
-	
+
 	set the itemDel to "."
 	if ("." & item -1 of tSiteURL) is gRigA["EXT"] then
 		put TRUE into tIndexPage
 	end if
 
 	# SET THE BASE URL
-	put rigSiteURL() & "/" & rigFetchSegment(1) & rigSlashSegment(2, "both") into sScaffBaseURL
+	put rigSiteURL() & rigFetchSegment(1) & rigSlashSegment(2, "both") into sScaffBaseURL
 	put rigFetchSegment(1) & rigSlashSegment(2, "leading") into sScaffBaseURI
-	
+
 	# SET A FEW GLOBALS
 	if tIndexPage is TRUE then
 		set the itemdelimiter to "/"
@@ -140,9 +140,9 @@ command rigScaffolding pDBtable
 	# LOAD THE LANGUAGE FILE AND CREATE VARIABLES
 	put rigLoadScaffoldingLanguage("scaffolding", "", TRUE) into sScaffLang
 	put sScaffLang into gData["lang"]
-	
+
 	# LOAD THE HELPER FILES WE PLAN TO USE
-	put "url,form" into tHelpers	
+	put "url,form" into tHelpers
 	rigLoadHelper tHelpers
 
 	# LOGGING
@@ -168,8 +168,8 @@ end rigScaffolding
 --|
 --| Summary: "Add" page, shows a form representing the currently selected DB
 --|             so that data can be inserted. Show the HTML "add" page.
---| 
---| Format:  rigScaffAdd 
+--|
+--| Format:  rigScaffAdd
 --|
 --| Parameters: --
 --|
@@ -178,7 +178,7 @@ end rigScaffolding
 
 command rigScaffAdd
   local tViewAnchorA, tViewLangLine, tAddAnchorA, tAddLangLine
-  
+
 	# SET GLOBALS
 	if rigLangLangLine("scaff_add") is empty then
 		put "Add Data" into gData["pageTitle"]
@@ -223,8 +223,8 @@ end rigScaffAdd
 --| Requires: rigDbInsert(), rigRedirect
 --|
 --| Summary: Insert the data. Redirects to the view page.
---| 
---| Format:  rigScaffInsert 
+--|
+--| Format:  rigScaffInsert
 --|
 --| Parameters: --
 --|
@@ -260,8 +260,8 @@ end rigScaffInsert
 --|
 --| Summary: "View" page, shows a table containing the data in the currently
 --|             selected DB. Shows the HTML "view" page.
---| 
---| Format:  rigScaffView 
+--|
+--| Format:  rigScaffView
 --|
 --| Parameters: --
 --|
@@ -272,7 +272,7 @@ command rigScaffView
   local tTotalRows, tAddAnchorA, tAddLangLine, tPerPage, tOffset, tQuery
   local tFields, tPrimary, tConfigA, tViewAnchorA, tViewLangLine
   local tEditLangLine, tDeleteLangLine, tCounter, tKey, tRowA, tField
-  
+
 	# FETCH THE TOTAL NUMBER OF DB ROWS
 	put rigDbCountAllResults(sScaffCurrentTable) into tTotalRows
 
@@ -282,20 +282,20 @@ command rigScaffView
 		if gData["noDataMessage"] is empty  then
 			put "No data exists for this table yet." into gData["noDataMessage"]
 		end if
-		
+
 		# BUILD ADD ANCHOR
 		put sScaffBaseURI into tAddAnchorA[1]
 		put "rigScaffAdd" into tAddAnchorA[2]
 		put rigLangLangLine("scaff_create_record") into tAddLangLine
 		put rigAnchor(tAddAnchorA, tAddLangLine) into gData["addAnchor"]
-		
+
 		get rigLoadView("header")
 		get rigLoadView("nodata")
 		get rigLoadView("footer")
 		exit rigScaffView
 	end if
 
-	# SET THE QUERY LIMIT/OFFSET	
+	# SET THE QUERY LIMIT/OFFSET
 	put rigFetchConfigItem("scaffNumRecords") into tPerPage
 	if tPerPage is not a integer then
 		put 5 into tPerPage
@@ -320,7 +320,7 @@ command rigScaffView
 	put "</p>" into tConfigA["fullTagClose"]
 
 	rigInitializePagination tConfigA
-	
+
 	# SET GLOBALS
 	if rigLangLangLine("scaff_view") is empty then
 		put "View Data" into gData["pageTitle"]
@@ -353,7 +353,7 @@ command rigScaffView
 	put "rigScaffDelete" into gData["deleteAnchor"][2]
 
 	put tQuery["resultarray"] into gData["queryResult"]
-	
+
 	# BUILD TABLE CONTENT
 	put rigLangLangLine("scaff_edit") into tEditLangLine
 	put rigLangLangLine("scaff_delete") into tDeleteLangLine
@@ -378,7 +378,7 @@ command rigScaffView
 
 		put "</tr>" & return after gData["tableContent"]
 	end repeat
-	
+
 	# LOAD VIEW FILES
 	get rigLoadView("header")
 	get rigLoadView("view")
@@ -404,8 +404,8 @@ end rigScaffView
 --|
 --| Summary: "Edit" page, shows a form representing the currently selected DB
 --|             so that data can be edited. Show the HTML "add" page.
---| 
---| Format:  rigScaffEdit 
+--|
+--| Format:  rigScaffEdit
 --|
 --| Parameters: --
 --|
@@ -415,7 +415,7 @@ end rigScaffView
 command rigScaffEdit
   local tID, tPrimary, tArray, tQuery, tViewAnchorA, tViewLangLine
   local tAddAnchorA, tAddLangLine
-  
+
 	put rigFetchSegment(4) into tID
 	if tID is FALSE then
 		rigScaffView
@@ -476,8 +476,8 @@ end rigScaffEdit
 --| Requires: rigPrimary(), rigFetchSegment(), rigDbUpdate(), rigRedirect
 --|
 --| Summary: Update, redirects to the view page.
---| 
---| Format:  rigScaffUpdate 
+--|
+--| Format:  rigScaffUpdate
 --|
 --| Parameters: --
 --|
@@ -486,7 +486,7 @@ end rigScaffEdit
 
 command rigScaffUpdate
   local tPrimary, tID, tArray
-  
+
 	# FETCH THE PRIMARY KEY
 	put rigPrimary(sScaffCurrentTable) into tPrimary
 
@@ -518,8 +518,8 @@ end rigScaffUpdate
 --| Requires: rigFetchSegment(), rigLangLangLine(), rigAnchor(), rigLoadView()
 --|
 --| Summary: Delete confirmation, show the HTML "delete confirm" page.
---| 
---| Format:  rigScaffDelete 
+--|
+--| Format:  rigScaffDelete
 --|
 --| Parameters: --
 --|
@@ -530,9 +530,9 @@ command rigScaffDelete
   local tID, tPrimary, tMessage, tAnswerNo, tNoArray, tAnswerYes
   local tYesArray, tViewAnchorA, tViewLangLine, tAddAnchorA
   local tAddLangLine
-  
+
 	put rigFetchSegment(4) into tID
-	
+
 	# FETCH THE PRIMARY KEY
 	put rigPrimary(sScaffCurrentTable) into tPrimary
 
@@ -610,8 +610,8 @@ end rigScaffDelete
 --| Requires: rigFetchSegment(), rigPrimary(), rigDbWhere, rigDbDelete(), rigSiteURL()
 --|
 --| Summary: Delete, redirects to the view page.
---| 
---| Format:  rigScaffDoDelete 
+--|
+--| Format:  rigScaffDoDelete
 --|
 --| Parameters: --
 --|
@@ -620,7 +620,7 @@ end rigScaffDelete
 
 command rigScaffDoDelete
   local tID, tPrimary, tURIarrayA, tSiteURL
-  
+
 	put rigFetchSegment(4) into tID
 
 	# FETCH THE PRIMARY KEY
