@@ -1,7 +1,7 @@
 <?lc
 
-	global gRigA -- array keys are: EXT, FCPATH, SELF, BASEPATH, APPPATH, errorData, databaseID, docTypes
-	               -- controller, handler, module, COOKIE, segments, rSegments, applicationFolder, activeRecord, CLI
+	global gRigA -- array keys are: EXT, FCPATH, SELF, BASEPATH, APPPATH, errorData, databaseID, docTypes, systemFolder
+	             -- controller, handler, module, COOKIE, segments, rSegments, applicationFolder, activeRecord, CLI
 
 ##
 #---------------------------------------------------------------
