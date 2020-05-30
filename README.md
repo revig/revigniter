@@ -8,7 +8,7 @@ You can [download released versions of revIgniter](https://revigniter.com/) from
 
 ### Server Requirements
 
-LiveCode Server or [On-Rev](https://www.on-rev.com/) server engine.
+LiveCode Server or [LiveCode Hosting](https://livecode.com/hosting/) server engine.
 
 ### Installation
 
