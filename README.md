@@ -4,19 +4,19 @@ revIgniter is a Web Application Development Framework primarily modeled on CodeI
 
 ### Downloading
 
-You can [download released versions of revIgniter](http://revigniter.com/) from the project's website.
+You can [download released versions of revIgniter](https://revigniter.com/) from the project's website.
 
 ### Server Requirements
 
-LiveCode Server or [On-Rev](http://www.on-rev.com/) server engine.
+LiveCode Server or [On-Rev](https://www.on-rev.com/) server engine.
 
 ### Installation
 
-Please see the [installation section](http://revigniter.com/userGuide/installation/index.html) of the User Guide.
+Please see the [installation section](https://revigniter.com/userGuide/installation/index.html) of the User Guide.
 
 ### Upgrading
 
-For upgrading from a previous version see the [upgrade section](http://revigniter.com/userGuide/installation/upgrading.html) of the User Guide.
+For upgrading from a previous version see the [upgrade section](https://revigniter.com/userGuide/installation/upgrading.html) of the User Guide.
 
 ### License
 
