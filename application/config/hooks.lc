@@ -12,7 +12,7 @@ end if
 # This file lets you define "hooks" to extend revIgniter without hacking the core
 # files.  Please see the user guide for info:
 #
-#	http://revigniter.com/userGuide/general/hooks.html
+#	https://revigniter.com/userGuide/general/hooks.html
 #
 ##
 

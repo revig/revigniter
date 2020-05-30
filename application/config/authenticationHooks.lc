@@ -12,7 +12,7 @@ end if
 # This file lets you define "hooks" to extend the Authentication.lc library
 # without hacking the library itself. Please see the user guide for info:
 #
-#	http://revigniter.com/userGuide/libraries/authentication.html
+#	https://revigniter.com/userGuide/libraries/authentication.html
 #
 ##
 
