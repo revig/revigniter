@@ -313,7 +313,7 @@ prototype required by the Session Library.<br />MySQL version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE IF NOT EXISTS `ri_sessions` (
-  `session_id` varchar(40) NOT NULL DEFAULT '0',
+  `session_id` varchar(64) NOT NULL DEFAULT '0',
   `ip_address` varchar(45) NOT NULL DEFAULT '0',
   `user_agent` varchar(120) NOT NULL,
   `last_activity` int(10) unsigned NOT NULL DEFAULT '0',
@@ -327,7 +327,7 @@ prototype required by the Session Library.<br />MySQL version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE ri_sessions (
-  session_id varchar(40) DEFAULT 0 NOT NULL,
+  session_id varchar(64) DEFAULT 0 NOT NULL,
   ip_address varchar(45) DEFAULT 0 NOT NULL,
   user_agent varchar(120) NOT NULL,
   last_activity integer DEFAULT 0 NOT NULL,
@@ -342,7 +342,7 @@ prototype required by the Session Library.<br />MySQL version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE "main"."ri_sessions" (
-  "session_id" text(40) NOT NULL DEFAULT '0',
+  "session_id" text(64) NOT NULL DEFAULT '0',
   "ip_address" text(45) NOT NULL DEFAULT '0',
   "user_agent" text(120) NOT NULL,
   "last_activity" integer(10) NOT NULL DEFAULT 0,
