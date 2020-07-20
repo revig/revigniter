@@ -9,14 +9,14 @@
 	put 0 into tCounter
 	 repeat for each key tKey in gData["fields"]
 		add 1 to tCounter
-	
+
 		if gData["fields"][tCounter]["primarykey"] = 1 then
 			next repeat
 		end if
 
 		put "<tr>" & return & "<td>" & gData["fields"][tCounter]["name"] & "</td>" & return after tFormData
 
-		if gData["fields"][tCounter]["type"] is "blob" then
+		if (gData["fields"][tCounter]["type"] is "blob") or (gData["fields"][tCounter]["type"] is "TEXT" and gData["fields"][tCounter]["name"] is among the items of "body,core,main,base,basic") then
 			put "<td><textarea class=" & quote & "textarea" & quote && "name=" & quote & gData["fields"][tCounter]["name"] & quote && "cols=" & quote & "60" & quote &&  "rows=" & quote & "10" & quote & ">" & gData["fields"][tCounter]["default"] & "</textarea></td>" & return after tFormData
 		else
 			put "<td><input class=" & quote & "input" & quote && "name=" & quote & gData["fields"][tCounter]["name"] & quote && "value=" & quote & gData["fields"][tCounter]["default"] & quote && "size=" & quote & "60" & quote && "/></td>" & return & "</tr>" & return after tFormData

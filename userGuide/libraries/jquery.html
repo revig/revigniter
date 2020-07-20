@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.6</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -64,7 +64,7 @@
      <div id="breadcrumbContainer">
        <div class="container">
            <ol class="breadcrumb">
-             <li><a href="http://revigniter.com/">revIgniter Home</a></li>
+             <li><a href="https://revigniter.com/">revIgniter Home</a></li>
               <li><a href="../index.html">User Guide Home</a></li>
               <li class="active">JQuery Library</li>
             <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
@@ -237,12 +237,13 @@ end index
 </div>
 
 
-<p>Now, to load required libraries, helpers and models, insert this code into the <dfn>ajax</dfn> handler.<br />First, we load the "Jquery" library. If you don't change the default setting using the second parameter, your code will link to the latest version of jQuery on jquery.com and you don't need to store a copy of jQuery on your host, though, as mentioned above, this is not recommended in a runtime environment. <br />We load the Table library as we want to display the data in the form of a table.<br />Of course, we load the database and we need a model, which we call "ajaxmodel". </p>
+<p>Now, to load required libraries, helpers and models, insert this code into the <dfn>ajax</dfn> handler.<br />First, we load the "Jquery" library. If you don't change the default setting using the second parameter, your code will link to the latest version of jQuery on jquery.com and you don't need to store a copy of jQuery on your host, though, as mentioned above, this is not recommended in a runtime environment. <br />We load the Table library as we want to display the data in the form of a table.<br />Then we load the Form helper which is needed in case CSRF protection is enabled.<br />Of course, we load the database and we need a model, which we call "ajaxmodel". </p>
 
 
 <div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Jquery"
 rigLoaderLoadLibrary "Table"
+rigLoadHelper "form"
 get rigLoadDatabase()
 rigLoadModel "ajaxmodel"
 </code></pre>
@@ -259,7 +260,18 @@ rigLoadModel "ajaxmodel"
 </code></pre>
 </div>
 
-<p>Now to the important part, the statements, which build the jQuery script. We want the script to handle key-up events in the input field. It should post the text, the user has typed, and replace HTML code with data returned by the controller.<br />Add this statement to tell the jQuery library to start writing the jQuery script:</p>
+<p>Add the following statements to get the CSRF token name which is needed in case CSRF protection is enabled.</p>
+
+<div class="codeSample">
+<pre><code>if rigFetchConfigItem("csrf_protection") is TRUE then
+  # CROSS SITE REQUEST FORGERY PROTECTION ON, GET TOKEN NAME
+  put TRUE into tCSRFprotected
+  put rigFetchConfigItem("csrf_token_name") into tCSRFtoken
+end if
+</code></pre>
+</div>
+
+<p>Now to the important part, the statements, which build the jQuery script. We want the script to handle key-up events in the input field. It should post the text, the user has typed, as well as the CSRF token (in case the CSRF protection is enabled), and replace HTML code with data returned by the controller.<br />Add this statement to tell the jQuery library to start writing the jQuery script:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">rigJQopen
@@ -273,10 +285,17 @@ rigLoadModel "ajaxmodel"
 </code></pre>
 </div>
 
-<p>Add the following statement, which posts the text (value) of the input field as "search_term" to the controller and it's <dfn>datafilter</dfn> handler, and replaces the HTML code inside the "#results" div with the returned data. Note: Here we use a getter, which returns the jQuery syntax to get the value of the input field.</p>
+<p>Add the following statements, which post the text (value) of the input field as "search_term" to the controller and it's <dfn>datafilter</dfn> handler, and replace the HTML code inside the "#results" div with the returned data. In case CSRF protection is enabled we post the CSRF token too. Note: Here we use a getter, which returns the jQuery syntax to get the value of the input field and the value of the hidden CSRF token field.</p>
 
 <div class="codeSample">
-<pre><code class="lang-livecodeserver">rigJQxhRequest "load", "ajax/datafilter", "search_term:" &amp;&amp; rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+<pre><code class="lang-livecodeserver">if tCSRFprotected is TRUE then
+  rigJQxhRequest "load", "ajax/datafilter", "search_term:" && \
+  rigJQgetR("'#filter'", "attr", "'value'") & "," & tCSRFtoken & ":" && \
+  rigJQgetR("'[name=" & tCSRFtoken & "]'", "attr", "'value'"), , , "'#results'"
+else
+  rigJQxhRequest "load", "ajax/datafilter", "search_term:" && \
+  rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+end if
 </code></pre>
 </div>
 
@@ -315,6 +334,13 @@ rigLoadModel "ajaxmodel"
 </code></pre>
 </div>
 
+<p>Add the following statement which is needed if CSRF protection is enabled. It adds an opening form tag and a hidden field containing the CSRF token:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">put rigFormOpen("ajax/datafilter") into gData["formOpen"]
+</code></pre>
+</div>
+
 <p>Finally load the view file, which we call "ajaxView":</p>
 
 <div class="codeSample">
@@ -337,6 +363,15 @@ rigLoadModel "ajaxmodel"
   else
     put "No match!" into gData["peopleTable"]
   end if
+	
+  # IN CASE CSRF PROTECTION IS ENABLED YOU NEED TO OUTPUT SOMETHING PRIOR
+  # TO LOADING THE VIEW, OTHERWISE THE CSRF COOKIE WILL BE RENEWED AT THE
+  # FIRST KEYUP EVENT IN THE #filter FIELD. THIS MEANS, AS THE TOKEN KEEPS
+  # UNCHANGED, THE COOKIE AND THE TOKEN DO NOT MATCH WHICH YIELDS AN ERROR.
+  if rigFetchConfigItem("csrf_protection") is TRUE then
+    put ""
+  end if
+	
   get rigLoadView("filteredView")
 end datafilter
 </code></pre>
@@ -369,20 +404,33 @@ put "ajax,index,datafilter,buildTable" into gControllerHandlers
 command ajax
   rigLoaderLoadLibrary "Jquery"
   rigLoaderLoadLibrary "Table"
+  rigLoadHelper "form"
   get rigLoadDatabase()
   rigLoadModel "ajaxmodel"
 end ajax
 
 command index
   put "revIgniter Ajax Tutorial" into gData["pageTitle"]
+  if rigFetchConfigItem("csrf_protection") is TRUE then
+    put TRUE into tCSRFprotected
+    put rigFetchConfigItem("csrf_token_name") into tCSRFtoken
+  end if
   rigJQopen
     rigJQeventOpen "'#filter'", "'keyup'"
-      rigJQxhRequest "load", "ajax/datafilter", "search_term:" && rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+      if tCSRFprotected is TRUE then
+        rigJQxhRequest "load", "ajax/datafilter", "search_term:" && \
+        rigJQgetR("'#filter'", "attr", "'value'") & "," & tCSRFtoken & ":" && \
+        rigJQgetR("'[name=" & tCSRFtoken & "]'", "attr", "'value'"), , , "'#results'"
+      else
+        rigJQxhRequest "load", "ajax/datafilter", "search_term:" && \
+        rigJQgetR("'#filter'", "attr", "'value'"), , , "'#results'"
+      end if
     rigJQeventClose
   rigJQclose
   put the result into gData["JQscript"]
   put peopleData() into tQuery
   buildTable tQuery
+  put rigFormOpen("ajax/datafilter") into gData["formOpen"]
   get rigLoadView("ajaxView")
 end index
 
@@ -395,6 +443,9 @@ command datafilter
     buildTable tQueryResult
   else
     put "No match!" into gData["peopleTable"]
+  end if
+  if rigFetchConfigItem("csrf_protection") is TRUE then
+    put ""
   end if
   get rigLoadView("filteredView")
 end datafilter
@@ -438,7 +489,9 @@ end buildTable
     &lt;body>
       &lt;div class="page_margins">
         &lt;div id="content">
+          [[gData["formOpen"] ]]
           &lt;div id="input">Name: &lt;input name="name" type="text" id="filter" />&lt;/div>
+          &lt;/form>
           &lt;p>&amp;nbsp;&lt;/p>
           &lt;h2>Dynamic Result (pulled from database)&lt;/h2>
           &lt;div id="results">[[gData["peopleTable"]]]&lt;/div>
@@ -865,7 +918,7 @@ Previous Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="language.html">Language Library</a>
 </p>
-<p><a href="http://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2020<span class="separator"> :: </span><a href="http://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2020<span class="separator"> :: </span><a href="https://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
   </div>
 </div>
 
