@@ -191,7 +191,7 @@ end _rigGetEncryptionKey
 --| Version:  1.1
 --| Created: 2009-10-16
 --| Last Mod: 2020-08-04
---| Requires: --
+--| Requires: rigHexDigest()
 --|
 --| Summary: Set the encryption key. Undocumented!!!!!!!!!!!
 --|
