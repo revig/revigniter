@@ -214,6 +214,7 @@ put "application/octet-stream" into sMime["ipa"]
 put "text/xml" into sMime["plist"]
 put "application/json" into sMime["json"][1]
 put "text/json" into sMime["json"][2]
+put "application/feed+json" into sMime["json"][3]
 put "application/x-x509-user-cert" into sMime["pem"][1]
 put "application/x-pem-file" into sMime["pem"][2]
 put "application/octet-stream" into sMime["pem"][3]
@@ -297,7 +298,7 @@ put "text/x-vcard" into sMime["vcf"]
 --| Requires: --
 --|
 --| Summary: Fetch mime type by providing an extension.
---| 
+--|
 --| Format:  rigFetchMimeType(param1)
 --|
 --| Parameters: string<pExtension>
@@ -310,7 +311,7 @@ function rigFetchMimeType pExtension
 		return sMime[pExtension]
 	end if
 
-	return FALSE	
+	return FALSE
 end rigFetchMimeType
 
 
@@ -328,7 +329,7 @@ end rigFetchMimeType
 --| Requires: --
 --|
 --| Summary: Fetch mime types.
---| 
+--|
 --| Format:  rigFetchAllMimeTypes()
 --|
 --| Parameters: --
