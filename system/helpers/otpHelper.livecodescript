@@ -812,9 +812,9 @@ end _rigOTPSha
 --| FUNCTION rigOTPqrCode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  2.0
 --| Created: 2019-06-18
---| Last Mod: 2019-08-22
+--| Last Mod: 2020-08-17
 --| Requires: rigOTPvalidBase32Str(), rigUrlEncodeRFC(), rigLoaderLoadLibrary, rigLogMessage
 --|
 --| Summary: Create QR code based on OTP URI data.
@@ -822,69 +822,89 @@ end _rigOTPSha
 --| Format:  rigOTPqrCode(param1, param2, param3[, param4][, param5][, param6][, param7][, param8][, param9])
 --|
 --| Parameters: string <pKey>, string <pAccount>, string <pIssuer>, string <pAlgo> (optional),
---|               integer <pDigits> (optional), integer <pPeriod> (optional), string <pECC> (optional),
---|               integer <pSize> (optional), mixed <pMask> (optional)
+--|             integer <pDigits> (optional), integer <pPeriod> (optional), string <pECC> (optional),
+--|             integer <pSize> (optional), mixed <pMask> (optional) /
+--|             alternatively provide all parameters as an array, keys: key, account, issuer, algo,
+--|             digits, period, ECC, size and mask
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMask
-  local tData, tImg, tImgData
+  local tParamsA, tData, tImg, tImgData
 
-  if (pKey is empty) or (rigOTPvalidBase32Str(pKey) is FALSE) then
+  if pKey is not an array then
+    put pKey into tParamsA["key"]
+    put pAccount into tParamsA["account"]
+    put pIssuer into tParamsA["issuer"]
+    put pAlgo into tParamsA["algo"]
+    put pDigits into tParamsA["digits"]
+    put pPeriod into tParamsA["period"]
+    put pECC into tParamsA["ECC"]
+    put pSize into tParamsA["size"]
+    put pMask into tParamsA["mask"]
+  else
+    put pKey into tParamsA
+  end if -- if pKey is not an array
+
+
+  if (tParamsA["key"] is empty) or (rigOTPvalidBase32Str(tParamsA["key"]) is FALSE) then
     rigLogMessage "error", "OTP: Missing key or base32 string contains invalid characters!"
     return FALSE
   end if
 
-  if pIssuer is empty then
+  if tParamsA["issuer"] is empty then
     rigLogMessage "error", "OTP: Missing issuer!"
     return FALSE
   else
-    put rigUrlEncodeRFC(pIssuer) into pIssuer
+    put rigUrlEncodeRFC(tParamsA["issuer"]) into tParamsA["issuer"]
   end if
 
-  if pAccount is empty then
+  if tParamsA["account"] is empty then
     rigLogMessage "error", "OTP: Missing account!"
     return FALSE
   else
-    put rigUrlEncodeRFC(pAccount) into pAccount
-    replace "%40" with "@" in pAccount
+    put rigUrlEncodeRFC(tParamsA["account"]) into tParamsA["account"]
+    replace "%40" with "@" in tParamsA["account"]
   end if
 
-  if (pAlgo is empty) or (pAlgo is not among the items of "SHA1,SHA224,SAH256,SHA384,SHA512,SHA3224,SHA3256,SHA3384,SHA3512") then
-    put "SHA1" into pAlgo
+  if (tParamsA["algo"] is empty) or (tParamsA["algo"] \
+    is not among the items of "SHA1,SHA224,SAH256,SHA384,SHA512,SHA3224,SHA3256,SHA3384,SHA3512") then
+    put "SHA1" into tParamsA["algo"]
   end if
 
-  if (pDigits is empty) or (pDigits is not an integer) then
-    put 6 into pDigits
+  if (tParamsA["digits"] is empty) or (tParamsA["digits"] is not an integer) then
+    put 6 into tParamsA["digits"]
   end if
 
-  if (pPeriod is empty) or (pPeriod is not an integer) then
-    put 30 into pPeriod
+  if (tParamsA["period"] is empty) or (tParamsA["period"] is not an integer) then
+    put 30 into tParamsA["period"]
   end if
 
-  if (pECC is empty) or (pECC is not among the items of "L,M,Q,H,X") then
-    put "M" into pECC
+  if (tParamsA["ECC"] is empty) or (tParamsA["ECC"] is not among the items of "L,M,Q,H,X") then
+    put "M" into tParamsA["ECC"]
   end if
 
-  if (pSize is empty) or (pSize is not among the items of "1,2,3,4,5,6,7,8,9,10") then
-    put 4 into pSize
+  if (tParamsA["size"] is empty) or (tParamsA["size"] is not among the items of "1,2,3,4,5,6,7,8,9,10") then
+    put 4 into tParamsA["size"]
   end if
 
-  if (pMask is empty) or (pMask is not among the items of "Auto,0,1,2,3,4,5,6,7") then
-    put "Auto" into pMask
+  if (tParamsA["mask"] is empty) or (tParamsA["mask"] is not among the items of "Auto,0,1,2,3,4,5,6,7") then
+    put "Auto" into tParamsA["mask"]
   end if
 
   rigLoaderLoadLibrary "QR"
 
   # OTP URI
-  put "otpauth://totp/" & pIssuer & ":" & pAccount & "?secret=" & pKey & "&issuer=" & pIssuer & "&algorithm=" & pAlgo & "&digits=" & pDigits & "&period=" & pPeriod into tData
+  put "otpauth://totp/" & tParamsA["issuer"] & ":" & tParamsA["account"] & "?secret=" & tParamsA["key"] \
+    & "&issuer=" & tParamsA["issuer"] & "&algorithm=" & tParamsA["algo"] & "&digits=" & tParamsA["digits"] \
+    & "&period=" & tParamsA["period"] into tData
 
   # GENERATE QR CODE DATA
   put "!" into tImg
   -- qrSetColors "Blue", "255,255,0"
   qrSetColors "Black", "White"
-  qrCreate tImg, tData, pECC, pSize, pMask
+  qrCreate tImg, tData, tParamsA["ECC"], tParamsA["size"], tParamsA["mask"]
 
   put the result into tImgData
 
