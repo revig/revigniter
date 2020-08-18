@@ -88,10 +88,10 @@ end libraryStack
 --| Format:  rigOTPgenerate param1[, param2][, param 3][, param4][, param5] [, param6]
 --|
 --| Parameters: string <pSecret> the decoded shared secret, integer <pTokenLength> 6 or 8 (optional),
---|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
---|               integer <pTimeStep> (optional), string <pType> hotp or totp (optional) /
---|               alternatively provide all parameters as an array, keys: secret, tokenLength, cryptoType,
---|               cryptoNumBits, timeStep and type
+--|             string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
+--|             integer <pTimeStep> (optional), string <pType> hotp or totp (optional) /
+--|             alternatively provide all parameters as an array, keys: secret, tokenLength, cryptoType,
+--|             cryptoNumBits, timeStep and type
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
@@ -156,9 +156,9 @@ end rigOTPgenerate
 --| COMMAND rigOTPcompareKeys
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  2.0
 --| Created: 2019-06-16
---| Last Mod: 2019-06-16
+--| Last Mod: 2020-08-17
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Compare supplied OTP with generated OTP.
@@ -166,49 +166,64 @@ end rigOTPgenerate
 --| Format:  rigOTPcompareKeys param1, param2[, param3][, param4][, param5][, param5][, param7]
 --|
 --| Parameters: string <pChallenge>, string <pKey>, integer <pTokenLength> 6 or 8 (optional),
---|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional),
---|               integer <pTimeStep> (optional), integer <pTimeWindow> (optional)
+--|             string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional),
+--|             integer <pTimeStep> (optional), integer <pTimeWindow> (optional) /
+--|             alternatively provide all parameters as an array, keys: challenge, key, tokenLength,
+--|             cryptoType, cryptoNumBits, timeStep and timeWindow
 --|
 --| Return: boolean
 ----------------------------------------------------------------------*/
 
 command rigOTPcompareKeys pChallenge pKey pTokenLength pCryptoType pCryptoNumBits pTimeStep pTimeWindow
-  local tTimestamp, tCounter, tTime, tOTP
+  local tOTPdataA, tTimestamp, tCounter, tTime, tOTP
 
-  if (pChallenge is empty) or (pKey is empty) then
+  if pChallenge is not an array then
+    put pChallenge into tOTPdataA["challenge"]
+    put pKey into tOTPdataA["key"]
+    put pTokenLength into tOTPdataA["tokenLength"]
+    put pCryptoType into tOTPdataA["cryptoType"]
+    put pCryptoNumBits into tOTPdataA["cryptoNumBits"]
+    put pTimeStep into tOTPdataA["timeStep"]
+    put pTimeWindow into tOTPdataA["timeWindow"]
+  else
+    put pChallenge into tOTPdataA
+  end if -- if pChallenge is not an array
+
+
+  if (tOTPdataA["challenge"] is empty) or (tOTPdataA["key"] is empty) then
     rigLogMessage "error", "OTP authentication: Missing challenge or secret!"
     return FALSE
   end if
 
-  if (pTokenLength is empty) or (pTokenLength is not an integer) then
-    put 6 into pTokenLength
+  if (tOTPdataA["tokenLength"] is empty) or (tOTPdataA["tokenLength"] is not an integer) then
+    put 6 into tOTPdataA["tokenLength"]
   end if
 
-  if pCryptoType is not among the items of "SHA,SHA3" then
-    put "SHA" into pCryptoType
+  if tOTPdataA["cryptoType"] is not among the items of "SHA,SHA3" then
+    put "SHA" into tOTPdataA["cryptoType"]
   end if
 
-  if pCryptoNumBits is not among the items of "1,224,256,384,512" then
-    put "1" into pCryptoNumBits
+  if tOTPdataA["cryptoNumBits"] is not among the items of "1,224,256,384,512" then
+    put "1" into tOTPdataA["cryptoNumBits"]
   end if
 
-  if (pTimeStep is empty) or (pTimeStep is not an integer) then
-    put 30 into pTimeStep
+  if (tOTPdataA["timeStep"] is empty) or (tOTPdataA["timeStep"] is not an integer) then
+    put 30 into tOTPdataA["timeStep"]
   end if
 
-  if (pTimeWindow is empty) or (pTimeWindow is not an integer) then
-    put 2 into pTimeWindow
+  if (tOTPdataA["timeWindow"] is empty) or (tOTPdataA["timeWindow"] is not an integer) then
+    put 2 into tOTPdataA["timeWindow"]
   end if
 
-  put floor(the seconds / pTimeStep) into tTimestamp
+  put floor(the seconds / tOTPdataA["timeStep"]) into tTimestamp
 
   # COMPARE OTPs
-  repeat with tCounter = -pTimeWindow to pTimeWindow
+  repeat with tCounter = -tOTPdataA["timeWindow"] to tOTPdataA["timeWindow"]
     put tTimestamp + tCounter into tTime
 
-    put _rigOTPoauthTotp(pKey, tTime, pTokenLength, pCryptoType, pCryptoNumBits) into tOTP
+    put _rigOTPoauthTotp(tOTPdataA["key"], tTime, tOTPdataA["tokenLength"], tOTPdataA["cryptoType"], tOTPdataA["cryptoNumBits"]) into tOTP
 
-    if tOTP is pChallenge then
+    if tOTP is tOTPdataA["challenge"] then
       return TRUE
     end if
   end repeat
