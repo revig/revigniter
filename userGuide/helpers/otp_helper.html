@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>OTP Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -181,7 +181,9 @@ end rigRunInitialQRConfig
 	<li>pType is the OTP type, this is "HOTP" or "TOTP". Currently the helper supports TOTP only. So, this parameter can be ignored.</li>
 </ul>
 
-<p>Returns FALSE in the result in case an error occurred, otherwise the result contains the one-time password.</p>
+<p>Alternatively provide all parameters as an array. Array key names are: <var>secret</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>type</var>.</p>
+
+<p>This handler returns FALSE in the result in case an error occurred, otherwise the result contains the one-time password.</p>
 
 
 <h3>rigOTPcompareKeys <var>pChallenge</var>, <var>pKey</var>, <var>pTokenLength</var>, <var>pCryptoType</var>, <var>pCryptoNumBits</var>, <var>pTimeStep</var>, <var>pTimeWindow</var></h3>
@@ -198,7 +200,9 @@ end rigRunInitialQRConfig
 	<li>pTimeWindow (optional) is a delay window to compare OTPs not only in the current period but also with the next and previous time steps. The default value is 2.</li>
 </ul>
 
-<p>Returns TRUE in the result if the two passwords match.</p>
+<p>Alternatively provide all parameters as an array. Array key names are: <var>challenge</var>, <var>key</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>timeWindow</var>.</p>
+
+<p>This handler returns TRUE in the result if the two passwords match.</p>
 
 <h3>rigOTPgenerateUserKey <var>pSecret</var></h3>
 
@@ -222,7 +226,9 @@ end rigRunInitialQRConfig
 	<li>pMask (optional) is an integer between 0 and 7 which defines a pattern that changes the outputted matrix. The default value is "Auto".</li>
 </ul>
 
-<p>Returns FALSE in the result in case an error occurred, otherwise the result contains the base64 encoded image data of the QR code. Here is an example:</p>
+<p>Alternatively provide all parameters as an array. Array key names are: <var>key</var>, <var>account</var>, <var>issuer</var>, <var>algo</var>, <var>digits</var>, <var>period</var>, <var>ECC</var>, <var>size</var> and <var>mask</var>.</p>
+
+<p>This function returns FALSE in the result in case an error occurred, otherwise the result contains the base64 encoded image data of the QR code. Here is an example:</p>
 
 
 <div class="codeSample">
