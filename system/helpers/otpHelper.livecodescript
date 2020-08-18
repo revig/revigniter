@@ -78,9 +78,9 @@ end libraryStack
 --| COMMAND rigOTPgenerate
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  2.0
 --| Created: 2019-06-15
---| Last Mod: 2019-08-15
+--| Last Mod: 2020-08-17
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Get an OTP providing a secret, token length, hash algorithm, time step and OTP type.
@@ -89,46 +89,59 @@ end libraryStack
 --|
 --| Parameters: string <pSecret> the decoded shared secret, integer <pTokenLength> 6 or 8 (optional),
 --|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
---|               integer <pTimeStep> (optional), string <pType> hotp or totp (optional)
+--|               integer <pTimeStep> (optional), string <pType> hotp or totp (optional) /
+--|               alternatively provide all parameters as an array, keys: secret, tokenLength, cryptoType,
+--|               cryptoNumBits, timeStep and type
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
 
 command rigOTPgenerate pSecret pTokenLength pCryptoType pCryptoNumBits pTimeStep pType
-  local tTimestamp
+  local tOTPdataA, tTimestamp
 
-  if pSecret is empty then
+  if pSecret is not an array then
+    put pSecret into tOTPdataA["secret"]
+    put pTokenLength into tOTPdataA["tokenLength"]
+    put pCryptoType into tOTPdataA["cryptoType"]
+    put pCryptoNumBits into tOTPdataA["cryptoNumBits"]
+    put pTimeStep into tOTPdataA["timeStep"]
+    put pType into tOTPdataA["type"]
+  else
+    put pSecret into tOTPdataA
+  end if -- if pSecret is not an array
+
+  if tOTPdataA["secret"] is empty then
     rigLogMessage "error", "OTP authentication: No secret provided!"
     return FALSE
     -- put randomBytes(16) into pSecret --------- store this string in db (encrypt it?)
   end if
 
-  if (pTokenLength is empty) or (pTokenLength is not an integer) then
-    put 6 into pTokenLength
+  if (tOTPdataA["tokenLength"] is empty) or (tOTPdataA["tokenLength"] is not an integer) then
+    put 6 into tOTPdataA["tokenLength"]
   end if
 
-  if pCryptoType is not among the items of "SHA,SHA3" then
-    put "SHA" into pCryptoType
+  if tOTPdataA["cryptoType"] is not among the items of "SHA,SHA3" then
+    put "SHA" into tOTPdataA["cryptoType"]
   end if
 
-  if pCryptoNumBits is not among the items of "1,224,256,384,512" then
-    put "1" into pCryptoNumBits
+  if tOTPdataA["cryptoNumBits"] is not among the items of "1,224,256,384,512" then
+    put "1" into tOTPdataA["cryptoNumBits"]
   end if
 
   # TODO implement hotp
-  if (pType is empty) or (pType is not among the items of "hotp,totp") then
-    put "totp" into pType
+  if (tOTPdataA["type"] is empty) or (tOTPdataA["type"] is not among the items of "hotp,totp") then
+    put "totp" into tOTPdataA["type"]
   end if
 
-  if pType is "totp" then
-    if (pTimeStep is empty) or (pTimeStep is not an integer) then
-      put 30 into pTimeStep
+  if tOTPdataA["type"] is "totp" then
+    if (tOTPdataA["timeStep"] is empty) or (tOTPdataA["timeStep"] is not an integer) then
+      put 30 into tOTPdataA["timeStep"]
     end if
 
-    put floor(the seconds / pTimeStep) into tTimestamp
+    put floor(the seconds / tOTPdataA["timeStep"]) into tTimestamp
 
     # GENERATE OTP
-    return _rigOTPoauthTotp(pSecret, tTimestamp, pTokenLength, pCryptoType, pCryptoNumBits)
+    return _rigOTPoauthTotp(tOTPdataA["secret"], tTimestamp, tOTPdataA["tokenLength"], tOTPdataA["cryptoType"], tOTPdataA["cryptoNumBits"])
   end if -- if pType is "totp"
 end rigOTPgenerate
 
