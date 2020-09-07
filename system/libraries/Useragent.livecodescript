@@ -350,9 +350,9 @@ end _rigSetPlatform
 --| FUNCTION _rigSetBrowser
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2009-10-07
---| Last Mod: 2019-01-07
+--| Last Mod: 2020-09-07
 --| Requires: rigPregQuote(), _rigSetMobile()
 --|
 --| Summary: Set the browser.
@@ -365,7 +365,7 @@ end _rigSetPlatform
 ----------------------------------------------------------------------*/
 
 private function _rigSetBrowser
-  local tMatch1, tKey, tVal, tPregQuotedStr, tRegex, tSafariOffset
+  local tMatch1, tKey, tVal, tPregQuotedStr, tRegex, tVersionOffset, tSafariOffset
 
 	if sUseragentA["browsersA"] is an array then
 
@@ -387,9 +387,10 @@ private function _rigSetBrowser
       if it is TRUE then
         put TRUE into sUseragentA["isBrowser"]
 
-        if "Safari" is in sUseragentA["agent"] then
+        if ("Safari" is in sUseragentA["agent"]) and ("Chrome" is not in sUseragentA["agent"]) then
+          put offset("Version/",sUseragentA["agent"]) into tVersionOffset
           put offset("Safari/",sUseragentA["agent"]) into tSafariOffset
-          put char (tSafariOffset + 7) to (the number of chars in sUseragentA["agent"]) of sUseragentA["agent"] into sUseragentA["version"]
+          put char (tVersionOffset + 8) to (tSafariOffset - 2) of sUseragentA["agent"] into sUseragentA["version"]
         else
 
           put tMatch1 into sUseragentA["version"]
