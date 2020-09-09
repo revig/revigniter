@@ -172,13 +172,14 @@ end rigRunInitialQRConfig
 
 <p>Generate a one-time password.</p>
 
+<p><em>Parameters</em></p>
 <ul>
-	<li>pSecret is the decoded shared secret.</li>
-	<li>pTokenLength (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
-	<li>pCryptoType (optional) is "SHA" or "SHA3", though keep in mind that "SHA3" does not conform to the RFC6238 TOTP standards. So, the default value of this parameter is "SHA".</li>
-	<li>pCryptoNumBits (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512 or 1, the default value.</li>
-	<li>pTimeStep (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
-	<li>pType is the OTP type, this is "HOTP" or "TOTP". Currently the helper supports TOTP only. So, this parameter can be ignored.</li>
+	<li><strong>pSecret:</strong> is the decoded shared secret.</li>
+	<li><strong>pTokenLength:</strong> (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
+	<li><strong>pCryptoType:</strong> (optional) is "SHA" or "SHA3", though keep in mind that "SHA3" does not conform to the RFC6238 TOTP standards. So, the default value of this parameter is "SHA".</li>
+	<li><strong>pCryptoNumBits:</strong> (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512 or 1, the default value.</li>
+	<li><strong>pTimeStep:</strong> (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
+	<li><strong>pType:</strong> is the OTP type, this is "HOTP" or "TOTP". Currently the helper supports TOTP only. So, this parameter can be ignored.</li>
 </ul>
 
 <p>Alternatively provide all parameters as an array. Array key names are: <var>secret</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>type</var>.</p>
@@ -190,14 +191,15 @@ end rigRunInitialQRConfig
 
 <p>Compare user supplied OTP with generated OTP.</p>
 
+<p><em>Parameters</em></p>
 <ul>
-	<li>pChallenge is the one-time password the user supplied.</li>
-	<li>pKey is the generated OTP based on stored data.</li>
-	<li>pTokenLength (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
-	<li>pCryptoType (optional) is "SHA" or "SHA3", though keep in mind that "SHA3" does not conform to the RFC6238 TOTP standards. So, the default value of this parameter is "SHA".</li>
-	<li>pCryptoNumBits (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512 or 1, the default value. Note: The values 224 and 384 do not conform to the RFC6238 TOTP standards.</li>
-	<li>pTimeStep (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
-	<li>pTimeWindow (optional) is a delay window to compare OTPs not only in the current period but also with the next and previous time steps. The default value is 2.</li>
+	<li><strong>pChallenge:</strong> is the one-time password the user supplied.</li>
+	<li><strong>pKey:</strong> is the generated OTP based on stored data.</li>
+	<li><strong>pTokenLength:</strong> (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
+	<li><strong>pCryptoType:</strong> (optional) is "SHA" or "SHA3", though keep in mind that "SHA3" does not conform to the RFC6238 TOTP standards. So, the default value of this parameter is "SHA".</li>
+	<li><strong>pCryptoNumBits:</strong> (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512 or 1, the default value. Note: The values 224 and 384 do not conform to the RFC6238 TOTP standards.</li>
+	<li><strong>pTimeStep:</strong> (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
+	<li><strong>pTimeWindow:</strong> (optional) is a delay window to compare OTPs not only in the current period but also with the next and previous time steps. The default value is 2.</li>
 </ul>
 
 <p>Alternatively provide all parameters as an array. Array key names are: <var>challenge</var>, <var>key</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>timeWindow</var>.</p>
@@ -214,16 +216,17 @@ end rigRunInitialQRConfig
 
 <p>Create QR code image data based on OTP URI data.</p>
 
+<p><em>Parameters</em></p>
 <ul>
-	<li>pKey is the base32 encoded shared secret.</li>
-	<li>pAccount is a user's email address or name.</li>
-	<li>pIssuer is the name of the entity issuing user accounts.</li>
-	<li>pAlgo (optional) defines the algorithm used. Can be "SHA1", "SHA256" or "SHA512". If not provided this parameter defaults to "SHA1".</li>
-	<li>pDigits (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
-	<li>pPeriod (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
-	<li>pECC (optional) is the error correction level. Possible values are "L", "M", "Q" and "H". If the parameter is left empty "M" is used.</li>
-	<li>pSize (optional) defines the size of the displayed QR code image. Valid values are in the range of 1 to 10. The default value is 4.</li>
-	<li>pMask (optional) is an integer between 0 and 7 which defines a pattern that changes the outputted matrix. The default value is "Auto".</li>
+	<li><strong>pKey:</strong> is the base32 encoded shared secret.</li>
+	<li><strong>pAccount:</strong> is a user's email address or name.</li>
+	<li><strong>pIssuer:</strong> is the name of the entity issuing user accounts.</li>
+	<li><strong>pAlgo:</strong> (optional) defines the algorithm used. Can be "SHA1", "SHA256" or "SHA512". If not provided this parameter defaults to "SHA1".</li>
+	<li><strong>pDigits:</strong> (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
+	<li><strong>pPeriod:</strong> (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
+	<li><strong>pECC:</strong> (optional) is the error correction level. Possible values are "L", "M", "Q" and "H". If the parameter is left empty "M" is used.</li>
+	<li><strong>pSize:</strong> (optional) defines the size of the displayed QR code image. Valid values are in the range of 1 to 10. The default value is 4.</li>
+	<li><strong>pMask:</strong> (optional) is an integer between 0 and 7 which defines a pattern that changes the outputted matrix. The default value is "Auto".</li>
 </ul>
 
 <p>Alternatively provide all parameters as an array. Array key names are: <var>key</var>, <var>account</var>, <var>issuer</var>, <var>algo</var>, <var>digits</var>, <var>period</var>, <var>ECC</var>, <var>size</var> and <var>mask</var>.</p>

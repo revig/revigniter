@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Form-Mail Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -108,7 +108,14 @@
 <h3>rigFormMail(<var>filePath</var>, <var>substitutionData</var>, <var>prefix</var>, <var>suffix</var>)</h3>
 
 <p>Fetches the form-mail template, assigns an array containing words for substitution and assigns prefix/suffix characters used in the mail template to surround the words to be substituted.</p>
-<p>The first parameter is the path to your mail template relative to root. Remember: Root is where your index.lc file is located. The second parameter is an associative array where the keys are the placeholders used in your template and the values are the words used for replacement. The third and fourth parameters are optional. The default values are: "&lt;#" for prefix and ">" for suffix. You have to assign these values if you use different characters for prefix and suffix in your template.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>filePath:</strong> is the path to your mail template relative to root, remember: Root is where your index.lc file is located</li>
+	<li><strong>substitutionData:</strong> is an associative array where the keys are the placeholders used in your template and the values are the words used for replacement</li>
+	<li><strong>prefix:</strong> (optional) default values is: "&lt;#", you have to assign this value if you use different characters for prefix in your template</li>
+	<li><strong>suffix:</strong> (optional) default value is ">", you have to assign this value if you use different characters for suffix in your template</li>
+</ul>
 
 <p>This function returns FALSE if the template was not found or TRUE otherwise.</p>
 

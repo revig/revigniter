@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Captcha Library : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="all" />
-    <meta name="author" content="Ralf Bitter" />
-    <meta name="description" content="revIgniter User Guide" />
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter User Guide">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -300,14 +300,22 @@ rigInitCaptcha tConfig</code></pre>
 <p>Call this function first in case you want to get a random math problem captcha:</p>
 <pre><code>put rigCaptchaMathProblem() into gData["captcha"]</code></pre>
 
-<p>The parameter defines the number of operators used to generate a math problem. Leave empty to set the number of operators to four (+,-,/,*), enter "2" to set the number of operators to two (+,-).</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pNumberOfOperators:</strong> defines the number of operators used to generate a math problem. Leave empty to set the number of operators to four (+,-,/,*), enter "2" to set the number of operators to two (+,-)</li>
+</ul>
 
 <h3>rigCaptchaStyle(<var>pNonce</var>)</h3>
 <p>Get captcha style tags to be placed in the header of the view file:</p>
 
 <pre><code>put rigCaptchaStyle() into gData["captchaStyle"]</code></pre>
 
-<p>Use the optional parameter to add a nonce (as used by Content Security Policy headers) to the style tags. Example:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pNonce:</strong> (optional) used to add a nonce (as used by Content Security Policy headers) to the style tags</li>
+</ul>
+
+<p>Example:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">put rigNonce() into tNonce
@@ -332,14 +340,30 @@ put rigHtmlMeta(tCspMetaA) into gData["cspTag"]
 <pre><code>put rigGetCaptchaNum() into gData["captchaNum"]</code></pre>
 
 <h3>rigValidCaptchaUserInput(<var>pCaptchaInput</var>, <var>pHiddenFieldValue</var>)</h3>
-<p>Validate captcha user input. The first parameter is the posted captcha user input and the second is the captcha hash retrieved from an hidden field. The function returns TRUE or FALSE.</p>
+<p>Validate captcha user input.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pCaptchaInput:</strong> is the posted captcha user input</li>
+	<li><strong>pHiddenFieldValue:</strong> is the captcha hash retrieved from an hidden field</li>
+</ul>
+
+<p>The function returns TRUE or FALSE</p>
+
 <pre><code>if rigValidCaptchaUserInput(tInput, tHiddenField) is TRUE then 
   -- your code here 
 end if
 </code></pre>
 
 <h3>rigInitCaptcha <var>pConfigArray</var></h3>
-<p>Used to set initial values whenever the library is loaded. The parameter is an array of captcha settings described above:</p>
+
+<p>Used to set initial values whenever the library is loaded.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pConfigArray:</strong> is an array of captcha settings described above</li>
+</ul>
+
 <pre><code class="lang-livecodeserver">rigInitCaptcha tConfig</code></pre>
 
 

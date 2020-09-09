@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Loader Library : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -141,7 +141,15 @@ rigLoaderLoadLibrary "Email", tConfig</code></pre>
 
 <h3>rigLoadStack "<var>stackName</var>", <var>tConfig</var>, "<var>behind / front</var>"</h3>
 
-<p>Use this handler to load revIgniter stack files located at system/stacks as well as your own stacks which should be located at <dfn>application/stacks</dfn>. The first parameter is the name of the stack (the suffix can be omitted) you want to load. Use the optional second parameter to pass configuration settings in form of an array. The optional third parameter is used to define if the loaded stack should sit in front or behind the home stack, default is behind.</p>
+<p>Use this handler to load revIgniter stack files located at system/stacks as well as your own stacks which should be located at <dfn>application/stacks</dfn>.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>stackName:</strong> is the name of the stack (the suffix can be omitted) you want to load</li>
+	<li><strong>tConfig:</strong> (optional) used to pass configuration settings in form of an array</li>
+	<li><strong>behind / front:</strong> (optional) used to define if the loaded stack should sit in front or behind the home stack, default is behind</li>
+</ul>
+
 <p>Like library files, stacks can be stored in subdirectories. Include the path, relative to the "stacks" folder to load a stack located in a subdirectory. Assuming your stack is located at:</p>
 
 <pre><code>stacks/flavors/Strawberry.livecode
@@ -170,13 +178,14 @@ rigLoadStack "Icecream", tConfig</code></pre>
 <p>This function is used to load your View files.  If you haven't read the <a href="../general/views.html">Views</a> section of the
 user guide it is recommended that you do since it shows you how this function is typically used.</p>
 
-<p>The first parameter is required.  It is the name of the view file you would like to load. &nbsp;Note: The .lc file extension does not need to be specified unless you use something other than <kbd>.lc</kbd>.</p>
-
-
-<p>The second <strong>optional</strong> parameter lets you change the behavior of the function so that it returns data as a string
-rather than sending it to your browser.  This can be useful if you want to process the data in some way.  If you
-set the parameter to <kbd>TRUE</kbd> (boolean) it will return data.  The default behavior is <kbd>FALSE</kbd>, which sends it
-to your browser.  Remember to assign it to a variable if you want the data returned:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>fileName:</strong> is the name of the view file you would like to load. &nbsp;Note: The .lc file extension does not need to be specified unless you use something other than <kbd>.lc</kbd></li>
+	<li><strong>TRUE/FALSE</strong> (optional) lets you change the behavior of the function so that it returns data as a string
+rather than sending it to your browser, this can be useful if you want to process the data in some way, if you
+set the parameter to <kbd>TRUE</kbd> (boolean) it will return data, the default behavior is <kbd>FALSE</kbd>, which sends it
+to your browser, remember to assign it to a variable if you want the data returned:</li>
+</ul>
 
 <pre><code>put rigLoadView("<var>myfile</var>", <kbd>TRUE</kbd>) into tString</code></pre>
 

@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Date Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -261,7 +261,11 @@ put "DATE_ISO8601" into tFormat
 put rigStandardDate(tFormat, tTime) into gData["standardDate"]
 </code></pre>
 
-<p>The first parameter must contain the format, the second parameter must contain the date as a timestamp (seconds).</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>format:</strong> must contain the format</li>
+	<li><strong>time:</strong> must contain the date as a timestamp (seconds)</li>
+</ul>
 
 <p>Supported formats:</p>
 
@@ -392,8 +396,13 @@ put rigHumanToTimestamp(tDatestring) into gData["humanToTimestamp"]
 
 <pre><code>1 Year, 10 Months, 2 Weeks, 5 Days, 10 Hours, 16 Minutes</code></pre>
 
-<p>The first parameter must contain a timestamp.  The second parameter must contain a timestamp that is greater than the first timestamp.  If the second parameter is empty, the current time will be used.  The most common purpose
-for this function is to show how much time has elapsed from some point in time in the past to now.  Example:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>seconds:</strong> must contain a timestamp</li>
+	<li><strong>time:</strong> (optional) must contain a timestamp that is greater than the first timestamp, if this parameter is empty, the current time will be used</li>
+</ul>
+
+<p>The most common purpose for this function is to show how much time has elapsed from some point in time in the past to now.  Example:</p>
 
 <pre><code>put rigTimespan("1083241902", "1273234277") into gData["timespan"]
 </code></pre>

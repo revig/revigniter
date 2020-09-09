@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>FTP Library : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -323,8 +323,10 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Get FTP debug messages. Don't forget to set the <kbd>debug</kbd> preference to TRUE.</p>
 
-<p><em>Parameters</em><br>
-<strong>pWhichMsg:</strong> You can optionally choose between &quot;status&quot; and &quot;debug&quot;, if you leave this parameter blank you get both types of messages</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pWhichMsg:</strong> You can optionally choose between &quot;status&quot; and &quot;debug&quot;, if you leave this parameter blank you get both types of messages</li>
+</ul>
 
 <p>Example:</p>
 
@@ -340,12 +342,14 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Uploads a file to a FTP server. You must at least supply the local path and the remote path.</p>
 
-<p><em>Parameters</em><br>
-<strong>pLocalPath:</strong> The path to your local file<br>
-<strong>pRemotePath:</strong> The path to the file on your server<br>
-<strong>pData:</strong> A boolean to specify that you intend to upload data like for example a string instead of a file. This parameter is optional, the default value is FALSE<br>
-<strong>pCreateMissingDirs:</strong> An optional boolean to tell the handler that the remote path includes directories which are missing and thus need to be created prior to uploading, the default value is FALSE<br>
-<strong>pPermissions:</strong> This optional parameter should be an octal number and is used to set permissions, the default value is 0700</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pLocalPath:</strong> The path to your local file</li>
+<li><strong>pRemotePath:</strong> The path to the file on your server</li>
+<li><strong>pData:</strong> A boolean to specify that you intend to upload data like for example a string instead of a file. This parameter is optional, the default value is FALSE</li>
+<li><strong>pCreateMissingDirs:</strong> An optional boolean to tell the handler that the remote path includes directories which are missing and thus need to be created prior to uploading, the default value is FALSE</li>
+<li><strong>pPermissions:</strong> This optional parameter should be an octal number and is used to set permissions, the default value is 0700</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
@@ -363,9 +367,11 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Downloads a file from a remote server to the local server. You must supply the remote path and the local path.</p>
 
-<p><em>Parameters</em><br>
-<strong>pRemotePath:</strong> The path to the file on your server<br>
-<strong>pLocalPath:</strong> Local file path</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pRemotePath:</strong> The path to the file on your server</li>
+<li><strong>pLocalPath:</strong> Local file path</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
@@ -384,10 +390,12 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Permits you to rename or move a file. Supply the source file name/path and the new file name/path.</p>
 
-<p><em>Parameters</em><br>
-<strong>pOldFile:</strong> Old file name/path<br>
-<strong>pNewFile:</strong> New file name/path<br>
-<strong>pMissingDirs:</strong> An optional boolean to tell the handler that the new path includes directories which are missing and thus need to be created, the default value is FALSE</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pOldFile:</strong> Old file name/path</li>
+<li><strong>pNewFile:</strong> New file name/path</li>
+<li><strong>pMissingDirs:</strong> An optional boolean to tell the handler that the new path includes directories which are missing and thus need to be created, the default value is FALSE</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
 
@@ -404,8 +412,10 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Lets you delete a file. Supply the source path with the file name.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The file path</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The file path</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
 
@@ -421,10 +431,12 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Lets you delete a folder and / or sub-folders and everything a folder contains. Supply at least the source path to the directory.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The folder path<br>
-<strong>pRecursive:</strong> This optional boolean specifies if the folder should be deleted recursively (including all sub-folders), the default value is FALSE<br>
-<strong>pPurgeOnly:</strong> Use this optional boolean to specifiy that folders should be purged only and not deleted, the default value is FALSE</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The folder path</li>
+<li><strong>pRecursive:</strong> This optional boolean specifies if the folder should be deleted recursively (including all sub-folders), the default value is FALSE</li>
+<li><strong>pPurgeOnly:</strong> Use this optional boolean to specifiy that folders should be purged only and not deleted, the default value is FALSE</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
 
@@ -444,9 +456,11 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Permits you to retrieve a directory listing. You must supply the path to the desired directory.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The folder path<br>
-<strong>pSimpleList:</strong> This optional boolean lets you enable &quot;simple&quot; directory listings over FTP and SFTP, the default value is FALSE</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The folder path</li>
+<li><strong>pSimpleList:</strong> This optional boolean lets you enable &quot;simple&quot; directory listings over FTP and SFTP, the default value is FALSE</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure, otherwise on success the files list.</p>
 
@@ -462,9 +476,11 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Recursively reads a local folder including files and sub-folders and creates a mirror on the remote server. You must supply a source path and a destination path.</p>
 
-<p><em>Parameters</em><br>
-<strong>pLocalPath:</strong> The local path<br>
-<strong>pRemotePath:</strong> The remote path</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pLocalPath:</strong> The local path</li>
+<li><strong>pRemotePath:</strong> The remote path</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
@@ -483,9 +499,11 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Lets you create a directory on a remote server. Supply the path ending in the folder name you wish to create. Optionally permissions can be set by passing an octal number in the second parameter.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The path to the directory to create<br>
-<strong>pPermissions:</strong> The folder permissions (octal), this parameter is optional</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The path to the directory to create</li>
+<li><strong>pPermissions:</strong> The folder permissions (octal), this parameter is optional</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
 
@@ -502,9 +520,11 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Permits you to set file / folder permissions. Supply the path to the file / folder you wish to alter permissions on.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The path to alter permissions for<br>
-<strong>pPermissions:</strong> The file / folder permissions (octal)</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The path to alter permissions for</li>
+<li><strong>pPermissions:</strong> The file / folder permissions (octal)</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
 
@@ -521,8 +541,10 @@ put the result into gData["responseData"]</code></pre>
 
 <p>Changes the current working directory to the specified path, FTP and FTPS only.</p>
 
-<p><em>Parameters</em><br>
-<strong>pPath:</strong> The directory path</p>
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pPath:</strong> The directory path</li>
+</ul>
 
 <p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
 

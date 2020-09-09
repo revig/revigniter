@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Modules Library : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -112,7 +112,14 @@
 
 <h3>rigLoadModule <var>pModuleSegments</var></h3>
 
-<p>After loading the modules library use this handler to load module controllers (as many as you like) within an application controller or within a module. Please read about <a href="../general/modules.html#controllerSpecifications">module controller specifications</a> in the "Modules" section.<br>The parameter is the path to a module controller relative to <dfn>application/modules/</dfn> excluding the <dfn>controllers</dfn> directory. Do not include the file extension (.lc).</p> <p>In the following example this handler loads module controller <dfn>myCoolModule.lc</dfn> located in <dfn>application/modules/myCoolModule/controllers</dfn> and runs the main handler <dfn>myCoolModule</dfn>. Note: In case the controller in question is named after your module the path specified in the parameter doesn't need to include the name of the controller.</p>
+<p>After loading the modules library use this handler to load module controllers (as many as you like) within an application controller or within a module. Please read about <a href="../general/modules.html#controllerSpecifications">module controller specifications</a> in the "Modules" section.</p>
+	
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pModuleSegments:</strong> is the path to a module controller relative to <dfn>application/modules/</dfn> excluding the <dfn>controllers</dfn> directory, do not include the file extension (.lc)</li>
+</ul>
+	
+<p>In the following example this handler loads module controller <dfn>myCoolModule.lc</dfn> located in <dfn>application/modules/myCoolModule/controllers</dfn> and runs the main handler <dfn>myCoolModule</dfn>. Note: In case the controller in question is named after your module the path specified in the parameter doesn't need to include the name of the controller.</p>
 
 <pre><code class="lang-livecodeserver">rigLoadModule "myCoolModule"</code></pre>
 
@@ -129,9 +136,14 @@
 
 <h3>rigRunModule(<var>pModuleSegments</var>, <var>pParamsA</var>)</h3>
 
-<p>Returns output (a view) or a return value from a module controller. The first parameter is the path to a module controller optionally including additional segments 
-	used to pass parameter values. Please see <a href="../general/modules.html#paths">module paths</a> in the "Modules" section. The second parameter is optional and
-	is used to pass parameters as an array.</p>
+<p>Returns output (a view) or a return value from a module controller.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pModuleSegments:</strong> is the path to a module controller optionally including additional segments used to pass parameter values, please see <a href="../general/modules.html#paths">module paths</a> in the "Modules" section</li>
+	<li><strong>pParamsA:</strong> (optional) is used to pass parameters as an array</li>
+</ul>
+
 	
 <p>In the first example this function calls the default handler <dfn>myCoolModuleIndex</dfn> of controller <dfn>myCoolModule.lc</dfn> which is located 
 	in <dfn>application/modules/myCoolModule/controllers</dfn>. The view or data returned is stored in <var>gData</var>.</p>
@@ -167,8 +179,16 @@
 
 <h3>rigFetchModuleSegment(<var>pN</var>, <var>pNoResult</var>)</h3>
 
-<p>This function returns the URI segment, or URI value based on the number provided. Where <var>pN</var> is the segment number you wish to retrieve.
-	 Segments are numbered from left to right. For example, if your module URI is this:</p>
+<p>This function returns the URI segment, or URI value based on the number provided.
+	
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pN:</strong> is the segment number you wish to retrieve</li>
+	<li><strong>pNoResult:</strong> (optional) permits you to set your own default value if the segment is missing</li>
+</ul>
+	
+
+<p>Segments are numbered from left to right. For example, if your module URI is this:</p>
 
 <pre><code>myCoolModule/someModuleController/someHandler/name/joe/location/UK/gender/male</code></pre>
 
@@ -190,7 +210,7 @@
 
 <pre><code class="lang-livecodeserver">put rigFetchModuleSegment(4) && "=" && rigFetchModuleSegment(5) into tKeyValue</code></pre>
 
-<p>By default the function returns FALSE if the segment does not exist. The optional second parameter permits you to set your own default value if the segment is missing. For example, this would tell the function to return "n/a" in the event of failure:</p>
+<p>By default the function returns FALSE if the segment does not exist. Use the optional second parameter to set your own default value if the segment is missing. For example, this would tell the function to return "n/a" in the event of failure:</p>
 
 <pre><code>put rigFetchModuleSegment(5, "n/a") into tName</code></pre>
 

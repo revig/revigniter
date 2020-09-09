@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Authentication Handler Reference : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="all" />
-    <meta name="author" content="Ralf Bitter" />
-    <meta name="description" content="revIgniter User Guide" />
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter User Guide">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../../css/style-ck.css">
@@ -102,9 +102,11 @@
 
 <p>Logs the user in.</p>
 
-<p>pIdentity is a string to identify the user. Usually this is an email address or a username.<br />
-  pPassword is a password string.<br />
-  pRemember (optional) is a boolean which determines if the user wants to be remembered.</p>
+<p><em>Parameters</em></p>
+<ul><li><strong>pIdentity:</strong> is a string to identify the user. Usually this is an email address or a username</li>
+<li><strong>pPassword:</strong> is a password string</li>
+<li><strong>pRemember:</strong> (optional) is a boolean which determines if the user wants to be remembered</li>
+</ul>
 
 <p>This function returns TRUE if the user was successfully logged in, otherwise it returns FALSE.</p>
 
@@ -159,11 +161,14 @@ end logout
 
 <p>Register (create) a new user.</p>
 
-<p>pUsername is a username.<br />
-  pPassword is the user's password.<br />
-  pEmail is the user's email address.<br />
-  pExtraData (optional) is an array containing additional data like first name, last name etc.<br />
-  pGroupname (optional) is a numbered array used to define which groups the user belongs to.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pUsername:</strong> is a username</li>
+	<li><strong>pPassword:</strong> is the user's password</li>
+	<li><strong>pEmail:</strong> is the user's email address</li>
+	<li><strong>pExtraData:</strong> (optional) is an array containing additional data like first name, last name etc</li>
+	<li><strong>pGroupname:</strong> (optional) is a numbered array used to define which groups the user belongs to</li>
+</ul>
 
 <p>This function returns a user ID if the user was successfully created, otherwise it returns FALSE.</p>
 
@@ -197,10 +202,12 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 
 <p>Update user data.</p>
 
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> is the user's ID</li>
+	<li><strong>pData:</strong> is an array containing the update data</li>
+</ul>
 
-<p>pID is the user's ID.<br />
-  pData is an array containing the update data.</p>
-  
   <p>This function returns TRUE if the user was successfully updated, otherwise it returns FALSE.</p>
   
   
@@ -231,7 +238,10 @@ end if
 
 <p>Delete a user.</p>
 
-<p>The parameter is the user's ID.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> is the user's ID</li>
+</ul>
 
 <p>This function returns TRUE if the user was successfully deleted, otherwise it returns FALSE.</p>
 
@@ -255,9 +265,11 @@ end if
 
 <p>Resets the user's password by emailing the user a reset code.</p>
 
-<p>pIdentity is a string which represents the user's identity as defined in the authentication.lc config file.</p>
-
-<p>pExtraData (optional) is an array containing additional data. Currently the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+	<li><strong>pExtraData:</strong> (optional) is an array containing additional data. Currently the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password</li>
+</ul>
 
 <p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case <var>sAuthenticationConf["sendEmails"]</var> is set to FALSE.</p>
 
@@ -310,8 +322,10 @@ end if
 
 <p>Check to see if the currently logged in user is an administrator.</p>
 
-<p>The optional parameter is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
-
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used</li>
+</ul>
 <p>This function returns TRUE if the user is an admin, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
@@ -332,9 +346,11 @@ end if
 
 <p>Check if user is a member of a specific group.</p>
 
-<p>pGroup is an integer (the group ID) or a string (the group name) or an array of strings and integers.<br />
-  pID (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used.</p>
-
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pGroup:</strong> is an integer (the group ID) or a string (the group name) or an array of strings and integers</li>
+	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used</li>
+</ul>
 <p>This function returns TRUE if the user is a member of any given group, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
@@ -388,7 +404,10 @@ end if
 
 <p>Check if there is an entry in the DB regarding the username provided.</p>
 
-<p>The parameter is the user's username.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pUsername:</strong> is the user's username</li>
+</ul>
 
 <p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
 
@@ -422,8 +441,10 @@ end if
 
 <p>Check if there is an entry in the DB regarding the email address provided.</p>
 
-<p>The parameter is the user's email address.</p>
-
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pEmail:</strong> is the user's email address</li>
+</ul>
 <p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
@@ -455,10 +476,12 @@ end if
 
 <h3>rigAuthIdentityCheck( <var>pIdentity</var> )</h3>
 
-
 <p>Identity check for remembered users (auto-login).</p>
 
-<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+</ul>
 
 <p>This function returns TRUE if the user is registered, otherwise it returns FALSE.</p>
 
@@ -486,7 +509,10 @@ end if
 
 <p>If login attempt tracking is enabled, checks to see if the number of failed login attempts for this identity or ip address has been exceeded. Login attempt limits are not enforced in the library.</p>
 
-<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+</ul>
 
 <p>This function returns TRUE if maximum login attempts is exceeded, FALSE if not or if login attempts not tracked.</p>
 
@@ -508,7 +534,10 @@ end if
 
 <p>Get number of login attempts from a given ipAddress or identity.</p>
 
-<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+</ul>
 
 <p>This function returns the number of failed login attempts for this identity or ip address.</p>
 
@@ -527,7 +556,10 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>If login attempt tracking is enabled, records another failed login attempt for this identity or ip address. This function is automatically called by the rigAuthLogin() function in case the login failed.</p>
 
-<p>The parameter is a string which represents the user's identity as defined in the authentication.lc config file.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+</ul>
 
 <p>This function returns TRUE if increasing the number was successful, otherwise it returns FALSE.</p>
 
@@ -537,15 +569,20 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p>Clears all failed login attempt records for this identity or this ip address. This function is automatically called by the rigAuthLogin() function if the login succeeded.</p>
 
-<p>pIdentity is a string which represents the user's identity as defined in the authentication.lc config file.<br />
-  pExpirePeriod (optional) is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
+  <li><strong>pExpirePeriod:</strong> (optional) is the number of seconds after which all the entries of login attempts should be cleared. If set to empty, a value of 86400 ( 1 day) is used</li>
+</ul>  
 
 <h3>rigAuthUser( <var>pID</var> )</h3>
 
 <p>Get a particular user.</p>
 
-<p>The optional parameter is the user's id (integer). If a user id is not passed the id of the currently logged in user will be used.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> (optional) is the user's id (integer). If a user id is not passed the id of the currently logged in user will be used</li>
+</ul>
 
 <p>This function returns FALSE in case there is no user data with the given id, otherwise it returns the result of the database query as an array.</p>
 
@@ -572,7 +609,10 @@ end if
 
 <p>Get the users.</p>
 
-<p>The optional parameter is an array of group IDs or a single ID.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pGroupIDs:</strong> (optional) is an array of group IDs or a single ID</li>
+</ul>
 
 <p>This function returns FALSE in case there is no user data with the given group id, otherwise it returns the users who are members of the groups specified by the parameter or all users if the parameter is empty.</p>
 
@@ -608,7 +648,10 @@ end repeat
 
 <p>Get a specific group.</p>
 
-<p>The parameter is a group id.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> is a group id</li>
+</ul>
 
 <p>This function returns FALSE in case there is no group data with the given id, otherwise it returns a group, the result of the database query as a numbered array.</p>
 
@@ -673,8 +716,10 @@ end repeat
 
 <p>Get groups of a specific user.</p>
 
-<p>The optional parameter is a user's id.</p>
-
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> (optional) is a user's id</li>
+</ul>
 <p>This function returns FALSE in case the user with the given id is not a member of any group, otherwise it returns all groups the user is a member of, the result of the database query as a numbered array.</p>
 
 <p>Example:</p>
@@ -711,9 +756,12 @@ end if
 
 <p>Add user to a group.</p>
 
-<p>pGroupID is an integer, the ID of the group a user should be added to.<br />
-  pUserID is the user's ID.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pGroupID:</strong> is an integer, the ID of the group a user should be added to</li>
+  <li><strong>pUserID:</strong> is the user's ID</li>
+</ul>
+
   <p>Example:</p>
 
 
@@ -740,8 +788,11 @@ end if
 
 <p>Remove user from group.</p>
 
-<p>pGroupIDs is an array of group IDs or a single group ID.<br />
-  pUserID is the user's id.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pGroupIDs:</strong> is an array of group IDs or a single group ID</li>
+  <li><strong>pUserID:</strong> is the user's id</li>
+</ul>
 
 <p>This function returns TRUE if the user was successfully removed from the group(s), otherwise it returns FALSE.</p>
 
@@ -770,9 +821,11 @@ get rigAuthRemoveFromGroup(, tUserID)
 
 <p>Get authentication messages.</p>
 
-<p>pPrefix (optional) is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
-  pSuffix (optional) is an ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pPrefix:</strong> (optional) is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+  <li><strong>pSuffix:</strong> (optional) is an ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+</ul>  
 <p>This function returns all authentication messages as a string.</p>
 
 <p>Example:</p>
@@ -794,9 +847,12 @@ end if
 
 <p>Set the message delimiters.</p>
 
-<p>pStartDelimiter is the starting delimiter.<br />
-  pEndDelimiter is the ending delimiter.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pStartDelimiter:</strong> is the starting delimiter</li>
+  <li><strong>pEndDelimiter:</strong> is the ending delimiter</li>
+</ul>
+
 <p>Example:</p>
 
 
@@ -818,9 +874,12 @@ end if
 
 <p>Get authentication errors.</p>
 
-<p>pPrefix (optional) is the starting delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.<br />
-  pSuffix (optional) is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pPrefix:</strong> (optional) is the starting delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+  <li><strong>pSuffix:</strong> (optional) is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+</ul>
+
 <p>This function returns authentication errors as a string.</p>
 
 
@@ -842,9 +901,12 @@ end if
 
 <p>Set the message delimiters.</p>
 
-<p>pStartDelimiter is the starting delimiter.<br />
-  pEndDelimiter is the ending delimiter.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pStartDelimiter:</strong> is the starting delimiter</li>
+  <li><strong>pEndDelimiter:</strong> is the ending delimiter</li>
+</ul>
+
 <p>Example:</p>
 
 
@@ -869,8 +931,11 @@ end if
 
 <p>Get a value from the configuration settings array.</p>
 
-<p>pItem is the array key.<br />
-  pIndex (optional) is the second array key.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pItem:</strong> is the array key</li>
+  <li><strong>pIndex:</strong> (optional) is the second array key</li>
+</ul>
 
 <p>Example:</p>
 
@@ -897,9 +962,11 @@ put rigAuthFetchConfigItem("tables", "users") into tUsersTableName
 
 <p>Activate a user account.</p>
 
-<p>pID is the user's id.<br />
-  pCode (optional) is the activation code.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> is the user's id</li>
+  <li><strong>pCode:</strong> (optional) is the activation code</li>
+</ul>  
 <p>This function returns TRUE in case user activation was successful, otherwise it returns FALSE.</p>
   
 <p>Example:</p>
@@ -927,7 +994,10 @@ end if
 
 <p>Deactivate a user.</p>
 
-<p>The parameter is the user's id.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pID:</strong> is the user's id</li>
+</ul>
 
 <p>This function returns TRUE in case user deactivation was successful, otherwise it returns FALSE.</p>
 
@@ -947,7 +1017,10 @@ end if
 
 <p>Check the code used to reset a password.</p>
 
-<p>The parameter is the "forgotten password" code.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pCode:</strong> is the "forgotten password" code</li>
+</ul>
 
 <p>This function returns user data as an array in case the provided code was checked successfully, otherwise it returns FALSE.</p>
 
@@ -971,7 +1044,10 @@ put rigAuthForgottenPasswordCheck(tForgottenPasswordCode) into tUser
 
 <p>Delete the forgotten password code.</p>
 
-<p>The parameter is the code used to reset a password.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pCode:</strong> is the code used to reset a password</li>
+</ul>
 
 <p>This function returns TRUE in case the code used to reset a password was deleted successfully, otherwise it returns FALSE.</p>
 
@@ -993,9 +1069,12 @@ end if
 
 <p>Replace password with a new one.</p>
 
-<p>pIdentity is the user's email address or whatever is used to identify a user.<br />
-  pNewPassword is the new password.</p>
-  
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is the user's email address or whatever is used to identify a user</li>
+  <li><strong>pNewPassword:</strong> is the new password</li>
+</ul>
+
 <p>This function returns TRUE in case the old password was replaced successfully, otherwise it returns FALSE.</p>
 
 <p>Example:</p>
@@ -1016,11 +1095,13 @@ put rigAuthResetPassword(tIdentity, rigVarPOST("newPassword")) into tChange
 
 <p>Validate and change a password.</p>
 
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pIdentity:</strong> is the user's email address or whatever is used to identify a user</li>
+  <li><strong>pOldPassword:</strong> is the old password</li>
+  <li><strong>pNewPassword:</strong> is the new password</li>
+</ul>
 
-<p>pIdentity is the user's email address or whatever is used to identify a user.<br />
-  pOldPassword is the old password.<br />
-  pNewPassword is the new password.</p>
-  
 <p>This function returns TRUE in case the password was changed successfully, otherwise it returns FALSE.</p>  
 
 

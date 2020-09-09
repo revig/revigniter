@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>URL Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -168,15 +168,14 @@ put rigASiteURL(tSegments) into tURL</code></pre>
 
 <pre><code>rigAnchor(<var>uri segments</var>, <var>text</var>, <var>attributes</var>)</code></pre>
 
-<p>The first parameter can contain any segments you wish appended to the URL.  As with the <dfn>rigASiteURL()</dfn> function above,
-segments can be a string or an array. Of course you can link to external URLs too if you use full URLs like "http://external-example.com/segment/" for the first parameter.</p>
-
-<p><strong>Note:</strong>&nbsp; If you are building links that are internal to your application do not include the base URL (http://...).  This
-will be added automatically from the information specified in your config file. Include only the URI segments you wish appended to the URL.</p>
-
-<p>The second segment is the text you would like the link to say.  If you leave it blank, the URL will be used.</p>
-
-<p>The third parameter can contain a list of attributes you would like added to the link.  The attributes can be a simple string or an associative array.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>uri segments:</strong> (optional) can contain any segments you wish appended to the URL, as with the <dfn>rigASiteURL()</dfn> function above,
+segments can be a string or an array, of course you can link to external URLs too if you use full URLs like "http://external-example.com/segment/" for the first parameter. <strong>Note:</strong>&nbsp; If you are building links that are internal to your application do not include the base URL (http://...).  This
+will be added automatically from the information specified in your config file. Include only the URI segments you wish appended to the URL.</li>
+	<li><strong>text:</strong> (optional) is the text you would like the link to say, if you leave it blank, the URL will be used</li>
+	<li><strong>attributes:</strong> (optional) can contain a list of attributes you would like added to the link, the attributes can be a simple string or an associative array</li>
+</ul>
 
 <p>Here are some examples:</p>
 
