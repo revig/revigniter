@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>revIgniter Cheatsheets : revIgniter User Guide</title>
+		<title>Upgrading from 2.1.7 to 2.1.8 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all">
 		<meta name="author" content="Ralf Bitter" >
@@ -66,7 +66,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="https://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">revIgniter Cheatsheets</li>
+			 		 	<li class="active">Upgrading from 2.1.7 to 2.1.8</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -93,17 +93,51 @@
 	
 <div id="content">
 
-<h1>revIgniter Cheatsheets</h1>
-
-<h2>Library Reference</h2>
+<h1>Upgrading from 2.1.7 to 2.1.8</h1>
 
 
-<div class="clearfix"><a href="../images/revIgniter2.1.5LibraryReference.pdf" target="_blank"><img src="../images/revIgniter2.1.5LibraryReference.png" class="img-responsive pull-left" border="0" alt="revIgniter Library Reference" /></a></div>
-
-<h2>Helper Reference</h2>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
 
 
-<div class="clearfix"><a href="../images/revIgniter2.1.5HelperReference.pdf" target="_blank"><img src="../images/revIgniter2.1.5HelperReference.png" class="img-responsive pull-left" border="0" alt="revIgniter Helper Reference" /></a></div>
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+<p>Replace these files in your "system/libraries" folder with the new versions:</p>
+
+<ul>
+	<li><dfn>Encrypt.livecodescript</dfn></li>
+	<li><dfn>Input.livecodescript</dfn></li>
+	<li><dfn>Useragent.livecodescript</dfn></li>
+</ul>
+
+
+<p>Replace this file in your "system/helpers" folder with the new version:</p>
+
+<ul>
+	<li><dfn>otpHelper.livecodescript</dfn></li>
+</ul>
+
+
+<p>Replace this file in your "application/config" folder with the new version:</p>
+
+<ul>
+	<li><dfn>mimes.lc</dfn></li>
+</ul>
+
+
+
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
+
 
 </div>
 <!-- END CONTENT -->
@@ -114,11 +148,11 @@
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp;<a href="at_a_glance.html">revIgniter at a Glance</a>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
 <span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="features.html">revIgniter Features</a>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
 </p>
 <p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2020<span class="separator"> :: </span><a href="https://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
 	</div>

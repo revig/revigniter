@@ -37,7 +37,14 @@ Use tables where appropriate for long lists of preferences.
 
 ### rigFooFunction(<var>tParam1</var>, <var>tParam2</var>, <var>tParam3</var>)
 
-Description
+Description  
+
+*Parameters*  
+
+- **tParam1:** info
+- **tParam2:** info
+- **tParam3:** info
+
 
 Example:  
 
