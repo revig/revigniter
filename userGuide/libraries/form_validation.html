@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Form Validation : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="all" />
-    <meta name="author" content="Ralf Bitter" />
-    <meta name="description" content="revIgniter User Guide" />
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter User Guide">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -552,7 +552,7 @@ end index
 
 
 <div class="codeSample">
-<pre><code>&lt;head>
+<pre><code class="language-livecodeserver">&lt;head>
 &lt;title>My Form&lt;/title>
 &lt;/head>
 &lt;body>
@@ -1422,12 +1422,27 @@ put the result into tStringValidResult
 
 <h3>rigAddValidationGrp <var>pGroup</var></h3>
 
-<p>Defines a group name for a set of validation rules used in a validation configuration file, see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>. The "pGroup" parameter is optional. If you neither want to specify a group nor an associated controller handler you can omit it.</p>
+<p>Defines a group name for a set of validation rules used in a validation configuration file, see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a></p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pGroup:</strong> (optional) is the group name, if you neither want to specify a group nor an associated controller handler you can omit it</li>
+</ul>
 
 
 <h3>rigAddValidationRules <var>pField</var>, <var>pLabel</var>, <var>pRules</var>, <var>pConfArray</var></h3>
 
-<p>Adds rules to a validation array in a configuration file. The first parameter is the name of the form field. The second parameter specifies a form field label used for example in error messages to identify a field. The third parameter includes all required rules. The fourth parameter is the name of your validation array variable used in your validation config file.  Please see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
+<p>Adds rules to a validation array in a configuration file.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pField:</strong> is the name of the form field</li>
+	<li><strong>pLabel:</strong> specifies a form field label used for example in error messages to identify a field</li>
+	<li><strong>pRules:</strong> includes all required rules</li>
+	<li><strong>pConfArray:</strong> is the name of your validation array variable used in your validation config file</li>
+</ul>
+
+<p>Please see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
 
 
 <h3>rigFormValidRun()</h3>
@@ -1441,10 +1456,16 @@ group via the function, as described in: <a href="#savingtoconfig">Saving Groups
 <p>Permits you to set custom error messages.  See <a href="#settingerrors">Setting Error Messages</a> above.</p>
 
 
-<h3>rigSetPrefilledValues pPrefilledValues</h3>
+<h3>rigSetPrefilledValues <var>pPrefilledValues</var></h3>
 
 <p>This command is needed if you use any prefilled form fields in combination with the rigRequiredR validation rule so that
   the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma delimited list or in an array.</p>
+	
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pPrefilledValues:</strong> the prefilled values</li>
+</ul>
+
   
 <p>Let's say the default values of your form fields are "First Name", "Last Name" and "name@any.com". Then you would store these
   values in a validator variable like in the following example:</p>
@@ -1488,6 +1509,12 @@ rigSetPrefilledValues tPrefilledArray
 
 <p>Use this handler to change error delimiters globally in your controller. Please see the <a href="#errordelimiters">Changing the Error Delimiters</a> section above.</p>
 
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pOpenTag:</strong> the opening tag</li>
+	<li><strong>pCloseTag:</strong> the closing tag</li>
+</ul>
+
 
 
 <h3>rigSetValue()</h3>
@@ -1514,7 +1541,7 @@ put rigSetSelect("mySelect", "three") into gData["mySelectThree"]
 
 <p>Your view file should look like this:</p>
 
-<pre><code>&lt;select name="mySelect">
+<pre><code class="language-livecodeserver">&lt;select name="mySelect">
 &lt;option value="one" [[gData["mySelectOne"]]] >One</option>
 &lt;option value="two" [[gData["mySelectTwo"]]] >Two</option>
 &lt;option value="three" [[gData["mySelectThree"]]] >Three</option>

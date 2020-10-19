@@ -6,9 +6,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <title>Asset Helper : revIgniter User Guide</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="robots" content="all" />
-        <meta name="author" content="Ralf Bitter" />
-        <meta name="description" content="revIgniter User Guide" />
+        <meta name="robots" content="all">
+        <meta name="author" content="Ralf Bitter" >
+        <meta name="description" content="revIgniter User Guide">
 
         <!-- Bootstrap -->
         <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -40,7 +40,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
                 </div>
 
                 <div class="collapse navbar-collapse">
@@ -155,12 +155,13 @@
                 <h3>rigCssAsset(<var>tAsset</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
                 <p>Generates a css asset location html code.</p>
-
+								
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tAsset</var>) is the name of your CSS file like myCSS.css. Assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myCSS.css. These folders would be located in assets/css.</li>
-									<li>The second optional parameter (<var>tAttributes</var>) is an array of attributes.</li>
-									<li>The third optional parameter (<var>tModule</var>) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li>
-									<li>The fourth optional parameter (<var>tCacheBuster</var>) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</li>
+									<li><strong>tAsset:</strong> is the name of your CSS file like myCSS.css, assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myCSS.css, these folders would be located in assets/css</li>
+									<li><strong>tAttributes:</strong> (optional) is an array of attributes</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
                 <p>Here is an example for the header section in your view file:</p>
@@ -170,9 +171,10 @@
                 <h3>rigDynamicCssAsset(<var>tRawCSS</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
                 <p>Simple CSS preprocessor which dynamically generates a CSS file and the corresponding CSS asset location html code. This function is primarily intended to be used to apply cache busting to images referenced in CSS files.</p>
-
+								
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tRawCSS</var>) is the name of your CSS file containing variables enclosed in double square brackets that correspond to array keys in the global array variable gData.</li>
+									<li><strong>tRawCSS:</strong> is the name of your CSS file containing variables enclosed in double square brackets that correspond to array keys in the global array variable gData</li>
 									<li>The meaning of the second (<var>tAttributes</var>), third (<var>tModule</var>) and fourth (<var>tCacheBuster</var>) parameter is identical to those of the <kbd>rigCssAsset()</kbd> function above.</li>
 							</ul>
 
@@ -238,10 +240,12 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
                 <h3>rigImgAssetURL(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
                 <p>Used mainly in conjunction with the rigDynamicCssAsset() function to generate image URLs as values for the gData array variable.</p>
+								
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tAsset</var>) is the name of your image file like myPic.jpg. Assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img.</li>
-									<li>The second parameter (<var>tModule</var>) is optional, it is the name of the folder where you store all your assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li> 
-									<li>The third optional parameter (<var>tCacheBuster</var>) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above). See usage in the example above.</li>
+									<li><strong>tAsset:</strong> is the name of your image file like myPic.jpg, assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg, these folders would be located in assets/img</li>
+									<li><strong>tModule:</strong> (optional) is the name of the folder where you store all your assets for the current page if you like to organize assets for different pages in separate folders this folder should be located in a "modules" folder, which is located in the "assets" folder"</li> 
+									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above), see usage in the example above</li>
 							</ul>
 
 
@@ -249,11 +253,12 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 
                 <p>Generates image asset location html code.</p>
 
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tAsset</var>) is the name of your image file like myPic.jpg. Assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg. These folders would be located in assets/img.</li>
-									<li>The second optional parameter (<var>tAttributes</var>) is an array of attributes.</li>
-									<li>The third optional parameter (<var>tModule</var>) a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li>
-									<li>The fourth optional parameter (<var>tCacheBuster</var>) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</li>
+									<li><strong>tAsset:</strong> is the name of your image file like myPic.jpg, assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg, these folders would be located in assets/img</li>
+									<li><strong>tAttributes:</strong> (optional) is an array of attributes</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
                 <p>Example:</p>
@@ -270,12 +275,13 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <p>Generates JavaScript asset location html code.</p>
 
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tAsset</var>) is the name of your Javascript file like myScript.js. Assets can be nested in folders, then the value of this 											parameter looks like: myFirstFolder/mySecondFolder/myScript.js. These folders would be located in assets/js.</li>
-                   	<li>The second optional parameter (<var>tModule</var>) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li>
-									<li>The third optional parameter (<var>tCacheBuster</var>) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</li>
-									<li>The optional fourth parameter (<var>tAttribute</var>) is an async and / or defer script attribute.</li>
-									<li>The optional fifth parameter (<var>pNonce</var>) is a Content Security Policy nonce.</li>
+									<li><strong>tAsset:</strong> is the name of your Javascript file like myScript.js, assets can be nested in folders, then the value of this 											parameter looks like: myFirstFolder/mySecondFolder/myScript.js, these folders would be located in assets/js</li>
+                   	<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
+									<li><strong>tAttribute:</strong> (optional) is an async and / or defer script attribute</li>
+									<li><strong>pNonce:</strong> (optional) is a Content Security Policy nonce</li>
 							</ul>
 
                 <p>Here is an example for your view file:</p>
@@ -289,12 +295,13 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <h3>rigJsAsset(<var>tGoogleApisAsset</var>, <var>tModule</var>, <var>tLocalFallbackAsset</var>, <var>tAttribute</var>, <var>pNonce</var>)</h3>
 
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>If you want to use the Google Apis CDN to serve an open-source JavaScript library you can do so by setting the first parameter (<var>tGoogleApisAsset</var>) of the rigJsAsset() function to a value like: jsGoogleapis-&lt;name&gt;-&lt;version&gt;.</li>
-									<li>The second optional parameter (<var>tModule</var>) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li>
-									<li>The optional third parameter (<var>tLocalFallbackAsset</var>) is the name of a JavaScript file on your server which serves as a fallback in case a connection to the Google content distribution network is not possible.</li>
-									<li>The optional fourth parameter (<var>tAttribute</var>) is an async and / or defer script attribute.</li>
-									<li>The optional fifth parameter (<var>pNonce</var>) is a Content Security Policy nonce.</li>
+									<li><strong>tGoogleApisAsset:</strong> if you want to use the Google Apis CDN to serve an open-source JavaScript library you can do so by setting this parameter to a value like: jsGoogleapis-&lt;name&gt;-&lt;version&gt;</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tLocalFallbackAsset:</strong> (optional) is the name of a JavaScript file on your server which serves as a fallback in case a connection to the Google content distribution network is not possible</li>
+									<li><strong>tAttribute:</strong> (optional) is an async and / or defer script attribute</li>
+									<li><strong>pNonce:</strong> (optional) is a Content Security Policy nonce</li>
 									</ul>
 									
 							<p>Examples:</p>
@@ -312,9 +319,10 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <p>Generates a link tag using the base url that points to favicon. Use this function, if your favicon is not located at your root. Put it in <dfn>assets/img</dfn>.</p>
 
+								<p><em>Parameters</em></p>
 							<ul>
-                    <li>The first optional parameter (<var>tModule</var>) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders. This folder should be located in a "modules" folder, which is located in the "assets" folder".</li>
-                    <li>The second optional parameter (<var>tCacheBuster</var>) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above).</li>
+                    <li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+                    <li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
                 <p>Here is an example for your view file:</p>
@@ -326,13 +334,14 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <p>Generates a manifest file used to store resources in the HTML5 application cache.</p>
 
+								<p><em>Parameters</em></p>
                 <ul>
-									<li>The first parameter (<var>tResourcesDir</var>) is a root relative path to resources you want to be cached.</li>
-									<li>The second parameter (<var>tManifestName</var>) is the name of the manifest file to be generated.</li>
-									<li>The optional third parameter (<var>tUseAbsoluteURI</var>) is a boolean which determines whether to write absolute URIs. Defaults to FALSE.</li>
-									<li>The optional fourth parameter (<var>tResourcesOnlineOnly</var>) is either an array or a comma delimited list of file names of assets which should not be cached. These names represent the NETWORK section of the manifest to be built. Use pure file names here without paths.</li>
-									<li>The optional fifth parameter (<var>tFallbackResources</var>) is an array of pairs of root relative paths used to build the FALLBACK section of the manifest. The array key describes the preferred URL for a resource to be cached, whereas the array value is a fallback URL to use if the file is inaccessible using the first URL.</li>
-									<li>Use the optional sixth parameter (<var>tDirToIgnore</var>) to define a directory containing assets which you don't want to be cached.</li>
+									<li><strong>tResourcesDir:</strong> is a root relative path to resources you want to be cached</li>
+									<li><strong>tManifestName:</strong> is the name of the manifest file to be generated</li>
+									<li><strong>tUseAbsoluteURI:</strong> (optional) is a boolean which determines whether to write absolute URIs. Defaults to FALSE</li>
+									<li><strong>tResourcesOnlineOnly:</strong> (optional) is either an array or a comma delimited list of file names of assets which should not be cached, these names represent the NETWORK section of the manifest to be built, use pure file names here without paths</li>
+									<li><strong>tFallbackResources:</strong> (optional) is an array of pairs of root relative paths used to build the FALLBACK section of the manifest, the array key describes the preferred URL for a resource to be cached, whereas the array value is a fallback URL to use if the file is inaccessible using the first URL</li>
+									<li><strong>tDirToIgnore:</strong> (optional) is used to define a directory containing assets which you don't want to be cached</li>
 							</ul>
 
                 <p>Example:</p>

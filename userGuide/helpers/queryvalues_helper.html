@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>QueryValues Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -108,7 +108,15 @@
 
 <h3>rigQueryValues(<var>pResult</var>, <var>pKeyValueDelimiter</var>, <var>pRecordDelimiter</var>, <var>pFieldnames</var>)</h3>
 
-<p>The first parameter is a database query result. The second parameter defines the key value delimiter (defaults to " => "). The third parameter defines the record delimiter (defaults to ", "). If you leave the second and third parameters blank the default values are used. "&lt;>" as the second parameter specifies, that you want to omit the array keys and retrieve the values only. The optional fourth parameter is an array containing the field names of the database table. Example:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pResult:</strong> is a database query result</li>
+	<li><strong>pKeyValueDelimiter:</strong> (optional) defines the key value delimiter (defaults to " => "), using "&lt;>" specifies, that you want to omit the array keys and retrieve the values only</li>
+	<li><strong>pRecordDelimiter:</strong> (optional) defines the record delimiter (defaults to ", ")</li>
+	<li><strong>pFieldnames:</strong> (optional) is an array containing the field names of the database table</li>
+</ul>
+
+<p>Example:</p>
 
 
 

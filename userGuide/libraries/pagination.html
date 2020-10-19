@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Pagination Library : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="all" />
-    <meta name="author" content="Ralf Bitter" />
-    <meta name="description" content="revIgniter User Guide" />
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter User Guide">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -490,7 +490,12 @@ rigRunInitialPaginationConfig sConfig
 
 <h3>rigInitializePagination <var>pConfig</var></h3>
 
-<p>Run initial configuration procedures. The parameter is an array containing your configuration settings.</p>
+<p>Run initial configuration procedures.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pConfig:</strong> is an array containing your configuration settings</li>
+</ul>
 
 
 <h3>rigCreatePaginationLinks()</h3>
@@ -500,13 +505,23 @@ rigRunInitialPaginationConfig sConfig
 
 <h3>rigAjaxPagination <var>pPaginationData</var>, <var>pPaginationLinks</var></h3>
 
-<p>Build and send JSON data used by the AJAX pagination script. The fist parameter contains the current data to be displayed. The second parameter contains the current pagination links.</p>
+<p>Build and send JSON data used by the AJAX pagination script.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pPaginationData:</strong> contains the current data to be displayed</li>
+	<li><strong>pPaginationLinks:</strong> contains the current pagination links</li>
+</ul>
 
 
 <h3>rigAjaxPaginationCode(<var>pNonce</var>)</h3>
 
-<p>Generates and returns the AJAX pagination JavaScript code. The parameter, a Content Security Policy nonce, is optional.</p>
+<p>Generates and returns the AJAX pagination JavaScript code.</p>
 
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pNonce:</strong> (optional) is a Content Security Policy nonce</li>
+</ul>
 
 </div>
 <!-- END CONTENT -->

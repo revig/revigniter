@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Query Helper Handlers : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -145,7 +145,15 @@ put tURL into tArray["url"]
 put rigDbInsertString("tablename", tArray) into tStr
 </code></pre>
 
-<p>The first parameter is the table name, the second is an associative array with the data to be inserted.  The above example produces:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pTable:</strong> is the table name</li>
+	<li><strong>pDataA:</strong> is an associative array with the data to be inserted</li>
+</ul>
+
+<p>The example above produces:</p>
+
+
 <pre><code>INSERT INTO tablename (name, email, url) VALUES ('Rick', 'rick@example.com', 'example.com')</code></pre>
 
 <p class="important"><strong>Note:</strong> Values are automatically escaped, producing safer queries.</p>
@@ -164,7 +172,15 @@ put "authorID = 1 AND status = 'active'" into tWhere
 put rigDbUpdateString("tablename", tData, tWhere) into tStr
 </code></pre>
 
-<p>The first parameter is the table name, the second is an associative array with the data to be updated, and the third parameter is the "where" clause which can be a string or an associative array. The above example produces:</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pTable:</strong> is the table name</li>
+	<li><strong>pDataA:</strong> is an associative array with the data to be updated</li>
+	<li><strong>pWhere:</strong> is the "where" clause which can be a string or an associative array</li>
+</ul>
+
+<p>The example above produces:</p>
+
 <pre><code> UPDATE tablename SET name = 'Rick', email = 'rick@example.com', url = 'example.com' WHERE authorID = 1 AND status = 'active'</code></pre>
 
 <p class="important"><strong>Note:</strong> Values are automatically escaped, producing safer queries.</p>
@@ -178,7 +194,10 @@ put rigSqlDateTimeToIntDate(tDateTime) into gData["dateTime"]
 -- the value of gData["dateTime"] is: Mon, 27 Jun 2016 15:45:30 +0200
 </code></pre>
 
-<p>The parameter is a SQL DATETIME date and time value.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pDateTime:</strong> is a SQL DATETIME date and time value</li>
+</ul>
 
 
 </div>

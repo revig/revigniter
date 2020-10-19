@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>JQuery Library : revIgniter User Guide</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="all" />
-    <meta name="author" content="Ralf Bitter" />
-    <meta name="description" content="revIgniter User Guide" />
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter User Guide">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -590,9 +590,18 @@ put the result into gData["JQscript"]
 <pre><code>rigJQajaxForm "'#submitBtn'", "'#formField'", "'myController/addDataHandler'", TRUE, "'myController/viewHandler'", "'#content'"
 </code></pre>
 
-<p>The first parameter is a selector tied to the form submit button. The second parameter is a comma delimited list of selectors of form elements. The third parameter specifies the URI to post the data to. The optional fourth parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional fifth parameter specifies the URI, which is responsibel for loading a view containing result data. The optional sixth parameter specifies the selector of an object, which acts as a container for the result data returned by the controller.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>submitBtnSelector:</strong> is a selector tied to the form submit button</li>
+	<li><strong>selectorList:</strong> is a comma delimited list of selectors of form elements</li>
+	<li><strong>postURI:</strong> specifies the URI to post the data to</li>
+	<li><strong>preventDefault:</strong> (optional) is a boolean used to prevent the default action of the event to be triggered, default is TRUE</li>
+	<li><strong>dataToLoadURI:</strong> (optional) specifies the URI, which is responsibel for loading a view containing result data</li>
+	<li><strong>dataContainerSelector:</strong> (optional) specifies the selector of an object, which acts as a container for the result data returned by the controller</li>
+</ul>
 
 <p class="important"><strong>Note:</strong> This handler assumes, that IDs and names of form elements are identical.</p>
+
 
 <h3>rigJQeventAlert <var>selector</var>, <var>event</var>, <var>alert</var>, <var>preventDefault</var>, <var>eventData</var></h3>
 
@@ -601,7 +610,14 @@ put the result into gData["JQscript"]
 <pre><code>rigJQeventAlert "a", "click", "'As you can see, this link no longer takes you to revIgniter.com'", TRUE
 </code></pre>
 
-<p>The first parameter specifies a selector, the second an event type. Third parameter determines the alert to be displayed. This can be a string or the eventData parameter of the event object. This data can be passed to jQuery with the fifth parameter. The optional fourth parameter is a boolean used to prevent the default action of the event to be triggered if set to TRUE.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> specifies a selector</li>
+	<li><strong>event:</strong> specifies an event type</li>
+	<li><strong>alert:</strong> determines the alert to be displayed, this can be a string or the eventData parameter of the event object which can be passed to jQuery with the fifth parameter</li>
+	<li><strong>preventDefault:</strong> (optional) is a boolean used to prevent the default action of the event to be triggered if set to TRUE</li>
+	<li><strong>eventData:</strong> (optional) data passed to jQuery, see the third parameter</li>
+</ul>
 
 <p>Here is another example showing how to use the optional fifth parameter:</p>
 
@@ -615,36 +631,66 @@ rigJQeventAlert "'#testObject'", "'click'", "event.data.msg", , "msg: message"
 
 <h3>rigJQalert <var>alert</var></h3>
 
-<p>This handler writes a simple alert statement. The parameter is a string to be displayed as alert.</p>
+<p>This handler writes a simple alert statement.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>alert:</strong> is a string to be displayed as alert</li>
+</ul>
 
 <h3>rigJQalertR(<var>alert</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQalert), but instead of adding the statement to the script, it returns it.</p>
 
+
 <h3>rigJQconfirm <var>varName</var>, <var>question</var>, <var>global</var></h3>
 
-<p>Adds a statement, which displays a JavaScript confirmation box and stores the returned value in a variable. The first parameter is the name of the variable. The second parameter is the question to be asked and the third parameter is a boolean, which specifies if it is a global variable. </p>
+<p>Adds a statement, which displays a JavaScript confirmation box and stores the returned value in a variable.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>varName:</strong> is the name of the variable</li>
+	<li><strong>question:</strong> is the question to be asked</li>
+	<li><strong>global:</strong> is a boolean, which specifies if it is a global variable</li>
+</ul>
 
 <h3>rigJQconfirmR(<var>varName</var>, <var>question</var>, <var>global</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQconfirm), but instead of adding the statement to the script, it returns it.</p>
 
+
 <h3>rigJQprompt <var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var></h3>
 
-<p>Adds a statement, which displays a JavaScript prompt box and stores the input value in a variable. The first parameter is the name of the variable. The second parameter is the prompt. The optional third parameter is the default value and the optional fourth parameter is a boolean, which specifies if the variable, the input value is stored in, should be global.</p>
+<p>Adds a statement, which displays a JavaScript prompt box and stores the input value in a variable.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>varName:</strong> is the name of the variable</li>
+	<li><strong>prompt:</strong> is the prompt</li>
+	<li><strong>default:</strong> (optional) is the default value</li>
+	<li><strong>global:</strong> (optional) is a boolean, which specifies if the variable, the input value is stored in, should be global</li>
+</ul>
 
 <h3>rigJQpromptR(<var>varName</var>, <var>prompt</var>, <var>default</var>, <var>global</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQprompt), but instead of adding the statement to the script, it returns it.</p>
 
-<h3>rigJQset <var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var></h3>
+
+<h3>rigJQset <var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>toggleClassSwitch</var></h3>
 
 <p>Permits you to write all sorts of jQuery setter statements, which manipulate the DOM in some manner. Example:</p>
 
 <pre><code class="lang-livecodeserver">rigJQset "'p:last'", "addClass", "'selected'"
 </code></pre>
 
-<p>The first parameter specifies a selector, the second a jQuery method. The third parameter contains the values to be set. Depending on the specified method, these can be a string, an array, a comma delimited list or a function returning the content to set. The optional fourth parameter, a boolean, tells the handler to treat the Propertyvalues parameter as function. The optional fifth parameter is only used by the toggleClass method. It is a boolean to determine whether the class should be added or removed.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> specifies a selector</li>
+	<li><strong>method:</strong> specifies a jQuery method</li>
+	<li><strong>propertyValues:</strong> contains the values to be set, depending on the specified method, these can be a string, an array, a comma delimited list or a function returning the content to set</li>
+	<li><strong>function:</strong> (optional) is a boolean which tells the handler to treat the propertyValues parameter as function</li>
+	<li><strong>toggleClassSwitch:</strong> (optional) is only used by the toggleClass method, it is a boolean to determine whether the class should be added or removed</li>
+</ul>
 
 <p>Here is another example, which shows the use of a function as property value:</p>
 
@@ -655,9 +701,10 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 <p class="important"><strong>Note:</strong> To reference the function arguments for index positions of elements in a set and for old values, always use the terms "index" and "oldVal".</p>
 
 
-<h3>rigJQsetR(<var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>ToggleClassSwitch</var>)</h3>
+<h3>rigJQsetR(<var>selector</var>, <var>method</var>, <var>propertyValues</var>, <var>function</var>, <var>toggleClassSwitch</var>)</h3>
 
 <p>This function does the same as it's equivalent handler (JQset), but instead of adding the statement to the script, it returns it.</p>
+
 
 <h3>rigJQgetR(<var>selector</var>, <var>method</var>, <var>getterProp</var>)</h3>
 
@@ -666,10 +713,15 @@ rigJQset "'p:last'", "addClass", tSetterData, TRUE
 <pre><code class="lang-livecodeserver">rigJQgetR("'#userinput'", "attr", "'value'")
 </code></pre>
 
-<p>The first parameter specifies a selector, the second a jQuery method. Use the optional third parameter to determine the property to get.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> specifies a selector</li>
+	<li><strong>method:</strong> specifies a jQuery method</li>
+	<li><strong>getterProp:</strong> (optional) used to determine the property to get</li>
+</ul>
 
 
-<h3>rigJQeventOpen <var>selector</var>, <var>event</var>, <var>preventDefault</var>, <var>eventData</var>, <var>eventObject</var>, <var>FunctionArguments</var></h3>
+<h3>rigJQeventOpen <var>selector</var>, <var>event</var>, <var>preventDefault</var>, <var>eventData</var>, <var>eventObject</var>, <var>functionArguments</var></h3>
 
 <p>This tells the library to start writing statements registering behaviors to take effect when the user interacts with the browser. Example:</p>
 
@@ -681,7 +733,15 @@ rigJQeventClose
 </code></pre>
 </div>
 
-<p>The first parameter specifies a selector, the second a JavaScript event. The optional third parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional fourth parameter contains data passed to the function. The optional fifth parameter is a function to execute each time the event is triggered. The optional sixth parameter contains additional function arguments.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> specifies a selector</li>
+	<li><strong>event:</strong> specifies a JavaScript event</li>
+	<li><strong>preventDefault:</strong> (optional) is a boolean used to prevent the default action of the event to be triggered, default is TRUE</li>
+	<li><strong>eventData:</strong> (optional) contains data passed to the function</li>
+	<li><strong>eventObject:</strong> (optional) is a function to execute each time the event is triggered</li>
+	<li><strong>functionArguments:</strong> (optional) contains additional function arguments</li>
+</ul>
 
 <p>Here is another example demonstrating the use of additional function arguments:</p>
 
@@ -711,7 +771,16 @@ rigJQeventClose
 <pre><code class="lang-livecodeserver">rigJQeventEffect "'#hideBtn'", "'#hideDiv'", "'click'", "hide", "'slow'", , rigJQeffectR("'a'", "hide")
 </code></pre>
 
-<p>The first parameter specifies an object, which triggers the event, the second determines the object the effect is applied to. The third parameter is an event type. The fourth parameter specifies an effect method. The optional fifth parameter is used to set effect parameters. The optional sixth parameter is a boolean used to prevent the default action of the event to be triggered, default is TRUE. The optional seventh parameter contains a function to call once the animation is complete.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>triggerSelector:</strong> specifies an object, which triggers the event</li>
+	<li><strong>targetSelector:</strong> determines the object the effect is applied to</li>
+	<li><strong>event:</strong> is an event type</li>
+	<li><strong>effect:</strong> specifies an effect method</li>
+	<li><strong>parameter:</strong> (øptional) is used to set effect parameters</li>
+	<li><strong>preventDefault:</strong> (optional) is a boolean used to prevent the default action of the event to be triggered, default is TRUE</li>
+	<li><strong>callback:</strong> (optional) contains a function to call once the animation is complete</li>
+</ul>
 
 <p>Here is another example:</p>
 
@@ -726,7 +795,13 @@ rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", ,
 <pre><code class="lang-livecodeserver">rigJQeffect "'a'", "hide", "'slow'"
 </code></pre>
 
-<p>The first parameter determines the object the effect is applied to. The second specifies the effect. The optional third parameter is used to set the effect duration and the optional fourth parameter contains a function to call once the animation is complete.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> determines the object the effect is applied to</li>
+	<li><strong>effect:</strong> specifies the effect</li>
+	<li><strong>duration:</strong> (optional) is used to set the effect duration</li>
+	<li><strong>callback:</strong> (optional) contains a function to call once the animation is complete</li>
+</ul>
 
 <p class="important"><strong>Note:</strong> Don't use "animate" as effect. There is a special rigJQanimate handler for this type of effect.</p>
 
@@ -734,7 +809,7 @@ rigJQeventEffect "'#showBtn'", "'#showDiv'", "'click'", "slideDown", "'slow'", ,
 
 <p>This function does the same as it's equivalent handler (JQeffect), but instead of adding the statement to the script, it returns it.</p>
 
-<h3>rigJQeventAnim <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>properties</var>, <var>Duration</var>, <var>Easing</var>, <var>Callback</var></h3>
+<h3>rigJQeventAnim <var>triggerSelector</var>, <var>targetSelector</var>, <var>event</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var></h3>
 
 <p>Permits you to perform a custom animation of a set of CSS properties on various events. Example:</p>
 
@@ -748,7 +823,16 @@ rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 </code></pre>
 </div>
 
-<p>The first parameter specifies an object, which triggers the event, the second determines the object the animation is applied to. The third parameter specifies the event and the fourth the CSS properties to be animated. Put these into an array. The optional fifth parameter sets the animation duration, this can be an integer, a string or an array. The optional sixth parameter contains a string indicating which easing function to use for the animation. The optional seventh parameter contains a function to call once the animation is complete.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>triggerSelector:</strong> specifies an object, which triggers the event</li>
+	<li><strong>targetSelector:</strong> determines the object the animation is applied to</li>
+	<li><strong>event:</strong> specifies the event</li>
+	<li><strong>properties:</strong> specifies the CSS properties to be animated, put these into an array</li>
+	<li><strong>duration:</strong> (optional) sets the animation duration, this can be an integer, a string or an array</li>
+	<li><strong>easing:</strong> (optional) contains a string indicating which easing function to use for the animation</li>
+	<li><strong>callback:</strong> (optional) contains a function to call once the animation is complete</li>
+</ul>
 
 <p class="important"><strong>Note:</strong> Use an array for duration if you need to set more properties than the duration only. To provide other easing functions than the default "swing" for animation you need additional Jquery plugins.</p>
 
@@ -756,7 +840,14 @@ rigJQeventAnim "'#go'", "'#block'", "click", tAnimProps, "1500"
 
 <p>Permits you to perform a custom animation of a set of CSS properties.</p>
 
-<p>The first parameter determines the object the animation is applied to. The second parameter contains the CSS properties to be animated. This can be an array or a string. If you don't use an array use the following form: "key1: value1, key2: value2, . . ." The optional third parameter sets the animation duration, this can be an integer, a string or an array. The optional fourth parameter contains a string indicating which easing function to use for the animation. The optional fifth parameter contains a function to call once the animation is complete.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> determines the object the animation is applied to</li>
+	<li><strong>properties:</strong> contains the CSS properties to be animated, this can be an array or a string, if you don't use an array use the following form: "key1: value1, key2: value2, . . ."</li>
+	<li><strong>duration:</strong> (optional) sets the animation duration, this can be an integer, a string or an array</li>
+	<li><strong>easing:</strong> (optional) contains a string indicating which easing function to use for the animation</li>
+	<li><strong>callback:</strong> (optional) contains a function to call once the animation is complete</li>
+</ul>
 
 <h3>rigJQanimateR(<var>selector</var>, <var>properties</var>, <var>duration</var>, <var>easing</var>, <var>callback</var>)</h3>
 
@@ -779,7 +870,11 @@ rigJQeventClose
 </code></pre>
 </div>
 
-<p>The first parameter is an array of jQuery.ajax settings. If you just want to configure the default Ajax request, set the optional second parameter, a boolean, to TRUE.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>ajaxOptions:</strong> is an array of jQuery.ajax settings</li>
+	<li><strong>setUpOnly:</strong> (optional) is a boolean, if you just want to configure the default Ajax request, set this parameter to TRUE</li>
+</ul>
 
 <p class="important"><strong>Note:</strong> To reference the "success:" function argument for any data returned, always use the term "data". Reference the second argument using the term "textStatus", and the third argument using the term "XMLHttpRequest".</p>
 
@@ -787,7 +882,7 @@ rigJQeventClose
 
 <p>This function does the same as it's equivalent handler (JQajax), but instead of adding the statement to the script, it returns it.</p>
 
-<h3>rigJQxhRequest <var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>Selector</var></h3>
+<h3>rigJQxhRequest <var>type</var>, <var>URI</var>, <var>data</var>, <var>callback</var>, <var>dataType</var>, <var>selector</var></h3>
 
 <p>Permits you to load data from the server and, depending on the request type, place the returned HTML into the matched element without a browser page refresh. Example:</p>
 
@@ -798,7 +893,15 @@ rigJQeventClose
 </code></pre>
 </div>
 
-<p>The first parameter specifies the type of request, possible values are: "get", "post", "load" and "getJSON". The optional second parameter is a string containing the URI to which the request is sent. The optional third parameter can be a map (JavaScript object), i.e. a Key/Value pair like "key: value", or string that is sent to the server with the request. The optional fourth parameter contains a callback function that is executed when the request completes. Use the terms "data", "textStatus" and "XMLHttpRequest" to reference the arguments of the callback if needed. The optional fifth parameter specifies the type of data that you're expecting back from the server. Available types are: "xml", "html", "script", "json", "jsonp" and "text". The optional sixth parameter specifies the element to place the returned HTML into. This parameter is only relevant, if the request type is "load".</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>type:</strong> specifies the type of request, possible values are: "get", "post", "load" and "getJSON"</li>
+	<li><strong>URI:</strong> (optional) is a string containing the URI to which the request is sent</li>
+	<li><strong>data:</strong> (optional) can be a map (JavaScript object), i.e. a Key/Value pair like "key: value", or a string that is sent to the server with the request</li>
+	<li><strong>callback:</strong> (optional) contains a callback function that is executed when the request completes, use the terms "data", "textStatus" and "XMLHttpRequest" to reference the arguments of the callback if needed</li>
+	<li><strong>dataType:</strong> (optional) specifies the type of data that you're expecting back from the server, available types are: "xml", "html", "script", "json", "jsonp" and "text"</li>
+	<li><strong>selector:</strong> (optional) specifies the element to place the returned HTML into, this parameter is only relevant, if the request type is "load"</li>
+</ul>
 
 <p class="important"><strong>Note:</strong> Mind the syntax of the Key/Value pair, a map (JavaScript object), contained in the third parameter. Don't use "get" as request type if query strings are not enabled in config.lc.</p>
 
@@ -821,14 +924,22 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
   
 <p>Permits you to write statements to call any jQuery or any custom function.</p>
 
-<p>The optional first parameter is a selector, use a comma delimited list if you want to deal with more than one element. The second parameter specifies the function name and the optional third parameter contains the function arguments.</p>
-
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> (optional) is a selector, use a comma delimited list if you want to deal with more than one element</li>
+	<li><strong>functionName:</strong> specifies the function name</li>
+	<li><strong>funtionArguments:</strong> (optional) contains the function arguments</li>
+</ul>
 
 <h3>rigJQfunctionOpen <var>name</var>, <var>arguments</var></h3>
 
 <p>Tells the library to start writing a custom function.</p>
 
-<p>The first parameter specifies the name of the function and the optional second parameter contains the function arguments as a comma delimited list.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>name:</strong> specifies the name of the function</li>
+	<li><strong>arguments:</strong> (optional) contains the function arguments as a comma delimited list</li>
+</ul>
 
 <h3>rigJQfunctionClose</h3>
 
@@ -845,7 +956,12 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 <pre><code class="lang-livecodeserver">rigJQcondition "logout==true", "window.location = 'logout';"
 </code></pre>
 
-<p>The first parameter contains the condition, the second specifies what to do if the condition is met, and the optional third parameter specifies what to do if the condition is not met.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>condition:</strong> contains the condition</li>
+	<li><strong>ifAction:</strong> specifies what to do if the condition is met</li>
+	<li><strong>elseAction:</strong> (optional) specifies what to do if the condition is not met</li>
+</ul>
 
 <h3>rigJQconditionR(<var>condition</var>, <var>ifAction</var>, <var>elseAction</var>)</h3>
 
@@ -856,7 +972,12 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 
 <p>Permits you to iterate over a jQuery object or over both, a map (JavaScript object) or an array, executing a function for each matched element or for each member of a collection.</p>
 
-<p>The first parameter is used to iterate over an object and contains a selector. The second parameter contains a collection, i.e. a map (JavaScript object) or an array. Depending on using the first or the second parameter, the third parameter contains eather a function to execute for each matched element, or a function that will be executed on every member of a collection.</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>selector:</strong> is used to iterate over an object and contains a selector</li>
+	<li><strong>collection:</strong> contains a collection, i.e. a map (JavaScript object) or an array</li>
+	<li><strong>callback:</strong> depending on using the first or the second parameter, this parameter contains eather a function to execute for each matched element, or a function that will be executed on every member of a collection</li>
+</ul>
 
 <p>If iterating over a jQuery object reference the function arguments using the terms: "index" and "element". If iterating over a collection use the terms: "index" and "value".</p>
 
@@ -883,7 +1004,10 @@ rigJQxhRequest "post", "myController", "limit: 25", tCallback
 <pre><code class="lang-livecodeserver">rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "attr", "'scrollHeight'")
 </code></pre>
 
-<p>The parameter can be a string specifying a name and a value delimited by a comma, or an array to declare more than one variable with only one statement. If you use an array stick to the following form: put "name,value;" into tVarsArray[n] where n is an integer starting with 1</p>
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>vars:</strong> can be a string specifying a name and a value delimited by a comma, or an array to declare more than one variable with only one statement, if you use an array stick to the following form: put "name,value;" into tVarsArray[n] where n is an integer starting with 1</li>
+</ul>
 
 <p>Here is another example, which takes the result of a confirmation box as value:</p>
 

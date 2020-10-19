@@ -145,11 +145,11 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.8
+--| Version:  1.9
 --| Created: 2009-06-17
---| Last Mod: 2019-02-08
+--| Last Mod: 2020-08-08
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
---|           	_rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
+--|           _rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
 --| Summary: This command does the following:
 --| 	          Cleans $_GET data (if query strings are enabled)
@@ -202,7 +202,9 @@ private command _rigSanitizeGlobals
 	if ($_SERVER["REQUEST_METHOD"] = "POST") and ($_POST is not an array) then
 
 		# FIRST CHECK IF POST DATA IS JSON
-		if sInputA["contentType"] is "application/json" then
+    if (sInputA["contentType"] is "application/json") \
+    or (sInputA["contentType"] is "application/feed+json") or \
+    (sInputA["contentType"] is "text/json") then
 			set the itemdelimiter to "="
 			put item 1 of $_POST_RAW into tPOSTrawVariableKey
 			put item 2 of $_POST_RAW into tPOSTrawVariableValue

@@ -78,9 +78,9 @@ end libraryStack
 --| COMMAND rigOTPgenerate
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  2.0
 --| Created: 2019-06-15
---| Last Mod: 2019-08-15
+--| Last Mod: 2020-08-17
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Get an OTP providing a secret, token length, hash algorithm, time step and OTP type.
@@ -88,47 +88,60 @@ end libraryStack
 --| Format:  rigOTPgenerate param1[, param2][, param 3][, param4][, param5] [, param6]
 --|
 --| Parameters: string <pSecret> the decoded shared secret, integer <pTokenLength> 6 or 8 (optional),
---|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
---|               integer <pTimeStep> (optional), string <pType> hotp or totp (optional)
+--|             string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional)
+--|             integer <pTimeStep> (optional), string <pType> hotp or totp (optional) /
+--|             alternatively provide all parameters as an array, keys: secret, tokenLength, cryptoType,
+--|             cryptoNumBits, timeStep and type
 --|
 --| Return: integer
 ----------------------------------------------------------------------*/
 
 command rigOTPgenerate pSecret pTokenLength pCryptoType pCryptoNumBits pTimeStep pType
-  local tTimestamp
+  local tOTPdataA, tTimestamp
 
-  if pSecret is empty then
+  if pSecret is not an array then
+    put pSecret into tOTPdataA["secret"]
+    put pTokenLength into tOTPdataA["tokenLength"]
+    put pCryptoType into tOTPdataA["cryptoType"]
+    put pCryptoNumBits into tOTPdataA["cryptoNumBits"]
+    put pTimeStep into tOTPdataA["timeStep"]
+    put pType into tOTPdataA["type"]
+  else
+    put pSecret into tOTPdataA
+  end if -- if pSecret is not an array
+
+  if tOTPdataA["secret"] is empty then
     rigLogMessage "error", "OTP authentication: No secret provided!"
     return FALSE
     -- put randomBytes(16) into pSecret --------- store this string in db (encrypt it?)
   end if
 
-  if (pTokenLength is empty) or (pTokenLength is not an integer) then
-    put 6 into pTokenLength
+  if (tOTPdataA["tokenLength"] is empty) or (tOTPdataA["tokenLength"] is not an integer) then
+    put 6 into tOTPdataA["tokenLength"]
   end if
 
-  if pCryptoType is not among the items of "SHA,SHA3" then
-    put "SHA" into pCryptoType
+  if tOTPdataA["cryptoType"] is not among the items of "SHA,SHA3" then
+    put "SHA" into tOTPdataA["cryptoType"]
   end if
 
-  if pCryptoNumBits is not among the items of "1,224,256,384,512" then
-    put "1" into pCryptoNumBits
+  if tOTPdataA["cryptoNumBits"] is not among the items of "1,224,256,384,512" then
+    put "1" into tOTPdataA["cryptoNumBits"]
   end if
 
   # TODO implement hotp
-  if (pType is empty) or (pType is not among the items of "hotp,totp") then
-    put "totp" into pType
+  if (tOTPdataA["type"] is empty) or (tOTPdataA["type"] is not among the items of "hotp,totp") then
+    put "totp" into tOTPdataA["type"]
   end if
 
-  if pType is "totp" then
-    if (pTimeStep is empty) or (pTimeStep is not an integer) then
-      put 30 into pTimeStep
+  if tOTPdataA["type"] is "totp" then
+    if (tOTPdataA["timeStep"] is empty) or (tOTPdataA["timeStep"] is not an integer) then
+      put 30 into tOTPdataA["timeStep"]
     end if
 
-    put floor(the seconds / pTimeStep) into tTimestamp
+    put floor(the seconds / tOTPdataA["timeStep"]) into tTimestamp
 
     # GENERATE OTP
-    return _rigOTPoauthTotp(pSecret, tTimestamp, pTokenLength, pCryptoType, pCryptoNumBits)
+    return _rigOTPoauthTotp(tOTPdataA["secret"], tTimestamp, tOTPdataA["tokenLength"], tOTPdataA["cryptoType"], tOTPdataA["cryptoNumBits"])
   end if -- if pType is "totp"
 end rigOTPgenerate
 
@@ -143,9 +156,9 @@ end rigOTPgenerate
 --| COMMAND rigOTPcompareKeys
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  2.0
 --| Created: 2019-06-16
---| Last Mod: 2019-06-16
+--| Last Mod: 2020-08-17
 --| Requires: rigLogMessage, _rigOTPoauthTotp()
 --|
 --| Summary: Compare supplied OTP with generated OTP.
@@ -153,49 +166,64 @@ end rigOTPgenerate
 --| Format:  rigOTPcompareKeys param1, param2[, param3][, param4][, param5][, param5][, param7]
 --|
 --| Parameters: string <pChallenge>, string <pKey>, integer <pTokenLength> 6 or 8 (optional),
---|               string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional),
---|               integer <pTimeStep> (optional), integer <pTimeWindow> (optional)
+--|             string <pCryptoType> SHA or SHA3 (optional), integer <pCryptoNumBits> (optional),
+--|             integer <pTimeStep> (optional), integer <pTimeWindow> (optional) /
+--|             alternatively provide all parameters as an array, keys: challenge, key, tokenLength,
+--|             cryptoType, cryptoNumBits, timeStep and timeWindow
 --|
 --| Return: boolean
 ----------------------------------------------------------------------*/
 
 command rigOTPcompareKeys pChallenge pKey pTokenLength pCryptoType pCryptoNumBits pTimeStep pTimeWindow
-  local tTimestamp, tCounter, tTime, tOTP
+  local tOTPdataA, tTimestamp, tCounter, tTime, tOTP
 
-  if (pChallenge is empty) or (pKey is empty) then
+  if pChallenge is not an array then
+    put pChallenge into tOTPdataA["challenge"]
+    put pKey into tOTPdataA["key"]
+    put pTokenLength into tOTPdataA["tokenLength"]
+    put pCryptoType into tOTPdataA["cryptoType"]
+    put pCryptoNumBits into tOTPdataA["cryptoNumBits"]
+    put pTimeStep into tOTPdataA["timeStep"]
+    put pTimeWindow into tOTPdataA["timeWindow"]
+  else
+    put pChallenge into tOTPdataA
+  end if -- if pChallenge is not an array
+
+
+  if (tOTPdataA["challenge"] is empty) or (tOTPdataA["key"] is empty) then
     rigLogMessage "error", "OTP authentication: Missing challenge or secret!"
     return FALSE
   end if
 
-  if (pTokenLength is empty) or (pTokenLength is not an integer) then
-    put 6 into pTokenLength
+  if (tOTPdataA["tokenLength"] is empty) or (tOTPdataA["tokenLength"] is not an integer) then
+    put 6 into tOTPdataA["tokenLength"]
   end if
 
-  if pCryptoType is not among the items of "SHA,SHA3" then
-    put "SHA" into pCryptoType
+  if tOTPdataA["cryptoType"] is not among the items of "SHA,SHA3" then
+    put "SHA" into tOTPdataA["cryptoType"]
   end if
 
-  if pCryptoNumBits is not among the items of "1,224,256,384,512" then
-    put "1" into pCryptoNumBits
+  if tOTPdataA["cryptoNumBits"] is not among the items of "1,224,256,384,512" then
+    put "1" into tOTPdataA["cryptoNumBits"]
   end if
 
-  if (pTimeStep is empty) or (pTimeStep is not an integer) then
-    put 30 into pTimeStep
+  if (tOTPdataA["timeStep"] is empty) or (tOTPdataA["timeStep"] is not an integer) then
+    put 30 into tOTPdataA["timeStep"]
   end if
 
-  if (pTimeWindow is empty) or (pTimeWindow is not an integer) then
-    put 2 into pTimeWindow
+  if (tOTPdataA["timeWindow"] is empty) or (tOTPdataA["timeWindow"] is not an integer) then
+    put 2 into tOTPdataA["timeWindow"]
   end if
 
-  put floor(the seconds / pTimeStep) into tTimestamp
+  put floor(the seconds / tOTPdataA["timeStep"]) into tTimestamp
 
   # COMPARE OTPs
-  repeat with tCounter = -pTimeWindow to pTimeWindow
+  repeat with tCounter = -tOTPdataA["timeWindow"] to tOTPdataA["timeWindow"]
     put tTimestamp + tCounter into tTime
 
-    put _rigOTPoauthTotp(pKey, tTime, pTokenLength, pCryptoType, pCryptoNumBits) into tOTP
+    put _rigOTPoauthTotp(tOTPdataA["key"], tTime, tOTPdataA["tokenLength"], tOTPdataA["cryptoType"], tOTPdataA["cryptoNumBits"]) into tOTP
 
-    if tOTP is pChallenge then
+    if tOTP is tOTPdataA["challenge"] then
       return TRUE
     end if
   end repeat
@@ -784,9 +812,9 @@ end _rigOTPSha
 --| FUNCTION rigOTPqrCode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  2.0
 --| Created: 2019-06-18
---| Last Mod: 2019-08-22
+--| Last Mod: 2020-08-17
 --| Requires: rigOTPvalidBase32Str(), rigUrlEncodeRFC(), rigLoaderLoadLibrary, rigLogMessage
 --|
 --| Summary: Create QR code based on OTP URI data.
@@ -794,69 +822,89 @@ end _rigOTPSha
 --| Format:  rigOTPqrCode(param1, param2, param3[, param4][, param5][, param6][, param7][, param8][, param9])
 --|
 --| Parameters: string <pKey>, string <pAccount>, string <pIssuer>, string <pAlgo> (optional),
---|               integer <pDigits> (optional), integer <pPeriod> (optional), string <pECC> (optional),
---|               integer <pSize> (optional), mixed <pMask> (optional)
+--|             integer <pDigits> (optional), integer <pPeriod> (optional), string <pECC> (optional),
+--|             integer <pSize> (optional), mixed <pMask> (optional) /
+--|             alternatively provide all parameters as an array, keys: key, account, issuer, algo,
+--|             digits, period, ECC, size and mask
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigOTPqrCode pKey pAccount pIssuer pAlgo pDigits pPeriod pECC pSize pMask
-  local tData, tImg, tImgData
+  local tParamsA, tData, tImg, tImgData
 
-  if (pKey is empty) or (rigOTPvalidBase32Str(pKey) is FALSE) then
+  if pKey is not an array then
+    put pKey into tParamsA["key"]
+    put pAccount into tParamsA["account"]
+    put pIssuer into tParamsA["issuer"]
+    put pAlgo into tParamsA["algo"]
+    put pDigits into tParamsA["digits"]
+    put pPeriod into tParamsA["period"]
+    put pECC into tParamsA["ECC"]
+    put pSize into tParamsA["size"]
+    put pMask into tParamsA["mask"]
+  else
+    put pKey into tParamsA
+  end if -- if pKey is not an array
+
+
+  if (tParamsA["key"] is empty) or (rigOTPvalidBase32Str(tParamsA["key"]) is FALSE) then
     rigLogMessage "error", "OTP: Missing key or base32 string contains invalid characters!"
     return FALSE
   end if
 
-  if pIssuer is empty then
+  if tParamsA["issuer"] is empty then
     rigLogMessage "error", "OTP: Missing issuer!"
     return FALSE
   else
-    put rigUrlEncodeRFC(pIssuer) into pIssuer
+    put rigUrlEncodeRFC(tParamsA["issuer"]) into tParamsA["issuer"]
   end if
 
-  if pAccount is empty then
+  if tParamsA["account"] is empty then
     rigLogMessage "error", "OTP: Missing account!"
     return FALSE
   else
-    put rigUrlEncodeRFC(pAccount) into pAccount
-    replace "%40" with "@" in pAccount
+    put rigUrlEncodeRFC(tParamsA["account"]) into tParamsA["account"]
+    replace "%40" with "@" in tParamsA["account"]
   end if
 
-  if (pAlgo is empty) or (pAlgo is not among the items of "SHA1,SHA224,SAH256,SHA384,SHA512,SHA3224,SHA3256,SHA3384,SHA3512") then
-    put "SHA1" into pAlgo
+  if (tParamsA["algo"] is empty) or (tParamsA["algo"] \
+    is not among the items of "SHA1,SHA224,SAH256,SHA384,SHA512,SHA3224,SHA3256,SHA3384,SHA3512") then
+    put "SHA1" into tParamsA["algo"]
   end if
 
-  if (pDigits is empty) or (pDigits is not an integer) then
-    put 6 into pDigits
+  if (tParamsA["digits"] is empty) or (tParamsA["digits"] is not an integer) then
+    put 6 into tParamsA["digits"]
   end if
 
-  if (pPeriod is empty) or (pPeriod is not an integer) then
-    put 30 into pPeriod
+  if (tParamsA["period"] is empty) or (tParamsA["period"] is not an integer) then
+    put 30 into tParamsA["period"]
   end if
 
-  if (pECC is empty) or (pECC is not among the items of "L,M,Q,H,X") then
-    put "M" into pECC
+  if (tParamsA["ECC"] is empty) or (tParamsA["ECC"] is not among the items of "L,M,Q,H,X") then
+    put "M" into tParamsA["ECC"]
   end if
 
-  if (pSize is empty) or (pSize is not among the items of "1,2,3,4,5,6,7,8,9,10") then
-    put 4 into pSize
+  if (tParamsA["size"] is empty) or (tParamsA["size"] is not among the items of "1,2,3,4,5,6,7,8,9,10") then
+    put 4 into tParamsA["size"]
   end if
 
-  if (pMask is empty) or (pMask is not among the items of "Auto,0,1,2,3,4,5,6,7") then
-    put "Auto" into pMask
+  if (tParamsA["mask"] is empty) or (tParamsA["mask"] is not among the items of "Auto,0,1,2,3,4,5,6,7") then
+    put "Auto" into tParamsA["mask"]
   end if
 
   rigLoaderLoadLibrary "QR"
 
   # OTP URI
-  put "otpauth://totp/" & pIssuer & ":" & pAccount & "?secret=" & pKey & "&issuer=" & pIssuer & "&algorithm=" & pAlgo & "&digits=" & pDigits & "&period=" & pPeriod into tData
+  put "otpauth://totp/" & tParamsA["issuer"] & ":" & tParamsA["account"] & "?secret=" & tParamsA["key"] \
+    & "&issuer=" & tParamsA["issuer"] & "&algorithm=" & tParamsA["algo"] & "&digits=" & tParamsA["digits"] \
+    & "&period=" & tParamsA["period"] into tData
 
   # GENERATE QR CODE DATA
   put "!" into tImg
   -- qrSetColors "Blue", "255,255,0"
   qrSetColors "Black", "White"
-  qrCreate tImg, tData, pECC, pSize, pMask
+  qrCreate tImg, tData, tParamsA["ECC"], tParamsA["size"], tParamsA["mask"]
 
   put the result into tImgData
 

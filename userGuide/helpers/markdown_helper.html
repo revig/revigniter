@@ -5,9 +5,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title>Markdown Helper : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="robots" content="all" />
-		<meta name="author" content="Ralf Bitter" />
-		<meta name="description" content="revIgniter User Guide" />
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
 
 		<!-- Bootstrap -->
 		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.7</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -125,8 +125,13 @@ end if
 
 <h3>rigMarkdown(<var>pPlainText</var>, <var>pHTML4Flag</var>)</h3>
 
-<p>This function is a wrapper for the Markdown engine to convert plain text to structurally valid XHTML (or HTML).<br />The first parameter is a string formatted with the Markdown syntax. The optional second parameter is a boolean which configures Markdown to produce HTML 4 output. Defaults to FALSE (XHTML).</p>
+<p>This function is a wrapper for the Markdown engine to convert plain text to structurally valid XHTML (or HTML).</p>
 
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>pPlainText:</strong> is a string formatted with the Markdown syntax</li>
+	<li><strong>pHTML4Flag:</strong> (optional) is a boolean which configures Markdown to produce HTML 4 output, defaults to FALSE (XHTML)</li>
+</ul>
 
 
 <pre><code>if rigMarkdownAvailable() then
