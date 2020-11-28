@@ -449,9 +449,9 @@ end _rigHtmlList
 --| FUNCTION rigHtmlBr
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 08-10-09
---| Last Mod: 08-10-09
+--| Version:  1.1
+--| Created: 2009-10-08
+--| Last Mod: 2020-11-28
 --| Requires: --
 --|
 --| Summary: Generates HTML BR tags based on number supplied.
@@ -473,7 +473,7 @@ function rigHtmlBr pNum
 	end if
 
 	repeat tNum
-		put "<br />" after tBrTags
+		put "<br>" after tBrTags
 	end repeat
 
 	return tBrTags
@@ -490,12 +490,12 @@ end rigHtmlBr
 --| FUNCTION rigHtmlImg
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 08-10-09
---| Last Mod: 05-01-10
+--| Version:  1.2
+--| Created: 08-10-2009-10-08
+--| Last Mod: 2020-11-28
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
---| Summary: Generates an <img /> element.
+--| Summary: Generates an <img> element.
 --|
 --| Format:  rigHtmlImg(param1, param2)
 --|
@@ -539,7 +539,7 @@ function rigHtmlImg pSrc pIndexPage
 		end if
 	end repeat
 
-	put "/>" after tImg
+	put ">" after tImg
 
 	return tImg
 end rigHtmlImg
@@ -800,9 +800,9 @@ end rigHtmlJsLink
 --| FUNCTION rigHtmlMeta
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 09-10-09
---| Last Mod: 09-10-09
+--| Version:  1.1
+--| Created: 2009-10-09
+--| Last Mod: 2020-11-28
 --| Requires: --
 --|
 --| Summary: Generates meta tags from an array of key/values.
@@ -873,7 +873,7 @@ function rigHtmlMeta pName pContent pType pNewLine
 			put tMeta["newline"] into tNewline
 		end if
 
-		put "<meta" && tType & "=" & quote & tMetaName & quote && "content=" & quote & tContent & quote && "/>" & tNewline after tStr
+		put "<meta" && tType & "=" & quote & tMetaName & quote && "content=" & quote & tContent & quote && ">" & tNewline after tStr
 	end repeat
 
 	return tStr
