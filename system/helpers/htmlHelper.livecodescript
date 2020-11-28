@@ -48,12 +48,12 @@ local sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -64,7 +64,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -86,7 +86,7 @@ end libraryStack
 --|
 --| Summary: Generates an HTML heading tag.  First param is the data.
 --|            Second param is the size of the heading tag.
---| 
+--|
 --| Format:  rigHtmlHeading(param1, 2)
 --|
 --| Parameters: string <pData>, integer <pH>
@@ -96,7 +96,7 @@ end libraryStack
 
 function rigHtmlHeading pData pH
   local tH
-  
+
 	if pH is empty then
 		put 1 into tH
 	else
@@ -126,7 +126,7 @@ end rigHtmlHeading
 --|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
 --|            of the list may be changed.
---| 
+--|
 --| Format:  rigHtmlUL(param1, param2)
 --|
 --| Parameters: mixed <pList>, mixed <pAttributes>
@@ -136,7 +136,7 @@ end rigHtmlHeading
 
 function rigHtmlUL pList pAttributes
   local tList, tI, tTemp
-  
+
   put pList into tList
   if tList is not an array then
     if comma is in tList then
@@ -153,9 +153,9 @@ function rigHtmlUL pList pAttributes
       put tList into tList[1]
     end if
   end if
-	
+
   put empty into sNumberedListArray
-	
+
   return _rigHtmlList("ul", tList, pAttributes)
 end rigHtmlUL
 
@@ -179,7 +179,7 @@ end rigHtmlUL
 --|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
 --|            of the list may be changed.
---| 
+--|
 --| Format:  rigHtmlOL(param1, param2)
 --|
 --| Parameters: mixed <pList>, mixed <pAttributes>
@@ -189,7 +189,7 @@ end rigHtmlUL
 
 function rigHtmlOL pList pAttributes
   local tList, tI, tTemp
-  
+
   put pList into tList
   if tList is not an array then
     if comma is in tList then
@@ -232,7 +232,7 @@ end rigHtmlOL
 --|            a comma delimited list or from a multi-dimensional array.
 --|			    The first dimension must be numbered, otherweise the order
 --|            of the list may be changed.
---| 
+--|
 --| Format:  _rigHtmlList(param1, param2, param3, param4)
 --|
 --| Parameters: string <pType>, mixed <pList>, mixed <pAttributes>, integer <pDepth>
@@ -244,7 +244,7 @@ private function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitCl
   local tAttributes, tList, tI, tTemp, tDepth, tOut, tKey
   local tVal, tAtts, tRegEx, tMatch, tMatch2, tWriteOpenList
   local tOmitClosingTag, tLastListItem
-  
+
   # CHECK IF THE ARRAY IS NUMBERED (LOOK AT FIRST KEY ONLY)
   if sNumberedListArray is empty then
     if (line 1 in the keys of pList) is a number then
@@ -252,7 +252,7 @@ private function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitCl
     else
       put FALSE into sNumberedListArray
     end if
-  end if	
+  end if
 
   put pAttributes into tAttributes
   put pList into tList
@@ -295,10 +295,10 @@ private function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitCl
     put tAtts into tAttributes
   end if
 
-  put "<li>.+</li>" into tRegEx   
+  put "<li>.+</li>" into tRegEx
   put matchText((line -2 of pCurrentOut), tRegEx) into tMatch
 
-  put "<" & pType & ".*>" into tRegEx   
+  put "<" & pType & ".*>" into tRegEx
   put matchText((line -2 of pCurrentOut), tRegEx) into tMatch2
 
   # CHECK IF AN OPENING LIST TAG SHOULD BE ADDED TO THE OUTPUT
@@ -308,15 +308,15 @@ private function _rigHtmlList pType pList pAttributes pDepth pCurrentOut pOmitCl
     else
       put FALSE into tWriteOpenList
     end if
-      
+
   else
     if (tMatch is not TRUE) and ((tMatch2 is not TRUE) or (("<" & pType & ">") is not in (line -2 of pCurrentOut))) then
       put TRUE into tWriteOpenList
     else
       put FALSE into tWriteOpenList
-    end if 
+    end if
   end if
-   
+
   if tWriteOpenList is TRUE then
 
     # WRITE THE OPENING LIST TAG
@@ -455,7 +455,7 @@ end _rigHtmlList
 --| Requires: --
 --|
 --| Summary: Generates HTML BR tags based on number supplied.
---| 
+--|
 --| Format:  rigHtmlBr(param1)
 --|
 --| Parameters: integer <pNum>
@@ -465,7 +465,7 @@ end _rigHtmlList
 
 function rigHtmlBr pNum
   local tNum, tBrTags
-  
+
 	if pNum is empty then
 		put 1 into tNum
 	else
@@ -496,7 +496,7 @@ end rigHtmlBr
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
 --| Summary: Generates an <img /> element.
---| 
+--|
 --| Format:  rigHtmlImg(param1, param2)
 --|
 --| Parameters: mixed <pSrc>, bool <pIndexPage>
@@ -507,7 +507,7 @@ end rigHtmlBr
 function rigHtmlImg pSrc pIndexPage
   local tIndexPage, tKey, tSrc, tImg, tK, tV, tURL
   local tBaseURL
-  
+
 	if pIndexPage is empty then
 		put FALSE into tIndexPage
 	else
@@ -565,7 +565,7 @@ end rigHtmlImg
 --|             Valid options are xhtml11, xhtml1-strict, xhtml1-trans, xhtml1-frame, html5,
 --|             html4-strict, html4-trans, and html4-frame.  Values are saved in the
 --|             doctypes config file.
---| 
+--|
 --| Format:  rigHtmlDocType(param1)
 --|
 --| Parameters: string <pType> the doctype to be generated
@@ -575,7 +575,7 @@ end rigHtmlImg
 
 function rigHtmlDocType pType
   local tType
-  
+
 	if pType is empty then
 		put "html5" into tType
 	else
@@ -610,24 +610,25 @@ end rigHtmlDocType
 --| FUNCTION rigHtmlLinkTag
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 09-10-09
---| Last Mod: 21-09-11
+--| Version:  1.3
+--| Created: 2009-10-09
+--| Last Mod: 2020-11-28
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
---| Summary: Generates HTML <link /> tags.
---| 
---| Format:  rigHtmlLinkTag(param1, param2, param3, param4, param5, param6)
+--| Summary: Generates HTML <link> tags.
+--|
+--| Format:  rigHtmlLinkTag(param1, param2, param3, param4, param5, param6, param7)
 --|
 --| Parameters: mixed <pHref> stylesheet hrefs or an array, string <pRel>, string <pType>, string <pTitle>,
---|               string <pMedia>, bool <pIndexPage> should indexPage be added to the css path
+--|             string <pMedia>, bool <pIndexPage> should indexPage be added to the css path,
+--|             bool <pCors> should the "crossorigin" attribute be set
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage
+function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
   local tRel, tType, tIndexPage, tLink, tK, tV, tURL, tBaseURL
-  
+
 	if pRel is empty then
 		put "stylesheet" into tRel
 	else
@@ -644,11 +645,19 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage
 		put pType into tType
 	end if
 
-	if pIndexPage is empty then
+	if (pIndexPage is empty) or ((pHref is an array) and (pHref["indexPage"] is empty)) then
 		put FALSE into tIndexPage
 	else
-		put pIndexPage into tIndexPage
-	end if
+    if pHref is an array then
+      put pHref["indexPage"] into tIndexPage
+    else
+      put pIndexPage into tIndexPage
+    end if -- if pHref is an array
+	end if -- if (pIndexPage is empty) or ((pHref is an array) and (pHref["indexPage"] is empty))
+
+  if (pCors is TRUE) or ((pHref is an array) and (pHref["cors"] is TRUE)) then
+    put "crossorigin" into tCors
+  end if -- if pCors is TRUE
 
 	put "<link " into tLink
 
@@ -665,11 +674,13 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage
 					put " href=" & quote & tBaseURL & tV & quote & " " after tLink
 				end if
 			else
-				put tK & "=" & quote & tV & quote & " " after tLink
+        if (tK <> "indexPage") and (tK <> "cors") then
+          put tK & "=" & quote & tV & quote & " " after tLink
+        end if
 			end if
 		end repeat
 
-		put "/>" after tLink
+		put tCors & ">" after tLink
 	else
 		if "://" is in pHref then
 			put " href=" & quote & pHref & quote & " " after tLink
@@ -695,7 +706,7 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage
 			put "media=" & quote & pMedia & quote & " " after tLink
 		end if
 
-		put "/>" after tLink
+		put tCors & ">" after tLink
 	end if
 
 	return tLink
@@ -718,7 +729,7 @@ end rigHtmlLinkTag
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
 --| Summary: Generates link to a JavaScript file.
---| 
+--|
 --| Format:  rigHtmlJsLink(param1, param2)
 --|
 --| Parameters: mixed <pSrc>, bool <pIndexPage> should indexPage be added to the css path,
@@ -729,7 +740,7 @@ end rigHtmlLinkTag
 
 function rigHtmlJsLink pSrc pIndexPage pNewLine
   local tIndexPage, tNewLine, tK, tV, tLink, tURL, tBaseURL
-  
+
 	if pIndexPage is empty then
 		put FALSE into tIndexPage
 	else
@@ -740,7 +751,7 @@ function rigHtmlJsLink pSrc pIndexPage pNewLine
 		put return into tNewLine
 	else
 		put pNewLine into tNewLine
-	end if	
+	end if
 
 	if pSrc is an array then
 		repeat for each key tK in pSrc
@@ -758,7 +769,7 @@ function rigHtmlJsLink pSrc pIndexPage pNewLine
 
 			put "></script>" & tNewLine after tLink
 		end repeat
-		
+
 	else
 		put "<script type=" & quote & "text/javascript" & quote & " " after tLink
 
@@ -795,7 +806,7 @@ end rigHtmlJsLink
 --| Requires: --
 --|
 --| Summary: Generates meta tags from an array of key/values.
---| 
+--|
 --| Format:  rigHtmlMeta(param1, param2, param3, param4)
 --|
 --| Parameters: mixed <pName>, string <pContent>, string <pType>, string <pNewLine>
@@ -806,7 +817,7 @@ end rigHtmlJsLink
 function rigHtmlMeta pName pContent pType pNewLine
   local tType, tNewLine, tNameA, tKey, tMeta, tMetaName
   local tContent, tStr
-  
+
 	if pType is empty then
 		put "name" into tType
 	else
@@ -884,7 +895,7 @@ end rigHtmlMeta
 --| Requires: --
 --|
 --| Summary: Generates non-breaking space entities based on number supplied.
---| 
+--|
 --| Format:  rigHtmlNbs(param1)
 --|
 --| Parameters: integer <pNum>
@@ -894,7 +905,7 @@ end rigHtmlMeta
 
 function rigHtmlNbs pNum
   local tNum, tNbsTags
-  
+
 	if pNum is empty then
 		put 1 into tNum
 	else
