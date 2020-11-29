@@ -449,9 +449,9 @@ end _rigHtmlList
 --| FUNCTION rigHtmlBr
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2009-10-08
---| Last Mod: 2009-10-08
+--| Last Mod: 2020-11-28
 --| Requires: --
 --|
 --| Summary: Generates HTML BR tags based on number supplied.
@@ -473,7 +473,7 @@ function rigHtmlBr pNum
 	end if
 
 	repeat tNum
-		put "<br />" after tBrTags
+		put "<br>" after tBrTags
 	end repeat
 
 	return tBrTags
@@ -490,12 +490,12 @@ end rigHtmlBr
 --| FUNCTION rigHtmlImg
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 2009-10-08
---| Last Mod: 2010-01-05
+--| Version:  1.2
+--| Created: 08-10-2009-10-08
+--| Last Mod: 2020-11-28
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
---| Summary: Generates an <img /> element.
+--| Summary: Generates an <img> element.
 --|
 --| Format:  rigHtmlImg(param1, param2)
 --|
@@ -539,7 +539,7 @@ function rigHtmlImg pSrc pIndexPage
 		end if
 	end repeat
 
-	put "/>" after tImg
+	put ">" after tImg
 
 	return tImg
 end rigHtmlImg
@@ -615,7 +615,7 @@ end rigHtmlDocType
 --| Last Mod: 2020-11-28
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
---| Summary: Generates HTML <link /> tags.
+--| Summary: Generates HTML <link> tags.
 --|
 --| Format:  rigHtmlLinkTag(param1, param2, param3, param4, param5, param6, param7)
 --|
@@ -656,7 +656,7 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
 	end if -- if (pIndexPage is empty) or ((pHref is an array) and (pHref["indexPage"] is empty))
 
   if (pCors is TRUE) or ((pHref is an array) and (pHref["cors"] is TRUE)) then
-    put "crossorigin " into tCors
+    put "crossorigin" into tCors
   end if -- if pCors is TRUE
 
 	put "<link " into tLink
@@ -680,7 +680,7 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
 			end if
 		end repeat
 
-		put tCors & "/>" after tLink
+		put tCors & ">" after tLink
 	else
 		if "://" is in pHref then
 			put " href=" & quote & pHref & quote & " " after tLink
@@ -706,7 +706,7 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
 			put "media=" & quote & pMedia & quote & " " after tLink
 		end if
 
-		put tCors & "/>" after tLink
+		put tCors & ">" after tLink
 	end if
 
 	return tLink
@@ -800,9 +800,9 @@ end rigHtmlJsLink
 --| FUNCTION rigHtmlMeta
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2009-10-09
---| Last Mod: 2009-10-09
+--| Last Mod: 2020-11-28
 --| Requires: --
 --|
 --| Summary: Generates meta tags from an array of key/values.
@@ -873,7 +873,7 @@ function rigHtmlMeta pName pContent pType pNewLine
 			put tMeta["newline"] into tNewline
 		end if
 
-		put "<meta" && tType & "=" & quote & tMetaName & quote && "content=" & quote & tContent & quote && "/>" & tNewline after tStr
+		put "<meta" && tType & "=" & quote & tMetaName & quote && "content=" & quote & tContent & quote && ">" & tNewline after tStr
 	end repeat
 
 	return tStr
