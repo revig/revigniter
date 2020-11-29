@@ -656,7 +656,7 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
 	end if -- if (pIndexPage is empty) or ((pHref is an array) and (pHref["indexPage"] is empty))
 
   if (pCors is TRUE) or ((pHref is an array) and (pHref["cors"] is TRUE)) then
-    put "crossorigin" into tCors
+    put "crossorigin " into tCors
   end if -- if pCors is TRUE
 
 	put "<link " into tLink
