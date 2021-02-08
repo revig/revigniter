@@ -49,12 +49,12 @@ local sDateItems, sLongTime, sInternetDate, sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --|
+ --| 
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
-
+ 
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -65,7 +65,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-
+    
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -88,7 +88,7 @@ end libraryStack
 --| Summary: Returns the current time as timestamp (seconds) referenced, either
 --|            to your server's local time or GMT, based on the "timeReference"
 --|            setting in your config file.
---|
+--| 
 --| Format:  rigNow()
 --|
 --| Parameters: --
@@ -118,7 +118,7 @@ end rigNow
 --| Requires: _rigFragmentDate, _rigTranslatedDateItem()
 --|
 --| Summary: This functon converts date codes formatted using the MySQL style.
---|
+--| 
 --| Format:  rigMdate(param1, param2)
 --|
 --| Parameters: string <pDateString>, integer <pTime>
@@ -128,7 +128,7 @@ end rigNow
 
 function rigMdate pDateString, pTime
   local tTime, tFormatedDate, tCounter, tDateStringItems
-
+  
 	set the caseSensitive to TRUE
 
 	if pTime is empty then
@@ -178,7 +178,7 @@ end rigMdate
 --| Requires: rigLangLoadLang(), rigLangLangLine(), rigDayOfYear(), rigWeekOfYear()
 --|
 --| Summary: Translates MySQL date codes.
---|
+--| 
 --| Format:  _rigTranslatedDateItem(param1, param2)
 --|
 --| Parameters: integer <pYear>
@@ -189,7 +189,7 @@ end rigMdate
 private function _rigTranslatedDateItem pItem, pTime
   local tWeekdays, tTranslatedItem, tMonthnames, tItemSuffix, tYear
   local tMonth, tDay, tHour
-
+  
 	set the caseSensitive to TRUE
 	switch pItem
 		# ABBREVIATED NAME OF DAY
@@ -254,7 +254,7 @@ private function _rigTranslatedDateItem pItem, pTime
 			end if
 		break
 		# DAY IN YEAR 001 - 366
-		#
+		# 
 		case "%j"
 			put item 1 of sDateItems into tYear
 			put item 2 of sDateItems into tMonth
@@ -372,7 +372,7 @@ end _rigTranslatedDateItem
 --| Requires: --
 --|
 --| Summary: Store date fragments in local variables.
---|
+--| 
 --| Format:  _rigFragmentDate param1
 --|
 --| Parameters: integer <pTimestamp>
@@ -382,7 +382,7 @@ end _rigTranslatedDateItem
 
 private command _rigFragmentDate pTimestamp
   local tTime
-
+  
 	# STORE DATE ITEMS
 	put pTimestamp into tTime
 	convert (tTime) from seconds to dateItems
@@ -421,7 +421,7 @@ end _rigFragmentDate
 --| Requires: _rigIsLeapYear()
 --|
 --| Summary: Returns the day in a given year as integer.
---|
+--| 
 --| Format:  rigDayOfYear(param1)
 --|
 --| Parameters: integer <pYear>, integer <pMonth>, integer <pDay>
@@ -431,7 +431,7 @@ end _rigFragmentDate
 
 function rigDayOfYear pYear pMonth pDay
   local tDayNums, tNumDays
-
+  
 	# IS THE YEAR A LEAP YEAR
 	if _rigIsLeapYear(pYear) is TRUE then
 		put "31,29,31,30,31,30,31,31,30,31,30,31" into tDayNums
@@ -468,7 +468,7 @@ end rigDayOfYear
 --| Requires: --
 --|
 --| Summary: Checks if year is leap year.
---|
+--| 
 --| Format:  _rigIsLeapYear(param1)
 --|
 --| Parameters: integer <pYear>
@@ -480,7 +480,7 @@ private function _rigIsLeapYear pYear
 	if ((pYear mod 400) = 0) or (((pYear mod 4) = 0) and ((pYear mod 100) <> 0)) then
 		return TRUE
 	end if
-
+	
 	return FALSE
 end _rigIsLeapYear
 
@@ -501,7 +501,7 @@ end _rigIsLeapYear
 --| Requires: --
 --|
 --| Summary: This function returns the week number of a given timestamp.
---|
+--| 
 --| Format:  _rigWeekOfYear(param1, param2)
 --|
 --| Parameters: integer <pTime>, bool <pSundayFirst>
@@ -512,7 +512,7 @@ end _rigIsLeapYear
 private function _rigWeekOfYear pTime pSundayFirst
   local tSundayFirst, tDateItems, tYear, tMonth, tDay, tNumberDays
   local tDateItemsFirstOfYear, tFirstDayNum, tDaysToSubtract
-
+  
 	if pSundayFirst is empty then
 		put FALSE into tSundayFirst
 	else
@@ -571,7 +571,7 @@ end _rigWeekOfYear
 --| Requires: rigMdate()
 --|
 --| Summary: Returns a date formatted according to the submitted standard.
---|
+--| 
 --| Format:  rigStandardDate(param1, param2)
 --|
 --| Parameters: string <pFormat>, integer <pTime>
@@ -581,7 +581,7 @@ end _rigWeekOfYear
 
 function rigStandardDate pFormat pTime
   local tFormat, tFormatArray
-
+  
 	if pFormat is empty then
 		put "DATE_RFC822" into tFormat
 	else
@@ -612,32 +612,6 @@ end rigStandardDate
 
 
 
-/*----------------------------------------------------------------------
---| FUNCTION rigCustomDate
---|
---| Author: rabit
---| Version:  1.0
---| Created: 2021-02-06
---| Last Mod: 2021-02-06
---| Requires: rigMdate()
---|
---| Summary: Return a custom formatted date.
---|
---| Parameters: string <pCustomFormat> a format template like "%d. %M %Y", integer <pTime>
---|
---| Return: string
-----------------------------------------------------------------------*/
-
-function rigCustomDate pCustomFormat pTime
-	if pCustomFormat is empty then
-		return FALSE
-	end if
-
-	return rigMdate(pCustomFormat, pTime)
-end rigCustomDate
-
-
-
 
 
 
@@ -651,7 +625,7 @@ end rigCustomDate
 --| Requires: --
 --|
 --| Summary: Converts a local timestamp (the seconds) to GMT (as seconds).
---|
+--| 
 --| Format:  rigLocalToGMT(param1)
 --|
 --| Parameters: integer <pTime>
@@ -662,7 +636,7 @@ end rigCustomDate
 function rigLocalToGMT pTime
   local tTime, tSeconds, tInternetDate, tGMToffset, tPrefix, tMinutesOffset
   local tHoursOffset, tGMToffsetSecs, tGMT
-
+  
 	if pTime is empty then
 		put the seconds into tTime
 	else
@@ -714,7 +688,7 @@ end rigLocalToGMT
 --|
 --| Summary: Takes a timestamp (the seconds) (in GMT) as input, and returns
 --|            at the local value based on the timezone and DST setting submitted.
---|
+--| 
 --| Format:  rigGmtToLocal(param1, param2, param3)
 --|
 --| Parameters: integer <pTime>, string <pTimeZone>, bool <pDST> daylight savings time
@@ -724,7 +698,7 @@ end rigLocalToGMT
 
 function rigGmtToLocal pTime pTimeZone pDST
   local tTimeZone, tTime
-
+  
 	if pTime is empty then
 		return rigNow()
 	end if
@@ -760,7 +734,7 @@ end rigGmtToLocal
 --| Requires: --
 --|
 --| Summary: Converts a MySQL Datetime / Timestamp to seconds.
---|
+--| 
 --| Format:  rigMysqlTimeToSeconds(param1)
 --|
 --| Parameters: string <pMysqlTime>
@@ -770,7 +744,7 @@ end rigGmtToLocal
 
 function rigMysqlTimeToSeconds pMysqlTime
   local tMysqlTime, tYear, tMonth, tDay, tShortDate, tDateItems
-
+  
 	put pMysqlTime into tMysqlTime
 
 	if ("-" is in tMysqlTime) and (":" is in tMysqlTime) then
@@ -803,7 +777,7 @@ function rigMysqlTimeToSeconds pMysqlTime
 	end if
 
 	put tMonth & "/" & tDay & "/" & tYear into tShortDate
-
+	
 	# BUILD THE DATE ITEMS
 	convert (tShortDate) from short date to dateItems
 	put it into tDateItems
@@ -832,7 +806,7 @@ end rigMysqlTimeToSeconds
 --| Requires: --
 --|
 --| Summary: Formats timestamp (seconds) to the following prototype: 2010-08-21 11:35 PM
---|
+--| 
 --| Format:  rigTimestampToHuman(param1, param2, param3)
 --|
 --| Parameters: integer <pTime>, bool <pShowSecs>, string <pFormat>
@@ -842,7 +816,7 @@ end rigMysqlTimeToSeconds
 
 function rigTimestampToHuman pTime pShowSecs pFormat
   local tTime, tShowSecs, tFormat, tDateItems, tLongTime, tDate
-
+  
 	if pTime is empty then
 		put the seconds into tTime
 	else
@@ -914,7 +888,7 @@ end rigTimestampToHuman
 --| Requires: rigTrim(), rigPregReplace()
 --|
 --| Summary: Convert "human" date to timestamp (seconds).
---|
+--| 
 --| Format:  rigHumanToTimestamp(param1)
 --|
 --| Parameters: string <pDatestring>
@@ -924,7 +898,7 @@ end rigTimestampToHuman
 
 function rigHumanToTimestamp pDatestring
   local tDatestring, tRegEx, tHour, tSecs, tTempDate, tDateItems
-
+  
 	if pDatestring is empty then
 		return FALSE
 	end if
@@ -998,7 +972,7 @@ end rigHumanToTimestamp
 --|
 --| Summary: Returns a span of seconds in this format:
 --|            10 days 14 hours 36 minutes 47 seconds.
---|
+--| 
 --| Format:  rigTimespan(param1, param2)
 --|
 --| Parameters: integer <pSeconds>, integer <pTime>
@@ -1009,7 +983,7 @@ end rigHumanToTimestamp
 function rigTimespan pSeconds pTime
   local tSeconds, tTime, tSecs, tDatestring, tYears
   local tMonths, tWeeks, tDays, tHours, tMinutes
-
+  
 	get rigLangLoadLang("date")
 
 	if (pSeconds is empty) or (pSeconds is not a number) then
@@ -1150,7 +1124,7 @@ end rigTimespan
 --|
 --| Summary: Takes a month/year as input and returns the number of days
 --|            for the given month/year. Takes leap years into consideration.
---|
+--| 
 --| Format:  rigDaysInMonth(param1, param2)
 --|
 --| Parameters: integer <pMonth>, integer <pYear>
@@ -1160,7 +1134,7 @@ end rigTimespan
 
 function rigDaysInMonth pMonth pYear
   local tMonth, tYear, tDaysInMonth
-
+  
 	if (pMonth is not a number) or (pMonth < 1) or (pMonth > 12) then
 	      return 0
 	   else
@@ -1201,7 +1175,7 @@ end rigDaysInMonth
 --| Requires: rigTimezones()
 --|
 --| Summary: Generates a drop-down menu of timezones.
---|
+--| 
 --| Format:  rigTimezoneMenu(param1, param2, param3)
 --|
 --| Parameters: string <pDefault>, string <pClass>, string <pName>
@@ -1211,7 +1185,7 @@ end rigDaysInMonth
 
 function rigTimezoneMenu pDefault pClass pName
   local tDefault, tName, tMenu, tTimeZonesList, tCounter
-
+  
 	get rigLangLoadLang("date")
 
 	if pDefault is "GMT" then
@@ -1270,7 +1244,7 @@ end rigTimezoneMenu
 --|
 --| Summary: Returns a list of timezones.  This is a helper function
 --|            for various other ones in this library.
---|
+--| 
 --| Format:  rigTimezones(param1)
 --|
 --| Parameters: string <pTimeZone>
@@ -1280,7 +1254,7 @@ end rigTimezoneMenu
 
 function rigTimezones pTimeZone
   local tZones, tTimeZone, tCounter, tValue
-
+  
 	put "UM12,-12,UM11,-11,UM10,-10,UM95,-9.5,UM9,-9,UM8,-8,UM7,-7,UM6,-6,UM5,-5,UM45,-4.5,UM4,-4,UM35,-3.5,UM3,-3,UM2,-2,UM1,-1,UTC,0,UP1,+1,UP2,+2,UP3,+3,UP35,+3.5,UP4,+4,UP45,+4.5,UP5,+5,UP55,+5.5,UP575,+5.75,UP6,+6,UP65,+6.5,UP7,+7,UP8,+8,UP875,+8.75,UP9,+9,UP95,+9.5,UP10,+10,UP105,+10.5,UP11,+11,UP115,+11.5,UP12,+12,UP1275,+12.75,UP13,+13,UP14,+14" into tZones
 
 	if pTimeZone is empty then
