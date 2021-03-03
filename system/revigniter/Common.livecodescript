@@ -2035,9 +2035,9 @@ end rigNl2br
 --| FUNCTION rigGetHTTPheader
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2016-07-11
---| Last Mod: 2016-07-11
+--| Last Mod: 2021-03-03
 --| Requires: --
 --|
 --| Summary: Return value of any HTTP header.
@@ -2050,6 +2050,7 @@ end rigNl2br
 ----------------------------------------------------------------------*/
 
 function rigGetHTTPheader pHeader
+  put toUpper(pHeader) into pHeader
   replace "-" with "_" in pHeader
   put "HTTP_" & pHeader into pHeader
   return $_SERVER[pHeader]
