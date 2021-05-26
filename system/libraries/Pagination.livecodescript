@@ -453,7 +453,7 @@ end rigCreatePaginationLinks
 --| Version:  1.1
 --| Created: 2014-02-28
 --| Last Mod: 2021-03-03
---| Requires: rigFetchSegment(), rigTotalRsegments(), rigLogMessage, rigElapsedTime()
+--| Requires: rigLogMessage, rigElapsedTime()
 --|
 --| Summary: Build and send JSON data used by AJAX pagination script.
 --|
