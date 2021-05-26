@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.8</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.1.9</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -161,7 +161,7 @@ put rigHtmlImg(tImgProperties) into gData["myPic"]
 
 <h3><a id="link_tag"></a>rigHtmlLinkTag()</h3>
 
-<p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media and indexPage. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates.</p>
+<p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media, indexPage and cors. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates; cors is a boolean which adds the "crossorigin" attribute if set to TRUE.</p>
 
 <pre><code class="lang-livecodeserver">put rigHtmlLinkTag("css/mystyles.css") into gData["myStyleLink"]
 -- gives &lt;link href=&quot;http://site.com/css/mystyles.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code></pre>
@@ -185,6 +185,18 @@ put "print" into tLink["media"]
 
 put rigHtmlLinkTag(tLink) into gData["myStyleLink"]
 -- &lt;link href=&quot;http://site.com/css/printer.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; media=&quot;print&quot; /&gt;</code></pre>
+ 
+ <p>Preloading a font:</p>
+ 
+ <pre><code>put "assets/fonts/dosis-v7-latin-300.woff2" into tFontLinkDosis["href"]
+put "preload" into tFontLinkDosis["rel"]
+put "font/woff2" into tFontLinkDosis["type"]
+put true into tFontLinkDosis["cors"]
+
+
+put rigHtmlLinkTag(tFontLinkDosis) into gData["fontLinkDosis"]
+ -- &lt;link href=&quot;https://site.com/assets/fonts/dosis-v7-latin-300.woff2&quot; rel=&quot;preload&quot; type=&quot;font/woff2&quot; crossorigin /&gt;</code></pre>
+ 
   
 <h3><a id="nbs"></a>rigHtmlNbs()</h3>
 
@@ -224,7 +236,7 @@ put rigHtmlUL(tList, tAttributes) into gData["myUL"]
 
 <p>Here is a more complex example, using a multi-dimensional array:</p>
 
-<pre><code>rigLoadHelper "html"
+<pre><code class="lang-livecodeserver">rigLoadHelper "html"
 
 put "boldlist" into tAttributes["class"]
 put "mylist" into tAttributes["id"]
@@ -421,7 +433,7 @@ Previous Topic:&nbsp;&nbsp;<a href="galleria_helper.html">Form-Mail Helper</a>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="jwt_helper.html">JWT Helper</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2020<span class="separator"> :: </span><a href="https://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span><a href="https://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
   </div>
 </div>
 

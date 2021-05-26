@@ -450,10 +450,10 @@ end rigCreatePaginationLinks
 --| COMMAND rigAjaxPagination
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 28-02-2014
---| Last Mod: 28-02-2014
---| Requires: rigFetchSegment(), rigTotalRsegments(), rigLogMessage, rigElapsedTime()
+--| Version:  1.1
+--| Created: 2014-02-28
+--| Last Mod: 2021-03-03
+--| Requires: rigLogMessage, rigElapsedTime()
 --|
 --| Summary: Build and send JSON data used by AJAX pagination script.
 --|
@@ -468,11 +468,7 @@ command rigAjaxPagination pPaginationData pPaginationLinks
   local tAjax, tJSONpaginationData, tElapsed
 
   # CHECK IF PAGE REQUEST IS AN XMLHTTP REQUEST
-  put (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") into tAjax
-  if (rigFetchSegment(rigTotalSegments()) is "ajaxrequest") or (rigFetchSegment(rigTotalRsegments()) is "ajaxrequest") then
-    put TRUE into tAjax
-  end if
-
+  put rigGetHTTPheader("X-Requested-With") is "XMLHttpRequest" into tAjax
 
   if tAjax is TRUE then
     # PREPARE QUOTES TO CONFORM WITH JSON
@@ -508,9 +504,9 @@ end rigAjaxPagination
 --| FUNCTION rigAjaxPaginationCode
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2014-02-28
---| Last Mod: 2020-01-13
+--| Last Mod: 2021-03-03
 --| Requires: --
 --|
 --| Summary: Return AJAX pagination JavaScript code.
@@ -527,7 +523,7 @@ function rigAjaxPaginationCode pNonce
     put " nonce='" & pNonce & "'" into tNonce
   end if
 
-	return "<script" & tNonce & ">/* @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt */function switchPage(t){" & quote & "use strict" & quote & ";" & quote & "A" & quote & "!==(t=t||window.event).target.nodeName&&" & quote & "A" & quote & "!==t.target.parentNode.nodeName||" & sPaginationA["widgetName"] & ".clickListener(t," & quote & sPaginationA["linksElementID"] & quote & "," & quote & sPaginationA["dataElementID"] & quote & ")}document.addEventListener(" & quote & "DOMContentLoaded" & quote & ",(function(){" & quote & "use strict" & quote & ";var t=document.getElementById(" & quote & sPaginationA["linksElementID"] & quote & ");t.addEventListener?t.addEventListener(" & quote & "click" & quote & ",switchPage,!1):t.attachEvent&&t.attachEvent(" & quote & "onclick" & quote & ",switchPage)}));var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");var u=o.href[o.href.length-1]===" & quote & "/" & quote & "?" & quote & "ajaxrequest/" & quote & ":" & quote & "/ajaxrequest/" & quote & ";r.open(" & quote & "POST" & quote & ",o.href+u,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };/* @license-end */</script>"
+	return "<script" & tNonce & ">/* @license magnet:?xt=urn:btih:8e4f440f4c65981c5bf93c76d35135ba5064d8b7&dn=apache-2.0.txt */function switchPage(t){" & quote & "use strict" & quote & ";" & quote & "A" & quote & "!==(t=t||window.event).target.nodeName&&" & quote & "A" & quote & "!==t.target.parentNode.nodeName||" & sPaginationA["widgetName"] & ".clickListener(t," & quote & sPaginationA["linksElementID"] & quote & "," & quote & sPaginationA["dataElementID"] & quote & ")}document.addEventListener(" & quote & "DOMContentLoaded" & quote & ",(function(){" & quote & "use strict" & quote & ";var t=document.getElementById(" & quote & sPaginationA["linksElementID"] & quote & ");t.addEventListener?t.addEventListener(" & quote & "click" & quote & ",switchPage,!1):t.attachEvent&&t.attachEvent(" & quote & "onclick" & quote & ",switchPage)}));var" && sPaginationA["widgetName"] & "={paginationWidget:null,paginationData:null,preventDefault:function(e){" & quote & "use strict" & quote & ";e=e||window.event;document.addEventListener?e.preventDefault():document.attachEvent&&(e.returnValue=!1)},clickListener:function(e,t,n){" & quote & "use strict" & quote & ";e=e||window.event;this.paginationWidget=document.getElementById(t);this.paginationData=document.getElementById(n);if(this.paginationWidget!==null&&this.paginationData!==null){this.preventDefault(e);try{var r=new XMLHttpRequest}catch(i){try{var r=new ActiveXObject(" & quote & "Microsoft.XMLHTTP" & quote & ")}catch(s){var r=null} } if(r!==null){var o=e.target?e.target:e.srcElement;if(o.nodeName!==" & quote & "A" & quote & "){o=o.parentNode;}o.requestTimer=setTimeout(function(){r.abort();" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server timed out while making your request." & quote & ")}," & sPaginationA["ajaxServerTimeout"] & ");r.open(" & quote & "POST" & quote & ",o.href,!0);r.onreadystatechange=function(){if(r.readyState===4){clearTimeout(o.requestTimer);r.status===200||r.status===304?" & sPaginationA["widgetName"] & ".writeData(r.responseText):" & sPaginationA["widgetName"] & ".writeError(" & quote & "The server was unable to be contacted." & quote & ")} }; r.setRequestHeader(" & quote & "Content-Type" & quote & "," & quote & "application/json" & quote & ");r.setRequestHeader(" & quote & "X-Requested-With" & quote & "," & quote & "XMLHttpRequest" & quote & "); r.send(null)} } }, writeData:function(e){" & quote & "use strict" & quote & ";var t=JSON.parse(e);" & sPaginationA["widgetName"] & ".paginationData.innerHTML=t.paginationData;" & sPaginationA["widgetName"] & ".paginationWidget.innerHTML=t.paginationLinks}, writeError:function(e){" & quote & "use strict" & quote & ";alert(e)} };/* @license-end */</script>"
 end rigAjaxPaginationCode
 
 
