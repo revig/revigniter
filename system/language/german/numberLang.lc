@@ -1,10 +1,30 @@
 <?lc
 
-put "Tb" into gLang["terabyte_abbr"]
-put "Gb" into gLang["gigabyte_abbr"]
-put "Mb" into gLang["megabyte_abbr"]
-put "Kb" into gLang["kilobyte_abbr"]
-put "Bytes" into gLang["bytes"]
+##
+# This file is part of the revIgniter framework.
+#
+# @copyright	Copyright (c) 2009 - 2021, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
+##
+
+
+put "Tb" into gLang["numTerabyteAbbr"]
+put "Gb" into gLang["numGigabyteAbbr"]
+put "Mb" into gLang["numMegabyteAbbr"]
+put "Kb" into gLang["numKilobyteAbbr"]
+put "Bytes" into gLang["numBytes"]
+
+put "tausend" into gLang["numThousand"]
+put "Millionen" into gLang["numMillion"]
+put "Milliarden" into gLang["numBillion"]
+put "Billionen" into gLang["numTrillion"]
+put "Billiarden" into gLang["numQuadrillion"]
+
+put "€" into gLang["numCurrencySymbol"]
+put "," into gLang["numDecimalSep"]
+put "3%d.%d,%d%s" into gLang["numFormatCurrency"]
+put "3%d %d,%d" into gLang["numFormat"]
 
 --| END OF numberLang.lc
 --| Location:  ./system/language/german/numberLang.lc

@@ -1,10 +1,30 @@
 <?lc
 
-put "To" into gLang["terabyte_abbr"]
-put "Go" into gLang["gigabyte_abbr"]
-put "Mo" into gLang["megabyte_abbr"]
-put "Ko" into gLang["kilobyte_abbr"]
-put "Octets" into gLang["bytes"]
+##
+# This file is part of the revIgniter framework.
+#
+# @copyright	Copyright (c) 2009 - 2021, dimensionB Bitter u. Bitter GmbH
+# @license		https://revigniter.com/userGuide/license.html
+# @link		    https://revigniter.com
+##
+
+
+put "To" into gLang["numTerabyteAbbr"]
+put "Go" into gLang["numGigabyteAbbr"]
+put "Mo" into gLang["numMegabyteAbbr"]
+put "Ko" into gLang["numKilobyteAbbr"]
+put "Octets" into gLang["numBytes"]
+
+put "mille" into gLang["numThousand"]
+put "millions" into gLang["numMillion"]
+put "milliards" into gLang["numBillion"]
+put "billions" into gLang["numTrillion"]
+put "mille billions" into gLang["numQuadrillion"]
+
+put "€" into gLang["numCurrencySymbol"]
+put "," into gLang["numDecimalSep"]
+put "3%d.%d,%d%s" into gLang["numFormatCurrency"]
+put "3%d %d,%d" into gLang["numFormat"]
 
 --| END OF numberLang.lc
 --| Location:  ./system/language/french/numberLang.lc
