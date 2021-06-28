@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Number Helper : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
+
+		
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
+				<input type="hidden" name="kj" value="#000000"/>
+				<input type="hidden" name="k7" value="#2B3137"/>
+				<input type="hidden" name="k8" value="#C7C7C7"/>
+			  <input type="hidden" name="k9" value="#85EAFB"/>
+				<input type="hidden" name="kx" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+			  <input type="hidden" name="k1" value="-1"/>
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.navbar-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="https://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Number Helper</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+		
+<div id="content">
+
+
+<h1>Number Helper</h1>
+
+<p>The Number Helper file contains handlers that help you work with numeric data respecting country-specific number formats. It lets you specify number formats using number codes, where each code letter is preceded with a percent sign:  %c3%d,%d.%d etc.</p>
+
+<h3>Number Code Specifiers and Separators</h3>
+
+
+<p>Supported specifiers:</p>
+
+
+<div class="table">
+<table>
+	<tr>
+		<th>Specifier</th>
+		<th>Description</th>
+	</tr>
+	<tr>	
+		<td class="td">%d</td>
+		<td class="td">Digits</td>
+	</tr>
+	<tr>	
+		<td class="td">%c</td>
+		<td class="td">Currency symbol (€, $, CHF, ... example: %c3%d,%d.%d)</td>
+	</tr>
+	<tr>	
+		<td class="td">%s</td>
+		<td class="td">Suffix for formatted numbers as bytes, based on size (TB, GB, MB, ... example: 3%d,%d.%d%s)</td>
+	</tr>
+	<tr>	
+		<td class="td">%a</td>
+		<td class="td">Suffix for a human-readable number like 123.4 million (quadrillion, trillion, ... example: 3%d,%d.%d%a)</td>
+	</tr>
+	<tr>	
+		<td class="td">3%</td>
+		<td class="td">Amount of digits in a digits group, this specifier must precede the numeric code (example: 3%d,%d.%d)</td>
+	</tr>
+	<tr>	
+		<td class="td">5%</td>
+		<td class="td">Defines a partition threshold, that is, the minimum number of digits required for a number to be separated into groups of digits, this specifier must precede the group size specifier of the numeric code (4%, 5%, ..., example: 5%3%d'%d.%d %c)</td>
+	</tr>
+</table>
+</div>
+
+
+<p>Supported separators:</p>
+
+
+<div class="table">
+<table>
+	<tr>
+		<th>Separator</th>
+		<th>Description</th>
+	</tr>
+	<tr>	
+		<td class="td">.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,</td>
+		<td class="td">Decimal separators</td>
+	</tr>
+	<tr>	
+		<td class="td">,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' (typewriter apostrophe)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;’ (typesetter's apostrophe)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and space)</td>
+		<td class="td">Thousands separators</td>
+	</tr>
+</table>
+</div>
+
+
+<h3>Number Code Examples:</h3>
+
+<p>US-English number format including a currency symbol specifier, the number is separated into groups of three digits:</p>
+<pre><code>%c3%d,%d.%d
+</code></pre>
+
+
+<p>European number format including a data size suffix specifier:</p>
+<pre><code>3%d %d,%d%s
+</code></pre>
+
+
+<p>Swiss-German (canton St. Gallen) number format including a group partition threshold specifier and a data size suffix specifier, please note that although the integral part uses an apostrophe as decimal separator, there is a different thousands separator for the decimal part (the space after the last digits specifier):</p>
+<pre><code>5%3%d'%d.%d %s
+</code></pre>
+
+
+<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to specify a number format. The number format parameter of all functions is optional. If this parameter is empty the number code as specified in language files is used. Country-specific number codes and text generated can be found in the following language file: <kbd>system/language/&lt;your_lang&gt;/numberLang.lc</kbd>.</p>
+
+
+<h2>Loading this Helper</h2>
+
+<p>This helper is loaded using the following code:</p>
+<pre><code class="lang-livecodeserver">rigLoadHelper "number"</code></pre>
+
+
+<h2>Handler Reference</h2>
+
+The following functions are available:
+
+<h3>rigFormattedNum(<var>number</var>, <var>numberCode</var>, <var>unit</var>)</h3>
+<p>Converts a number to a formatted number string.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>number:</strong> must contain a number</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
+	<li><strong>unit:</strong> (optional) must contain a string like "CHF", "C$", "miles"... etc.</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put "987654321.1234567" into tNumToFormat
+put "3%d.%d,%d " into tFormat
+put rigFormattedNum(tNumToFormat, tFormat, "km") into gData["formattedNum"]
+# RESULT: 987.654.321,123 456 7 km
+</code></pre>
+
+
+
+<h3>rigFormattedNumToNum(<var>number</var>, <var>decimalSeparator</var>)</h3>
+<p>Converts a formatted number string to a number.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>number:</strong> must contain a number</li>
+	<li><strong>decimalSeparator:</strong> (optional) must contain the decimal separator ("." or ",") of the number in the number parameter, if this parameter is empty the decimal separator as specified in language files is used</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put "987'654'321.123 456 7" into tFormattedToNumber
+put rigFormattedNumToNum(tFormattedToNumber, ".") into gData["number"]
+# RESULT: 987654321.1234567
+</code></pre>
+
+
+
+<h3>rigNumberToCurrency(<var>number</var>, <var>numberCode</var>, <var>symbol</var>)</h3>
+<p>Converts a number to common currency formats, like USD, EUR, GBP... etc.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>number:</strong> must contain a number</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
+	<li><strong>symbol:</strong> (optional) must contain a string like "CHF", "C$", "€"... etc., if this parameter is empty the currency symbol as specified in language files is used</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put "987654321.12" into tNumber
+put rigNumberToCurrency(tNumber, , ) into gData["currency"]
+# RESULT: $ 987,654,321.12 (in case the US-Englsh language file is in use)
+</code></pre>
+
+
+
+
+
+<h3>rigNumberToAmount(<var>number</var>, <var>numberCode</var>, <var>precision</var>)</h3>
+<p>Converts a number to a human-readable version, like 123.4 trillion for numbers up to the quadrillions.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>number:</strong> must contain a number</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
+	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision, if this parameter is empty a floating point precision of 1 is used</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put "987654321.1234567" into tNumber
+put rigNumberToAmount(tNumber, , 5) into gData["amount"]
+# RESULT: 987.654 32 million (in case the Englsh language file is in use)
+</code></pre>
+
+
+
+<h3>rigNumberToSize(<var>number</var>, <var>numberCode</var>, <var>precision</var>)</h3>
+<p>Formats numbers as bytes, based on size, and adds the appropriate suffix.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>number:</strong> must contain a number</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
+	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision, if this parameter is empty a floating point precision of 1 is used</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put "987654321.1234567" into tNumber
+put rigNumberToSize(tNumber, , 5) into gData["theSize"]
+# RESULT: 941.900 56 MB (in case the Englsh language file is in use)
+</code></pre>
+	
+
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp;<a href="markdown_helper.html">Markdown Helper</a>
+<span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="otp_helper.html">OTP Helper</a>
+</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span>dimensionB Bitter u. Bitter GmbH</p>
+	</div>
+</div>
+
+
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
+
+</body>
+</html>
