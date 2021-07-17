@@ -450,9 +450,9 @@ end rigDbVersion
 --| FUNCTION rigDbQuery
 --|
 --| Author: rabit
---| Version:  1.11
+--| Version:  1.12
 --| Created: 2009-07-09
---| Last Mod: 2018-04-30
+--| Last Mod: 2021-07-17
 --| Requires: rigLogMessage, rigDbDisplayError, _rigLoadRdriver, rigCompileBinds, rigSimpleQuery(),
 --|            rigDbErrorMessage(), rigListFields(), rigTransComplete(), rigIsWriteType(), _rigCacheInit(),
 --|            rigDeleteDBcacheFiles, rigNumRows(), rigWriteSQLcache(), rigDbRedirectOnError
@@ -604,7 +604,7 @@ function rigDbQuery pSQL pBinds
 			get rigTransComplete()
 
 			# LOG AND DISPLAY ERRORS
-			rigLogMessage "error", "Query error:" & tErrorMessage
+			rigLogMessage "error", "Query error:" && tErrorMessage
 
 			put tErrorMessage into tErrorArray[1]
 			put tSQL into tErrorArray[2]
