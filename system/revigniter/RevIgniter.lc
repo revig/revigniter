@@ -76,6 +76,15 @@ end if
 
 ##
 #------------------------------------------------------
+#  Load the behavior for custom stacks which do not include configuration and debug code
+#------------------------------------------------------
+##
+
+  start using stack (gRigA["BASEPATH"] & "revigniter/stackBehavior.livecodescript")
+
+
+##
+#------------------------------------------------------
 # Load the framework constants
 #------------------------------------------------------
 ##
