@@ -12,15 +12,15 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
 
-    
+
     <script src="../js/nav-ck.js"></script>
-    
+
     <!-- Touch icons -->
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
-    
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
         <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
@@ -59,8 +59,8 @@
  		 	 		</form>
         </div><!--/.navbar-collapse -->
      </div>
-     
-     <!-- START BREADCRUMB -->     
+
+     <!-- START BREADCRUMB -->
      <div id="breadcrumbContainer">
        <div class="container">
            <ol class="breadcrumb">
@@ -71,8 +71,8 @@
             </ol>
         </div>
     </div>
-    <!-- END BREADCRUMB -->    
-    
+    <!-- END BREADCRUMB -->
+
     <!-- START SLIDEBOX -->
     <div class="slide-panel top">
       <div class="container">
@@ -82,15 +82,15 @@
       <div id="close-button" class="slide-button">Close</div>
     </div>
     <!-- END SLIDEBOX -->
-   
+
   </div>
 <!-- END PAGE HEAD -->
 
- 
+
 
 <!-- START CONTENT -->
 <div class="container gridContainer">
-  
+
 <div id="content">
 
 <h1>Using Stacks</h1>
@@ -126,7 +126,10 @@
 
 <h2>The Stack File</h2>
 
-<p>For debugging purposes and to set up the stack to expect data your stack should have this basic prototype:</p>
+<p>If your stack expects configuration data on load, your stack should have this basic prototype, that is the following code is optional:</p>
+
+
+<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to modify your existing stacks that you may have inherited from other platforms in any way, as long as the stacks in question do not need to be configured on load like other revIgniter libraries. If you don't add the following code the part used for debugging is automatically added by setting a behavior.</p>
 
 <p>Stack script:</p>
 
@@ -181,6 +184,8 @@ end openStack
 
 <h2>Passing Parameters When Initializing Your Stack</h2>
 
+<p class="important"><strong>Note:</strong>&nbsp; The following applies only to stacks which include the configuration handler as outlined above.</p>
+
 <p>In the stack loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your stack:</p>
 
 
@@ -198,7 +203,7 @@ rigLoadStack "Somestack", <kbd>tParamsA</kbd>
 <h2>Replacing Native Stacks with Your Versions</h2>
 
 <p>Simply by naming your stack files identically to a native stack will cause revIgniter to use it instead of the native one. To use this
-feature you must name the file exactly the same as the native stack.</dfn>.</p>
+feature you must name the file exactly the same as the native stack.</p>
 
 
 <p>To load your stack you'll see the standard loading handler:</p>
@@ -341,7 +346,7 @@ Next Topic:&nbsp;&nbsp;<a href="hooks.html">Hooks - Extending the Core</a>
 
 <script src="../js/script-ck.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function() { 
+document.addEventListener("DOMContentLoaded", function() {
   Slidebox.init();
 	MobileSearchBar.init();
 });
