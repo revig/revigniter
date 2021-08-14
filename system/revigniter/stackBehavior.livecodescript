@@ -55,5 +55,5 @@ end rigRunInitialStackConfig
 
 
 --| END OF stackBehavior.livecodescript
---| Location:  ./system/revigniter/english/stackBehavior.livecodescript
+--| Location:  ./system/revigniter/stackBehavior.livecodescript
 ----------------------------------------------------------------------
