@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.0</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -126,7 +126,10 @@
 
 <h2>The Stack File</h2>
 
-<p>For debugging purposes and to set up the stack to expect data your stack should have this basic prototype:</p>
+<p>If your stack expects configuration data on load, your stack should have this basic prototype, that is the following code is optional:</p>
+
+
+<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to modify your existing stacks that you may have inherited from other platforms in any way, as long as the stacks in question do not need to be configured on load like other revIgniter libraries. If you don't add the following code the part used for debugging is automatically added by revIgniter using a behavior.</p>
 
 <p>Stack script:</p>
 
@@ -181,6 +184,8 @@ end openStack
 
 <h2>Passing Parameters When Initializing Your Stack</h2>
 
+<p class="important"><strong>Note:</strong>&nbsp; The following applies only to stacks which include the configuration handler as outlined above.</p>
+
 <p>In the stack loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your stack:</p>
 
 
@@ -198,7 +203,7 @@ rigLoadStack "Somestack", <kbd>tParamsA</kbd>
 <h2>Replacing Native Stacks with Your Versions</h2>
 
 <p>Simply by naming your stack files identically to a native stack will cause revIgniter to use it instead of the native one. To use this
-feature you must name the file exactly the same as the native stack.</dfn>.</p>
+feature you must name the file exactly the same as the native stack.</p>
 
 
 <p>To load your stack you'll see the standard loading handler:</p>
@@ -327,7 +332,7 @@ Previous Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Li
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="hooks.html">Hooks - Extending the Core</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span><a href="https://revigniter.com/">dimensionB Bitter u. Bitter GmbH</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

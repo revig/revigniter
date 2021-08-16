@@ -6,9 +6,9 @@ script "numberHelper"
 # An application development framework for LiveCode
 # modeled on CodeIgniter
 #
-# @package   RevIgniter
+# @package    RevIgniter
 # @author     rabit@revigniter.com
-# @copyright  Copyright (c) 2009 - 2021, dimensionB Bitter u. Bitter GmbH
+# @copyright  Copyright (c) 2009 - 2021, Ralf Bitter
 # @license    https://revigniter.com/userGuide/license.html
 # @link       https://revigniter.com
 ##
@@ -18,11 +18,11 @@ script "numberHelper"
 ##
 # RevIgniter Number Helper
 #
-# @package      RevIgniter
+# @package     RevIgniter
 # @subpackage  Helpers
-# @category     Helpers
-# @author       rabit@revigniter.com
-# @link          https://revigniter.com/userGuide/helpers/number_helper.html
+# @category    Helpers
+# @author      rabit@revigniter.com
+# @link        https://revigniter.com/userGuide/helpers/number_helper.html
 ##
 
 ## ------------------------------------------------------------------------
@@ -653,5 +653,5 @@ end rigNumberToCurrency
 
 
 
---| END OF numberLib.livecodescript
+--| END OF numberHelper.livecodescript
 ----------------------------------------------------------------------

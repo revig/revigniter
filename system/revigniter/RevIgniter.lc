@@ -20,7 +20,7 @@ end if
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
 # @license		http://revigniter.com/userGuide/license.html
 # @link		    http://revigniter.com
 ##
@@ -43,7 +43,7 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "2.2.0"
+	constant RIVERSION = "2.2.1"
 	constant RISTATE = "final"
 
 # VERSION GETTER
@@ -72,6 +72,15 @@ end if
 ##
 
 	start using stack (gRigA["BASEPATH"] & "revigniter/Common.livecodescript")
+
+
+##
+#------------------------------------------------------
+#  Load the behavior for custom stacks which do not include configuration and debug code
+#------------------------------------------------------
+##
+
+  start using stack (gRigA["BASEPATH"] & "revigniter/stackBehavior.livecodescript")
 
 
 ##

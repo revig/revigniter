@@ -8,7 +8,7 @@ script "Loader"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -1899,9 +1899,9 @@ end _rigRiInitLibrary
 --| COMMAND _rigRiInitStack
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 31-07-2011
---| Last Mod: 22-12-2014
+--| Version:  1.2
+--| Created: 2011-07-31
+--| Last Mod: 2021-08-08
 --| Requires: --
 --|
 --| Summary: Load config file associated with loaded stack.
@@ -1961,7 +1961,13 @@ private command _rigRiInitStack pStack pPrefix pConfig
 		put "rigRunInitial" & pStack & "StackConfig" into tHandler
 		combine pConfig using numToCodepoint(1) and numToCodepoint(2)
 
-		do tHandler && quote & pConfig & quote
+		dispatch tHandler to stack pStack with pConfig
+
+    if it is not "handled" then
+      set the behavior of stack pStack to the long id of stack "stackBehavior"
+      dispatch "rigLogLoaded" to stack pStack
+      rigLogMessage "debug", "Stack" && pStack && "has no configuration handler"
+    end if
 	end if
 end _rigRiInitStack
 

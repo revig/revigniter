@@ -8,7 +8,7 @@ script "Config"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2020, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -147,16 +147,17 @@ end _setBaseURL
 --| FUNCTION rigLoadConfigFile
 --|
 --| Author: rabit
---| Version:  1.4
---| Created: 30-06-09
---| Last Mod: 08-12-15
+--| Version:  1.5
+--| Created: 2009-06-30
+--| Last Mod: 2021-07-17
 --| Requires: rigIsMainConfigLoaded(), rigShowError, rigLogMessage
 --|
 --| Summary: Loads any configuration file.
 --|
 --| Format:  rigLoadConfigFile(param1, param2, param3, param4)
 --|
---| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>, string <pModule> the module name (optional)
+--| Parameters: string <pConfigFile>, bool <pUseSections>, bool <pFailGracefully>,
+--|             string <pModule> the module name (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
@@ -276,7 +277,7 @@ function rigLoadConfigFile pConfigFile pUseSections pFailGracefully pModule
   put tConfigFileName into sConfigIsLoaded[tConfigIsLoadedKeyNum]
 
   if pModule <> empty then
-    rigLogMessage "debug", "Config file loaded:" & pModule & "/config/" & item -1 of tConfigFileName & gRigA["EXT"]
+    rigLogMessage "debug", "Config file loaded:" && pModule & "/config/" & item -1 of tConfigFileName & gRigA["EXT"]
   else
     rigLogMessage "debug", "Config file loaded: config/" & tConfigFileName & gRigA["EXT"]
   end if
