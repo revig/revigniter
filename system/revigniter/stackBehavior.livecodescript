@@ -8,7 +8,7 @@ script "stackBehavior"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2021, dimensionB Bitter u. Bitter GmbH
+# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
