@@ -221,7 +221,7 @@ if tJWTA["valid"] is TRUE then
 	
 else-- if tJWTA["valid"] is TRUE
   # RESPONSE IS ERROR "HTTP/1.0 400 Bad Request" OR "HTTP/1.0 401 Unauthorized"
-  put tJWTA["response"] into tA["secretstring"]
+  put tJWTA["response"] into tA["responsedata"]
   rigSetStatusHeader word 2 of tJWTA["response"]
 end if -- if tJWTA["valid"] is TRUE
 
