@@ -405,9 +405,9 @@ end rigMailToLink
 --| FUNCTION rigSafeMailToLink
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 05-10-09
---| Last Mod: 27-04-15
+--| Version:  1.3
+--| Created: 2009-10-05
+--| Last Mod: 2021-11-07
 --| Requires: rigArrayReverse()
 --|
 --| Summary: Create a spam-protected mailTo link written in Javascript.
@@ -415,19 +415,26 @@ end rigMailToLink
 --| Format: rigSafeMailToLink(param1, param2, param3)
 --|
 --| Parameters: string <pEmail>, string <pTitle> the link title, mixed <pAttributes> any attributes
+--|             string <pNonce> CSP nonce (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigSafeMailToLink pEmail pTitle pAttributes
+function rigSafeMailToLink pEmail pTitle pAttributes pNonce
   local tTitle, tStr, tCharsNum, tChar, tX, tKey, tVal, tTemp
   local tTempCounter, tOrdinal, tCount, tNumber, tItemDelimiter
-  local tOutput, tNum, tV
+  local tOutput, tNum, tV, tNonce
 
   if pTitle is empty then
     put pEmail into tTitle
   else
     put pTitle into tTitle
+  end if
+
+  if pNonce <> empty then
+    put " nonce=" & quote & pNonce & quote into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put " {{g_ScriptNonce_}}" into tNonce
   end if
 
   put "<a href=" & quote & "mailto:" into tStr
@@ -530,8 +537,7 @@ function rigSafeMailToLink pEmail pTitle pAttributes
   put rigArrayReverse(tX, tItemDelimiter) into tX
 
   # WRITE HTML CODE
-  put "<script type=" & quote & "text/javascript" & quote & ">" & return & \
-  "var l=new Array();" & return into tOutput
+  put "<script" & tNonce & ">" & return & "var l=new Array();" & return into tOutput
 
   put 0 into tNum
   repeat with i = 1 to tCharsNum
