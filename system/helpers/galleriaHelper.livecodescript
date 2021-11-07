@@ -70,9 +70,9 @@ end libraryStack
 --| FUNCTION rigGalleriaData
 --|
 --| Author: rabit
---| Version:  1.10
+--| Version:  1.11
 --| Created: 2011-12-11
---| Last Mod: 2020-01-13
+--| Last Mod: 2021-11-07
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo(), rigWriteFile()
 --|
@@ -174,7 +174,9 @@ function rigGalleriaData pGalleryPath pOptions pContainerID pDataVariableName pC
 
   # CSP
   if pNonce <> empty then
-    put "nonce='" & pNonce & "' " into tNonce
+    put "nonce=" & quote & pNonce & quote & " " into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put "{{g_ScriptNonce_}} " into tNonce
   end if
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
@@ -425,9 +427,9 @@ end rigGalleriaData
 --| FUNCTION rigDynamicGalleriaData
 --|
 --| Author: rabit
---| Version:  1.7
+--| Version:  1.8
 --| Created: 2011-12-27
---| Last Mod: 2020-01-13
+--| Last Mod: 2021-11-07
 --| Requires: rigTrim(), rigFetchConfigItem(), rigGetFileNames(), rigLogMessage,
 --| 					rigGetFileInfo()
 --|
@@ -507,7 +509,9 @@ function rigDynamicGalleriaData pMetaData pOptions pContainerID pDataVariableNam
 
   # CSP
   if pNonce <> empty then
-    put " nonce='" & pNonce & "' " into tNonce
+    put "nonce=" & quote & pNonce & quote & " " into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put "{{g_ScriptNonce_}} " into tNonce
   end if
 
 	# GET PATH TRANSLATED - NEEDED TO GET FILE INFO
