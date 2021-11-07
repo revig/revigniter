@@ -723,16 +723,16 @@ end rigHtmlLinkTag
 --| FUNCTION rigHtmlJsLink
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 09-10-09
---| Last Mod: 09-10-09
+--| Version:  1.1
+--| Created: 2009-10-09
+--| Last Mod: 2021-11-07
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
 --| Summary: Generates link to a JavaScript file.
 --|
 --| Format:  rigHtmlJsLink(param1, param2)
 --|
---| Parameters: mixed <pSrc>, bool <pIndexPage> should indexPage be added to the css path,
+--| Parameters: mixed <pSrc>, bool <pIndexPage> should indexPage be added to the JS path,
 --|               string <pNewLine>
 --|
 --| Return: string
@@ -757,7 +757,7 @@ function rigHtmlJsLink pSrc pIndexPage pNewLine
 		repeat for each key tK in pSrc
 			put pSrc[tK] into tV
 
-			put "<script type=" & quote & "text/javascript" & quote & " " after tLink
+			put "<script " after tLink
 
 			if tIndexPage is TRUE then
 				put rigSiteURL(tV) into tURL
@@ -771,7 +771,7 @@ function rigHtmlJsLink pSrc pIndexPage pNewLine
 		end repeat
 
 	else
-		put "<script type=" & quote & "text/javascript" & quote & " " after tLink
+		put "<script " after tLink
 
 		if "://" is in pSrc then
 			put "src=" & quote & pSrc & quote after tLink
