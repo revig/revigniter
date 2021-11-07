@@ -253,22 +253,28 @@ end _rigSetInitialJqueryValue
 --| FUNCTION rigJQuerySource
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 22-02-10
---| Last Mod: 13-05-16
+--| Version:  1.4
+--| Created: 2010-02-22
+--| Last Mod: 2021-11-07
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
 --|
---| Format:  rigJQuerySource()
+--| Format:  rigJQuerySource([param1])
 --|
---| Parameters: --
+--| Parameters: string <pNonce> CSP nonce (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJQuerySource
-  local tJqueryPath, tSiteURL
+function rigJQuerySource pNonce
+  local tJqueryPath, tSiteURL, tNonce
+
+  if pNonce <> empty then
+    put "nonce=" & quote & pNonce & quote & " " into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put "{{g_ScriptNonce_}} " into tNonce
+  end if
 
 	if sUseJQremotely is not TRUE then
 		if char 1 of sJqueryPath is "/" then
@@ -283,14 +289,14 @@ function rigJQuerySource
       put char 1 to -9 of tSiteURL into tSiteURL
     end if
 
-		return "<script type=" & quote & "text/javascript" & quote && "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
+		return "<script" && tNonce & "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
 	else
 		if sJqueryCurrentVersion is empty then
 			# LATEST VERSION FROM JQUERY.COM
-			return "<script src=" & quote & "//code.jquery.com/jquery-latest.js" & quote & "></script>"
+			return "<script" && tNonce & "src=" & quote & "//code.jquery.com/jquery-latest.js" & quote & "></script>"
 		else
 			# JQUERY FROM AJAX.GOOGLEAPIS
-			return "<script src=" & quote & "//ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote && "type=" & quote & "text/javascript" & quote & "></script>"
+			return "<script" && tNonce & "src=" & quote & "//ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote & "></script>"
 		end if
 	end if
 end rigJQuerySource
@@ -305,22 +311,22 @@ end rigJQuerySource
 --| COMMAND rigJQopen
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 07-03-10
---| Last Mod: 07-03-10
+--| Version:  1.1
+--| Created: 2010-03-07
+--| Last Mod: 2021-11-07
 --| Requires: _rigJsScriptOpen(), _rigJQreadyOpen
 --|
 --| Summary: Start building jQuery script.
 --|
---| Format:  rigJQopen
+--| Format:  rigJQopen [param]
 --|
---| Parameters: --
+--| Parameters: string <pNonce> CSP nonce (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-command rigJQopen
-	put _rigJsScriptOpen() & _rigJQreadyOpen() into sJqueryScript
+command rigJQopen pNonce
+	put _rigJsScriptOpen(pNonce) & _rigJQreadyOpen() into sJqueryScript
 end rigJQopen
 
 
@@ -364,22 +370,30 @@ end rigJQclose
 --| FUNCTION _rigJsScriptOpen
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 22-02-10
---| Last Mod: 22-02-10
+--| Version:  1.1
+--| Created: 2010-02-22
+--| Last Mod: 2021-11-07
 --| Requires: --
 --|
 --| Summary: Return javascript open tag.
 --|
---| Format: _rigJsScriptOpen()
+--| Format: _rigJsScriptOpen([param])
 --|
---| Parameters: --
+--| Parameters: string <pNonce> CSP nonce (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-private function _rigJsScriptOpen
-	return "<script type=" & quote & "text/javascript" & quote & ">" & return
+private function _rigJsScriptOpen pNonce
+  local tNonce
+
+  if pNonce <> empty then
+    put " nonce=" & quote & pNonce & quote into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put " {{g_ScriptNonce_}}" into tNonce
+  end if
+
+  return "<script" & tNonce & ">" & return
 end _rigJsScriptOpen
 
 
