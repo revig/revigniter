@@ -374,6 +374,25 @@ end if
 	put 90000 into gConfig["csrf_expire"]
 
 
+##
+#--------------------------------------------------------------------------
+# Bot Detection
+#--------------------------------------------------------------------------
+# Determine when a bot makes a request and display an error in that case.
+#
+# 'honeypot_hidden' = The visibility of the text field. Default is TRUE.
+# 'honeypot_label' = The label of the text field.
+# 'honeypot_name' = The name of the text field.
+# 'honeypot-containerID' = The ID selector of the honeypot container
+##
+
+	put FALSE into gConfig["honeypot"]
+	put TRUE into gConfig["honeypot_hidden"]
+	put "Fill in this field" into gConfig["honeypot_label"]
+	put "honeypot" into gConfig["honeypot_name"]
+	put "rigHP" into gConfig["honeypot_containerID"]
+
+
 
 ##
 #--------------------------------------------------------------------------
