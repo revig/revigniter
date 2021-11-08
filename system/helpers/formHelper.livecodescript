@@ -97,7 +97,9 @@ end libraryStack
 
 function rigFormOpen pAction pAttributes pHidden
   local tAttributes, tURIstring, tAction, tForm, tCSRFprotection, tBaseURL
-  local tStandardURLs, tURIsegments, tSegment, tHiddenURI
+  local tStandardURLs, tURIsegments, tSegment, tHiddenURI, tHoneypotLabel
+  local tHoneypotName, tHoneypotTemplate, tHoneypotDivStyle, tHoneypotStyle
+  local tHoneypotID
 
 	if pAttributes is not an array then
 		put "method=" & quote & "post" & quote into tAttributes
