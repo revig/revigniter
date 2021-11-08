@@ -47,12 +47,12 @@ local sPreppedFields, sStackInUse
  --| Requires: --
  --|
  --| Summary:  Run security check.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -63,7 +63,7 @@ on libraryStack
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
     end if
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -78,19 +78,19 @@ end libraryStack
 --| FUNCTION rigFormOpen
 --|
 --| Author: rabit
---| Version:  1.3
---| Created: 28-07-09
---| Last Mod: 15-07-12
+--| Version:  1.4
+--| Created: 2009-07-28
+--| Last Mod: 2021-11-07
 --| Requires: rigSiteURL(), _rigAttributesToString(), rigFormHidden(), rigFetchConfigItem()
 --|            rigGetCSRFhash(), rigGetCSRFtokenName()
 --|
 --| Summary: Creates the opening portion of the form.
---| 
+--|
 --| Format:  rigFormOpen(param1, param2, param3)
 --|
 --| Parameters: string <pAction> the URI segments of the form destination,
 --|               array <pAttributes> a key/value pair of attributes,
---|               array <pHidden> a key/value pair hidden data 
+--|               array <pHidden> a key/value pair hidden data
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
@@ -98,48 +98,48 @@ end libraryStack
 function rigFormOpen pAction pAttributes pHidden
   local tAttributes, tURIstring, tAction, tForm, tCSRFprotection, tBaseURL
   local tStandardURLs, tURIsegments, tSegment, tHiddenURI
-  
+
 	if pAttributes is not an array then
 		put "method=" & quote & "post" & quote into tAttributes
 	else
 		put pAttributes into tAttributes
 	end if
-    
+
 	# IF NO ACTION IS PROVIDED THEN SET TO THE CURRENT URL
 	if pAction is empty then
 		put rigUriString() into tURIstring
 		put rigSiteURL(tURIstring) into tAction
-		
+
 	# IF AN ACTION IS NOT A FULL URL THEN TURN IT INTO ONE
 	else 	if "://" is in pAction then
 		put pAction into tAction
 	else
 		put rigSiteURL(pAction) into tAction
 	end if
-    
+
 	put "<form action=" & quote & tAction & quote into tForm
 	put tForm & _rigAttributesToString(tAttributes, TRUE) into tForm
 	put tForm & ">" into tForm
-	
+
 	# ADD CSRF FIELD IF ENABLED, BUT LEAVE IT OUT FOR GET REQUESTS AND REQUESTS TO EXTERNAL WEBSITES
 	put rigFetchConfigItem("csrf_protection") into tCSRFprotection
 	put rigFetchConfigItem("baseUrl") into tBaseURL
 	if (tCSRFprotection is TRUE) and (tBaseURL is in tAction) and (tAttributes["method"] is not "get") then
 		put rigGetCSRFhash() into pHidden[rigGetCSRFtokenName()]
 	end if
-    
+
 	# CHECK IF STANDARD QUERY STRING BASED URLs ARE ENABLED
 	put rigFetchConfigItem("enableQueryStrings") into tStandardURLs
-		
+
 	# STANDARD QUERY STRING BASED URLs
 	if (tStandardURLs is TRUE) and (tAttributes["method"] is not "post") then
 
 		 set the itemdelimiter to "?"
-    
+
 		put item 2 of tAction into tURIsegments
-    
+
     		set the itemdelimiter to "&"
-    
+
     		repeat for each item tSegment in tURIsegments
         		set the itemdelimiter to "="
         		put "<input type=" & quote & "hidden" & quote && "name=" & quote & (item 1 of tSegment) & quote && "value=" & quote & (item 2 of tSegment) & quote & ">" after tHiddenURI
@@ -153,7 +153,32 @@ function rigFormOpen pAction pAttributes pHidden
 	if pHidden is an array then
 		put tForm & return & rigFormHidden(pHidden) into tForm
 	end if
-    
+
+  # ADD HONEYPOT TEXT INPUT FIELD
+  if rigFetchConfigItem("honeypot") is TRUE then
+    put rigFetchConfigItem("honeypot_label") into tHoneypotLabel
+    put rigFetchConfigItem("honeypot_name") into tHoneypotName
+    put rigFetchConfigItem("honeypot_containerID") into tHoneypotID
+    put "<label>" & tHoneypotLabel & "</label><input type=" & quote & "text" & quote & \
+    " name=" & tHoneypotName & " value=" & quote & quote & "/>" into tHoneypotTemplate
+
+    if rigFetchConfigItem("honeypot_hidden") then
+      # IF LIBRARY Contentsecuritypolicy IS LOADED ADD A NONCE
+      if "Contentsecuritypolicy" is not among the lines of the stacksInUse then
+        put  " style=" & quote & "display: none;" & quote into tHoneypotDivStyle
+        put "" into tHoneypotStyle
+      else
+        put "<style {{g_StyleNonce_}}> #" & tHoneypotID && "{display: none;} </style>" into tHoneypotStyle
+      end if
+    else
+      put "" into tHoneypotDivStyle
+    end if -- if rigFetchConfigItem("honeypot_hidden")
+
+    put tHoneypotStyle & "<div id=" & quote & tHoneypotID & quote & tHoneypotDivStyle & ">" & tHoneypotTemplate & "</div>" into tHoneypotContainer
+
+    put tForm & return & tHoneypotContainer into tForm
+  end if -- if rigFetchConfigItem("honeypot") is TRUE
+
 	return tForm
 end rigFormOpen
 
@@ -175,19 +200,19 @@ end rigFormOpen
 --|
 --| Summary: Form declaration - multipart type. Creates the opening portion
 --|            of the form, but with "multipart/form-data".
---| 
+--|
 --| Format:  rigFormOpenMultiPart(param1, param2, param3)
 --|
 --| Parameters: string <pAction> the URI segments of the form destination,
 --|               array <pAttributes> a key/value pair of attributes,
---|               array <pHidden> a key/value pair hidden data 
+--|               array <pHidden> a key/value pair hidden data
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
 function rigFormOpenMultiPart pAction pAttributes pHidden
   local tAttributes
-  
+
 	put pAttributes into tAttributes
 	put "multipart/form-data" into tAttributes["enctype"]
 
@@ -211,7 +236,7 @@ end rigFormOpenMultiPart
 --|
 --| Summary: Generates hidden fields.  You can pass a simple
 --|            key/value string or an associative array with multiple values.
---| 
+--|
 --| Format:  rigFormHidden(param1, param2, param3)
 --|
 --| Parameters: mixed <pName>, string <pValue>, bool <pRecursion>
@@ -221,7 +246,7 @@ end rigFormOpenMultiPart
 
 function rigFormHidden pName pValue pRecursion
   local tRecursion, tForm, tKey, tK, tV
-  
+
 	if pRecursion is empty then
 		put FALSE into tRecursion
 	else
@@ -249,7 +274,7 @@ function rigFormHidden pName pValue pRecursion
 			get rigFormHidden(pName[tK], tV, TRUE)
 		end repeat
 	end if
-    
+
 	return tForm
 end rigFormHidden
 
@@ -269,7 +294,7 @@ end rigFormHidden
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Text input field.
---| 
+--|
 --| Format:  rigFormInput(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -279,7 +304,7 @@ end rigFormHidden
 
 function rigFormInput pData pValue pExtra
   local tDefaults
-  
+
 	put "text" into tDefaults["type"]
 
 	if pData is not an array then
@@ -309,7 +334,7 @@ end rigFormInput
 --| Requires: --
 --|
 --| Summary: Password field. Identical to the input function but adds the "password" type.
---| 
+--|
 --| Format:  rigFormPassword(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -319,7 +344,7 @@ end rigFormInput
 
 function rigFormPassword pData pValue pExtra
   local tData
-  
+
 	put pData into tData
 
 	if tData is not an array then
@@ -346,7 +371,7 @@ end rigFormPassword
 --| Requires: --
 --|
 --| Summary: Upload field. Identical to the input function but adds the "file" type.
---| 
+--|
 --| Format:  rigFormUpload(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -356,7 +381,7 @@ end rigFormPassword
 
 function rigFormUpload pData pValue pExtra
   local tData
-  
+
 	put pData into tData
 
 	if tData is not an array then
@@ -384,7 +409,7 @@ end rigFormUpload
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Textarea field.
---| 
+--|
 --| Format:  rigFormTextarea(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -394,7 +419,7 @@ end rigFormUpload
 
 function rigFormTextarea pData pValue pExtra
   local tData, tDefaults, tVal, tName
-  
+
 	put pData into tData
 
 	if tData is not an array then
@@ -420,11 +445,11 @@ function rigFormTextarea pData pValue pExtra
 		--repeat for each line thisLine in tDataKeysList
 			--put tData[thisLine] into tDataValRemoved[thisLine]
 		--end repeat
-		
+
 
 		--put tData into tDataValRemoved
 		--delete variable tDataValRemoved["value"]
-		delete variable tData["value"] 
+		delete variable tData["value"]
 
 	end if
 
@@ -454,7 +479,7 @@ end rigFormTextarea
 --| Requires: rigFormDropDown()
 --|
 --| Summary: Multi-select menu
---| 
+--|
 --| Format:  rigFormMultiselect(param1, param2, param3, param4)
 --|
 --| Parameters: string <pName>, array <pOptions>, mixed <pSelected>, string <pExtra>
@@ -486,10 +511,10 @@ end rigFormMultiselect
 --| Requires: --
 --|
 --| Summary: Drop-Down menu.
---| 
+--|
 --| Format:  rigFormDropDown(param1, param2[, param3][, param4][, param5])
 --|
---| Parameters: string <pName>, array <pOptions>, mixed <pSelected> (optional), 
+--| Parameters: string <pName>, array <pOptions>, mixed <pSelected> (optional),
 --| 						string <pExtra> (optional), string <pSortType> (optional) can be
 --|              "asctext", "desctext", "ascnum" or "descnum"
 --|
@@ -499,10 +524,10 @@ end rigFormMultiselect
 function rigFormDropDown pName pOptions pSelected pExtra pSortType
   local tOptions, tSelected, tExtra, tMultiple, tForm, tSelectedAsElementsList
   local tKey, tVal, tValKeys, tSel, tValue, tAdditionalAttributes
-  
+
 	put pOptions into tOptions
 	put pSelected into tSelected
-	
+
   if (pSortType is empty) or (pSortType is not among the items of "ascnum,descnum,asctext,desctext") then
     put "asctext" into pSortType
   end if
@@ -510,7 +535,7 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	if (tSelected is not an array) and (tSelected is not empty) then
 		put tSelected into tSelected[1]
 	end if
-	
+
 	# IF NO SELECTED STATE WAS SUBMITTED WE WILL ATTEMPT TO SET IT AUTOMATICALLY
 	if (tSelected is not an array) and (tSelected is empty) then
 		# IF THE FORM NAME APPEARS IN THE $_POST ARRAY WE HAVE A WINNER!
@@ -525,7 +550,7 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	else
 		put pExtra into tExtra
 	end if
-	
+
 	if (the number of lines in the keys of tSelected > 1) and ("multiple" is not in tExtra) then
 		put " multiple=" & quote & "multiple" & quote into tMultiple
 	else
@@ -537,22 +562,22 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 	# GET ELEMENTS OF tSelected
 	put tSelected into tSelectedAsElementsList
 	combine tSelectedAsElementsList using comma
-	
+
   get the keys of tOptions
   rigSort it, pSortType
-	
+
   repeat for each line tKey in it
 		put tOptions[tKey] into tVal
 
 		if tVal is an array then
-        put the keys of tVal into tValKeys   
+        put the keys of tVal into tValKeys
         rigSort tValKeys, pSortType
-				
+
 			put "<optgroup label=" & quote & tKey & quote & ">" & return after tForm
 
        repeat for each line tOptgroupKey in tValKeys
 				if comma is not in tOptgroupKey then
-						
+
 					if tOptgroupKey is among the items of tSelectedAsElementsList then
 						put " selected=" & quote & "selected" & quote into tSel
 					else
@@ -560,13 +585,13 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 					end if
 
 					put "<option value=" & quote & tOptgroupKey & quote & tSel & ">" & tVal[tOptgroupKey] & "</option>" & return after tForm
-					
+
 				else -- if comma is not in tOptgroupKey then
-					
+
 					put item 1 of tOptgroupKey into tValue
 					put item 2 to (the number of items of tOptgroupKey) of tOptgroupKey into tAdditionalAttributes
 					replace comma with space in tAdditionalAttributes
-					
+
 					if tValue is among the items of tSelectedAsElementsList then
 						put " selected=" & quote & "selected" & quote into tSel
 					else
@@ -574,15 +599,15 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 					end if
 
 					put "<option value=" & quote & tValue & quote & tSel && tAdditionalAttributes & ">" & tVal[tOptgroupKey] & "</option>" & return after tForm
-					
+
 				end if -- if comma is not in tOptgroupKey then
-				
+
 			end repeat
 
 			put "</optgroup>" & return after tForm
 
 		else -- if tVal is an array then
-				
+
 			if comma is not in tKey then
 				if tKey is among the items of tSelectedAsElementsList then
 					put " selected=" & quote & "selected" & quote into tSel
@@ -591,12 +616,12 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 				end if
 
 				put "<option value=" & quote & tKey & quote & tSel & ">" & tVal & "</option>" & return after tForm
-				
+
 			else
 				put item 1 of tKey into tValue
 				put item 2 to (the number of items of tKey) of tKey into tAdditionalAttributes
 				replace comma with space in tAdditionalAttributes
-				
+
 				if tValue is among the items of tSelectedAsElementsList then
 					put " selected=" & quote & "selected" & quote into tSel
 				else
@@ -606,9 +631,9 @@ function rigFormDropDown pName pOptions pSelected pExtra pSortType
 				put "<option value=" & quote & tValue & quote & tSel && tAdditionalAttributes & ">" & tVal & "</option>" & return after tForm
 			end if
 		end if -- if tVal is an array then
-			
-			
-	end repeat 
+
+
+	end repeat
 
 	put "</select>" after tForm
 
@@ -631,7 +656,7 @@ end rigFormDropDown
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Checkbox field.
---| 
+--|
 --| Format:  rigFormCheckbox(param1, param2, param3, param4)
 --|
 --| Parameters: mixed <pData>, string <pValue>, bool <pChecked>, string <pExtra>
@@ -641,7 +666,7 @@ end rigFormDropDown
 
 function rigFormCheckbox pData pValue pChecked pExtra
   local tChecked, tData, tDefaults
-  
+
 	if pChecked is empty then
 		put FALSE into tChecked
 	else
@@ -675,12 +700,12 @@ function rigFormCheckbox pData pValue pChecked pExtra
 			--end repeat
 			--put tDataCheckedRemoved into tData
 
-			delete variable tData["checked"] 
+			delete variable tData["checked"]
 
 		else
 			put "checked" into tData["checked"]
 		end if
-		
+
 	end if
 
 	if tChecked is TRUE then
@@ -697,7 +722,7 @@ function rigFormCheckbox pData pValue pChecked pExtra
 			--end repeat
 			--put tDefaultsCheckedRemoved into tDefaults
 
-			delete variable tDefaults["checked"] 
+			delete variable tDefaults["checked"]
 
 	end if
 
@@ -720,7 +745,7 @@ end rigFormCheckbox
 --| Requires: rigFormCheckbox()
 --|
 --| Summary: Radio button.
---| 
+--|
 --| Format:  rigFormRadio(param1, param2, param3, param4)
 --|
 --| Parameters: mixed <pData>, string <pValue>, bool <pChecked>, string <pExtra>
@@ -730,7 +755,7 @@ end rigFormCheckbox
 
 function rigFormRadio pData pValue pChecked pExtra
   local tChecked, tData
-  
+
 	if pChecked is empty then
 		put FALSE into tChecked
 	else
@@ -764,7 +789,7 @@ end rigFormRadio
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Submit button.
---| 
+--|
 --| Format:  rigSubmitButton(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -774,7 +799,7 @@ end rigFormRadio
 
 function rigSubmitButton pData pValue pExtra
   local tData, tDefaults
-  
+
 	put pData into tData
 
 	put "submit" into tDefaults["type"]
@@ -806,7 +831,7 @@ end rigSubmitButton
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Reset button.
---| 
+--|
 --| Format:  rigResetButton(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pValue>, string <pExtra>
@@ -816,7 +841,7 @@ end rigSubmitButton
 
 function rigResetButton pData pValue pExtra
   local tData, tDefaults
-  
+
 	put pData into tData
 
 	put "reset" into tDefaults["type"]
@@ -849,7 +874,7 @@ end rigResetButton
 --| Requires: _rigParseFormAttributes()
 --|
 --| Summary: Form button.
---| 
+--|
 --| Format:  rigFormButton(param1, param2, param3)
 --|
 --| Parameters: mixed <pData>, string <pContent>, string <pExtra>
@@ -859,7 +884,7 @@ end rigResetButton
 
 function rigFormButton pData pContent pExtra
   local tContent, tData, tDefaults
-  
+
 	put pContent into tContent
 	put pData into tData
 
@@ -884,8 +909,8 @@ function rigFormButton pData pContent pExtra
 			--put tData[thisLine] into tDataContRemoved[thisLine]
 		--end repeat
 		--put tDataContRemoved into tData
-		
-		delete variable tData["content"]	
+
+		delete variable tData["content"]
 
 	end if
 
@@ -909,7 +934,7 @@ end rigFormButton
 --| Requires: --
 --|
 --| Summary: Form label tag.
---| 
+--|
 --| Format:  rigFormLabel(param1, param2, param3)
 --|
 --| Parameters: string <pLabelText> text to appear onscreen, string <pID> id the label applies to,
@@ -920,7 +945,7 @@ end rigFormButton
 
 function rigFormLabel pLabelText pID pAttributes
   local tLabel
-  
+
 	put "<label" into tLabel
 
 	if pID <> "" then
@@ -956,7 +981,7 @@ end rigFormLabel
 --|
 --| Summary: Used to produce <fieldset><legend>text</legend>.  To close fieldset
 --|                    use rigFormFieldsetClose().
---| 
+--|
 --| Format:  rigFormFieldset(param1, param2)
 --|
 --| Parameters: string <pLegendText> the legend text, array <pAttributes> additional attributes
@@ -966,7 +991,7 @@ end rigFormLabel
 
 function rigFormFieldset pLegendText pAttributes
   local tFieldset
-  
+
 	put "<fieldset" into tFieldset
 	put _rigAttributesToString(pAttributes, FALSE) after tFieldset
 	put ">" & return after tFieldset
@@ -994,7 +1019,7 @@ end rigFormFieldset
 --| Requires: --
 --|
 --| Summary: Fieldset close tag.
---| 
+--|
 --| Format:  rigFormFieldsetClose(param1)
 --|
 --| Parameters: string <pExtra>
@@ -1022,7 +1047,7 @@ end rigFormFieldsetClose
 --| Requires: --
 --|
 --| Summary: Form close tag.
---| 
+--|
 --| Format:  rigFormClose(param1)
 --|
 --| Parameters: string <pExtra>
@@ -1050,7 +1075,7 @@ end rigFormClose
 --| Requires: rigPregReplace(), rigHtmlSpecialChars()
 --|
 --| Summary: Formats text so that it can be safely placed in a form field in the event it has HTML tags.
---| 
+--|
 --| Format:  rigFormPrep(param1, param2)
 --|
 --| Parameters: string <pStr>, string <pFieldName>
@@ -1060,7 +1085,7 @@ end rigFormClose
 
 function rigFormPrep pStr pFieldName
   local tStr, tKey, tTemp, tRegEx, tReplacement, tStrToReplaceInFoundStr
-  
+
 	put pStr into tStr
 
 	# IF THE FIELD NAME IS AN ARRAY WE DO THIS RECURSIVELY
@@ -1070,7 +1095,7 @@ function rigFormPrep pStr pFieldName
 		end repeat
 		return tStr
 	end if
-    
+
 	if tStr is "" then
 		return ""
 	end if
@@ -1084,8 +1109,8 @@ function rigFormPrep pStr pFieldName
 	end if
 
 	put "__TEMP_AMPERSANDS__" into tTemp
-    
-	# REPLACE ENTITIES TO TEMPORARY MARKERS SO THAT 
+
+	# REPLACE ENTITIES TO TEMPORARY MARKERS SO THAT
 	# rigHtmlSpecialChars WON'T MESS THEM UP
 	put "(&#\d+);" into tRegEx
     	put "__TEMP_AMPERSANDS__" into tReplacement
@@ -1136,7 +1161,7 @@ end rigFormPrep
 --| Summary: Grabs a value from the POST array for the specified field so you can
 --|            re-populate an input field or textarea.  If Form Validation
 --|            is active it retrieves the info from the validation library.
---| 
+--|
 --| Format:  rigSetValue(param1, param2)
 --|
 --| Parameters: string <pField>, mixed <pDefault>, bool <pHtmlEscape> whether to escape HTML tags
@@ -1146,13 +1171,13 @@ end rigFormPrep
 
 function rigSetValue pField pDefault pHtmlEscape
   local tHtmlEscape
-  
+
 	if pHtmlEscape is empty then
 		put TRUE into tHtmlEscape
 	else
 		put pHtmlEscape into tHtmlEscape
 	end if
-  
+
 	if rigLibIsLoaded("Formvalidation") is not TRUE then
 		rigLoaderLoadLibrary "Formvalidation"
 	end if
@@ -1160,7 +1185,7 @@ function rigSetValue pField pDefault pHtmlEscape
   if tHtmlEscape is FALSE then
     return rigFormValidSetValue(pField, pDefault)
   end if
-  
+
 	return rigFormPrep(rigFormValidSetValue(pField, pDefault), pField)
 end rigSetValue
 
@@ -1181,7 +1206,7 @@ end rigSetValue
 --|
 --| Summary: Let's you set the selected value of a <select> menu via data in the POST array.
 --|            If Form Validation is active it retrieves the info from the validation library.
---| 
+--|
 --| Format:  rigSetSelect(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1191,7 +1216,7 @@ end rigSetValue
 
 function rigSetSelect pField pValue pDefault
   local tStatusMarker, tElement
-  
+
 	put "selected" into tStatusMarker
 	put "select" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1215,7 +1240,7 @@ end rigSetSelect
 --|
 --| Summary: Let's you set the selected value of a checkbox via the value in the POST array.
 --|            If Form Validation is active it retrieves the info from the validation library.
---| 
+--|
 --| Format:  rigSetCheckbox(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1225,7 +1250,7 @@ end rigSetSelect
 
 function rigSetCheckbox pField pValue pDefault
   local tStatusMarker, tElement
-  
+
 	put "checked" into tStatusMarker
 	put "checkbox" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1249,7 +1274,7 @@ end rigSetCheckbox
 --|
 --| Summary: Let's you set the selected value of a radio field via info in the POST array.
 --|            If Form Validation is active it retrieves the info from the validation library.
---| 
+--|
 --| Format: rigSetRadio(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>
@@ -1259,7 +1284,7 @@ end rigSetCheckbox
 
 function rigSetRadio pField pValue pDefault
   local tStatusMarker, tElement
-  
+
 	put "checked" into tStatusMarker
 	put "radio" into tElement
 	return rigSetSelectCheckboxRadio(pField, pValue, pDefault, tStatusMarker, tElement)
@@ -1283,7 +1308,7 @@ end rigSetRadio
 --| Summary: Helper function used by some of the form helpers.
 --|                    Let's you set the selected value of a <select> menu, a checkbox and a radio field via info in the POST array.
 --|                   If Form Validation is active it retrieves the info from the validation library.
---| 
+--|
 --| Format:  rigSetSelectCheckboxRadio(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string <pField>, string <pValue>, bool <pDefault>, string <pStatusMarker>, string <pElement>
@@ -1293,7 +1318,7 @@ end rigSetRadio
 
 function rigSetSelectCheckboxRadio pField pValue pDefault pStatusMarker pElement
   local tField, tDefault, tFieldAsElementsList
-  
+
 	put pField into tField
 
 	if pDefault is empty then
@@ -1313,13 +1338,13 @@ function rigSetSelectCheckboxRadio pField pValue pDefault pStatusMarker pElement
 					return " " & pStatusMarker & "=" & quote & pStatusMarker & quote
 				end if
 			end if
-		
+
 			return ""
 		end if
 		*/
 
 		put $_POST[tField] into tField
-		
+
 		if tField is an array then
 			# GET ELEMENTS OF tField
 			put tField into tFieldAsElementsList
@@ -1370,7 +1395,7 @@ end rigSetSelectCheckboxRadio
 --|
 --| Summary: Returns the error for a specific form field.  This is a helper for the
 --|            form validation library.
---| 
+--|
 --| Format:  rigFormError(param1, param2, param3)
 --|
 --| Parameters: string <pField>, string <pPrefix>, string <pSuffix>
@@ -1410,7 +1435,7 @@ end rigFormError
 --|
 --| Summary: Returns all the errors associated with a form submission.  This is a helper
 --|            function for the form validation library.
---| 
+--|
 --| Format:  rigValidationErrors(param1, param2)
 --|
 --| Parameters: string <pPrefix>, string <pSuffix>
@@ -1449,7 +1474,7 @@ end rigValidationErrors
 --| Requires: rigFormPrep()
 --|
 --| Summary: Helper function used by some of the form helpers.
---| 
+--|
 --| Format:  _rigParseFormAttributes(param1, param2)
 --|
 --| Parameters: array <pAttributes>, array <pDefault>
@@ -1460,42 +1485,42 @@ end rigValidationErrors
 private function _rigParseFormAttributes pAttributes pDefault
   local tDefault, tAttributesKeysList, tKey, tFoundLineNum, tRemainingAtts
   local tAtt, tVal
-  
+
 	put pDefault into tDefault
-    
+
 	set the wholematches to true
-    
+
 	if pAttributes is an array then
-        
+
 		put the keys of pAttributes into tAttributesKeysList
-        
+
 		# SET THE DEFAULT ATTRIBUTES TO THE VALUES OF pAttributes
 		repeat for each key tKey in tDefault
-            			
+
 			if tKey is among the keys of pAttributes then
 				put pAttributes[tKey] into tDefault[tKey]
-                
+
 				put lineoffset(tKey,tAttributesKeysList) into tFoundLineNum
 				delete line tFoundLineNum of tAttributesKeysList
 			end if
 		end repeat
-        
+
 		# IF THERE ARE STILL ATTRIBUTES LEFT, MERGE THE
 		# REMAINING ATTRIBUTES WITH THE DEFAULT ATTRIBUTES
 		if the number of lines of tAttributesKeysList > 0 then
 			repeat for each line thisLine in tAttributesKeysList
 				put pAttributes[thisLine] into tRemainingAtts[thisLine]
 			end repeat
-            
+
 			# MERGE LISTS
 			combine tRemainingAtts using return and comma
 			combine tDefault using return and comma
 			put return & tRemainingAtts after tDefault
-             
+
 			#BUILD ARRAY AGAIN
 			split tDefault using return and comma
 		end if
-        
+
     end if
 
 	put "" into tAtt
@@ -1527,7 +1552,7 @@ end _rigParseFormAttributes
 --| Requires: --
 --|
 --| Summary: Helper function used by some of the form helpers.
---| 
+--|
 --| Format:  _rigAttributesToString(param1, param2)
 --|
 --| Parameters: mixed <pAttributes>, bool <pFormtag>
@@ -1537,20 +1562,20 @@ end _rigParseFormAttributes
 
 private function _rigAttributesToString pAttributes pFormtag
   local tAttributes, tFormtag, tCharset, tAtts
-  
+
 	put pAttributes into tAttributes
-    
+
 	if pFormtag is empty then
 		put FALSE into tFormtag
 	else
 		put pFormtag into tFormtag
 	end if
-    
+
 	if (tAttributes is not an array) and (the number of chars of tAttributes > 0) then
 		if (pFormtag is TRUE) and ("method" is not in tAttributes) then
 			put tAttributes && "method=" & quote & "post" & quote into tAttributes
 		end if
-		
+
 		if (pFormtag is TRUE) and ("accept-charset" is not in tAttributes) then
 			put rigConfigItem("charset") into tCharset
 			if tCharset is empty then
@@ -1560,17 +1585,17 @@ private function _rigAttributesToString pAttributes pFormtag
 			end if
 			put tAttributes && "accept-charset=" & quote & tCharset & quote into tAttributes
 		end if
-        
+
 		return " " & tAttributes
 	end if
-    
+
 	if tAttributes is an array then
 		put "" into tAtts
-        
+
 		if ("method" is not among the keys of tAttributes) and (pFormtag is TRUE) then
 			put tAtts && "method=" & quote & "post" & quote into tAtts
 		end if
-		
+
 		if ("accept-charset" is not among the keys of tAttributes) and (pFormtag is TRUE) then
 			put rigConfigItem("charset") into tCharset
 			if tCharset is empty then
@@ -1580,14 +1605,14 @@ private function _rigAttributesToString pAttributes pFormtag
 			end if
 			put tAtts && "accept-charset=" & quote & tCharset & quote into tAtts
 		end if
-        
+
 		repeat for each key tKey in tAttributes
 			put tAtts && tKey & "=" & quote & tAttributes[tKey] & quote into tAtts
 		end repeat
-         
+
 		return tAtts
 	end if
-     
+
 end _rigAttributesToString
 
 
