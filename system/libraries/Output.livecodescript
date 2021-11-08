@@ -29,7 +29,7 @@ script "Output"
 
 
 
-global gRigA, gControllerHandlers, g_ElapsedTime_
+global gRigA, gControllerHandlers, g_ElapsedTime_, g_StyleNonce_, g_ScriptNonce_
 
 local sStackInUse, sOutputA -- array keys are: cacheExpiration, enableProfiler, finalOutput, headers, profilerPrefs
 
@@ -360,7 +360,7 @@ command _rigDisplay pOutput, pCached
 
   # SET THE CONTENT SECURITY HEADERS
   if "Contentsecuritypolicy" is among the lines of the stacksInUse then
-    rigSetHeader _rigCSPheader("block", tOutput)
+    rigSetHeader _rigCSPheader("allow", tOutput)
     rigSetHeader _rigCSPheader("report", tOutput)
   end if
 
