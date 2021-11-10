@@ -100,7 +100,7 @@ end libraryStack
 ----------------------------------------------------------------------*/
 
 private command _rigSetDefaultValues
-  put FALSE into sCspA["reportOnly"]                          -- flag for report only policy
+  put FALSE into sCspA["report-only"]                         -- flag for report only policy
   put "" into sCspA["allow"]["report-uri"]                    -- the URL where a browser will send reports when a content security policy is violated
   put FALSE into sCspA["allow"]["upgrade-insecure-requests"]  -- rewrite URL schemes, changes HTTP to HTTPS
   put "'self'" into sCspA["allow"]["default-src"]             -- default policy for fetching resources
@@ -158,8 +158,8 @@ command rigRunInitialContentsecuritypolicyConfig pConfig
 	end if
 
 	if tConfig is an array then
-    if ("reportOnly" is among the keys of tConfig) and (tConfig["reportOnly"] is a boolean) then
-      put tConfig["reportOnly"] into sCspA["reportOnly"]
+    if ("report-only" is among the keys of tConfig) and (tConfig["report-only"] is a boolean) then
+      put tConfig["report-only"] into sCspA["report-only"]
     end if
 
 		_rigInitializeCSP tConfig
@@ -191,8 +191,8 @@ private command _rigInitializeCSP pConfig
   local tDirective, tVal
 
   if pConfig is an array then
-    if pConfig["reportOnly"] is TRUE then
-      put TRUE into sCspA["reportOnly"]
+    if pConfig["report-only"] is TRUE then
+      put TRUE into sCspA["report-only"]
     end if
 
     repeat for each key tDirective in pConfig
@@ -229,7 +229,7 @@ end _rigInitializeCSP
 private command _rigSetInitialCSPvalue pDirective pValue
   local tMode
 
-  if sCspA["reportOnly"] is TRUE then
+  if sCspA["report-only"] is TRUE then
     put "report" into tMode
   else
     put "allow" into tMode
@@ -390,9 +390,9 @@ command rigCspSet pDirective pValue pMode
   end if
 
   if pDirective is an array then
-    if pDirective["reportOnly"] is TRUE then
+    if pDirective["report-only"] is TRUE then
       put "report" into tMode
-      put TRUE into sCspA["reportOnly"]
+      put TRUE into sCspA["report-only"]
     end if
 
     repeat for each key tKey in pDirective
@@ -406,7 +406,7 @@ command rigCspSet pDirective pValue pMode
     if pDirective is among the items of sCspDirectives then
       put pValue into sCspA[tMode][pDirective]
 
-    else if pDirective is "reportOnly" then
+    else if pDirective is "report-only" then
       put pValue into sCspA[pDirective]
     end if
   end if -- if pDirective is an array
@@ -444,9 +444,9 @@ command rigCspAdd pDirective pValue pMode
   end if
 
   if pDirective is an array then
-    if pDirective["reportOnly"] is TRUE then
+    if pDirective["report-only"] is TRUE then
       put "report" into tMode
-      put TRUE into sCspA["reportOnly"]
+      put TRUE into sCspA["report-only"]
     end if
 
     repeat for each key tKey in pDirective
