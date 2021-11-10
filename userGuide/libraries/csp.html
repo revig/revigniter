@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Content Security Policy Library : revIgniter User Guide</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="all">
+		<meta name="author" content="Ralf Bitter" >
+		<meta name="description" content="revIgniter User Guide">
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" media="screen" href="../css/style-ck.css">
+
+		
+		<script src="../js/nav-ck.js"></script>
+		
+		<!-- Touch icons -->
+		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
+		<link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+		    <script src="../js/html5shiv.js"></script>
+		    <script src="../js/respond.min.js"></script>
+		<![endif]-->
+
+	</head>
+<body>
+	<!-- START PAGE HEAD -->
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
+				<input type="hidden" name="kj" value="#000000"/>
+				<input type="hidden" name="k7" value="#2B3137"/>
+				<input type="hidden" name="k8" value="#C7C7C7"/>
+			  <input type="hidden" name="k9" value="#85EAFB"/>
+				<input type="hidden" name="kx" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+			  <input type="hidden" name="k1" value="-1"/>
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.navbar-collapse -->
+     </div>
+		 
+		 <!-- START BREADCRUMB -->		 
+		 <div id="breadcrumbContainer">
+			 <div class="container">
+			 		<ol class="breadcrumb">
+			 			<li><a href="https://revigniter.com/">revIgniter Home</a></li>
+			 		 	<li><a href="../index.html">User Guide Home</a></li>
+			 		 	<li class="active">Content Security Policy Library</li>
+						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+			 		 </ol>
+				</div>
+		</div>
+		<!-- END BREADCRUMB -->		
+		
+		<!-- START SLIDEBOX -->
+		<div class="slide-panel top">
+			<div class="container">
+				<div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
+			</div>
+			<div id="open-button" class="slide-button">Table of Contents</div>
+			<div id="close-button" class="slide-button">Close</div>
+		</div>
+		<!-- END SLIDEBOX -->
+	 
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+		
+<div id="content">
+
+
+<h1>Content Security Policy Library</h1>
+
+<p>This library enables you to implement a Content Security Policy on your site. A CSP is one of the best protective measures that can reduce the risk of content injection attacks, such as Cross Site Scripting (XSS). The CSP library generates two headers:</p>
+
+<ol>
+	<li>a Content-Security-Policy HTTP header, which contains directives that whitelist domains from which the browser is allowed to load resources, including images, stylesheets, javascript files, etc. The browser will block loading resources from somewhere that isn't on this whitelist.</li>
+	<li>a Content-Security-Policy-Report-Only HTTP header that works just like the CSP header, but it only reports on violations of the policy without blocking restricted resources.</li>
+</ol>
+
+<p>Both headers are sent at the same time, enforcing policies while monitoring others if needed.</p>
+
+<p>For more information, you should visit the following sites:<br>
+	<a href="https://content-security-policy.com/">https://content-security-policy.com/</a> <br>
+<a href="https://www.w3.org/TR/CSP">https://www.w3.org/TR/CSP</a> <br>
+<a href="https://www.sitepoint.com/improving-web-security-with-the-content-security-policy/">https://www.sitepoint.com/improving-web-security-with-the-content-security-policy/</a></p>
+
+
+<h2>Initializing the Library</h2>
+
+<p>The Content Security Policy Library is initialized in your controller like most other libraries in revIgniter using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
+
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Contentsecuritypolicy"
+</code></pre>
+
+<h2>Setting CSP Directives</h2>
+
+<h3>Setting Directives Manually</h3>
+
+<p class="important"><strong>Note:</strong> Many directives have default values/keywords that will be used if you do not set them. See the Directives table below. If no changes are needed the default Content-Security-Policy header is sent and you're all done just by loading the library.</p>
+
+<p>Directives are set during runtime by passing a single value/keyword, multiple values/keywords or an array that sets multiple directives at once to the library, like in the following examples (please note the single quotes used for keywords):</p>
+
+<div class="codeSample">
+<pre><code># SET A DIRECTIVE USING A SINGLE VALUE/KEYWORD
+rigCspSet "script-src", "'none'"</code></pre>
+</div>
+
+<div class="codeSample">
+<pre><code># SET A DIRECTIVE USING MULTIPLE VALUES/KEYWORDS
+rigCspSet "style-src", "'self' css.example.com"</code></pre>
+</div>
+
+<div class="codeSample">
+<pre><code># SET MULTIPLE DIRECTIVES USING AN ARRAY
+put "'self' css.example.com" into tCspA["style-src"]
+put "'none'" into tCspA["script-src"]
+rigCspSet tCspA</code></pre>
+</div>
+
+
+<h3>Adding Values/Keywords to Directives Manually</h3>
+
+<p>You can add values/keywords to directives like in the following example:</p>
+
+<div class="codeSample">
+<pre><code># ADD A SINGLE VALUE/KEYWORD TO A DIRECTIVE
+rigCspAdd "style-src", "css.example.com"</code></pre>
+</div>
+
+<div class="codeSample">
+<pre><code># Add MULTIPLE VALUES/KEYWORDS TO A DIRECTIVE
+rigCspAdd "style-src", "'unsafe-inline' css.example.com"</code></pre>
+</div>
+
+<div class="codeSample">
+<pre><code># ADD VALUES/KEYWORDS TO MULTIPLE DIRECTIVES USING AN ARRAY
+put "'self' script.example.com" into tCspA["script-src"]
+put "'unsafe-inline'" into tCspA["style-src"]
+rigCspAdd tCspA</code></pre>
+</div>
+
+<p class="important"><strong>Note:</strong> If a directive already includes a specific value/keyword, the assignment will be ignored.</p>
+
+<h3>Reporting</h3>
+
+<p>You can instruct the browser to send (POST) JSON-formatted violation reports to a location specified in a report-uri directive. Example:</p>
+
+<div class="codeSample">
+<pre><code># SET A REPORT URI
+rigCspSet "report-uri", "report.example.com/myparser"</code></pre>
+</div>
+
+<p>To ask the browser to monitor a policy, reporting violations but not enforcing the restrictions, you can set the third parameter to "report". Valid values are "allow" and "report", the default value is "allow". If the third parameter is set to "report" directives are set in the whitelist of the Content-Security-Policy-Report-Only HTTP header. Example:</p>
+
+<div class="codeSample">
+<pre><code># IF DIRECTIVE IS VIOLATED SEND A REPORT WITHOUT BLOCKING
+rigCspSet "report-uri", "report.example.com/myparser", "report"
+rigCspSet "style-src", "'self' css.example.com", "report"</code></pre>
+</div>
+
+
+<h3>Setting Directives in a Config File</h3>
+
+<p>If you prefer not to set directives using the above method, you can instead store them in a config file.
+Simply create a new file called <var>contentSecurityPolicy.lc</var> and  add the <var>Config</var> array in that file.
+At the end of the file write: <dfn>rigRunInitialContentsecuritypolicyConfig yourArrayVariableName</dfn>. Then save the file
+at <var>config/contentSecurityPolicy.lc</var> and it will be used automatically. Example:</p>
+
+<div class="codeSample">
+<pre><code>local sDirectivesA
+
+put TRUE into sDirectivesA["upgrade-insecure-requests"]
+put "media.example.com" into sDirectivesA["media-src"]
+put "'unsafe-inline' css.example.com" into sDirectivesA["style-src"]
+
+rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
+</div>
+
+<p>To report violations without enforcing restrictions you can set the "report-only" directive to true like in the following example:</p>
+
+<div class="codeSample">
+<pre><code>local sDirectivesA
+
+put TRUE into sDirectivesA["report-only"]
+
+put TRUE into sDirectivesA["upgrade-insecure-requests"]
+put "media.example.com" into sDirectivesA["media-src"]
+put "'unsafe-inline' css.example.com" into sDirectivesA["style-src"]
+
+rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
+</div>
+
+<h2>Directives</h2>
+
+<p>The following directives are available. The default value, if available any, indicates what will be used if you do not specify that directive.</p>
+
+<div class="table">
+<table>
+<tr>
+<th>Preference</th>
+<th>Default&nbsp;Value</th>
+<th>Options</th>
+<th>Description</th>
+</tr>
+
+<tr>
+<td class="td"><strong>report-only</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Flag for report only policy</td>
+</tr>
+<tr>
+<td class="td"><strong>report-uri</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">The URI where a browser will send reports when a content security policy is violated</td>
+</tr>
+<tr>
+<td class="td"><strong>upgrade-insecure-requests</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Rewrite URL schemes, changes HTTP to HTTPS</td>
+</tr>
+<tr>
+<td class="td"><strong>default-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Default policy for fetching resources</td>
+</tr>
+<tr>
+<td class="td"><strong>script-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Defines valid sources of JavaScript</td>
+</tr>
+<tr>
+<td class="td"><strong>style-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Defines valid sources of stylesheets or CSS</td>
+</tr>
+<tr>
+<td class="td"><strong>img-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Defines the origins from which images can be loaded</td>
+</tr>
+<tr>
+<td class="td"><strong>base-uri</strong></td>
+<td class="td">'self'</td>
+<td class="td">None</td>
+<td class="td">Restricts the URLs that can be used in the src attribute of a HTML base tag</td>
+</tr>
+<tr>
+<td class="td"><strong>child-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Lists the URLs for workers and embedded frame contents</td>
+</tr>
+<tr>
+<td class="td"><strong>connect-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Limits the origins that you can connect to (via XHR, WebSockets, and EventSource)</td>
+</tr>
+<tr>
+<td class="td"><strong>font-src</strong></td>
+<td class="td">No Default</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Specifies the origins that can serve web fonts</td>
+</tr>
+<tr>
+<td class="td"><strong>form-action</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Lists valid endpoints for submission from &lt;form&gt; tags</td>
+</tr>
+<tr>
+<td class="td"><strong>frame-ancestors</strong></td>
+<td class="td">No Default</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Specifies the sources that can embed the current page</td>
+</tr>
+<tr>
+<td class="td"><strong>media-src</strong></td>
+<td class="td">No Default</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Restricts the origins allowed to deliver video and audio</td>
+</tr>
+<tr>
+<td class="td"><strong>object-src</strong></td>
+<td class="td">'self'</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Allows control over Flash and other plugins</td>
+</tr>
+<tr>
+<td class="td"><strong>manifest-src</strong></td>
+<td class="td">No Default</td>
+<td class="td">Any valid value/keyword</td>
+<td class="td">Restricts the URLs that application manifests can be loaded</td>
+</tr>
+<tr>
+<td class="td"><strong>plugin-types</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">Defines valid MIME types for plugins invoked via &lt;object&gt; and &lt;embed&gt;</td>
+</tr>
+<tr>
+<td class="td"><strong>sandbox</strong></td>
+<td class="td">No Default</td>
+<td class="td">None</td>
+<td class="td">Enables a sandbox for the requested resource similar to the iframe sandbox attribute</td>
+</tr>
+</table>
+</div>
+
+
+<h2>Using a Nonce to Protect Inline Styles and Scripts</h2>
+
+<p>A nonce (a number used once) is just a random string generated by the CSP library. When included in the CSP header, an inline script or inline CSS can be executed if the script or style tag contains a nonce attribute that matches the nonce specified in the CSP header. Nonces are automatically generated if you add<br>
+"{{g_ScriptNonce_}}" or "{{g_StyleNonce_}}" respectively to the script tag or style tag in question. These placeholders will be replaced during runtime with the generated nonce. Examples:</p>
+
+<div>
+<pre><code>&lt;style {{g_StyleNonce_}}&gt;
+  body {
+    margin: 40px;
+    padding: 0;
+    background-color: #fff;
+  }
+&lt;/style&gt;</code></pre>
+</div>
+
+<div>
+<pre><code>&lt;script {{g_ScriptNonce_}}&gt;
+  console.log("Script will run if it contains a nonce attribute");
+&lt;/script&gt;</code></pre>
+</div>
+
+<p class="important"><strong>Note:</strong> There are inline scripts (JavaScript) and inline CSS generated dynamically by various revIgniter libraries. Using the CSP library nonces are automatically attached to these script or style tags.</p>
+
+
+<h2>Handler Reference</h2>
+
+
+<h3>rigCspSet <var>pDirective</var>, <var>pValue</var>, <var>pMode</var></h3>
+
+<p>Setter for content security policy directives.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pDirective:</strong> A valid CSP directive or an array of directives.</li>
+<li><strong>pValue:</strong> Keywords or other options. This parameter is redundant if the first parameter is an array.</li>
+<li><strong>pMode:</strong> A boolean to specify the HTTP header (either Content-Security-Policy or Content-Security-Policy-Report-Only) where the directives are to be written. This parameter is optional. Valid values are "allow" and "report", the default value is "allow".</li>
+</ul>
+
+<p>Examples:</p>
+
+<pre><code>rigCspSet "upgrade-insecure-requests", TRUE, "report"</code></pre>
+
+<pre><code>put "'unsafe-inline' 'unsafe-eval'" into tCspA["script-src"] # PLEASE DON'T
+put "'unsafe-inline'" into tCspA["style-src"]
+rigCspSet tCspA</code></pre>
+
+
+<h3>rigCspAdd <var>pDirective</var>, <var>pValue</var>, <var>pMode</var></h3>
+
+<p>Add options to content security policy directives.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pDirective:</strong> A valid CSP directive or an array of directives.</li>
+<li><strong>pValue:</strong> Keywords or other options. This parameter is redundant if the first parameter is an array.</li>
+<li><strong>pMode:</strong> A boolean to specify the HTTP header (either Content-Security-Policy or Content-Security-Policy-Report-Only) where the directives are to be written. This parameter is optional. Valid values are "allow" and "report", the default value is "allow".</li>
+</ul>
+
+<p>If a directive already includes a specific value/keyword, the assignment will be ignored.</p>
+
+<p>Examples:</p>
+
+<pre><code>rigCspAdd "style-src", "'unsafe-inline' css.example.com"</code></pre>
+
+<pre><code>put "js.example.com" into tCspA["script-src"]
+put "'unsafe-inline' css.example.com" into tCspA["style-src"]
+rigCspAdd tCspA</code></pre>
+
+
+<h3>rigCspGet( <var>pDirective</var>,  <var>pMode</var> )</h3>
+
+<p>Get options of content security policy directives included in the CSP HTTP header. You will probably rarely need this function.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+<li><strong>pDirective:</strong> A valid CSP directive.</li>
+<li><strong>pMode:</strong> This optional parameter specifies the whitelist (standard or report only) the options should fetched from. Valid values are "allow" or "report", default is "allow".</li>
+</ul>
+
+<p>Example:</p>
+
+<pre><code>put rigCspGet("script-src", "report") into tScriptSrcOptions
+</code></pre>  
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+	<div class="container">
+<p>
+Previous Topic:&nbsp;&nbsp; <a href="config.html">Config Library</a><span class="separator"> :: </span>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
+Next Topic:&nbsp;&nbsp;<a href="../database/index.html">Database Library</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span>Ralf Bitter</p>
+	</div>
+</div>
+
+
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+  	hljs.tabReplace = '    ';
+  	hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
+
+<script src="../js/clipboard-ck.js"></script>
+
+</body>
+</html>

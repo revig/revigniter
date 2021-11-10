@@ -176,7 +176,7 @@ end if
 <p>Using the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function will automatically insert a hidden CSRF token field in your forms.</p>
 
 
-<h2>CSRF Preferences</h2>
+<h3>CSRF Preferences</h3>
 <p>You'll find the following CSRF related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
 
 <div class="table">
@@ -215,6 +215,57 @@ end if
 </div>
 
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate expiration time is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
+
+
+<h2>Bot Detection</h2>
+
+<p>If you are accepting user data you may consider to enable bot detection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["honeypot"] to TRUE. When set to TRUE, form fields that are hidden but accessible to a Bot, are attached to any form, provided that the rigFormOpen() function (included in formHelper.lc) is used. Requests containing data entered into these honeypot fields are assumed to come from a bot. In this case an error page is shown.</p>
+
+<p class="important"><strong>Note:</strong> You need to use the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function in order to automatically insert a hidden Bot detection honeypot field in your forms.</p>
+
+<h3>Bot Detection Preferences</h3>
+<p>You'll find the following Bot detection related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
+
+<div class="table">
+<table>
+<tr>
+  <th>Preference</th>
+  <th>Default</th>
+  <th>Options</th>
+  <th>Description</th>
+</tr>
+<tr>
+  <td class="td"><strong>honeypot</strong></td>
+  <td class="td">FALSE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">Whether to enable Bot detection.</td>
+</tr>
+<tr>
+  <td class="td"><strong>honeypot_hidden</strong></td>
+  <td class="td">TRUE</td>
+  <td class="td">TRUE/FALSE (boolean)</td>
+  <td class="td">The visibility of the text field.</td>
+</tr>
+<tr>
+  <td class="td"><strong>honeypot_label</strong></td>
+  <td class="td">Fill in this field</td>
+  <td class="td">None</td>
+  <td class="td">The label of the text field.</td>
+</tr>
+<tr>
+  <td class="td"><strong>honeypot_name</strong></td>
+  <td class="td">honeypot</td>
+  <td class="td">None</td>
+  <td class="td">The name of the text field.</td>
+</tr>
+<tr>
+  <td class="td"><strong>honeypot_containerID</strong></td>
+  <td class="td">rigHP</td>
+  <td class="td">None</td>
+  <td class="td">The ID selector of the honeypot container.</td>
+</tr>
+</table>
+</div>
 
 
 <h2>Using POST, COOKIE, or SERVER Data</h2>
