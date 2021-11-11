@@ -255,26 +255,20 @@ end _rigSetInitialJqueryValue
 --| Author: rabit
 --| Version:  1.4
 --| Created: 2010-02-22
---| Last Mod: 2021-11-07
+--| Last Mod: 2021-11-11
 --| Requires: --
 --|
 --| Summary: Return html string embedding jQuery.
 --|
---| Format:  rigJQuerySource([param1])
+--| Format:  rigJQuerySource()
 --|
---| Parameters: string <pNonce> CSP nonce (optional)
+--| Parameters: --
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJQuerySource pNonce
-  local tJqueryPath, tSiteURL, tNonce
-
-  if pNonce <> empty then
-    put "nonce=" & quote & pNonce & quote & " " into tNonce
-  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
-    put "{{g_ScriptNonce_}} " into tNonce
-  end if
+function rigJQuerySource
+  local tJqueryPath, tSiteURL
 
 	if sUseJQremotely is not TRUE then
 		if char 1 of sJqueryPath is "/" then
@@ -289,14 +283,14 @@ function rigJQuerySource pNonce
       put char 1 to -9 of tSiteURL into tSiteURL
     end if
 
-		return "<script" && tNonce & "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
+		return "<script" && "src=" & quote & tSiteURL & tJqueryPath & quote & "></script>"
 	else
 		if sJqueryCurrentVersion is empty then
 			# LATEST VERSION FROM JQUERY.COM
-			return "<script" && tNonce & "src=" & quote & "//code.jquery.com/jquery-latest.js" & quote & "></script>"
+			return "<script" && "src=" & quote & "//code.jquery.com/jquery-latest.js" & quote & "></script>"
 		else
 			# JQUERY FROM AJAX.GOOGLEAPIS
-			return "<script" && tNonce & "src=" & quote & "//ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote & "></script>"
+			return "<script" && "src=" & quote & "//ajax.googleapis.com/ajax/libs/jquery/" & sJqueryCurrentVersion & "/jquery.min.js" & quote & "></script>"
 		end if
 	end if
 end rigJQuerySource
