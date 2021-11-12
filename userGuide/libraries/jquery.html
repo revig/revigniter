@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -571,9 +571,15 @@ end peopleData
 
 <p>This function returns the html string linking to jQuery.</p>
 
-<h3>rigJQopen</h3>
+<h3>rigJQopen <var>nonce</var></h3>
 
 <p>Use this handler to tell the library to start building your jQuery script.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>nonce:</strong> (optional) a Content Security Policy nonce, use the <dfn>rigNonce()</dfn> function to provide the nonce, in case the Content security Policy library is loaded a nonce is added automatically at runtime</li>
+</ul>
+
 
 <h3>rigJQclose</h3>
 
