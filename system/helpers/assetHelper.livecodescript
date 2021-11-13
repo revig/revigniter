@@ -459,9 +459,9 @@ end rigJsAssetURL
 --| FUNCTION rigJsAsset
 --|
 --| Author: rabit
---| Version:  1.8
+--| Version:  1.9
 --| Created: 2009-10-06
---| Last Mod: 2020-01-14
+--| Last Mod: 2021-11-06
 --| Requires: rigJsAssetURL()
 --|
 --| Summary: Generate JavaScript asset location html code. If you want to use
@@ -492,7 +492,9 @@ function rigJsAsset pAsset pModule pCacheBusterOrFallbackAsset pAttribute pNonce
 	end if
 
   if pNonce <> empty then
-    put " nonce='" & pNonce & "'" into tNonce
+    put " nonce=" & quote & pNonce & quote into tNonce
+  else if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    put " {{g_ScriptNonce_}}" into tNonce
   end if
 
    if char 1 to 12 of pAsset <> "jsGoogleapis" then

@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -114,6 +114,13 @@ minimize the possibility that malicious data can be passed to your application. 
 <li>Dash: -</li>
 </ul>
 
+
+<h2>Bot Detection</h2>
+
+<p>If you are accepting user data enable revIgniter's hidden honeypot form field to trap bots. Bot detection is described <a href="../libraries/input.html">here</a>.
+</p>
+
+
 <h2>GET Data</h2>
 
 <p>GET data is simply disallowed by revIgniter since the system utilizes URI segments rather than traditional URL query strings (unless
@@ -121,7 +128,7 @@ you have the query string option enabled in your config file).  The global GET
 array is set to <strong>empty</strong> by the Input library during system initialization.</p>
 
 
-<h1>Best Practices</h1>
+<h2>Best Practices</h2>
 
 <p>Before accepting any data into your application, whether it be POST data from a form submission, COOKIE data, URI data,
 XML-RPC data, or even data from the SERVER array, you are encouraged to practice this three step approach:</p>
@@ -136,7 +143,7 @@ XML-RPC data, or even data from the SERVER array, you are encouraged to practice
 
 <ul>
 
-<li><h2>XSS Filtering</h2>
+<li><h3>XSS Filtering</h3>
 
 <p>revIgniter comes with a Cross Site Scripting filter.  This filter looks for commonly
 used techniques to embed malicious Javascript into your data, or other types of code that attempt to hijack cookies
@@ -145,31 +152,35 @@ or do other malicious things. The XSS Filter is described <a href="../libraries/
 </li>
 
 
-<li><h2>CSRF Protection</h2>
+<li><h3>CSRF Protection</h3>
 
 <p>Enable revIgniter's cross-site request forgery (CSRF) protection if you are accepting user data. CSRF protection is described <a href="../libraries/input.html">here</a>.
 </p>
 </li>
 
 
-<li><h2>Filename Sanitation</h2>
+<li><h3>Filename Sanitation</h3>
 
 <p>revIgniter comes with a function to <a href="../libraries/input.html">sanitize filenames</a> from user input.
 </p>
 </li>
 
 
-<li><h2>Validate the data</h2>
+<li><h3>Validate the data</h3>
 
 <p>revIgniter has a <a href="../libraries/form_validation.html">Form Validation Library</a> that assists you in validating, filtering, and prepping
 your data.</p>
 </li>
 
-<li><h2>Escape all data before database insertion</h2>
+<li><h3>Escape all data before database insertion</h3>
 
 <p>Never insert information into your database without escaping it. Please see the section that discusses
 <a href="../database/queries.html">queries</a> for more information.</p>
+</li>
 
+<li>
+	<h3>Content Security Policy</h3>
+	<p>Use the <a href="../libraries/csp.html">Content Security Policy Library</a> to further reduce the risk of content injection attacks, such as Cross Site Scripting (XSS).</p>
 </li>
 
 </ul>

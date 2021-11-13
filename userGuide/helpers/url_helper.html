@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -227,7 +227,7 @@ If you want the function to use all of its defaults leave the third parameter bl
 <h3>rigSafeMailToLink()</h3>
 
 <p>Identical to the above function except it writes an obfuscated version of the mailTo tag using ordinal numbers
-written with JavaScript to help prevent the email address from being harvested by spam bots.</p>
+written with JavaScript to help prevent the email address from being harvested by spam bots. This function has an optional fourth parameter that is a Content Security Policy nonce (number used once) that you can provide using the <dfn>rigNonce()</dfn> function, which is added to the script tag. In case the <a href="../libraries/csp.html">Content Security Policy</a> library is loaded a nonce is added automatically during runtime.</p>
 
 
 <h3>rigAutoLink()</h3>

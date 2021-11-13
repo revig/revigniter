@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.2.1</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -123,12 +123,12 @@ rigDoException <var>contexts</var>, "<var>currentFile</var>", "<var>currentHandl
 
 <h3>rigNonce()</h3>
 
-<p>Generates a random string unique for each request as used by Content-Security-Policy response headers.
-<br>Example:</p>
+<p>Generates a random string unique for each request as used by Content Security Policy response headers.
+<br>Example on generating a CSP meta tag:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">put "'nonce-" & rigNonce() & "'" into tSrcNonce
-# GENERATE A Content-Security-Policy META TAG TO BE USED IN THE HEADER
+# GENERATE A Content Security Policy META TAG TO BE USED IN THE HEADER
 rigLoadHelper "html"
 put "Content-Security-Policy" into tCspMetaA["name"]
 put "style-src 'self'" && tSrcNonce into tCspMetaA["content"]
@@ -150,6 +150,8 @@ body {
 &lt;/style>
 </code></pre>
 </div>
+
+<p class="important"><strong>Note:</strong> The preferred mechanism to deliver CSP is an HTTP header. Furthermore there are directives the meta tag can't be used for, like frame-ancestors, sandbox or report-uri. So, you should consider using the <a href="../libraries/csp.html">Content Security Policy library</a>, which also makes it easier to set up a CSP. See <a href="../libraries/csp.html">Content Security Policy library</a> documentation for more information.</p>
 
 
 </div>

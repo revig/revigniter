@@ -90,9 +90,9 @@ end libraryStack
 --| COMMAND _rigSetDefaultValues
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2018-12-14
---| Last Mod: 2018-12-14
+--| Last Mod: 2021-11-07
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
@@ -113,6 +113,9 @@ private command _rigSetDefaultValues
   put 7200 into sInputA["CSRFexpire"]
   put "rig_csrf_token" into sInputA["CSRFtokenName"]
   put "rig_csrf_cookie" into sInputA["CSRFcookieName"]
+
+  put FALSE into sInputA["honeypot"]
+  put "honeypot" into sInputA["honeypotName"]
 
   put "[removed]" into sInputA["neverAllowedStr"]["gRigA"]
 
@@ -145,9 +148,9 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.9
+--| Version:  1.10
 --| Created: 2009-06-17
---| Last Mod: 2020-08-08
+--| Last Mod: 2021-11-07
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
 --|           _rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
@@ -156,6 +159,8 @@ end _rigSetDefaultValues
 --|             Cleans $_POST data
 --|             Cleans special cookie data
 --|             Standardizes newline characters to LF
+--|             Checks CSRF protection
+--|             Does bot detection
 --|
 --| Format:  _rigSanitizeGlobals
 --|
@@ -169,7 +174,7 @@ private command _rigSanitizeGlobals
   local tTrimmedKey, tCSRFsettings
 
 	# INPUT CONFIGURATION
-	put "useXssClean,allowGetArray,enableCSRF" into tInputSettings
+	put "useXssClean,allowGetArray,enableCSRF,honeypot" into tInputSettings
 	repeat for each item tItem in tInputSettings
 		_rigInputConfig tItem
 	end repeat
@@ -271,6 +276,12 @@ private command _rigSanitizeGlobals
 		_rigCSRFverify
 	end if
 
+  # BOT DETECTION
+  if sInputA["honeypot"] is TRUE then
+    _rigHoneypotConfig "honeypotName"
+    _rigHoneypotBotDetection
+  end if
+
 	rigLogMessage "debug", "Global POST and COOKIE data sanitized"
 end _rigSanitizeGlobals
 
@@ -283,9 +294,9 @@ end _rigSanitizeGlobals
 --| COMMAND _rigInputConfig
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2012-07-14
---| Last Mod: 2019-01-07
+--| Last Mod: 2021-11-07
 --| Requires: rigFetchConfigItem()
 --|
 --| Summary: Input library configuration.
@@ -318,6 +329,12 @@ private command _rigInputConfig pVarName
 			if tSetting is TRUE then
 				put tSetting into sInputA["enableCSRF"]
 			end if
+    break
+    case "honeypot"
+      put rigFetchConfigItem("honeypot") into tSetting
+      if tSetting is TRUE then
+        put tSetting into sInputA["honeypot"]
+      end if
 	end switch
 end _rigInputConfig
 
@@ -614,6 +631,99 @@ end rigGetCSRFtokenName
 
 
 
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigHoneypotConfig
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2021-11-07
+--| Last Mod: 2021-11-07
+--| Requires: rigFetchConfigItem()
+--|
+--| Summary: Honeypot configuration.
+--|
+--| Format:  _rigHoneypotConfig param1
+--|
+--| Parameters: string <pVarName>
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigHoneypotConfig pVarName
+  local tSetting
+
+  if pVarName is "honeypotName" then
+    put rigFetchConfigItem("honeypot_name") into tSetting
+
+		if tSetting is not empty then
+			put tSetting into sInputA["honeypotName"]
+		end if
+  end if
+end _rigHoneypotConfig
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigHoneypotBotDetection
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2021-11-07
+--| Last Mod: 2021-11-07
+--| Requires: --
+--|
+--| Summary: Determine if the request comes from a bot.
+--|
+--| Format:  _rigHoneypotBotDetection
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigHoneypotBotDetection
+  local tHoneypotValue
+
+	if $_POST is an array then
+
+	  put rigVarPost(sInputA["honeypotName"]) into tHoneypotValue
+
+    if tHoneypotValue <> empty then
+      rigLogMessage "error", "Bot detected!"
+      _rigHoneypotShowError
+    end if
+  end if
+
+  rigLogMessage "debug", "The result of the bot detection was negative."
+end _rigHoneypotBotDetection
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _rigHoneypotShowError
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2021-11-07
+--| Last Mod: 2021-11-07
+--| Requires: rigShowError
+--|
+--| Summary: Show bot detection error.
+--|
+--| Format:  _rigHoneypotShowError
+--|
+--| Parameters: --
+--|
+--| Return: empty
+----------------------------------------------------------------------*/
+
+private command _rigHoneypotShowError
+	rigShowError "Sorry, nice try but bots must stay outside.", 200
+end _rigHoneypotShowError
 
 
 

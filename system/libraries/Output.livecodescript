@@ -29,7 +29,7 @@ script "Output"
 
 
 
-global gRigA, gControllerHandlers, g_ElapsedTime_
+global gRigA, gControllerHandlers, g_ElapsedTime_, g_StyleNonce_, g_ScriptNonce_
 
 local sStackInUse, sOutputA -- array keys are: cacheExpiration, enableProfiler, finalOutput, headers, profilerPrefs
 
@@ -319,17 +319,18 @@ end rigOutputCache
 --| COMMAND _rigDisplay
 --|
 --| Author: rabit
---| Version:  2.7
+--| Version:  2.8
 --| Created: 2009-06-19
---| Last Mod: 2018-10-16
+--| Last Mod: 2021-11-06
 --| Requires: Log, _writeCache, _output, rigLogMessage, rigFetchConfigItem()
+--|           _rigCSPheader()
 --|
 --| Summary:  All "view" data is automatically put into this variable by the
---|           	 Loader library: sOutputA["finalOutput"]
+--|           Loader library: sOutputA["finalOutput"]
 --|
---|           	 This handler sends the finalized output data to the browser along
---|           	 with any server headers and profile data. It also stops the
---|           	 benchmark timer so the page rendering speed can be shown.
+--|           This handler sends the finalized output data to the browser along
+--|           with any server headers and profile data. It also stops the
+--|           benchmark timer so the page rendering speed can be shown.
 --|
 --| Format:  _rigDisplay param1, param2
 --|
@@ -356,6 +357,12 @@ command _rigDisplay pOutput, pCached
 	if sOutputA["cacheExpiration"] > 0 then
 		_rigWriteCache tOutput
 	end if
+
+  # SET THE CONTENT SECURITY HEADERS
+  if "Contentsecuritypolicy" is among the lines of the stacksInUse then
+    rigSetHeader _rigCSPheader("allow", tOutput)
+    rigSetHeader _rigCSPheader("report", tOutput)
+  end if
 
 	# PARSE OUT THE ELAPSED TIME
 	put rigElapsedTime("totalExecutionTime_start", "totalExecutionTime_end", 4) into tElapsed
