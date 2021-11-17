@@ -85,9 +85,9 @@ end libraryStack
 --| COMMAND _rigSetDefaultValues
 --|
 --| Author: rabit
---| Version: 1.0
+--| Version: 1.1
 --| Created: 2021-11-02
---| Last Mod: 2021-11-02
+--| Last Mod: 2021-11-17
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
@@ -100,6 +100,8 @@ end libraryStack
 ----------------------------------------------------------------------*/
 
 private command _rigSetDefaultValues
+  put FALSE into sCspA["omit-script-nonce"]                   -- omit automatic creation of script source nonce values for the CSP header
+  put FALSE into sCspA["omit-style-nonce"]                    -- omit automatic creation of style source nonce values for the CSP header
   put FALSE into sCspA["report-only"]                         -- flag for report only policy
   put "" into sCspA["allow"]["report-uri"]                    -- the URL where a browser will send reports when a content security policy is violated
   put FALSE into sCspA["allow"]["upgrade-insecure-requests"]  -- rewrite URL schemes, changes HTTP to HTTPS
@@ -132,9 +134,9 @@ end _rigSetDefaultValues
 --| COMMAND rigRunInitialContentsecuritypolicyConfig
 --|
 --| Author: rabit
---| Version: 1.0
+--| Version: 1.1
 --| Created: 2021-11-02
---| Last Mod: 2021-11-02
+--| Last Mod: 2021-11-17
 --| Requires: _rigInitializeCSP
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing.
@@ -160,6 +162,14 @@ command rigRunInitialContentsecuritypolicyConfig pConfig
 	if tConfig is an array then
     if ("report-only" is among the keys of tConfig) and (tConfig["report-only"] is a boolean) then
       put tConfig["report-only"] into sCspA["report-only"]
+    end if
+
+    if ("omit-script-nonce" is among the keys of tConfig) and (tConfig["omit-script-nonce"] is a boolean) then
+      put tConfig["omit-script-nonce"] into sCspA["omit-script-nonce"]
+    end if
+
+    if ("omit-style-nonce" is among the keys of tConfig) and (tConfig["omit-style-nonce"] is a boolean) then
+      put tConfig["omit-style-nonce"] into sCspA["omit-style-nonce"]
     end if
 
 		_rigInitializeCSP tConfig
@@ -245,13 +255,13 @@ end _rigSetInitialCSPvalue
 --| FUNCTION _rigCSPheader
 --|
 --| Author: rabit
---| Version: 1.0
+--| Version: 1.1
 --| Created: 2021-10-30
---| Last Mod: 2021-10-30
+--| Last Mod: 2021-11-17
 --| Requires: --
 --|
 --| Summary: Generate the content security policy headers according to the options set
---|            in sCspA["allow"] and sCspA["report"]
+--|          in sCspA["allow"] and sCspA["report"]
 --|
 --| Format: _rigCSPheader(param1[, param2])
 --|
@@ -272,10 +282,10 @@ function _rigCSPheader pMode pOutput
 
     # CHECK IF WE NEED CSP NONCES
     if tAddNonce is TRUE then
-      if sStyleNonce <> TRUE then
+      if (sStyleNonce <> TRUE) and (sCspA["omit-style-nonce"] is FALSE) then
         put matchText(pOutput,"{{g_StyleNonce_}}") into sStyleNonce
       end if
-      if sScriptNonce <> TRUE then
+      if (sScriptNonce <> TRUE) and (sCspA["omit-script-nonce"] is FALSE) then
         put matchText(pOutput,"{{g_ScriptNonce_}}") into sScriptNonce
       end if
 
