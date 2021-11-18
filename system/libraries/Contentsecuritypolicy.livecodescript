@@ -134,7 +134,7 @@ end _rigSetDefaultValues
 --| COMMAND rigRunInitialContentsecuritypolicyConfig
 --|
 --| Author: rabit
---| Version: 1.1
+--| Version: 1.0
 --| Created: 2021-11-02
 --| Last Mod: 2021-11-17
 --| Requires: _rigInitializeCSP
@@ -162,14 +162,6 @@ command rigRunInitialContentsecuritypolicyConfig pConfig
 	if tConfig is an array then
     if ("report-only" is among the keys of tConfig) and (tConfig["report-only"] is a boolean) then
       put tConfig["report-only"] into sCspA["report-only"]
-    end if
-
-    if ("omit-script-nonce" is among the keys of tConfig) and (tConfig["omit-script-nonce"] is a boolean) then
-      put tConfig["omit-script-nonce"] into sCspA["omit-script-nonce"]
-    end if
-
-    if ("omit-style-nonce" is among the keys of tConfig) and (tConfig["omit-style-nonce"] is a boolean) then
-      put tConfig["omit-style-nonce"] into sCspA["omit-style-nonce"]
     end if
 
 		_rigInitializeCSP tConfig
