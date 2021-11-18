@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.0</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -218,7 +218,7 @@ rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 
 <h2>Directives</h2>
 
-<p>The following directives are available. The default value, if available any, indicates what will be used if you do not specify that directive.</p>
+<p>The following directives/settings are available. The default value, if available any, indicates what will be used if you do not specify that directive.</p>
 
 <div class="table">
 <table>
@@ -229,6 +229,18 @@ rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 <th>Description</th>
 </tr>
 
+<tr>
+<td class="td"><strong>omit-script-nonce</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Flag to prevent automatic insertion of a script source nonce value into the CSP header, 'unsafe-inline' is ignored if a nonce value is present in the source list</td>
+</tr>
+<tr>
+<td class="td"><strong>omit-style-nonce</strong></td>
+<td class="td">false</td>
+<td class="td">false, true</td>
+<td class="td">Flag to prevent automatic insertion of a style source nonce value into the CSP header, 'unsafe-inline' is ignored if a nonce value is present in the source list</td>
+</tr>
 <tr>
 <td class="td"><strong>report-only</strong></td>
 <td class="td">false</td>

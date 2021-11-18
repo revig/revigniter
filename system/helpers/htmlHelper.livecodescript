@@ -610,9 +610,9 @@ end rigHtmlDocType
 --| FUNCTION rigHtmlLinkTag
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-10-09
---| Last Mod: 2020-11-28
+--| Last Mod: 2021-11-17
 --| Requires: rigSiteURL(), rigSlashItem()
 --|
 --| Summary: Generates HTML <link /> tags.
@@ -693,7 +693,13 @@ function rigHtmlLinkTag pHref pRel pType pTitle pMedia pIndexPage pCors
 		end if
 
 		if tType <> "" then
-			put "rel=" & quote & tRel & quote && "type=" & quote & tType & quote & " " after tLink
+      if (tRel is "preload") and (char 1 to 4 of tType is "font") then
+        put "rel=" & quote & tRel & quote && "as=" & quote & "font" & quote && "type=" & quote & tType & quote & " " after tLink
+
+      else
+        put "rel=" & quote & tRel & quote && "type=" & quote & tType & quote & " " after tLink
+      end if -- if (tRel is "preload") and (cahr 1 to 4 of tType is "font")
+
 		else
 			put "rel=" & quote & tRel & quote & " " after tLink
 		end if

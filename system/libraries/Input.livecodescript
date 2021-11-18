@@ -670,10 +670,10 @@ end _rigHoneypotConfig
 --| COMMAND _rigHoneypotBotDetection
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2021-11-07
---| Last Mod: 2021-11-07
---| Requires: --
+--| Last Mod: 2021-11-16
+--| Requires: rigVarPost(), rigLogMessage, _rigHoneypotShowError
 --|
 --| Summary: Determine if the request comes from a bot.
 --|
@@ -687,7 +687,7 @@ end _rigHoneypotConfig
 private command _rigHoneypotBotDetection
   local tHoneypotValue
 
-	if $_POST is an array then
+	if ($_POST is an array) and (sInputA["honeypotName"] is among the keys of $_POST) then
 
 	  put rigVarPost(sInputA["honeypotName"]) into tHoneypotValue
 
