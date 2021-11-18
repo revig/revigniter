@@ -367,9 +367,9 @@ end rigCspGet
 --| COMMAND rigCspSet
 --|
 --| Author: rabit
---| Version: 1.0
+--| Version: 1.1
 --| Created: 2021-11-01
---| Last Mod: 2021-11-01
+--| Last Mod: 2021-11-18
 --| Requires: --
 --|
 --| Summary: Setter for content security policy directives.
@@ -401,14 +401,20 @@ command rigCspSet pDirective pValue pMode
       if tKey is among the items of sCspDirectives then
         put pDirective[tKey] into tVal
         put tVal into sCspA[tMode][tKey]
-      end if
+
+      else
+        if tKey is among the items of "omit-script-nonce,omit-style-nonce" then
+          put pDirective[tKey] into tVal
+          put tVal into sCspA[tKey]
+        end if
+      end if -- if tKey is among the items of sCspDirectives
     end repeat
 
   else -- if pDirective is an array
     if pDirective is among the items of sCspDirectives then
       put pValue into sCspA[tMode][pDirective]
 
-    else if pDirective is "report-only" then
+    else if pDirective is among the items of "report-only,omit-script-nonce,omit-style-nonce" then
       put pValue into sCspA[pDirective]
     end if
   end if -- if pDirective is an array
