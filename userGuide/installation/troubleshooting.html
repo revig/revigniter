@@ -95,7 +95,7 @@
 
 <h1>Troubleshooting</h1>
 
-<h2>Handler Names</h2>
+<h2>Page Not Found and Handler Names</h2>
 
 <p>Make sure to put all your handler names in your controller as a comma separated list into the global 
 variable <samp>gControllerHandlers</samp>, otherwise you get a <kbd>"Page Not Found"</kbd> error.<br />
@@ -104,6 +104,12 @@ See the comments in the sample files in the <dfn>application/controllers</dfn> f
 <h2>Error Logging</h2>
 
 <p>If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>application/logs</dfn> folder is writable.</p>
+
+
+<h2>Loading Controllers via the Command-Line Interface and Logging</h2>
+
+<p>The owner of files created while running revIgniter as a web application may be different than the one when loading controllers via the command-line interface. This means that a log file created by a web app cannot be written to by running controllers from CLI and vice versa. So, in case logging is enabled, make sure that the current log file can be written to by controllers loaded via CLI.</p>
+
 
 <h2>Search-Engine Friendly URLs</h2>
 
