@@ -1485,9 +1485,9 @@ end _rigAutoloader
 --| COMMAND _rigLoadStack
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2011-07-30
---| Last Mod: 2019-09-01
+--| Last Mod: 2021-11-24
 --| Requires: rigFetchConfigItem(), rigLogMessage, rigShowError, _rigRiInitStack
 --|
 --| Summary: This handler loads the requested stack.
@@ -1508,7 +1508,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
   local tPrefix, tSubStack, tSubStackTempA, tSubStackTempB, tSubStackExists
   local tBaseStack, tStackInArray, tIsDuplicate, tPathVariants, tPathVar
   local tFilePath, tFilePathTempA, tFilePathTempB, tFilePathExists
-  local tFileIsInArray, tPathNotSpecified
+  local tFileIsInArray, tPathNotSpecified, tBaseStackName, tStackName
 
 	if sLoaderA["riLoadedStackFiles"] is an array then
 		put the number of lines in the keys of sLoaderA["riLoadedStackFiles"] into tNumLoadedStacks
@@ -1631,8 +1631,10 @@ private command _rigLoadStack pStack pParams pPosition pModule
         -- go stack tSubStack
 				# go stack IS CURRENTLY NOT WORKING PROPERLY, SO THIS
 				# IS A WORKAROUND UNTIL THIS HAS CHANGED
+        put the short name of stack tBaseStack into tBaseStackName
+
         start using stack tSubStack
-        set the defaultStack to tStackToLoad
+        set the defaultStack to tBaseStackName
 			else
 				start using stack tSubStack
 			end if
@@ -1640,7 +1642,7 @@ private command _rigLoadStack pStack pParams pPosition pModule
 			add 1 to tNumLoadedStacks
 			put tSubStack into sLoaderA["riLoadedStackFiles"][tNumLoadedStacks]
 
-			_rigRiInitStack tStackToLoad, tPrefix, pParams
+			_rigRiInitStack tStackToLoad, tPrefix, pParams, tBaseStackName
 			exit _rigLoadStack
 
 		end if -- if there is a file tSubStack then
@@ -1711,7 +1713,9 @@ private command _rigLoadStack pStack pParams pPosition pModule
 			add 1 to tNumLoadedStacks
 			put tFilePath into sLoaderA["riLoadedStackFiles"][tNumLoadedStacks]
 
-			_rigRiInitStack tStackToLoad, "", pParams
+      put the short name of stack tFilePath into tStackName
+
+			_rigRiInitStack tStackToLoad, "", pParams, tStackName
 			exit _rigLoadStack
 
 		end repeat
@@ -1899,23 +1903,24 @@ end _rigRiInitLibrary
 --| COMMAND _rigRiInitStack
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2011-07-31
---| Last Mod: 2021-08-08
+--| Last Mod: 2021-11-24
 --| Requires: --
 --|
 --| Summary: Load config file associated with loaded stack.
 --|
 --| Format:  _rigRiInitStack param1, param2, param3
 --|
---| Parameters: string <pStack> the item that is being loaded, string <pPrefix>, array <pConfig>
+--| Parameters: string <pStack> the item that is being loaded, string <pPrefix>,
+--|             array <pConfig>, string <pStackName> name of stack, not file name
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-private command _rigRiInitStack pStack pPrefix pConfig
+private command _rigRiInitStack pStack pPrefix pConfig pStackName
   local tConfigFileFound, tStacksKeyNum, tNameLower, tFirstCharUpper
-  local tNameUCfirst, tPath, tStackName, tHandler
+  local tNameUCfirst, tPath, tStackFileName, tHandler
 
 	put FALSE into tConfigFileFound
 
@@ -1950,10 +1955,10 @@ private command _rigRiInitStack pStack pPrefix pConfig
 		end if
 	end if
 
-	put pPrefix & pStack into tStackName
+	put pPrefix & pStack into tStackFileName
 
 	add 1 to tStacksKeyNum
-	put tStackName into sLoaderA["riStacks"][tStacksKeyNum]
+	put tStackFileName into sLoaderA["riStacks"][tStacksKeyNum]
 
 	# RUN THE CONFIGURATION HANDLER IF NO CONFIGURATION FILE WAS FOUND
 	# OTHERWISE, THIS IS DONE BY THE CONFIGURATION FILE ITSELF
@@ -1961,11 +1966,11 @@ private command _rigRiInitStack pStack pPrefix pConfig
 		put "rigRunInitial" & pStack & "StackConfig" into tHandler
 		combine pConfig using numToCodepoint(1) and numToCodepoint(2)
 
-		dispatch tHandler to stack pStack with pConfig
+		dispatch tHandler to stack pStackName with pConfig
 
     if it is not "handled" then
-      set the behavior of stack pStack to the long id of stack "stackBehavior"
-      dispatch "rigLogLoaded" to stack pStack
+      set the behavior of stack pStackName to the long id of stack "stackBehavior"
+      dispatch "rigLogLoaded" to stack pStackName
       rigLogMessage "debug", "Stack" && pStack && "has no configuration handler"
     end if
 	end if
