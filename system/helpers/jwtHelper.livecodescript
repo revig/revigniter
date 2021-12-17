@@ -220,21 +220,14 @@ end rigJWTencode
 --|
 --| Format:  rigJWTdecode([param1][, param2][, param3])
 --|
---| Parameters: string <pToken> (optional), integer <pNumBits> the number of bits
---|               of the hash function (optional), string <pAlg> algorithm ("HS" or "RS") (optional)
+--| Parameters: string <pToken> (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigJWTdecode pToken pNumBits pAlg
+function rigJWTdecode pToken
   local tJWTheader, tJWTpayload, tJWThmac, tJWTDecodedA
-
-	# CHECK VALUE FOR NUMBER OF BITS
-	_rigJWTTypeNum pNumBits
-
-  if pAlg <> "RS" then
-    put "HS" into pAlg
-  end if
+  local tAlg, tNumBits
 
 	# GET TOKEN
 	if pToken is empty then
@@ -255,13 +248,16 @@ function rigJWTdecode pToken pNumBits pAlg
 	put item 3 of pToken into tJWThmac
 
 	if (pToken <> empty) and (the number of items of pToken is 3) then
+    # GET HASH SIZE AND ALGORITHM FROM HEADER
+    put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
+		put JsonImport(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
+
+    put char 1 to 2 of tJWTDecodedA["header"]["alg"] into tAlg
+    put char 3 to 5 of tJWTDecodedA["header"]["alg"] into tNumBits
 
 		# CHECK INTEGRITY OF TOKEN
-		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, pNumBits, pAlg) into tJWTDecodedA["valid"]
+		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, tNumBits, tAlg) into tJWTDecodedA["valid"]
 		#
-
-		put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
-		put JsonImport(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
 
 		if tJWTDecodedA["valid"] is TRUE then
 			put "" into tJWTDecodedA["response"]
