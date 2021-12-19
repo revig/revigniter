@@ -336,15 +336,19 @@ else
 
 <h2>Dealing with LiveCode Arrays in Post Data</h2>
 
-<p>You can send LiveCode arrays to revIgniter using POST. For this to work the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd> respectively in case you like to send your array in compressed form.<br />Use 
-  <pre><code>base64Encode(arrayEncode(myArray))</code></pre> 
-  or 
-  <pre><code>base64Encode(compress(arrayEncode(myArray)))</code></pre> 
-to prepare LiveCode arrays on the client side.</p>
+<p>You can send LiveCode arrays to revIgniter using POST. For this to work the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd> respectively in case you like to send your array in compressed form.<br />Use</p>
+  <pre><code>put base64Encode(arrayEncode(myArray)) into tMyPreparedArray</code></pre> 
+  <p>or</p> 
+  <pre><code>put base64Encode(compress(arrayEncode(myArray))) into tMyPreparedArray</code></pre> 
+<p>to prepare LiveCode arrays on the client side.</p>
 
 <p>Then format your data using LiveCode's libURLFormData() function like:</p>
 
-<pre><code>put libURLFormData("arrayName", tMyPreparedArray, "anotherArrayName", tMyOtherPreparedArray, "keyForSomeString", "myString") into tDataToSend</code></pre> 
+<pre><code>put libURLFormData("myArray", tMyPreparedArray, "myOtherArray", tMyOtherPreparedArray, "keyForSomeString", "myString") into tDataToSend</code></pre> 
+
+<p>Alternatively, you can post without formatting the data like:</p>
+
+<pre><code>put tMyPreparedArray into tDataToSend</code></pre>
 
 <p>Set the correct header and send the data to revIgniter:</p>
 
@@ -354,17 +358,23 @@ post tDataToSend to URL "http://mysite.com/mycontroller/"
 </code></pre>
 
 
-<p>On the server side you can retrieve your data like:</p>
+<p>If you sent the data as form data, you can retrieve your data on the server side like:</p>
 
-<pre><code>put rigVarPost("arrayName") into tMyArray</code></pre>
+<pre><code>put rigVarPost("myArray") into tMyArray</code></pre>
+
+<p>Otherwise use as function parameter (the key name of the $_POST array) "rigLCArray" to retrieve the data like:</p>
+
+<pre><code>put rigVarPost("rigLCArray") into tMyArray</code></pre>
 
 
 <h2>Dealing with JSON in Post Data</h2>
 
-<p>To post JSON send <kbd>"Content-Type: application/json"</kbd> along with the POST data. This way there is no need to send JSON as form data.<br />On the server side JSON data can be retrieved from <dfn>$_POST</dfn> and from <dfn>$_POST_RAW</dfn> as well as from <dfn>rigVarPost()</dfn> or from <dfn>rigVarPost(, TRUE)</dfn> respectively.</p>
+<p>To post JSON send <kbd>"Content-Type: application/json"</kbd> along with the POST data. There is no need to send JSON as form data.<br />On the server side JSON data can be retrieved from <dfn>$_POST</dfn> and from <dfn>$_POST_RAW</dfn> as well as from <dfn>rigVarPost()</dfn> or from <dfn>rigVarPost(, TRUE)</dfn> respectively.</p>
+<p>If you like you can post JSON  as form data too. Assuming that the name of the first form part is "myJSONdata", the JSON data can then be retreived from <dfn>rigVarPost("myJSONdata")</dfn> or from <dfn>rigVarPost("myJSONdata", TRUE)</dfn> respectively.</p>
 
 
 
+<h2>User Agent and IP Address</h2>
 
 <h3>rigIpAddress()</h3>
 <p>Returns the IP address for the current user.  If the IP address is not valid, the function will return an IP of: 0.0.0.0</p>
