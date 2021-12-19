@@ -148,19 +148,19 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.10
+--| Version:  1.11
 --| Created: 2009-06-17
---| Last Mod: 2021-11-07
+--| Last Mod: 2021-12-19
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
 --|           _rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
 --| Summary: This command does the following:
---| 	          Cleans $_GET data (if query strings are enabled)
---|             Cleans $_POST data
---|             Cleans special cookie data
---|             Standardizes newline characters to LF
---|             Checks CSRF protection
---|             Does bot detection
+--| 	       Cleans $_GET data (if query strings are enabled)
+--|          Cleans $_POST data
+--|          Cleans special cookie data
+--|          Standardizes newline characters to LF
+--|          Checks CSRF protection
+--|          Does bot detection
 --|
 --| Format:  _rigSanitizeGlobals
 --|
@@ -205,28 +205,49 @@ private command _rigSanitizeGlobals
 	# SO WE CALL A FALLBACK FUNCTION (A WORK AROUND FOR AN ENGINE ISSUE
 	# WHERE THE $_POST VARIABLE IS EMPTY) TO RETRIEVE THE POST ARRAY.
 	if ($_SERVER["REQUEST_METHOD"] = "POST") and ($_POST is not an array) then
+    set the itemdelimiter to "="
+    put item 1 of $_POST_RAW into tPOSTrawVariableKey
+    put item 2 of $_POST_RAW into tPOSTrawVariableValue
 
 		# FIRST CHECK IF POST DATA IS JSON
     if (sInputA["contentType"] is "application/json") \
     or (sInputA["contentType"] is "application/feed+json") or \
     (sInputA["contentType"] is "text/json") then
-			set the itemdelimiter to "="
-			put item 1 of $_POST_RAW into tPOSTrawVariableKey
-			put item 2 of $_POST_RAW into tPOSTrawVariableValue
 
 			if tPOSTrawVariableValue is empty then
+        # JSON SENT USING post
 				# SHOULD WE FILTER THE DATA?
 				if sInputA["useXssClean"] is TRUE then
 					put rigXssClean(tPOSTrawVariableKey) into item 1 of $_POST_RAW
 				end if
 
 				put $_POST_RAW into $_POST
-			end if
 
-		else
-		# WE ARE NOT DEALING WITH JSON, SO CALL THE FALLBACK FUNCTION
-			put _rigVarPostFallback() into $_POST
-		end if
+      else
+        # JSON SENT USING post libURLFormData
+        # SHOULD WE FILTER THE DATA?
+        if sInputA["useXssClean"] is TRUE then
+          put rigXssClean(urlDecode(tPOSTrawVariableValue)) into $_POST
+        else
+          put urlDecode(tPOSTrawVariableValue) into $_POST
+        end if
+			end if -- if tPOSTrawVariableValue is empty
+
+		else -- if (sInputA["contentType"] is "application/json")
+      if (sInputA["contentType"] is "application/lc.array") or (sInputA["contentType"] is "application/lc.array.compressed") then
+         if tPOSTrawVariableValue is empty then
+           # LC ARRAY SENT USING post
+           put $_POST_RAW into $_POST["rigLCArray"]
+         else
+           # LC ARRAY SENT USING post libURLFormData
+           put urlDecode(tPOSTrawVariableValue) into $_POST[tPOSTrawVariableKey]
+         end if
+
+       else -- if (sInputA["contentType"] is "application/lc.array")
+         # WE ARE NOT DEALING WITH JSON, SO CALL THE FALLBACK FUNCTION
+         put _rigVarPostFallback() into $_POST
+       end if -- if (sInputA["contentType"] is "application/lc.array")
+     end if -- if (sInputA["contentType"] is "application/json")
 	end if -- if ($_SERVER["REQUEST_METHOD"] = "POST") and ($_POST is not an array) then
 
 
@@ -268,6 +289,7 @@ private command _rigSanitizeGlobals
 
 	# CSRF PROTECTION CHECK
 	if sInputA["enableCSRF"] is TRUE then
+    set the itemdelimiter to ","
 		put "CSRFexpire,CSRFtokenName,CSRFcookieName" into tCSRFsettings
 		repeat for each item tItem in tCSRFsettings
 			_rigCSRFconfig tItem
