@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.2</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -99,6 +99,7 @@
 
 
 <ul>
+<li><a href="#version233">Version 2.3.3</a></li>
 <li><a href="#version232">Version 2.3.2</a></li>
 <li><a href="#version231">Version 2.3.1</a></li>
 <li><a href="#version230">Version 2.3.0</a></li>
@@ -231,6 +232,17 @@
 <li><a href="#version091a">Version Alpha 0.9.1</a></li>
 <li><a href="#version09a">Version Alpha 0.9</a></li>
 </ul>
+
+
+<h2><a id="version233">&nbsp;</a>Version 2.3.3</h2>
+<p>Release Date: 2021-12-21</p>
+
+<ul>
+	<li><strong>Changed:</strong> The JWT helper has been revised. JSON Web Tokens can now be signed with an asymmetric signing algorithm using RSA public/private key pairs. Please see the <a href="helpers/jwt_helper.html">JSON Web Token Helper</a> section of the User Guide.</li>
+	<li><strong>Changed:</strong> The restrictions on posting LC arrays and JSON data to revIgniter have been removed. This means that LC arrays can now be posted without having to use the libURLFormData() function. Also, JSON data can be posted using libURLFormData(), which was as yet not possible. Please see the <a href="libraries/input.html">Input Library</a> section of the User Guide.</li>
+	<li><strong>Fixed:</strong> missing extension name in log message of loaded extensions.</li>
+</ul>
+
 
 
 
