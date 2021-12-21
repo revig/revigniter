@@ -615,19 +615,19 @@ end rigLoadPlugins
 --| COMMAND rigLoadExtension
 --|
 --| Author: rabit
---| Version:  1.6
+--| Version:  1.7
 --| Created: 2016-07-10
---| Last Mod: 2019-01-08
+--| Last Mod: 2021-12-09
 --| Requires: rigShowError, rigLogMessage, _rigPrepareExtensionsArray,
 --|           _rigExtensionsArrayToList()
 --|
 --| Summary: This function loads the specified LiveCode Builder extension (library).
 --|
---| Format:  rigLoadExtension param1[, param2]
+--| Format: rigLoadExtension param1[, param2]
 --|
 --| Parameters: mixed <pExtensions> extension names (and optional resource paths relative to
---|               the extension folder) as array or a comma separated list, string <pModule>
---|               the module name (optional)
+--|             the extension folder) as array or a comma separated list, string <pModule>
+--|             the module name (optional)
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
@@ -700,7 +700,7 @@ command rigLoadExtension pExtensions pModule
     put tFolderPrefix & tExtension["extension"] into sLoaderA["riExtensions"][tNewExtensionKey]["extension"]
     put tFolderPrefix & tExtension["resourcePath"] into sLoaderA["riExtensions"][tNewExtensionKey]["resourcePath"]
 
-    rigLogMessage "debug", "Extension loaded: " & tExtension
+    rigLogMessage "debug", "Extension loaded:" && tExtension["extension"]
   end repeat
 end rigLoadExtension
 

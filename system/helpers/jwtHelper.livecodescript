@@ -36,6 +36,8 @@ global gRigA
 local sH0, sH1, sH2, sH3, sH4, sH5, sH6, sH7, sK
 local sSource, sIsFile, sBytesDone, sDataSize, sTail, sStackInUse
 
+constant kRSAkeyLength = 4096
+
 
 
 
@@ -50,12 +52,12 @@ local sSource, sIsFile, sBytesDone, sDataSize, sTail, sStackInUse
  --| Requires: _rigJWTinitHelper
  --|
  --| Summary:  Run security check and run initial handler.
- --| 
+ --|
  --| Parameters: --
  --|
  --| Return: empty
  ----------------------------------------------------------------------*/
- 
+
 on libraryStack
   if (gRigA is not an array) and (the environment is "server") then
     put "No direct script access allowed."
@@ -65,10 +67,10 @@ on libraryStack
   if the short name of the target = the short name of me then
     if sStackInUse <> TRUE then
       put TRUE into sStackInUse
-      
+
       _rigJWTinitHelper
     end if -- if sStackInUse <> TRUE
-    
+
   else
     pass libraryStack
   end if -- if the short name of the target = the short name of me
@@ -88,7 +90,7 @@ end libraryStack
 --| Requires: rigLoadExtension
 --|
 --| Summary: Load the LiveCode Builder JSON library.
---| 
+--|
 --| Format:  _rigJWTinitHelper
 --|
 --| Parameters: --
@@ -107,36 +109,41 @@ end _rigJWTinitHelper
 --| FUNCTION rigJWTencode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2016-07-08
---| Last Mod: 2018-11-09
+--| Last Mod: 2021-12-16
 --| Requires: _rigStrToArray(), _rigJWTgenerateSecret(), _rigHmacSha2b64(), _rigJWTpurge
+--|           _rigJWTrsaKeys(), rigLogMessage
 --|
 --| Summary: Generates and returns a JSON Web Token. Note: Use a binary string as a secret.
---| 
---| Format:  rigJWTencode([param1], param2[, param3])
+--|
+--| Format:  rigJWTencode([param1], param2[, param3][, param4])
 --|
 --| Parameters: mixed <pHeader> (optional), mixed <pPayload>, integer <pNumBits> the number
---| 						of bits of the hash function (optional)
+--| 						of bits of the hash function (optional), string <pAlg> algorithm ("HS" or "RS") (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigJWTencode pHeader pPayload pNumBits
+function rigJWTencode pHeader pPayload pNumBits pAlg
   local tJWTheaderDataA, tJWTheader, tJWTpayload, tSecretFile
-  local tJWTsecret, tJWTheaderPayload, tJWThmac
-  
+  local tJWTsecret, tJWTheaderPayload, tJWThmac, tKeysA
+
 	# CHECK VALUE FOR NUMBER OF BITS
 	_rigJWTTypeNum pNumBits
-	
+
+  if pAlg <> "RS" then
+    put "HS" into pAlg
+  end if
+
   # HEADER
   if pHeader is empty then
 		set the itemDel to "."
-	
+
 		if item 1 of the version < 9 then
 			put "HS256" into tJWTheaderDataA["alg"]
 		else
-			put "HS" & pNumBits into tJWTheaderDataA["alg"]
+			put pAlg & pNumBits into tJWTheaderDataA["alg"]
 		end if
     put "JWT"into tJWTheaderDataA["typ"]
   else
@@ -146,14 +153,14 @@ function rigJWTencode pHeader pPayload pNumBits
   end if
   put base64Encode(JsonExport(tJWTheaderDataA)) into tJWTheader
   #
-  
+
   # PAYLOAD
   if pPayload is not an array then
     put _rigStrToArray(pPayload, , TRUE, TRUE) into pPayload
   end if
   put base64Encode(JsonExport(pPayload)) into tJWTpayload
   #
-  
+
   # SECRET
   put gRigA["APPPATH"] & "config/jwt.lc" into tSecretFile
   if there is a file tSecretFile then
@@ -163,13 +170,34 @@ function rigJWTencode pHeader pPayload pNumBits
     put base64Decode(_rigJWTgenerateSecret()) into tJWTsecret
   end if
   #
-  
+
   # HMAC
   put tJWTheader & "." & tJWTpayload into tJWTheaderPayload
   _rigJWTpurge tJWTheaderPayload
 
-	put _rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits) into tJWThmac
-	_rigJWTpurge tJWThmac
+	put _rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits, pAlg) into tJWThmac
+  #
+
+  # ENCRYPTION
+  if pAlg is "RS" then
+    put _rigJWTrsaKeys(kRSAkeyLength) into tKeysA
+
+    if tKeysA["private"] <> empty then
+      encrypt tJWThmac using rsa with private key tKeysA["private"]
+
+      if the result is empty then
+        put base64encode(it) into tJWThmac
+      else
+        rigLogMessage "error", "RSA encryption error!" && the result
+      end if
+    else
+      rigLogMessage "error", "Private RSA key failed to be generated or is missing!"
+      return FALSE
+    end if -- if tKeysA["private"] <> empty
+  end if -- if pAlg is "RS"
+  #
+
+  _rigJWTpurge tJWThmac
 
   return tJWTheaderPayload & "." & tJWThmac
 end rigJWTencode
@@ -183,51 +211,53 @@ end rigJWTencode
 --| FUNCTION rigJWTdecode
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2016-07-09
---| Last Mod: 2018-11-09
+--| Last Mod: 2021-12-16
 --| Requires: rigGetHTTPheader(), _rigJWTVerifySig(), rigLogMessage
 --|
 --| Summary: Decode and validate a JSON Web Token.
---| 
---| Format:  rigJWTdecode([param1][, param2])
 --|
---| Parameters: string <pToken> (optional), integer <pNumBits> the number of bits
---|               of the hash function (optional)
+--| Format:  rigJWTdecode([param1][, param2][, param3])
+--|
+--| Parameters: string <pToken> (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigJWTdecode pToken pNumBits
+function rigJWTdecode pToken
   local tJWTheader, tJWTpayload, tJWThmac, tJWTDecodedA
-  
-	# CHECK VALUE FOR NUMBER OF BITS
-	_rigJWTTypeNum pNumBits
-	
+  local tAlg, tNumBits
+
 	# GET TOKEN
 	if pToken is empty then
 		# HEADER DATA
 		put rigGetHTTPheader("Authorization") into pToken
+
+    -- rigLogMessage "debug", "rabit pToken" && pToken /*---- TEMP TEST! ----*/
 		if pToken <> empty then
 			put word -1 of pToken into pToken
 		end if
 	end if
 	#
-  
+
 	set the itemDel to "."
 
 	put item 1 of pToken into tJWTheader
 	put item 2 of pToken into tJWTpayload
 	put item 3 of pToken into tJWThmac
-    
+
 	if (pToken <> empty) and (the number of items of pToken is 3) then
-  
-		# CHECK INTEGRITY OF TOKEN
-		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, pNumBits) into tJWTDecodedA["valid"]
-		#
- 
-		put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
+    # GET HASH SIZE AND ALGORITHM FROM HEADER
+    put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
 		put JsonImport(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
+
+    put char 1 to 2 of tJWTDecodedA["header"]["alg"] into tAlg
+    put char 3 to 5 of tJWTDecodedA["header"]["alg"] into tNumBits
+
+		# CHECK INTEGRITY OF TOKEN
+		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, tNumBits, tAlg) into tJWTDecodedA["valid"]
+		#
 
 		if tJWTDecodedA["valid"] is TRUE then
 			put "" into tJWTDecodedA["response"]
@@ -236,12 +266,12 @@ function rigJWTdecode pToken pNumBits
 
 			rigLogMessage "debug", "The token was not able to be decoded."
 		end if
-  
+
 	else
 		put FALSE into tJWTDecodedA["valid"]
 		put empty into tJWTDecodedA["header"]
 		put empty into tJWTDecodedA["payload"]
-		put "HTTP/1.0 400 Bad Request" into tJWTDecodedA["response"]
+    put "HTTP/1.0 400 Bad Request" into tJWTDecodedA["response"]
 
 		rigLogMessage "debug", "No token was able to be extracted."
 	end if -- if (pToken <> empty) and (the number of items of pToken is 3) then
@@ -259,24 +289,25 @@ end rigJWTdecode
 --| FUNCTION _rigJWTVerifySig
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2016-07-13
---| Last Mod: 2018-11-09
+--| Last Mod: 2021-12-16
 --| Requires: rigLogMessage, _rigHmacSha2b64(), _rigJWTpurge
 --|
 --| Summary: Verify signature of token received.
---| 
---| Format:  _rigJWTVerifySig(param1, param2, param3, param4)
+--|
+--| Format:  _rigJWTVerifySig(param1, param2, param3, param4, param5)
 --|
 --| Parameters: string <pHeaderEncoded>, string <pPayloadEncoded>, string <pJWThmac>,
---| 						integer <pNumBits> the number of bits of the hash function
+--| 						integer <pNumBits> the number of bits of the hash function,
+--|             string <pAlg> algorithm ("HS" or "RS") (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-private function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac pNumBits
+private function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac pNumBits pAlg
   local tSecretFile, tJWTsecret, tJWTheaderPayload, tJWThmac
-  
+
   put gRigA["APPPATH"] & "config/jwt.lc" into tSecretFile
   if there is a file tSecretFile then
     put url ("binfile:" & tSecretFile) into tJWTsecret
@@ -285,10 +316,26 @@ private function _rigJWTVerifySig pHeaderEncoded pPayloadEncoded pJWThmac pNumBi
 		rigLogMessage "error", "Failed to read file jwt.lc!", TRUE
 		return FALSE
   end if
-	
+
 	put pHeaderEncoded & "." & pPayloadEncoded into tJWTheaderPayload
 
-	put _rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits) into tJWThmac
+	put _rigHmacSha2b64(tJWTheaderPayload, tJWTsecret, pNumBits, pAlg) into tJWThmac
+
+  # COMPARE ENCRYPTED HASHES
+  if pAlg is "RS" then
+    put _rigJWTrsaKeys(kRSAkeyLength) into tKeysA
+    put base64Decode(pJWThmac) into tHash
+
+    encrypt tJWThmac using rsa with private key tKeysA["private"]
+
+    if the result is empty then
+      return (it is tHash)
+    else
+      rigLogMessage "error", "RSA encryption error!" && the result
+      return FALSE
+    end if
+  end if -- if pAlg is "RS"
+
 	_rigJWTpurge tJWThmac
 
 	return (tJWThmac is pJWThmac)
@@ -310,7 +357,7 @@ end _rigJWTVerifySig
 --| Requires: rigLogMessage
 --|
 --| Summary: Generate a random secret.
---| 
+--|
 --| Format:  _rigJWTgenerateSecret()
 --|
 --| Parameters: --
@@ -320,19 +367,105 @@ end _rigJWTVerifySig
 
 private function _rigJWTgenerateSecret
   local tSecret, tSecretFile
-  
+
   put base64Encode(randomBytes(64)) into tSecret
   put gRigA["APPPATH"] & "config/jwt.lc" into tSecretFile
   put tSecret into URL ("binfile:" & tSecretFile)
-  
+
   if the result is not empty then
     rigLogMessage "error", "Failed to write to file jwt.lc!", TRUE
   end if
-  
+
   return tSecret
 end _rigJWTgenerateSecret
 
 
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigJWTrsaKeys
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2021-12-14
+--| Last Mod: 2021-12-14
+--| Requires: _rigJWTgenerateKeys()
+--|
+--| Summary: Get the RSA keys.
+--|
+--| Format:  _rigJWTrsaKeys(param1)
+--|
+--| Parameters: integer <pNumBits>
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+function _rigJWTrsaKeys pNumBits
+  local tPrivateKeyFile, tPublicKeyFile, tKeysA
+
+  put gRigA["APPPATH"] & "config/jwtPrivate" & pNumBits & ".pem" into tPrivateKeyFile
+  put gRigA["APPPATH"] & "config/jwtPublic" & pNumBits & ".pem" into tPublicKeyFile
+
+  if (there is a file tPrivateKeyFile) and (there is a file tPublicKeyFile) then
+    put url ("binfile:" & tPrivateKeyFile) into tKeysA["private"]
+    put url ("binfile:" & tPublicKeyFile) into tKeysA["public"]
+  else
+    put _rigJWTgenerateKeys(pNumBits, tPrivateKeyFile, tPublicKeyFile) into tKeysA
+  end if
+
+  return tKeysA
+end _rigJWTrsaKeys
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigJWTgenerateKeys
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2021-12-14
+--| Last Mod: 2021-12-14
+--| Requires: rigLogMessage
+--|
+--| Summary: Generate RSA (private/public) keys.
+--|
+--| Format:  _rigJWTgenerateKeys(param1, param2, param3)
+--|
+--| Parameters: integer <pNumBits> key length, string <pPrivateKeyFile> path, string <pPublicKeyFile> path
+--|
+--| Return: array
+----------------------------------------------------------------------*/
+
+private function _rigJWTgenerateKeys pNumBits pPrivateKeyFile pPublicKeyFile
+  local tGeneratePrivateKey, tGeneratePublicKey, tGenError = FALSE, tKeysA
+
+  put "openssl genrsa -out" && pPrivateKeyFile && quote & pNumBits & quote into tGeneratePrivateKey
+  put "openssl rsa -pubout -in" && pPrivateKeyFile && "-out" && pPublicKeyFile into tGeneratePublicKey
+
+  put shell(tGeneratePrivateKey) into tResult
+
+  if (the result <> empty) or (there is not a file pPrivateKeyFile) then
+    put TRUE into tGenError
+    rigLogMessage "error", "Failed to generate private key or failed to write to file jwtPrivate" & pNumBits & ".pem!", TRUE
+  end if
+
+  get shell(tGeneratePublicKey)
+
+  if (the result <> empty) or (there is not a file pPublicKeyFile) then
+    put TRUE into tGenError
+    rigLogMessage "error", "Failed to generate public key or failed to write to file jwtPublic" & pNumBits & ".pem!", TRUE
+  end if
+
+  if tGenError is FALSE then
+    put url ("binfile:" & pPrivateKeyFile) into tKeysA["private"]
+    put url ("binfile:" & pPublicKeyFile) into tKeysA["public"]
+  end if
+
+  return tKeysA
+end _rigJWTgenerateKeys
 
 
 
@@ -343,23 +476,27 @@ end _rigJWTgenerateSecret
 --|
 --| Author: Mark Smith
 --| Modification: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2009-09-09
---| Last Mod: 2018-11-11
+--| Last Mod: 2021-12-16
 --| Requires: rigHmacSha2()
 --|
 --| Summary: Return signature using a header concatenated with a payload and a secret.
---| 
---| Format: _rigHmacSha2b64(param1, param2, param3)
+--|
+--| Format: _rigHmacSha2b64(param1, param2, param3, param4)
 --|
 --| Parameters: string <pMsg>, string <pKey>, integer <pNumBits> the number of bits
---|               of the hash function
+--|               of the hash function, string <pAlg> algorithm ("HS" or "RS")
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-private function _rigHmacSha2b64 pMsg pKey pNumBits
-  return base64encode(rigHmacSha2(pMsg, pKey, pNumBits))
+private function _rigHmacSha2b64 pMsg pKey pNumBits pAlg
+  if pAlg <> "RS" then
+    return base64encode(rigHmacSha2(pMsg, pKey, pNumBits))
+  end if
+
+   return rigHmacSha2(pMsg, pKey, pNumBits)
 end _rigHmacSha2b64
 
 
@@ -378,7 +515,7 @@ end _rigHmacSha2b64
 --| Requires: _rigsHa2()
 --|
 --| Summary: Encode string using a secret.
---| 
+--|
 --| Format:  rigHmacSha2(param1, param2, param3)
 --|
 --| Parameters: string <pMsg>, string <pKey>, integer <pNumBits> the number of
@@ -389,21 +526,21 @@ end _rigHmacSha2b64
 
 function rigHmacSha2 pMsg, pKey, pNumBits
   local tBlockSize, ipad, opad
-  
+
   if pNumBits > 256 then
     put 128 into tBlockSize
   else
     put 64 into tBlockSize
   end if
-		 
+
   if length(pKey) > tBlockSize then
     put _rigsHa2(pKey,,pNumBits) into pKey
   end if
-	
+
   repeat tBlockSize - length(pKey)
     put null after pKey
   end repeat
-  
+
   repeat for each byte b in pKey
     put numtobyte(bytetonum(b) bitXor 54) after ipad
     put numtobyte(bytetonum(b) bitXor 92) after opad
@@ -429,7 +566,7 @@ end rigHmacSha2
 --|            _rigProcessChunkSha256
 --|
 --| Summary: Used by rigHmacSha2 to encode a string using a secret.
---| 
+--|
 --| Format: _rigsHa2(param1, param2, param3)
 --|
 --| Parameters: string <pInput>, bool <pIsFile>, integer <NumBits> the number of
@@ -440,9 +577,9 @@ end rigHmacSha2
 
 private function _rigsHa2 pInput, pIsFile, pNumBits
   local tChunk, tDigestType
-  
+
 	set the itemDel to "."
-	
+
 	if item 1 of the version < 9 then
 		_rigJWTSetInput pInput, pIsFile
 
@@ -458,15 +595,15 @@ private function _rigsHa2 pInput, pIsFile, pNumBits
 			end if
 		end repeat
 
-		return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7) 
+		return binaryencode("M8", sH0,sH1,sH2,sH3,sH4,sH5,sH6,sH7)
 	end if -- if item 1 of the version < 9
- 
+
 	set the itemDel to ","
 	if pNumBits is among the items of "256,384,512" then
     put "SHA-" & pNumBits into tDigestType
     return messageDigest(pInput, tDigestType)
 	end if -- if pNumBits is among the items of "256,384,512"
- 
+
 	return messageDigest(pInput, "SHA-512")
 end _rigsHa2
 
@@ -484,7 +621,7 @@ end _rigsHa2
 --| Requires: rigFileSize(), _rigDataSizeBytes()
 --|
 --| Summary: Prepare script local vars using string.
---| 
+--|
 --| Format: _rigJWTSetInput param1[, param2]
 --|
 --| Parameters: mixed <pSource>, bool <pIsFile> (optional)
@@ -494,12 +631,12 @@ end _rigsHa2
 
 private command _rigJWTSetInput pSource, pIsFile
   local tRem
-  
+
   put 0 into sDataSize
   put 0 into sBytesDone
   put pSource into sSource
   put empty into sTail
-   
+
   if pIsFile and there is a file pSource then
     put true into sIsFile
     open file sSource for binary read
@@ -508,9 +645,9 @@ private command _rigJWTSetInput pSource, pIsFile
     put false into sIsFile
     put length(sSource) into sDataSize
   end if
-   
+
   put sDataSize mod 64 into tRem
-   
+
   if tRem = 0 then
     put binaryencode("M16", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0) into sTail["u"]
     put numtobyte(128) into byte 1 of sTail["u"]
@@ -520,14 +657,14 @@ private command _rigJWTSetInput pSource, pIsFile
     end repeat
     put numtobyte(128) into byte 1 of sTail["p"]
     put binaryencode("M16", 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0) into sTail["u"]
-  else 
+  else
     repeat 64 - tRem
       put null after sTail["u"]
     end repeat
     put numtobyte(128) into byte 1 of sTail["u"]
-      
+
   end if
-   
+
   put _rigDataSizeBytes(sDataSize) into byte -8 to -1 of sTail["u"]
 end _rigJWTSetInput
 
@@ -546,7 +683,7 @@ end _rigJWTSetInput
 --| Requires: --
 --|
 --| Summary: Convert file size to bytes.
---| 
+--|
 --| Format: _rigDataSizeBytes(param1)
 --|
 --| Parameters: integer <pNum>
@@ -556,7 +693,7 @@ end _rigJWTSetInput
 
 private function _rigDataSizeBytes pNum
   local tPow, tBits
-  
+
   multiply pNum by 8
   repeat with n = 63 down to 0
     put 2 ^ n into tPow
@@ -585,7 +722,7 @@ end _rigDataSizeBytes
 --| Requires: --
 --|
 --| Summary: Define constants used for encoding.
---| 
+--|
 --| Format: _rigInitSha256consts
 --|
 --| Parameters: --
@@ -595,7 +732,7 @@ end _rigDataSizeBytes
 
 private command _rigInitSha256consts
   local tConsts, tCount
-  
+
   if keys(sK) is empty then
     put "1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748," & \
     "2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206," & \
@@ -606,7 +743,7 @@ private command _rigInitSha256consts
     "3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877," & \
     "958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452," & \
     "2361852424,2428436474,2756734187,3204031479,3329325298" into tConsts
-       
+
     put 0 into tCount
     repeat for each item i in tConsts
       put i into sK[tCount]
@@ -631,7 +768,7 @@ end _rigInitSha256consts
 --| Requires: --
 --|
 --| Summary: Define variables used for encoding.
---| 
+--|
 --| Format: _rigInitSha256vars
 --|
 --| Parameters: --
@@ -666,7 +803,7 @@ end _rigInitSha256vars
 --| Requires: --
 --|
 --| Summary: Generate data chunk used for encoding input data.
---| 
+--|
 --| Format: _rigNextChunk()
 --|
 --| Parameters: --
@@ -676,31 +813,31 @@ end _rigInitSha256vars
 
 private function _rigNextChunk
   local tChunk, tChunkSize
-  
+
   put empty into tChunk
-   
+
   if (sBytesDone < sDataSize) and (sDataSize > 0) then
-       
+
     if sIsFile then
       read from file sSource for 64
       put it into tChunk
     else
       put byte (sBytesDone + 1) to (sBytesDone + 64) of sSource into tChunk
     end if
-       
+
     put length(tChunk) into tChunkSize
     add tChunkSize to sBytesDone
-      
+
     if tChunkSize < 56 then
       put sTail["u"] after tChunk
       delete variable sTail
-      if sIsFile then 
+      if sIsFile then
         close file sSource
       end if
     else if tChunksize > 55 and tChunkSize < 64 then
       put sTail["p"] after tChunk
     end if
-       
+
   else
     if sTail["u"] is not empty then
       put sTail["u"] into tChunk
@@ -708,7 +845,7 @@ private function _rigNextChunk
       if sIsFile then close file sSource
     end if
   end if
-    
+
   return tChunk
 end _rigNextChunk
 
@@ -727,7 +864,7 @@ end _rigNextChunk
 --| Requires: _rigChunkToArray()
 --|
 --| Summary: Process data chunk used for encoding input data.
---| 
+--|
 --| Format: _rigProcessChunkSha256 param1
 --|
 --| Parameters: string <pChunk>
@@ -738,58 +875,58 @@ end _rigNextChunk
 private command _rigProcessChunkSha256 pChunk
   local w, tNum, temp1, temp2, s0, s1, a, b, c, d, e, f, g, h
   local temp3, maj, t2, ch, t1
-  
+
   put _rigChunkToArray(pChunk) into w
-   
+
   # MAKE SUBCHUNKS
   repeat with i = 16 to 63
     put w[i-15] * 33554432 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp1
-      if temp1 = 0 then 
+      if temp1 = 0 then
         put 4294967295 into temp1
       end if
     else
       put tNum into temp1
     end if
-      
+
     put w[i-15] * 16384 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp2
-      if temp2 = 0 then 
+      if temp2 = 0 then
         put 4294967295 into temp2
       end if
     else
       put tNum into temp2
     end if
-      
+
     put temp1 bitXor temp2 bitXor (w[i-15] div 8) into s0
 
     put w[i-2] * 32768 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp1
-      if temp1 = 0 then 
+      if temp1 = 0 then
         put 4294967295 into temp1
       end if
     else
       put tNum into temp1
     end if
-      
+
     put w[i-2] * 8192 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp2
-      if temp2 = 0 then 
+      if temp2 = 0 then
         put 4294967295 into temp2
       end if
     else
       put tNum into temp2
     end if
-      
+
     put temp1 bitXor temp2 bitXor (w[i-2] div 1024) into s1
-  
+
     put (w[i-16] + s0 + w[i-7] + s1) mod 4294967296 into w[i]
   end repeat
-   
+
   # main processing loop
   put sH0 into a
   put sH1 into b
@@ -799,79 +936,79 @@ private command _rigProcessChunkSha256 pChunk
   put sH5 into f
   put sH6 into g
   put sH7 into h
-   
+
   repeat with i = 0 to 63
     put a * 1073741824 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp1
-      if temp1 = 0 then 
+      if temp1 = 0 then
         put 4294967295 into temp1
       end if
     else
       put tNum into temp1
     end if
-      
+
     put a * 524288 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp2
-      if temp2 = 0 then 
+      if temp2 = 0 then
         put 4294967295 into temp2
       end if
     else
       put tNum into temp2
     end if
-      
+
     put a * 1024 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp3
-      if temp3 = 0 then 
+      if temp3 = 0 then
         put 4294967295 into temp3
       end if
     else
       put tNum into temp3
     end if
-      
+
     put temp1 bitXor temp2 bitXor temp3 into s0
-      
-      
+
+
     put (a bitAnd b) bitXor (a bitAnd c) bitXor (b bitAnd c) into maj
     put (s0 + maj) mod 4294967296 into t2
 
     put e * 67108864 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp1
-      if temp1 = 0 then 
+      if temp1 = 0 then
         put 4294967295 into temp1
       end if
     else
       put tNum into temp1
     end if
-      
+
     put e * 2097152 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp2
-      if temp2 = 0 then 
+      if temp2 = 0 then
         put 4294967295 into temp2
       end if
     else
       put tNum into temp2
     end if
-      
+
     put e * 128 into tNum
     if tNum > 4294967295 then
       put tNum mod 4294967295 into temp3
-      if temp3 = 0 then 
+      if temp3 = 0 then
         put 4294967295 into temp3
       end if
     else
       put tNum into temp3
     end if
-      
+
     put temp1 bitXor temp2 bitXor temp3 into s1
-       
+
     put (e bitAnd f) bitXor ((bitNot e) bitAnd g) into ch
     put (h + s1 + ch + sK[i] + w[i]) mod 4294967296 into t1
-      
+
     put g into h
     put f into g
     put e into f
@@ -907,7 +1044,7 @@ end _rigProcessChunkSha256
 --| Requires: --
 --|
 --| Summary: Convert input data chunk used for encoding into an array.
---| 
+--|
 --| Format: _rigChunkToArray(param1)
 --|
 --| Parameters: string <pChunk>
@@ -917,7 +1054,7 @@ end _rigProcessChunkSha256
 
 private function _rigChunkToArray pChunk
   local bNum, count, tArray
-  
+
   put empty into bNum
   put 0 into count
   repeat with n = 1 to 64 - 4 step 4
@@ -941,7 +1078,7 @@ end _rigChunkToArray
 --| Requires: --
 --|
 --| Summary: Remove CR and "=" from JWT elements.
---| 
+--|
 --| Format: _rigJWTpurge param1
 --|
 --| Parameters: string <pStr>
@@ -968,7 +1105,7 @@ end _rigJWTpurge
 --| Requires: --
 --|
 --| Summary: Check number of bits of the hash function.
---| 
+--|
 --| Format:  _rigJWTTypeNum param1
 --|
 --| Parameters: mixed <pNumBits>
