@@ -519,10 +519,10 @@ end buildTable
 <a id="model"></a>
 <h2>Model</h2>
 
-<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <kbd>application/models/</kbd> folder:</p>
+<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.livecodescript</dfn>. In it, place the following code and save it to your <kbd>application/models/</kbd> folder:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code>script "ajaxmodel"
 
 function peopleData pSearchTerm
   if pSearchTerm &lt;> "" then
