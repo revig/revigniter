@@ -462,7 +462,7 @@ private function _rigValidateRequest pSegmentsArray
 			# DOES THE DEFAULT CONTROLLER EXIST IN THE SUB-FOLDER?
 			if there is a file (gRigA["APPPATH"] & rigFetchDirectory() & sRouterA["defaultController"] & gRigA["EXT"]) then
 				put "" into sRouterA["directory"]
-				put "" into tTemp[1]
+				put "" into tTemp
 				return tTemp
 			end if
 
