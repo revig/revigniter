@@ -148,9 +148,9 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.11
+--| Version:  1.12
 --| Created: 2009-06-17
---| Last Mod: 2021-12-19
+--| Last Mod: 2022-11-06
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
 --|           _rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
@@ -187,7 +187,8 @@ private command _rigSanitizeGlobals
 	end if
 
 
-	# THIS SEEMS STRANGE, BUT WE SAVE THE GET ARRAY IN THE POST ARRAY TO SIMPLIFY FURTHER INPUT VALIDATION
+	# THIS SEEMS STRANGE, BUT WE SAVE THE GET ARRAY IN THE
+  # POST ARRAY TO SIMPLIFY FURTHER INPUT VALIDATION
 	# ALL VALIDATION IS THEN DONE WITH THE POST ARRAY
 	if $_GET is an array then
 		if (the number of lines in the keys of $_GET > 1) then
@@ -224,13 +225,27 @@ private command _rigSanitizeGlobals
 				put $_POST_RAW into $_POST
 
       else
-        # JSON SENT USING post libURLFormData
-        # SHOULD WE FILTER THE DATA?
-        if sInputA["useXssClean"] is TRUE then
-          put rigXssClean(urlDecode(tPOSTrawVariableValue)) into $_POST
-        else
-          put urlDecode(tPOSTrawVariableValue) into $_POST
-        end if
+        # CHECK IF THE JASON DATA INCLUDES ESCAPED
+        # QUOTATION MARKS FOLLOWING AN EQUAL SYMBOL
+        if char 1 of tPOSTrawVariableValue <> "\" then
+          # JSON SENT USING post libURLFormData
+          # SHOULD WE FILTER THE DATA?
+          if sInputA["useXssClean"] is TRUE then
+            put rigXssClean(urlDecode(tPOSTrawVariableValue)) into $_POST
+          else
+            put urlDecode(tPOSTrawVariableValue) into $_POST
+          end if
+
+        else -- if char 1 of tPOSTrawVariableValue <> "\"
+          # JSON SENT USING post, INCLUDES ESCAPED QUOTATION MARKS
+	        # SHOULD WE FILTER THE DATA?
+	        if sInputA["useXssClean"] is TRUE then
+		        put rigXssClean($_POST_RAW) into $_POST
+          else
+            put $_POST_RAW into $_POST
+	        end if
+        end if -- if char 1 of tPOSTrawVariableValue <> "\"
+
 			end if -- if tPOSTrawVariableValue is empty
 
 		else -- if (sInputA["contentType"] is "application/json")
