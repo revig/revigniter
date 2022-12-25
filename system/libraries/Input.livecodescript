@@ -225,9 +225,9 @@ private command _rigSanitizeGlobals
 				put $_POST_RAW into $_POST
 
       else
-        # CHECK IF THE JASON DATA INCLUDES ESCAPED
-        # QUOTATION MARKS FOLLOWING AN EQUAL SYMBOL
-        if char 1 of tPOSTrawVariableValue <> "\" then
+        # CHECK IF THE JSON DATA SUBMITTED USING AN AJAX REQUEST
+        # IN THIS CASE WE CONTINUE TO PROCESS $_POST_RAW
+        if sInputA["xRequestedWith"] <> "XMLHttpRequest" then
           # JSON SENT USING post libURLFormData
           # SHOULD WE FILTER THE DATA?
           if sInputA["useXssClean"] is TRUE then
@@ -236,15 +236,15 @@ private command _rigSanitizeGlobals
             put urlDecode(tPOSTrawVariableValue) into $_POST
           end if
 
-        else -- if char 1 of tPOSTrawVariableValue <> "\"
+        else -- if sInputA["xRequestedWith"] <> "XMLHttpRequest"
           # JSON SENT USING post, INCLUDES ESCAPED QUOTATION MARKS
 	        # SHOULD WE FILTER THE DATA?
 	        if sInputA["useXssClean"] is TRUE then
-		        put rigXssClean($_POST_RAW) into $_POST
+		        put rigXssClean(urlDecode($_POST_RAW)) into $_POST
           else
-            put $_POST_RAW into $_POST
+            put urlDecode($_POST_RAW) into $_POST
 	        end if
-        end if -- if char 1 of tPOSTrawVariableValue <> "\"
+        end if -- if sInputA["xRequestedWith"] <> "XMLHttpRequest"
 
 			end if -- if tPOSTrawVariableValue is empty
 
