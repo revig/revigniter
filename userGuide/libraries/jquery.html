@@ -15,11 +15,7 @@
     
     <script src="../js/nav-ck.js"></script>
     
-    <!-- Touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../images/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../images/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../images/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../images/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon" href="https://revigniter.com/assets/img/apple-touch-icon.png">
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -38,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -519,10 +515,10 @@ end buildTable
 <a id="model"></a>
 <h2>Model</h2>
 
-<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.lc</dfn>. In it, place the following code and save it to your <kbd>application/models/</kbd> folder:</p>
+<p>There is only one model function needed. This function retrieves the filtered data from the database. Create this model called <dfn>ajaxmodel.livecodescript</dfn>. In it, place the following code and save it to your <kbd>application/models/</kbd> folder:</p>
 
 <div class="codeSample">
-<pre><code>&lt;?lc
+<pre><code>script "ajaxmodel"
 
 function peopleData pSearchTerm
   if pSearchTerm &lt;> "" then

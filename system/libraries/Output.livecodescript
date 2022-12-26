@@ -744,13 +744,13 @@ end _rigOutDisplayCache
 
 
 
-----------------------------------------------------------------------
+/*----------------------------------------------------------------------
 --| FUNCTION rigCacheVarsMerged
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 25-07-09
---| Last Mod: 25-07-09
+--| Version:  1.1
+--| Created: 2009-07-25
+--| Last Mod: 2022-03-22
 --| Requires: --
 --|
 --| Summary:  Merge pseudo variables in cached file.
@@ -760,14 +760,14 @@ end _rigOutDisplayCache
 --| Parameters: string <pStr>
 --|
 --| Return: string
-----------------------------------------------------------------------
+----------------------------------------------------------------------*/
 
 function rigCacheVarsMerged pStr
   local tStr, tMergedStr
 
 	put pStr into tStr
-	replace "{{" with "[[" in tStr
-	replace "}}" with "]]" in tStr
+	replace "{{g_" with "[[g_" in tStr
+	replace "_}}" with "_]]" in tStr
 
 	put merge(tStr) into tMergedStr
 

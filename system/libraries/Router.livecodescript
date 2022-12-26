@@ -395,9 +395,9 @@ end _rigSetRequest
 --| FUNCTION _rigValidateRequest
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 2009-06-19
---| Last Mod: 2018-11-01
+--| Last Mod: 2022-12-25
 --| Requires: rigSetDirectory, rigShow404, rigSetController, rigSetHandler, _rigValidateModuleRequest()
 --|
 --| Summary: Validates the supplied segments. Attempts to determine the path
@@ -411,7 +411,7 @@ end _rigSetRequest
 ----------------------------------------------------------------------*/
 
 private function _rigValidateRequest pSegmentsArray
-  local tDirectory, tSegments, t404ErrorSegments, tErrMsg, tTemp, tModule, tSegmentTwo
+  local tDirectory, tSegments, t404ErrorSegments, tErrMsg, tModule, tSegmentTwo
 
 	# DOES THE REQUESTED CONTROLLER EXIST IN THE ROOT FOLDER?
 	if there is a file (gRigA["APPPATH"] & "controllers/" & pSegmentsArray[1] & gRigA["EXT"]) then
@@ -461,9 +461,7 @@ private function _rigValidateRequest pSegmentsArray
 			rigSetHandler "index"
 			# DOES THE DEFAULT CONTROLLER EXIST IN THE SUB-FOLDER?
 			if there is a file (gRigA["APPPATH"] & rigFetchDirectory() & sRouterA["defaultController"] & gRigA["EXT"]) then
-				put "" into sRouterA["directory"]
-				put "" into tTemp[1]
-				return tTemp
+				return ""
 			end if
 
 		end if
