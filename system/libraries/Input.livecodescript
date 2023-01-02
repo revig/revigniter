@@ -225,7 +225,7 @@ private command _rigSanitizeGlobals
 				put $_POST_RAW into $_POST
 
       else
-        # CHECK IF THE JSON DATA SUBMITTED USING AN AJAX REQUEST
+        # CHECK IF THE JSON DATA HAS BEEN SUBMITTED USING AN AJAX REQUEST
         # IN THIS CASE WE CONTINUE TO PROCESS $_POST_RAW
         if sInputA["xRequestedWith"] <> "XMLHttpRequest" then
           # JSON SENT USING post libURLFormData
