@@ -84,10 +84,10 @@ end libraryStack
 --|
 --| Summary: Initialize the database.
 --| 
---| Format:  rigDB(param1, param2)
+--| Format:  rigDB([param1][, param2])
 --|
---| Parameters: string <pParams> the DB credentials, bool <pActiveRecordOverride> whether to enable
---|                       active record (this allows us to override the config setting).
+--| Parameters: string <pParams> the DB credentials (optional), bool <pActiveRecordOverride> whether
+--|               to enable active record, this allows us to override the config setting (optional).
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/

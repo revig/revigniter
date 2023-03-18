@@ -310,10 +310,11 @@ end rigLoadModel
 --|
 --| Summary: Database Loader
 --|
---| Format:  rigLoadDatabase(param1, param2, param3)
+--| Format:  rigLoadDatabase([param1][, param2][, param3])
 --|
---| Parameters: string <pParams> the DB credentials, bool <pReturn>,  bool <pActiveRecord> whether to
---|               enable active record (this allows us to override the config setting).
+--| Parameters: mixed <pParams> the database group name or the DB credentials (optional),
+--|               bool <pReturn> (optional),  bool <pActiveRecord> whether to
+--|               enable active record, this allows us to override the config setting (optional).
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
