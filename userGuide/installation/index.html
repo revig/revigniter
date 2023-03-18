@@ -91,7 +91,7 @@
 
 <h1>Installation Instructions</h1>
 
-<p>revIgniter is installed in four steps:</p>
+<p>revIgniter is installed in four steps (apart from 2 optional steps):</p>
 
 <ol>
 <li>Unzip the package.</li>
@@ -99,6 +99,7 @@
 <li>Open the <dfn>application/config/config.lc</dfn> file with a text editor and set your base URL.  If you intend to use encryption or sessions, set your encryption key. If you enable error logging in <dfn>application/config/config.lc</dfn> make sure that the <dfn>application/logs</dfn> folder is writable.</li>
 <li>Set the file permissions on your <dfn>application/cache</dfn> folder such that it is writable.</li>
 <li>If you intend to use a database, open the <dfn>application/config/database.lc</dfn> file with a text editor and set your database settings.</li>
+<li>If you intend to use a SQLite databse the <dfn>application/db</dfn> folder must be set such that it is writable and executable (777), your database file must be writable (666).</li>
 </ol>
 
 <p>If you wish to hide the location of your revIgniter files you can rename the <dfn>system</dfn> folder
