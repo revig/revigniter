@@ -2392,12 +2392,12 @@ end rigXssClean
 --| COMMAND rigEncodeRevTags
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 03-08-09
---| Last Mod: 06-09-12
---| Requires: --
+--| Version:  1.3
+--| Created: 2009-08-03
+--| Last Mod: 2023-03-20
+--| Requires: rigEncodeLcTags
 --|
---| Summary: Convert REV / LC tags to entities.
+--| Summary: Convert REV / LC tags to entities. LEGACY CODE!!!!!!!!!!!!!!
 --|
 --| Format: rigEncodeRevTags param1
 --|
@@ -2407,6 +2407,34 @@ end rigXssClean
 ----------------------------------------------------------------------*/
 
 command rigEncodeRevTags pStr
+  rigEncodeLcTags pStr
+
+	return the result
+end rigEncodeRevTags
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigEncodeLcTags
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-03-20
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Convert REV / LC tags to entities.
+--|
+--| Format: rigEncodeLcTags param1
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+command rigEncodeLcTags pStr
   local tStr
 
 	put pStr into tStr
@@ -2418,7 +2446,7 @@ command rigEncodeRevTags pStr
 	replace "?>" with "?&gt;" in tStr
 
 	return tStr
-end rigEncodeRevTags
+end rigEncodeLcTags
 
 
 
