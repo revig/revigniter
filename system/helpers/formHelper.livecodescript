@@ -78,33 +78,33 @@ end libraryStack
 --| FUNCTION rigFormOpen
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 2009-07-28
---| Last Mod: 2021-11-07
---| Requires: rigSiteURL(), _rigAttributesToString(), rigFormHidden(), rigFetchConfigItem()
---|            rigGetCSRFhash(), rigGetCSRFtokenName()
+--| Last Mod: 2023-04-13
+--| Requires: rigUriString(), rigSiteURL(), _rigAttributesToString(),rigFetchConfigItem(),
+--|            rigHiddenCSRFtoken(), rigQ(), rigFormHidden()
 --|
 --| Summary: Creates the opening portion of the form.
 --|
---| Format:  rigFormOpen(param1, param2, param3)
+--| Format:  rigFormOpen(param1[, param2][, param3])
 --|
 --| Parameters: string <pAction> the URI segments of the form destination,
---|               array <pAttributes> a key/value pair of attributes,
---|               array <pHidden> a key/value pair hidden data
+--|               array <pAttributesA> a key/value pair of attributes (optional),
+--|               array <pHiddenA> a key/value pair hidden data (optional)
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigFormOpen pAction pAttributes pHidden
+function rigFormOpen pAction pAttributesA pHiddenA
   local tAttributes, tURIstring, tAction, tForm, tCSRFprotection, tBaseURL
   local tStandardURLs, tURIsegments, tSegment, tHiddenURI, tHoneypotLabel
   local tHoneypotName, tHoneypotTemplate, tHoneypotDivStyle, tHoneypotStyle
   local tHoneypotID
 
-	if pAttributes is not an array then
+	if pAttributesA is not an array then
 		put "method=" & quote & "post" & quote into tAttributes
 	else
-		put pAttributes into tAttributes
+		put pAttributesA into tAttributes
 	end if
 
 	# IF NO ACTION IS PROVIDED THEN SET TO THE CURRENT URL
@@ -116,7 +116,11 @@ function rigFormOpen pAction pAttributes pHidden
 	else 	if "://" is in pAction then
 		put pAction into tAction
 	else
-		put rigSiteURL(pAction) into tAction
+    if pAction <> "#" then
+      put rigSiteURL(pAction) into tAction
+    else
+      put pAction into tAction
+    end if
 	end if
 
 	put "<form action=" & quote & tAction & quote into tForm
@@ -127,7 +131,7 @@ function rigFormOpen pAction pAttributes pHidden
 	put rigFetchConfigItem("csrf_protection") into tCSRFprotection
 	put rigFetchConfigItem("baseUrl") into tBaseURL
 	if (tCSRFprotection is TRUE) and (tBaseURL is in tAction) and (tAttributes["method"] is not "get") then
-		put rigGetCSRFhash() into pHidden[rigGetCSRFtokenName()]
+		put rigHiddenCSRFtoken(pHiddenA) into pHiddenA
 	end if
 
 	# CHECK IF STANDARD QUERY STRING BASED URLs ARE ENABLED
@@ -144,7 +148,7 @@ function rigFormOpen pAction pAttributes pHidden
 
     		repeat for each item tSegment in tURIsegments
         		set the itemdelimiter to "="
-        		put "<input type=" & quote & "hidden" & quote && "name=" & quote & (item 1 of tSegment) & quote && "value=" & quote & (item 2 of tSegment) & quote & ">" after tHiddenURI
+        		put "<input type=" & rigQ("hidden") && "name=" & rigQ(item 1 of tSegment) && "value=" & rigQ(item 2 of tSegment) & ">" after tHiddenURI
         		set the itemdelimiter to "&"
     		end repeat
 
@@ -152,8 +156,8 @@ function rigFormOpen pAction pAttributes pHidden
 	end if
 	#
 
-	if pHidden is an array then
-		put tForm & return & rigFormHidden(pHidden) into tForm
+	if pHiddenA is an array then
+		put tForm & return & rigFormHidden(pHiddenA) into tForm
 	end if
 
   # ADD HONEYPOT TEXT INPUT FIELD
@@ -161,13 +165,13 @@ function rigFormOpen pAction pAttributes pHidden
     put rigFetchConfigItem("honeypot_label") into tHoneypotLabel
     put rigFetchConfigItem("honeypot_name") into tHoneypotName
     put rigFetchConfigItem("honeypot_containerID") into tHoneypotID
-    put "<label>" & tHoneypotLabel & "</label><input type=" & quote & "text" & quote & \
-    " name=" & tHoneypotName & " value=" & quote & quote & "/>" into tHoneypotTemplate
+    put "<label>" & tHoneypotLabel & "</label><input type=" & rigQ("text") && \
+    "name=" & tHoneypotName & " value=" & quote & quote & "/>" into tHoneypotTemplate
 
     if rigFetchConfigItem("honeypot_hidden") then
       # IF LIBRARY Contentsecuritypolicy IS LOADED ADD A NONCE
       if "Contentsecuritypolicy" is not among the lines of the stacksInUse then
-        put  " style=" & quote & "display: none;" & quote into tHoneypotDivStyle
+        put  " style=" & rigQ("display: none;") into tHoneypotDivStyle
         put "" into tHoneypotStyle
       else
         put "<style {{g_StyleNonce_}}> #" & tHoneypotID && "{display: none;} </style>" into tHoneypotStyle
@@ -176,7 +180,7 @@ function rigFormOpen pAction pAttributes pHidden
       put "" into tHoneypotDivStyle
     end if -- if rigFetchConfigItem("honeypot_hidden")
 
-    put tHoneypotStyle & "<div id=" & quote & tHoneypotID & quote & tHoneypotDivStyle & ">" & tHoneypotTemplate & "</div>" into tHoneypotContainer
+    put tHoneypotStyle & "<div id=" & rigQ(tHoneypotID) & tHoneypotDivStyle & ">" & tHoneypotTemplate & "</div>" into tHoneypotContainer
 
     put tForm & return & tHoneypotContainer into tForm
   end if -- if rigFetchConfigItem("honeypot") is TRUE
@@ -231,10 +235,10 @@ end rigFormOpenMultiPart
 --| FUNCTION rigFormHidden
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 28-07-09
---| Last Mod: 06-11-09
---| Requires: rigFormPrep()
+--| Version:  1.3
+--| Created: 2009-07-28
+--| Last Mod: 2023-04-13
+--| Requires: rigFormHidden(), rigFormPrep(), rigQ()
 --|
 --| Summary: Generates hidden fields.  You can pass a simple
 --|            key/value string or an associative array with multiple values.
@@ -248,6 +252,7 @@ end rigFormOpenMultiPart
 
 function rigFormHidden pName pValue pRecursion
   local tRecursion, tForm, tKey, tK, tV
+	local tCSRF, tCSRFtokenName
 
 	if pRecursion is empty then
 		put FALSE into tRecursion
@@ -269,7 +274,24 @@ function rigFormHidden pName pValue pRecursion
 	end if
 
 	if pValue is not an array then
-		put "<input type=" & quote & "hidden" & quote && "name=" & quote & pName & quote && "value=" & quote & rigFormPrep(pValue, pName) & quote && "/>" & return after tForm
+    # CHECK IF WE ARE DEALING WITH A CSRF FIELD
+    # IF YES ADD A ASYNergy ATTRIBUTE
+    put item 2 of pName into tCSRF
+		
+    if tCSRF is "__CSRF__" then
+      put TRUE into tCSRF
+      put item 1 of pName into tCSRFtokenName
+    end if -- if tCSRF is "__CSRF__"
+    
+    if tCSRF is TRUE then
+      put "<input type=" & rigQ("hidden") && "name=" & rigQ(tCSRFtokenName) \
+      && "value=" & rigQ(rigFormPrep(pValue, pName)) && "asyn:csrf=" & \
+      rigQ(tCSRFtokenName) && "/>" & return after tForm
+    else
+      put "<input type=" & rigQ("hidden") && "name=" & rigQ(pName) && \
+      "value=" & rigQ(rigFormPrep(pValue, pName)) && "/>" & return after tForm
+    end if -- if tCSRF is TRUE
+		
 	else
 		repeat for each key tK in pValue
 			put pValue[tK] into tV
@@ -280,6 +302,44 @@ function rigFormHidden pName pValue pRecursion
 	return tForm
 end rigFormHidden
 
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION rigHiddenCSRFtoken
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2022-05-20
+--| Last Mod: 2022-05-20
+--| Requires: --
+--|
+--| Summary: Returns a hidden input field using a CSRF token as value or an array.
+--| 
+--| Format:  rigHiddenCSRFtoken([param1])
+--|
+--| Parameters: pHiddenA <pHiddenA> array of name/value pairs for input fields to be hidden (optional)
+--|
+--| Return: mixed
+----------------------------------------------------------------------*/
+
+function rigHiddenCSRFtoken pHiddenA
+  local tCSRFtoken, tHiddenCSRFtokenA
+  
+  put rigGetCSRFhash() into tCSRFtoken
+  
+  # RETURN AN ARRAY OR A HIDDEN CSRF INPUT FIELD
+  # THE ",__CSRF__" ADDITION INDICATES THAT A
+  # ASYNergy ATTRIBUTE ("asyn:csrf")SHOULD BE ADDED
+  if the paramCount = 1 then
+    put tCSRFtoken into pHiddenA[rigGetCSRFtokenName() & ",__CSRF__"]
+    return pHiddenA
+  end if
+    
+  put tCSRFtoken into tHiddenCSRFtokenA[rigGetCSRFtokenName() & ",__CSRF__"]
+  return rigFormHidden(tHiddenCSRFtokenA)
+end rigHiddenCSRFtoken
 
 
 
