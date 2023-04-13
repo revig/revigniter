@@ -511,11 +511,12 @@ end rigFormValidErrorString
 --| FUNCTION rigFormValidRun
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-07-30
---| Last Mod: 2015-09-17
+--| Last Mod: 2023-04-13
 --| Requires: rigSetConfigRules, _rigRequire, rigFetchValidationConf(), rigTrim, rigSetRules
---|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute, _rigResetPostArray
+--|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute
+--|           _rigResetPostArray
 --|
 --| Summary: Run the validator. This function does all the work.
 --|
@@ -546,8 +547,10 @@ function rigFormValidRun pGroup
 	end if
 
 	# DO WE EVEN HAVE ANY DATA TO PROCESS?  MM?
-	if $_POST is not an array then
+	if ($_POST is not an array) and (pData is empty) then
 		return FALSE
+  else if pData is an array then
+    put pData into $_POST
 	end if
 
 	# DOES THE _FIELD_DATA ARRAY CONTAINING THE VALIDATION RULES EXIST?
