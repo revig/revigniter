@@ -90,9 +90,9 @@ end libraryStack
 --| COMMAND _rigSetDefaultValues
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2018-12-14
---| Last Mod: 2021-11-07
+--| Last Mod: 2023-04-13
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
@@ -136,6 +136,9 @@ private command _rigSetDefaultValues
   put "[removed]" into sInputA["neverAllowedRegex"]["Redirect\s+302"]
 
   put $_SERVER["CONTENT_TYPE"] into sInputA["contentType"]
+  # CHECK FOR AJAX REQUEAST
+  put $_SERVER["HTTP_X_REQUESTED_WITH"] into sInputA["xRequestedWith"] --------------- fixes a JSON issue
+  put $_SERVER["HTTP_X_ASYNERGY"] into sInputA["xASYNergy"]
 
   put "useXssClean,allowGetArray,enableCSRF,CSRFexpire,CSRFtokenName,CSRFcookieName,CSRFhash,XSShash,neverAllowedStr,neverAllowedRegex" into sPrivateVars
 end _rigSetDefaultValues
@@ -489,9 +492,9 @@ end _rigCSRFsetHash
 --| COMMAND _rigCSRFverify
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2012-07-15
---| Last Mod: 2016-09-10
+--| Last Mod: 2023-04-13
 --| Requires: _rigCSRFsetCookie, rigVarPost(), rigVarCookie(), _rigCSRFshowError,
 --| 					_rigInputSetCookie, _rigCSRFsetHash, rigLogMessage
 --|
@@ -506,14 +509,40 @@ end _rigCSRFsetHash
 
 private command _rigCSRFverify
   local tCSRFtoken, tCSRFcookie
+  local tPostDataIsJSON, tToken
+  local tMatchStart, tMatchEnd
+  
+	# FIRST CHECK IF POST DATA IS JSON
+  if (sInputA["contentType"] is "application/json") \
+    or (sInputA["contentType"] is "application/feed+json") or \
+    (sInputA["contentType"] is "text/json") then
+  
+    put TRUE into tPostDataIsJSON    
+  end if
 
-	# IF NO POST DATA EXISTS WE WILL SET THE CSRF COOKIE
-	if $_POST is not an array then
-		_rigCSRFsetCookie
-		exit _rigCSRFverify
-	end if
-
-	put rigVarPost(sInputA["CSRFtokenName"]) into tCSRFtoken
+  # IF NO POST ARRAY OR NO JSON DATA EXISTS WE WILL SET THE CSRF COOKIE
+  if $_POST is not an array then
+    if tPostDataIsJSON is TRUE then
+      # THE FOLLOWING IS A WORKAROUND FOR THE filter COMMAND NOT WORKING
+      # WITH THE REGULAR EXPRESSION (?<=(<csrfTokenName>":")).+(?=",)
+      put "(" & sInputA["CSRFtokenName"] & quote & ":" & quote & ")" into tRegEx
+      put matchChunk($_POST,tRegEx,tMatchStart,tMatchEnd) into tCSRFtoken
+    
+      if tCSRFtoken is TRUE then
+        put char (tMatchEnd +1) to (the number of chars of $_POST) of $_POST into tToken
+        set the itemDel to quote
+        put item 1 of tToken into tCSRFtoken
+      end if
+    
+    else
+      _rigCSRFsetCookie
+      exit _rigCSRFverify
+    end if
+    
+  else
+    put rigVarPost(sInputA["CSRFtokenName"]) into tCSRFtoken
+  end if
+	
 	put rigVarCookie(sInputA["CSRFcookieName"]) into tCSRFcookie
 
 	# DO THE TOKENS EXIST IN BOTH THE _POST AND _COOKIE ARRAYS?
@@ -529,12 +558,18 @@ private command _rigCSRFverify
 
 	# WE KILL THIS SINCE WE'RE DONE AND WE DON'T WANT TO
 	# POLUTE THE _POST ARRAY
-	put empty into $_POST[sInputA["CSRFtokenName"]]
+  if $_POST is an array then ----------------------- fixes JSON issue
+	  put empty into $_POST[sInputA["CSRFtokenName"]]
+  end if ----------
 
 	# NOTHING SHOULD LAST FOREVER, DELETE COOKIE
-	_rigInputSetCookie sInputA["CSRFcookieName"]
-	_rigCSRFsetHash
-	_rigCSRFsetCookie
+  # SKIP IF IT IS AN AJAX REQUEST, BECAUSE THE RESPONSE
+  # DOES NOT INCLUDE A COOKIE ANYWAY
+  if sInputA["xRequestedWith"] <> "XMLHttpRequest" then
+	  _rigInputSetCookie sInputA["CSRFcookieName"]
+	  _rigCSRFsetHash
+	  _rigCSRFsetCookie
+  end if
 
 	rigLogMessage "debug", "CSRF token verified"
 end _rigCSRFverify
