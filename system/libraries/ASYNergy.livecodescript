@@ -113,12 +113,14 @@ private command _rigSetDefaultValues
     _rigAsynStoreCSS
     _rigAsynStoreScript
     
+    # DISPENSABLE
     try
       # LIFECYCLE HOOK: MOUNT
       put rigUriToAssoc() into sSegA
       -- put rigRuriToAssoc() into sSegA ----------------------------------- temp test
       rigAsynMount sSegA
     end try
+    #
       
   else -- if sAJAXrequest <> TRUE
     put _rigAsynPayload() into sWorkingPldA
@@ -126,11 +128,13 @@ private command _rigSetDefaultValues
     if sWorkingPldA is FALSE then
       rigLogMessage "error", "Error on processing the ASYNergy payload."
       
+    # DISPENSABLE
     else
       try
         # LIFECYCLE HOOK: UPDATED
         rigAsynUpdated sWorkingPldA
       end try
+    #
     end if -- if sWorkingPldA is FALSE
   end if -- if sAJAXrequest <> TRUE
 end _rigSetDefaultValues
@@ -450,15 +454,28 @@ end rigAsynParams
 --|
 --| Summary: Retrieve elements of the payload array.
 --| 
---| Format:  rigAsynPayload(param1)
+--| Format:  rigAsynPayload([param1][, param2])
 --|
---| Parameters: string <pKey>
+--| Parameters: string <pKey1> (optional), string <pKey2 (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-function rigAsynPayload pKey
-  return sWorkingPldA[pKey]
+function rigAsynPayload
+  switch the paramCount
+    case 1
+      put param(1) into tKey
+      return sWorkingPldA[tKey]
+
+    break
+    case 2
+      put param(1) into tKey1
+      put param(2) into tKey2
+      return sWorkingPldA[tKey1][tKey2]
+
+    default
+    return sWorkingPldA
+  end switch
 end rigAsynPayload
 
 
