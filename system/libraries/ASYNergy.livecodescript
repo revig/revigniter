@@ -415,27 +415,36 @@ end rigAsynElemData
 --| FUNCTION rigAsynParams
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2022-11-13
---| Last Mod: --
+--| Last Mod: 2023-05-21
 --| Requires: _rigAsynModelValueMod
 --|
 --| Summary: Return model parameters as array.
 --| 
---| Format:  rigAsynParams([param1])
+--| Format:  rigAsynParams([params])
 --|
---| Parameters: bool <pRunLCfunc> should the LC function be applied if specified (optional)
+--| Parameters: integers <params> the model parameter keys of values
+--|               to which a LC function should be applied (optional)
 --|
 --| Return: array
 ----------------------------------------------------------------------*/
 
-function rigAsynParams pRunLCfunc
-  local tFunc
-  
-  put sWorkingPldA["mutablesData"][1]["lcFunc"] into tFunc
+function rigAsynParams
+  local tFunc, tParam, tLCfuncParamsKeys
 
-  if (pRunLCfunc is TRUE) and (tFunc <> empty) then
-    return _rigAsynModelValueMod(tFunc, sWorkingPldA["params"])
+  if the paramCount <> 0 then
+    put sWorkingPldA["mutablesData"][1]["lcFunc"] into tFunc
+    
+    if tFunc <> empty then
+
+      repeat with tParam = 1 to the paramCount
+        put param(tParam) & comma after tLCfuncParamsKeys
+      end repeat
+      delete char -1 of tLCfuncParamsKeys
+
+      return _rigAsynModelValueMod(tFunc, sWorkingPldA["params"], tLCfuncParamsKeys)
+    end if
   end if
 
   return sWorkingPldA["params"]
@@ -486,27 +495,34 @@ end rigAsynPayload
 --| FUNCTION _rigAsynModelValueMod
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2022-08-27
---| Last Mod: --
+--| Last Mod: 2023-05-21
 --| Requires: _rigAsynRunFunc()
 --|
 --| Summary: Run an arbitrary function on a model value or a model param value,
 --|            used to generate the content for the mutable element.
 --| 
---| Format:  _rigAsynModelValueMod(param1, param2)
+--| Format:  _rigAsynModelValueMod(param1, param2[, param3])
 --|
---| Parameters: string <pFunc>, mixed <pValue>
+--| Parameters: string <pFunc>, mixed <pValue>, string <pLCfuncParamsKey> comma separated
+--|               list of model parameter array keys (optional)
 --|
 --| Return: mixed
 ----------------------------------------------------------------------*/
 
-private function _rigAsynModelValueMod pFunc pValue
+private function _rigAsynModelValueMod pFunc pValue pLCfuncParamsKeys
   local tStatement, tResult
 
   if pValue is an array then
     repeat for each key tKey in pValue
-      put _rigAsynRunFunc(pFunc, pValue[tKey]) into tResult[tKey]
+      
+      if tKey is among the items of pLCfuncParamsKeys then
+        put _rigAsynRunFunc(pFunc, pValue[tKey]) into tResult[tKey]
+      else
+        put pValue[tKey] into tResult[tKey]
+      end if
+      
     end repeat
 
   else
