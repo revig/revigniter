@@ -87,11 +87,11 @@ end libraryStack
 --| COMMAND _rigSetDefaultValues
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2022-05-26
---| Last Mod: --
+--| Last Mod: 2023-05-21
 --| Requires: rigGetHTTPheader(), _rigAsynInitHelper, _rigAsynStoreCSS,
---|           _rigAsynStoreScript, rigUriToAssoc(), _rigAsynPayload(), rigLogMessage
+--|           _rigAsynStoreScript, _rigAsynPayload(), rigLogMessage
 --|
 --| Summary: Set default values for library variables.
 --|
@@ -112,29 +112,13 @@ private command _rigSetDefaultValues
     put FALSE into sAJAXrequest
     _rigAsynStoreCSS
     _rigAsynStoreScript
-    
-    # DISPENSABLE
-    try
-      # LIFECYCLE HOOK: MOUNT
-      put rigUriToAssoc() into sSegA
-      -- put rigRuriToAssoc() into sSegA ----------------------------------- temp test
-      rigAsynMount sSegA
-    end try
-    #
       
   else -- if sAJAXrequest <> TRUE
     put _rigAsynPayload() into sWorkingPldA
 
     if sWorkingPldA is FALSE then
       rigLogMessage "error", "Error on processing the ASYNergy payload."
-      
-    # DISPENSABLE
-    else
-      try
-        # LIFECYCLE HOOK: UPDATED
-        rigAsynUpdated sWorkingPldA
-      end try
-    #
+
     end if -- if sWorkingPldA is FALSE
   end if -- if sAJAXrequest <> TRUE
 end _rigSetDefaultValues
@@ -337,7 +321,7 @@ command rigAsynRespond pRespData pSyncModelID pMutableID pMutableAttrVal
     end if
   end if -- if pRespData is not an array
 
-  # DON'T RESPOND TWICE, THIS CAN HAPPEN IF HOOK HYDRATE IS USED
+  # DON'T RESPOND TWICE
   if sResponseSent <> TRUE then
 
     repeat for each key tKey in tParamsA
