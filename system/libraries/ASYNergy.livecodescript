@@ -202,9 +202,9 @@ end _rigAsynInitHelper
 --| FUNCTION _rigAsynPayload
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2022-05-26
---| Last Mod: --
+--| Last Mod: 2023-05-21
 --| Requires: rigVarPost(), _rigAsynModelValueMod()
 --| 
 --| Summary: Return ASYNergy JSON data as array
@@ -252,8 +252,9 @@ private function _rigAsynPayload
       put tWorkingPldA["mutablesData"][1]["lcFunc"] into tLCfunc
 
       if tLCfunc <> empty then
-        if tLCfunc is among the items of sFuncWhiteList then
+        if (tLCfunc is among the items of sFuncWhiteList) and (tWorkingPldA["modelData"]["modelVal"] <> empty) then
           put _rigAsynModelValueMod(tLCfunc, tWorkingPldA["modelData"]["modelVal"]) into tWorkingPldA[tWorkingPldA["modelData"]["modelAttrVal"]]
+
         else
           put "Function not available!" into tWorkingPldA["modelAttrVal"]
         end if -- if tLCfunc is among the items of sFuncWhiteList
