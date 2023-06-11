@@ -868,7 +868,7 @@ end _rigAsynStoreScript
 --| Last Mod: 2023-03-26
 --| Requires: --
 --|
---| Summary: Return true of false depending on whether the request was an ASYNergy request.
+--| Summary: Return true or false depending on whether the request was an ASYNergy request.
 --| 
 --| Format:  rigIsAsynRequest()
 --|
