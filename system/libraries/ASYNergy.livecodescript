@@ -290,7 +290,7 @@ end _rigAsynPayload
 --| 
 --| Format:  rigAsynRespond param1[, param2][, param3][, param4]
 --|
---| Parameters: string <pRespData>,
+--| Parameters: mixed <pRespData>,
 --|               mixed <pSyncModelID> model(s) (identified by it's id) to be synced
 --|               with the mutable element (optional),
 --|               mixed <pMutableID> mutable element(s) (identified by it's id)
@@ -380,12 +380,13 @@ end rigAsynRespond
 --| Requires: --
 --|
 --| Summary: Get the value/text/html of an element specified by the elements's attribute value.
+--|            If dealing with select elements this function returns an array.
 --| 
 --| Format:  rigAsynElemData(params1)
 --|
 --| Parameters: string <pAttrVal> the attribute value of the element
 --|
---| Return: string
+--| Return: mixed
 ----------------------------------------------------------------------*/
 
 function rigAsynElemData pAttrVal
