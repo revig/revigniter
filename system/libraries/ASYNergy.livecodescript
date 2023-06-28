@@ -842,7 +842,7 @@ end _rigAsynStoreCSS
 private command _rigAsynStoreScript
   local tNonce, tControllerURL
     
-  put rigJsAsset("asynergy.js", "ASYNergy") & return into gData["asynergyScript"]
+  put rigJsAsset("ASYNergy/asynergy.js") & return into gData["asynergyScript"]
   
   if "Contentsecuritypolicy" is among the lines of the stacksInUse then
     put " {{g_ScriptNonce_}}" into tNonce
