@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="all">
     <meta name="author" content="Ralf Bitter" >
-    <meta name="description" content="revIgniter User Guide">
+    <meta name="description" content="revIgniter tutorial for a simple chat application using ASYNergy">
 
     <!-- Bootstrap -->
     <link rel="stylesheet" media="screen" href="../css/style-ck.css">
@@ -91,120 +91,280 @@
 
 <h1>Simple Chat Application</h1>
 
-<p>This tutorial shows you how to build dynamic web pages with revIgniter on the basis of a simple chat application.<br />The chat consists of a Login page, where you enter a name,</p>
+<p>This tutorial uses a simple chat application to show you how to build dynamic web pages with revIgniter using <a href="https://github.com/revig/ASYNergy">ASYNergy</a>, a JavaScript framework for making network requests and
+changing things on the page.</p>
+
+<p class="important"><strong>Note:</strong> This tutorial replaces the "Simple Chat Application" tutorial which was dependent on the JQuery library and JQuery. The JQuery library is hereby declared deprecated and is no longer being developed.</p>
+
+<ul>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#stylesheet">The Stylesheet</a></li>
+	<li><a href="#dbTable">The Table</a></li>
+	<li><a href="#controller">Controller</a></li>
+	<ul>
+		<li><a href="#chatHandler">The Chat Handler</a></li>
+		<li><a href="#indexHandler">The Index Handler</a></li>
+		<li><a href="#addMsgHandler">The addMsg Handler</a></li>
+		<li><a href="#chatListHandler">The chatList Handler</a></li>
+		<li><a href="#logoutHandler">The Logout Handler</a></li>
+	</ul>
+	<li><a href="#model">Model</a></li>
+	<ul>
+		<li><a href="#getMsgDataHandler">The getMsgData Handler</a></li>
+		<li><a href="#_addMsgHandler">The _addMsg Handler</a></li>
+		<li><a href="#flattenDBhandler">The flattenDB Handler</a></li>
+	</ul>
+	<li><a href="#view">View</a></li>
+	<ul>
+		<li><a href="#headerView">The Header View</a></li>
+		<li><a href="#footerView">The Footer View</a></li>
+		<li><a href="#loginView">The Login View</a></li>
+		<li><a href="#chatView">The Chat View</a></li>
+	</ul>
+	<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The chat consists of a Login page, where you enter a name:<br>&nbsp;</p>
 
 <div class="clearfix"><img src="../images/chatlogin.png" class="img-responsive pull-left" alt="chat login" id="img_chatlogin" /></div>
 
-<p>and the Chat page with a list of messages and an input field.</p>
+<p><br>and the Chat page with a list of messages and an input field:<br>&nbsp;</p>
 
 <div class="clearfix"><img src="../images/chat.png" class="img-responsive pull-left" alt="chat messages" id="img_chat" /></div>
 
-<p>In order to accomplish this we need the following files and a database table:</p>
+<p><br>&nbsp;<br>To set up this application, we need the following files and a database table:</p>
 
 <ul>
 <li>a controller named "chat.lc", the file, that will be associated with the URI.</li>
-<li>four views, respectively page fragments, named "chatheader.lc", "chatcontent.lc", "chatfooter.lc" and "chatlist.lc". Of course two view files, one representing the Login page and one representing the Chat page, would do,  but this is to demonstrate how multiple views are assembled and as a side-effect we avoid redundant html code.</li>
-<li>a model named "chatmodel.lc", the file, which deals with information in your database.</li>
-<li>a table in your database named "chat" to store the chat messages. We use MySQL here as the database platform.</li>
+<li>four views, respectively page fragments, named "chatHeaderView.lc", "chatContentView.lc", "chatFooterView.lc" and "chatLoginView.lc". Of course two view files, one representing the Login page and one representing the Chat page, would do,  but this is to demonstrate how multiple views are assembled and as a side-effect we avoid redundant html code.</li>
+<li>a model named "chatmodel.livecodescript", the file, which deals with information in your database.</li>
+<li>a table in your database named "chat" to store the chat messages. We use SQLite here as the database platform.</li>
 </ul>
 
 <p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
 
-<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in assets/css/chat.css
-and build the table using the table structure below.</p>
+<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in <samp>assets/css/chat.css</samp>,
+build the table using the table structure below and store the SQLite file in <samp>application/db/</samp>. If you like you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
 
-  <p>The stylesheet:</p>
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="stylesheet">The Stylesheet</h2>
 
 <div class="codeSample">
-<pre><code>body {
-  font: 12pt "Lucida Grande", Lucida, Verdana, Geneva, sans-serif;
+<pre><code>*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.page_margins {
-  margin-top: 50px;
+:root {
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+body {
+  color: rgb(199, 199, 199);
+  font-family:
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  Helvetica,
+  Arial,
+  sans-serif,
+  'Apple Color Emoji',
+  'Segoe UI Emoji';
+  font-size: 16px;
+}
+
+hr {
+  height: 0;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+#login,
+#logo,
+#chat {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#logo {
+  display: block;
+  width: 162px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+.formRow,
+#login,
+#chat {
+  display: flex;
+}
+
+.formRow {
+  justify-content: flex-end;
+}
+
+.formRow,
+.formRow > input {
+  padding: .5em;
+}
+
+.formRow > label {
+  padding: .5em .5em .5em 0;
+}
+
+.formRow > input {
+  flex: 5;
+}
+
+.formRow > label,
+input#submitbtn {
+  flex: 1;
+}
+
+#userinput,
+#submitbtn {
+  margin: .5em;
+}
+
+ul#list {
+  padding: 0;
+}
+
+hr {
+  color: rgba(199, 199, 199, 0.5);
+}
+
+body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+body,
+input[type=text] {
+  background-color: rgb(43, 49, 55);
+}
+
+#login,
+#chat {
+  flex-direction: column;
 }
 
 #login {
-  margin-left: auto;
-  margin-right: auto;
-  width: 400px;
-  height: 70px;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#E3E3E3, endColorstr=#A1A1A1);
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#E3E3E3, endColorstr=#A1A1A1)";
-  background: -moz-linear-gradient(bottom, #A1A1A1, #E3E3E3);
-  background: -webkit-gradient(
-  linear,
-  left bottom,
-  left top,
-  color-stop(0, rgb(161,161,161)),
-  color-stop(1, rgb(227,227,227))
-  );
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  color: #515151;
-  font-size: 83.33%;
+  max-width: 400px;
+  margin-top: 20px;
+  padding: 1em;
 }
 
-#login form {
-  margin-top: 0px;
-}
-
-#login form, #login p {
-  padding-left: 78px;
+#login,
+#chat,
+input[type=submit],
+input[type=text] {
+  border: 1px solid rgb(199, 199, 199, 0.5);
+  border-radius: 8px;
 }
 
 #login p {
-  padding-top: 8px;
-  margin-bottom: 6px;
+  margin: 0px;
+  padding: 0 .5em .5em;
 }
 
-#login input#name {
-  width: 149px;
+input[type=submit] {
+  background-color: rgb(199, 199, 199);
+  border: none;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: rgb(118, 205, 0);
+  transition: background-color 0.8s;
+}
+
+input[type=text] {
+  color: rgb(255, 255, 255);
+}
+
+a,
+input[type=submit] {
+  text-decoration: none;
 }
 
 #chat {
-  width: 500px;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#E3E3E3, endColorstr=#A1A1A1);
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#E3E3E3, endColorstr=#A1A1A1)";
-  background: -moz-linear-gradient(bottom, #A1A1A1, #E3E3E3);
-  background: -webkit-gradient(
-  linear,
-  left bottom,
-  left top,
-  color-stop(0, rgb(161,161,161)),
-  color-stop(1, rgb(227,227,227))
-  );
-  margin-left: auto;
-  margin-right: auto;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  color: #515151;
+  max-width: 500px;
 }
 
 #chatheader {
-  background-color: transparent;
   height: 40px;
+}
+
+p#username,
+p#logout {
+  font-size: 83.33%;
+  margin-top: 12px;
 }
 
 p#username {
   float: left;
-  margin-left: 20px;
-  font-size: 83.33%;
-  margin-top: 12px;
+  margin-left: 1.5em;
 }
 
 p#logout {
   text-align: right;
-  width: 100px;
   float: right;
-  margin-right: 20px;
-  font-size: 83.33%;
-  margin-top: 12px;
+  margin-right: 1.5em;
 }
 
 a {
-  text-decoration: none;
-  color: #367ec9;
+  color: rgb(118, 205, 0);
 }
 
 a:hover {
@@ -214,62 +374,29 @@ a:hover {
 #chatbody {
   height: 214px;
   overflow: auto;
-  background-color: transparent;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #48a2ff;
-  border-top: 1px solid #48a2ff;
-  clear: both;
+  border-bottom: 1px solid rgb(118, 205, 0);
+  border-top: 1px solid rgb(118, 205, 0);
 }
 
 #chatbody li {
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#3B3B3B, endColorstr=#4A4A4A);
-  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#3B3B3B, endColorstr=#4A4A4A)";
-  background: -webkit-gradient(
-  linear,
-  left bottom,
-  left top,
-  color-stop(0, rgb(59,59,59)),
-  color-stop(0.1, rgb(107,107,107))
-  );
-  background: -moz-linear-gradient(
-  center bottom,
-  rgb(59,59,59) 0%,
-  rgb(107,107,107) 10%
-  );
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-top-right-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-topright: 5px;
-  color: #e0e0e0;
+  background: rgb(107, 107, 107);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: rgb(224, 224, 224);
   font-size: 75%;
   height: 30px;
   padding-left: 12px;
   padding-top: 1px;
-  margin: 6px 20px 0 -20px;
+  margin: 6px 1.5em 0 1.5em;
   list-style-type: none;
 }
 
-#chatfooter {
-  background-color: #919191;
-  margin-top: 20px;
-  -webkit-border-bottom-left-radius: 10px;
-  -webkit-border-bottom-right-radius: 10px;
-  -moz-border-radius-bottomleft: 5px;
-  -moz-border-radius-bottomright: 5px;
-  padding: 20px;
-  height: 20px;
+#list {
+  margin: 6px 0 6px 0;
 }
 
 #userinput {
-  width: 360px;
-  float: left;
-}
-
-#submitbtn {
-  float: right;
-  width: 60px;
-  margin-left: 28px;
+  width: 100%;
 }
 
 #footer {
@@ -277,25 +404,28 @@ a:hover {
   text-align: center;
   margin-top: 80px;
 }
+
 </code></pre>
 </div>
 
-  <p>The table:</p>
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="dbTable">The Table (SQLite)</h2>
 
 <div class="codeSample">
-<pre><code>CREATE TABLE `chat` (
-  `id` int(7) NOT NULL auto_increment,
-  `user` varchar(255) NOT NULL,
-  `msg` text NOT NULL,
-  `time` int(9) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+<pre><code>CREATE TABLE "chat" (
+  "id" INTEGER NOT NULL,
+  "user" TEXT(20) NOT NULL,
+  "msg" TEXT NOT NULL,
+  "time" INTEGER(9) NOT NULL,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
 </code></pre>
 </div>
 
+<p><a href="#top">Top of Page</a></p>
 
-
-<h2>Controller</h2>
+<h2 id="controller">Controller</h2>
 
 <p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
 
@@ -305,7 +435,7 @@ a:hover {
 <pre><code>&lt;?lc
 
 # PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
-put "index,chat" into gControllerHandlers
+put "chat,index" into gControllerHandlers
 
 
 # THE CONTROLLER HANDLER
@@ -328,27 +458,31 @@ end index
 
 <p>Save this script as "chat.lc" in <samp>application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
-<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required libraries, helpers, models and the database.</p>
-  
-  <p>As we don't want page redraws while sending new chat messages we use Ajax requests and therefore load the jQuery library:</p>
+<p><a href="#top">Top of Page</a></p>
 
-<pre><code class="lang-livecodeserver">put "1.7.2" into tJquerySettings["jqueryCurrentVersion"]
-rigLoaderLoadLibrary "Jquery", tJquerySettings
+<h4 id="chatHandler">The Chat Handler</h4>
+
+<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required helpers, libraries, models and the database.</p>
+
+<p>Actually we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code which is then stored in <var>gData["asynergyScript"]</var>. So, there are two helpers left to be loaded. The URL helper, which used to generate a link, and the Form helper, which is needed to generate the form action markup.</p> 
+  
+<pre><code class="lang-livecodeserver">put "url,form" into tHelpers
+rigLoadHelper tHelpers
+</code></pre>
+  
+  <p>Since we don't want page redraws while sending new chat messages, we use AJAX requests with the help of <a href="https://github.com/revig/ASYNergy">ASYNergy</a> and therefore we load the <a href="../libraries/asynergy.html">ASYNergy library</a>:</p>
+
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "ASYNergy"
 </code></pre>
 
-  <p>To store the user name, so that all messages will be sent with the associated name, we will use a cookie-based session. So we need the Session library:</p>
+  <p>To store the user name, so that all chat messages will be sent with the associated name, we will use a cookie-based session. So we need the Session library:</p>
   
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"
 </code></pre>
 
-  <p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "chat" table. Add the following line to the <dfn>chat</dfn> handler:</p>
+  <p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "chat" table. Add the following line to the <dfn>chat</dfn> handler:</p>
 
 <pre><code>get rigLoadDatabase()
-</code></pre>
-
-  <p>Further we will need the Asset helper to generate javascript and css location html code:</p> 
-  
-<pre><code class="lang-livecodeserver">rigLoadHelper "asset"
 </code></pre>
 
 <p>So far we have not built the model, but we include it here anyway and write the corresponding code afterwards:</p>
@@ -356,35 +490,81 @@ rigLoaderLoadLibrary "Jquery", tJquerySettings
 <pre><code class="lang-livecodeserver">rigLoadModel "chatmodel"
 </code></pre>
 
-<p>Finally we save the page title in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like [[gData["pageTitle"]]], the values of this array will be automatically combined with the view:</p>
+<p>We save the page title in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like <var>[[gData["pageTitle"]]]</var>, the values of this array will be automatically merged with the view:</p>
 
-<pre><code>put "revIgniter Chat Application Tutorial" into gData["pageTitle"]
+<pre><code>put "ASYNergy Chat Application Tutorial" into gData["pageTitle"]
+</code></pre>
+
+<p>Finally we add the login form action markup to gData:</p>
+
+<pre><code>put rigFormOpen("chat") into gData["loginFormOpen"]
+</code></pre>
+
+<p>This will generate a HTML markup like:</p>
+
+<pre><code>&lt;form action="https://example.com/chat" method="post" accept-charset="utf-8">
+</code></pre>
+
+<p>or, in case you enabled CSRF protection:</p>
+
+<pre><code>&lt;form action="https://example.com/chat" method="post" accept-charset="utf-8">
+&lt;input type="hidden" name="csrfTokenName" value="bb8e156c-9aa5-42be-b573-dc0b533ca3da" asyn:csrf="csrfTokenName" />
 </code></pre>
 
 <p>Your chat handler should now look like this:</p>
 
 <div class="codeSample">
 <pre><code>command chat
-  put "1.7.2" into tJquerySettings["jqueryCurrentVersion"]
-  rigLoaderLoadLibrary "Jquery", tJquerySettings
-    
+  # HELPERS NEEDED
+  put "url,form" into tHelpers
+  rigLoadHelper tHelpers
+
+  # LIBRARIES NEEDED
+  rigLoaderLoadLibrary "ASYNergy"
   rigLoaderLoadLibrary "Session"
 
+  # DATABASE
   get rigLoadDatabase()
 
-  rigLoadHelper "asset"
-
+  # MODEL
   rigLoadModel "chatmodel"
 
-  put "revIgniter Chat Application Tutorial" into gData["pageTitle"]
+  # SET PAGE TITLE
+  put "ASYNergy Chat Application Tutorial" into gData["pageTitle"]
+
+  # LOGIN FORM ACTION
+  put rigFormOpen("chat") into gData["loginFormOpen"]
 end chat
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> Mind the version number of jQuery. The jQuery library is not compatible with newer versions of jQuery. Actually it is tested against version 1.4.2 but this sample application works with version 1.7.2 too.</p>
+<p><a href="#top">Top of Page</a></p>
 
-<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. With this handler we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
+<h4 id="indexHandler">The Index Handler</h4>
 
+<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First we call the <dfn>rigAnchor()</dfn> function to generate a link used on the Chat page to load the Login view by calling the "logout" handler.</p>
+	
+<pre><code>put rigAnchor("chat/logout", "Logout") into gData["logoutAnchor"]
+</code></pre>
+
+<p>Then we add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "addMsg", is set to the name of the handler to be called or to the value of the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute of the mutable HTML element respectively. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
+
+<pre><code>put "addMsg" into tFormAttrA["asyn:submit.prevent"]
+put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+</code></pre>
+
+<p>This will generate a HTML markup like:</p>
+
+<pre><code>&lt;form action="https://example.com/addMsg" method="post" accept-charset="utf-8" asyn:submit.prevent="addMsg">
+</code></pre>
+
+<p>or, in case you enabled CSRF protection:</p>
+
+<pre><code>&lt;form action="https://example.com/addMsg" method="post" accept-charset="utf-8" asyn:submit.prevent="addMsg">
+&lt;input type="hidden" name="csrfTokenName" value="bb8e156c-9aa5-42be-b573-dc0b533ca3da" asyn:csrf="csrfTokenName" />
+</code></pre>
+	
+<p>Within the index handler we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
 
 <div class="codeSample">
 <pre><code>if rigSessUserdata("name") &lt;> FALSE then
@@ -392,7 +572,10 @@ end chat
   put FALSE into tLogin
 else
   put rigVarPost("name", TRUE) into tPOSTname
-  if tPOSTname &lt;> FALSE then
+  if (tPOSTname &lt;> FALSE) and (tPOSTname &lt;> empty) then
+      
+    put textEncode(tPOSTname, "UTF-8") into tPOSTname
+      
     rigSetSessUserdata "name", tPOSTname
     put tPOSTname into gData["user"]
     put FALSE into tLogin
@@ -404,93 +587,51 @@ end if
 </div>
 
 <p>If there is an item "name" in the session data we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p> 
-<p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of rigVarPost() to "TRUE". </p>
-<p> If the POST data contains a value for "name" we save it in the session data as well as in the global variable <var>gData</var> and set a flag to load the Chat page, otherwise we set a flag to load the Login page.</p>
-
-
-<p>As indicated above we use jQuery to do the Ajax requests. It is beyond the scope of this tutorial to explain the following statements, which build the jQuery part, in detail. So, if you would like to get more information please read about the <a href="../libraries/jquery.html">Jquery library</a> in the User Guide. Basically the code below implements:</p>
-
-<ul>
-<li>an Ajax request named "loadMessages" to load the messages list without refreshing the page, without caching as it is updated with every new message and those updates should be reflected</li>
-<li>an Ajax request to add a message to the database</li>
-<li>an auto-scroll function to automatically scroll the content down if the chat container overflows
-<li>a function to handle logout requests</li>
-<li>and a function to continuously update the chat messages list by calling the "loadMessages" function mentioned above every 2.5 seconds
-</ul>
-
-<p>Now add the following code (mind line breaks) to the <dfn>index</dfn> handler:</p>
-
-<div class="codeSample">
-<pre><code class="lang-livecodeserver">if tLogin is FALSE then
-  # USER SENT A NAME
-  rigJQopen
-    # LOAD MESSAGES
-    rigJQfunctionOpen "loadMessages"
-      rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")
-
-      put "chat/view" into tAjax["url"]
-      put "false" into tAjax["cache"]
-      put rigJQsetR("'#chatbody'", "html", "data") &amp; \
-      rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")) &amp; \
-      rigJQconditionR("currentScroll > previousScroll", rigJQanimateR("'#chatbody'", "scrollTop: currentScroll", "'normal'")) into tAjax["success"]
-      rigJQajax tAjax
-    rigJQcb
-
-    # ADD MESSAGE TO MESSAGES LIST
-    rigJQeventOpen "'#submitbtn'", "'click'", TRUE
-      rigJQxhRequest "post", "chat/addmsg", "userinput:" &amp;&amp; rigJQgetR("'#userinput'", "attr", "'value'")
-      rigJQset "'#userinput'", "attr", "'value', ''"
-    rigJQeventClose
-
-    # LOGOUT
-    rigJQeventOpen "'#logout'", "'click'"
-      rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
-      rigJQcondition "logout==true", "window.location = 'logout';"
-    rigJQeventClose
-
-    rigJQaddStatement "setInterval (loadMessages, 2500);"
-
-  # THE FOLLOWING COMMAND RETURNS THE JQUERY SCRIPT
-  rigJQclose
-  put the result into gData["JQscript"]
-
-  # GET DATA FROM DATABASE
-  put getMsgData() into gData["msgList"]
-
-end if
-</code></pre>
-</div>
-
-<p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
-
-<p>The last statement gets the messages list from the database with the help of the <dfn>getMsgData</dfn> function. This function needs to be implemented in the model later.</p>
+<p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of <dfn>rigVarPost()</dfn> to "TRUE". </p>
+<p> If the POST data contains a value for "name" we save it in the session data as well as in the global variable <var>gData</var> and set a flag to load the chat view, otherwise we set a flag to load the login view.</p>
 
 <p>We need to make sure that the page will not be cached. So, we set a server header, which the Output library will send for you when outputting the final rendered display. Add the following line to the <dfn>index</dfn> handler:</p>
 
 <pre><code class="lang-livecodeserver">rigSetHeader "Cache-Control: no-cache"
 </code></pre>
 
-<p>All that is left to do is to load the view files, which we will build later. As mentioned earlier we split the page into view files, which represent the header, the content and the footer. Header and footer are identical as to the Login page and the Chat page. The content is different. So, if there is no user name specified, we load the login content, otherwise the chat content:</p>
+<p>All that is left to do is to load the view files, which we will build later. As mentioned earlier we split the page into view files, which represent the header, the content and the footer. Header and footer are identical as to the Login page and the Chat page. The content is different. So, if there is no user name specified, we load the login view, otherwise the chat view:</p>
 
-<pre><code>get rigLoadView("chatheader")
+<pre><code>get rigLoadView("chatHeaderView")
 if tLogin is TRUE then
-  get rigLoadView("chatlogin")
+  get rigLoadView("chatLoginView")
 else
-  get rigLoadView("chatcontent")
+  # GET DATA FROM DATABASE
+  put getMsgData() into gData["msgList"]
+  put textEncode(gData["msgList"], "UTF-8") into gData["msgList"]
+  get rigLoadView("chatContentView")
 end if
-get rigLoadView("chatfooter")
+get rigLoadView("chatFooterView")
 </code></pre>
+
+<p>The <dfn>getMsgData()</dfn> function gets the chat messages list from the database. This function needs to be implemented in the model later.</p>
 
 <p>Your <dfn>index</dfn> handler should now look like this:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">command index
+  # LINK TO THE LOGIN PAGE
+  put rigAnchor("chat/logout", "Logout") into gData["logoutAnchor"]
+  
+  # GENERATE FORM ACTION MARKUP
+  put "addMsg" into tFormAttrA["asyn:submit.prevent"]
+  put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+
+  # CHECK IF WE NEED TO SEND THE LOGIN PAGE OR THE CHAT PAGE
   if rigSessUserdata("name") &lt;> FALSE then
     put rigSessUserdata("name") into gData["user"]
     put FALSE into tLogin
   else
     put rigVarPost("name", TRUE) into tPOSTname
-    if tPOSTname &lt;> FALSE then
+    if (tPOSTname &lt;> FALSE) and (tPOSTname &lt;> empty) then
+      
+      put textEncode(tPOSTname, "UTF-8") into tPOSTname
+      
       rigSetSessUserdata "name", tPOSTname
       put tPOSTname into gData["user"]
       put FALSE into tLogin
@@ -499,110 +640,113 @@ get rigLoadView("chatfooter")
     end if
   end if
 
-  if tLogin is FALSE then
-    rigJQopen
-      rigJQfunctionOpen "loadMessages"
-        rigJQvar "previousScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")
-
-        put "chat/view" into tAjax["url"]
-        put "false" into tAjax["cache"]
-        put rigJQsetR("'#chatbody'", "html", "data") &amp; \
-        rigJQvarR("currentScroll," &amp; rigJQgetR("'#chatbody'", "prop", "'scrollHeight'")) &amp; \
-        rigJQconditionR("currentScroll > previousScroll", rigJQanimateR("'#chatbody'", "scrollTop: currentScroll", "'normal'")) into tAjax["success"]
-        rigJQajax tAjax
-      rigJQcb
-
-      rigJQeventOpen "'#submitbtn'", "'click'", TRUE
-        rigJQxhRequest "post", "chat/addmsg", "userinput:" &amp;&amp; rigJQgetR("'#userinput'", "attr", "'value'")
-        rigJQset "'#userinput'", "attr", "'value', ''"
-      rigJQeventClose
-
-      rigJQeventOpen "'#logout'", "'click'"
-        rigJQvar "logout,confirm('Are you sure you want to end the chat session?');"
-        rigJQcondition "logout==true", "window.location = 'logout';"
-      rigJQeventClose
-
-      rigJQaddStatement "setInterval (loadMessages, 2500);"
-
-    rigJQclose
-    put the result into gData["JQscript"]
-
-    put getMsgData() into gData["msgList"]
-
-  end if
-
+  # MAKE SURE THAT THE PAGE WILL NOT BE CACHED
   rigSetHeader "Cache-Control: no-cache"
 
-  get rigLoadView("chatheader")
+  # LOAD THE VIEW FILES
+  get rigLoadView("chatHeaderView")
   if tLogin is TRUE then
-    get rigLoadView("chatlogin")
+    get rigLoadView("chatLoginView")
   else
-    get rigLoadView("chatcontent")
+    # GET DATA FROM DATABASE
+    put getMsgData() into gData["msgList"]
+    put textEncode(gData["msgList"], "UTF-8") into gData["msgList"]
+    get rigLoadView("chatContentView")
   end if
-  get rigLoadView("chatfooter")
+  get rigLoadView("chatFooterView")
 end index
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> If you use jQuery version &lt; 1.6 replace the jQuery prop methods with the jQuery attr method.</p>
+<p><a href="#top">Top of Page</a></p>
 
-<p>Now we need a handler, which adds new messages to the database. It takes the POST data, checks if the message is not empty and, along with the session data, hands it over to the model, which is responsible for database related tasks. Add the following handler to the controller script:</p>
+<h4 id="addMsgHandler">The addMsg Handler</h4>
+
+<p>Now we need a handler, which adds new messages to the database. It takes the chat user name from the session data and the message from the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JSON data processed by the <a href="../libraries/asynergy.html">ASYNergy</a> library. The handler checks that the message is not empty and passes it along with the session data to the model, that is responsible for database related tasks. The model function <dfn>getMsgData()</dfn> returns the chat messages from the database in form of an HTML list. Then you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> to return the updated chat list to the client, and you were done. But we want to clear the message input field. So, we need to create the response data using the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> function <dfn>rigAsynAddResponseData()</dfn> and add response data for the second mutable <a Href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML element. Finally calling the model handler <dfn>flattenDB</dfn> limits the maximum number of database table rows to 22 by deleting the oldest message if the maximum number is exceeded.</p>
+
+<p>Add the following handler to the controller script:</p>
 
 <div class="codeSample">
-<pre><code>command addmsg
+<pre><code>command addMsg
   put rigSessUserdata("name") into tName
-  put rigVarPost("userinput") into tMsg
+  put rigAsynElemData("msg") into tMsg
   
-  if (tMsg &lt;> FALSE) and (tMsg &lt;> "") then
+  if tMsg &lt;> empty then
     _addMsg tName, tMsg
   end if
-end addmsg
+  
+  put getMsgData() into tMsgList
+
+  # IF YOU DON'T INTEND TO CLEAR THE USER INPUT FIELD
+  # CALL rigAsynRespond tMsgList AND YOU ARE DONE
+  # OTHERWISE...
+  put rigAsynAddResponseData(tMsgList, , , "addMsg") into tResponseA
+  put rigAsynAddResponseData("", , , "userinput") into tResponseA
+  
+  rigAsynRespond tResponseA
+  
+  flattenDB 22
+end addMsg
 </code></pre>
 </div>
 
-<p>You may notice that the name of the model handler <dfn>_addMsg</dfn> has an underscore as the name prefix. This is to hide certain handlers from public access. These handlers will not be served via a URL request.</p>
+<p class="important"><strong>Note:</strong> Don't forget to add the handler name "addMsg" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
 
-<p class="important"><strong>Note:</strong> Don't forget to add the handler name "addmsg" to the global variable gControllerHandlers at the top of the page.</p>
+<p><a href="#top">Top of Page</a></p>
 
-<p>The next handler to add to the controller script gets the data from the model, stores it in the global variable <var>gData</var> and loads the view chatlist.lc, which consists of the messages list only:</p>
+<h4 id="chatListHandler">The chatList Handler</h4>
+
+<p>The next handler to add to the controller script is called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> every two and a half seconds to keep the messages list, displayed on the page, updated. It fetches all chat messages from the model in the form of an HTML list, creates case-specific response data, and sends it to the client. Actually you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> and you were done, but in this particular case the name of the handler called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> ("chatList") is different from the value ("addMsg") of the HTML attribute of the corresponding mutable ASYNergy HTML element to be updated.</p>
 
 <div class="codeSample">
-<pre><code>command view 
-  put getMsgData() into gData["msgList"]
-
-  get rigLoadView("chatlist")
-end view
+<pre><code>command chatList
+  put getMsgData() into tMsgList
+  put rigAsynAddResponseData(tMsgList, , , "addMsg") into tResponseA
+  
+  rigAsynRespond tResponseA
+end chatList
 </code></pre>
 </div>
 
 <p>Of course, later we need to make sure that the model contains a <dfn>getMsgData</dfn> function.</p>
 
-<p class="important"><strong>Note:</strong> Add the handler name "view" to the global variable gControllerHandlers at the top of the page.</p>
+<p class="important"><strong>Note:</strong> Add the handler name "chatList" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="logoutHandler">The Logout Handler</h4>
 
 <p>The last handler is used to end the chat session. If there is a user name, it sends the user name and a "User has left ..." message to the model to add this data to the database. Then it destroys the session data as it is not needed anymore and loads the appropriate view files to display the login page again. Add the following code to the controller:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">command logout
   put rigSessUserdata("name") into tName
-  if tName &lt;> FALSE then
-    put "User" &amp;&amp; tName &amp;&amp; "has left the chat session." into tMsg
-    _addMsg tName, tMsg
+  if (tName &lt;> FALSE) and (tName &lt;> empty) then
+    put "User" && tName && "has left the chat session." into tMsg
+    _addMsg tName, tMsg, FALSE
   end if
   
   rigSessDestroy
   
-  get rigLoadView("chatheader")
-  get rigLoadView("chatlogin")
-  get rigLoadView("chatfooter")
+  get rigLoadView("chatHeaderView")
+  get rigLoadView("chatLoginView")
+  get rigLoadView("chatFooterView")
 end logout
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> Add the handler name "logout" to the global variable gControllerHandlers.</p>
+<p class="important"><strong>Note:</strong> Add the handler name "logout" to the global variable <var>gControllerHandlers</var>.</p>
 
-<h2>Model</h2>
+<p>The first line of the controller's code should now look like this:</p>
 
-<p>The model is responsible for database related tasks. In this case our model serves two purposes: It gets messages from the database and it stores new messages in the database. As described above, the controller calls a model function named <dfn>getMsgData</dfn> and a model handler named <dfn>_addMsg</dfn>. We will now build a model consisting of these two handlers. </p>
+<pre><code>put "chat,index,addMsg,chatList,logout" into gControllerHandlers
+</code></pre>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="model">Model</h2>
+
+<p>The model is responsible for database related tasks. In this case our model serves two purposes: It gets messages from the database and it stores new messages in the database. As described above, the controller calls a model function named <dfn>getMsgData</dfn>, a model handler named <dfn>_addMsg</dfn>, and a model handler named <dfn>flattenDB</dfn>. We will now build a model consisting of these three handlers. </p>
 
 <p>We start with the basic prototype of a model script only stack:</p>
 
@@ -621,7 +765,7 @@ on libraryStack
 
   if the short name of the target &lt;> the short name of me then
     pass libraryStack
-  end if -- if the short name of the target = the short name of me
+  end if
 end libraryStack
 
 
@@ -633,56 +777,59 @@ end libraryStack
 
 <p>As specified in the <dfn>chat</dfn> handler of the controller script, name this file "chatmodel.livecodescript" and save it in <samp>application/models</samp>.</p>
 
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="getMsgDataHandler">The getMsgData Handler</h4>
+
 <p>Add the following lines to build the <dfn>getMsgData</dfn> function, which is used to get messages from the database:</p>
 
+<div class="codeSample">
 <pre><code>function getMsgData
   rigDbOrderBy "id", "ASC"
   put rigDbGet("chat") into tQueryResult
 
 end getMsgData
 </code></pre>
+</div>
 
 <p>First we set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing this means that new messages will be located at the bottom and old messages at the top of the list. Then we retrieve the data from the database and store the result, an array, in a variable.</p>
 
 <p>Next, we check if the number of rows of the table is greater than 0. If not, there are no messages and we simply return FALSE. Insert the following lines right after "tQueryResult":</p>
 
+<div class="codeSample">
 <pre><code>  if tQueryResult["numrows"] > 0 then
 
   end if
   return FALSE
 </code></pre>
+</div>
 
+<p>Now we loop through the rows of the chat table and build the messages list adding all the necessary HTML tags. This list will be returned by the function. Complete the function by inserting the following lines right after the first line of the code above:</p>
 
-<p>As we don't want to keep outdated chat messages we limit the number of table rows stored to 20. We do this by deleting 11 messages if the number of rows is greater than 20. Note: These figures are arbitrary. Insert the following code right after the conditional statement:</p>
-
-<pre><code>    if tQueryResult["numrows"] > 20 then
-      get rigDbQuery("DELETE LOW_PRIORITY FROM chat ORDER BY id ASC LIMIT 11")
-
-      rigDbOrderBy "id", "ASC"
-      put rigDbGet("chat") into tQueryResult
-    end if
-</code></pre>
-
-<p>Now we loop through the rows of the chat table and build the messages list adding all the necessary html tags. This list will be returned by the function. Complete the function by inserting the following lines right after the code above:</p>
-
+<div class="codeSample">
 <pre><code class="lang-livecodeserver">    repeat with i = 1 to tQueryResult["numrows"]
       put rigDbRow(i) into tRowData
+      
       put tRowData["time"] into tTime
       convert tTime to short time
+      
+      put textDecode(tRowData["user"], "UTF-8") into tRowData["user"]
+      put textDecode(tRowData["msg"], "UTF-8") into tRowData["msg"]
 
       if tRowData["msg"] is "User" &amp;&amp; tRowData["user"] &amp;&amp; "has left the chat session." then
         put "&lt;li>&lt;i>(" &amp; tTime &amp; ")" &amp;&amp; tRowData["msg"] &amp; "&lt;/i>&lt;/li>" &amp; return after tMsgData
       else
-
         put "&lt;li>(" &amp; tTime &amp; ") &lt;b>" &amp; tRowData["user"] &amp; "&lt;/b>: " &amp; tRowData["msg"] &amp; "&lt;/li>" &amp; return after tMsgData
       end if
     end repeat
+
     return tMsgData
 </code></pre>
+</div>
 
-<p>Note: The table row data is stored in an array where the keys are the table field names.This array can be accessed with the help of the <dfn>rigDbRow</dfn> function.</p>
+<p>Note: The table row data is stored in an array where the keys are the table field names. This array can be accessed with the help of the <dfn>rigDbRow()</dfn> function.</p>
 
-<p>Your <dfn>getMsgData</dfn> function should now look like this: </p>
+<p>Your <dfn>getMsgData()</dfn> function should now look like this: </p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">function getMsgData
@@ -690,16 +837,14 @@ end getMsgData
   put rigDbGet("chat") into tQueryResult
 
   if tQueryResult["numrows"] > 0 then
-    if tQueryResult["numrows"] > 20 then
-      get rigDbQuery("DELETE LOW_PRIORITY FROM chat ORDER BY id ASC LIMIT 11")
-
-      rigDbOrderBy "id", "ASC"
-      put rigDbGet("chat") into tQueryResult
-    end if
     repeat with i = 1 to tQueryResult["numrows"]
       put rigDbRow(i) into tRowData
+      
       put tRowData["time"] into tTime
       convert tTime to short time
+      
+      put textDecode(tRowData["user"], "UTF-8") into tRowData["user"]
+      put textDecode(tRowData["msg"], "UTF-8") into tRowData["msg"]
 
       if tRowData["msg"] is "User" &amp;&amp; tRowData["user"] &amp;&amp; "has left the chat session." then
         put "&lt;li>&lt;i>(" &amp; tTime &amp; ")" &amp;&amp; tRowData["msg"] &amp; "&lt;/i>&lt;/li>" &amp; return after tMsgData
@@ -707,214 +852,334 @@ end getMsgData
         put "&lt;li>(" &amp; tTime &amp; ") &lt;b>" &amp; tRowData["user"] &amp; "&lt;/b>: " &amp; tRowData["msg"] &amp; "&lt;/li>" &amp; return after tMsgData
       end if
     end repeat
-    return tMsgData
 
+    return tMsgData
   end if
+
   return FALSE
 end getMsgData
 </code></pre>
 </div>
 
+<p><a href="#top">Top of Page</a></p>
 
-<p>Add the following code to complete the model script:</p>
+<h4 id="_addMsgHandler">The _addMsg Handler</h4>
+
+<p>Add the <dfn>_addMsg</dfn> handler to the model script:</p>
 
 <div class="codeSample">
-<pre><code>command _addMsg pName pMsg
+<pre><code>command _addMsg pName pMsg pEncode
   put pName into tData["user"]
   put pMsg into tData["msg"]
   put the seconds into tData["time"]
+
+  if pEncode &lt;> FALSE then
+    put textEncode(tData["msg"], "UTF-8") into tData["msg"]
+  end if
+  
   get rigDbInsert("chat", tData)
 end _addMsg
 </code></pre>
 </div>
 
-<p>This handler is called by the controller. It puts a new message along with the user name and the current time into  an array and inserts this data into the "chat" table.<br />Now, that's all about the model script and all that is left to do is to build the view files.</p>
+<p>This handler puts a new message along with the user name and the current time into an array and inserts this data into the "chat" table.</p>
 
+<p><a href="#top">Top of Page</a></p>
 
-<h2>View</h2>
+<h4 id="flattenDBhandler">The flattenDB Handler</h4>
 
-<p>As mentioned above, the Login page and the Chat page use the same header and footer. The content is different. So, we split the pages into three separate view files. Start with the header view and save the following code in <samp>application/views</samp> as chatheader.lc:</p>
-
-
-<pre><code>&lt;!DOCTYPE html>
-&lt;html>
-&lt;head>
-  &lt;meta charset="utf-8">
-</code></pre>
-
-<p>This is just the doctype declaration and a meta description. Now add the page title:</p>
-
-
-<pre><code>&lt;title>[[gData["pageTitle"]]]&lt;/title>
-</code></pre>
-
-<p>Remember: We stored the page title earlier, when we built the controller, in the global variable <var>gData</var>.</p>
-
-<p>Add the jQuery framework:</p>
-
-<pre><code>&lt;? return rigJQuerySource() ?>
-</code></pre>
-
-<p>Here, we call a Jquery library function, which returns a html string linking to jQuery.</p>
-
-<p>Add the stylesheet:</p>
-
-
-<pre><code>&lt;? return rigCssAsset("chat.css") ?>
-</code></pre>
-
-<p>This is an asset helper function, which generates a CSS asset location html code.</p>
-
-<p>Add the jQuery script, the code, which is needed to do all the XHTML requests:</p>
-
-
-<pre><code>[[gData["JQscript"]]]
-</code></pre>
-
-<p>Complete the chatheader.lc script with the following lines:</p>
-
-<pre><code>&lt;/head>
-  
-  &lt;body>
-    &lt;div class="page_margins">
-</code></pre>
-
-<p>Your chatheader.lc script should now look like this:</p>
+<p>As we don't want to keep outdated chat messages, we limit the number of table rows stored calling the <dfn>flattenDB</dfn> handler. The optional parameter specifies the maximum number of messages allowed to be stored in the database table. We set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing this means that new messages will be located at the bottom and old messages at the top of the list. Then we retrieve the data from the database and store the result, an array, in a variable.</p>
 
 <div class="codeSample">
-<pre><code>&lt;!DOCTYPE html>
-&lt;html>
-&lt;head>
-  &lt;meta charset="utf-8">
+<pre><code>command flattenDB pMaxMessages
+  if (pMaxMessages is empty) or (pMaxMessages is not a number) then
+    put 20 into pMaxMessages
+  end if
 
-  &lt;title>[[gData["pageTitle"]]]&lt;/title>
+  rigDbOrderBy "id", "ASC"
+  put rigDbGet("chat") into tQueryResult
 
-  &lt;? return rigJQuerySource() ?>
-
-  &lt;? return rigCssAsset("chat.css") ?>
-
-  [[gData["JQscript"]]]
-
-&lt;/head>
-
-&lt;body>
-  &lt;div class="page_margins">
+end flattenDB
 </code></pre>
 </div>
 
-<p>There is not much to say about the footer. Just save the following code as "chatfooter.lc" in <samp>application/views</samp>:</p>
+<p>Now, if the number of table rows is greater then the maximum number of rows allowed, we loop through the rows of the chat table and delete the rows exceeding the limit. Add the following code to the <dfn>flattenDB</dfn> handler:</p>
+
+<pre><code>if tQueryResult["numrows"] > 0 then
+    if tQueryResult["numrows"] > pMaxMessages then
+      
+      put tQueryResult["numrows"] - pMaxMessages into tNumLoops
+      
+      repeat with i = 1 to tNumLoops
+        put rigDbRow(1) into tRowData
+        put tRowData["id"] into tID
+
+        rigDbWhere "id", tID
+        get rigDbDelete("chat")
+        
+        rigDbOrderBy "id", "ASC"
+        get rigDbGet("chat")
+      end repeat
+
+    end if -- if tQueryResult["numrows"] > pMaxMessages
+  end if -- if tQueryResult["numrows"] > 0 	
+</code></pre>
+
+<p>Your <dfn>flattenDB</dfn> function should now look like this: </p>
+
+<div class="codeSample">
+<pre><code>command flattenDB pMaxMessages
+  local tQueryResult, tNumLoops, tRowData, tID
+
+  if (pMaxMessages is empty) or (pMaxMessages is not a number) then
+    put 20 into pMaxMessages
+  end if
+
+  rigDbOrderBy "id", "ASC"
+  put rigDbGet("chat") into tQueryResult
+  
+  if tQueryResult["numrows"] > 0 then
+    if tQueryResult["numrows"] > pMaxMessages then
+      
+      put tQueryResult["numrows"] - pMaxMessages into tNumLoops
+      
+      repeat with i = 1 to tNumLoops
+        put rigDbRow(1) into tRowData
+        put tRowData["id"] into tID
+
+        rigDbWhere "id", tID
+        get rigDbDelete("chat")
+        
+        rigDbOrderBy "id", "ASC"
+        get rigDbGet("chat")
+      end repeat
+
+    end if
+  end if
+end flattenDB
+</code></pre>
+</div>
+
+<p>That's all about the model script and all that is left to do is to build the view files.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="view">View</h2>
+
+<p>As mentioned above, the Login page and the Chat page use the same header and footer. The content is different. So, we split the particular page into three separate view files.</p>
+
+<h4 id="headerView">The Header View</h4>
+
+<p>Start with the header view and save the following code in <samp>application/views</samp> as chatHeaderView.lc:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html lang="en" dir="ltr">
+&lt;head>
+  &lt;meta charset="utf-8">
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+</code></pre>
+</div>
+
+<p>This is just the doctype declaration and meta data. Now add the page title:</p>
+
+<div class="codeSample">
+<pre><code>&lt;title>[[gData["pageTitle"] ]]&lt;/title>
+</code></pre>
+</div>
+
+<p>Remember: We stored the page title earlier, when we built the controller, in the global variable <var>gData</var>.</p>
+
+<p>Add the stylesheet and complete the chatHeaderView.lc script:</p>
+
+<div class="codeSample">
+<pre><code>  &lt;? return rigCssAsset("chat.css") ?>
+&lt;/head>
+  &lt;body>
+</code></pre>
+</div>
+
+<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location html code.</p>
+
+<p>Your chatHeaderView.lc script should now look like this:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html lang="en" dir="ltr">
+&lt;head>
+  &lt;meta charset="utf-8">
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  &lt;title>[[gData["pageTitle"] ]]&lt;/title>
+
+  &lt;? return rigCssAsset("asynChat.css") ?>
+&lt;/head>
+  &lt;body>
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="footerView">The Footer View</h4>
+
+<p>The footer includes the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> script and an additional script which shows how to tap into the inner workings of <a href="https://github.com/revig/ASYNergy">ASYNergy</a> using hooks. There is a JavaScript function which scrolls the chat messages list to the bottom. This function is called whenever the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML element with the id "chatbody" is initialized (when the page is loaded) and whenever <a href="https://github.com/revig/ASYNergy">ASYNergy</a> has processed a request after the user has entered a message.</p>
+
+<p>Save the following code as "chatFooterView.lc" in <samp>application/views</samp>:</p>
 
 <div class="codeSample">
 <pre><code>  &lt;div id="footer">
     &lt;hr />
-    &lt;p>revIgniter Chat Application Tutorial&lt;/p>
+    &lt;p>ASYNergy Chat Application Tutorial&lt;/p>
   &lt;/div>
-
-  &lt;/div>
-&lt;/body>
+    
+  &lt;script>
+  document.addEventListener("DOMContentLoaded", () => {
+    ASYNergy.hook('element.initialized', (el, agent, eventType) => {
+      if (el.id === 'chatbody') { scrollToBottom('#' + el.id) };
+    });
+    
+    ASYNergy.hook('message.processed', (el, agent, eventType) => {
+      if (eventType !== 'poll') { scrollToBottom('#chatbody') };
+    });
+  });
+  function scrollToBottom(elID) {
+    document.querySelector(elID).scroll({ top: document.querySelector(elID).scrollHeight, left: 0,behavior: "smooth" });
+  };
+  &lt;/script>
+  
+  [[gData["asynergyScript"] ]]
+  &lt;/body>
 &lt;/html>
 </code></pre>
 </div>
 
-<p>There is nothing special with the content of the Login page either. So, save the following code in <samp>application/views</samp> as "chatlogin.lc":</p>
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="loginView">The Login View</h4>
+
+<p>There is nothing special with the content of the login view. So, save the following code in <samp>application/views</samp> as "chatLoginView.lc":</p>
 
 
 <div class="codeSample">
-<pre><code>&lt;div id="login">
-  &lt;p>Please enter your name.&lt;/p>
-  &lt;form action="http://example.com/chat/" method="post">
+<pre><code>&lt;div class="container">
+  &lt;img src="https://revigniter.com/assets/img/tutorialLogo.png"  width="162" height="38" alt="revIgniter Logo" id="logo" />
 
-    &lt;label for="name">Name:&lt;/label>
-    &lt;input type="text" name="name" id="name" size="20" maxlength="12" placeholder="Name" />
-    &lt;input type="submit" name="loginbtn" id="loginbtn" value="Login" />
-  &lt;/form>
+  &lt;div id="login">
+    &lt;p>Please enter your name.&lt;/p>
+    [[gData["loginFormOpen"] ]]
+
+      &lt;div class="formRow">
+        &lt;label for="name">Name:&lt;/label>
+        &lt;input type="text" name="name" id="name" size="20" maxlength="12" placeholder="Name" />
+      &lt;/div>
+      &lt;div class="formRow">
+        &lt;input type="submit" name="loginbtn" id="loginbtn" value="Login" />
+      &lt;/div>
+    &lt;/form>
+  &lt;/div>
 &lt;/div>
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> Don't forget to replace the action attribute with the proper URL.</p>
+<p><a href="#top">Top of Page</a></p>
 
-<p>Now save the code below as "chatcontent.lc" in <samp>application/views</samp>:</p>
+<h4 id="chatView">The Chat View</h4>
+
+<p>Now save the code below as "chatContentView.lc" in <samp>application/views</samp>:</p>
 
 
-<pre><code>&lt;div id="chat">
-  &lt;div id="chatheader">
-  &lt;p id="username">Welcome, &lt;b>[[gData["user"]]]&lt;/b>&lt;/p>
-  &lt;p id="logout">&lt;a href="#">Logout&lt;/a>&lt;/p>
-&lt;/div>
+<pre><code>  &lt;div class="container">
+    &lt;img src="https://revigniter.com/assets/img/tutorialLogo.png"  width="162" height="38" alt="revIgniter Logo" id="logo" />
+
+    &lt;section class="main">
+    
+      &lt;div id="chat">
+        &lt;div id="chatheader">
+          &lt;p id="username">Welcome, &lt;b>[[gData["user"]]]&lt;/b>&lt;/p>
+          &lt;p id="logout">[[gData["logoutAnchor"] ]]&lt;/p>
+        &lt;/div>
 </code></pre>
 
-<p>Here we display the name of the user, which we stored in our global variable <var>gData</var>. Further there is a link, which is used by the jQuery script to end the chat session.</p>
+<p>Here we display the name of the user, which we stored in our global variable <var>gData["user"]</var>. Further there is the link which we stored earlier in the <var>gData["logoutAnchor"]</var> variable calling the logout handler of the chat controller.</p>
 
 <p>To display the messages list add the following lines:</p>
 
 
-<pre><code>  &lt;div id="chatbody">
-    &lt;ul>
-    [[gData["msgList"]]]
-    &lt;/ul>
-  &lt;/div>
+<pre><code>    &lt;div id="chatbody" asyn:poll.2500ms="chatList">
+      &lt;ul id="list" asyn:mutable="addMsg">
+        [[gData["msgList"]]]
+      &lt;/ul>
+    &lt;/div>
 </code></pre>
 
-<p>This unordered list is built dynamically when the page is loaded the first time or whenever the message data is updated by the jQuery script, which loads the chatlist view to replace the data in this list with new data. </p>
+<p>This unordered list is created dynamically when the page is loaded the first time or whenever the messages data is updated by <a href:="https://github.com/revig/ASYNergy">ASYNergy</a>, replacing the data inside the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> mutable HTML element with the response data. The HTML attribute <var>asyn:poll.2500ms="chatList"</var> means that <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> sends an AJAX request every two and a half seconds that calls the chat controller's "chatList" handler. The <var>asyn:mutable="addMsg"</var> attribute of the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> mutable element means that the content inside the element's opening and closing tag will be replaced with the respective response data.</p>
 
 <p>To complete the chatcontent view add the HTML form, which is used to send messages:</p>
 
 
-<pre><code>  &lt;div id="chatfooter">
-    &lt;form action="http://example.com/chat/addMsg" method="post">
-      &lt;input name="userinput" type="text" id="userinput" size="64" maxlength="100" placeholder="Message" />
-      &lt;input name="submitbtn" type="submit"  id="submitbtn" value="Send" />
-    &lt;/form>
+<pre><code>        &lt;div id="chatfooter">
+          [[gData["chatFormOpen"] ]]
+            &lt;div class="formRow">
+              &lt;input name="userinput" type="text" id="userinput" asyn:mutable="userinput" asyn:transmit="msg" size="64" maxlength="100" placeholder="Message" />
+              &lt;input name="submitbtn" type="submit"  id="submitbtn" value="Send" />
+            &lt;/div>
+          &lt;/form>
+        &lt;/div>
+      &lt;/div>
+
+  &lt;/section>
+
   &lt;/div>
-&lt;/div>
 </code></pre>
 
-<p>You may replace the action attribute with the proper URL, if you like, but it is not necessary because the jQuery script prevents the default action anyway. So, this attribute could even be empty. The URI is correct though. It specifies a controller named "chat" and a handler named "addMsg". Check out the jQuery script, and you will notice, that it uses this URI to post new messages.</p>
+<p>There are two <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attributes. <var>asyn:mutable="userinput"</var> marks the input field as "mutable". This ensures that this field can be set to any value after submission of the form. In our case the controller's <dfn>addMsg</dfn> handler sets it's value to empty. <var>asyn:transmit="msg"</var> is used to send the input data to the server. The controller has then access to this data calling rigAsynElemData("msg").</p>
 
-<p>Your chatcontent view should now look like this:</p>
+<p>Your chat content view should now look like this:</p>
 
 
 <div class="codeSample">
-<pre><code>&lt;div id="chat">
-  &lt;div id="chatheader">
-    &lt;p id="username">Welcome, &lt;b>[[gData["user"]]]&lt;/b>&lt;/p>
-    &lt;p id="logout">&lt;a href="#">Logout&lt;/a>&lt;/p>
+<pre><code>  &lt;div class="container">
+    &lt;img src="https://revigniter.com/assets/img/tutorialLogo.png"  width="162" height="38" alt="revIgniter Logo" id="logo" />
+
+    &lt;section class="main">
+    
+      &lt;div id="chat">
+        &lt;div id="chatheader">
+          &lt;p id="username">Welcome, &lt;b>[[gData["user"]]]&lt;/b>&lt;/p>
+          &lt;p id="logout">[[gData["logoutAnchor"] ]]&lt;/p>
+        &lt;/div>
+        &lt;div id="chatbody" asyn:poll.2500ms="chatList">
+          &lt;ul id="list" asyn:mutable="addMsg">
+            [[gData["msgList"]]]
+          &lt;/ul>
+        &lt;/div>
+        &lt;div id="chatfooter">
+          [[gData["chatFormOpen"] ]]
+            &lt;div class="formRow">
+              &lt;input name="userinput" type="text" id="userinput" asyn:mutable="userinput" asyn:transmit="msg" size="64" maxlength="100" placeholder="Message" />
+              &lt;input name="submitbtn" type="submit"  id="submitbtn" value="Send" />
+            &lt;/div>
+          &lt;/form>
+        &lt;/div>
+      &lt;/div>
+
+  &lt;/section>
+
   &lt;/div>
-  &lt;div id="chatbody">
-    &lt;ul>
-    [[gData["msgList"]]]
-    &lt;/ul>
-  &lt;/div>
-  &lt;div id="chatfooter">
-    &lt;form action="http://example.com/chat/addMsg" method="post">
-      &lt;input name="userinput" type="text" id="userinput" size="64" maxlength="100" placeholder="Message" />
-      &lt;input name="submitbtn" type="submit"  id="submitbtn" value="Send" />
-    &lt;/form>
-  &lt;/div>
-&lt;/div>
-</code></pre>
-</div>
-
-
-<p>As mentioned earlier, the jQuery script contains a function, which loads the messages list. This is done by sending a request to chat/view. Then the <dfn>view</dfn> handler puts the messages list into the <var>gData</var> variable and loads the chatlist view, which is used by the Ajax request to replace the HTML code inside the div with the id "chatbody".</p> <p> This view consists of the following three lines of code, which you should save as "chatlist.lc" in <samp>application/views</samp>:</p>
-
-
-<div class="codeSample">
-<pre><code>&lt;ul>
-  [[gData["msgList"]]]
-&lt;/ul>
 </code></pre>
 </div>
 
 <p>That's it, your chat application should work as expected.</p>
 
-<h2>Conclusion</h2>
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="conclusion">Conclusion</h2>
 
 <p>There is still work to be done to turn this into a full featured chat application, but nonetheless this sample illustrates:</p>
 <ul>
   <li>revIgniter's approach to separate application logic from presentation permits your web pages to contain minimal scripting since the presentation is separate from the LiveCode scripting.</li>
   <li>By using revIgniter you don,t have to write a whole lot of LiveCode code as you don't have to write libraries from scratch. revIgniter provides you with all the features you need (almost). So, you can get right to work and accomplish a lot in the least amount of time.</li>
+	<li>The combination of revIgniter and <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> allows incremental updates to the user interface without reloading entire pages, making the application faster and more responsive to user actions.</li>
 </ul>
 
 

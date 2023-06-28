@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ASYNergy Data Filter Tutorial : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter tutorial on form validation using ASYNergy">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/style-ck.css">
+
+    
+    <script src="../js/nav-ck.js"></script>
+    
+    <link rel="apple-touch-icon" href="https://revigniter.com/assets/img/apple-touch-icon.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.4</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
+				<input type="hidden" name="kj" value="#000000"/>
+				<input type="hidden" name="k7" value="#2B3137"/>
+				<input type="hidden" name="k8" value="#C7C7C7"/>
+			  <input type="hidden" name="k9" value="#85EAFB"/>
+				<input type="hidden" name="kx" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+			  <input type="hidden" name="k1" value="-1"/>
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.navbar-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="https://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">ASYNergy Data Filter Tutorial</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>ASYNergy Data Filter</h1>
+
+<p>This tutorial shows how to use <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to filter the contents of an HTML table and provide real-time feedback to the user without reloading the page. <a href="https://github.com/revig/ASYNergy">ASYNergy</a>, a complement to revIgniter, is a JavaScript framework for network requests and changes on the page.</p>
+
+<ul>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#stylesheet">The Stylesheet</a></li>
+	<li><a href="#dbTable">The Table</a></li>
+	<li><a href="#controller">Controller</a></li>
+	<ul>
+		<li><a href="#asyntableHandler">The asynTable Handler</a></li>
+		<li><a href="#indexHandler">The Index Handler</a></li>
+		<li><a href="#datafilterHandler">The datafilter Handler</a></li>
+		<li><a href="#buildtableHandler">The _buildTable Handler</a></li>
+	</ul>
+	<li><a href="#model">Model</a></li>
+	<ul>
+		<li><a href="#peopleData">The peopleData Function</a></li>
+		<li><a href="#getTableTemplate">The getTableTemplate Function</a></li>
+	</ul>
+	<li><a href="#view">View</a></li>
+	<ul>
+		<li><a href="#pageView">The Page View</a></li>
+		<li><a href="#filteredtableView">The Filtered Table View</a></li>
+	</ul>
+	<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The page consists of a table and a form with one input field.</p>
+
+<p>While typing in the input field <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to filter the data of the "people" database table. Then <a href="https://github.com/revig/ASYNergy">ASYNergy</a> replaces the HTML table with the HTML table of the response containing the filtered data.</p>
+
+<div class="clearfix"><img src="../images/datafilter.png" class="img-responsive pull-left" alt="table" id="img_form" /></div>
+
+
+<p><br>&nbsp;<br>To set up the data filter, we need the following files and a database table:</p>
+
+<ul>
+<li>a controller named "asynTable.lc", the file, that will be associated with the URI.</li>
+<li>two views named "asynTableView.lc" and "asynFilteredTableView.lc".</li>
+<li>a model named "asyntablemodel.livecodescript", the file, which deals with information in your database.</li>
+<li>a table in your database named "people" to store data that can be filtered by the user. We use SQLite here as the database platform.</li>
+</ul>
+
+<p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
+
+<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in <samp>assets/css/asynTable.css</samp>,
+build the table using the table structure below, insert the provided data and store the SQLite file in <samp>application/db/</samp>.  If you like you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="stylesheet">The Stylesheet</h2>
+
+<div class="codeSample">
+<pre><code>*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+body {
+  color: rgb(199, 199, 199);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
+  font-size: 16px;
+}
+
+hr {
+  height: 0;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+table {
+  text-indent: 0;
+  border-color: inherit;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+  
+body,
+input[type=text] {
+  background-color: rgb(43, 49, 55);
+}
+
+#logo {
+  display: block;
+  width: 162px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+#logo,
+#filterList {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.formRow,
+#filterList {
+  display: flex;
+}
+
+.formRow {
+  justify-content: flex-end;
+}
+
+.formRow,
+.formRow > input {
+  padding: .5em;
+}
+
+.formRow > label {
+  padding: .5em .5em .5em 0;
+}
+
+.formRow > input {
+  flex: 5;
+}
+
+.formRow > label {
+  flex: 1;
+}
+
+input[type=text] {
+  color: rgb(255, 255, 255);
+}
+
+hr {
+  color: rgba(199, 199, 199, 0.5);
+  margin-top: 40px;
+}
+
+body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+#filterList,
+#tableWrapper,
+input[type=text] {
+  border: 1px solid rgb(199, 199, 199, 0.5);
+  border-radius: 8px;
+}
+
+#filterList {
+  flex-direction: column;
+  max-width: 400px;
+  padding: 1em 1em 4em;
+}
+
+#footer,
+#filterList {
+  font-size: .75em;
+}
+
+#mytable {
+  width: 100%;
+}
+
+.myRow {
+  color: #000;
+  background-color: rgb(178, 191, 204);
+}
+
+.myAltRow {
+  color: #000;
+  background-color: rgb(145, 151, 157);
+}
+
+#footer,
+#speed,
+#noMatch {
+  text-align: center;
+}
+
+#noMatch {
+  color: rgb(109, 189, 0);
+}
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="dbTable">The Table (SQLite)</h2>
+
+<div class="codeSample">
+<pre><code>CREATE TABLE "people" (
+  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "name" TEXT(64) NOT NULL,
+  "age" INTEGER(2) NOT NULL,
+  "email" TEXT(64) NOT NULL
+);
+
+INSERT INTO "people" ("id", "name", "age", "email") VALUES
+('1', 'Ali Lloyd', '32', 'ali@livecode.com'),
+('2', 'Edwin Meese', '38', 'edwin@wh.gov'),
+('3', 'Anthony Fauci', '74', 'anthony@nih.gov'),
+('4', 'Boris Johnson', '65', 'ex-priminister@theuk.com'),
+('5', 'Jonathan Edwards', '54', 'triple@jump.com'),
+('6', 'Steve Jobs', '66', 'steve@apple.com'),
+('7', 'Bill Gates', '72', 'bill@microsoft.com'),
+('8', 'Big Bird', '46', 'bigbird@thestreet.com'),
+('9', 'Kevin Miller', '36', 'kevin@livecode.com'),
+('10', 'Barack Obama', '62', 'barack@theusa.com'),
+('11', 'David Brent', '32', 'david@funny.com'),
+('12', 'Klaus Schwab', '87', 'klaus@wef.org'),
+('13', 'Steven Spielberg', '69', 'me@moviemaking.com');
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="controller">Controller</h2>
+
+<p>The controller consists of two handlers commonly used in controllers and two additional ones. The first handler <dfn>asynTable</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI.</p>
+
+<p>Further we need a handler that triggers a database query and a handler that builds the HTML table using the query result.</p>
+
+<p>We start with the basic prototype for a controller script:</p>
+
+<div class="codeSample">
+<pre><code>&lt;?lc
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "asynTable,index" into gControllerHandlers
+
+
+# THE CONTROLLER HANDLER
+command asynTable
+  # LOAD REQUIRED LIBRAIES, MODELS, HELPERS
+end asynTable
+
+# THE DEFAULT HANDLER
+command index
+  -- do something here
+end index
+
+
+
+--| END OF asynTable.lc
+--| Location: ./application/controllers/asynTable.lc
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+<p>Save this script as "asynTable.lc" in <samp>application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/asynTable/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/asynTable/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="asyntableHandler">The asynTable Handler</h4>
+
+<p>The controller handler <dfn>asynTable</dfn> is called first. So, this is a good place to load required helpers, libraries, models and the database.</p>
+
+<p>Actually we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code which is then stored in <var>gData["asynergyScript"]</var>. So there is only one helper left to be loaded. The Form helper, which is used to generate the form open tag.</p> 
+  
+<pre><code class="lang-livecodeserver">rigLoadHelper "form"
+</code></pre>
+  
+  <p>Since we don't want full page redraws while the user is typing in the input field, we use AJAX requests with the help of <a href="https://github.com/revig/ASYNergy">ASYNergy</a> and therefore we load the <a href="../libraries/asynergy.html">ASYNergy library</a>. Also, of course, we need the <a href="../libraries/table.html">Table library</a> to build the HTML table:</p>
+
+<pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "ASYNergy"
+rigLoaderLoadLibrary "Table"
+</code></pre>
+
+<p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "people" table. Add the following line to the <dfn>asynTable</dfn> handler:</p>
+
+<pre><code>get rigLoadDatabase()
+</code></pre>
+
+<p>So far we have not built the model, but we include it here anyway and write the corresponding code afterwards:</p>
+
+<pre><code class="lang-livecodeserver">rigLoadModel "asyntablemodel"
+</code></pre>
+
+<p>Your <dfn>asynTable</dfn> handler should now look like this:</p>
+
+<div class="codeSample">
+<pre><code>command asynTable
+  # HELPERS
+  rigLoadHelper "form"
+
+  # LIBRARIES NEEDED
+  rigLoaderLoadLibrary "ASYNergy"
+  rigLoaderLoadLibrary "Table"
+
+  # DATABASE
+  get rigLoadDatabase("asynTable")
+
+  # MODEL
+  rigLoadModel "asyntablemodel"
+end asynTable
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="indexHandler">The Index Handler</h4>
+
+<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First we save the page title in the global variable <var>gData</var>.</p>
+	
+<pre><code>put "ASYNergy Data Filter" into gData["pageTitle"]
+</code></pre>
+
+<p>Then we add code that generates the markup for the logo:</p>
+
+<div class="codeSample">
+<pre><code>put "logo" into tLogo["id"]
+put "Logo" into tLogo["alt"]
+put "162" into tLogo["width"]
+put "38" into tLogo["height"]
+put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
+</code></pre>
+</div>
+
+<p>Note: The fourth parameter of the <dfn>rigImageAsset()</dfn> function determines if asset file names should include the timestamp of last modification. Setting this parameter to true avoids issues with browser cached data whenever you modify static files like images, CSS files, JavaScript files or favicons without changing the file name.</p>
+
+<p>Now let's add code that retrieves the database data and populates the HTML table.
+
+<pre><code class="lang-livecodeserver">put peopleData() into tQueryResultA
+_buildTable tQueryResultA
+</code></pre>
+
+<p>The <dfn>peopleData()</dfn> function retrieves the database data. This function needs to be implemented in the model later.</p>
+
+<p>The <dfn>_buildTable</dfn> controller handler is used to generate the HTML table that will be populated with the result of the database query.</p>
+
+<p>Then we need code to generate the form's action markup and a hidden CSRF token in case CSRF protection is enabled:</p>
+
+<pre><code>put rigFormOpen("asynTable/datafilter") into gData["formOpen"]
+</code></pre>
+
+<p>This will generate a HTML markup like:</p>
+
+<pre><code>&lt;form action="https://example.com/asynTable/datafilter" method="post" accept-charset="utf-8">
+</code></pre>
+
+<p>or, in case you enabled CSRF protection:</p>
+
+<pre><code>&lt;form action="https://example.com/asynTable/datafilter" method="post" accept-charset="utf-8">
+&lt;input type="hidden" name="csrfTokenName" value="f349be1c-2065-4ecd-ada4-7b902d68a93f" asyn:csrf="csrfTokenName" />
+</code></pre>
+
+<p>The last line of the <dfn>index</dfn> handler loads the <dfn>asynTableView</dfn> view.</p>
+
+<pre><code>get rigLoadView("asynTableView")
+</code></pre>
+
+<p>Your <dfn>index</dfn> handler should now look like this:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command index
+  local tQueryResultA
+
+  # SET PAGE TITLE
+  put "ASYNergy Data Filter" into gData["pageTitle"]
+
+  # GENERATE LOGO MARKUP, NO NEED TO LOAD THE ASSET HELPER
+  # IT IS LOADED BY THE ASYNERGY HELPER
+  put "logo" into tLogo["id"]
+  put "Logo" into tLogo["alt"]
+  put "162" into tLogo["width"]
+  put "38" into tLogo["height"]
+  put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
+
+  # GET THE DATA AND POPULATE THE TABLE
+  put peopleData() into tQueryResultA
+  _buildTable tQueryResultA
+
+  # NEEDED TO ADD A HIDDEN CSRF TOKEN
+  # IN CASE CSRF PROTECTION IS ENABLED
+  put rigFormOpen("asynTable/datafilter") into gData["formOpen"]
+
+  # LOAD THE VIEW FILE
+  get rigLoadView("asynTableView")
+end index
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="datafilterHandler">The datafilter Handler</h4>
+
+<p>Now we need a handler that is called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> while the user is typing in the input form field.</p>
+
+<p>Add the following handler to the controller script. We will implement the <dfn>peopleData()</dfn> function and the <dfn>_buildTable</dfn> handler later.</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command datafilter
+  local tQueryResultA
+
+  put peopleData(rigAsynElemData("datafilter")) into tQueryResultA
+
+  if tQueryResultA &lt;> FALSE then
+    _buildTable tQueryResultA
+  else
+    put "&lt;p id=" & quote & "noMatch" & quote & ">No match!&lt;/p>" into gData["peopleTable"]
+  end if
+
+  # SUBMIT THE VIEW FILE
+  rigAsynRespond rigLoadView("asynFilteredTableView", TRUE)
+end datafilter
+</code></pre>
+</div>
+
+<p>The <dfn>peopleData()</dfn> function retrieves the filtered data by providing a search term entered by the user in the input field, which has an <dfn>asyn:model</dfn> attribute with the value "datafilter". If the database query returns data the <dfn>datafilter</dfn> handler calls the <dfn>_buildTable</dfn> handler, which generates the HTML table that it stores in the <var>gData</var> variable. If the query returns "FALSE" the <dfn>datafilter</dfn> handler stores an error message in the <var>gData</var> variable.</p>
+
+<p>The <dfn>rigAsynRespond</dfn> handler adds the <dfn>asynFilteredTableView</dfn> to the JSON response data and sends it to the client. <a href="https://github.com/revig/ASYNergy">ASYNergy</a> then replaces the current HTML enclosed by the tags of a "mutable"  element whose <var>asyn:mutable</var> attribute has the value "datafilter". The second parameter of the rigLoadView function tells the function to return data, including merged dynamic data, as a string instead of sending it to the browser.</p>
+
+<p class="important"><strong>Note:</strong> Don't forget to add the handler name "datafilter" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
+
+<p>The first line of the controller's code should now look like this:</p>
+
+<pre><code>put "asynTable,index,datafilter" into gControllerHandlers
+</code></pre>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="buildtableHandler">The _buildTable Handler</h4>
+
+<p>The next handler to add to the controller script is called by the <dfn>datafilter</dfn> handler when the user types in the input form field.</p>
+
+<div class="codeSample">
+<pre><code>private command _buildTable pQueryResultA
+  local tResultA
+
+  put pQueryResultA["resultarray"] into tResultA
+
+  # STEPS TO BUILD THE TABLE:
+  # STEP 1: GENERATE THE TABLE HEADING
+  rigSetTableHeading pQueryResultA["fieldnames"], TRUE
+
+  # STEP 2: FETCH A CUSTOM TABLE TEMPLATE FROM MODEL (OPTIONAL)
+  rigSetTableTemplate getTableTemplate()
+
+  # STEP 3: GENERATE THE TABLE
+  put rigGenerateTable(tResultA) into gData["peopleTable"]
+end _buildTable
+</code></pre>
+</div>
+
+<p>This handler uses the database query result data to generate the heading of the HTML table, then it retrieves a custom table template from the model. Finally it generates the HTML table including the data of the "people" database table and returns it.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="model">Model</h2>
+
+<p>The model is responsible for database related tasks. In this case our model serves two purposes: It returns data from the "people" table and it returns a custom HTML table template.</p>
+
+<p>As described above, the controller calls a model function named <dfn>peopleData()</dfn> and a function named <dfn>getTableTemplate()</dfn>. We will now build a model consisting of these two functions.</p>
+
+<p>We start with the basic prototype of a model script only stack:</p>
+
+<div class="codeSample">
+<pre><code>script "asyntablemodel"
+
+
+global gRigA
+
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target &lt;> the short name of me then
+    pass libraryStack
+  end if
+end libraryStack
+
+
+--| END OF asyntablemodel.livecodescript
+--| Location:  ./application/models/asyntablemodel.livecodescript
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+<p>As specified in the <dfn>asynTable</dfn> handler of the controller script, name this file "asyntablemodel.livecodescript" and save it in <samp>application/models</samp>.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="peopleData">The peopleData Function</h4>
+
+<p>Add the following lines to build the <dfn>peopleData()</dfn> function that is used to filter the "people" table by name with a search term entered by the user:</p>
+
+<div class="codeSample">
+<pre><code>function peopleData pSearchTerm
+  local tQueryResult
+
+  if pSearchTerm &lt;> "" then
+    rigDbLike "name", pSearchTerm
+  end if
+
+  put rigDbGet("people") into tQueryResult
+  if tQueryResult["numrows"] > 0 then
+    return tQueryResult
+  end if
+
+  return FALSE
+end peopleData
+</code></pre>
+</div>
+
+<p>First we set a LIKE clause to filter the database entries in the "people" table with a search term passed with the <var>pSearchTerm</var> parameter. Then we run the query using the <dfn>rigDbGet("people")</dfn> function. If the query result contains data the function returns the filtered data, otherwise "FALSE".</p>
+	
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="getTableTemplate">The getTableTemplate Function</h4>
+
+<p>Add the <dfn>getTableTemplate</dfn> function to the model script:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">function getTableTemplate
+  local tMyTemplateA
+
+  put "&lt;table border=" & rigQ("0") && "cellpadding=" & rigQ("4") && "cellspacing=" & rigQ("0") && "id=" & rigQ("mytable") & ">" into tMyTemplateA["tableOpen"]
+  put "&lt;tr class=" & rigQ("myRow") & ">" into tMyTemplateA["rowStart"]
+  put "&lt;tr class=" & rigQ("myAltRow") & ">" into tMyTemplateA["rowAltStart"]
+
+  return tMyTemplateA
+end getTableTemplate
+</code></pre>
+</div>
+
+<p>This function changes the HTML table template prototype on opening tags, row tags and alternating row tags.</p>
+
+<p>That's all about the model script and all that is left to do is to build the two view files.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="view">View</h2>
+
+<p>In this tutorial, as an exception we don't break out parts like headers and footers into their own view files. Instead, we use one view that represents the complete HTML page and one that replaces the HTML table when the user types in the input field.</p>
+
+<h4 id="pageView">The Page View</h4>
+
+<p>Start with the complete HTML page view and save the following code in <samp>application/views</samp> as asynTableView.lc:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html>
+  &lt;head>
+    &lt;meta charset="utf-8">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    &lt;title>[[gData["pageTitle"] ]]&lt;/title>
+  
+    &lt;? return rigCssAsset("asynTable.css") ?>
+  &lt;/head>
+
+  &lt;body>      
+    &lt;div class="container">
+		
+      &lt;section class="main">
+        
+        [[gData["logo"] ]]
+
+        &lt;div id="filterList">
+          [[gData["formOpen"] ]] 
+            &lt;div class="formRow">
+              &lt;label for="name">Name:&lt;/label>
+              &lt;input asyn:model.debounce.100ms="datafilter" name="name" type="text">
+            &lt;/div>
+          &lt;/form>
+
+          &lt;h3>Dynamic Result (pulled from database)&lt;/h3>
+
+          &lt;div asyn:mutable="datafilter" id="tableWrapper">
+            [[gData["peopleTable"] ]]
+            &lt;p id="speed">
+            &lt;br>Rendered in {{g_ElapsedTime_}} seconds
+            &lt;/p>
+          &lt;/div>
+        &lt;/div>
+
+      &lt;/section>
+    &lt;/div>
+	
+    &lt;div id="footer">
+      &lt;hr>
+      &lt;p>revIgniter ASYNergy Data Filter Tutorial&lt;/p>
+    
+    &lt;/div>
+
+    [[gData["asynergyScript"] ]]
+  &lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+<p>The head element is the container for the page title stored in the <var>gData</var> variable and the stylesheet returned by the <dfn>rigCssAsset()</dfn> function.</p>
+
+<p>The body element includes the form, the HTML table and the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> script.</p>
+
+<p><a href="https://github.com/revig/ASYNergy">ASYNergy</a> offers a "debounce" modifier. The <dfn>asyn:model</dfn> directive of the input field includes such a modifier, which in this case applies a debounce of 100ms. This means that <a href="https://github.com/revig/ASYNergy">ASYNergy</a> will send a request at the most every 100 milliseconds. The default debounce is 150ms.</p>
+
+<p>There is a div element with an <dfn>asyn:mutable</dfn> attribute whose value is "datafilter". This is the same value as the value of the <dfn>asyn:model</dfn> attribute of the input field. This means that every time the value of the input field changes i.e. the user enters something into the input field, the HTML code enclosed by the tags of the "mutable" element is replaced. In our example we swap this code with the filtered table view.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="filteredtableView">The Filtered Table View</h4>
+
+<p>This view is identical to the HTML code enclosed by the tags of the "mutable" element of the complete page view above. It includes the HTML table whose data is filtered when the user enters something in the form input field.</p>
+
+<p>Save the following code as "asynFilteredTableView.lc" in <samp>application/views</samp>:</p>
+
+<div class="codeSample">
+<pre><code>[[gData["peopleTable"] ]]
+&lt;p id="speed">
+&lt;br>Rendered in {{g_ElapsedTime_}} seconds
+&lt;/p>
+</code></pre>
+</div>
+
+<p>That's it. Now load the "asynTable" page in your browser and start typing in the form field.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This sample illustrates:</p>
+<ul>
+	<li>revIgniter's approach to near real-time update of partial page content on user input.</li>
+  <li>By using revIgniter you don,t have to write a whole lot of LiveCode code as you don't have to write libraries from scratch.</li>
+	<li>The combination of revIgniter and <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> allows incremental updates to the user interface without reloading entire pages, making the application faster and more responsive to user actions.</li>
+</ul>
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a>
+</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+  </div>
+</div>
+
+
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
+
+<script src="../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>
