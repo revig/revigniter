@@ -568,7 +568,7 @@ end _rigAsynRunFunc
 --| 
 --| Format:  rigAsynValidateInput(param1[, param2][, param3])
 --|
---| Parameters: mixed <pModelAttrVal>, array <pTransmittedElA> attribut names and values
+--| Parameters: mixed <pModelAttrVal>, array <pTransmittedElA> attribute names and values
 --|               included in JavaScript object "transmissionElsData" (optional),
 --|               string <pRuleGroup> the name of the validation group (optional)
 --|
@@ -927,7 +927,7 @@ end rigAsynGet
 --|
 --| Format:  rigAsynSet param1, param2
 --|
---| Parameters: string <pKey> sEncryptA array key, mixed <pVal>
+--| Parameters: string <pKey> array key, mixed <pVal>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
