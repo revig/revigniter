@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.4</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -856,7 +856,7 @@ end rigFetchValidationConf
 </div>
 
 
-<p><dfn>Your validation rule file will be loaded automatically and used when you call the rigFormValidRun() function.</dfn></p>
+<p>Your validation rule file will be loaded automatically and used when you call the <dfn>rigFormValidRun() function</dfn>.</p>
 
 <p class="important">Please note that you MUST add the <dfn>rigFetchValidationConf()</dfn> function to your configuration file as shown above.</p>
 
@@ -1122,7 +1122,7 @@ and as your Validation Rule field name.</p>
 
 <p>As with our first example, you must use the exact array name in the helper functions:</p>
 
-<pre><code>put rigFormError("<kbd>sports[nba][basketball]</kbd>") into gData["basketballError"]</code></pre>
+<pre><code class="hljs livecodeserver">put rigFormError("<kbd>sports[nba][basketball]</kbd>") into gData["basketballError"]</code></pre>
 
 <p>If you are using checkboxes (or other fields) that have multiple options, don't forget to leave an empty bracket after each option, so that all selections will be added to the
 POST array:</p>
@@ -1141,7 +1141,7 @@ POST array:</p>
 
 <p>When you use a helper function you'll include the bracket as well:</p>
 
-<pre><code>put rigFormError("<kbd>options[color][]</kbd>") into gData["colorError"]</code></pre>
+<pre><code class="hljs livecodeserver">put rigFormError("<kbd>options[color][]</kbd>") into gData["colorError"]</code></pre>
 
 
 
@@ -1360,9 +1360,9 @@ put the result into tStringValidResult
 <td class="td">Strips the HTML from image tags leaving the raw URL.</td>
 </tr><tr>
 
-<td class="td"><strong>encodeRevTags</strong></td>
+<td class="td"><strong>encodeLCTags</strong></td>
 <td class="td">No</td>
-<td class="td">Converts rev tags to entities.</td>
+<td class="td">Converts rev / lc tags to entities.</td>
 </tr><tr>
 
 <td class="td"><strong>trim</strong></td>
@@ -1596,7 +1596,7 @@ Previous Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library<
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="ftp.html">FTP Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 
