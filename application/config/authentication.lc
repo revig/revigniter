@@ -23,6 +23,20 @@ local sAuthenticationConf
 
 ##
 #--------------------------------------------------------------------------
+# Database Group Name
+#--------------------------------------------------------------------------
+#
+# The name of the database group used for authentication. Leave empty if you like to use the active
+# group as specified in the database configuration file.
+#
+##
+
+put "" into sAuthenticationConf["dbGroup"]
+
+
+
+##
+#--------------------------------------------------------------------------
 # Table Names
 #--------------------------------------------------------------------------
 #

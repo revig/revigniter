@@ -2065,9 +2065,9 @@ end rigGetHTTPheader
 --| FUNCTION rigRawURLdecode
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 29-06-10
---| Last Mod: 22-12-14
+--| Version:  1.3
+--| Created: 2010-06-29
+--| Last Mod: 2023-04-13
 --| Requires: --
 --|
 --| Summary: Returns the decoded URL as string.
@@ -2084,7 +2084,7 @@ function rigRawURLdecode pStr
   local tStrDecoded
 
   replace "+" with "-r" & numToCodepoint(1) & "b-" in pStr
-  put URLDecode(pStr) into tStrDecoded
+  put textDecode(urlDecode(pStr),"UTF-8") into tStrDecoded
   replace "-r" & numToCodepoint(1) & "b-" with "+" in tStrDecoded
 
   return tStrDecoded

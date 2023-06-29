@@ -51,10 +51,10 @@ local sAuthQuery, sAuthFieldnames, sStackInUse
  --| COMMAND libraryStack
  --|
  --| Author: rabit
- --| Version:  1.0
+ --| Version:  1.1
  --| Created: 2018-12-19
- --| Last Mod: --
- --| Requires: rigLogMessage
+ --| Last Mod: 2023-03-18
+ --| Requires: rigLogMessage, rigLoadHelper, rigLoaderLoadLibrary, rigLangLoadLang()
  --|
  --| Summary:  Run security check and load additional files.
  --|
@@ -81,10 +81,10 @@ on libraryStack
       # AUTOMATICALLY LOAD LIBS / HELPERS / LANGUAGE FILES
       rigLoadHelper "cookie"
       rigLoaderLoadLibrary "Encrypt"
-      rigLoaderLoadLibrary "Session"
       rigLoaderLoadLibrary "Email"
-      get rigLoadDatabase(, TRUE, TRUE)
       get rigLangLoadLang("authentication")
+      # THE SESSION LIBRARY AND THE DATABASE ARE LOADED
+      # IN HANDLER rigRunInitialAuthenticationConfig
       #
     end if -- if sStackInUse <> TRUE
 
@@ -102,10 +102,10 @@ end libraryStack
 --| COMMAND rigRunInitialAuthenticationConfig
 --|
 --| Author: rabit
---| Version:  1.1
---| Created: 07-09-12
---| Last Mod: 22-12-14
---| Requires: _rigInitializeAuthentication
+--| Version:  1.2
+--| Created: 2012-09-07
+--| Last Mod: 2023-03-18
+--| Requires: rigLoadDatabase(), rigLoaderLoadLibrary, _rigInitializeAuthentication
 --|
 --| Summary: Run initial configuration procedures. Don't remove, even if it does nothing!
 --|
@@ -128,6 +128,13 @@ command rigRunInitialAuthenticationConfig pConfig
 	end if
 
 	if tConfig is an array then
+    # IMPLICITLY LOAD DATABASE BEFORE SESSION LIBRARY!
+    if tConfig["dbGroup"] is empty then
+      get rigLoadDatabase(, TRUE, TRUE)
+    else
+      get rigLoadDatabase(tConfig["dbGroup"], TRUE, TRUE)
+    end if
+    rigLoaderLoadLibrary "Session"
 
 		_rigInitializeAuthentication tConfig
 	end if

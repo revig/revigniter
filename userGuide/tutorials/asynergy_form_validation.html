@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ASYNergy Form Validation Tutorial : revIgniter User Guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="all">
+    <meta name="author" content="Ralf Bitter" >
+    <meta name="description" content="revIgniter tutorial on form validation using ASYNergy">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" media="screen" href="../css/style-ck.css">
+
+    
+    <script src="../js/nav-ck.js"></script>
+    
+    <link rel="apple-touch-icon" href="https://revigniter.com/assets/img/apple-touch-icon.png">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
+        <script src="../js/respond.min.js"></script>
+    <![endif]-->
+
+  </head>
+<body>
+  <!-- START PAGE HEAD -->
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.0</a>
+        </div>
+
+        <div class="collapse navbar-collapse">
+          <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
+ 		      <div class="form-group">
+ 				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
+				<input type="hidden" name="kj" value="#000000"/>
+				<input type="hidden" name="k7" value="#2B3137"/>
+				<input type="hidden" name="k8" value="#C7C7C7"/>
+			  <input type="hidden" name="k9" value="#85EAFB"/>
+				<input type="hidden" name="kx" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kaa" value="#FFFFFF"/>
+			  <input type="hidden" name="k1" value="-1"/>
+ 		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
+ 				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
+ 		      </div>
+ 		 	 		</form>
+        </div><!--/.navbar-collapse -->
+     </div>
+     
+     <!-- START BREADCRUMB -->     
+     <div id="breadcrumbContainer">
+       <div class="container">
+           <ol class="breadcrumb">
+             <li><a href="https://revigniter.com/">revIgniter Home</a></li>
+              <li><a href="../index.html">User Guide Home</a></li>
+              <li class="active">ASYNergy Form Validation Tutorial</li>
+            <li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
+            </ol>
+        </div>
+    </div>
+    <!-- END BREADCRUMB -->    
+    
+    <!-- START SLIDEBOX -->
+    <div class="slide-panel top">
+      <div class="container">
+        <div id="panelContent"><script type="text/javascript">createMenu('../');</script></div>
+      </div>
+      <div id="open-button" class="slide-button">Table of Contents</div>
+      <div id="close-button" class="slide-button">Close</div>
+    </div>
+    <!-- END SLIDEBOX -->
+   
+  </div>
+<!-- END PAGE HEAD -->
+
+ 
+
+<!-- START CONTENT -->
+<div class="container gridContainer">
+  
+<div id="content">
+
+<h1>ASYNergy Form Validation</h1>
+
+<p>This tutorial shows how to validate form data and provide real-time feedback to the user without reloading the page using <a href="https://github.com/revig/ASYNergy">ASYNergy</a>, a JavaScript framework for network requests and changes on the page.</p>
+
+<ul>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#stylesheet">The Stylesheet</a></li>
+	<li><a href="#dbTable">The Table</a></li>
+	<li><a href="#controller">Controller</a></li>
+	<ul>
+		<li><a href="#asynregisterHandler">The asynRegister Handler</a></li>
+		<li><a href="#indexHandler">The Index Handler</a></li>
+		<li><a href="#emailHandler">The email Handler</a></li>
+		<li><a href="#passwordHandler">The password Handler</a></li>
+		<li><a href="#passwordConfirmHandler">The passwordConfirm Handler</a></li>
+		<li><a href="#signupHandler">The signup Handler</a></li>
+		<li><a href="#successHandler">The success Handler</a></li>
+		<li><a href="#emailCheckHandler">The emailCheck Handler</a></li>
+	</ul>
+	<li><a href="#validationRules">Validation Rules</a></li>
+	<li><a href="#model">Model</a></li>
+	<ul>
+		<li><a href="#emailIsInDB">The emailIsInDB Function</a></li>
+		<li><a href="#insertUser">The insertUser Handler</a></li>
+	</ul>
+	<li><a href="#view">View</a></li>
+	<ul>
+		<li><a href="#headerView">The Header View</a></li>
+		<li><a href="#footerView">The Footer View</a></li>
+		<li><a href="#registerView">The Register View</a></li>
+		<li><a href="#mainView">The Main View</a></li>
+		<li><a href="#successView">The Success View</a></li>
+	</ul>
+	<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>The page consists of a registration form where you enter an email address, password and a password confirmation.</p>
+
+<p>When the email input field loses focus while filling out the form, <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends an AJAX request to ensure that the entered string is a valid email address and that the address is not already stored in the database. If something is wrong, an error message will be displayed right below the email input field.</p>
+
+<p>While typing in the password field <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the length of the entered string is between 8 and 24 characters. If this requirement is not met, an error message will be displayed right below the password input field.</p>
+
+<p>When typing in the password confirmation input field <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the two password strings match. As long as this requirement is not met, an error message will be displayed right below the password confirmation input field.<br>&nbsp;</p>
+
+<div class="clearfix"><img src="../images/formvalidation.png" class="img-responsive pull-left" alt="form" id="img_form" /></div>
+
+
+<p><br>&nbsp;<br>To set up this form, we need the following files and a database table:</p>
+
+<ul>
+<li>a controller named "asynRegister.lc", the file, that will be associated with the URI.</li>
+<li>five views, respectively page fragments, named "registerMainView.lc", "registerHeaderView.lc", "registerView.lc", "registerFooterView.lc" and "registerSuccessView.lc". Of course two view files, one representing the Registration page and one representing the Success page, would do, but this is to demonstrate how multiple views are assembled and as a side-effect we avoid redundant html code.</li>
+<li>a model named "asynregistermodel.livecodescript", the file, which deals with information in your database.</li>
+<li>a table in your database named "users" to store the email addresses and passwords of the users. We use SQLite here as the database platform.</li>
+</ul>
+
+<p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
+
+<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in <samp>assets/css/asynReg.css</samp>,
+build the table using the table structure below and store the SQLite file in <samp>application/db/</samp>.  If you like you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="stylesheet">The Stylesheet</h2>
+
+<div class="codeSample">
+<pre><code>*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+body {
+  color: rgb(199, 199, 199);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji';
+  font-size: 16px;
+}
+
+hr {
+  height: 0;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+}
+
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+body {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+body,
+input[type=text],
+input[type=password] {
+  background-color: rgb(43, 49, 55);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+#logo {
+  display: block;
+  width: 162px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+}
+
+.main,
+section a {
+  display: flex;
+}
+
+.main {
+  flex-direction: column;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 36px;
+}
+
+form {
+  margin-bottom: 8px;
+}
+
+section a {
+  align-self: center;
+  color: rgb(118, 205, 0);
+}
+
+input[type=text], input[type=password] {
+  color: rgb(255, 255, 255);
+  padding: 6px;
+}
+
+input[type=text],
+input[type=password],
+input[type=submit] {
+  margin: 8px 0 20px;
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: rgb(199, 199, 199);
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+input[type=submit]:hover {
+  background-color: rgb(118, 205, 0);
+  transition: background-color 0.8s;
+}
+
+section,
+input[type=submit],
+input[type=text],
+input[type=password] {
+  border-radius: 8px;
+}
+
+section a,
+input[type=submit] {
+  text-decoration: none;
+}
+
+section,
+input[type=text],
+input[type=password] {
+  border: 1px solid rgb(199, 199, 199, 0.5);
+}
+
+#footer {
+  font-size: .75em;
+  text-align: center;
+}
+
+hr {
+  color: rgba(199, 199, 199, 0.5);
+  margin: 40px 15px 0 15px;
+}
+
+.errorMessage {
+  color: rgb(250, 80, 80);
+  font-size: .75em;
+  margin-top: -10px;
+}
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="dbTable">The Table (SQLite)</h2>
+
+<div class="codeSample">
+<pre><code>CREATE TABLE "users" (
+  "id" INTEGER NOT NULL,
+  "email" TEXT NOT NULL,
+  "password" TEXT NOT NULL,
+  PRIMARY KEY ("id")
+);
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="controller">Controller</h2>
+
+<p>The controller consists of two handlers commonly used in controllers and six additional ones. The first handler <dfn>asynRegister</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI.</p>
+
+<p>Further we need a handler that checks if the string entered into the email input field is a valid email address, a handler that validates the password entered, one that validates the confirmation password, a handler that is called by clicking on the "Register" button, and finally a "success" handler that loads the page confirming that the registration was successful.</p>
+
+<p>We start with the basic prototype for a controller script:</p>
+
+<div class="codeSample">
+<pre><code>&lt;?lc
+
+# PUT YOUR HANDLER NAMES  INTO THE GLOBAL gControllerHandlers AS A COMMA SEPARATED LIST
+put "asynRegister,index" into gControllerHandlers
+
+
+# THE CONTROLLER HANDLER
+command asynRegister
+  # LOAD REQUIRED LIBRAIES, MODELS, HELPERS
+end asynRegister
+
+# THE DEFAULT HANDLER
+command index
+  -- do something here
+end index
+
+
+
+--| END OF asynRegister.lc
+--| Location: ./application/controllers/asynRegister.lc
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+<p>Save this script as "asynRegister.lc" in <samp>application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/asynRegister/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/asynRegister/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="asynregisterHandler">The asynRegister Handler</h4>
+
+<p>The controller handler <dfn>asynRegister</dfn> is called first. So, this is a good place to load required helpers, libraries, models and the database.</p>
+
+<p>Actually we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code which is then stored in <var>gData["asynergyScript"]</var>. The Form helper needed to generate the form action markup is loaded by the <a href="../libraries/form_validation.html">Formvalidation library</a>. So there is only one helper left to be loaded. The URL helper, which is used to generate a link.</p> 
+  
+<pre><code class="lang-livecodeserver">rigLoadHelper "url"
+</code></pre>
+  
+  <p>Since we don't want page redraws while the user fills out the form and the input is validated, we use AJAX requests with the help of <a href="https://github.com/revig/ASYNergy">ASYNergy</a> and therefore we load the <a href="../libraries/asynergy.html">ASYNergy library</a>. Also, of course, we need the <a href="../libraries/form_validation.html">Formvalidation library</a> and the <a href="../libraries/encryption.html">Encryption library</a> to encrypt the passwords:</p>
+
+<pre><code class="lang-livecodeserver">put "ASYNergy,Formvalidation,Encrypt" into tLibs
+rigLoaderLoadLibrary tLibs
+</code></pre>
+
+<p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "users" table. Add the following line to the <dfn>asynRegister</dfn> handler:</p>
+
+<pre><code>get rigLoadDatabase()
+</code></pre>
+
+<p>So far we have not built the model, but we include it here anyway and write the corresponding code afterwards:</p>
+
+<pre><code class="lang-livecodeserver">rigLoadModel "asynregistermodel"
+</code></pre>
+
+<p>Finally we call the <dfn>rigAnchor()</dfn> function to generate a link used on the success page that points back to the registration page. We save this link in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like <var>[[gData["againAnchor"]]]</var>, the values of this array will be automatically merged with the view:</p>
+
+<pre><code>put rigAnchor("asynRegister", "Try it again!") into gData["againAnchor"]
+</code></pre>
+
+<p>Your <dfn>asynRegister</dfn> handler should now look like this:</p>
+
+<div class="codeSample">
+<pre><code>command asynRegister
+  local tLibs
+  
+  # HELPERS NEEDED, THE ASSET HELPER IS
+  # LOADED BY THE ASYNERGY LIBRARY, THE
+  # FORM HELPER IS LOADED BY THE
+  # FORMVALIDATION LIBRARY
+  rigLoadHelper "url"
+  
+  # LIBRARIES NEEDED
+  put "ASYNergy,Formvalidation,Encrypt" into tLibs
+  rigLoaderLoadLibrary tLibs
+  # DATABASE
+  get rigLoadDatabase("asynRegister")
+  # MODEL
+  rigLoadModel "asynregistermodel"
+  
+  # LINK ON THE SUCCESS PAGE THAT POINTS BACK TO THE REGISTRATION PAGE
+  put rigAnchor("asynRegister", "Try it again!") into gData["againAnchor"]
+end asynRegister
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="indexHandler">The Index Handler</h4>
+
+<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First we save the page title in the global variable <var>gData</var>.</p>
+	
+<pre><code>put "Asynergy Registration" into gData["pageTitle"]
+</code></pre>
+
+<p>Then we add code that generates the markup for the logo:</p>
+
+<div class="codeSample">
+<pre><code>put "logo" into tLogo["id"]
+put "Logo" into tLogo["alt"]
+put "162" into tLogo["width"]
+put "38" into tLogo["height"]
+put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
+</code></pre>
+</div>
+
+<p>Note: The fourth parameter of the <dfn>rigImageAsset()</dfn> function determines if asset file names should include the timestamp of last modification. Setting this parameter to true avoids issues with browser cached data whenever you modify static files like images, CSS files, JavaScript files or favicons without changing the file name.</p>
+
+<p>Now let's add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "signup", is set to the name of the controller handler to be called when the user clicks onto the submit button. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
+
+<pre><code>put "signup" into tFormAttrA["asyn:submit.prevent"]
+put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
+</code></pre>
+
+<p>This will generate a HTML markup like:</p>
+
+<pre><code>&lt;form action="https://example.com/asynRegister" method="post" accept-charset="utf-8" asyn:submit.prevent="signup">
+</code></pre>
+
+<p>or, in case you enabled CSRF protection:</p>
+
+<pre><code>&lt;form action="https://example.com/asynRegister" method="post" accept-charset="utf-8" asyn:submit.prevent="signup">
+&lt;input type="hidden" name="csrfTokenName" value="bb8e156c-9aa5-42be-b573-dc0b533ca3da" asyn:csrf="csrfTokenName" />
+</code></pre>
+
+<p>Then we add code that generates the submit button markup:</p>
+
+<pre><code>put rigSubmitButton("register", "Register") into gData["submit"]
+</code></pre>
+	
+<p>In case a user has JavaScript disabled for some reason so that <a href="https://github.com/revig/ASYNergy">ASYNergy</a> cannot be loaded, we set up the default form validation mechanism within the <dfn>index</dfn> handler. This requires the generation of error messages and the storage of input data for re-populating the form in case the data entered was incorrect. If the entered data is correct, we store it in the database and load the "success" page, otherwise we reload the registration page and display the corresponding error messages.</p>
+
+<p>There is a small but crucial difference to normal form validation, namely we add <var>asyn:mutable</var> attributes to the markup of error messages. These "directives" are used by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to display the error messages without reloading the whole page.</p>
+
+<p>Following the code for form validation as described:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver"># VALIDATE FORM DATA AND GENERATE ERROR MESSAGES
+# NO NEED TO SPECIFY THE RULE GROUP WITH THE FIRST PARAMETER
+# OF THE rigFormValidRun() FUNCTION BECAUSE IT IS AUTOMATICALLY
+# SET TO THE CONTROLLER NAME WHICH IS THE NAME OF THE
+# APPROPRIATE RULE GROUP SET IN config/validation.lc
+if rigFormValidRun() is FALSE then
+  # GET VALIDATION ERRORS
+  put rigFormError("email", "&lt;p class=" & quote & "errorMessage" & quote && \
+    "asyn:mutable=" & quote & "email" & quote & ">", "&lt;/p&gt;") into gData["emailError"]
+
+  put rigFormError("password", "&lt;p class=" & quote & "errorMessage" & quote && \
+    "asyn:mutable=" & quote & "password" & quote & ">", "&lt;/p&gt;") into gData["pwError"]
+
+  put rigFormError("passwordConfirm", "&lt;p class=" & quote & "errorMessage" & quote && \
+    "asyn:mutable=" & quote & "passwordConfirm" & quote & ">", "&lt;/p&gt;") into gData["pwConfError"]
+
+  # IF VALIDATION FAILES RE-POPULATE THE FORM
+  # AND LOAD PAGE AGAIN
+  put rigSetValue("email") into gData["email"]
+  put rigSetValue("password") into gData["password"]
+  put rigSetValue("passwordConfirm") into gData["passwordConfirm"]
+
+  get rigLoadView("registerMainView")
+else
+  # OTHERWISE ADD NEW DATA TO THE DATABASE
+  # AND LOAD THE SUCCESS PAGE
+  put rigVarPOST("email") into tEmail
+  put rigVarPOST("password") into tPassword
+  put rigEncode(tPassword, "myKey") into tEncPW
+    
+  if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+    insertUser tEmail, tEncPW
+    get rigLoadView("registerSuccessView")
+  else
+    get rigLoadView("registerMainView")
+  end if
+
+end if
+</code></pre>
+</div>
+
+<p>The <dfn>insertUser</dfn> handler inserts the email address and the password of new users into the database. This handler needs to be implemented in the model later.</p>
+
+<p>Your <dfn>index</dfn> handler should now look like this:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">command index
+  local tLogo, tFormAttrA, tEmail, tPassword, tEncPW
+
+  # SET PAGE TITLE
+  put "Asynergy Registration" into gData["pageTitle"]
+  
+  # GENERATE LOGO MARKUP, NO NEED TO LOAD THE ASSET HELPER
+  # IT IS LOADED BY THE ASYNERGY HELPER
+  put "logo" into tLogo["id"]
+  put "Logo" into tLogo["alt"]
+  put "162" into tLogo["width"]
+  put "38" into tLogo["height"]
+  put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
+
+
+  # GENERATE FORM OPEN AND SUBMIT BUTTON MARKUP
+  put "signup" into tFormAttrA["asyn:submit.prevent"]
+  put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
+  put rigSubmitButton("register", "Register") into gData["submit"]
+  
+
+  # VALIDATE FORM DATA AND GENERATE ERROR MESSAGES.
+  # NO NEED TO SPECIFY THE RULE GROUP WITH THE FIRST PARAMETER
+  # OF THE rigFormValidRun() FUNCTION BECAUSE IT IS AUTOMATICALLY
+  # SET TO THE CONTROLLER NAME WHICH IS THE NAME OF THE
+  # APPROPRIATE RULE GROUP SET IN config/validation.lc
+  if rigFormValidRun() is FALSE then
+    # GET VALIDATION ERRORS
+    put rigFormError("email", "&lt;p class=" & quote & "errorMessage" & quote && \
+      "asyn:mutable=" & quote & "email" & quote & ">", "&lt;/p&gt;") into gData["emailError"]
+
+    put rigFormError("password", "&lt;p class=" & quote & "errorMessage" & quote && \
+      "asyn:mutable=" & quote & "password" & quote & ">", "&lt;/p&gt;") into gData["pwError"]
+
+    put rigFormError("passwordConfirm", "&lt;p class=" & quote & "errorMessage" & quote && \
+      "asyn:mutable=" & quote & "passwordConfirm" & quote & "&gt;", "&lt;/p&gt;") into gData["pwConfError"]
+
+    # IF VALIDATION FAILES RE-POPULATE THE FORM
+    # AND LOAD PAGE AGAIN
+    put rigSetValue("email") into gData["email"]
+    put rigSetValue("password") into gData["password"]
+    put rigSetValue("passwordConfirm") into gData["passwordConfirm"]
+
+    get rigLoadView("registerMainView")
+  else
+    # OTHERWISE ADD NEW DATA TO THE DATABASE
+    # AND LOAD THE SUCCESS PAGE
+    put rigVarPOST("email") into tEmail
+    put rigVarPOST("password") into tPassword
+    put rigEncode(tPassword, "myKey") into tEncPW
+    
+    if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+      insertUser tEmail, tEncPW
+      get rigLoadView("registerSuccessView")
+    else
+      get rigLoadView("registerMainView")
+    end if
+
+  end if
+end index
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="emailHandler">The email Handler</h4>
+
+<p>Now we need handlers that validate user input and are called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> while the user is filling out the form.</p>
+
+<p>Add the following handler, which checks whether the validation rules for entering an email address are met, to the controller script. We will implement validation rules later.</p>
+
+<div class="codeSample">
+<pre><code># DON'T FORGET TO ADD THE NAMES OF THE HANDLERS BELOW
+# TO THE LIST IN THE gControllerHandlers VARIABLE
+# AT THE TOP OF THE CONTROLLER SCRIPT.
+command email
+  local tError
+
+  put rigAsynValidateInput("email") into tError
+  rigAsynRespond tError
+end email
+</code></pre>
+</div>
+
+<p>The <dfn>rigAsynValidateInput()</dfn> function included in the ASYNergy library validates input data using the form validation library. The first parameter of this function is the value of the <var>asyn:model</var> attribute of the email input element passed by <a href="https://github.com/revig/ASYNergy">ASYNergy</a>. The AJAX request sent by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> also contains the value of the email form field, which is validated according to the rules we will define later.</p>
+
+<p>If the validation fails an error message will be added to the response which is sent by the <dfn>rigAsynRespond</dfn> handler. This message replaces the current HTML enclosed by the tags of a "mutable" element whose <var>asyn:mutable</var> attribute has the value "email".</p>
+
+<p class="important"><strong>Note:</strong> Don't forget to add the handler name "email" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="passwordHandler">The password Handler</h4>
+
+<p>The next handler to add to the controller script is called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> when the user writes in the password form field.</p>
+
+<div class="codeSample">
+<pre><code>command password
+  local tTransmitted, tTransmittedA, tError
+  
+  put rigAsynElemData("passwordConfirm") into tTransmitted
+
+  # ONLY COMPARE THE 2 PASSWORD ENTRIES IF THE PASSWORD
+  # CONFIRMATION FIELD IS NOT EMPTY
+  if tTransmitted &lt;> empty then
+    put tTransmitted into tTransmittedA["passwordConfirm"]
+  end if
+  put rigAsynValidateInput("password", tTransmittedA) into tError
+  
+  rigAsynRespond tError
+end password
+</code></pre>
+</div>
+
+<p>The password is validated and if the password confirmation field is not empty, it is checked whether the entered password matches the password confirmation. The handler has access to the value of the password confirmation form field calling rigAsynElemData("passwordConfirm").</p>
+
+<p class="important"><strong>Note:</strong> Add the handler name "password" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="passwordConfirmHandler">The passwordConfirm Handler</h4>
+
+<p>The next handler is called when the user writes in the password confirmation form field. The <dfn>rigAsynValidateInput("password,passwordConfirm")</dfn> function uses the form validation library validates two form fields and checks if the entered password matches the password confirmation.</p>
+
+<p>Add the following code to the controller script:</p>
+
+<div class="codeSample">
+<pre><code>command passwordConfirm
+  local tError
+
+  put rigAsynValidateInput("password,passwordConfirm") into tError
+
+  rigAsynRespond tError
+end passwordConfirm
+</code></pre>
+</div>
+
+<p class="important"><strong>Note:</strong> Add the handler name "passwordConfirm" to the global variable <var>gControllerHandlers</var>.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="signupHandler">The signup Handler</h4>
+
+<p>"signup" is the value of the <var>asyn:submit.prevent</var> attribute of the form element. This means that when the user clicks on the submit button, <a href="https://github.com/revig/ASYNergy">ASYNergy</a> calls the <dfn>signup</dfn> handler of the controller:</p>
+
+<div class="codeSample">
+<pre><code>command signup
+  local tErrorA, tEmail, tPassword, tEncPW, tSegments
+  
+  put rigAsynValidateInput("email,password,passwordConfirm") into tErrorA
+  
+  if tErrorA is empty then
+    put  rigAsynElemData("email") into tEmail
+    put  rigAsynElemData("password") into tPassword
+    put rigEncode(tPassword, "myKey") into tEncPW
+    
+    if rigEncode(tPassword, "myKey") &lt;> FALSE then
+      insertUser tEmail, tEncPW
+      
+      # DISPLAY SUCCESS PAGE
+      put "asynRegister/success" into tSegments
+      rigAsynNavigate tSegments
+    else
+      # RELOAD THE REGISTRATION PAGE
+      put "asynRegister" into tSegments
+      rigAsynNavigate tSegments
+    end if
+    
+  else
+    rigAsynRespond tErrorA
+  end if -- if tErrorA is empty
+end signup
+</code></pre>
+</div>
+
+<p>The <dfn>rigAsynValidateInput("email,password,passwordConfirm")</dfn> function validates all three input form fields at once and returns an array of error messages if validation fails. If there are no errors the <dfn>signup</dfn> handler stores the email address and the encrypted password in the database and loads the "success" page using the <dfn>rigAsynNavigate</dfn> handler of the ASYNergy library, otherwise it sends a response to the client including the corresponding error messages.</p>
+
+<p>Of course, later we need to make sure that the model contains an <dfn>insertUser</dfn> handler.</p>
+
+<p class="important"><strong>Note:</strong> Add the handler name "signup" to the global variable <var>gControllerHandlers</var>.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="successHandler">The success Handler</h4>
+
+<p>The following handler will be called by the <dfn>signup</dfn> handler if form validation was successful. It just loads the <dfn>registerSuccessView.lc</dfn> view.</p>
+
+<div class="codeSample">
+<pre><code>command success
+  get rigLoadView("registerSuccessView")
+end success
+</code></pre>
+</div>
+
+<p class="important"><strong>Note:</strong> Add the handler name "signup" to the global variable <var>gControllerHandlers</var>.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="emailCheckHandler">The emailCheck Handler</h4>
+
+<p>The last controller handler is an example on how to implement form validation callbacks, which permit you to extend the validation library to meet your needs.</p>
+
+<div class="codeSample">
+<pre><code># HANDLER CALLED BY THE CALLBACK RULE callback_emailCheck
+command emailCheck pEmail
+  if emailIsInDB(pEmail) then
+    rigSetMessage "emailCheck", "The email has already been taken"
+    return FALSE
+  end if
+
+  return TRUE
+end emailCheck
+</code></pre>
+</div>
+
+<p>The <dfn>emailIsInDB(pEmail)</dfn> function checks whether an entered email is already stored in the database. If so, an error message is displayed.</p>
+
+<p>Later we make sure that the model contains an <dfn>emailIsInDB()</dfn> function.</p>
+
+<p class="important"><strong>Note:</strong> Add the handler name "emailCheck" to the global variable <var>gControllerHandlers</var>.</p>
+
+<p>The first line of the controller's code should now look like this:</p>
+
+<pre><code>put "asynRegister,index,email,password,passwordConfirm,signup,success,emailCheck" into gControllerHandlers
+</code></pre>
+
+<p><a href="#top">Top of Page</a></p>
+
+
+<h2 id="validationRules">Validation Rules</h2>
+
+
+<p>The Form Validation library permits you to store all your validation rules organized in groups in a config file. You can organize these rules into "groups". These groups can be loaded automatically when a matching controller/handler is called.</p>
+
+<p>To store the form validation rules, you need to create a file named validation.lc in the <samp>application/config</samp> folder if you don't have it already:</p>
+
+<div class="codeSample">
+<pre><code>&lt;?lc
+
+local sValidationConf
+
+# THIS FUNCTION IS MANDATORY
+function rigFetchValidationConf
+  return sValidationConf
+end rigFetchValidationConf
+</code></pre>
+</div>
+
+<p>Please note that you MUST add the rigFetchValidationConf() function to your configuration file as shown above.</p>
+
+<p>Then add the validation rules as shown below:</p>
+
+<div class="codeSample">
+<pre><code>rigAddValidationGrp "asynRegister"
+rigAddValidationRules "email", "Email", "trim|requiredR|validEmailR|callback_emailCheck|xssClean", sValidationConf
+rigAddValidationRules "password", "Password", "requiredR|minLengthR[8]|maxLengthR[24]", sValidationConf
+rigAddValidationRules "passwordConfirm", "Confirm Password", "requiredR|matchesR[password]", sValidationConf
+</code></pre>
+</div>
+
+<p>We set the name of the validation group to the name of the controller/handler, in this case to the controller, because validation is done in the <dfn>index</dfn> handler that is executed by calling the contoller. This means that we do not need to specify a validation group as a parameter of the <dfn>rigFormValidRun()</dfn> function.</p>
+
+<p>The rules in detail are:</p>
+
+<ul>
+	<li>
+		<var>email</var>: "email" is the name of the field, "Email" is the name of the label, whitespace will be trimmed, the form element must not be empty, the value must be a valid email address, validation calls a callback controller handler named "emailCheck", and the value is run through the XSS filtering handler.
+	</li>
+	<li>
+		<var>password</var>: "password" is the name of the field, "Password" is the name of the label, the form element must not be empty, the minimum length of the string must be 8 characters, the maximum 24 characters.
+	</li>
+	<li>
+		<var>passwordConfirm</var>: "passwordConfirm" is the name of the field, "Confirm Password" is the name of the label, the form element must not be empty and the value of this field must match the value of the password field.
+	</li>
+</ul>
+
+<p>All validation rules are stored in the <var>sValidationConf</var> variable.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="model">Model</h2>
+
+<p>The model is responsible for database related tasks. In this case our model serves two purposes: It checks if the provided email address is already stored in the database and it stores email addresses and the corresponding passwords in the database.</p>
+
+<p>As described above, the controller calls a model function named <dfn>emailIsInDB()</dfn> and a handler named <dfn>insertUser</dfn>. We will now build a model consisting of these two handlers.</p>
+
+<p>We start with the basic prototype of a model script only stack:</p>
+
+<div class="codeSample">
+<pre><code>script "asynregistermodel"
+
+
+global gRigA
+
+ 
+on libraryStack
+  if (gRigA is not an array) and (the environment is "server") then
+    put "No direct script access allowed."
+    exit to top
+  end if
+
+  if the short name of the target &lt;> the short name of me then
+    pass libraryStack
+  end if
+end libraryStack
+
+
+--| END OF asynregistermodel.livecodescript
+--| Location:  ./application/models/asynregistermodel.livecodescript
+----------------------------------------------------------------------
+</code></pre>
+</div>
+
+<p>As specified in the <dfn>asynRegister</dfn> handler of the controller script, name this file "asynregistermodel.livecodescript" and save it in <samp>application/models</samp>.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="emailIsInDB">The emailIsInDB Function</h4>
+
+<p>Add the following lines to build the <dfn>emailIsInDB()</dfn> function that is used to check if the provided email address is already stored in the database:</p>
+
+<div class="codeSample">
+<pre><code>function emailIsInDB pEmail
+  local tQueryResult
+  
+  rigDbWhere "email", pEmail
+  put rigDbGet("users") into tQueryResult
+  
+  if tQueryResult["numrows"] > 0 then
+    return TRUE
+  end if
+  
+  return FALSE
+end emailIsInDB
+</code></pre>
+</div>
+
+<p>First we set a WHERE clause to search for database entries in the "users" table that match the <var>pEmail</var> parameter. Then we run the query using the <dfn>rigDbGet("users")</dfn> function. If the query result contains data, i.e. the email address already exists in the database, the function returns "TRUE", otherwise "FALSE".</p>
+	
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="insertUser">The insertUser Handler</h4>
+
+<p>Add the <dfn>insertUser</dfn> handler to the model script:</p>
+
+<div class="codeSample">
+<pre><code>command insertUser pEmail pPassword
+  local tDataA
+  
+  put pEmail into tDataA["email"]
+  put pPassword into tDataA["password"]
+  
+  get rigDbInsert("users", tDataA)
+	
+  return it
+end insertUser
+</code></pre>
+</div>
+
+<p>This handler uses the <dfn>rigDbInsert()</dfn> function to insert an email address and a password into the "users" table of the database.</p>
+
+<p>That's all about the model script and all that is left to do is to build the view files.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="view">View</h2>
+
+<p>To make views easy to manage, it’s a good idea to break out some common parts, like headers and footers, into their own view files, which can then be included in other views as needed. So, we split the registration page into three separate view files that will be loaded by a "main" view.</p>
+
+<h4 id="headerView">The Header View</h4>
+
+<p>Start with the header view and save the following code in <samp>application/views</samp> as registerHeaderView.lc:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html lang="en" dir="ltr">
+  &lt;head>
+    &lt;meta charset="utf-8">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+</code></pre>
+</div>
+
+<p>This is just the doctype declaration and meta data. Now add the page title:</p>
+
+<div class="codeSample">
+<pre><code>    &lt;title>[[gData["pageTitle"] ]]&lt;/title>
+</code></pre>
+</div>
+
+<p>Remember: We stored the page title earlier, when we built the controller, in the global variable <var>gData</var>.</p>
+
+<p>Add the stylesheet and complete the registerHeaderView.lc script:</p>
+
+<div class="codeSample">
+<pre><code class="lang-html">    &lt;? return rigCssAsset("asynReg.css") ?>
+  &lt;/head>
+  &lt;body>
+</code></pre>
+</div>
+
+<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location html code.</p>
+
+<p>Your registerHeaderView.lc script should now look like this:</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html lang="en" dir="ltr">
+  &lt;head>
+    &lt;meta charset="utf-8">
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    &lt;title>[[gData["pageTitle"] ]]&lt;/title>
+
+    &lt;? return rigCssAsset("asynReg.css") ?>
+  &lt;/head>
+  &lt;body>
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="footerView">The Footer View</h4>
+
+<p>The footer includes the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> script.</p>
+
+<p>Save the following code as "registerFooterView.lc" in <samp>application/views</samp>:</p>
+
+<div class="codeSample">
+<pre><code>    &lt;div id="footer">
+      &lt;hr>
+      &lt;p>revIgniter ASYNergy Form Validation Tutorial&lt;/p>
+
+    &lt;/div>
+  
+    [[gData["asynergyScript"] ]]
+  &lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="registerView">The Register View</h4>
+
+<p>The register view includes the registration form with form labels and paragraphs for error strings stored in the <var>gData</var> variable.</p>
+
+<p>Save the following code in <samp>application/views</samp> as "registerView.lc":</p>
+
+<div class="codeSample">
+<pre><code>&lt;div class="container">
+  
+  [[gData["logo"] ]]
+
+  &lt;section class="main">
+    [[gData["formOpen"] ]]
+      &lt;label for="email">Email Address&lt;/label>
+      &lt;input type="text" name="email" asyn:model.blur="email" asyn:transmit="email" value="[[gData["email"] ]]">
+      [[gData["emailError"] ]]
+      
+      &lt;label for="password">Password&lt;/label>
+      &lt;input type="password" name="password" asyn:model="password" asyn:transmit="password" value="[[gData["password"] ]]">
+      [[gData["pwError"] ]]
+      
+      &lt;label for="passwordConfirm">Confirm Password&lt;/label>
+      &lt;input type="password" name="passwordConfirm" asyn:model="passwordConfirm" asyn:transmit="passwordConfirm" value="[[gData["passwordConfirm"] ]]">
+      [[gData["pwConfError"] ]]
+      
+      [[gData["submit"] ]]
+    &lt;/form>
+      
+    &lt;a href="#">Already have an account?&lt;/a>
+  &lt;/section>
+
+&lt;/div>
+</code></pre>
+</div>
+
+<p>As you can see, all input elements have an <dfn>asyn:model</dfn> attribute. These <a href="https://github.com/revig/ASYNergy">ASYNergy</a> directives act as trigger for AJAX requests. The corresponding <dfn>asyn:mutable</dfn> attributes we have previously added to the markup of the error messages, take a look at the <dfn>index</dfn> handler.</p>
+
+<p>Please note that the <dfn>asyn:model</dfn> attribute of the "email" input field has a "blur" modifier. This causes an AJAX request to be sent when the input element loses focus.</p>
+
+<p>All input elements have an <dfn>asyn:transmit</dfn> attribute. This means that the values of all these elements will be added to the request data when the user clicks on the submit button.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="mainView">The Main View</h4>
+
+<p>Now save the code below as "registerMainView.lc" in <samp>application/views</samp>:</p>
+
+<div class="codeSample">
+<pre><code class="lang-livecodeserver">&lt;?
+put rigLoadView("registerHeaderView", TRUE) into tHeader
+put rigLoadView("registerView", TRUE) into tContent
+put rigLoadView("registerFooterView", TRUE) into tFooter
+
+return tHeader && tContent && tFooter
+?>
+</code></pre>
+</div>
+
+<p>The main view, which is loaded by the <dfn>index</dfn> handler, combines the three partial views and returns the full registration page.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h4 id="successView">The Success View</h4>
+
+<p>There is one view left. It is the one which will be displayed after saving the form data to the database.</p>
+
+<p>Save the following code in <samp>application/views</samp> as "registerSuccessView.lc":</p>
+
+<div class="codeSample">
+<pre><code>&lt;!DOCTYPE html>
+&lt;html lang="en" dir="ltr">
+&lt;head>
+  &lt;meta charset="utf-8">
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  &lt;title>Registration Success&lt;/title>
+	
+&lt;/head>
+
+&lt;body>
+	
+  &lt;div id="container">
+    &lt;header>
+      &lt;h1>Registration Success&lt;/h1>
+    &lt;/header>
+    
+    &lt;div id="main" role="main">
+      [[gData["againAnchor"] ]]
+    &lt;/div>
+    
+  &lt;/div>
+
+&lt;/body>
+&lt;/html>
+</code></pre>
+</div>
+
+<p>That's it, your registration form should work as expected. Try it out, enter something in the form fields, and see the error messages that are triggered by AJAX requests. Save an email address and a password to the database, then try entering the same email address again.</p>
+
+<p>Then deactivate JavaScript in your browser and you will see that form validation still works.</p>
+
+<p><a href="#top">Top of Page</a></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>This sample illustrates:</p>
+<ul>
+	<li>revIgniter's approach to form validation and real-time feedback when a form is filled out.</li>
+  <li>By using revIgniter you don,t have to write a whole lot of LiveCode code as you don't have to write libraries from scratch.</li>
+	<li>The combination of revIgniter and <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> allows incremental updates to the user interface without reloading entire pages, making the application faster and more responsive to user actions.</li>
+</ul>
+
+
+</div>
+<!-- END CONTENT -->
+
+</div> <!-- /container -->
+
+
+<div id="footer">
+  <div class="container">
+<p>
+<a href="#top">Top of Page</a><span class="separator"> :: </span>
+<a href="../index.html">User Guide Home</a>
+</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+  </div>
+</div>
+
+
+
+<script src="../js/highlight.pack.js"></script>
+ <script>
+    hljs.tabReplace = '    ';
+    hljs.initHighlightingOnLoad();
+ </script>
+
+<script src="../js/script-ck.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() { 
+  Slidebox.init();
+	MobileSearchBar.init();
+});
+</script>
+
+<script src="../js/clipboard-ck.js"></script>
+
+
+</body>
+</html>

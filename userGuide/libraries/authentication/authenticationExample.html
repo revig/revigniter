@@ -15,11 +15,7 @@
     
     <script src="../../js/nav-ck.js"></script>
     
-    <!-- Touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../../images/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../../images/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../../images/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../../images/apple-touch-icon-57-precomposed.png">
+    <link rel="apple-touch-icon" href="https://revigniter.com/assets/img/apple-touch-icon.png">
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -38,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.3.4</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.0</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1199,125 +1195,61 @@ local sValidationConf
 
 # AUTHENTICATION VALIDATION
 # LOGIN
-put "identity" into sValidationConf["auth/login"][1]["field"]
-put "Email" into sValidationConf["auth/login"][1]["label"]
-put "trim|requiredR|validEmailR|maxLengthR[100]|xssClean" into sValidationConf["auth/login"][1]["rules"]
-
-put "password" into sValidationConf["auth/login"][2]["field"]
-put "Password" into sValidationConf["auth/login"][2]["label"]
-put "requiredR|alphaDashR|maxLengthR[40]|xssClean" into sValidationConf["auth/login"][2]["rules"]
-
-put "remember[]" into sValidationConf["auth/login"][3]["field"]
-put "Remember me" into sValidationConf["auth/login"][3]["label"]
-put "numericR" into sValidationConf["auth/login"][3]["rules"]
+rigAddValidationGrp "auth/login"
+rigAddValidationRules "identity", "Email", "trim|requiredR|validEmailR|maxLengthR[100]|xssClean", sValidationConf
+rigAddValidationRules "password", "Password", "requiredR|alphaDashR|maxLengthR[40]|xssClean", sValidationConf
+rigAddValidationRules "remember[]", "Remember me", "numericR", sValidationConf
 
 
 # CREATE USER
-put "first" into sValidationConf["auth/createUser"][1]["field"]
-put "First Name" into sValidationConf["auth/createUser"][1]["label"]
-put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][1]["rules"]
-
-put "last" into sValidationConf["auth/createUser"][2]["field"]
-put "Last Name" into sValidationConf["auth/createUser"][2]["label"]
-put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][2]["rules"]
-
-put "company" into sValidationConf["auth/createUser"][3]["field"]
-put "Company" into sValidationConf["auth/createUser"][3]["label"]
-put "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean" into sValidationConf["auth/createUser"][3]["rules"]
-
-put "email" into sValidationConf["auth/createUser"][4]["field"]
-put "Email" into sValidationConf["auth/createUser"][4]["label"]
-put "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean" into sValidationConf["auth/createUser"][4]["rules"]
-
-put "phone" into sValidationConf["auth/createUser"][5]["field"]
-put "Phone" into sValidationConf["auth/createUser"][5]["label"]
-put "trim|alphaDashR|maxLengthR[20]" into sValidationConf["auth/createUser"][5]["rules"]
-
-put "password" into sValidationConf["auth/createUser"][6]["field"]
-put "Password" into sValidationConf["auth/createUser"][6]["label"]
-put "requiredR|minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean" into sValidationConf["auth/createUser"][6]["rules"]
-
-put "passwordConfirm" into sValidationConf["auth/createUser"][7]["field"]
-put "Confirm Password" into sValidationConf["auth/createUser"][7]["label"]
-put "requiredR" into sValidationConf["auth/createUser"][7]["rules"]
+rigAddValidationGrp "auth/createUser"
+rigAddValidationRules "first", "First Name", "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "last", "Last Name", "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "company", "Company", "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "email", "Email", "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean", sValidationConf
+rigAddValidationRules "phone", "Phone", "trim|alphaDashR|maxLengthR[20]", sValidationConf
+rigAddValidationRules "password", "Password", "requiredR|minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean", sValidationConf
+rigAddValidationRules "passwordConfirm", "Confirm Password", "requiredR", sValidationConf
 
 
 # DEACTIVATE USER
-put "confirm" into sValidationConf["auth/deactivate"][1]["field"]
-put "Confirmation" into sValidationConf["auth/deactivate"][1]["label"]
-put "requiredR|alphaR" into sValidationConf["auth/deactivate"][1]["rules"]
-
-put "id" into sValidationConf["auth/deactivate"][2]["field"]
-put "User ID" into sValidationConf["auth/deactivate"][2]["label"]
-put "requiredR|numericR" into sValidationConf["auth/deactivate"][2]["rules"]
+rigAddValidationGrp "auth/deactivate"
+rigAddValidationRules "confirm", "Confirmation", "requiredR|alphaR", sValidationConf
+rigAddValidationRules "id", "User ID", "requiredR|numericR", sValidationConf
 
 
 # FORGOT PASSWORD
-put "email" into sValidationConf["auth/forgotPassword"][1]["field"]
-put "Email" into sValidationConf["auth/forgotPassword"][1]["label"]
-put "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean" into sValidationConf["auth/forgotPassword"][1]["rules"]
+rigAddValidationGrp "auth/forgotPassword"
+rigAddValidationRules "email", "Email", "trim|requiredR|validEmailR|minLengthR[3]|maxLengthR[100]|xssClean", sValidationConf
 
 
 # RESET PASSWORD
-put "newPassword" into sValidationConf["auth/resetPassword"][1]["field"]
-put "New Password" into sValidationConf["auth/resetPassword"][1]["label"]
-put "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean" into sValidationConf["auth/resetPassword"][1]["rules"]
-
-put "newPasswordConfirm" into sValidationConf["auth/resetPassword"][2]["field"]
-put "Confirm New Password" into sValidationConf["auth/resetPassword"][2]["label"]
-put "requiredR" into sValidationConf["auth/resetPassword"][2]["rules"]
+rigAddValidationGrp "auth/resetPassword"
+rigAddValidationRules "newPassword", "New Password", "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean", sValidationConf
+rigAddValidationRules "newPasswordConfirm", "Confirm New Password", "requiredR", sValidationConf
 
 
 # CHANGE PASSWORD
-put "oldPassword" into sValidationConf["auth/changePassword"][1]["field"]
-put "Old Password" into sValidationConf["auth/changePassword"][1]["label"]
-put "requiredR" into sValidationConf["auth/changePassword"][1]["rules"]
-
-put "newPassword" into sValidationConf["auth/changePassword"][2]["field"]
-put "New Password" into sValidationConf["auth/changePassword"][2]["label"]
-put "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean" into sValidationConf["auth/changePassword"][2]["rules"]
-
-put "newPasswordConfirm" into sValidationConf["auth/changePassword"][3]["field"]
-put "Confirm New Password" into sValidationConf["auth/changePassword"][3]["label"]
-put "requiredR" into sValidationConf["auth/changePassword"][3]["rules"]
+rigAddValidationGrp "auth/changePassword"
+rigAddValidationRules "oldPassword", "Old Password", "requiredR", sValidationConf
+rigAddValidationRules "newPassword", "New Password", "requiredR|minLengthR[8]|maxLengthR[20]|matchesR[newPasswordConfirm]|xssClean", sValidationConf
+rigAddValidationRules "newPasswordConfirm", "Confirm New Password", "requiredR", sValidationConf
 
 
 # EDIT USER
-put "first" into sValidationConf["auth/editUser"][1]["field"]
-put "First Name" into sValidationConf["auth/editUser"][1]["label"]
-put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][1]["rules"]
-
-put "last" into sValidationConf["auth/editUser"][2]["field"]
-put "Last Name" into sValidationConf["auth/editUser"][2]["label"]
-put "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][2]["rules"]
-
-put "company" into sValidationConf["auth/editUser"][3]["field"]
-put "Company" into sValidationConf["auth/editUser"][3]["label"]
-put "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean" into sValidationConf["auth/editUser"][3]["rules"]
-
-put "phone" into sValidationConf["auth/editUser"][4]["field"]
-put "Phone" into sValidationConf["auth/editUser"][4]["label"]
-put "trim|alphaDashR|maxLengthR[20]" into sValidationConf["auth/editUser"][4]["rules"]
-
-put "password" into sValidationConf["auth/editUser"][5]["field"]
-put "Password" into sValidationConf["auth/editUser"][5]["label"]
-put "minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean" into sValidationConf["auth/editUser"][5]["rules"]
-
-put "passwordConfirm" into sValidationConf["auth/editUser"][6]["field"]
-put "Confirm Password" into sValidationConf["auth/editUser"][6]["label"]
-put "minLengthR[8]" into sValidationConf["auth/editUser"][6]["rules"]
+rigAddValidationGrp "auth/editUser"
+rigAddValidationRules "first", "First Name", "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "last", "Last Name", "trim|requiredR|minLengthR[3]|maxLengthR[50]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "company", "Company", "trim|minLengthR[3]|maxLengthR[100]|alphaDashR|xssClean", sValidationConf
+rigAddValidationRules "phone", "Phone", "trim|alphaDashR|maxLengthR[20]", sValidationConf
+rigAddValidationRules "password", "Password", "minLengthR[8]|maxLengthR[40]|matchesR[passwordConfirm]|xssClean", sValidationConf
+rigAddValidationRules "passwordConfirm", "Confirm Password", "minLengthR[8]", sValidationConf
 
 
 # DELETE USER
-put "confirm" into sValidationConf["auth/deleteUser"][1]["field"]
-put "Confirmation" into sValidationConf["auth/deleteUser"][1]["label"]
-put "requiredR|alphaR" into sValidationConf["auth/deleteUser"][1]["rules"]
-
-put "id" into sValidationConf["auth/deleteUser"][2]["field"]
-put "User ID" into sValidationConf["auth/deleteUser"][2]["label"]
-put "requiredR|numericR" into sValidationConf["auth/deleteUser"][2]["rules"]
-
-
+rigAddValidationGrp "auth/deleteUser"
+rigAddValidationRules "confirm", "Confirmation", "requiredR|alphaR", sValidationConf
+rigAddValidationRules "id", "User ID", "requiredR|numericR", sValidationConf
 
 
 
@@ -1923,7 +1855,7 @@ Previous Topic:&nbsp;&nbsp;<a href="authenticationEmail.html"> Authentication Em
 <a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="authenticationOTP.html">OTP Authentication</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2021<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

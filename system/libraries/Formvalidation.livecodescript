@@ -511,11 +511,12 @@ end rigFormValidErrorString
 --| FUNCTION rigFormValidRun
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-07-30
---| Last Mod: 2015-09-17
+--| Last Mod: 2023-04-13
 --| Requires: rigSetConfigRules, _rigRequire, rigFetchValidationConf(), rigTrim, rigSetRules
---|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute, _rigResetPostArray
+--|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute
+--|           _rigResetPostArray
 --|
 --| Summary: Run the validator. This function does all the work.
 --|
@@ -546,8 +547,10 @@ function rigFormValidRun pGroup
 	end if
 
 	# DO WE EVEN HAVE ANY DATA TO PROCESS?  MM?
-	if $_POST is not an array then
+	if ($_POST is not an array) and (pData is empty) then
 		return FALSE
+  else if pData is an array then
+    put pData into $_POST
 	end if
 
 	# DOES THE _FIELD_DATA ARRAY CONTAINING THE VALIDATION RULES EXIST?
@@ -2392,12 +2395,12 @@ end rigXssClean
 --| COMMAND rigEncodeRevTags
 --|
 --| Author: rabit
---| Version:  1.2
---| Created: 03-08-09
---| Last Mod: 06-09-12
---| Requires: --
+--| Version:  1.3
+--| Created: 2009-08-03
+--| Last Mod: 2023-03-20
+--| Requires: rigEncodeLcTags
 --|
---| Summary: Convert REV / LC tags to entities.
+--| Summary: Convert REV / LC tags to entities. LEGACY CODE!!!!!!!!!!!!!!
 --|
 --| Format: rigEncodeRevTags param1
 --|
@@ -2407,6 +2410,34 @@ end rigXssClean
 ----------------------------------------------------------------------*/
 
 command rigEncodeRevTags pStr
+  rigEncodeLcTags pStr
+
+	return the result
+end rigEncodeRevTags
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND rigEncodeLcTags
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-03-20
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Convert REV / LC tags to entities.
+--|
+--| Format: rigEncodeLcTags param1
+--|
+--| Parameters: string <pStr>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+command rigEncodeLcTags pStr
   local tStr
 
 	put pStr into tStr
@@ -2418,7 +2449,7 @@ command rigEncodeRevTags pStr
 	replace "?>" with "?&gt;" in tStr
 
 	return tStr
-end rigEncodeRevTags
+end rigEncodeLcTags
 
 
 

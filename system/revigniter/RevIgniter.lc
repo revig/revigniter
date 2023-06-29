@@ -43,7 +43,7 @@ end if
 
 
 # RI VERSION
-	constant RIVERSION = "2.3.4"
+	constant RIVERSION = "2.4.0"
 	constant RISTATE = "final"
 
 # VERSION GETTER
