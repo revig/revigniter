@@ -511,23 +511,24 @@ end rigFormValidErrorString
 --| FUNCTION rigFormValidRun
 --|
 --| Author: rabit
---| Version:  1.4
+--| Version:  1.5
 --| Created: 2009-07-30
---| Last Mod: 2023-04-13
+--| Last Mod: 2023-07-07
 --| Requires: rigSetConfigRules, _rigRequire, rigFetchValidationConf(), rigTrim, rigSetRules
 --|           rigLogMessage, rigLangLoadLang(), _rigReduceArray(), _rigFormValidExecute
 --|           _rigResetPostArray
 --|
 --| Summary: Run the validator. This function does all the work.
 --|
---| Format: rigFormValidRun(param1)
+--| Format: rigFormValidRun([param1], [param2])
 --|
---| Parameters: array <pGroup>
+--| Parameters: array <pGroup>, array <pData> the ASYNergy values of the respective
+--|               asyn:model attribute of the input elements to be validated (optional)
 --|
 --| Return: bool
 ----------------------------------------------------------------------*/
 
-function rigFormValidRun pGroup
+function rigFormValidRun pGroup pData
   local tValidationConfig, tConfigArray, tURI, tRow, tRules
   local tTotalErrors
 
