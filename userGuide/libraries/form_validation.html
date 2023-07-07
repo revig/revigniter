@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.0</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.1</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -1443,10 +1443,15 @@ put the result into tStringValidResult
 <p>Please see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
 
 
-<h3>rigFormValidRun()</h3>
+<h3>rigFormValidRun(<var>pGroup</var>, <var>pData</var>)</h3>
 
-<p>Runs the validation routines.  Returns boolean TRUE on success and FALSE on failure. You can optionally pass the name of the validation
-group via the function, as described in: <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
+<p>This function runs the validation routines. It returns boolean TRUE on success and FALSE on failure. You can optionally pass the name of the validation group via the function, as described in: <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a>.</p>
+
+<p><em>Parameters</em></p>
+<ul>
+	<li><strong>The first (optional) parameter is name of the validation group.</strong></li>
+	<li><strong>The second (optional) parameter is an array of the ASYNergy values of the respective asyn:model attribute of the input elements to be validated.</strong></li>
+</ul>
 
 
 <h3>rigSetMessage</h3>
