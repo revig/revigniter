@@ -50,11 +50,11 @@ end if
 # URI string.  The default setting of "AUTO" works for most servers.
 # If your links do not seem to work, try one of the other delicious flavors:
 #
-# "AUTO"			Default - auto detects
-# "PATH_INFO" 	Uses the PATH_INFO
-# "QUERY_STRING"	Uses the QUERY_STRING
-# "REQUEST_URI"		Uses the REQUEST_URI
-# "ORIG_PATH_INFO"	Uses the ORIG_PATH_INFO
+# "AUTO"                Default - auto detects
+# "PATH_INFO"          Uses the PATH_INFO
+# "QUERY_STRING"      Uses the QUERY_STRING
+# "REQUEST_URI"       Uses the REQUEST_URI
+# "ORIG_PATH_INFO"   Uses the ORIG_PATH_INFO
 # "PATH_TRANSLATED"  As a last resort: Uses filesystem based path to current script
 #
 ##
@@ -264,20 +264,20 @@ end if
 # Session Variables
 #--------------------------------------------------------------------------
 #
-# 'sess_cookie_name' 		= The name you want for the cookie.
-# 'sess_expiration'  			= The number of SECONDS you want the session to last.
+# 'sess_cookie_name'      = The name you want for the cookie.
+# 'sess_expiration'         = The number of SECONDS you want the session to last.
 #  by default sessions last 129600 seconds (36 hours related to server time).  Set to zero for no expiration.
-# 'sess_expire_on_close' 	= Whether to cause the session to expire automatically.
-# 'sess_encrypt_cookie' 	= TRUE/FALSE (boolean).  Whether to encrypt the cookie
-# 'sess_driver' 					= The storage driver to use: "files", "database" or empty. If set to empty all data is stored in the cookie.
-# 'sess_save_location' 		= The location to save sessions to. Of course this is driver dependent.
+# 'sess_expire_on_close'   = Whether to cause the session to expire automatically.
+# 'sess_encrypt_cookie'    = TRUE/FALSE (boolean).  Whether to encrypt the cookie
+# 'sess_driver'              = The storage driver to use: "files", "database" or empty. If set to empty all data is stored in the cookie.
+# 'sess_save_location'     = The location to save sessions to. Of course this is driver dependent.
 #  For the "files" driver, it's an absolute path to a writable directory or empty. If set to empty the standard temporary folder is used.
 #  For the "database" driver, it's a table name or empty. If set to empty "ri_sessions" is used as table name. You must create the
 #  table before enabling the "database" driver option.
-# 'sess_match_ip' 				= Whether to match the user's IP address when reading the session data. Note that some
+# 'sess_match_ip'          = Whether to match the user's IP address when reading the session data. Note that some
 #  ISPs dynamically change the IP, so if you want a non-expiring session you will likely set this to FALSE.
-# 'sess_match_useragent'	= Whether to match the User Agent when reading the session data.
-# 'sess_time_to_update' 	= How many seconds between revIgniter refreshing Session Information.
+# 'sess_match_useragent' = Whether to match the User Agent when reading the session data.
+# 'sess_time_to_update'   = How many seconds between revIgniter refreshing Session Information.
 # 'sess_hash_type' 	       = The hash type to be used by the encryption library for session cookie encryption. Possible values are
 # SHA-1,SHA-224,SHA-256,SHA-384,SHA-512,SHA3-224,SHA3-256,SHA3-384 and SHA3-512. The default value is empty
 # which means SHA-1 will be used. This is for backwards compatibility. If you use server version 9.0.0 dp 7 or higher please
@@ -303,10 +303,10 @@ end if
 # Cookie Related Variables
 #--------------------------------------------------------------------------
 #
-# 'cookiePrefix' = Set a prefix if you need to avoid collisions
-# 'cookieDomain' = Set to .your-domain.com for site-wide cookies
-# 'cookiePath'   =  Typically will be a forward slash
-# 'cookie_secure' =  Cookies will only be set if a secure HTTPS connection exists.
+# 'cookiePrefix'      = Set a prefix if you need to avoid collisions
+# 'cookieDomain'     = Set to .your-domain.com for site-wide cookies
+# 'cookiePath'        = Typically will be a forward slash
+# 'cookie_secure'    = Cookies will only be set if a secure HTTPS connection exists.
 # 'cookie_samesite' = Attribute providing some protection against CSRF attacks. Values are:
 # "Strict", "Lax", "None" or empty. Default value is "Strict".
 #
@@ -325,10 +325,10 @@ end if
 # Captcha Related Variables
 #--------------------------------------------------------------------------
 #
-# 'captchaLength' = Set the number of digits to build the captcha with.
-# 'captchaColor' = Set the color of the captcha digits.
-# 'captchaBckgndColor'   =  Set the color of the captcha background.
-# 'captchaHashKey' = Set string to append to the captcha number before generating a md5 hash.
+# 'captchaLength'       = Set the number of digits to build the captcha with.
+# 'captchaColor'        = Set the color of the captcha digits.
+# 'captchaBckgndColor' =  Set the color of the captcha background.
+# 'captchaHashKey'     = Set string to append to the captcha number before generating a md5 hash.
 # This can be used for comparison purposes. You should change the default value.
 #
 ##
@@ -363,9 +363,9 @@ end if
 # checked on a submitted form. If you are accepting user data, it is strongly
 # recommended CSRF protection be enabled.
 #
-# 'csrf_token_name' = The token name
+# 'csrf_token_name'  = The token name
 # 'csrf_cookie_name' = The cookie name
-# 'csrf_expire' = The number in seconds the token should expire.
+# 'csrf_expire'        = The number in seconds the token should expire.
 ##
 
 	put FALSE into gConfig["csrf_protection"]
@@ -380,9 +380,9 @@ end if
 #--------------------------------------------------------------------------
 # Determine when a bot makes a request and display an error in that case.
 #
-# 'honeypot_hidden' = The visibility of the text field. Default is TRUE.
-# 'honeypot_label' = The label of the text field.
-# 'honeypot_name' = The name of the text field.
+# 'honeypot_hidden'       = The visibility of the text field. Default is TRUE.
+# 'honeypot_label'        = The label of the text field.
+# 'honeypot_name'        = The name of the text field.
 # 'honeypot-containerID' = The ID selector of the honeypot container
 ##
 
