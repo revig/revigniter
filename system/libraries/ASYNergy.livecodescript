@@ -281,9 +281,9 @@ end _rigAsynPayload
 --| COMMAND rigAsynRespond
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2022-11-07
---| Last Mod: --
+--| Last Mod: 2023-08-26
 --| Requires: rigElapsedTime()
 --|
 --| Summary: Prepare ASYNergy response and send JSON data to the client.
@@ -361,8 +361,12 @@ command rigAsynRespond pRespData pSyncModelID pMutableID pMutableAttrVal
         put merge(tResponseA["asynergyResponse"][tRespKey]["mutableVal"]) into tResponseA["asynergyResponse"][tRespKey]["mutableVal"]
       end if
     end repeat
+
+    if g_ElapsedTime_ is empty then
+      put rigElapsedTime("totalExecutionTime_start", , 4) into g_ElapsedTime_
+    end if
     
-    _rigAsynRespond tResponseA
+    _rigAsynRespond tResponseA, g_ElapsedTime_
 
   end if -- if sResponseSent <> TRUE
 end rigAsynRespond
@@ -701,21 +705,21 @@ end rigAsynNavigate
 --| COMMAND _rigAsynRespond
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2023-04-01
---| Last Mod: --
---| Requires: --
+--| Last Mod: 2023-08-26
+--| Requires: rigLogMessage
 --|
 --| Summary: Send JSON response.
 --| 
---| Format:  _rigAsynRespond param
+--| Format:  _rigAsynRespond param1 param2
 --|
---| Parameters: array <pResponseA>
+--| Parameters: array <pResponseA>, number <pElapsedTime>
 --|
 --| Return: empty
 ----------------------------------------------------------------------*/
 
-private command _rigAsynRespond pResponseA
+private command _rigAsynRespond pResponseA pElapsedTime
   # rigSetHeader DOES NOT WORK WITH AJAX, USE: put header ...
   -- rigSetHeader "Content-type: application/json"
   put header "Content-type: application/json; charset=UTF-8"
@@ -724,6 +728,9 @@ private command _rigAsynRespond pResponseA
   
   # AND AWAY WE GO...
   put textEncode(JsonExport(pResponseA), "UTF-8")
+
+  rigLogMessage "debug", "Asynergy response data sent to browser"
+  rigLogMessage "debug", "Execution time up to this point:" && pElapsedTime
 end _rigAsynRespond
 
 

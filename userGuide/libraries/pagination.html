@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.1</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -92,7 +92,7 @@
 
 <h1>Pagination Library</h1>
 
-<p>revIgniter's Pagination library is very easy to use. It is 100% customizable, either dynamically or via stored preferences, and it even works with AJAX.</p>
+<p>revIgniter's Pagination library is very easy to use. It is 100% customizable, either dynamically or via stored preferences, and it even works with AJAX and furthermore with <a href="#ASYNergy">ASYNergy</a>.</p>
 
 <p>If you are not familiar with the term "pagination", it refers to links that allows you to navigate from page to page, like this:</p>
 
@@ -113,7 +113,7 @@
 <div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Pagination"
 # PAGINATION CONFIGURATION
-put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+put "page" into tConfig["paginationHandler"]
 put 200 into tConfig["totalRows"]
 put 20 into tConfig["perPage"]
 
@@ -126,13 +126,20 @@ put rigCreatePaginationLinks() into gData["pagination"]</code></pre>
 
 <h3>Notes:</h3>
 
-<p>The <var>tConfig</var> array contains your configuration variables.  It is passed to the <dfn>rigInitializePagination</dfn> handler as shown above.  Although there are some twenty items you can configure, at
+<p>The <var>tConfig</var> array contains your configuration variables. It is passed to the <dfn>rigInitializePagination</dfn> handler as shown above.  Although there are some twenty items you can configure, at
 minimum you need the three shown.  Here is a description of what those items represent:</p>
 
 <ul>
-  <li><strong>baseUrl</strong> This is the full URL to the controller/handler containing your pagination.  In the example
-  above, it is pointing to a controller called "test" and a handler called "page".  Keep in mind that you can
+	<li><strong>paginationHandler</strong> This is the name of the handler containing your pagination. In the example
+  above, it is pointing to a handler called "page". If you add the pagination code to your index handler, you do not need to specify this variable because the default value is "index".</li>
+  <li><strong>baseUrl</strong> Alternatively you can define the full URL to the controller/handler containing your pagination. The following example points to a controller called "test" and a handler called "page".  Keep in mind that you can
   <a href="../general/routing.html">re-route your URI</a> if you need a different structure.</li>
+</ul>
+
+<pre><code>put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+</code></pre>
+	
+<ul>
   <li><strong>totalRows</strong> This number represents the total rows in the result set you are creating pagination for.
   Typically this number will be the total rows that your database query returned.
   </li>
@@ -144,7 +151,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 
 <h2>Another Example</h2>
 
-<p>As explained above, to build the pagination HTML links the library needs to be provided with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now the important part: The third segment is a number, the page number calculated by the library which should be evaluated by your pagination handler as shown below:</p>
+<p>As explained above, to build the pagination HTML links the library needs to be provided either with the name of your pagination handler, or with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now the important part: The third segment is a number, the page number calculated by the library which should be evaluated by your pagination handler as shown below:</p>
 
 
 <div class="codeSample">
@@ -161,8 +168,8 @@ command page
   put rigDbCountAllResults("yourTable") into tTotalNumRecords
 
   # PAGINATION CONFIGURATION
-  # DO THE PAGINATION BASE URL CONFIGURATION
-  put "http://example.com/index.lc/test/page/" into tConfig["baseUrl"]
+  # DO THE PAGINATION HANDLER CONFIGURATION
+  put "page" into tConfig["paginationHandler"]
   
   # SET LIMIT OF ROWS TO BE DISPLAYED
   # LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
@@ -215,14 +222,7 @@ end page
 
 <h2>AJAX Example</h2>
 
-<p>If you like to make the pagination work with XMLHTTP requests you just need to set the AJAX flag to true before initializing the library</p>
-
-<div class="codeSample">
-<pre><code>put TRUE into tConfig["ajax"]</code></pre>
-</div>
-
-
-<p>and add the following two lines of code right after calling the rigCreatePaginationLinks function like:</p>
+<p>The simplest way to make the pagination work with XMLHTTP requests is to add the following two lines of code right after calling the rigCreatePaginationLinks function like:</p>
 
 <div class="codeSample">
 <pre><code># SEND JSON DATA TO BE PROCESSED BY AJAX PAGINATION SCRIPT TO BROWSER
@@ -238,8 +238,20 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 
 <ul>
   <li>Add the AJAX pagination script like <dfn>[[gData["ajaxCode"]]]</dfn> to your view file preferably at the bottom just before the closing body tag.</li>
-  <li>The AJAX pagination code includes a X-Requested-With header. This allows us to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard http request.</li>
-  <li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination". If you like to use different IDs you need to extend your settings like:</li>
+  <li>The AJAX pagination code includes a X-Requested-With header (the value is "XMLHttpRequest"). This allows us to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard HTTP request.</li>
+  <li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination" like:</li>
+</ul>
+
+<pre><code>&lt;div id="paginationData">[[gData["paginationData"] ]]&lt;/div>
+</code></pre>
+
+<p>and:</p>
+
+<pre><code>&lt;div id="pagination">[[gData["paginationLinks"] ]]&lt;/div>
+</code></pre>
+
+<ul>
+	<li>If you like to use different IDs you need to extend your settings like:</li>
 </ul>
 
 <div class="codeSample">
@@ -262,13 +274,127 @@ put rigAjaxPaginationCode(tNonce) into gData["ajaxCode"]
 <p class="important"><strong>Note:</strong> revIgniter's AJAX pagination is not compatible with Internet Explorer 7 and below.</p>
 
 
+<h2><a id="ASYNergy">&nbsp;</a>ASYNergy Example</h2>
+
+<p>For XMLHTTP requests to add entries into the browser's session history stack, so that you can navigate back and forth through the individual pages with the corresponding buttons in the browser's toolbar, you must use ASYNergy. Please read about the <a href="https://github.com/revig/ASYNergy">ASYNergy JavaScript application</a> in chapter <a href="./asynergy.html">ASYNergy Library</a>.</p>
+
+<div class="codeSample">
+<pre><code># AGAIN WE ASSUME YOU RETRIEVE YOUR DATA FROM A SQL DATABASE
+# USING ACTIVE RECORD FEATURES
+command test
+  # IN ADDITION TO THE Pagination LIBRARY
+  # LOAD THE ASYNergy LIBRARY. IT MUST BE
+  # LOADED BEFORE THE Pagination LIBRARY!
+  rigLoaderLoadLibrary "ASYNergy"
+	
+  rigLoaderLoadLibrary "Pagination"
+  # CONNECT TO DATABASE
+  get rigLoadDatabase("yourDatabase")
+end test
+
+command page
+  # CHECK IF THIS IS AN ASYNergy REQUEST
+  put  rigGetHTTPheader("X-ASYNergy") into tAJAXrequest
+
+  # GET PAGE NUMBER FROM THE
+  # MODEL / ACTION PARAMETER
+  # NOTE: THIS IS THE OFFSET FOR YOUR QUERY
+  if tAJAXrequest is TRUE then
+    put rigAsynParams() into tParamsA
+    put tParamsA[1] into tRecordsOffset
+  else
+    # GET PAGE NUMBER FROM THE 3rd URI SEGMENT
+    # IN CASE THE USER DISABLED JavaScript
+    put rigFetchSegment(3) into tRecordsOffset
+  end if
+
+  # GET TOTAL NUMBER OF ROWS
+  put rigDbCountAllResults("yourTable") into tTotalNumRecords
+
+  # PAGINATION CONFIGURATION
+  # DO THE PAGINATION HANDLER CONFIGURATION
+  put "page" into tConfig["paginationHandler"]
+  
+  # SET LIMIT OF ROWS TO BE DISPLAYED
+  # LET'S SAY YOU WANT TO SHOW 20 ITEMS PER PAGE
+  put 20 into tConfig["perPage"]
+  
+  # SET TOTAL ROWS CONFIGURATION
+  put tTotalNumRecords into tConfig["totalRows"]
+  # CONFIGURATION END
+  
+  # INITIALIZE PAGINATION
+  rigInitializePagination tConfig
+
+  # GET PAGE NUMBER
+  # NOTE: THIS IS THE OFFSET FOR YOUR QUERY
+  put rigFetchSegment(3) into tPageNum
+  if (tPageNum is an integer) and (tPageNum > 0) and (tPageNum < tTotalNumRecords) then
+    put tPageNum into tOffset
+  else
+    put 0 into tOffset
+  end if
+
+  # GET DATABASE QUERY RESULT DATA 
+  # YOUR DATABASE QUERY STUFF HERE . . . LIKE
+  # rigDbOrderBy, rigDbWhere OR WHATEVER
+
+  # SET THE QUERY LIMITS
+  rigDbLimit tConfig["perPage"], tOffset
+
+  # GET QUERY RESULT
+  put rigDbGet("yourTable") into tQueryResult
+
+  if tQueryResult["numrows"] > 0 then
+    # DEAL WITH THE QUERY RESULT DATA HERE, BUILD A TABLE OR WHATEVER
+    # . . .
+    # STORE YOUR PAGINATION DATA IN gData
+    put tYourData into gData["paginationData"]
+  
+    # GET PAGINATION HTML LINKS
+    # THE PARAMETER IS OPTIONAL, BUT IT IS MANDATORY IF ASYNergy IS USED
+    put rigCreatePaginationLinks(tRecordsOffset) into gData["paginationLinks"]
+  end if
+
+  # FINALLY SEND THE RESPONSE (JSON DATA) TO ASYNergy
+  if tAJAXrequest is TRUE then
+    put rigAsynAddResponseData(gData["paginationData"], , , "paginationData") into tResponseA
+    put rigAsynAddResponseData(gData["paginationLinks"], , , "pagination") into tResponseA
+    rigAsynRespond tResponseA
+    # STOP THE EXECUTION OF THE HANDLER BEFORE LOADING THE VIEW FILE!
+    exit to top
+  end if
+
+  # LOAD THE VIEW FILE
+  get rigLoadView("testView")
+end page
+</code></pre>
+</div>
+
+<h3>Notes:</h3>
+
+<ul>
+  <li>Add the ASYNergy script like <dfn>[[gData["asynergyScript"] ]]</dfn> to your view file preferably at the bottom just before the closing body tag.</li>
+  <li>The example implies that the HTML element containing the pagination data has an <dfn>asyn:mutable</dfn> attribute whose value is "paginationData" and that the HTML element containing the pagination links has an <dfn>asyn:mutable</dfn> attribute whose value is "pagination" like:</li>
+</ul>
+
+<pre><code>&lt;div asyn:mutable="paginationData">[[gData["paginationData"] ]]&lt;/div>
+</code></pre>
+
+<p>and:</p>
+
+<pre><code>&lt;div asyn:mutable="pagination">[[gData["paginationLinks"] ]]&lt;/div>
+</code></pre>
+
+<p class="important"><strong>Note:</strong> In case the user disabled JavaScript, standard HTTP requests are used.</p>
+
+
 <h2>Setting preferences in a config file</h2>
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <kbd>pagination.lc</kbd>,  add an
 array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
-array as parameter. Then save the file in: <kbd>application/config/pagination.lc</kbd> and it will be used automatically. You
-will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
+array as parameter. Then save the file in: <kbd>application/config/pagination.lc</kbd> and it will be used automatically.</p>
 
 <p>Example:</p>
 
@@ -296,6 +422,8 @@ rigRunInitialPaginationConfig sConfig
 </code></pre>
 </div>
 
+<p class="important"><strong>Note:</strong> You will NOT need to use the <dfn>rigInitializePagination</dfn> handler if you save your preferences in a config file.</p>
+
 
 <h2>Customizing the Pagination</h2>
 
@@ -310,7 +438,9 @@ rigRunInitialPaginationConfig sConfig
 <th>Options</th>
 <th>Description</th>
 </tr><tr>
-<td class="td"><strong>sConfig["baseUrl"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The full URL to the controller/handler containing your pagination. See examples above.</td>
+<td class="td"><strong>sConfig["paginationHandler"]</strong></td><td class="td">"index"</td><td class="td">None</td><td class="td">The name of the handler containing your pagination. See examples above.</td>
+</tr><tr>
+<td class="td"><strong>sConfig["baseUrl"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The full URL to the controller/handler containing your pagination. This is an alternative to sConfig["paginationHandler"].</td>
 </tr><tr>
 <td class="td"><strong>sConfig["totalRows"]</strong></td><td class="td">None</td><td class="td">None</td><td class="td">The number representing the total rows in the result set you are creating pagination for. Typically this number will be the total rows that your database query returned.</td>
 </tr><tr>
@@ -474,8 +604,6 @@ rigRunInitialPaginationConfig sConfig
 <th>Options</th>
 <th>Description</th>
 </tr><tr>
-<td class="td"><strong>sConfig["ajax"]</strong></td><td class="td">None</td><td class="td">TRUE or FALSE</td><td class="td">XMLHTTP Pagination flag.</td>
-</tr><tr>
 <td class="td"><strong>sConfig["ajaxServerTimeout"]</strong></td><td class="td">10000</td><td class="td">None</td><td class="td">Delay to trigger an error while making an AJAX request (milliseconds).</td>
 </tr><tr>
 <td class="td"><strong>sConfig["widgetName"]</strong></td><td class="td">PaginationWidget</td><td class="td">None</td><td class="td">Name of Ajax pagination JavaScript object.</td>
@@ -492,7 +620,7 @@ rigRunInitialPaginationConfig sConfig
 
 <h3>rigInitializePagination <var>pConfig</var></h3>
 
-<p>Run initial configuration procedures.</p>
+<p>Run initial configuration procedures. You will NOT need to use this handler if you save your preferences in a config file.</p>
 
 <p><em>Parameters</em></p>
 <ul>
@@ -500,9 +628,12 @@ rigRunInitialPaginationConfig sConfig
 </ul>
 
 
-<h3>rigCreatePaginationLinks()</h3>
+<h3>rigCreatePaginationLinks(<var>pRecordsOffset</var>)</h3>
 
 <p>Generates and returns the pagination links.</p>
+<ul>
+	<li><strong>pRecordsOffset:</strong> is an integer and defines the current page. This parameter is optional, but it is mandatory if ASYNergy is used</li>
+</ul>
 
 
 <h3>rigAjaxPagination <var>pPaginationData</var>, <var>pPaginationLinks</var></h3>

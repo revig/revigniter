@@ -8,7 +8,7 @@ script "Pagination"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
+# @copyright	Copyright (c) 2009 - 2023, Ralf Bitter
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -31,7 +31,7 @@ script "Pagination"
 
 
 
-global gRigA
+global gRigA, gConfig
 
 local sVarsNoDefaults
 local sStackInUse, sPagArrayKeys, sPaginationA -- array keys are: perPage, numLinks, curPage, firstLink, nextLink, prevLink, lastLink, uriSegment, firstTagClose,
@@ -89,9 +89,9 @@ end libraryStack
 --| COMMAND _rigSetDefaultValues
 --|
 --| Author: rabit
---| Version:  1.0
+--| Version:  1.1
 --| Created: 2019-01-04
---| Last Mod: 2019-01-04
+--| Last Mod: 2023-08-26
 --| Requires: --
 --|
 --| Summary: Set default values for library variables.
@@ -105,16 +105,16 @@ end libraryStack
 
 private command _rigSetDefaultValues
   ---------------- no default values ----------------
-  -- baseUrl -- The page we are linking to
+  -- baseUrl -- The page including controller and handler we are linking to (option 1)
   -- totalRows -- Total number of items (database results)
   -- fullTagOpen
-  -- ajax -- XMLHTTP Pagination flag
   -- fullTagClose
   -- firstTagOpen
   -- lastTagClose
   -- prevTagClose
   -- numTagClose
   ---------------------------------------------
+  put "index" into sPaginationA["paginationHandler"] -- The controller handler dealing with pagination (option 2)
   put 10 into sPaginationA["perPage"]					-- Max number of items you want shown per page
   put 2 into sPaginationA["numLinks"]					-- Number of "digit" links to show before/after the currently viewed page
   put 0 into sPaginationA["curPage"]					-- The current page being viewed
@@ -137,10 +137,12 @@ private command _rigSetDefaultValues
   put "paginationData" into sPaginationA["dataElementID"]    -- The ID of the HTML element containing the paginated data (used for XMLHTTP requests only)
   put 10000 into sPaginationA["ajaxServerTimeout"]           -- Delay to trigger an error while making an AJAX request (milliseconds)
   put "PaginationWidget" into sPaginationA["widgetName"]    -- Name of Ajax pagination JavaScript object
+	
+	put ("ASYNergy" is among the lines of the stacksInUse) into sPaginationA["asynergyPagination"]
 
-  put "perPage,numLinks,curPage,firstLink,nextLink,prevLink,lastLink,uriSegment,firstTagClose,lastTagOpen,curTagOpen,curTagClose,nextTagOpen,nextTagClose,prevTagOpen,numTagOpen,pageQueryString,queryStringSegment,linksElementID,dataElementID,ajaxServerTimeout,widgetName,baseUrl,totalRows,ajax,fullTagOpen,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sPagArrayKeys
+  put "perPage,numLinks,curPage,firstLink,nextLink,prevLink,lastLink,uriSegment,firstTagClose,lastTagOpen,curTagOpen,curTagClose,nextTagOpen,nextTagClose,prevTagOpen,numTagOpen,pageQueryString,queryStringSegment,linksElementID,dataElementID,ajaxServerTimeout,widgetName,paginationHandler,baseUrl,totalRows,fullTagOpen,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose,asynergyPagination" into sPagArrayKeys
 
-  put "baseUrl,totalRows,fullTagOpen,ajax,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sVarsNoDefaults
+  put "baseUrl,totalRows,fullTagOpen,fullTagClose,firstTagOpen,lastTagClose,prevTagClose,numTagClose" into sVarsNoDefaults
 end _rigSetDefaultValues
 
 
@@ -192,10 +194,10 @@ end rigRunInitialPaginationConfig
 --| COMMAND rigInitializePagination
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 22-09-09
---| Last Mod: 22-09-09
---| Requires: rigSetInitialPaginationValue
+--| Version:  1.1
+--| Created: 2022-09-09
+--| Last Mod: 2023-07-12
+--| Requires: rigSetInitialPaginationValue, rigSiteURL(), rigFetchSegment()
 --|
 --| Summary: Initialize preferences.
 --|
@@ -218,6 +220,13 @@ command rigInitializePagination pConfig
 		end repeat
 	end if
 
+  if sPaginationA["baseUrl"] is empty then
+  	if gConfig["enableQueryStrings"] is TRUE then
+      put rigSiteURL() & "?c=" & rigFetchSegment(1) & "&h=" & sPaginationA["paginationHandler"] into sPaginationA["baseUrl"]
+  	else
+      put rigSiteURL() & rigFetchSegment(1) & "/" & sPaginationA["paginationHandler"] into sPaginationA["baseUrl"]
+  	end if
+  end if
 end rigInitializePagination
 
 
@@ -261,21 +270,22 @@ end rigSetInitialPaginationValue
 --| FUNCTION rigCreatePaginationLinks
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2009-09-22
---| Last Mod: 2020-01-13
---| Requires: rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, rigPregReplace()
+--| Last Mod: 2023-07-19
+--| Requires: rigFetchConfigItem(), rigVarGet(), rigShowError, rigRTrim, _rigFirstLink(),
+--|            _rigPreviousLink(), _rigDigitLinks(), _rigNextLink(), _rigLastLink(), rigPregReplace()
 --|
 --| Summary: Generate the pagination links.
 --|
---| Format:  rigCreatePaginationLinks()
+--| Format:  rigCreatePaginationLinks([param1])
 --|
---| Parameters: --
+--| Parameters: integer <pRecordsOffset> current page (optional), needed if ASYNergy is used
 --|
 --| Return: string
 ----------------------------------------------------------------------*/
 
-function rigCreatePaginationLinks
+function rigCreatePaginationLinks pRecordsOffset
   local tNumPages, tQuerySeg, tUriSeg, tUriPageNumber, tStart, tEnd
   local tAriaLabel, tOutput, tCounter, tI, tN, tJ, tRegEx
   local tReplacementtStrToReplaceInFoundStr, tReplacement, tStrToReplaceInFoundStr
@@ -294,17 +304,27 @@ function rigCreatePaginationLinks
 	end if
 
 	# DETERMINE THE CURRENT PAGE NUMBER.
-	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
-		put rigVarGet(sPaginationA["queryStringSegment"]) into tQuerySeg
-		if tQuerySeg is not 0 then
-			put tQuerySeg into sPaginationA["curPage"]
-		end if
-	else
-		put rigFetchSegment(sPaginationA["uriSegment"]) into tUriSeg
-		if tUriSeg is not 0 then
-			put tUriSeg into sPaginationA["curPage"]
-		end if
-	end if
+  # IN CASE ASYNergy IS USED GET THE CURRENT PAGE FROM THE
+  # MODEL OR ACTION PARAMETER AND PASS IT TO THIS FUNCTION.
+  if (pRecordsOffset is empty) or (pRecordsOffset is not an integer) then
+    if (gConfig["enableQueryStrings"] is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
+    
+      put rigVarGet(sPaginationA["queryStringSegment"]) into tQuerySeg
+      if tQuerySeg is not 0 then
+        put tQuerySeg into sPaginationA["curPage"]
+      end if
+    else
+      put rigFetchSegment(sPaginationA["uriSegment"]) into tUriSeg
+      if tUriSeg is not 0 then
+        put tUriSeg into sPaginationA["curPage"]
+      end if
+    end if
+    
+  else
+    if pRecordsOffset is not 0 then
+      put pRecordsOffset into sPaginationA["curPage"]
+    end if
+  end if
 
 	if sPaginationA["numLinks"] < 1 then
 		rigShowError "Your number of links must be a positive number."
@@ -339,15 +359,73 @@ function rigCreatePaginationLinks
 
 	# IS PAGINATION BEING USED OVER GET OR POST?  IF GET, ADD A PER_PAGE QUERY
 	# STRING. IF POST, ADD A TRAILING SLASH TO THE BASE URL IF NEEDED
-	if (rigFetchConfigItem("enableQueryStrings") is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
-		put rigRTrim(sPaginationA["baseUrl"]) & "&amp;" & sPaginationA["queryStringSegment"] & "=" into sPaginationA["baseUrl"]
+  if (gConfig["enableQueryStrings"] is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
+    put rigRTrim(sPaginationA["baseUrl"]) & "&" & sPaginationA["queryStringSegment"] & "=" into sPaginationA["baseUrl"]
 	else
 		put rigRTrim(sPaginationA["baseUrl"], "/") & "/" into sPaginationA["baseUrl"]
 	end if
 
 	# AND HERE WE GO...
 	# RENDER THE "FIRST" LINK
-	if  sPaginationA["curPage"] > (sPaginationA["numLinks"] + 1) then
+  put _rigFirstLink() into tOutput
+  #
+
+	# RENDER THE "PREVIOUS" LINK
+  put _rigPreviousLink(tUriPageNumber) after tOutput
+  #
+
+	# WRITE THE DIGIT LINKS
+  put _rigDigitLinks(tStart, tEnd, tOutput) into tOutput
+  #
+
+	# RENDER THE "NEXT" LINK
+  put _rigNextLink(tNumPages) after tOutput
+  #
+
+	# RENDER THE "LAST" LINK  
+  put _rigLastLink(tNumPages) after tOutput
+  #
+
+  # KILL DOUBLE SLASHES.  NOTE: SOMETIMES WE CAN END UP WITH A DOUBLE SLASH
+  # IN THE PENULTIMATE LINK SO WE'LL KILL ALL DOUBLE SLASHES.
+  put "([^:]//+)" into tRegEx
+  put "//" into tStrToReplaceInFoundStr
+  put "/" into tReplacement
+
+  put rigPregReplace(tOutput, tRegEx, tStrToReplaceInFoundStr, tReplacement) into tOutput
+
+  # ADD THE WRAPPER HTML IF EXISTS
+  put sPaginationA["fullTagOpen"] & tOutput & sPaginationA["fullTagClose"] into tOutput
+
+  return tOutput
+end rigCreatePaginationLinks
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigFirstLink
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-07-17
+--| Last Mod:
+--| Requires: --
+--|
+--| Summary: Render the "FIRST" link.
+--| 
+--| Format:  _rigFirstLink()
+--|
+--| Parameters: --
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+private function _rigFirstLink
+  local tAriaLabel, tURL, tHandlerOffset, tFirstLink
+  
+  if  sPaginationA["curPage"] > (sPaginationA["numLinks"] + 1) then
 		# ARIA
 		if sPaginationA["firstLink"] contains "&lsaquo;" then
       put "aria-label='First'" into tAriaLabel
@@ -355,91 +433,240 @@ function rigCreatePaginationLinks
 			put empty into tAriaLabel
 		end if
 		#
-    put sPaginationA["firstTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & "'" && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & sPaginationA["firstTagClose"] into tOutput
+
+    # ASYNergy
+    # REMOVE THE HANDLER FROM THE URI
+    put sPaginationA["baseUrl"] into tURL
+
+    if sPaginationA["asynergyPagination"] is TRUE then
+      if (gConfig["enableQueryStrings"] is TRUE) or (sPaginationA["pageQueryString"] is TRUE) then
+        put offset("&h=", tURL ) into tHandlerOffset
+        put char 1 to (tHandlerOffset - 1) of tURL into tURL
+      
+      else
+        set the itemDel to "/"
+        if char -1 of tURL is "/" then
+          put char 1 to -2 of tURL into tURL
+        end if
+        delete item -1 of tURL
+      end if -- if (gConfig["enableQueryStrings"] is TRUE) or (sPaginationA["pageQueryString"] is TRUE)
+    end if -- if sPaginationA["asynergyPagination"] is TRUE
+    #
+
+    put sPaginationA["firstTagOpen"] & "<a href='" & tURL & "'" \
+    && tAriaLabel & ">" & sPaginationA["firstLink"] & "</a>" & \
+    sPaginationA["firstTagClose"] into tFirstLink
 	end if
-  #
+  
+  return tFirstLink
+end _rigFirstLink
 
-	# RENDER THE "PREVIOUS" LINK
-	if sPaginationA["curPage"] <> 1 then
-			# ARIA
-			if sPaginationA["prevLink"] contains "&lt;" then
-        put "aria-label='Previous'" into tAriaLabel
-			else
-				put empty into tAriaLabel
-			end if
-			#
-		put tUriPageNumber - sPaginationA["perPage"] into tCounter
-		if tCounter = 0 then
-			put empty into tCounter
-		end if
 
-    put sPaginationA["prevTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tCounter & "'" && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & sPaginationA["prevTagClose"] after tOutput
-	end if
-  #
 
-	# WRITE THE DIGIT LINKS
-	repeat with tLoopCounter = (tStart - 1) to tEnd
-		put (tLoopCounter * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
 
-		if tI >= 0 then
-			if sPaginationA["curPage"] = tLoopCounter then
-				put sPaginationA["curTagOpen"] & tLoopCounter & sPaginationA["curTagClose"] after tOutput -- current page
-			else
-				if tI = 0 then
-					put empty into tN
-				else
-					put tI into tN
-				end if
 
-        put sPaginationA["numTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tN & "'>" & tLoopCounter & "</a>" & sPaginationA["numTagClose"] after tOutput
-			end if
-		end if
-	end repeat
-  #
+/*----------------------------------------------------------------------
+--| FUNCTION _rigPreviousLink
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-07-17
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Render the "PREVIOUS" link
+--|  
+--| Format:  _rigPreviousLink(param1)
+--|
+--| Parameters: integer <pUriPageNumber>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
 
-	# RENDER THE "NEXT" LINK
-	if sPaginationA["curPage"] < tNumPages then
-		# ARIA
-		if sPaginationA["nextLink"] contains "&gt;" then
+private function _rigPreviousLink pUriPageNumber
+  local tAriaLabel, tCounter, tAsynMarkup, tPreviousLink
+  
+  if sPaginationA["curPage"] <> 1 then
+    # ARIA
+    if sPaginationA["prevLink"] contains "&lt;" then
+      put "aria-label='Previous'" into tAriaLabel
+    else
+      put empty into tAriaLabel
+    end if
+    #
+
+    put pUriPageNumber - sPaginationA["perPage"] into tCounter
+    if tCounter = 0 then
+      put empty into tCounter
+      
+    else
+      # ASYNergy
+      if sPaginationA["asynergyPagination"] is TRUE then
+        put "asyn:click.prevent=" & quote & sPaginationA["paginationHandler"] & "('" & tCounter & "')" & quote into tAsynMarkup
+      end if
+      #
+    end if
+
+    put sPaginationA["prevTagOpen"] & "<a" && tAsynMarkup && "href='" & sPaginationA["baseUrl"] & \
+    tCounter & "'" && tAriaLabel & ">" & sPaginationA["prevLink"] & "</a>" & \
+    sPaginationA["prevTagClose"] into tPreviousLink
+  end if
+  
+  return tPreviousLink
+end _rigPreviousLink
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigDigitLinks
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-07-17
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Render the digit links.
+--| 
+--| Format:  _rigDigitLinks(param1, param2, param3)
+--|
+--| Parameters: integer <pStart> the pagination start number, integer <pEnd>
+--|               the pagination end number, string <pPaginationLinks> incomplete pagination markup
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+private function _rigDigitLinks pStart pEnd pPaginationLinks
+  local tLoopCounter, tStart, tEnd, tI, tN, tAsynMarkup
+  
+  repeat with tLoopCounter = (pStart - 1) to pEnd
+    put (tLoopCounter * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
+
+    if tI >= 0 then
+      if sPaginationA["curPage"] = tLoopCounter then
+        put sPaginationA["curTagOpen"] & tLoopCounter & \
+        sPaginationA["curTagClose"] after pPaginationLinks -- current page
+      else
+        if tI = 0 then
+          put empty into tN
+        else
+          put tI into tN
+        end if
+        
+        # ASYNergy
+        if sPaginationA["asynergyPagination"] is TRUE then
+          put "asyn:click.prevent=" & quote & sPaginationA["paginationHandler"] & "('" & tN & "')" & quote into tAsynMarkup
+        end if
+        #
+
+        put sPaginationA["numTagOpen"] & "<a" && tAsynMarkup && "href='" & sPaginationA["baseUrl"] & tN & "'>" & \
+        tLoopCounter & "</a>" & sPaginationA["numTagClose"] after pPaginationLinks
+      end if
+    end if
+  end repeat
+  
+  return pPaginationLinks
+end _rigDigitLinks
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigNextLink
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-07-18
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Render the "NEXT" link.
+--| 
+--| Format:  _rigNextLink(param1)
+--|
+--| Parameters: integer <pNumPages>
+--|
+--| Return: string
+----------------------------------------------------------------------*/
+
+private function _rigNextLink pNumPages
+  local tAriaLabel, tJ, tAsynMarkup, tNextLink
+  
+  if sPaginationA["curPage"] < pNumPages then
+    # ARIA
+    if sPaginationA["nextLink"] contains "&gt;" then
       put "aria-label='Next'" into tAriaLabel
-		else
-			put empty into tAriaLabel
-		end if
-		#
-		put sPaginationA["curPage"] * sPaginationA["perPage"] into tJ
+    else
+      put empty into tAriaLabel
+    end if
+    #
+    put sPaginationA["curPage"] * sPaginationA["perPage"] into tJ
+    
+    # ASYNergy
+    if sPaginationA["asynergyPagination"] is TRUE then
+      put "asyn:click.prevent=" & quote & sPaginationA["paginationHandler"] & "('" & tJ & "')" & quote into tAsynMarkup
+    end if
+    #
 
-    put sPaginationA["nextTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tJ & "'" && tAriaLabel & ">" & sPaginationA["nextLink"] & "</a>" & sPaginationA["nextTagClose"] after tOutput
+    put sPaginationA["nextTagOpen"] & "<a" && tAsynMarkup && "href='" & sPaginationA["baseUrl"] & \
+    tJ & "'" && tAriaLabel & ">" & sPaginationA["nextLink"] & \
+    "</a>" & sPaginationA["nextTagClose"] into tNextLink
 	end if
-  #
+  
+  return tNextLink
+end _rigNextLink
 
-	# RENDER THE "LAST" LINK
-	if (sPaginationA["curPage"] + sPaginationA["numLinks"]) < tNumPages then
-		# ARIA
-		if sPaginationA["lastLink"] contains "&raquo;" then
+
+
+
+
+/*----------------------------------------------------------------------
+--| FUNCTION _rigLastLink
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2023-07-18
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Render the "LAST" link.
+--| 
+--| Format:  _rigLastLink(param1)
+--|
+--| Parameters: integer <pNumPages>
+--|
+--| Return: returnType
+----------------------------------------------------------------------*/
+
+private function _rigLastLink pNumPages
+  local tAriaLabel, tI, tAsynMarkup, tLastLink
+  
+  if (sPaginationA["curPage"] + sPaginationA["numLinks"]) < pNumPages then
+    # ARIA
+    if sPaginationA["lastLink"] contains "&raquo;" then
       put "aria-label='Last'" into tAriaLabel
-		else
-			put empty into tAriaLabel
-		end if
-		#
-		put (tNumPages * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
+    else
+      put empty into tAriaLabel
+    end if
+    #
+    put (pNumPages * sPaginationA["perPage"]) - sPaginationA["perPage"] into tI
+    
+    # ASYNergy
+    if sPaginationA["asynergyPagination"] is TRUE then
+      put "asyn:click.prevent=" & quote & sPaginationA["paginationHandler"] & "('" & tI & "')" & quote into tAsynMarkup
+    end if
+    #
 
-    put sPaginationA["lastTagOpen"] & "<a href='" & sPaginationA["baseUrl"] & tI & "'" && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & sPaginationA["lastTagClose"] after tOutput
-	end if
-  #
-
-	# KILL DOUBLE SLASHES.  NOTE: SOMETIMES WE CAN END UP WITH A DOUBLE SLASH
-	# IN THE PENULTIMATE LINK SO WE'LL KILL ALL DOUBLE SLASHES.
-	 put "([^:]//+)" into tRegEx
-    	put "//" into tStrToReplaceInFoundStr
-    	put "/" into tReplacement
-
-    	put rigPregReplace(tOutput, tRegEx, tStrToReplaceInFoundStr, tReplacement) into tOutput
-
-	# ADD THE WRAPPER HTML IF EXISTS
-	put sPaginationA["fullTagOpen"] & tOutput & sPaginationA["fullTagClose"] into tOutput
-
-	return tOutput
-end rigCreatePaginationLinks
+    put sPaginationA["lastTagOpen"] & "<a" && tAsynMarkup && "href='" & sPaginationA["baseUrl"] & \
+    tI & "'" && tAriaLabel & ">" & sPaginationA["lastLink"] & "</a>" & \
+    sPaginationA["lastTagClose"] into tLastLink
+  end if
+  
+  return tLastLink
+end _rigLastLink
 
 
 
