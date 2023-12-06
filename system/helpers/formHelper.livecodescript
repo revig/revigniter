@@ -78,9 +78,9 @@ end libraryStack
 --| FUNCTION rigFormOpen
 --|
 --| Author: rabit
---| Version:  1.5
+--| Version:  1.6
 --| Created: 2009-07-28
---| Last Mod: 2023-04-13
+--| Last Mod: 2023-12-06
 --| Requires: rigUriString(), rigSiteURL(), _rigAttributesToString(),rigFetchConfigItem(),
 --|            rigHiddenCSRFtoken(), rigQ(), rigFormHidden()
 --|
@@ -107,23 +107,28 @@ function rigFormOpen pAction pAttributesA pHiddenA
 		put pAttributesA into tAttributes
 	end if
 
-	# IF NO ACTION IS PROVIDED THEN SET TO THE CURRENT URL
-	if pAction is empty then
-		put rigUriString() into tURIstring
-		put rigSiteURL(tURIstring) into tAction
+	# SET ACTION ATTRIBUTE
+	if "action" is not among the keys of pAttributesA then
+		# IF NO ACTION IS PROVIDED THEN SET TO THE CURRENT URL
+		if pAction is empty then
+			put rigUriString() into tURIstring
+			put rigSiteURL(tURIstring) into tAction
 
-	# IF AN ACTION IS NOT A FULL URL THEN TURN IT INTO ONE
-	else 	if "://" is in pAction then
-		put pAction into tAction
-	else
-    if pAction <> "#" then
-      put rigSiteURL(pAction) into tAction
-    else
-      put pAction into tAction
-    end if
-	end if
+			# IF AN ACTION IS NOT A FULL URL THEN TURN IT INTO ONE
+		else 	if "://" is in pAction then
+			put pAction into tAction
+		else
+			if pAction <> "#" then
+				put rigSiteURL(pAction) into tAction
+			else
+				put pAction into tAction
+			end if
+		end if -- if pAction is empty
 
-	put "<form action=" & quote & tAction & quote into tForm
+		put "action=" & quote & tAction & quote into tAction
+	end if -- if "action" is not among the keys of pAttributesA
+
+	put "<form " & tAction into tForm
 	put tForm & _rigAttributesToString(tAttributes, TRUE) into tForm
 	put tForm & ">" into tForm
 
