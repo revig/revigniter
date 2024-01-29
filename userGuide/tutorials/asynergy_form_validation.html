@@ -533,7 +533,7 @@ else
   put rigVarPOST("password") into tPassword
   put rigEncode(tPassword, "myKey") into tEncPW
     
-  if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+  if tEncPW &lt;&gt; FALSE then
     insertUser tEmail, tEncPW
     get rigLoadView("registerSuccessView")
   else
@@ -600,7 +600,7 @@ end if
     put rigVarPOST("password") into tPassword
     put rigEncode(tPassword, "myKey") into tEncPW
     
-    if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+    if tEncPW &lt;&gt; FALSE then
       insertUser tEmail, tEncPW
       get rigLoadView("registerSuccessView")
     else
@@ -705,7 +705,7 @@ end passwordConfirm
     put  rigAsynElemData("password") into tPassword
     put rigEncode(tPassword, "myKey") into tEncPW
     
-    if rigEncode(tPassword, "myKey") &lt;> FALSE then
+    if tEncPW &lt;> FALSE then
       insertUser tEmail, tEncPW
       
       # DISPLAY SUCCESS PAGE
@@ -743,7 +743,7 @@ end success
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> Add the handler name "signup" to the global variable <var>gControllerHandlers</var>.</p>
+<p class="important"><strong>Note:</strong> Add the handler name "success" to the global variable <var>gControllerHandlers</var>.</p>
 
 <p><a href="#top">Top of Page</a></p>
 
