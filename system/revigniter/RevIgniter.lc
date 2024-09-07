@@ -55,6 +55,13 @@ end if
         return RIVERSION
     end switch
   end rigVersion
+	
+# IS THE ENGINE LC CREATE?
+	if "productVersion" is in the functionNames then
+		put TRUE into gRigA["IsCreate"]
+	else
+		put FALSE into gRigA["IsCreate"]
+	end if
 
 
 ##
