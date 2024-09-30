@@ -22,7 +22,7 @@ script "ASYNergy"
 # @package			revIgniter
 # @subpackage	Libraries
 # @category	  	Libraries
-# @requires			com.livecode.library.json
+# @requires			com.livecode.library.json (not required if the engine is LC Create)
 # @author		  	rabit@revigniter.com
 # @link		    		https://revigniter.com/userGuide/libraries/asynergy.html
 ##
@@ -159,9 +159,9 @@ end rigRunInitialAsynergyConfig
 --| COMMAND _rigAsynInitHelper
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 2016-07-11
---| Last Mod: --
+--| Version:  1.1
+--| Created: 2022-05-26
+--| Last Mod: 2024-09-23
 --| Requires: rigLoadHelper, rigLoadExtension
 --|
 --| Summary: Load the LiveCode Builder JSON library and the asset helper.
@@ -174,12 +174,15 @@ end rigRunInitialAsynergyConfig
 ----------------------------------------------------------------------*/
 
 private command _rigAsynInitHelper
-  # IF THERE IS NO XMLHttpRequest WE DON'T NEED THE JSON EXTENSION
-  # IF THERE IS A XMLHttpRequest WE DON'T NEED THE ASSET HELPER
-  if sAJAXrequest <> TRUE then
-    rigLoadHelper "asset"
-  else
-    rigLoadExtension "com.livecode.library.json"
+	# IF THERE IS NO XMLHttpRequest WE DON'T NEED THE JSON EXTENSION
+	# IF THERE IS A XMLHttpRequest WE DON'T NEED THE ASSET HELPER
+	if sAJAXrequest <> TRUE then
+		rigLoadHelper "asset"
+	else
+		# IF THE ENGINE IS LC CREATE WE DON'T NEED THE JSON EXTENSION
+		if not sBetterJSONIncluded then
+			rigLoadExtension "com.livecode.library.json"
+		end if
   end if
 end _rigAsynInitHelper
 
