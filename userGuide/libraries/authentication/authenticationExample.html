@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -270,7 +270,7 @@ end index
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/createUser", tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/createUser", tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("User Data") into gData["fsOpen"]
@@ -404,7 +404,7 @@ end createUser
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/login", tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/login", tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Login Form") into gData["fsOpen"]
@@ -554,7 +554,7 @@ end activate
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/deactivate/" & tID, tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/deactivate/" & tID, tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Deactivate User Form") into gData["fsOpen"]
@@ -645,7 +645,7 @@ end deactivate
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/forgotPassword/", tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/forgotPassword/", tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Forgot Password Form") into gData["fsOpen"]
@@ -725,7 +725,7 @@ end forgotPassword
 
   # FORM OPEN
   put "authForm" into tFormAttr["id"]
-  put rigFormOpen("auth/resetPassword/" & tForgottenPasswordCode, tFormAttr) into gData["formOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/resetPassword/" & tForgottenPasswordCode, tFormAttr) into gData["formOpen"]
 
   # FIELD SET
   put rigFormFieldset("Reset Password Form") into gData["fsOpen"]
@@ -847,7 +847,7 @@ end resetPassword
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/changePassword/", tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/changePassword/", tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Change Password Form") into gData["fsOpen"]
@@ -958,7 +958,7 @@ end changePassword
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/editUser/" & tID, tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/editUser/" & tID, tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Edit User") into gData["fsOpen"]
@@ -1081,7 +1081,7 @@ end editUser
 
  # FORM OPEN
  put "authForm" into tFormAttr["id"]
- put rigFormOpen("auth/deleteUser/" & tID, tFormAttr) into gData["formOpen"]
+ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("auth/deleteUser/" & tID, tFormAttr) into gData["formOpen"]
 
  # FIELD SET
  put rigFormFieldset("Delete User Form") into gData["fsOpen"]
