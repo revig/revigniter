@@ -22,7 +22,7 @@ script "jwtHelper"
 # @package			revIgniter
 # @subpackage	Helpers
 # @category	  	Helpers
-# @requires			com.livecode.library.json
+# @requires			com.livecode.library.json (not required if the engine is LC Create)
 # @author		  	rabit@revigniter.com
 # @link		    		https://revigniter.com/userGuide/helpers/jwtHelper.html
 ##
