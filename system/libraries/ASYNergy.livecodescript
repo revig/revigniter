@@ -22,7 +22,7 @@ script "ASYNergy"
 # @package			revIgniter
 # @subpackage	Libraries
 # @category	  	Libraries
-# @requires			com.livecode.library.json
+# @requires			com.livecode.library.json (not required if the engine is LC Create)
 # @author		  	rabit@revigniter.com
 # @link		    		https://revigniter.com/userGuide/libraries/asynergy.html
 ##
@@ -33,7 +33,7 @@ script "ASYNergy"
 
 global gRigA, g_ElapsedTime_, gData
 
-local sSegA, sResponseSent, sStackInUse, sAJAXrequest, sPayloadA, sWorkingPldA, sMutablesDataA, sAccumulatedRespDataA , sFuncWhiteList = "abs,acos,annuity,arithmeticmean,asin,atan,atan2,average,averagedeviation,avg,avgdev,base64decode,base64encode,baseconvert,binarydecode,binaryencode,byteoffset,bytetonum,ceil,ceiling,chartonum,codepointoffset,codepointproperty,codepointtonum,codeunitoffset,colornames,compound,cos,date,dateformat,exp,exp1,exp10,exp2,floor,format,geometricmean,harmonicmean,isnumber,isotomac,itemoffset,len,length,lineoffset,ln,ln1,log10,log2,lower,mactoiso,matchchunk,matchtext,max,md5digest,mean,median,merge,mergMarkdownToXHTML,messagedigest,millisec,millisecond,milliseconds,millisecs,min,monthnames,nativechartonum,normalizetext,numtobyte,numtochar,numtocodepoint,numtonativechar,offset,paragraphoffset,popstddev,populationstandarddeviation,populationvariance,popvariance,random,randombytes,replacetext,round,sec,seconds,secs,sentenceoffset,sha1digest,sin,sqrt,standarddeviation,statround,stddev,sum,tan,textdecode,textencode,tick,ticks,time,tokenoffset,tolower,toupper,truewordoffset,trunc,unidecode,uniencode,upper,urldecode,urlencode,uuid,variance,weekdaynames,wordoffset"
+local sSegA, sResponseSent, sStackInUse, sAJAXrequest, sPayloadA, sWorkingPldA, sMutablesDataA, sAccumulatedRespDataA , sBetterJSONIncluded, sFuncWhiteList = "abs,acos,annuity,arithmeticmean,asin,atan,atan2,average,averagedeviation,avg,avgdev,base64decode,base64encode,baseconvert,binarydecode,binaryencode,byteoffset,bytetonum,ceil,ceiling,chartonum,codepointoffset,codepointproperty,codepointtonum,codeunitoffset,colornames,compound,cos,date,dateformat,exp,exp1,exp10,exp2,floor,format,geometricmean,harmonicmean,isnumber,isotomac,itemoffset,len,length,lineoffset,ln,ln1,log10,log2,lower,mactoiso,matchchunk,matchtext,max,md5digest,mean,median,merge,mergMarkdownToXHTML,messagedigest,millisec,millisecond,milliseconds,millisecs,min,monthnames,nativechartonum,normalizetext,numtobyte,numtochar,numtocodepoint,numtonativechar,offset,paragraphoffset,popstddev,populationstandarddeviation,populationvariance,popvariance,random,randombytes,replacetext,round,sec,seconds,secs,sentenceoffset,sha1digest,sin,sqrt,standarddeviation,statround,stddev,sum,tan,textdecode,textencode,tick,ticks,time,tokenoffset,tolower,toupper,truewordoffset,trunc,unidecode,uniencode,upper,urldecode,urlencode,uuid,variance,weekdaynames,wordoffset"
 
 
 
@@ -43,12 +43,12 @@ local sSegA, sResponseSent, sStackInUse, sAJAXrequest, sPayloadA, sWorkingPldA, 
  --| COMMAND libraryStack
  --|
  --| Author: rabit
- --| Version:  1.0
+ --| Version:  1.1
  --| Created: 2022-05-26
- --| Last Mod: --
+ --| Last Mod: 2024-09-07
  --| Requires: rigLogMessage, _rigSetDefaultValues
  --|
- --| Summary:  Run security check and run initial handler.
+ --| Summary:  Run security check and run initial handlers.
  --|
  --| Parameters: --
  --|
@@ -69,6 +69,10 @@ on libraryStack
       if the environment is "server" then
         rigLogMessage "debug", "ASYNergy Library Loaded"
       end if
+			
+ 		 # CHECK IF THE ENGINE IS LC CREATE AND
+ 		 # IF THE LC CREATE VERSION > 1.0.0-DP-1
+ 		 _checkBetterJSON
       
       # SET INITIAL VALUES OF THE LIBRARY VARIABLES
       _rigSetDefaultValues
@@ -155,9 +159,9 @@ end rigRunInitialAsynergyConfig
 --| COMMAND _rigAsynInitHelper
 --|
 --| Author: rabit
---| Version:  1.0
---| Created: 2016-07-11
---| Last Mod: --
+--| Version:  1.1
+--| Created: 2022-05-26
+--| Last Mod: 2024-09-23
 --| Requires: rigLoadHelper, rigLoadExtension
 --|
 --| Summary: Load the LiveCode Builder JSON library and the asset helper.
@@ -170,12 +174,15 @@ end rigRunInitialAsynergyConfig
 ----------------------------------------------------------------------*/
 
 private command _rigAsynInitHelper
-  # IF THERE IS NO XMLHttpRequest WE DON'T NEED THE JSON EXTENSION
-  # IF THERE IS A XMLHttpRequest WE DON'T NEED THE ASSET HELPER
-  if sAJAXrequest <> TRUE then
-    rigLoadHelper "asset"
-  else
-    rigLoadExtension "com.livecode.library.json"
+	# IF THERE IS NO XMLHttpRequest WE DON'T NEED THE JSON EXTENSION
+	# IF THERE IS A XMLHttpRequest WE DON'T NEED THE ASSET HELPER
+	if sAJAXrequest <> TRUE then
+		rigLoadHelper "asset"
+	else
+		# IF THE ENGINE IS LC CREATE WE DON'T NEED THE JSON EXTENSION
+		if not sBetterJSONIncluded then
+			rigLoadExtension "com.livecode.library.json"
+		end if
   end if
 end _rigAsynInitHelper
 
@@ -216,9 +223,18 @@ private function _rigAsynPayload
   if tPayload <> FALSE then
     try
       put textDecode(tPayload, "ASCII") into tPayload
-      put JsonImport(tPayload) into sPayloadA
+			
+			if sBetterJSONIncluded then
+				put jsonDecode(tPayload) into sPayloadA
+			else
+      		put JsonImport(tPayload) into sPayloadA
+			end if
     catch e
-      rigLogMessage "error", "ASYNergy JsonImport error!"
+			if sBetterJSONIncluded then
+				rigLogMessage "error", "ASYNergy jsonDecode error!"
+			else
+      		rigLogMessage "error", "ASYNergy JsonImport error!"
+			end if
       
       return FALSE
     end try
@@ -705,9 +721,9 @@ end rigAsynNavigate
 --| COMMAND _rigAsynRespond
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2023-04-01
---| Last Mod: 2023-08-26
+--| Last Mod: 2024-09-07
 --| Requires: rigLogMessage
 --|
 --| Summary: Send JSON response.
@@ -727,7 +743,11 @@ private command _rigAsynRespond pResponseA pElapsedTime
   put TRUE into sResponseSent
   
   # AND AWAY WE GO...
-  put textEncode(JsonExport(pResponseA), "UTF-8")
+	if sBetterJSONIncluded then
+		put textEncode(jsonEncode(pResponseA), "UTF-8")
+	else
+  	put textEncode(JsonExport(pResponseA), "UTF-8")
+	end if
 
   rigLogMessage "debug", "Asynergy response data sent to browser"
   rigLogMessage "debug", "Execution time up to this point:" && pElapsedTime
@@ -944,6 +964,39 @@ command rigAsynSet pKey pVal
     put pVal into sWorkingPldA[pKey]
   end if
 end rigAsynSet
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _checkBetterJSON
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2024-09-07
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Check if the engine is lc create
+--|            and if the LC Create version > 1.0.0-DP-1
+--|
+--| Format:  _checkBetterJSON
+--|
+--| Parameters: --
+--|
+--| Return: boolean
+----------------------------------------------------------------------*/
+
+private command _checkBetterJSON
+	put FALSE into sBetterJSONIncluded
+	if gRigA["IsCreate"] then
+		if productVersion() is not "1.0.0-dp-1" then
+			put TRUE into sBetterJSONIncluded
+		end if
+	end if
+end _checkBetterJSON
+
 
 
 

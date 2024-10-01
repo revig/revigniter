@@ -34,20 +34,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
  		      <div class="form-group">
  				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
-				<input type="hidden" name="kj" value="#000000"/>
-				<input type="hidden" name="k7" value="#2B3137"/>
-				<input type="hidden" name="k8" value="#C7C7C7"/>
-			  <input type="hidden" name="k9" value="#85EAFB"/>
-				<input type="hidden" name="kx" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kj" value="222222"/>
+				<input type="hidden" name="k7" value="2B3137"/>
+				<input type="hidden" name="k8" value="C7C7C7"/>
+			  <input type="hidden" name="k9" value="85EAFB"/>
+				<input type="hidden" name="kx" value="FFFFFF"/>
+				<input type="hidden" name="kaa" value="FFFFFF"/>
 			  <input type="hidden" name="k1" value="-1"/>
  		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
  				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
@@ -478,7 +477,7 @@ put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
 <p>Now let's add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "signup", is set to the name of the controller handler to be called when the user clicks onto the submit button. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
 
 <pre><code>put "signup" into tFormAttrA["asyn:submit.prevent"]
-put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
+put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("asynRegister", tFormAttrA) into gData["formOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -534,7 +533,7 @@ else
   put rigVarPOST("password") into tPassword
   put rigEncode(tPassword, "myKey") into tEncPW
     
-  if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+  if tEncPW &lt;&gt; FALSE then
     insertUser tEmail, tEncPW
     get rigLoadView("registerSuccessView")
   else
@@ -567,7 +566,7 @@ end if
 
   # GENERATE FORM OPEN AND SUBMIT BUTTON MARKUP
   put "signup" into tFormAttrA["asyn:submit.prevent"]
-  put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("asynRegister", tFormAttrA) into gData["formOpen"]
   put rigSubmitButton("register", "Register") into gData["submit"]
   
 
@@ -601,7 +600,7 @@ end if
     put rigVarPOST("password") into tPassword
     put rigEncode(tPassword, "myKey") into tEncPW
     
-    if rigEncode(tPassword, "myKey") &lt;&gt; FALSE then
+    if tEncPW &lt;&gt; FALSE then
       insertUser tEmail, tEncPW
       get rigLoadView("registerSuccessView")
     else
@@ -706,7 +705,7 @@ end passwordConfirm
     put  rigAsynElemData("password") into tPassword
     put rigEncode(tPassword, "myKey") into tEncPW
     
-    if rigEncode(tPassword, "myKey") &lt;> FALSE then
+    if tEncPW &lt;> FALSE then
       insertUser tEmail, tEncPW
       
       # DISPLAY SUCCESS PAGE
@@ -744,7 +743,7 @@ end success
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> Add the handler name "signup" to the global variable <var>gControllerHandlers</var>.</p>
+<p class="important"><strong>Note:</strong> Add the handler name "success" to the global variable <var>gControllerHandlers</var>.</p>
 
 <p><a href="#top">Top of Page</a></p>
 

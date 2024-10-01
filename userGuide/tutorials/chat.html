@@ -34,20 +34,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
  		      <div class="form-group">
  				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
-				<input type="hidden" name="kj" value="#000000"/>
-				<input type="hidden" name="k7" value="#2B3137"/>
-				<input type="hidden" name="k8" value="#C7C7C7"/>
-			  <input type="hidden" name="k9" value="#85EAFB"/>
-				<input type="hidden" name="kx" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kj" value="222222"/>
+				<input type="hidden" name="k7" value="2B3137"/>
+				<input type="hidden" name="k8" value="C7C7C7"/>
+			  <input type="hidden" name="k9" value="85EAFB"/>
+				<input type="hidden" name="kx" value="FFFFFF"/>
+				<input type="hidden" name="kaa" value="FFFFFF"/>
 			  <input type="hidden" name="k1" value="-1"/>
  		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
  				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
@@ -497,7 +496,7 @@ rigLoadHelper tHelpers
 
 <p>Finally we add the login form action markup to gData:</p>
 
-<pre><code>put rigFormOpen("chat") into gData["loginFormOpen"]
+<pre><code>put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("chat") into gData["loginFormOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -533,7 +532,7 @@ rigLoadHelper tHelpers
   put "ASYNergy Chat Application Tutorial" into gData["pageTitle"]
 
   # LOGIN FORM ACTION
-  put rigFormOpen("chat") into gData["loginFormOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("chat") into gData["loginFormOpen"]
 end chat
 </code></pre>
 </div>
@@ -550,7 +549,7 @@ end chat
 <p>Then we add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "addMsg", is set to the name of the handler to be called or to the value of the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute of the mutable HTML element respectively. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
 
 <pre><code>put "addMsg" into tFormAttrA["asyn:submit.prevent"]
-put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("addMsg", tFormAttrA) into gData["chatFormOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -620,7 +619,7 @@ get rigLoadView("chatFooterView")
   
   # GENERATE FORM ACTION MARKUP
   put "addMsg" into tFormAttrA["asyn:submit.prevent"]
-  put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("addMsg", tFormAttrA) into gData["chatFormOpen"]
 
   # CHECK IF WE NEED TO SEND THE LOGIN PAGE OR THE CHAT PAGE
   if rigSessUserdata("name") &lt;> FALSE then

@@ -22,7 +22,7 @@ script "jwtHelper"
 # @package			revIgniter
 # @subpackage	Helpers
 # @category	  	Helpers
-# @requires			com.livecode.library.json
+# @requires			com.livecode.library.json (not required if the engine is LC Create)
 # @author		  	rabit@revigniter.com
 # @link		    		https://revigniter.com/userGuide/helpers/jwtHelper.html
 ##
@@ -34,7 +34,7 @@ script "jwtHelper"
 global gRigA
 
 local sH0, sH1, sH2, sH3, sH4, sH5, sH6, sH7, sK
-local sSource, sIsFile, sBytesDone, sDataSize, sTail, sStackInUse
+local sSource, sIsFile, sBytesDone, sDataSize, sTail, sStackInUse, sBetterJSONIncluded
 
 constant kRSAkeyLength = 4096
 
@@ -46,12 +46,12 @@ constant kRSAkeyLength = 4096
  --| COMMAND libraryStack
  --|
  --| Author: rabit
- --| Version:  1.0
+ --| Version:  1.1
  --| Created: 2018-12-28
- --| Last Mod: --
- --| Requires: _rigJWTinitHelper
+ --| Last Mod: 2024-09-07
+ --| Requires: _checkBetterJSON, _rigJWTinitHelper
  --|
- --| Summary:  Run security check and run initial handler.
+ --| Summary:  Run security check and run initial handlers.
  --|
  --| Parameters: --
  --|
@@ -59,21 +59,27 @@ constant kRSAkeyLength = 4096
  ----------------------------------------------------------------------*/
 
 on libraryStack
-  if (gRigA is not an array) and (the environment is "server") then
-    put "No direct script access allowed."
-    exit to top
-  end if
+ if (gRigA is not an array) and (the environment is "server") then
+	 put "No direct script access allowed."
+	 exit to top
+ end if
 
-  if the short name of the target = the short name of me then
-    if sStackInUse <> TRUE then
-      put TRUE into sStackInUse
+ if the short name of the target = the short name of me then
+	 if sStackInUse <> TRUE then
+		 put TRUE into sStackInUse
+		
+		 # CHECK IF THE ENGINE IS LC CREATE AND
+		 # IF THE LC CREATE VERSION > 1.0.0-DP-1
+		 _checkBetterJSON
 
-      _rigJWTinitHelper
-    end if -- if sStackInUse <> TRUE
+		 if not sBetterJSONIncluded then
+			 _rigJWTinitHelper
+		 end if
+	 end if -- if sStackInUse <> TRUE
 
-  else
-    pass libraryStack
-  end if -- if the short name of the target = the short name of me
+ else
+	 pass libraryStack
+ end if -- if the short name of the target = the short name of me
 end libraryStack
 
 
@@ -109,9 +115,9 @@ end _rigJWTinitHelper
 --| FUNCTION rigJWTencode
 --|
 --| Author: rabit
---| Version:  1.3
+--| Version:  1.4
 --| Created: 2016-07-08
---| Last Mod: 2021-12-16
+--| Last Mod: 2024-09-07
 --| Requires: _rigStrToArray(), _rigJWTgenerateSecret(), _rigHmacSha2b64(), _rigJWTpurge
 --|           _rigJWTrsaKeys(), rigLogMessage
 --|
@@ -151,14 +157,24 @@ function rigJWTencode pHeader pPayload pNumBits pAlg
       put _rigStrToArray(pHeader, , TRUE, TRUE) into tJWTheaderDataA
     end if
   end if
-  put base64Encode(JsonExport(tJWTheaderDataA)) into tJWTheader
+	
+	if sBetterJSONIncluded then
+		put base64Encode(jsonEncode(tJWTheaderDataA)) into tJWTheader
+	else
+  	put base64Encode(JsonExport(tJWTheaderDataA)) into tJWTheader
+	end if
   #
 
   # PAYLOAD
   if pPayload is not an array then
     put _rigStrToArray(pPayload, , TRUE, TRUE) into pPayload
   end if
-  put base64Encode(JsonExport(pPayload)) into tJWTpayload
+	
+	if sBetterJSONIncluded then
+		put base64Encode(jsonEncode(pPayload)) into tJWTpayload
+	else
+  	put base64Encode(JsonExport(pPayload)) into tJWTpayload
+	end if
   #
 
   # SECRET
@@ -211,9 +227,9 @@ end rigJWTencode
 --| FUNCTION rigJWTdecode
 --|
 --| Author: rabit
---| Version:  1.2
+--| Version:  1.3
 --| Created: 2016-07-09
---| Last Mod: 2021-12-16
+--| Last Mod: 2024-09-07
 --| Requires: rigGetHTTPheader(), _rigJWTVerifySig(), rigLogMessage
 --|
 --| Summary: Decode and validate a JSON Web Token.
@@ -248,12 +264,17 @@ function rigJWTdecode pToken
 	put item 3 of pToken into tJWThmac
 
 	if (pToken <> empty) and (the number of items of pToken is 3) then
-    # GET HASH SIZE AND ALGORITHM FROM HEADER
-    put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
-		put JsonImport(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
+		# GET HASH SIZE AND ALGORITHM FROM HEADER
+		if sBetterJSONIncluded then
+			put jsonDecode(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
+			put jsonDecode(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
+		else
+			put JsonImport(base64Decode(tJWTheader)) into tJWTDecodedA["header"]
+			put JsonImport(base64Decode(tJWTpayload)) into tJWTDecodedA["payload"]
+		end if
 
-    put char 1 to 2 of tJWTDecodedA["header"]["alg"] into tAlg
-    put char 3 to 5 of tJWTDecodedA["header"]["alg"] into tNumBits
+		put char 1 to 2 of tJWTDecodedA["header"]["alg"] into tAlg
+		put char 3 to 5 of tJWTDecodedA["header"]["alg"] into tNumBits
 
 		# CHECK INTEGRITY OF TOKEN
 		put _rigJWTVerifySig(tJWTheader, tJWTpayload, tJWThmac, tNumBits, tAlg) into tJWTDecodedA["valid"]
@@ -1130,6 +1151,38 @@ private command _rigJWTTypeNum @pNumBits
     end if -- if pNumBits is among the items of "256,384,512"
   end if -- if pNumBits is not a number
 end _rigJWTTypeNum
+
+
+
+
+
+/*----------------------------------------------------------------------
+--| COMMAND _checkBetterJSON
+--|
+--| Author: rabit
+--| Version:  1.0
+--| Created: 2024-09-07
+--| Last Mod: --
+--| Requires: --
+--|
+--| Summary: Check if the engine is lc create
+--|            and if the LC Create version > 1.0.0-DP-1
+--|
+--| Format:  _checkBetterJSON
+--|
+--| Parameters: --
+--|
+--| Return: boolean
+----------------------------------------------------------------------*/
+
+private command _checkBetterJSON
+	put FALSE into sBetterJSONIncluded
+	if gRigA["IsCreate"] then
+		if productVersion() is not "1.0.0-dp-1" then
+			put TRUE into sBetterJSONIncluded
+		end if
+	end if
+end _checkBetterJSON
 
 
 

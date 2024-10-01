@@ -34,20 +34,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-right" role="search" method="get" action="https://duckduckgo.com/">
  		      <div class="form-group">
  				<input type="hidden" name="sites" value="revigniter.com/userGuide/"/>
-				<input type="hidden" name="kj" value="#000000"/>
-				<input type="hidden" name="k7" value="#2B3137"/>
-				<input type="hidden" name="k8" value="#C7C7C7"/>
-			  <input type="hidden" name="k9" value="#85EAFB"/>
-				<input type="hidden" name="kx" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
-				<input type="hidden" name="kaa" value="#FFFFFF"/>
+				<input type="hidden" name="kj" value="222222"/>
+				<input type="hidden" name="k7" value="2B3137"/>
+				<input type="hidden" name="k8" value="C7C7C7"/>
+			  <input type="hidden" name="k9" value="85EAFB"/>
+				<input type="hidden" name="kx" value="FFFFFF"/>
+				<input type="hidden" name="kaa" value="FFFFFF"/>
 			  <input type="hidden" name="k1" value="-1"/>
  		        <span id="searchLabel">Search User Guide</span> &nbsp; <input type="search" placeholder="Search&hellip;" name="q" id="q" class="revignitersearch" maxlength="255" />
  				&nbsp;<input type="image" id="submitSearch" src="../images/searchGo.png" />
@@ -165,11 +164,11 @@ end if
 
 <h2>Cross-site request forgery (CSRF) Protection</h2>
 
-<p>You can enable CSRF protection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["csrf_protection"] to TRUE. When set to TRUE, token will be checked on a submitted form using the rigFormOpen() function (included in <kbd>formHelper.lc</kbd>) and matched with a CSRF cookie. If you are accepting user data, it is strongly recommended CSRF protection be enabled.</p>
+<p>You can enable CSRF protection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["csrf_protection"] to TRUE. When set to TRUE, token will be checked on a submitted form using the <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>() function (included in <kbd>formHelper.lc</kbd>) and matched with a CSRF cookie. If you are accepting user data, it is strongly recommended CSRF protection be enabled.</p>
 
 <pre><code>put TRUE into gConfig["csrf_protection"]</code></pre>
 
-<p>Using the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function will automatically insert a hidden CSRF token field in your forms.</p>
+<p>Using the <a href="../helpers/form_helper.html">form helper</a> and the <var><a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>()</var> function will automatically insert a hidden CSRF token field in your forms.</p>
 
 
 <h3>CSRF Preferences</h3>
@@ -215,9 +214,9 @@ end if
 
 <h2>Bot Detection</h2>
 
-<p>If you are accepting user data you may consider to enable bot detection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["honeypot"] to TRUE. When set to TRUE, form fields that are hidden but accessible to a Bot, are attached to any form, provided that the rigFormOpen() function (included in formHelper.lc) is used. Requests containing data entered into these honeypot fields are assumed to come from a bot. In this case an error page is shown.</p>
+<p>If you are accepting user data you may consider to enable bot detection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["honeypot"] to TRUE. When set to TRUE, form fields that are hidden but accessible to a Bot, are attached to any form, provided that the <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>() function (included in formHelper.lc) is used. Requests containing data entered into these honeypot fields are assumed to come from a bot. In this case an error page is shown.</p>
 
-<p class="important"><strong>Note:</strong> You need to use the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function in order to automatically insert a hidden Bot detection honeypot field in your forms.</p>
+<p class="important"><strong>Note:</strong> You need to use the <a href="../helpers/form_helper.html">form helper</a> and the <var><a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>()</var> function in order to automatically insert a hidden Bot detection honeypot field in your forms.</p>
 
 <h3>Bot Detection Preferences</h3>
 <p>You'll find the following Bot detection related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
@@ -354,7 +353,7 @@ post tDataToSend to URL "http://mysite.com/mycontroller/"
 </code></pre>
 
 
-<p>If you sent the data as form data, you can retrieve your data on the server side like:</p>
+<p>If you send the data as form data, you can retrieve your data on the server side like:</p>
 
 <pre><code>put rigVarPost("myArray") into tMyArray</code></pre>
 
