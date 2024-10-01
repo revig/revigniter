@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.2</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -496,7 +496,7 @@ rigLoadHelper tHelpers
 
 <p>Finally we add the login form action markup to gData:</p>
 
-<pre><code>put rigFormOpen("chat") into gData["loginFormOpen"]
+<pre><code>put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("chat") into gData["loginFormOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -532,7 +532,7 @@ rigLoadHelper tHelpers
   put "ASYNergy Chat Application Tutorial" into gData["pageTitle"]
 
   # LOGIN FORM ACTION
-  put rigFormOpen("chat") into gData["loginFormOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("chat") into gData["loginFormOpen"]
 end chat
 </code></pre>
 </div>
@@ -549,7 +549,7 @@ end chat
 <p>Then we add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "addMsg", is set to the name of the handler to be called or to the value of the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute of the mutable HTML element respectively. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
 
 <pre><code>put "addMsg" into tFormAttrA["asyn:submit.prevent"]
-put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("addMsg", tFormAttrA) into gData["chatFormOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -619,7 +619,7 @@ get rigLoadView("chatFooterView")
   
   # GENERATE FORM ACTION MARKUP
   put "addMsg" into tFormAttrA["asyn:submit.prevent"]
-  put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
+  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("addMsg", tFormAttrA) into gData["chatFormOpen"]
 
   # CHECK IF WE NEED TO SEND THE LOGIN PAGE OR THE CHAT PAGE
   if rigSessUserdata("name") &lt;> FALSE then
