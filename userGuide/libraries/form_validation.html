@@ -269,7 +269,7 @@ command index
   rigLoaderLoadLibrary "Formvalidation"
 
   # BUILD THE FORM OPEN TAG
-  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("form") into gData["formOpenTag"]
+  put rigFormOpen("form") into gData["formOpenTag"]
 
   if rigFormValidRun() is FALSE then
     # GET VALIDATION ERRORS
@@ -313,7 +313,7 @@ is that it generates the action URL for you, based on the URL in your config fil
 
 <pre><code>[[gData["formOpenTag"]]]</code></pre>
 
-<p>This expression will be merged with the result of the <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>() function in the controller.</p>
+<p>This expression will be merged with the result of the rigFormOpen() function in the controller.</p>
 
 </li>
 
@@ -378,7 +378,7 @@ command index
   rigLoaderLoadLibrary "Formvalidation"
 
   # BUILD THE FORM OPEN TAG
-  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("form") into gData["formOpenTag"]
+  put rigFormOpen("form") into gData["formOpenTag"]
 
   rigSetRules "username", "Username", "requiredR"
   rigSetRules "password", "Password", "requiredR"
@@ -517,7 +517,7 @@ command index
   rigLoaderLoadLibrary "Formvalidation"
 
   # BUILD THE FORM OPEN TAG
-  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("form") into gData["formOpenTag"]
+  put rigFormOpen("form") into gData["formOpenTag"]
 
   rigSetRules "username", "Username", "requiredR"
   rigSetRules "password", "Password", "requiredR"
@@ -626,7 +626,7 @@ command index
   rigLoaderLoadLibrary "Formvalidation"
 
   # BUILD THE FORM OPEN TAG
-  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("form") into gData["formOpenTag"]
+  put rigFormOpen("form") into gData["formOpenTag"]
 
   rigSetRules "username", "Username", "callback_userNameCheck"
   rigSetRules "password", "Password", "requiredR"
