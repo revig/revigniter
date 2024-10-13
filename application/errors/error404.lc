@@ -12,34 +12,29 @@ line-height: 1.5;
 }
 
 body {
-background-color:	#fff;
-font-size:			1.2em;
+background-color: #fff;
+font-size: 1.2em;
 }
 
-#content  {
-display: grid;
-grid-template-rows: 100%;
-grid-template-columns: 1fr;
-justify-items: center;
-align-items: center;
-height: 100vh;
-}
-
-#errorMsg {
+section {
 border: #888 1px solid;
-text-align: center;
+border-radius: 1em;
+padding: 1em;
+position: absolute;
+top: 50%;
+left: 50%;
+margin-right: -49%;
+transform: translate(-50%, -50%)
 }
 
 h1 {
-font-weight:		normal;
-font-size:			1em;
-color:				#990000;
-padding: 10px 10px 0;
-margin: 			0 0 4px 0;
+font-size: 1em;
+color: #990000;
+margin: 0 0 0.5em 0;
+text-align: center;
 }
 
 p {
-padding: 0 10px 10px;
 margin: 0;
 }
 
@@ -60,11 +55,11 @@ font-size: 0.8em;
 </style>
 </head>
 <body>
-  <div id="content">
+  <section>
     <div id="errorMsg">
       <h1>[[gRigA["errorData"]["heading"] ]]</h1>
-      [[gRigA["errorData"]["message"] ]]
+      [[gRigA["errorData"]["message"] ]] 
     </div>
-	</div>
+	</section>
 </body>
 </html>

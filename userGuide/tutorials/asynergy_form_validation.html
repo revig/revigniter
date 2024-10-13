@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -162,11 +162,6 @@ build the table using the table structure below and store the SQLite file in <sa
   box-sizing: border-box;
 }
 
-:root {
-  -moz-tab-size: 4;
-  tab-size: 4;
-}
-
 html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
@@ -193,6 +188,7 @@ body {
 
 hr {
   height: 0;
+  color: inherit;
 }
 
 b,
@@ -209,18 +205,6 @@ textarea {
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
-}
-
-button,
-select {
-  text-transform: none;
-}
-
-button,
-[type='button'],
-[type='reset'],
-[type='submit'] {
-  -webkit-appearance: button;
 }
 
 ::-moz-focus-inner {
@@ -248,6 +232,9 @@ a:hover {
 }
 
 .container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -256,8 +243,6 @@ a:hover {
   display: block;
   width: 162px;
   margin-bottom: 20px;
-  margin-left: auto;
-  margin-right: auto;
   margin-top: 20px;
 }
 
@@ -268,9 +253,7 @@ section a {
 
 .main {
   flex-direction: column;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 400px;
   padding: 36px;
 }
 
@@ -477,7 +460,7 @@ put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
 <p>Now let's add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "signup", is set to the name of the controller handler to be called when the user clicks onto the submit button. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
 
 <pre><code>put "signup" into tFormAttrA["asyn:submit.prevent"]
-put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("asynRegister", tFormAttrA) into gData["formOpen"]
+put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
 </code></pre>
 
 <p>This will generate a HTML markup like:</p>
@@ -566,7 +549,7 @@ end if
 
   # GENERATE FORM OPEN AND SUBMIT BUTTON MARKUP
   put "signup" into tFormAttrA["asyn:submit.prevent"]
-  put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("asynRegister", tFormAttrA) into gData["formOpen"]
+  put rigFormOpen("asynRegister", tFormAttrA) into gData["formOpen"]
   put rigSubmitButton("register", "Register") into gData["submit"]
   
 

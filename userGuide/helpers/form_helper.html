@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.4</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -103,17 +103,17 @@
 
 
 
-<h3><a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>()</h3>
+<h3>rigFormOpen()</h3>
 
 <p>Creates an opening form tag with a base URL <strong>built from your config preferences</strong>.  It will optionally let you
 add form attributes and hidden input fields, and will always add the attribute accept-charset based on the Output Charset value in your config file. This attribute defaults to "UTF-8".</p>
 
 <p>The main benefit of using this tag rather than hard coding your own HTML is that it permits your site to be more portable
-in the event your URLs ever change. Furthermore, if CSRF protection is enabled in your <kbd>application/config/config.lc</kbd> file, the <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>() function automatically inserts a hidden CSRF token field in your forms.</p>
+in the event your URLs ever change. Furthermore, if CSRF protection is enabled in your <kbd>application/config/config.lc</kbd> file, the rigFormOpen() function automatically inserts a hidden CSRF token field in your forms.</p>
 
 <p>Here's a simple example:</p>
 
-<pre><code>put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("email/send") into gData["formOpen"]</code></pre>
+<pre><code>put rigFormOpen("email/send") into gData["formOpen"]</code></pre>
 
 <p>The above example would create a form that points to your base URL plus the "email/send" URI segments, like this:</p>
 
@@ -130,7 +130,7 @@ in the event your URLs ever change. Furthermore, if CSRF protection is enabled i
 <pre><code>put "email" into tAttributes["class"]
 put "myform" into tAttributes["id"]
 
-put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("email/send", tAttributes) into gData["formOpen"]</code></pre>
+put rigFormOpen("email/send", tAttributes) into gData["formOpen"]</code></pre>
 
 <p>The above example would create a form similar to this:</p>
 
@@ -143,7 +143,7 @@ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("em
 <pre><code>put "Joe" into tHidden["username"]
 put "234" into tHidden["memberID"]
 
-put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("email/send", "", tHidden) into gData["formOpen"]</code></pre>
+put rigFormOpen("email/send", "", tHidden) into gData["formOpen"]</code></pre>
 
 <p>The above example would create a form similar to this:</p>
 
@@ -152,9 +152,9 @@ put <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>("em
 &lt;input type="hidden" name="memberID" value="234" /></code></pre>
 
 
-<h3><a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>MultiPart()</h3>
+<h3>rigFormOpenMultiPart()</h3>
 
-<p>This function is absolutely identical to the <dfn><a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.3</a>()</dfn> tag above except that it adds a multipart attribute,
+<p>This function is absolutely identical to the <dfn>rigFormOpen()</dfn> tag above except that it adds a multipart attribute,
 which is necessary if you would like to use the form to upload files with.</p>
 
 <h3>rigFormHidden()</h3>
