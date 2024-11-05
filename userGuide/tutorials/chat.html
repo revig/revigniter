@@ -233,8 +233,6 @@ button,
   align-items: center;
   display: flex;
   flex-direction: column;
-  padding-left: 15px;
-  padding-right: 15px;
 }
 
 #logo {
@@ -301,7 +299,6 @@ input[type=text] {
 }
 
 #login {
-  width: 400px;
   margin-top: 20px;
   padding: 1em;
 }
@@ -377,7 +374,6 @@ a:hover {
   overflow: auto;
   border-bottom: 1px solid rgb(118, 205, 0);
   border-top: 1px solid rgb(118, 205, 0);
-  /*clear: both;*/
 }
 
 #chatbody li {
@@ -386,9 +382,7 @@ a:hover {
   border-top-right-radius: 5px;
   color: rgb(224, 224, 224);
   font-size: 75%;
-  height: 30px;
-  padding-left: 12px;
-  padding-top: 1px;
+  padding: 0.6em 12px;
   margin: 6px 1.5em 0 1.5em;
   list-style-type: none;
 }
@@ -405,6 +399,12 @@ a:hover {
   font-size: 58.33%;
   text-align: center;
   margin-top: 80px;
+}
+
+@media only screen and (min-width: 420px) {
+  #login {
+      width: 400px;
+  }
 }
 
 </code></pre>
