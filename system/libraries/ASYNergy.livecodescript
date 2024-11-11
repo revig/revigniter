@@ -193,10 +193,10 @@ end _rigAsynInitHelper
 --| FUNCTION _rigAsynPayload
 --|
 --| Author: rabit
---| Version:  1.1
+--| Version:  1.2
 --| Created: 2022-05-26
---| Last Mod: 2023-05-21
---| Requires: rigVarPost(), _rigAsynModelValueMod()
+--| Last Mod: 2024-11-11
+--| Requires: rigFetchConfigItem(), rigVarPost(), _rigAsynModelValueMod()
 --| 
 --| Summary: Return ASYNergy JSON data as array
 --| 
@@ -208,7 +208,7 @@ end _rigAsynInitHelper
 ----------------------------------------------------------------------*/
 
 private function _rigAsynPayload
-  local tKey, tPayload, tWorkingPldA, tLCfunc
+  local tKey, tPayload, tWorkingPldA, tLCfunc, tXssFlag
   
   # A PERCENT SIGN IN THE PAYLOAD MAY PRODUCE ZERO ("<NUL>") CHARACTERS
   # WHICH ARE GENERATED WHILE URL DECODING THE PAYLOAD IN rigXssClean()
@@ -217,25 +217,28 @@ private function _rigAsynPayload
   # SO PRIOR TO XSS CLEANING WE OBSCURE THE PERCENT SIGN AND
   # INSERT IT AFTERWARDS AGAIN.
   replace "%" with "]![" in $_POST
-  put rigVarPost("asynPayload", TRUE) into tPayload
+  # THERE IS NO NEED TO RUN THE XSS FILTER IF GLOBAL FILTERING IS SET
+  # TO TRUE, AS IN THIS CASE THE $_POST DATA IS ALREADY FILTERED.
+  put not rigFetchConfigItem("globalXssFiltering") into tXssFlag
+  put rigVarPost("asynPayload", tXssFlag) into tPayload
   replace "]![" with "%" in tPayload
 
   if tPayload <> FALSE then
     try
       put textDecode(tPayload, "ASCII") into tPayload
-			
-			if sBetterJSONIncluded then
-				put jsonDecode(tPayload) into sPayloadA
-			else
-      		put JsonImport(tPayload) into sPayloadA
-			end if
+
+      if sBetterJSONIncluded then
+        put jsonDecode(tPayload) into sPayloadA
+      else
+        put JsonImport(tPayload) into sPayloadA
+      end if
     catch e
-			if sBetterJSONIncluded then
-				rigLogMessage "error", "ASYNergy jsonDecode error!"
-			else
-      		rigLogMessage "error", "ASYNergy JsonImport error!"
-			end if
-      
+      if sBetterJSONIncluded then
+        rigLogMessage "error", "ASYNergy jsonDecode error!"
+      else
+        rigLogMessage "error", "ASYNergy JsonImport error!"
+      end if
+
       return FALSE
     end try
 
