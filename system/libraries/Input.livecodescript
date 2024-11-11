@@ -151,9 +151,9 @@ end _rigSetDefaultValues
 --| COMMAND _rigSanitizeGlobals
 --|
 --| Author: rabit
---| Version:  1.12
+--| Version:  1.13
 --| Created: 2009-06-17
---| Last Mod: 2022-11-06
+--| Last Mod: 2024-11-11
 --| Requires: Log library, _rigInputConfig, _rigSerializedPOSTtoArray, _rigCleanInputData()
 --|           _rigVarPostFallback(), rigLogMessage, _rigCSRFconfig, _rigCSRFverify
 --|
@@ -240,6 +240,13 @@ private command _rigSanitizeGlobals
           end if
 
         else -- if sInputA["xRequestedWith"] <> "XMLHttpRequest"
+          # A PERCENT SIGN IN THE PAYLOAD MAY PRODUCE ZERO ("<NUL>") CHARACTERS
+          # WHICH ARE GENERATED WHILE URL DECODING THE PAYLOAD IN rigXssClean()
+          # IF ONE OF THE CHARACTERS AFTER "%" IS NOT A HEXADECIMAL DIGIT.
+          # THIS WOULD LEAD TO AN ERROR IN JsonImport.
+          # SO PRIOR TO XSS CLEANING WE OBSCURE THE PERCENT SIGN AND
+          # INSERT IT AFTERWARDS AGAIN.
+          replace "%" with "]![" in $_POST_RAW
           # JSON SENT USING post, INCLUDES ESCAPED QUOTATION MARKS
 	        # SHOULD WE FILTER THE DATA?
 	        if sInputA["useXssClean"] is TRUE then
@@ -247,6 +254,8 @@ private command _rigSanitizeGlobals
           else
             put urlDecode($_POST_RAW) into $_POST
 	        end if
+
+          replace "]![" with "%" in $_POST
         end if -- if sInputA["xRequestedWith"] <> "XMLHttpRequest"
 
 			end if -- if tPOSTrawVariableValue is empty
