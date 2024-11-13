@@ -94,6 +94,7 @@
 
 
 <ul>
+<li><a href="#version245">Version 2.4.5</a></li>
 <li><a href="#version244">Version 2.4.4</a></li>
 <li><a href="#version243">Version 2.4.3</a></li>
 <li><a href="#version242">Version 2.4.2</a></li>
@@ -235,8 +236,19 @@
 </ul>
 
 
+<h2><a id="version245">&nbsp;</a>Version 2.4.5</h2>
+<p>Release Date: 2024-11-13</p>
+
+<ul>
+	<li><strong>Fixed:</strong> Percentage signs in JSON data are now preserved and no longer produce zero (“&lt;NUL&gt;”) characters while filtering the data in the <dfn>_rigSanitizeGlobals</dfn> function of the Input library.</li>
+	<li><strong>Changed:</strong> The <dfn>_rigAsynPayload()</dfn> function of the ASYNergy library now refrains from executing the XSS filter if the global filtering is set to true.</li>
+	<li><strong>Changed:</strong> The stylesheets of the tutorial examples have been revised.</li>
+	<li><strong>Added:</strong> the latest version of the ASYNergy framework.</li>
+</ul>
+
+
 <h2><a id="version244">&nbsp;</a>Version 2.4.4</h2>
-<p>Release Date: 2024-10-013</p>
+<p>Release Date: 2024-10-13</p>
 
 <ul>
 	<li><strong>Fixed:</strong> the mess in the User Guide caused by unintentional execution of 'find and replace' in preparation of the previous version.</li>
