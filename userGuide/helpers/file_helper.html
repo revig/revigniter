@@ -120,7 +120,7 @@ revIgniter uses a front controller so paths are always relative to the main site
 
 <h3>rigWriteFile("<var>path</var>", <var>tData</var>)</h3>
 
-<p>Writes data to the file specified in the path.  If the file does not exist the function will create it. Example:</p>
+<p>Writes data to the file specified in the path.  If the file does not exist, the function will create it. Example:</p>
 
 <pre><code>put "Some file data" into tData
 
@@ -131,7 +131,7 @@ else
 end if</code></pre>
 
 
-<p>Note: In order for this function to write data to a file its file permissions must be set such that it is writable (666, 777, etc.).
+<p>Note: In order for this function to write data to a file, its file permissions must be set such that it is writable (666, 777, etc.).
 If the file does not already exist, the directory containing it must be writable.</p>
 
 <p class="important"><strong>Note:</strong> The path is relative to your main site index.lc file, NOT your controller or view files.
@@ -139,7 +139,7 @@ revIgniter uses a front controller so paths are always relative to the main site
 
 <h3>rigDeleteFiles "<var>path</var>"</h3>
 
-<p>Deletes aLL files contained in the supplied path.  Example:</p>
+<p>Deletes all files contained in the supplied path.  Example:</p>
 <pre><code class="lang-livecodeserver">rigDeleteFiles "./path/to/directory/"</code></pre>
 
 <p>If the second parameter is set to <kbd>TRUE</kbd>, any directories contained within the supplied root path will be deleted as well. Example:</p>
@@ -164,7 +164,7 @@ path are read as well if the third parameter is set to TRUE.</p>
 
 <h3>rigGetFileInfo("<var>path/to/file</var>", <var>tFileInformation</var>)</h3>
 
-<p>Given a file and path, returns the name, path, size, date modified as an array. Second parameter allows you to explicitly declare what information you want returned; options are: fileName, serverPath, fileSize, resourceSize, created, lastModified, lastAccessed, lastBackedUp, owner, groupOwner, permissions, fileType.
+<p>Given a file and path, returns the name, path, size, date modified as an array. The second parameter allows you to explicitly declare what information you want returned; options are: fileName, serverPath, fileSize, resourceSize, created, lastModified, lastAccessed, lastBackedUp, owner, groupOwner, permissions, fileType.
 Returns FALSE if the file cannot be found.</p>
 
 

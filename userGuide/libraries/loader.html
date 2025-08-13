@@ -92,9 +92,9 @@
 <h1>Loader Library</h1>
 
 <p>Loader, as the name suggests, is used to load elements.  These elements can be <a href="../general/libraries.html">Libraries</a>, <a href="../general/using_stacks.html">Stacks</a>, <a href="../general/views.html">View files</a>, <a href="../general/models.html">Models</a>,
-<a href="../general/helpers.html">Helpers</a>, Files, Language files, Custom Configuration files or <a href="../general/extensions.html">LiveCode Builder (library) Extensions</a>.</p>
+<a href="../general/helpers.html">Helpers</a>, Files, Language files, Custom Configuration files, or <a href="../general/extensions.html">LiveCode Builder (library) Extensions</a>.</p>
 
-<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system, so there is no need to do it manually.</p>
 
 <p>The following handlers are available in this library:</p>
 
@@ -104,13 +104,13 @@
 
 <p>This handler is used to load core libraries.  Where <var>libraryName</var> is the name of the library you want to load.</p>
 
-<p>For example, if you would like to send email with revIgniter, the first step is to load the email library within your controller:</p>
+<p>For example, if you would like to send an email with revIgniter, the first step is to load the email library within your controller:</p>
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Email"</code></pre>
 
 <p>Once loaded, the library will be ready for use.
 
-<p>Library files can be stored in subdirectories within the main "libraries" folder, or within your personal <dfn>application/libraries</dfn> folder.  
+<p>Library files can be stored in subdirectories within the main "libraries" folder or within your personal <dfn>application/libraries</dfn> folder.  
 To load a file located in a subdirectory, simply include the path, relative to the "libraries" folder.  
 For example, if you have a file located at:</p>
 
@@ -141,11 +141,11 @@ rigLoaderLoadLibrary "Email", tConfig</code></pre>
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>stackName:</strong> is the name of the stack (the suffix can be omitted) you want to load</li>
-	<li><strong>tConfig:</strong> (optional) used to pass configuration settings in form of an array</li>
+	<li><strong>tConfig:</strong> (optional) used to pass configuration settings in the form of an array</li>
 	<li><strong>behind / front:</strong> (optional) used to define if the loaded stack should sit in front or behind the home stack, default is behind</li>
 </ul>
 
-<p>Like library files, stacks can be stored in subdirectories. Include the path, relative to the "stacks" folder to load a stack located in a subdirectory. Assuming your stack is located at:</p>
+<p>Like library files, stacks can be stored in subdirectories. Include the path, relative to the "stacks" folder, to load a stack located in a subdirectory. Assuming your stack is located at:</p>
 
 <pre><code>stacks/flavors/Strawberry.livecode
 </code></pre>
@@ -171,15 +171,15 @@ rigLoadStack "Icecream", tConfig</code></pre>
 <h3>rigLoadView("<var>fileName</var>", <kbd>TRUE/FALSE</kbd>)</h3>
 
 <p>This function is used to load your View files.  If you haven't read the <a href="../general/views.html">Views</a> section of the
-user guide it is recommended that you do since it shows you how this function is typically used.</p>
+user guide, it is recommended that you do since it shows you how this function is typically used.</p>
 
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>fileName:</strong> is the name of the view file you would like to load. &nbsp;Note: The .lc file extension does not need to be specified unless you use something other than <kbd>.lc</kbd></li>
 	<li><strong>TRUE/FALSE</strong> (optional) lets you change the behavior of the function so that it returns data as a string
-rather than sending it to your browser, this can be useful if you want to process the data in some way, if you
-set the parameter to <kbd>TRUE</kbd> (boolean) it will return data, the default behavior is <kbd>FALSE</kbd>, which sends it
-to your browser, remember to assign it to a variable if you want the data returned:</li>
+rather than sending it to your browser. This can be useful if you want to process the data in some way. If you
+set the parameter to <kbd>TRUE</kbd> (boolean), it will return data. The default behavior is <kbd>FALSE</kbd>, which sends it
+to your browser. Remember to assign it to a variable if you want the data returned:</li>
 </ul>
 
 <pre><code>put rigLoadView("<var>myfile</var>", <kbd>TRUE</kbd>) into tString</code></pre>
@@ -189,7 +189,7 @@ to your browser, remember to assign it to a variable if you want the data return
 
 <pre><code class="lang-livecodeserver">rigLoadModel "<var>modelName</var>"</code></pre>
 
-<p>If your model is located in a sub-folder, include the relative path from your models folder. For example, if you have a model located at application/models/blog/queries.lc you'll load it using:</p>
+<p>If your model is located in a sub-folder, include the relative path from your models folder. For example, if you have a model located at application/models/blog/queries.lc, you'll load it using:</p>
 <pre><code class="lang-livecodeserver">rigLoadModel "<var>blog/queries</var>"</code></pre>
 
 
@@ -211,8 +211,8 @@ to your browser, remember to assign it to a variable if you want the data return
 
 <h3>rigLoadFile("<var>filepath/filename</var>", <kbd>TRUE/FALSE</kbd>)</h3>
 
-<p>This is a generic file loading function. Supply the filepath (relative to document root) and name in the first parameter and it will open and read the file.
-By default the data is sent to your browser, just like a View file, but if you set the second parameter to <kbd>TRUE</kbd> (boolean)
+<p>This is a generic file loading function. Supply the filepath (relative to document root) and name in the first parameter, and it will open and read the file.
+By default, the data is sent to your browser, just like a View file, but if you set the second parameter to <kbd>TRUE</kbd> (boolean),
 it will instead return the data as a string.</p>
 
 
@@ -223,7 +223,7 @@ it will instead return the data as a string.</p>
 <p>This handler is an alias of the <a href="config.html">config file loading function</a>: rigLoadConfigFile()</p>
 
 <h3>rigLoadExtension "<var>folderName</var>"</h3>
-<p>This handler loads LiveCode Builder extensions, where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in application/extensions/ or in system/extensions/. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name all delimited by a period.</p>
+<p>This handler loads LiveCode Builder extensions, where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in application/extensions/ or in system/extensions/. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name, all delimited by a period.</p>
 
 
 </div>

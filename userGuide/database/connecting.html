@@ -103,12 +103,12 @@ To enable "auto connecting", add the word <var>database</var> to the library arr
 
 <h2>Manually Connecting</h2>
 
-<p>If only some of your pages require database connectivity you can manually connect to your database by adding this
+<p>If only some of your pages require database connectivity, you can manually connect to your database by adding this
 line of code in any function where it is needed.</p>
 
 <pre><code>get rigLoadDatabase()</code></pre>
 
-<p class="important">If the above function does <strong>not</strong> contain any information in the first parameter it will connect
+<p class="important">If the above function does <strong>not</strong> contain any information in the first parameter, it will connect
 to the group specified in your database config file. For most people, this is the preferred method of use.</p>
 
 <h3>Available Parameters</h3>
@@ -126,14 +126,14 @@ to the group specified in your database config file. For most people, this is th
 from your config file, or you can even submit connection values for a database that is not specified in your config file.
 Examples:</p>
 
-<p>To choose a specific group from your config file you can do this:</p>
+<p>To choose a specific group from your config file, you can do this:</p>
 
 <pre><code>get rigLoadDatabase("groupName")</code></pre>
 
 <p>Where <var>groupName</var> is the name of the connection group from your config file.</p>
 
 
-<p>To connect manually to a desired database you can pass an array of values:</p>
+<p>To connect manually to a desired database, you can pass an array of values:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">put "localhost" into tConfig["hostname"]
@@ -152,7 +152,7 @@ put "utf8_general_ci" into tConfig["dbcollat"]
 get rigLoadDatabase(<samp>tConfig</samp>);</code></pre>
 </div>
 
-<p>For information on each of these values please see the <a href="configuration.html">configuration page</a>.</p>
+<p>For information on each of these values, please see the <a href="configuration.html">configuration page</a>.</p>
 
 <p>Or you can submit your database values as a Data Source Name. DSNs must have this prototype:</p>
 

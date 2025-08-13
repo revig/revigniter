@@ -112,8 +112,8 @@
 <li><strong>alnum</strong>:&nbsp; Alpha-numeric string with lower and uppercase characters.</li>
 <li><strong>numeric</strong>:&nbsp; Numeric string.</li>
 <li><strong>nozero</strong>:&nbsp; Numeric string with no zeros.</li>
-<li><strong>unique</strong>:&nbsp; A md5 encrypted UUID. Note: The length parameter is not available for this type.
-Returns a fixed length 32 character string.</li>
+<li><strong>unique</strong>:&nbsp; A MD5 encrypted UUID. Note: The length parameter is not available for this type.
+Returns a fixed length 32-character string.</li>
 </ul>
 
 <p>Usage example:</p>
@@ -123,7 +123,7 @@ Returns a fixed length 32 character string.</li>
 
 <h3>rigAlternator()</h3>
 
-<p>Allows two or more items to be alternated between, when cycling through a loop.  Example:</p>
+<p>Allows two or more items to be alternated between when cycling through a loop.  Example:</p>
 
 <pre><code>rigResetAlternator
 repeat with i = 1 to 10
@@ -131,8 +131,8 @@ repeat with i = 1 to 10
 end repeat
 </code></pre>
 
-<p><strong>Note:</strong> To use multiple separate calls to this function call the <dfn>rigResetAlternator</dfn> handler first.</p>
-<p>You can add as many parameters as you want, and with each iteration of your loop the next item will be returned.</p>
+<p><strong>Note:</strong> To use multiple separate calls to this function call, the <dfn>rigResetAlternator</dfn> handler first.</p>
+<p>You can add as many parameters as you want, and with each iteration of your loop, the next item will be returned.</p>
 
 <pre><code>rigResetAlternator
 repeat with i = 1 to 10
@@ -168,7 +168,7 @@ put rigTrimSlashes(tString) into tString -- results in this/that/theother</code>
 
 <h3>rigReduceMultiples()</h3>
 
-<p>Reduces multiple instances of a particular character occuring directly after each other. Example:</p>
+<p>Reduces multiple instances of a particular character occurring directly after each other. Example:</p>
 
 <pre><code>put "Fred, Bill,, Joe, Jimmy" into tString
 put rigReduceMultiples(tString,",") into tString -- results in "Fred, Bill, Joe, Jimmy"
@@ -179,7 +179,7 @@ put rigReduceMultiples(tString,",") into tString -- results in "Fred, Bill, Joe,
 <pre><code>rigReduceMultiples(string: text to search in, string: character to reduce, boolean: whether to remove the character from the front and end of the string)</code></pre>
 
 The first parameter contains the string in which you want to reduce the multiples. The second parameter contains the character you want to have reduced.
-The third parameter is FALSE by default; if set to TRUE it will remove occurences of the character at the beginning and the end of the string. Example:
+The third parameter is FALSE by default; if set to TRUE, it will remove occurrences of the character at the beginning and the end of the string. Example:
 
 <pre><code>put ",Fred, Bill,, Joe, Jimmy," into tString
 put rigReduceMultiples(tString, ",", TRUE) into tString -- results in "Fred, Bill, Joe, Jimmy"

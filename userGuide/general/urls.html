@@ -91,7 +91,7 @@
 
 <h1>revIgniter URLs</h1>
 
-<p>By default, URLs in revIgniter are designed to be search-engine and human friendly.  Rather than using the standard "query string"
+<p>By default, URLs in revIgniter are designed to be search-engine and human-friendly.  Rather than using the standard "query string"
 approach to URLs that is synonymous with dynamic systems, revIgniter uses a <strong>segment-based</strong> approach:</p>
 
 <pre><code>example.com/<var>news</var>/<dfn>article</dfn>/<samp>my_article</samp></code></pre>
@@ -100,7 +100,7 @@ approach to URLs that is synonymous with dynamic systems, revIgniter uses a <str
 
 <h2>URI Segments</h2>
 
-<p>The segments in the URL, in following with the Model-View-Controller approach, usually represent:</p>
+<p>The segments in the URL, following with the Model-View-Controller approach, usually represent:</p>
 
 <pre><code>example.com/<var>controller</var>/<dfn>handler</dfn>/<samp>ID</samp></code></pre>
 
@@ -137,19 +137,19 @@ contain handlers that make it easy to work with your URI data.  In addition, you
 </code></pre>
 </div>
 
-<p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, css and js is treated as
+<p>In the above example, any HTTP request other than those for index.lc, images, assets, robots.txt, CSS, and JS is treated as
 a request for your index.lc file. If you use this method to remove the page, set the Index File variable in your <dfn>application/config/config.lc</dfn> file so that it is blank.</p>
 
-<p>If your default controller is not loaded when the URI contains no data please read about URIs in your <dfn>application/config/config.lc</dfn> file and choose another protocol to retrieve the URI string.</p>
+<p>If your default controller is not loaded when the URI contains no data, please read about URIs in your <dfn>application/config/config.lc</dfn> file and choose another protocol to retrieve the URI string.</p>
 
-<p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
+<p class="important"><strong>Note:</strong> Adapt RewriteBase to the path to revIgniter. Typically, this is /. If you place revIgniter into a subfolder, RewriteBase would be something like /yourSubfolder/yourOtherSubfolder/.</p>
 
-<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See <a href="http://httpd.apache.org/docs/current/mod/mod_rewrite.html">http://httpd.apache.org/docs/current/mod/mod_rewrite.html</a></p>
+<p class="important"><strong>Note:</strong> To enable the rewrite engine for .htaccess files, you need to set "RewriteEngine On" and "Options FollowSymLinks" must be enabled in the Apache server configuration (httpd.conf) file. See <a href="http://httpd.apache.org/docs/current/mod/mod_rewrite.html">http://httpd.apache.org/docs/current/mod/mod_rewrite.html</a></p>
 
 
 <h2>Adding a URL Suffix</h2>
 
-<p>In your <dfn>application/config/config.lc</dfn> file you can specify a suffix that will be added to all URLs generated
+<p>In your <dfn>application/config/config.lc</dfn> file, you can specify a suffix that will be added to all URLs generated
 by revIgniter.  For example, if a URL is this:</p>
 
 <pre><code>example.com/index.lc/products/view/shoes</code></pre>
@@ -161,31 +161,31 @@ by revIgniter.  For example, if a URL is this:</p>
 
 <h2>Enabling Query Strings</h2>
 
-<p>In some cases you might prefer to use query strings URLs:</p>
+<p>In some cases, you might prefer to use query strings URLs:</p>
 
 <pre><code>index.lc?c=products&amp;m=view&amp;id=345</code></pre>
 
 <p>revIgniter optionally supports this capability, which can be enabled in your <dfn>application/config/config.lc</dfn> file. If you
-open your config file you'll see these items:</p>
+open your config file, you'll see these items:</p>
 
 <pre><code>put FALSE into gConfig["enableQueryStrings"]
 put  "c" into gConfig["controllerTrigger"]
 put "h" into gConfig["handlerTrigger"]</code></pre>
 
-<p>If you change "enableQueryStrings" to TRUE this feature will become active.  Your controllers and handlers will then
+<p>If you change "enableQueryStrings" to TRUE, this feature will become active.  Your controllers and handlers will then
 be accessible using the "trigger" words you've set to invoke your controllers and handlers:</p>
 
 <pre><code>index.lc?c=controller&amp;h=handler</code></pre>
 
 
 
-<h2>Using Secure URLs (https) Along with Normal URLs (http)</h2>
+<h2>Using Secure URLs (https) Along With Normal URLs (http)</h2>
 
-<p>In case you use secure URLs along with normal URLs you need to set the "Base Site URL" in your <dfn>application/config/config.lc</dfn> file to empty like:</p>
+<p>In case you use secure URLs along with normal URLs, you need to set the "Base Site URL" in your <dfn>application/config/config.lc</dfn> file to empty like:</p>
 
 <pre><code>put "" into gConfig["baseUrl"]</code></pre>
 
-<p>If gConfig["baseUrl"] is empty revIgniter will guess the protocol, domain and path to your installation.</p>
+<p>If gConfig["baseUrl"] is empty, revIgniter will guess the protocol, domain, and path to your installation.</p>
 
 
 </div>

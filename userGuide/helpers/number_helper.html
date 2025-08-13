@@ -91,7 +91,7 @@
 
 <h1>Number Helper</h1>
 
-<p>The Number Helper file contains handlers that help you work with numeric data respecting country-specific number formats. It lets you specify number formats using number codes, where each code letter is preceded with a percent sign:  %c3%d,%d.%d etc.</p>
+<p>The Number Helper file contains handlers that help you work with numeric data respecting country-specific number formats. It lets you specify number formats using number codes, where each code letter is preceded with a percent sign:  %c3%d,%d.%d, etc.</p>
 
 <h3>Number Code Specifiers and Separators</h3>
 
@@ -166,12 +166,12 @@
 </code></pre>
 
 
-<p>Swiss-German (canton St. Gallen) number format including a group partition threshold specifier and a data size suffix specifier, please note that although the integral part uses an apostrophe as decimal separator, there is a different thousands separator for the decimal part (the space after the last digits specifier):</p>
+<p>Swiss-German (canton St. Gallen) number format including a group partition threshold specifier and a data size suffix specifier, please note that although the integral part uses an apostrophe as a decimal separator, there is a different thousands separator for the decimal part (the space after the last digits specifier):</p>
 <pre><code>5%3%d'%d.%d %s
 </code></pre>
 
 
-<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to specify a number format. The number format parameter of all functions is optional. If this parameter is empty the number code as specified in language files is used. Country-specific number codes and text generated can be found in the following language file: <kbd>system/language/&lt;your_lang&gt;/numberLang.lc</kbd>.</p>
+<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to specify a number format. The number format parameter of all functions is optional. If this parameter is empty, the number code as specified in language files is used. Country-specific number codes and text generated can be found in the following language file: <kbd>system/language/&lt;your_lang&gt;/numberLang.lc</kbd>.</p>
 
 
 <h2>Loading this Helper</h2>
@@ -190,7 +190,7 @@ The following functions are available:
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>number:</strong> must contain a number</li>
-	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above. If this parameter is empty, the number code as specified in language files is used</li>
 	<li><strong>unit:</strong> (optional) must contain a string like "CHF", "C$", "miles"... etc.</li>
 </ul>
 
@@ -210,7 +210,7 @@ put rigFormattedNum(tNumToFormat, tFormat, "km") into gData["formattedNum"]
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>number:</strong> must contain a number</li>
-	<li><strong>decimalSeparator:</strong> (optional) must contain the decimal separator ("." or ",") of the number in the number parameter, if this parameter is empty the decimal separator as specified in language files is used</li>
+	<li><strong>decimalSeparator:</strong> (optional) must contain the decimal separator ("." or ",") of the number in the number parameter. If this parameter is empty, the decimal separator as specified in language files is used</li>
 </ul>
 
 <p>Example:</p>
@@ -228,8 +228,8 @@ put rigFormattedNumToNum(tFormattedToNumber, ".") into gData["number"]
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>number:</strong> must contain a number</li>
-	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
-	<li><strong>symbol:</strong> (optional) must contain a string like "CHF", "C$", "€"... etc., if this parameter is empty the currency symbol as specified in language files is used</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above. If this parameter is empty, the number code as specified in language files is used</li>
+	<li><strong>symbol:</strong> (optional) must contain a string like "CHF", "C$", "€"... etc. If this parameter is empty, the currency symbol as specified in language files is used</li>
 </ul>
 
 <p>Example:</p>
@@ -249,8 +249,8 @@ put rigNumberToCurrency(tNumber, , ) into gData["currency"]
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>number:</strong> must contain a number</li>
-	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
-	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision, if this parameter is empty a floating point precision of 1 is used</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above. If this parameter is empty, the number code as specified in language files is used</li>
+	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision. If this parameter is empty, a floating point precision of 1 is used</li>
 </ul>
 
 <p>Example:</p>
@@ -268,8 +268,8 @@ put rigNumberToAmount(tNumber, , 5) into gData["amount"]
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>number:</strong> must contain a number</li>
-	<li><strong>numberCode:</strong> (optional) must contain a number code as described above, if this parameter is empty the number code as specified in language files is used</li>
-	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision, if this parameter is empty a floating point precision of 1 is used</li>
+	<li><strong>numberCode:</strong> (optional) must contain a number code as described above. If this parameter is empty, the number code as specified in language files is used</li>
+	<li><strong>precision:</strong> (optional) must contain an integer specifying the floating point precision. If this parameter is empty a floating point precision of 1 is used</li>
 </ul>
 
 <p>Example:</p>

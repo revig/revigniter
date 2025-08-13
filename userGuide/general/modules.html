@@ -91,7 +91,7 @@
 
 <h1>Modules</h1>
 
-<p>Modules are components of the Hierarchical Model View Controller application design pattern further explained in chapter <br>
+<p>Modules are components of the Hierarchical Model View Controller application design pattern, further explained in chapter <br>
   <a href="../overview/hmvc.html">HMVC - Extending the Model-View-Controller Pattern</a>.</p>
 
 
@@ -114,13 +114,13 @@
 <a id="overview"></a>
 <h2>Overview</h2>
 
-<p>Following below the features and key points of revIgniter's approach to the HMVC pattern:</p>
+<p>Following below are the features and key points of revIgniter's approach to the HMVC pattern:</p>
 
 <ul>
   <li>Modules can be used as libraries.</li>
   <li>Module controllers can be used as application controllers.</li>
-  <li>Modules can be used as widgets or view partials respectively.</li>
-  <li>Modules can be nested, that's what "H" in HMVC means anyway.</li>
+  <li>Modules can be used as widgets or view partials, respectively.</li>
+  <li>Modules can be nested; that's what "H" in HMVC means anyway.</li>
   <li>Modules can load resources of other modules.</li>
   <li>Controllers can be located in myModule/controllers sub-directories.</li>
   <li>Pass any number of parameters to module controllers using URI style segments and / or an array (widgets only).</li>
@@ -128,8 +128,8 @@
   <li>Models may be loaded from myModule/models sub-directories.</li>  
   <li>Each module may contain a config/autoload.lc file.</li>
   <li>Each module may contain a config/config.lc file.</li>
-  <li>Each module may contain a config/routes.lc file. Note, this file is mandatory if a module controller is used as application controller.</li>
-  <li>Each module may contain an extensions directory, a language directory, a helpers directory, a libraries directory, a models directory and a stacks directory.</li>
+  <li>Each module may contain a config/routes.lc file. Note, this file is mandatory if a module controller is used as an application controller.</li>
+  <li>Each module may contain an extensions directory, a language directory, a helpers directory, a libraries directory, a models directory, and a stacks directory.</li>
 </ul>
 
 
@@ -158,13 +158,13 @@
 <a id="controllerSpecifications"></a>
 <h2>Module Controller Specifications</h2>
 
-<p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as uri segments into the  
+<p>Provided that the controller is used as an application controller, put all handler names which are likely to serve as URI segments into the  
 global <var>gModuleHandlers</var>.</p>
 
 <p>Provided that the controller is used as a library or widget, put the name of the main handler (the handler named after the module) as well as the index handler 
   name and all names of handlers which are likely to be called by using the <dfn>rigRunModule()</dfn> function into the global <var>gModuleHandlers</var>.</p>
 
-<p>To avoid name collisions with standard application controller index handlers the name of your module controller's index handler must be  
+<p>To avoid name collisions with standard application controller index handlers, the name of your module controller's index handler must be  
 composed of the controller name followed by the word "Index" like: myModuleIndex.</p>
 
 <p>Sample code of a module controller named after the module:</p>
@@ -210,22 +210,22 @@ end _privatehandler
 </div>
 
 
-<p>There is a very basic sample controller in modules/moduleSample/controllers which can serve as application controller as well as widget / view partial.</p>
+<p>There is a very basic sample controller in modules/moduleSample/controllers which can serve as an application controller as well as a widget / view partial.</p>
 
-<p class="important"><strong>Note:</strong> In case you use module controllers as application controller you must include a routes.lc file in the yourModule/config directory.
+<p class="important"><strong>Note:</strong> In case you use module controllers as application controllers you must include a routes.lc file in the yourModule/config directory.
   Routing has no effect on view partials or if modules are used as libraries. Please see the sample routes file in modules/moduleSample/config.</p>
   
   
 <a id="applicationControllers"></a>
 <h2>Using Modules as Application Controllers</h2>
 
-<p>To use modules as application controllers specify the controller script to be invoked using URI segments. There is no difference to standard controllers.  
-For example to run the sample module as application controller the appropriate URL would read:</p>
+<p>To use modules as application controllers, specify the controller script to be invoked using URI segments. There is no difference to standard controllers.  
+For example, to run the sample module as an application controller, the appropriate URL would read:</p>
 
 <pre><code>example.com/moduleSample</code></pre>
 
-<p class="important"><strong>Note:</strong> On the basis of the URL there is no way to distinguish between standard application controllers and module controllers 
-  used as app controllers. So, to avoid name collisions with app controller names be careful naming your module controllers. Of course this applies to naming modules 
+<p class="important"><strong>Note:</strong> On the basis of the URL, there is no way to distinguish between standard application controllers and module controllers 
+  used as app controllers. So, to avoid name collisions with app controller names, be careful naming your module controllers. Of course, this applies to naming modules 
   used as widgets only.</p>
 
   
@@ -248,7 +248,7 @@ For example to run the sample module as application controller the appropriate U
 
 <pre><code>myModule/mySubDirectory/myController</code></pre>
 
-<p>To address a particular controller handler instead of the index handler add it's name as segment Like:</p>
+<p>To address a particular controller handler instead of the index handler, add its name as a segment like:</p>
 
 <pre><code>myModule/myController/myControllerHandler</code></pre>
   
@@ -257,23 +257,23 @@ For example to run the sample module as application controller the appropriate U
 <pre><code>myModule/myController/myControllerHandler/name/joe</code></pre>
 
 
-<p>If you name a controller after your module and this controller is not in a sub-directory of myModule/controllers you can omit the controller name and the path would 
+<p>If you name a controller after your module and this controller is not in a sub-directory of myModule/controllers, you can omit the controller name, and the path would 
   simply be:</p>
   
 <pre><code>myModule</code></pre>
 
-<p>If you don't include a handler name the controller's index handler, myModuleIndex in this case, is called. Calling a particular handler of controller myModule of module 
+<p>If you don't include a handler name, the controller's index handler, myModuleIndex in this case, is called. Calling a particular handler of controller myModule of module 
   myModule would read:</p>
   
 <pre><code>myModule/myOtherHandler</code></pre>
 
-<p class="important"><strong>Note:</strong> Currently "query string" URLs are not compatible with modules. So, always use segment-based URLs.</p>
+<p class="important"><strong>Note:</strong> Currently, "query string" URLs are not compatible with modules. So, always use segment-based URLs.</p>
 
 
 <a id="loadingResources"></a>
 <h2>Loading Module Files and Resources</h2>
 
-<p>You can load models, libraries, helpers etc. like in standard application controllers. To load equivalent module files add the module's name to parameter lists like:</p>
+<p>You can load models, libraries, helpers, etc., like in standard application controllers. To load equivalent module files, add the module's name to parameter lists like:</p>
 
 
 <pre><code>rigLoadModel "moduleModel", , "myModule"
@@ -307,7 +307,7 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 
 <h3>Loading Views</h3>
 
-<p>In general module view files are loaded like any other view file using <dfn>rigLoadView()</dfn>. Provided that the particular module is used as widget you must keep 
+<p>In general, module view files are loaded like any other view file using <dfn>rigLoadView()</dfn>. Provided that the particular module is used as a widget, you must keep 
   in mind that you should not set the second parameter of this function to true. To set this parameter is unnecessary anyway because loading the view of a widget always 
   returns data as a string rather than sending it to the browser.</p>
 
@@ -315,30 +315,30 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 <a id="configuration"></a>
 <h2>Module Configuration</h2>
 
-<p>To configure your module simply add a configuration file "<dfn>config.lc</dfn>" to <dfn>application/modules/myModule/config/</dfn> like the one you find in the config directory of the sample module.</p>
+<p>To configure your module, simply add a configuration file "<dfn>config.lc</dfn>" to <dfn>application/modules/myModule/config/</dfn> like the one you find in the config directory of the sample module.</p>
 
 <h3>Setting a Module's Configuration Value in a Configuration File</h3>
 
-<p>To add configuration data related to your module use the module name as array key in a multidimensional array named "<var>gConfig</var>" like:</p>
+<p>To add configuration data related to your module, use the module name as an array key in a multidimensional array named "<var>gConfig</var>" like:</p>
 
 <pre><code>put "foo" into gConfig["myModule"]["bar"]</code></pre>
 
 <h3>Overriding a Global Configuration Value in a Configuration File</h3>
 
-<p>To override global configuration data just omit the module's name as array key.</p>
+<p>To override global configuration data, just omit the module's name as an array key.</p>
 
 <pre><code>put "french" into gConfig["language"]</code></pre>
 
 
 <h3>Fetching Module Config Items</h3>
 
-<p>To retrieve an item from your module's config file, use the standard function and add the name of your module as second parameter like:</p>
+<p>To retrieve an item from your module's config file, use the standard function and add the name of your module as the second parameter like:</p>
 
 <pre><code class="lang-livecodeserver">rigFetchConfigItem("itemName", "myModule")</code></pre>
 
 <h3>Setting a Module Config Item</h3>
 
-<p>If you would like to dynamically set a module's config item or change an existing one, you can so using:</p>
+<p>If you would like to dynamically set a module's config item or change an existing one, you can do so using:</p>
 
 <pre><code class="lang-livecodeserver">rigSetConfigItem("itemName", "itemValue", "myModule")</code></pre>
 
@@ -348,7 +348,7 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 <a id="routing"></a>
 <h2>URI Routing</h2>
 
-<p>Note, the following applies to modules only if used as application controllers. Routing has no effect on view partials or if modules are used as libraries. In case you use module controllers as application controller you must include a <dfn>routes.lc</dfn> file in the <dfn>yourModule/config directory</dfn>. This file lets you re-map URI requests to specific controller functions. Typically there is a one-to-one relationship between a module URL string and its corresponding controller page library/handler. The segments in a module URL normally follow this pattern:</p>
+<p>Note, the following applies to modules only if used as application controllers. Routing has no effect on view partials or if modules are used as libraries. In case you use module controllers as application controllers, you must include a <dfn>routes.lc</dfn> file in the <dfn>yourModule/config directory</dfn>. This file lets you re-map URI requests to specific controller functions. Typically, there is a one-to-one relationship between a module URL string and its corresponding controller page library/handler. The segments in a module URL normally follow this pattern:</p>
 
 <pre><code>example.com/myModule/handler/ID/</code></pre>
 
@@ -375,24 +375,24 @@ put sAutoLibraries into gModuleAutoload["libraries"]
 <p>This route indicates which controller page library should be loaded if the URI contains no data besides the module name. In the above example, the "pagelibrary" page 
   library would be loaded. 
   If the "defaultController" route is empty and there is only one URI segment specifying the name of the module, revIgniter expects that there is a controller named after 
-  the module and tries to load <dfn>myModule/myModule</dfn>. If no handler is specified the module's index handler is called which must be composed of the controller 
+  the module and tries to load <dfn>myModule/myModule</dfn>. If no handler is specified, the module's index handler is called, which must be composed of the controller 
   name followed by the word "Index" so that the route would look like: <dfn>myModule/myModule/myModuleIndex</dfn>.</p>
   
 <pre><code>put "" into gRoute["myModule"][1]["404Override"]</code></pre>
 
-<p>This route will tell the Router what URI segments to use if those provided in the URL cannot be matched to a valid route, in other words if the controller specified 
-  is missing. If this route is empty the default 404 error page is provided.</p>
+<p>This route will tell the Router what URI segments to use if those provided in the URL cannot be matched to a valid route, in other words, if the controller specified 
+  is missing. If this route is empty, the default 404 error page is provided.</p>
   
-<p class="important"><strong>Note:</strong> Module routes are relative to application/modules/. The gRoute["myModule"] array must be numbered 
-  and the key number for reserved routes must be 1. So custom route key numbers start with number 2.</p>
+<p class="important"><strong>Note:</strong> Module routes are relative to application/modules/. The gRoute["myModule"] array must be numbered, 
+  and the key number for reserved routes must be 1. So, custom route key numbers start with number 2.</p>
 
 
 <a id="assets"></a>
 <h2>Module Assets</h2>
   
-<p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files and images is that it simplifies distribution of modules including assets. 
-  Just organize all related assets (as described in chapter <a href="../helpers/asset_helper.html">Asset Helper</a>) in a folder preferably named after your module and 
-  store it in <dfn>assets/modules</dfn>. This way installation of a module with appendant assets is as simple as copying two folders to the right place.</p>
+<p>A nice side effect of using the asset helper to deal with module CSS files, JavaScript files, and images is that it simplifies the distribution of modules, including assets. 
+  Just organize all related assets (as described in chapter <a href="../helpers/asset_helper.html">Asset Helper</a>) in a folder, preferably named after your module, and 
+  store it in <dfn>assets/modules</dfn>. This way, installation of a module with appendant assets is as simple as copying two folders to the right place.</p>
 
 
 </div>

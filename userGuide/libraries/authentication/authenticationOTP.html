@@ -91,17 +91,17 @@
 
 <h1>One-Time Password Authentication</h1>
 
-<p>The authentication library incorporates two-factor authentication using OTP (currently TOTP conforming to <a href="https://tools.ietf.org/html/rfc6238">RFC6238</a> TOTP standards is supported) and QR-codes. In case you would like to do without all the library code unrelated to OTP you can load the <a href="../../helpers/otp_helper.html">OTP helper</a> instead and deal with the helper handlers.</p>
+<p>The authentication library incorporates two-factor authentication using OTP (currently TOTP conforming to <a href="https://tools.ietf.org/html/rfc6238">RFC6238</a> TOTP standards is supported) and QR codes. In case you would like to do without all the library code unrelated to OTP, you can load the <a href="../../helpers/otp_helper.html">OTP helper</a> instead and deal with the helper handlers.</p>
 
 <p class="important"><strong>Note:</strong> OTP authentication requires LiveCode's QR Code Generator Library. Please read about integration of the QR code library in chapter <a href="../../helpers/otp_helper.html">OTP Helper</a>.</p>
 
 <h2>Activation</h2>
-<p>To activate two-factor authentication set <var>sAuthenticationConf["otpEnabled"]</var> in <dfn>application/config/authentication.lc</dfn> to TRUE.</p>
+<p>To activate two-factor authentication, set <var>sAuthenticationConf["otpEnabled"]</var> in <dfn>application/config/authentication.lc</dfn> to TRUE.</p>
 
 
 <h2>OTP Authentication Table</h2>
 
-<p>In order to use two-factor authentication you need one more table in addition to the 4 tables defined in chapter <a href="authenticationTables.html">Authentication Tables</a>. This is a child table of the "users" table. Name this table "otp" according to default settings otherwise you need to adjust the authentication settings.</p>
+<p>In order to use two-factor authentication, you need one more table in addition to the 4 tables defined in chapter <a href="authenticationTables.html">Authentication Tables</a>. This is a child table of the "users" table. Name this table "otp" according to default settings; otherwise, you need to adjust the authentication settings.</p>
 
 
 <p><strong>The MySQL version:</strong></p>
@@ -165,10 +165,10 @@ CREATE TABLE "otp" (
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pAccount:</strong> (optional) is a string which identifies the user. Usually this is an email address or a username. If no value is provided the identity of the currently logged in user is used</li>
+	<li><strong>pAccount:</strong> (optional) is a string which identifies the user. Usually, this is an email address or a username. If no value is provided, the identity of the currently logged-in user is used</li>
 </ul>
 
-<p>The function returns an array with indices: "key" containing the base32 encoded shared secret, and "qr" containing the QR code ready to be displayed in a web page. If QR code generation fails empty array values are returned.</p>
+<p>The function returns an array with indices: "key" containing the base32 encoded shared secret, and "qr" containing the QR code ready to be displayed in a web page. If QR code generation fails, empty array values are returned.</p>
 
 <p>Example:</p>
 
@@ -183,7 +183,7 @@ put tQRa["qr"] into gData["qrCode"]
 
 <h3>rigAuthOTPkeysMatch(<var>pChallenge</var>)</h3>
 
-<p>This function allows you to compare user supplied authentication code (OTP) with a generated code based on the user's database values.</p>
+<p>This function allows you to compare user-supplied authentication code (OTP) with a generated code based on the user's database values.</p>
 
 <p><em>Parameters</em></p>
 <ul>
@@ -217,9 +217,9 @@ end if
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pUserID:</strong> (optional) is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided the ID of the currently logged in user is used</li>
+	<li><strong>pUserID:</strong> (optional) is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided, the ID of the currently logged-in user is used</li>
 </ul>
-<p>The function returns "pendingOTPsetup" in case the user has requested a QR code to set up two-factor authentication, but has not yet transferred a valid one-time password. In case the setup was successfully finished the function returns TRUE. If there is no OTP entry for the particular user the function returns FALSE.</p>
+<p>The function returns "pendingOTPsetup" in case the user has requested a QR code to set up two-factor authentication, but has not yet transferred a valid one-time password. In case the setup was successfully finished, the function returns TRUE. If there is no OTP entry for the particular user, the function returns FALSE.</p>
 
 <p>Example:</p>
 
@@ -277,7 +277,7 @@ end if
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pUserID:</strong> (optional) is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided the ID of the currently logged in user is used</li>
+	<li><strong>pUserID:</strong> (optional) is a user ID (integer) which is stored in the "id" field of the "users" table. If no value is provided, the ID of the currently logged-in user is used</li>
 </ul>
 
 <p>The function returns TRUE in case the operation was successful, otherwise it returns FALSE.</p>
@@ -288,7 +288,7 @@ end if
 
 <p>This function returns TRUE if the user is logged in, otherwise it returns FALSE.</p>
 
-<p>In case two-factor authentication is activated the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password the function returns "pendingOTPsetup".</p>
+<p>In case two-factor authentication is activated, the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password, the function returns "pendingOTPsetup".</p>
 
 <p>Example:</p>
 

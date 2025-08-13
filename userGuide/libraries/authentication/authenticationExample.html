@@ -98,18 +98,18 @@
   <li>There is an admin page which is used to manage user data (example.com/auth/).</li>
   <li>Opening this page without being logged in as a member of the admin group redirects you to a login page (example.com/auth/login/).</li>
   <li>A form is displayed on this page requiring you to fill in your credentials.</li>
-  <li>Now if you submit something invalid, the form is redisplayed containing an error message describing the problem.</li>
-  <li>If the verification of the data you supply is successful you will be redirected either to a member's page or to the admin page mentioned earlier, depending on which group you belong to.</li>
+  <li>Now, if you submit something invalid, the form is redisplayed containing an error message describing the problem.</li>
+  <li>If the verification of the data you supply is successful, you will be redirected either to a member's page or to the admin page mentioned earlier, depending on which group you belong to.</li>
   <li>Then, let's say you forgot your password.</li>
-  <li>Open the "Forgot Password" page, enter your email address and hit the send button (example.com/auth/forgotPassword/).</li>
-  <li>Now, while you are redirected to the login page there is an email waiting for you containing a link to a "Reset Password" page (example.com/auth/resetPassword/).</li>
-  <li>On this page enter a new password, confirm it and hit the submit button.</li>
+  <li>Open the "Forgot Password" page, enter your email address, and hit the send button (example.com/auth/forgotPassword/).</li>
+  <li>Now, while you are redirected to the login page, there is an email waiting for you containing a link to a "Reset Password" page (example.com/auth/resetPassword/).</li>
+  <li>On this page, enter a new password, confirm it, and hit the submit button.</li>
   <li>You are redirected to the login page where you can enter your new password.</li>
-  <li>To change your password open the "Change Password" page (example.com/auth/changePassword/), enter your email address and your password. Hit the submit button.</li>
+  <li>To change your password, open the "Change Password" page (example.com/auth/changePassword/), enter your email address, and your password. Hit the submit button.</li>
   <li>The procedure which follows is similar to the forgotten password one.</li>
   <li>Now, let's say you logged in as a member of the admin group.</li>
   <li>You will be presented with the administration page (example.com/auth/).</li>
-  <li>There you can create new users, activate / deactivate, edit and delete users.</li>
+  <li>There you can create new users, activate / deactivate, edit, and delete users.</li>
 </ol>
 
 <p>&nbsp;</p>
@@ -140,7 +140,7 @@
 
 <h2>The Controller</h2>
 
-<p>We start with the basic authentication controller script containing just the handler to load helpers respectively libraries and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your application/controllers/ folder.</p>
+<p>We start with the basic authentication controller script containing just the handler to load helpers, respectively, libraries, and the default (index) handler. Create a controller called auth.lc. In it, place the code below and save it to your application/controllers/ folder.</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">&lt;?lc
@@ -256,7 +256,7 @@ end index
 
 <a href="#top">Top of Page</a>
 
-<p>Add the following code which is needed to create new user data.</p>
+<p>Add the following code, which is needed to create new user data.</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">command createUser
@@ -489,7 +489,7 @@ end login
 
 <a href="#top">Top of Page</a>
 
-<p>Of course there is a logout handler.</p>
+<p>Of course, there is a logout handler.</p>
 
 <div class="codeSample">
 <pre><code>command logout
@@ -1071,7 +1071,7 @@ end editUser
 
 <a href="#top">Top of Page</a>
 
-<p>Now add the last handler which is needed to delete user data.</p>
+<p>Now add the last handler, which is needed to delete user data.</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">command deleteUser
@@ -1831,8 +1831,8 @@ button a {
 
 <h2>Try it!</h2>
 
-<p>After having installed all those sample files</p>
-<ul><li>go to your authentication page (yourDomain.com/auth/) and login as admin using "admin@admin.com" as user id and "revigniter" as password.</li>
+<p>After having installed all those sample files</p>,
+<ul><li>go to your authentication page (yourDomain.com/auth/) and log in as admin using "admin@admin.com" as user id and "revigniter" as password.</li>
   <li>Create a new user by clicking on "Create New User". Use your own email address so that you can verify that all works as expected.</li>
   <li>Log out.</li>
   <li>Check your email account and activate your test registration.</li>

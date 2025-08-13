@@ -95,28 +95,28 @@ during development.</p>
 
 <p class="important"><strong>Very important:</strong>  Scaffolding is intended for development use only.  It provides very little
 security other than a "secret" word, so anyone who has access to your revIgniter site can potentially edit or delete your information.
-If you use Scaffolding make sure you disable it immediately after you are through using it.  DO NOT leave it enabled on a live site.
+If you use Scaffolding, make sure you disable it immediately after you are through using it.  DO NOT leave it enabled on a live site.
 And please, set a secret word before you use it.</p>
 
 <h2>Why would someone use scaffolding?</h2>
 
 <p>Here's a typical scenario:  You create a new database table during development and you'd like a quick way to insert some data
-into it to work with.  Without Scaffolding your choices are either to write some inserts using the command line or to use a
-database management tool like phpMyAdmin.  With revIgniter's Scaffolding feature you can quickly add some data using its browser
-interface.  And when you are through using the data you can easily delete it.</p>
+into it to work with.  Without Scaffolding, your choices are either to write some inserts using the command line or to use a
+database management tool like phpMyAdmin.  With revIgniter's Scaffolding feature, you can quickly add some data using its browser
+interface.  And when you are through using the data, you can easily delete it.</p>
 
 <h2>Setting a Secret Word</h2>
 
-<p>Before enabling Scaffolding please take a moment to set a secret word.  This word, when encountered in your URL,
+<p>Before enabling Scaffolding, please take a moment to set a secret word.  This word, when encountered in your URL,
 will launch the Scaffolding interface, so please pick something obscure that no one is likely to guess.</p>
 
 <p>To set a secret word, open your <kbd>application/config/routes.lc</kbd> file and look for this item:</p>
 
 <pre><code>put "" into gRoute["scaffoldingTrigger"]</code></pre>
 
-<p>Once you've found it add your own unique word.</p>
+<p>Once you've found it, add your own unique word.</p>
 
-<p class="important"><strong>Note:</strong> The Scaffolding word can <strong>not</strong> start with an underscore.</p>
+<p class="important"><strong>Note:</strong> The Scaffolding word <strong>cannot</strong> start with an underscore.</p>
 
 
 <h2>Enabling Scaffolding</h2>
@@ -126,7 +126,7 @@ a working one available.  It also assumes you have configured revIgniter to auto
 If not, the information here won't be very relevant, so you are encouraged to go through those sections first.
 </p>
 
-<p>To enable Scaffolding you will initialize it in your controller with just one line of code like this:</p>
+<p>To enable Scaffolding, you will initialize it in your controller with just one line of code like this:</p>
 
 <div class="codeSample">
 <pre><code>&lt;?lc
@@ -156,7 +156,7 @@ end index
 <p>Where <kbd>tableName</kbd> is the name of the table (table, not database) you wish to work with.</p>
 
 <p class="important"><strong>Note:</strong> The rigLoadScaffolding handler must be called before anything else. 
-So, in the example above rigLoadScaffolding is in the blog handler as it is run before the index handler. </p>
+So, in the example above, rigLoadScaffolding is in the blog handler as it is run before the index handler. </p>
 
 <p>Once you've initialized Scaffolding, you will access it with this URL prototype:</p>
 
@@ -167,9 +167,9 @@ you would access Scaffolding like this:</p>
 
 <pre><code>example.com/index.lc/<var>blog</var>/<dfn>abracadabra</dfn>/</code></pre>
 
-<p>The Scaffolding interface should be self-explanatory.  You can add, edit or delete records.</p>
+<p>The Scaffolding interface should be self-explanatory.  You can add, edit, or delete records.</p>
 
-<p>To change the number of records displayed open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
+<p>To change the number of records displayed, open your <dfn>application/config/config.lc</dfn> file and look for this item:</p>
 
 <pre><code>put 10 into gConfig["scaffNumRecords"]</code></pre>
 

@@ -137,15 +137,15 @@ changing things on the page.</p>
 
 <ul>
 <li>a controller named "chat.lc", the file, that will be associated with the URI.</li>
-<li>four views, respectively page fragments, named "chatHeaderView.lc", "chatContentView.lc", "chatFooterView.lc" and "chatLoginView.lc". Of course two view files, one representing the Login page and one representing the Chat page, would do,  but this is to demonstrate how multiple views are assembled and as a side-effect we avoid redundant html code.</li>
+<li>four views, respectively page fragments, named "chatHeaderView.lc", "chatContentView.lc", "chatFooterView.lc" and "chatLoginView.lc". Of course, two view files, one representing the Login page and one representing the Chat page, would do,  but this is to demonstrate how multiple views are assembled and as a side-effect, we avoid redundant HTML code.</li>
 <li>a model named "chatmodel.livecodescript", the file, which deals with information in your database.</li>
 <li>a table in your database named "chat" to store the chat messages. We use SQLite here as the database platform.</li>
 </ul>
 
-<p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
+<p>If you have not read about controllers, views, and models in the User Guide, you should do so before continuing.</p>
 
-<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in <samp>assets/css/chat.css</samp>,
-build the table using the table structure below and store the SQLite file in <samp>application/db/</samp>. If you like you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
+<p class="important"><strong>Note:</strong> Before we begin, save the following stylesheet in <samp>assets/css/chat.css</samp>,
+build the table using the table structure below, and store the SQLite file in <samp>application/db/</samp>. If you like, you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
 
 <p><a href="#top">Top of Page</a></p>
 
@@ -429,7 +429,7 @@ a:hover {
 
 <h2 id="controller">Controller</h2>
 
-<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler <dfn>chat</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data and reopens the login page.</p>
+<p>The controller consists of two handlers commonly used in controllers and three additional ones. The first handler, <dfn>chat</dfn>, is named after the file itself and is called before any other handler. It loads all required libraries and helpers, plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI. Further, we need a handler, which adds new messages to the database, a handler, which gets all the messages and displays them, and finally a logout handler, which ends the chat, destroys the session data, and reopens the login page.</p>
 
 <p>We start with the basic prototype for a controller script:</p>
 
@@ -458,15 +458,15 @@ end index
 </code></pre>
 </div>
 
-<p>Save this script as "chat.lc" in <samp>application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
+<p>Save this script as "chat.lc" in <samp>application/controllers</samp>. This controller is associated with a URI like this: example.com/index.lc/chat/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/chat/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
 <p><a href="#top">Top of Page</a></p>
 
 <h4 id="chatHandler">The Chat Handler</h4>
 
-<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required helpers, libraries, models and the database.</p>
+<p>The controller handler <dfn>chat</dfn> is called first. So, this is a good place to load required helpers, libraries, models, and the database.</p>
 
-<p>Actually we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code which is then stored in <var>gData["asynergyScript"]</var>. So, there are two helpers left to be loaded. The URL helper, which used to generate a link, and the Form helper, which is needed to generate the form action markup.</p> 
+<p>Actually, we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code, which is then stored in <var>gData["asynergyScript"]</var>. So, there are two helpers left to be loaded. The URL helper, which used to generate a link, and the Form helper, which is needed to generate the form action markup.</p> 
   
 <pre><code class="lang-livecodeserver">put "url,form" into tHelpers
 rigLoadHelper tHelpers
@@ -482,7 +482,7 @@ rigLoadHelper tHelpers
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Session"
 </code></pre>
 
-  <p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "chat" table. Add the following line to the <dfn>chat</dfn> handler:</p>
+  <p>Now load the database. Note: If the function does not contain any information in the first parameter, it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE, and that your database contains the "chat" table. Add the following line to the <dfn>chat</dfn> handler:</p>
 
 <pre><code>get rigLoadDatabase()
 </code></pre>
@@ -497,7 +497,7 @@ rigLoadHelper tHelpers
 <pre><code>put "ASYNergy Chat Application Tutorial" into gData["pageTitle"]
 </code></pre>
 
-<p>Finally we add the login form action markup to gData:</p>
+<p>Finally, we add the login form action markup to gData:</p>
 
 <pre><code>put rigFormOpen("chat") into gData["loginFormOpen"]
 </code></pre>
@@ -544,7 +544,7 @@ end chat
 
 <h4 id="indexHandler">The Index Handler</h4>
 
-<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First we call the <dfn>rigAnchor()</dfn> function to generate a link used on the Chat page to load the Login view by calling the "logout" handler.</p>
+<p>If no handler is specified in the URI, the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First, we call the <dfn>rigAnchor()</dfn> function to generate a link used on the Chat page to load the Login view by calling the "logout" handler.</p>
 	
 <pre><code>put rigAnchor("chat/logout", "Logout") into gData["logoutAnchor"]
 </code></pre>
@@ -566,7 +566,7 @@ put rigFormOpen("addMsg", tFormAttrA) into gData["chatFormOpen"]
 &lt;input type="hidden" name="csrfTokenName" value="bb8e156c-9aa5-42be-b573-dc0b533ca3da" asyn:csrf="csrfTokenName" />
 </code></pre>
 	
-<p>Within the index handler we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
+<p>Within the index handler, we check if either the user sent a name via the login form or if there is an item "name" in the session data. Insert the following code into the <dfn>index</dfn> handler: </p>
 
 <div class="codeSample">
 <pre><code>if rigSessUserdata("name") &lt;> FALSE then
@@ -588,16 +588,16 @@ end if
 </code></pre>
 </div>
 
-<p>If there is an item "name" in the session data we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p> 
-<p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case the filter is called by setting the second parameter of <dfn>rigVarPost()</dfn> to "TRUE". </p>
-<p> If the POST data contains a value for "name" we save it in the session data as well as in the global variable <var>gData</var> and set a flag to load the chat view, otherwise we set a flag to load the login view.</p>
+<p>If there is an item "name" in the session data, we save the name in the global variable <var>gData</var> and set a flag to skip the Login page and to load the Chat page instead. If the item "name" is missing in the session data, we check if the user sent a name via the login form. This is done with the help of the <dfn>rigVarPost</dfn> function.</p> 
+<p class="important"><strong>Note:</strong> revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter all POST and COOKIE data that is encountered, or you can run it on a per item basis. In this case, the filter is called by setting the second parameter of <dfn>rigVarPost()</dfn> to "TRUE". </p>
+<p> If the POST data contains a value for "name", we save it in the session data as well as in the global variable <var>gData</var> and set a flag to load the chat view; otherwise, we set a flag to load the login view.</p>
 
 <p>We need to make sure that the page will not be cached. So, we set a server header, which the Output library will send for you when outputting the final rendered display. Add the following line to the <dfn>index</dfn> handler:</p>
 
 <pre><code class="lang-livecodeserver">rigSetHeader "Cache-Control: no-cache"
 </code></pre>
 
-<p>All that is left to do is to load the view files, which we will build later. As mentioned earlier we split the page into view files, which represent the header, the content and the footer. Header and footer are identical as to the Login page and the Chat page. The content is different. So, if there is no user name specified, we load the login view, otherwise the chat view:</p>
+<p>All that is left to do is to load the view files, which we will build later. As mentioned earlier, we split the page into view files, which represent the header, the content, and the footer. Header and footer are identical as to the Login page and the Chat page. The content is different. So, if there is no user name specified, we load the login view; otherwise, the chat view:</p>
 
 <pre><code>get rigLoadView("chatHeaderView")
 if tLogin is TRUE then
@@ -664,7 +664,7 @@ end index
 
 <h4 id="addMsgHandler">The addMsg Handler</h4>
 
-<p>Now we need a handler, which adds new messages to the database. It takes the chat user name from the session data and the message from the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JSON data processed by the <a href="../libraries/asynergy.html">ASYNergy</a> library. The handler checks that the message is not empty and passes it along with the session data to the model, that is responsible for database related tasks. The model function <dfn>getMsgData()</dfn> returns the chat messages from the database in form of an HTML list. Then you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> to return the updated chat list to the client, and you were done. But we want to clear the message input field. So, we need to create the response data using the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> function <dfn>rigAsynAddResponseData()</dfn> and add response data for the second mutable <a Href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML element. Finally calling the model handler <dfn>flattenDB</dfn> limits the maximum number of database table rows to 22 by deleting the oldest message if the maximum number is exceeded.</p>
+<p>Now we need a handler, which adds new messages to the database. It takes the chat user name from the session data and the message from the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JSON data processed by the <a href="../libraries/asynergy.html">ASYNergy</a> library. The handler checks that the message is not empty and passes it along with the session data to the model, that is responsible for database-related tasks. The model function <dfn>getMsgData()</dfn> returns the chat messages from the database in the form of an HTML list. Then you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> to return the updated chat list to the client, and you were done. But we want to clear the message input field. So, we need to create the response data using the <a href="https://github.com/revig/ASYNergy">ASYNergy</a> function <dfn>rigAsynAddResponseData()</dfn> and add response data for the second mutable <a Href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML element. Finally, calling the model handler <dfn>flattenDB</dfn> limits the maximum number of database table rows to 22 by deleting the oldest message if the maximum number is exceeded.</p>
 
 <p>Add the following handler to the controller script:</p>
 
@@ -698,7 +698,7 @@ end addMsg
 
 <h4 id="chatListHandler">The chatList Handler</h4>
 
-<p>The next handler to add to the controller script is called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> every two and a half seconds to keep the messages list, displayed on the page, updated. It fetches all chat messages from the model in the form of an HTML list, creates case-specific response data, and sends it to the client. Actually you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> and you were done, but in this particular case the name of the handler called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> ("chatList") is different from the value ("addMsg") of the HTML attribute of the corresponding mutable ASYNergy HTML element to be updated.</p>
+<p>The next handler to add to the controller script is called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> every two and a half seconds to keep the messages list, displayed on the page, updated. It fetches all chat messages from the model in the form of an HTML list, creates case-specific response data, and sends it to the client. Actually, you could call <dfn>rigAsynRespond</dfn> <var>tMsgList</var> and you were done, but in this particular case, the name of the handler called by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> ("chatList") is different from the value ("addMsg") of the HTML attribute of the corresponding mutable ASYNergy HTML element to be updated.</p>
 
 <div class="codeSample">
 <pre><code>command chatList
@@ -748,7 +748,7 @@ end logout
 
 <h2 id="model">Model</h2>
 
-<p>The model is responsible for database related tasks. In this case our model serves two purposes: It gets messages from the database and it stores new messages in the database. As described above, the controller calls a model function named <dfn>getMsgData</dfn>, a model handler named <dfn>_addMsg</dfn>, and a model handler named <dfn>flattenDB</dfn>. We will now build a model consisting of these three handlers. </p>
+<p>The model is responsible for database-related tasks. In this case, our model serves two purposes: It gets messages from the database and it stores new messages in the database. As described above, the controller calls a model function named <dfn>getMsgData</dfn>, a model handler named <dfn>_addMsg</dfn>, and a model handler named <dfn>flattenDB</dfn>. We will now build a model consisting of these three handlers. </p>
 
 <p>We start with the basic prototype of a model script only stack:</p>
 
@@ -794,9 +794,9 @@ end getMsgData
 </code></pre>
 </div>
 
-<p>First we set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing this means that new messages will be located at the bottom and old messages at the top of the list. Then we retrieve the data from the database and store the result, an array, in a variable.</p>
+<p>First, we set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing, this means that new messages will be located at the bottom and old messages at the top of the list. Then, we retrieve the data from the database and store the result, an array, in a variable.</p>
 
-<p>Next, we check if the number of rows of the table is greater than 0. If not, there are no messages and we simply return FALSE. Insert the following lines right after "tQueryResult":</p>
+<p>Next, we check if the number of rows of the table is greater than 0. If not, there are no messages, and we simply return FALSE. Insert the following lines right after "tQueryResult":</p>
 
 <div class="codeSample">
 <pre><code>  if tQueryResult["numrows"] > 0 then
@@ -806,7 +806,7 @@ end getMsgData
 </code></pre>
 </div>
 
-<p>Now we loop through the rows of the chat table and build the messages list adding all the necessary HTML tags. This list will be returned by the function. Complete the function by inserting the following lines right after the first line of the code above:</p>
+<p>Now, we loop through the rows of the chat table and build the messages list, adding all the necessary HTML tags. This list will be returned by the function. Complete the function by inserting the following lines right after the first line of the code above:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">    repeat with i = 1 to tQueryResult["numrows"]
@@ -890,7 +890,7 @@ end _addMsg
 
 <h4 id="flattenDBhandler">The flattenDB Handler</h4>
 
-<p>As we don't want to keep outdated chat messages, we limit the number of table rows stored calling the <dfn>flattenDB</dfn> handler. The optional parameter specifies the maximum number of messages allowed to be stored in the database table. We set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing this means that new messages will be located at the bottom and old messages at the top of the list. Then we retrieve the data from the database and store the result, an array, in a variable.</p>
+<p>As we don't want to keep outdated chat messages, we limit the number of table rows stored by calling the <dfn>flattenDB</dfn> handler. The optional parameter specifies the maximum number of messages allowed to be stored in the database table. We set an ORDER BY clause, which orders the query result ascending by a column named "id". As this column is auto-incrementing, this means that new messages will be located at the bottom and old messages at the top of the list. Then, we retrieve the data from the database and store the result, an array, in a variable.</p>
 
 <div class="codeSample">
 <pre><code>command flattenDB pMaxMessages
@@ -905,7 +905,7 @@ end flattenDB
 </code></pre>
 </div>
 
-<p>Now, if the number of table rows is greater then the maximum number of rows allowed, we loop through the rows of the chat table and delete the rows exceeding the limit. Add the following code to the <dfn>flattenDB</dfn> handler:</p>
+<p>Now, if the number of table rows is greater than the maximum number of rows allowed, we loop through the rows of the chat table and delete the rows exceeding the limit. Add the following code to the <dfn>flattenDB</dfn> handler:</p>
 
 <pre><code>if tQueryResult["numrows"] > 0 then
     if tQueryResult["numrows"] > pMaxMessages then
@@ -1001,7 +1001,7 @@ end flattenDB
 </code></pre>
 </div>
 
-<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location html code.</p>
+<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location HTML code.</p>
 
 <p>Your chatHeaderView.lc script should now look like this:</p>
 
@@ -1102,9 +1102,9 @@ end flattenDB
         &lt;/div>
 </code></pre>
 
-<p>Here we display the name of the user, which we stored in our global variable <var>gData["user"]</var>. Further there is the link which we stored earlier in the <var>gData["logoutAnchor"]</var> variable calling the logout handler of the chat controller.</p>
+<p>Here we display the name of the user, which we stored in our global variable <var>gData["user"]</var>. Further, there is the link which we stored earlier in the <var>gData["logoutAnchor"]</var> variable calling the logout handler of the chat controller.</p>
 
-<p>To display the messages list add the following lines:</p>
+<p>To display the messages list, add the following lines:</p>
 
 
 <pre><code>    &lt;div id="chatbody" asyn:poll.2500ms="chatList">
@@ -1116,7 +1116,7 @@ end flattenDB
 
 <p>This unordered list is created dynamically when the page is loaded the first time or whenever the messages data is updated by <a href:="https://github.com/revig/ASYNergy">ASYNergy</a>, replacing the data inside the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> mutable HTML element with the response data. The HTML attribute <var>asyn:poll.2500ms="chatList"</var> means that <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> sends an AJAX request every two and a half seconds that calls the chat controller's "chatList" handler. The <var>asyn:mutable="addMsg"</var> attribute of the <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> mutable element means that the content inside the element's opening and closing tag will be replaced with the respective response data.</p>
 
-<p>To complete the chatcontent view add the HTML form, which is used to send messages:</p>
+<p>To complete the chatcontent view, add the HTML form, which is used to send messages:</p>
 
 
 <pre><code>        &lt;div id="chatfooter">
@@ -1134,7 +1134,7 @@ end flattenDB
   &lt;/div>
 </code></pre>
 
-<p>There are two <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attributes. <var>asyn:mutable="userinput"</var> marks the input field as "mutable". This ensures that this field can be set to any value after submission of the form. In our case the controller's <dfn>addMsg</dfn> handler sets it's value to empty. <var>asyn:transmit="msg"</var> is used to send the input data to the server. The controller has then access to this data calling rigAsynElemData("msg").</p>
+<p>There are two <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attributes. <var>asyn:mutable="userinput"</var> marks the input field as "mutable". This ensures that this field can be set to any value after submission of the form. In our case, the controller's <dfn>addMsg</dfn> handler sets its value to empty. <var>asyn:transmit="msg"</var> is used to send the input data to the server. The controller has then access to this data calling rigAsynElemData("msg").</p>
 
 <p>Your chat content view should now look like this:</p>
 
@@ -1177,10 +1177,10 @@ end flattenDB
 
 <h2 id="conclusion">Conclusion</h2>
 
-<p>There is still work to be done to turn this into a full featured chat application, but nonetheless this sample illustrates:</p>
+<p>There is still work to be done to turn this into a full-featured chat application, but nonetheless, this sample illustrates:</p>
 <ul>
   <li>revIgniter's approach to separate application logic from presentation permits your web pages to contain minimal scripting since the presentation is separate from the LiveCode scripting.</li>
-  <li>By using revIgniter you don,t have to write a whole lot of LiveCode code as you don't have to write libraries from scratch. revIgniter provides you with all the features you need (almost). So, you can get right to work and accomplish a lot in the least amount of time.</li>
+  <li>By using revIgniter, you don't have to write a whole lot of LiveCode code as you don't have to write libraries from scratch. revIgniter provides you with all the features you need (almost). So, you can get right to work and accomplish a lot in the least amount of time.</li>
 	<li>The combination of revIgniter and <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> allows incremental updates to the user interface without reloading entire pages, making the application faster and more responsive to user actions.</li>
 </ul>
 

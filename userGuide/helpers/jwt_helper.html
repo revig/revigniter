@@ -91,10 +91,10 @@
 
 <h1>JSON Web Token Helper</h1>
 
-<p>The JSON Web Token Helper contains handlers which allows you to generate, decode and verify JSON Web Tokens. It follows the industry standard RFC 7519 which is a means for representing claims as a JSON object to be transferred between two parties. The JWT helper uses the HMAC SHA256, SHA384 or SHA512 hashing algorithm to sign tokens and a RSA public/private key pair to encrypt the hashed signing input in case an asymmetric signing algorithm is preferred. The RSA key length is 4096 bits.<br><br>
-If you are not familiar with JSON Web Tokens you can read about the concept at <a href="https://jwt.io">https://jwt.io</a>.</p>
+<p>The JSON Web Token Helper contains handlers which allow you to generate, decode, and verify JSON Web Tokens. It follows the industry standard RFC 7519, which is a means for representing claims as a JSON object to be transferred between two parties. The JWT helper uses the HMAC SHA256, SHA384, or SHA512 hashing algorithm to sign tokens and a RSA public/private key pair to encrypt the hashed signing input in case an asymmetric signing algorithm is preferred. The RSA key length is 4096 bits.<br><br>
+If you are not familiar with JSON Web Tokens, you can read about the concept at <a href="https://jwt.io">https://jwt.io</a>.</p>
 
-<p class="important"><strong>Note:</strong> If the server engine used is not LC Create, this helper requires the LiveCode Builder (library) extension com.livecode.library.json which needs to be stored in <kbd>application/extensions</kbd>. So, the path to the extension is <kbd>application/extensions/com.livecode.library.json/module.lcm</kbd>. Please read about how to include/load the LiveCode JSON extension in chapter <a href="../general/extensions.html">"Extensions"</a>.</p>
+<p class="important"><strong>Note:</strong> If the server engine used is not LC Create, this helper requires the LiveCode Builder (library) extension com.livecode.library.json, which needs to be stored in <kbd>application/extensions</kbd>. So, the path to the extension is <kbd>application/extensions/com.livecode.library.json/module.lcm</kbd>. Please read about how to include/load the LiveCode JSON extension in chapter <a href="../general/extensions.html">"Extensions"</a>.</p>
 
 <p class="important"><strong>Note:</strong> HMAC SHA384 and SHA512 hashing algorithms are not supported on LiveCode server prior to version 9.</p>
 
@@ -106,10 +106,10 @@ If you are not familiar with JSON Web Tokens you can read about the concept at <
 
 
 <h2>The Key</h2>
-<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <kbd>application/config</kbd>. Preferably this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key it will be generated for you - provided that file permissions allow - using the LiveCode <dfn>randomBytes(64)</dfn> function and saved to <kbd>application/config/jwt.lc</kbd> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control it's impossible to ensure key security so you may want to think carefully before using it for anything that requires high security.</p>
+<p>The key (secret) used to sign the token should be saved to a file named "jwt.lc" in <kbd>application/config</kbd>. Preferably, this key is a binary string which implicitly needs to be base64 encoded. If you don't specify a key, it will be generated for you - provided that file permissions allow - using the LiveCode <dfn>randomBytes(64)</dfn> function and saved to <kbd>application/config/jwt.lc</kbd> on calling the handler to encode a token. Keep in mind that if your server is not totally under your control, it's impossible to ensure key security, so you may want to think carefully before using it for anything that requires high security.</p>
 
 <h2>The RSA Public/Private Key Pair</h2>
-<p>The optional RSA public/private key pair used to encrypt the hashed signing input should be saved to a file "jwtPrivate4096" and "jwtPublic4096" respectively in <kbd>application/config</kbd>. If the keys are missing they will be generated for you on first request provided that file permissions allow and that the OpenSSL suite of command line tools is installed.</p>
+<p>The optional RSA public/private key pair used to encrypt the hashed signing input should be saved to a file "jwtPrivate4096" and "jwtPublic4096" respectively in <kbd>application/config</kbd>. If the keys are missing, they will be generated for you on first request provided that file permissions allow and that the OpenSSL suite of command-line tools is installed.</p>
 
 <h2>Handler Reference</h2>
 
@@ -121,14 +121,14 @@ If you are not familiar with JSON Web Tokens you can read about the concept at <
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pHeader:</strong> (optional) is used to build the header object and is generated automatically if not defined, usually you can leave this parameter empty or else it needs to be a comma delimited key value list or an array, the header generated by revIgniter consists of the type of the token, which is "JWT" and the appropriate signing algorithm ("HS256" on LiveCode below version 9, otherwise the algorithm is determined by the value of the third and fourth optional parameters)</li>
-	<li><strong>pPayload:</strong> can be a comma delimited key value list or an array</li>
-	<li><strong>pNumBits:</strong> (optional) is used to determine the size of the hash (digest). Valid values are "256", "384", "512" or empty, if the parameter is empty the default value on LiveCode server below version 9 is "256", otherwise "512" is used</li>
+	<li><strong>pHeader:</strong> (optional) is used to build the header object and is generated automatically if not defined. Usually, you can leave this parameter empty or else it needs to be a comma-delimited key-value list or an array. The header generated by revIgniter consists of the type of the token, which is "JWT", and the appropriate signing algorithm ("HS256" on LiveCode below version 9; otherwise, the algorithm is determined by the value of the third and fourth optional parameters)</li>
+	<li><strong>pPayload:</strong> can be a comma-delimited key-value list or an array</li>
+	<li><strong>pNumBits:</strong> (optional) is used to determine the size of the hash (digest). Valid values are "256", "384", "512", or empty. If the parameter is empty, the default value on LiveCode server below version 9 is "256"; otherwise, "512" is used</li>
 	<li><strong>pAlg:</strong> (optional) is used to determine the signing algorithm, "HS" or "RS"</li>
 </ul> 
 	
 	
-<p>Example using the default header and the default signing algorithm (HS256 on LIveCode server below vesion 9 and HS512 on LiveCode server version 9 or higher):</p>
+<p>Example using the default header and the default signing algorithm (HS256 on LiveCode server below version 9 and HS512 on LiveCode server version 9 or higher):</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">put the seconds into tIAT
@@ -149,7 +149,7 @@ put JsonExport(tTokenA)
 </code></pre>
 </div>
 
-<p>Following a variant using an array as second parameter:</p>
+<p>Following a variant using an array as the second parameter:</p>
 
 
 <div class="codeSample">
@@ -178,9 +178,9 @@ put JsonExport(tTokenA)
 </div>
 
 
-<p>These two examples above assume that the client side provides code which handles the response in form of a JSON object.</p>
+<p>These two examples above assume that the client side provides code which handles the response in the form of a JSON object.</p>
 
-<p>Example for the assignment of a signing algorithm, in this case RSA384, using the default header:</p>
+<p>Example for the assignment of a signing algorithm, in this case, RSA384, using the default header:</p>
 
 
 <pre><code class="lang-livecodeserver">put rigJWTencode( , tJWTpayload, 384, "RS") into tJWT
@@ -194,7 +194,7 @@ put JsonExport(tTokenA)
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pToken:</strong> (optional) is representing a token, if not provided the function assumes that the client side has sent the JWT in an "Authorization" header using the "Bearer" schema (Authorization: Bearer &lt;token>)</li>
+	<li><strong>pToken:</strong> (optional) is representing a token. If not provided, the function assumes that the client side has sent the JWT in an "Authorization" header using the "Bearer" schema (Authorization: Bearer &lt;token>)</li>
 </ul>
 	
 <p>Example:</p>
@@ -238,16 +238,16 @@ put JsonExport(tA)
 </code></pre>
 </div>
 
-<p>The example above assumes that the client side provides code which handles the response in form of a JSON object.</p>
+<p>The example above assumes that the client side provides code which handles the response in the form of a JSON object.</p>
 
 <h4>Data Returned</h4>
 
 <p>This function returns an <strong>array</strong> including the following keys:</p>
 <ul>
-	<li>"header"<br>(the value is the token header as array)</li>
-	<li>"payload"<br>(the value is the token payload as array)</li>
+	<li>"header"<br>(the value is the token header as an array)</li>
+	<li>"payload"<br>(the value is the token payload as an array)</li>
 	<li>"valid"<br>(the value is a boolean, this refers to the integrity of the token)</li>
-	<li>"response"<br>(the value is empty in case the token is valid, otherwise it is a string "HTTP/1.0 401 Unauthorized", in case the token can not be decoded the string is "HTTP/1.0 400 Bad Request" - use these strings as response header if something went wrong and the integrity of the token could not be determined)</li>
+	<li>"response"<br>(the value is empty in case the token is valid. Otherwise, it is a string "HTTP/1.0 401 Unauthorized", in case the token cannot be decoded, the string is "HTTP/1.0 400 Bad Request" - use these strings as response header if something went wrong and the integrity of the token could not be determined)</li>
 </ul>
 
 

@@ -94,7 +94,7 @@
 <p>The URI Library provides handlers that help you retrieve information from your URI strings. If you use URI routing, you can
 also retrieve information about the re-routed segments.</p>
 
-<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system, so there is no need to do it manually.</p>
 
 <h3>rigFetchSegment(<var>n</var>)</h3>
 
@@ -112,7 +112,7 @@ Segments are numbered from left to right. For example, if your full URL is this:
 <li>crime_is_up</li>
 </ol>
 
-<p>By default the function returns FALSE (boolean) if the segment does not exist. There is an optional second parameter that
+<p>By default, the function returns FALSE (boolean) if the segment does not exist. There is an optional second parameter that
 permits you to set your own default value if the segment is missing.
 For example, this would tell the function to return the number zero in the event of failure:</p>
 
@@ -136,7 +136,7 @@ re-routed URI in the event you are using revIgniter's <a href="../general/routin
 <h3>rigSlashSegment(<var>n</var>)</h3>
 
 <p>This function is almost identical to <dfn>rigFetchSegment()</dfn>, except it adds a trailing and/or leading slash based on the second
-parameter.  If the parameter is not used, a trailing slash added.  Examples:</p>
+parameter.  If the parameter is not used, a trailing slash is added.  Examples:</p>
 
 <pre><code>get rigSlashSegment(<var>3</var>)
 get rigSlashSegment(<var>3</var>, "leading")
@@ -164,14 +164,14 @@ re-routed URI in the event you are using revIgniter's <a href="../general/routin
 
 <pre><code>index.lc/user/search/name/joe/location/UK/gender/male</code></pre>
 
-<p>Using this function you can turn the URI into an associative array with this prototype:</p>
+<p>Using this function, you can turn the URI into an associative array with this prototype:</p>
 
 <pre><code>tArray["name"] -- "joe"
 tArray["location"] -- "UK"
 tArray["gender"] -- "male"
 </code></pre>
 
-<p>The first parameter of the function lets you set an offset.  By default it is set to <kbd>3</kbd> since your
+<p>The first parameter of the function lets you set an offset.  By default, it is set to <kbd>3</kbd> since your
 URI will normally contain a controller/handler in the first and second segments. Example:</p>
 
 <pre><code>put rigUriToAssoc(3) into tArray
@@ -189,7 +189,7 @@ put rigUriToAssoc(3, tDefault) into tArray</code></pre>
 
 <p>If the URI does not contain a value in your default array, an array index will be set to that name, with a value of FALSE.</p>
 
-<p>Lastly, if a corresponding value is not found for a given key (if there is an odd number of URI segments) the value will be set to FALSE (boolean).</p>
+<p>Lastly, if a corresponding value is not found for a given key (if there is an odd number of URI segments), the value will be set to FALSE (boolean).</p>
 
 
 <h3>rigRuriToAssoc(<var>n</var>)</h3>

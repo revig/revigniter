@@ -104,7 +104,7 @@
 
 <h3>rigNow()</h3>
 
-<p>Returns the current time as a timestamp (seconds), referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.  If you do not intend to set your master time reference to GMT (which you'll typically do if you run a site that lets each user set their own timezone settings) there is no benefit to using this function over LiveCode's seconds() function.
+<p>Returns the current time as a timestamp (seconds), referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.  If you do not intend to set your master time reference to GMT (which you'll typically do if you run a site that lets each user set their own timezone settings), there is no benefit to using this function over LiveCode's seconds() function.
 </p>
 
 
@@ -112,14 +112,14 @@
 
 <h3>rigMdate(<var>dateString</var>, <var>time</var>)</h3>
 
-<p>This function lets you use MySQL style date codes, where each code letter is preceded with a percent sign:  %Y %m %d etc. Example:</p>
+<p>This function lets you use MySQL-style date codes, where each code letter is preceded with a percent sign:  %Y %m %d, etc. Example:</p>
 
 <pre><code>put "Year: %Y Month: %m Day: %d - %h:%i %p" into tDateString
 put the seconds into tTime
 put rigMdate(tDateString, tTime) into gData["mdate"]
 </code></pre>
 
-<p>If a timestamp (seconds) is not included in the second parameter the current time will be used.</p>
+<p>If a timestamp (seconds) is not included in the second parameter, the current time will be used.</p>
 
 <p>Supported specifiers:</p>
 
@@ -342,7 +342,7 @@ timezone and Daylight Saving time submitted.  Example:</p>
 put rigGmtToLocal(tTimestamp, "UM4", TRUE) into gData["gmtToLocal"]
 </code></pre>
 
-<p><strong>Note:</strong> For a list of timezones see the reference at the bottom of this page.</p>
+<p><strong>Note:</strong> For a list of timezones, see the reference at the bottom of this page.</p>
 
 <h3>rigMysqlTimeToSeconds(<var>mysqlTime</var>)</h3>
 
@@ -362,7 +362,7 @@ put rigMysqlTimeToSeconds(tMysql) into gData["mysqlToSeconds"]
 <p>This can be useful if you need to display a date in a form field for submission.</p>
 
 <p>The time can be formatted with or without seconds, and it can be set to European ("eu") or US format ("us").  If only
-the timestamp is submitted it will return the time without seconds formatted for the U.S. Examples:</p>
+the timestamp is submitted, it will return the time without seconds formatted for the U.S. Examples:</p>
 
 <pre><code>put "1273254973" into tTimestamp
 
@@ -376,7 +376,7 @@ put rigTimestampToHuman(tTimestamp, TRUE, "us") into gData["timestampToHuman"] -
 
 <h3>rigHumanToTimestamp(<var>datestring</var>)</h3>
 
-<p>The opposite of the above function.  Takes a "human" time as input and returns it as timestamp.  This function is
+<p>The opposite of the above function.  Takes a "human" time as input and returns it as a timestamp.  This function is
 useful if you accept "human" formatted dates submitted via a form.  Returns FALSE if the date string passed to it is not formatted as indicated above.  Example:</p>
 
 <pre><code>put "2010-05-07 09:18:22 AM" into tDatestring
@@ -387,7 +387,7 @@ put rigHumanToTimestamp(tDatestring) into gData["humanToTimestamp"]
 
 <h3>rigTimespan(<var>seconds</var>, <var>time</var>)</h3>
 
-<p>Formats a timestamp (seconds) so that is appears similar to this:</p>
+<p>Formats a timestamp (seconds) so that it appears similar to this:</p>
 
 <pre><code>1 Year, 10 Months, 2 Weeks, 5 Days, 10 Hours, 16 Minutes</code></pre>
 
@@ -463,7 +463,7 @@ put rigHumanToTimestamp(tDatestring) into gData["humanToTimestamp"]
 
 <p>This menu is useful if you run a membership site in which your users are allowed to set their local timezone value.</p>
 
-<p>The first parameter lets you set the "selected" state of the menu.  For example, to set Brazil time as the default you will do this:</p>
+<p>The first parameter lets you set the "selected" state of the menu.  For example, to set Brazil time as the default, you will do this:</p>
 
 <pre><code>put rigTimezoneMenu("UM9", "tzClass", "tzName") into gData["timezoneMenu"]
 </code></pre>

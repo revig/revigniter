@@ -126,13 +126,13 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>The page consists of a registration form where you enter an email address, password and a password confirmation.</p>
+<p>The page consists of a registration form where you enter an email address, password, and a password confirmation.</p>
 
 <p>When the email input field loses focus while filling out the form, <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends an AJAX request to ensure that the entered string is a valid email address and that the address is not already stored in the database. If something is wrong, an error message will be displayed right below the email input field.</p>
 
-<p>While typing in the password field <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the length of the entered string is between 8 and 24 characters. If this requirement is not met, an error message will be displayed right below the password input field.</p>
+<p>While typing in the password field, <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the length of the entered string is between 8 and 24 characters. If this requirement is not met, an error message will be displayed right below the password input field.</p>
 
-<p>When typing in the password confirmation input field <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the two password strings match. As long as this requirement is not met, an error message will be displayed right below the password confirmation input field.<br>&nbsp;</p>
+<p>When typing in the password confirmation input field, <a href="https://github.com/revig/ASYNergy">ASYNergy</a> sends AJAX requests to check if the two password strings match. As long as this requirement is not met, an error message will be displayed right below the password confirmation input field.<br>&nbsp;</p>
 
 <div class="clearfix"><img src="../images/formvalidation.png" class="img-responsive pull-left" alt="form" id="img_form" /></div>
 
@@ -140,16 +140,16 @@
 <p><br>&nbsp;<br>To set up this form, we need the following files and a database table:</p>
 
 <ul>
-<li>a controller named "asynRegister.lc", the file, that will be associated with the URI.</li>
-<li>five views, respectively page fragments, named "registerMainView.lc", "registerHeaderView.lc", "registerView.lc", "registerFooterView.lc" and "registerSuccessView.lc". Of course two view files, one representing the Registration page and one representing the Success page, would do, but this is to demonstrate how multiple views are assembled and as a side-effect we avoid redundant html code.</li>
-<li>a model named "asynregistermodel.livecodescript", the file, which deals with information in your database.</li>
+<li>a controller named "asynRegister.lc", the file that will be associated with the URI.</li>
+<li>five views, respectively page fragments, named "registerMainView.lc", "registerHeaderView.lc", "registerView.lc", "registerFooterView.lc", and "registerSuccessView.lc". Of course, two view files, one representing the Registration page and one representing the Success page, would do, but this is to demonstrate how multiple views are assembled, and as a side-effect, we avoid redundant HTML code.</li>
+<li>a model named "asynregistermodel.livecodescript", the file that deals with information in your database.</li>
 <li>a table in your database named "users" to store the email addresses and passwords of the users. We use SQLite here as the database platform.</li>
 </ul>
 
-<p>If you have not read about controllers, views and models in the User Guide you should do so before continuing.</p>
+<p>If you have not read about controllers, views, and models in the User Guide, you should do so before continuing.</p>
 
-<p class="important"><strong>Note:</strong> Before we begin save the following stylesheet in <samp>assets/css/asynReg.css</samp>,
-build the table using the table structure below and store the SQLite file in <samp>application/db/</samp>.  If you like you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
+<p class="important"><strong>Note:</strong> Before we begin, save the following stylesheet in <samp>assets/css/asynReg.css</samp>,
+build the table using the table structure below, and store the SQLite file in <samp>application/db/</samp>.  If you like, you can use the <dfn>tutorials.sqlite</dfn> database located in the <samp>application/db</samp> folder.</p>
 
 <p><a href="#top">Top of Page</a></p>
 
@@ -348,9 +348,9 @@ hr {
 
 <h2 id="controller">Controller</h2>
 
-<p>The controller consists of two handlers commonly used in controllers and six additional ones. The first handler <dfn>asynRegister</dfn> is named after the file itself and is called before any other handler. It loads all required libraries and helpers plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI.</p>
+<p>The controller consists of two handlers commonly used in controllers and six additional ones. The first handler, <dfn>asynRegister</dfn>, is named after the file itself and is called before any other handler. It loads all required libraries and helpers, plus models and the database if needed. The second handler, named <dfn>index</dfn>, is the default handler, which is mandatory. This handler is called automatically if no other handler is specified in the URI.</p>
 
-<p>Further we need a handler that checks if the string entered into the email input field is a valid email address, a handler that validates the password entered, one that validates the confirmation password, a handler that is called by clicking on the "Register" button, and finally a "success" handler that loads the page confirming that the registration was successful.</p>
+<p>Further, we need a handler that checks if the string entered into the email input field is a valid email address, a handler that validates the password entered, one that validates the confirmation password, a handler that is called by clicking on the "Register" button, and finally a "success" handler that loads the page confirming that the registration was successful.</p>
 
 <p>We start with the basic prototype for a controller script:</p>
 
@@ -379,15 +379,15 @@ end index
 </code></pre>
 </div>
 
-<p>Save this script as "asynRegister.lc" in <samp>application/controllers</samp>. This controller is associated with an URI like this: example.com/index.lc/asynRegister/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/asynRegister/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
+<p>Save this script as "asynRegister.lc" in <samp>application/controllers</samp>. This controller is associated with a URI like this: example.com/index.lc/asynRegister/ or, if you use a .htaccess file with appropriate mod_rewrite rules: example.com/asynRegister/ (see <a href="../general/urls.html">revIgniter URLs</a>).</p>
 
 <p><a href="#top">Top of Page</a></p>
 
 <h4 id="asynregisterHandler">The asynRegister Handler</h4>
 
-<p>The controller handler <dfn>asynRegister</dfn> is called first. So, this is a good place to load required helpers, libraries, models and the database.</p>
+<p>The controller handler <dfn>asynRegister</dfn> is called first. So, this is a good place to load required helpers, libraries, models, and the database.</p>
 
-<p>Actually we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code which is then stored in <var>gData["asynergyScript"]</var>. The Form helper needed to generate the form action markup is loaded by the <a href="../libraries/form_validation.html">Formvalidation library</a>. So there is only one helper left to be loaded. The URL helper, which is used to generate a link.</p> 
+<p>Actually, we would need to load the Asset helper to generate JavaScript and CSS location html code, but this helper is automatically loaded by the <a href="../libraries/asynergy.html">ASYNergy library</a> to get the required <a href="https://github.com/revig/ASYNergy">ASYNergy</a> JavaScript code, which is then stored in <var>gData["asynergyScript"]</var>. The Form helper needed to generate the form action markup is loaded by the <a href="../libraries/form_validation.html">Formvalidation library</a>. So there is only one helper left to be loaded. The URL helper, which is used to generate a link.</p> 
   
 <pre><code class="lang-livecodeserver">rigLoadHelper "url"
 </code></pre>
@@ -398,7 +398,7 @@ end index
 rigLoaderLoadLibrary tLibs
 </code></pre>
 
-<p>Now load the database. Note: If the function does not contain any information in the first parameter it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE and that your database contains the "users" table. Add the following line to the <dfn>asynRegister</dfn> handler:</p>
+<p>Now load the database. Note: If the function does not contain any information in the first parameter, it will connect to the connection group specified in your database config file. For most people, this is the preferred method of use. Make sure that all these settings are correct, that <var>gRigA["activeRecord"]</var> is set to TRUE, and that your database contains the "users" table. Add the following line to the <dfn>asynRegister</dfn> handler:</p>
 
 <pre><code>get rigLoadDatabase()
 </code></pre>
@@ -408,7 +408,7 @@ rigLoaderLoadLibrary tLibs
 <pre><code class="lang-livecodeserver">rigLoadModel "asynregistermodel"
 </code></pre>
 
-<p>Finally we call the <dfn>rigAnchor()</dfn> function to generate a link used on the success page that points back to the registration page. We save this link in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like <var>[[gData["againAnchor"]]]</var>, the values of this array will be automatically merged with the view:</p>
+<p>Finally, we call the <dfn>rigAnchor()</dfn> function to generate a link used on the success page that points back to the registration page. We save this link in the global variable <var>gData</var>. If, in the view, enclosed in double square brackets, like <var>[[gData["againAnchor"]]]</var>, the values of this array will be automatically merged with the view:</p>
 
 <pre><code>put rigAnchor("asynRegister", "Try it again!") into gData["againAnchor"]
 </code></pre>
@@ -443,7 +443,7 @@ end asynRegister
 
 <h4 id="indexHandler">The Index Handler</h4>
 
-<p>If no handler is specified in the URI the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First we save the page title in the global variable <var>gData</var>.</p>
+<p>If no handler is specified in the URI, the default handler <dfn>index</dfn> is called. This is the handler, which does all the work when the page is loaded the first time. First, we save the page title in the global variable <var>gData</var>.</p>
 	
 <pre><code>put "Asynergy Registration" into gData["pageTitle"]
 </code></pre>
@@ -459,7 +459,7 @@ put rigImageAsset("logo.png", tLogo, , TRUE) into gData["logo"]
 </code></pre>
 </div>
 
-<p>Note: The fourth parameter of the <dfn>rigImageAsset()</dfn> function determines if asset file names should include the timestamp of last modification. Setting this parameter to true avoids issues with browser cached data whenever you modify static files like images, CSS files, JavaScript files or favicons without changing the file name.</p>
+<p>Note: The fourth parameter of the <dfn>rigImageAsset()</dfn> function determines if asset file names should include the timestamp of last modification. Setting this parameter to true avoids issues with browser cached data whenever you modify static files like images, CSS files, JavaScript files, or favicons without changing the file name.</p>
 
 <p>Now let's add code that creates the form's action markup including an <a href="https://github.com/revig/ASYNergy">ASYNergy</a> HTML attribute <var>asyn:submit.prevent</var> whose value, in this case "signup", is set to the name of the controller handler to be called when the user clicks onto the submit button. Adding this attribute to the form tells <a href="https://github.com/revig/ASYNergy">ASYNergy</a> to process it before submission. So, this prevents the normal submit action when the user submits the form.</p>
 
@@ -622,7 +622,7 @@ end email
 
 <p>The <dfn>rigAsynValidateInput()</dfn> function included in the ASYNergy library validates input data using the form validation library. The first parameter of this function is the value of the <var>asyn:model</var> attribute of the email input element passed by <a href="https://github.com/revig/ASYNergy">ASYNergy</a>. The AJAX request sent by <a href="https://github.com/revig/ASYNergy">ASYNergy</a> also contains the value of the email form field, which is validated according to the rules we will define later.</p>
 
-<p>If the validation fails an error message will be added to the response which is sent by the <dfn>rigAsynRespond</dfn> handler. This message replaces the current HTML enclosed by the tags of a "mutable" element whose <var>asyn:mutable</var> attribute has the value "email".</p>
+<p>If the validation fails, an error message will be added to the response which is sent by the <dfn>rigAsynRespond</dfn> handler. This message replaces the current HTML enclosed by the tags of a "mutable" element whose <var>asyn:mutable</var> attribute has the value "email".</p>
 
 <p class="important"><strong>Note:</strong> Don't forget to add the handler name "email" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
 
@@ -650,7 +650,7 @@ end password
 </code></pre>
 </div>
 
-<p>The password is validated and if the password confirmation field is not empty, it is checked whether the entered password matches the password confirmation. The handler has access to the value of the password confirmation form field calling rigAsynElemData("passwordConfirm").</p>
+<p>The password is validated, and if the password confirmation field is not empty, it is checked whether the entered password matches the password confirmation. The handler has access to the value of the password confirmation form field calling rigAsynElemData("passwordConfirm").</p>
 
 <p class="important"><strong>Note:</strong> Add the handler name "password" to the global variable <var>gControllerHandlers</var> at the top of the controller script.</p>
 
@@ -658,7 +658,7 @@ end password
 
 <h4 id="passwordConfirmHandler">The passwordConfirm Handler</h4>
 
-<p>The next handler is called when the user writes in the password confirmation form field. The <dfn>rigAsynValidateInput("password,passwordConfirm")</dfn> function uses the form validation library validates two form fields and checks if the entered password matches the password confirmation.</p>
+<p>The next handler is called when the user writes in the password confirmation form field. The <dfn>rigAsynValidateInput("password,passwordConfirm")</dfn> function uses the form validation library to validate two form fields and checks if the entered password matches the password confirmation.</p>
 
 <p>Add the following code to the controller script:</p>
 
@@ -711,7 +711,7 @@ end signup
 </code></pre>
 </div>
 
-<p>The <dfn>rigAsynValidateInput("email,password,passwordConfirm")</dfn> function validates all three input form fields at once and returns an array of error messages if validation fails. If there are no errors the <dfn>signup</dfn> handler stores the email address and the encrypted password in the database and loads the "success" page using the <dfn>rigAsynNavigate</dfn> handler of the ASYNergy library, otherwise it sends a response to the client including the corresponding error messages.</p>
+<p>The <dfn>rigAsynValidateInput("email,password,passwordConfirm")</dfn> function validates all three input form fields at once and returns an array of error messages if validation fails. If there are no errors, the <dfn>signup</dfn> handler stores the email address and the encrypted password in the database and loads the "success" page using the <dfn>rigAsynNavigate</dfn> handler of the ASYNergy library; otherwise, it sends a response to the client including the corresponding error messages.</p>
 
 <p>Of course, later we need to make sure that the model contains an <dfn>insertUser</dfn> handler.</p>
 
@@ -736,7 +736,7 @@ end success
 
 <h4 id="emailCheckHandler">The emailCheck Handler</h4>
 
-<p>The last controller handler is an example on how to implement form validation callbacks, which permit you to extend the validation library to meet your needs.</p>
+<p>The last controller handler is an example of how to implement form validation callbacks, which permit you to extend the validation library to meet your needs.</p>
 
 <div class="codeSample">
 <pre><code># HANDLER CALLED BY THE CALLBACK RULE callback_emailCheck
@@ -753,7 +753,7 @@ end emailCheck
 
 <p>The <dfn>emailIsInDB(pEmail)</dfn> function checks whether an entered email is already stored in the database. If so, an error message is displayed.</p>
 
-<p>Later we make sure that the model contains an <dfn>emailIsInDB()</dfn> function.</p>
+<p>Later, we make sure that the model contains an <dfn>emailIsInDB()</dfn> function.</p>
 
 <p class="important"><strong>Note:</strong> Add the handler name "emailCheck" to the global variable <var>gControllerHandlers</var>.</p>
 
@@ -796,7 +796,7 @@ rigAddValidationRules "passwordConfirm", "Confirm Password", "requiredR|matchesR
 </code></pre>
 </div>
 
-<p>We set the name of the validation group to the name of the controller/handler, in this case to the controller, because validation is done in the <dfn>index</dfn> handler that is executed by calling the contoller. This means that we do not need to specify a validation group as a parameter of the <dfn>rigFormValidRun()</dfn> function.</p>
+<p>We set the name of the validation group to the name of the controller/handler, in this case, to the controller, because validation is done in the <dfn>index</dfn> handler that is executed by calling the controller. This means that we do not need to specify a validation group as a parameter of the <dfn>rigFormValidRun()</dfn> function.</p>
 
 <p>The rules in detail are:</p>
 
@@ -808,7 +808,7 @@ rigAddValidationRules "passwordConfirm", "Confirm Password", "requiredR|matchesR
 		<var>password</var>: "password" is the name of the field, "Password" is the name of the label, the form element must not be empty, the minimum length of the string must be 8 characters, the maximum 24 characters.
 	</li>
 	<li>
-		<var>passwordConfirm</var>: "passwordConfirm" is the name of the field, "Confirm Password" is the name of the label, the form element must not be empty and the value of this field must match the value of the password field.
+		<var>passwordConfirm</var>: "passwordConfirm" is the name of the field, "Confirm Password" is the name of the label, the form element must not be empty, and the value of this field must match the value of the password field.
 	</li>
 </ul>
 
@@ -818,7 +818,7 @@ rigAddValidationRules "passwordConfirm", "Confirm Password", "requiredR|matchesR
 
 <h2 id="model">Model</h2>
 
-<p>The model is responsible for database related tasks. In this case our model serves two purposes: It checks if the provided email address is already stored in the database and it stores email addresses and the corresponding passwords in the database.</p>
+<p>The model is responsible for database-related tasks. In this case, our model serves two purposes: It checks if the provided email address is already stored in the database and it stores email addresses and the corresponding passwords in the database.</p>
 
 <p>As described above, the controller calls a model function named <dfn>emailIsInDB()</dfn> and a handler named <dfn>insertUser</dfn>. We will now build a model consisting of these two handlers.</p>
 
@@ -873,7 +873,7 @@ end emailIsInDB
 </code></pre>
 </div>
 
-<p>First we set a WHERE clause to search for database entries in the "users" table that match the <var>pEmail</var> parameter. Then we run the query using the <dfn>rigDbGet("users")</dfn> function. If the query result contains data, i.e. the email address already exists in the database, the function returns "TRUE", otherwise "FALSE".</p>
+<p>First, we set a WHERE clause to search for database entries in the "users" table that match the <var>pEmail</var> parameter. Then we run the query using the <dfn>rigDbGet("users")</dfn> function. If the query result contains data, i.e. the email address already exists in the database, the function returns "TRUE", otherwise "FALSE".</p>
 	
 <p><a href="#top">Top of Page</a></p>
 
@@ -897,7 +897,7 @@ end insertUser
 
 <p>This handler uses the <dfn>rigDbInsert()</dfn> function to insert an email address and a password into the "users" table of the database.</p>
 
-<p>That's all about the model script and all that is left to do is to build the view files.</p>
+<p>That's all about the model script, and all that is left to do is to build the view files.</p>
 
 <p><a href="#top">Top of Page</a></p>
 
@@ -936,7 +936,7 @@ end insertUser
 </code></pre>
 </div>
 
-<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location html code.</p>
+<p><var>rigCssAsset()</var> is an asset helper function, which generates a CSS asset location HTML code.</p>
 
 <p>Your registerHeaderView.lc script should now look like this:</p>
 
@@ -1013,7 +1013,7 @@ end insertUser
 </code></pre>
 </div>
 
-<p>As you can see, all input elements have an <dfn>asyn:model</dfn> attribute. These <a href="https://github.com/revig/ASYNergy">ASYNergy</a> directives act as trigger for AJAX requests. The corresponding <dfn>asyn:mutable</dfn> attributes we have previously added to the markup of the error messages, take a look at the <dfn>index</dfn> handler.</p>
+<p>As you can see, all input elements have an <dfn>asyn:model</dfn> attribute. These <a href="https://github.com/revig/ASYNergy">ASYNergy</a> directives act as triggers for AJAX requests. The corresponding <dfn>asyn:mutable</dfn> attributes we have previously added to the markup of the error messages, take a look at the <dfn>index</dfn> handler.</p>
 
 <p>Please note that the <dfn>asyn:model</dfn> attribute of the "email" input field has a "blur" modifier. This causes an AJAX request to be sent when the input element loses focus.</p>
 
@@ -1086,7 +1086,7 @@ return tHeader && tContent && tFooter
 <p>This sample illustrates:</p>
 <ul>
 	<li>revIgniter's approach to form validation and real-time feedback when a form is filled out.</li>
-  <li>By using revIgniter you don,t have to write a whole lot of LiveCode code as you don't have to write libraries from scratch.</li>
+  <li>By using revIgniter, you don't have to write a whole lot of LiveCode code as you don't have to write libraries from scratch.</li>
 	<li>The combination of revIgniter and <a href:="https://github.com/revig/ASYNergy">ASYNergy</a> allows incremental updates to the user interface without reloading entire pages, making the application faster and more responsive to user actions.</li>
 </ul>
 

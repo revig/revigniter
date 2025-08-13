@@ -91,19 +91,19 @@
 
 <h1>Authentication Handler Reference</h1>
 
-<p>Please find OTP specific handlers in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
+<p>Please find OTP-specific handlers in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
 
 <h3>rigAuthLogin( <var>pIdentity</var>, <var>pPassword</var>, <var>pRemember</var> )</h3>
 
 <p>Logs the user in.</p>
 
 <p><em>Parameters</em></p>
-<ul><li><strong>pIdentity:</strong> is a string to identify the user. Usually this is an email address or a username</li>
+<ul><li><strong>pIdentity:</strong> is a string to identify the user. Usually, this is an email address or a username</li>
 <li><strong>pPassword:</strong> is a password string</li>
 <li><strong>pRemember:</strong> (optional) is a boolean which determines if the user wants to be remembered</li>
 </ul>
 
-<p>This function returns TRUE if the user was successfully logged in, otherwise it returns FALSE.</p>
+<p>This function returns TRUE if the user was successfully logged in; otherwise, it returns FALSE.</p>
 
 
 <p>Example:</p>
@@ -124,7 +124,7 @@ get rigAuthLogin(rigVarPost("identity"), rigVarPost("password"), tRemember)
 </div>
 
 
-<p class="important"><strong>Note:</strong> For security reasons think about setting <var>gConfig["sess_expire_on_close"]</var> in <dfn>application/config/config.lc</dfn> to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired protected pages can be accessed without password even if you close the browser and even if the <var>pRemember</var> parameter is not set to TRUE.</p>
+<p class="important"><strong>Note:</strong> For security reasons, think about setting <var>gConfig["sess_expire_on_close"]</var> in <dfn>application/config/config.lc</dfn> to TRUE. Otherwise, in case you don't log out, as long as the session cookie has not expired, protected pages can be accessed without a password even if you close the browser and even if the <var>pRemember</var> parameter is not set to TRUE.</p>
 
 
 <h3>rigAuthLogout</h3>
@@ -161,11 +161,11 @@ end logout
 	<li><strong>pUsername:</strong> is a username</li>
 	<li><strong>pPassword:</strong> is the user's password</li>
 	<li><strong>pEmail:</strong> is the user's email address</li>
-	<li><strong>pExtraData:</strong> (optional) is an array containing additional data like first name, last name etc</li>
+	<li><strong>pExtraData:</strong> (optional) is an array containing additional data like first name, last name, etc</li>
 	<li><strong>pGroupname:</strong> (optional) is a numbered array used to define which groups the user belongs to</li>
 </ul>
 
-<p>This function returns a user ID if the user was successfully created, otherwise it returns FALSE.</p>
+<p>This function returns a user ID if the user was successfully created; otherwise, it returns FALSE.</p>
 
 
 <div class="codeSample">
@@ -189,7 +189,7 @@ put rigAuthRegister(tUserName, tPassword, tEmail, tExtraData, tGroups) into tReg
 </div>
 
 
-<p class="important"><strong>Note:</strong> The default URI used for activating a new user is "auth/activate". This means you should provide a controller called "auth" including a handler called "activate" to process user activation. To specify your own URI segments you need to set the fourth parameter using the array key "activationLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
+<p class="important"><strong>Note:</strong> The default URI used for activating a new user is "auth/activate". This means you should provide a controller called "auth" including a handler called "activate" to process user activation. To specify your own URI segments, you need to set the fourth parameter using the array key "activationLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
 
 
 
@@ -263,7 +263,7 @@ end if
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>pIdentity:</strong> is a string which represents the user's identity as defined in the authentication.lc config file</li>
-	<li><strong>pExtraData:</strong> (optional) is an array containing additional data. Currently the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password</li>
+	<li><strong>pExtraData:</strong> (optional) is an array containing additional data. Currently, the function processes solely one parameter array key which is called "passwordResetLink". This is the URI included with the forgotten password email used to reset a password</li>
 </ul>
 
 <p>This function returns TRUE if the user's password was reset successfully. It returns an array containing values for "identity" and "forgottenPasswordCode" in case <var>sAuthenticationConf["sendEmails"]</var> is set to FALSE.</p>
@@ -288,7 +288,7 @@ end if
 </div>
 
 
-<p class="important"><strong>Note:</strong> The default URI used to process forgotten password requests is "auth/resetPassword". This means you should provide a controller called "auth" including a handler called "resetPassword". To specify your own URI segments you need to set the second parameter using the array key "passwordResetLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
+<p class="important"><strong>Note:</strong> The default URI used to process forgotten password requests is "auth/resetPassword". This means you should provide a controller called "auth" including a handler called "resetPassword". To specify your own URI segments, you need to set the second parameter using the array key "passwordResetLink" to "yourController/yourHandler". Of course, replace "yourController/yourHandler" with your URI segments.</p>
 
 
 
@@ -296,9 +296,9 @@ end if
 
 <p>Check to see if a user is logged in.</p>
 
-<p>This function returns TRUE if the user is logged in, otherwise it returns FALSE.</p>
+<p>This function returns TRUE if the user is logged in, otherwise, it returns FALSE.</p>
 
-<p>In case two-factor authentication is activated the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password the function returns "pendingOTPsetup". Please read about OTP in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
+<p>In case two-factor authentication is activated, the function may return "pending" if the user logged in successfully but has still not transferred a valid one-time password. If the user logged in successfully and requested a QR code to set up two-factor authentication but still not transferred a valid one-time password, the function returns "pendingOTPsetup". Please read about OTP in chapter <a href="authenticationOTP.html">One-Time Password Authentication</a>.</p>
 
 <p>Example:</p>
 
@@ -315,11 +315,11 @@ end if
 <h3>rigAuthIsAdmin( <var>pID</var> )</h3>
 
 
-<p>Check to see if the currently logged in user is an administrator.</p>
+<p>Check to see if the currently logged-in user is an administrator.</p>
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used</li>
+	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed, the id of the currently logged-in user will be used</li>
 </ul>
 <p>This function returns TRUE if the user is an admin, otherwise it returns FALSE.</p>
 
@@ -339,12 +339,12 @@ end if
 <h3>rigAuthInGroup( <var>pGroup</var>, <var>pID</var> )</h3>
 
 
-<p>Check if user is a member of a specific group.</p>
+<p>Check if the user is a member of a specific group.</p>
 
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>pGroup:</strong> is an integer (the group ID) or a string (the group name) or an array of strings and integers</li>
-	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed the id of the currently logged in user will be used</li>
+	<li><strong>pID:</strong> (optional) is the user's ID. If a user id is not passed, the id of the currently logged-in user will be used</li>
 </ul>
 <p>This function returns TRUE if the user is a member of any given group, otherwise it returns FALSE.</p>
 
@@ -576,10 +576,10 @@ put rigAuthGetAttemptsNum(tIdentity) into tNumAttempts
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pID:</strong> (optional) is the user's id (integer). If a user id is not passed the id of the currently logged in user will be used</li>
+	<li><strong>pID:</strong> (optional) is the user's id (integer). If a user id is not passed the id of the currently logged-in user will be used</li>
 </ul>
 
-<p>This function returns FALSE in case there is no user data with the given id, otherwise it returns the result of the database query as an array.</p>
+<p>This function returns FALSE in case there is no user data with the given id, otherwise, it returns the result of the database query as an array.</p>
 
 <p>Example:</p>
 
@@ -609,7 +609,7 @@ end if
 	<li><strong>pGroupIDs:</strong> (optional) is an array of group IDs or a single ID</li>
 </ul>
 
-<p>This function returns FALSE in case there is no user data with the given group id, otherwise it returns the users who are members of the groups specified by the parameter or all users if the parameter is empty.</p>
+<p>This function returns FALSE in case there is no user data with the given group id, otherwise, it returns the users who are members of the groups specified by the parameter or all users if the parameter is empty.</p>
 
 <p>Example:</p>
 
@@ -648,7 +648,7 @@ end repeat
 	<li><strong>pID:</strong> is a group id</li>
 </ul>
 
-<p>This function returns FALSE in case there is no group data with the given id, otherwise it returns a group, the result of the database query as a numbered array.</p>
+<p>This function returns FALSE in case there is no group data with the given id, otherwise, it returns a group, the result of the database query as a numbered array.</p>
 
 <p>Example:</p>
 
@@ -675,7 +675,7 @@ delete char -2  to -1 of tRowData
 
 <p>Get the groups.</p>
 
-<p>This function returns FALSE in case there are no groups, otherwise it returns all groups, the result of the database query as a numbered array.</p>
+<p>This function returns FALSE in case there are no groups; otherwise, it returns all groups, the result of the database query as a numbered array.</p>
 
 <p>Example:</p>
 
@@ -715,7 +715,7 @@ end repeat
 <ul>
 	<li><strong>pID:</strong> (optional) is a user's id</li>
 </ul>
-<p>This function returns FALSE in case the user with the given id is not a member of any group, otherwise it returns all groups the user is a member of, the result of the database query as a numbered array.</p>
+<p>This function returns FALSE in case the user with the given id is not a member of any group; otherwise, it returns all groups the user is a member of, the result of the database query as a numbered array.</p>
 
 <p>Example:</p>
 
@@ -818,8 +818,8 @@ get rigAuthRemoveFromGroup(, tUserID)
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pPrefix:</strong> (optional) is a starting delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
-  <li><strong>pSuffix:</strong> (optional) is an ending delimiter for authentication related messages. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+	<li><strong>pPrefix:</strong> (optional) is a starting delimiter for authentication-related messages. If none is specified, the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+  <li><strong>pSuffix:</strong> (optional) is an ending delimiter for authentication-related messages. If none is specified, the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
 </ul>  
 <p>This function returns all authentication messages as a string.</p>
 
@@ -871,8 +871,8 @@ end if
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pPrefix:</strong> (optional) is the starting delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
-  <li><strong>pSuffix:</strong> (optional) is the ending delimiter. If none is specified the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+	<li><strong>pPrefix:</strong> (optional) is the starting delimiter. If none is specified, the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
+  <li><strong>pSuffix:</strong> (optional) is the ending delimiter. If none is specified, the delimiter as defined in <dfn>application/config/authentication.lc</dfn> is used</li>
 </ul>
 
 <p>This function returns authentication errors as a string.</p>

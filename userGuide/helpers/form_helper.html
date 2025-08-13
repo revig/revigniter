@@ -108,7 +108,7 @@
 <p>Creates an opening form tag with a base URL <strong>built from your config preferences</strong>.  It will optionally let you
 add form attributes and hidden input fields, and will always add the attribute accept-charset based on the Output Charset value in your config file. This attribute defaults to "UTF-8".</p>
 
-<p>The main benefit of using this tag rather than hard coding your own HTML is that it permits your site to be more portable
+<p>The main benefit of using this tag rather than hard-coding your own HTML is that it permits your site to be more portable
 in the event your URLs ever change. Furthermore, if CSRF protection is enabled in your <kbd>application/config/config.lc</kbd> file, the rigFormOpen() function automatically inserts a hidden CSRF token field in your forms.</p>
 
 <p>Here's a simple example:</p>
@@ -119,7 +119,7 @@ in the event your URLs ever change. Furthermore, if CSRF protection is enabled i
 
 <pre><code>&lt;form method="post" action="http:/example.com/index.lc/email/send" /></code></pre>
 
-<p>If no action parameter is provided then the current URL is set.</p>
+<p>If no action parameter is provided, then the current URL is set.</p>
 
 <p class="important"><strong>Note:</strong> You can override the current URL by providing an action attribute in the second parameter.</p>
 
@@ -185,7 +185,7 @@ put rigFormHidden(tData) into gData["hidden"]
 <h3>rigFormInput()</h3>
 
 <p>Lets you generate a standard text input field.  You can minimally pass the field name and value in the first
-and second parameter:</p>
+and second parameters:</p>
 
 <pre><code>put rigFormInput("username", "johndoe") into gData["input"]</code></pre>
 
@@ -203,11 +203,11 @@ put rigFormInput(tData) into gData["input"]
 -- Would produce:
 &lt;input type="text" name="username" id="username" value="johndoe" maxlength="100" size="50" style="width:50%" /></code></pre>
 
-<p>Of course you can define the input type too by setting an array key named "type" to any valid data.</p>
+<p>Of course, you can define the input type too by setting an array key named "type" to any valid data.</p>
 
 <h4>Adding Data to &lt;input></h4>
 
-<p>If you would like your input field to contain some additional data, like Javascript, you can pass it as a string in the
+<p>If you would like your input field to contain some additional data, like JavaScript, you can pass it as a string in the
 third parameter:</p>
 
 <pre><code class="lang-livecodeserver">put "onClick=" & quote & "some_function()" & quote into tJS
@@ -276,7 +276,7 @@ put rigFormDropDown("shirts", tOptions, "large", tJS) into gData["dropDown"]</co
 
 <h4>Adding Attributes to &lt;option></h4>
 
-<p>You can add attributes to the &lt;option> tag by appending comma delimited attribute value pairs to a key of the options array like in the following example:</p>
+<p>You can add attributes to the &lt;option> tag by appending comma-delimited attribute value pairs to a key of the options array like in the following example:</p>
 
 <pre><code class="lang-livecodeserver">put "Choose a size ..." into tOptions["choose","data-placeholder=" & quote & "true" & quote,"data-hilite=" & quote & "true" & quote]</code></pre>
 
@@ -284,11 +284,11 @@ put rigFormDropDown("shirts", tOptions, "large", tJS) into gData["dropDown"]</co
 
 <h4>Sorting</h4>
 
-<p>The optional fifth parameter let's you sort the drop-down options. Possible values defining sort direction (ascending or descending) and sort type (numeric or text) are: <var>asctext</var>, <var>desctext</var>, <var>ascnum</var> and <var>descnum</var>. If sort type is not specified ascending text is applied. Following an example sorting the options above from "small" to "exlarge" or from "Small Shirt" to "Extra Large Shirt" respectively:</p>
+<p>The optional fifth parameter lets you sort the drop-down options. Possible values defining sort direction (ascending or descending) and sort type (numeric or text) are: <var>asctext</var>, <var>desctext</var>, <var>ascnum</var>, and <var>descnum</var>. If sort type is not specified, ascending text is applied. Following an example, sorting the options above from "small" to "exlarge" or from "Small Shirt" to "Extra Large Shirt", respectively:</p>
 
 <pre><code>put rigFormDropDown("shirts", tOptions, "large", , "desctext") into gData["dropDown"]</code></pre>
 
-<p class="important"><strong>Note:</strong> Sorting applies to option keys, not values.<br>This way, as option keys are arbitrary, you can achieve any order for drop-down options independent from their values.</p>
+<p class="important"><strong>Note:</strong> Sorting applies to option keys, not values.<br>This way, as option keys are arbitrary, you can achieve any order for drop-down options independent of their values.</p>
 
 <h3>rigFormMultiselect()</h3>
 
@@ -332,7 +332,7 @@ put rigFormFieldsetClose() into gData["setClose"]
 
 <h3>rigFormFieldsetClose()</h3>
 
-<p>Produces a closing &lt;/fieldset&gt; tag.  The only advantage to using this function is it permits you to pass data to it
+<p>Produces a closing &lt;/fieldset&gt; tag.  The only advantage to using this function is that it permits you to pass data to it,
     which will be added below the tag.  For example:</p>
     
 <pre><code>put &quot;&lt;/div&gt;&lt;/div&gt;&quot; into tString
@@ -486,7 +486,7 @@ The second (optional) parameter allows you to set a default value for the form. 
 &lt;input type="text" name="quantity" value="<dfn>[[gData["qty"]]]</dfn>" size="50" /></code></pre>
 
 <p>The above form will show "0" when loaded for the first time.</p>
-<p>In case you need to use this function in combination with i.e. rigFormInput() you can turn off HTML escaping of the value and avoid double-escaping setting the third (optional) parameter to FALSE.</p>
+<p>In case you need to use this function in combination with i.e. rigFormInput(), you can turn off HTML escaping of the value and avoid double-escaping by setting the third (optional) parameter to FALSE.</p>
 
 <h3>rigSetSelect()</h3>
 

@@ -219,7 +219,7 @@ rigSetTableTemplate tTmpl
 <p class="important"><strong>Note:</strong>&nbsp; You'll notice there are two sets of "row" blocks in the template.  These permit you to create alternating row colors or design elements that alternate with each
 iteration of the row data.</p>
 
-<p>You are NOT required to submit a complete template.  If you only need to change parts of the layout you can simply submit those elements.
+<p>You are NOT required to submit a complete template.  If you only need to change parts of the layout, you can simply submit those elements.
 In this example, only the table opening tag is being changed:</p>
 
 <div class="codeSample">
@@ -253,7 +253,7 @@ put "Size" into tHeading[3]
 
 rigSetTableHeading tHeading</code></pre>
 
-<p>The second optional parameter is a boolean used to uppercase the first character of the table heading words. This is useful if you retrieve lowercase field names from a database table as table heading.</p>
+<p>The second optional parameter is a boolean used to uppercase the first character of the table heading words. This is useful if you retrieve lowercase field names from a database table as table headings.</p>
 
 <pre><code>rigSetTableHeading tQuery["fieldnames"], TRUE
 </code></pre>
@@ -313,14 +313,14 @@ rigSetTableTemplate tTmpl
 
 <h3>rigSetEmptyCellVal</h3>
 
-<p>Let's you set a default value for use in any table cells that are empty.  You might, for example, set a non-breaking space:</p>
+<p>Lets you set a default value for use in any table cells that are empty.  You might, for example, set a non-breaking space:</p>
 
 <pre><code>rigSetEmptyCellVal "&amp;nbsp;"
 </code></pre>
 
 <h3>rigClearTableVars</h3>
 
-<p>Lets you clear the table heading and row data.  If you need to show multiple tables with different data you should
+<p>Lets you clear the table heading and row data.  If you need to show multiple tables with different data, you should
 call this function after each table has been generated to empty the previous table information. Example:</p>
 
 <pre><code>rigLoaderLoadLibrary "Table"
