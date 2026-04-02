@@ -8,7 +8,7 @@ script "DBdriver"
 #
 # @package		revIgniter
 # @author		  rabit@revigniter.com
-# @copyright	Copyright (c) 2009 - 2021, Ralf Bitter
+# @copyright	Copyright (c) 2009 - 2026, Ralf Bitter
 # @license		https://revigniter.com/userGuide/license.html
 # @link		    https://revigniter.com
 ##
@@ -374,7 +374,7 @@ end rigDbSetCharset
 --| Last Mod: 29-09-09
 --| Requires: --
 --|
---| Summary: The name of the platform in use (mysql, postgresql, etc...).
+--| Summary: The name of the platform in use (mysql, mariadb, postgresql, etc...).
 --|
 --| Format:  rigDbPlatform()
 --|
@@ -1415,7 +1415,7 @@ end rigDbTableExists
 --| Requires: rigFetchDBdriverSetting(), rigDbDisplayError, _rigProtectIdentifiers(),
 --|           _rigDbListColumns(), rigDbRedirectOnError
 --|
---| Summary: Fetch MySQL Field Names.
+--| Summary: Fetch MySQL / MariaDB Field Names.
 --|
 --| Format:  rigDbListFields(param1)
 --|
@@ -1489,7 +1489,7 @@ function rigDbListFields pTable
         put tRow[tQuery["fieldnumbers"]["name"]] into tVal
       else
 
-        # THIS IS THE PostgreSQL / MySQL VERSION
+        # THIS IS THE PostgreSQL / MySQL / MariaDB VERSION
 				put line 1 in the keys of tRow into tK
 				put tRow[tK] into tVal
 			end if
