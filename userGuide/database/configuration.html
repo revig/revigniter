@@ -118,22 +118,22 @@ put TRUE into sDB["default"]["cacheautodel"]
 # SQLite DRIVER ONLY
 put "" into sDB["default"]["options"]
 
-# MYSQL AND THE POSTGRES DRIVER
-# DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
+# MYSQL / MARIADB AND THE POSTGRES DRIVER
+# DEFAULT MYSQL / MARIADB: 3306, DEFAULT POSTGRES: 5432
 -- put 3306 into sDB["default"]["port"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put FALSE into sDB["default"]["useSSL"]
 
 # THE FOLLOWING THREE VARIABLES ARE PART OF ENGINE CHANGES 4.6.4
 # BE AWARE THAT THESE ARE NOT TESTED
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put "" into sDB["default"]["dbSocket"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put 20 into sDB["default"]["dbTimeout"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put FALSE into sDB["default"]["dbAutoReconnect"]
 </code></pre>
 </div>
@@ -162,22 +162,22 @@ put TRUE into sDB["test"]["cacheautodel"]
 # SQLite DRIVER ONLY
 put "" into sDB["test"]["options"]
 
-# MYSQL AND THE POSTGRES DRIVER
-# DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
+# MYSQL / MARIADB AND THE POSTGRES DRIVER
+# DEFAULT MYSQL / MARIADB: 3306, DEFAULT POSTGRES: 5432
 -- put 3306 into sDB["test"]["port"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put FALSE into sDB["test"]["useSSL"]
 
 # THE FOLLOWING THREE VARIABLES ARE PART OF ENGINE CHANGES 4.6.4
 # BE AWARE THAT THESE ARE NOT TESTED
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put "" into sDB["test"]["dbSocket"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put 20 into sDB["test"]["dbTimeout"]
 
-# MYSQL DRIVER ONLY
+# MYSQL / MARIADB DRIVER ONLY
 put FALSE into sDB["test"]["dbAutoReconnect"]
 </code></pre>
 </div>
@@ -205,7 +205,7 @@ for the primary connection, but it too can be renamed to something more relevant
 <li><strong>username</strong> - The username used to connect to the database.</li>
 <li><strong>password</strong> - The password used to connect to the database.</li>
 <li><strong>database</strong> - The name of the database you want to connect to.</li>
-<li><strong>dbdriver</strong> - The database type, i.e., MySql, PostgreSQL, etc. Must be specified in lower case.</li>
+<li><strong>dbdriver</strong> - The database type, i.e., MariaDB, PostgreSQL, etc. Must be specified in lower case.</li>
 <li><strong>dbprefix</strong> - An optional table prefix which will be added to the table name when running <a href="active_record.html">Active Record</a> queries.  This permits multiple revIgniter installations to share one database.</li>
 <li><strong>pconnect</strong> - TRUE/FALSE (boolean) - Whether to use a persistent connection (currently not implemented).</li>
 <li><strong>dbdebug</strong> - TRUE/FALSE (boolean) - Whether database errors should be displayed.</li>
@@ -220,9 +220,9 @@ for the primary connection, but it too can be renamed to something more relevant
 <li><strong>useSSL</strong> - TRUE/FALSE Whether to use SSL for the connection or not.</li>
 </ul>
 
-<p class="important"><strong>Note:</strong> Depending on what database platform you are using (MySQL, PostgreSQL, etc.),
+<p class="important"><strong>Note:</strong> Depending on what database platform you are using (MariaDB, PostgreSQL, etc.),
 not all values will be needed.  For example, when using SQLite, you will not need to supply a username or password, and
-the database hostname will be the path to your database file. The information above assumes you are using MySQL.</p>
+the database hostname will be the path to your database file. The information above assumes you are using MySQL / MariaDB.</p>
 
 
 <h2>SQLite PRAGMA Statements</h2>

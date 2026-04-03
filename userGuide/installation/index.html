@@ -90,7 +90,7 @@
 
 <h1>Installation Instructions</h1>
 
-<p>revIgniter is installed in four steps (apart from 2 optional steps):</p>
+<p>revIgniter is installed in four steps (apart from three optional steps):</p>
 
 <ol>
 <li>Unzip the package.</li>
@@ -99,6 +99,7 @@
 <li>Set the file permissions on your <dfn>application/cache</dfn> folder such that it is writable.</li>
 <li>If you intend to use a database, open the <dfn>application/config/database.lc</dfn> file with a text editor and set your database settings.</li>
 <li>If you intend to use a SQLite database the <dfn>application/db</dfn> folder must be set such that it is writable and executable (777), and your database file must be writable (666).</li>
+<li>If you intend to use a MariaDB database to take advantage of the new password methods, you need to add the shared library <kbd>libmariadb</kbd>&mdash;which is included with LiveCode desktop distributions since version 10.0.4&mdash;to the <dfn>externals</dfn> folder of your LiveCode Server installation.</li>
 </ol>
 
 <p>If you wish to hide the location of your revIgniter files, you can rename the <dfn>system</dfn> folder
