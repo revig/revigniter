@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -151,7 +151,7 @@ end index
 <a id="handlers"></a>
 <h2>Handlers</h2>
 
-<p>In the above example the handler name is <dfn>index</dfn>.  The "index" handler is always loaded by default if the
+<p>In the above example, the handler name is <dfn>index</dfn>.  The "index" handler is always loaded by default if the
 <strong>second segment</strong> of the URI is empty.  Another way to show your "Hello World!" message would be this:</p>
 
 <pre><code>example.com/index.lc/<var>blog</var>/<samp>index</samp>/</code></pre>
@@ -178,7 +178,7 @@ end comments
 </div>
 
 
-<p class="important"><strong>Important:</strong>&nbsp; Don't forget to add the name of your new handler to the comma separated list of the variable gControllerHandlers.</p>
+<p class="important"><strong>Important:</strong>&nbsp; Don't forget to add the name of your new handler to the comma-separated list of the variable gControllerHandlers.</p>
 
 <p>Now load the following URL to see the <dfn>comments</dfn> handler:</p>
 
@@ -191,9 +191,9 @@ end comments
 <a id="passinguri"></a>
 <h2>Passing URI Segments to your Handlers</h2>
 
-<p>If your URI contains more than two segments you can retrieve them using the rigFetchSegment() function.</p>
+<p>If your URI contains more than two segments, you can retrieve them using the rigFetchSegment() function.</p>
 
-<p>For example, lets say you have a URI like this:</p>
+<p>For example, let's say you have a URI like this:</p>
 
 <pre><code>example.com/index.lc/<var>products</var>/<samp>shoes</samp>/<kbd>sandals</kbd>/<dfn>123</dfn></code></pre>
 
@@ -226,7 +226,7 @@ your <dfn>application/config/routes.lc</dfn> file and set this variable:</p>
 
 
 <p>Where <var>blog</var> is the name of the controller library you want used. If you now load your main index.lc file without
-specifying any URI segments you'll see your Hello World message by default.</p>
+specifying any URI segments, you'll see your Hello World message by default.</p>
 
 
 
@@ -269,7 +269,7 @@ post-process the finalized data in some way and send it to the browser yourself.
 add a handler named <dfn>_output</dfn> to your controller that will receive the finalized output data.</p>
 
 <p><strong>Important:</strong>&nbsp; If your controller contains a handler named <kbd>_output</kbd>, it will <strong>always</strong>
-be called by the output library instead of puting the finalized data directly. The first parameter of the handler will contain the finalized output.</p>
+be called by the output library instead of putting the finalized data directly. The first parameter of the handler will contain the finalized output.</p>
 
 <p>Here is an example:</p>
 
@@ -280,15 +280,15 @@ end _output
 
 <p class="important">Please note that your <dfn>_output</dfn> handler will receive the data in its finalized state.  Benchmark data will be rendered,
 cache files written (if you have caching enabled), and headers will be sent (if you use that <a href="../libraries/output.html">feature</a>)
-before it is handed off to the _output handler.  If you are using this feature the page execution timer might not be perfectly accurate
-since it will not take into acccount any further processing you do.  For an alternate way to control output <em>before</em> any of the final processing is done, please see the available handlers in the <a href="../libraries/output.html">Output Library</a>.</p>
+before it is handed off to the _output handler.  If you are using this feature, the page execution timer might not be perfectly accurate
+since it will not take into account any further processing you do.  For an alternate way to control output <em>before</em> any of the final processing is done, please see the available handlers in the <a href="../libraries/output.html">Output Library</a>.</p>
 
 <a id="private"></a>
 <h2>Private Handlers</h2>
 
 
-<p>In some cases you may want certain handlers hidden from public access.  To make a handler private, simply add an
-underscore as the name prefix and it will not be served via a URL request. For example, if you were to have a handler like this:</p>
+<p>In some cases, you may want certain handlers hidden from public access.  To make a handler private, simply add an
+underscore as the name prefix, and it will not be served via a URL request. For example, if you were to have a handler like this:</p>
 
 <pre><code>command _utility
   -- some code
@@ -304,22 +304,22 @@ end _utility
 <a id="subfolders"></a>
 <h2>Organizing Your Controllers into Sub-folders</h2>
 
-<p>If you are building a large application you might find it convenient to organize your controllers into sub-folders.  revIgniter permits you to do this.</p>
+<p>If you are building a large application, you might find it convenient to organize your controllers into sub-folders.  revIgniter permits you to do this.</p>
 
 <p>Simply create folders within your <dfn>application/controllers</dfn> directory and place your controller libraries within them.</p>
 
-<p><strong>Note:</strong>&nbsp; When using this feature the first segment of your URI must specify the folder.  For example, lets say you have a controller
+<p><strong>Note:</strong>&nbsp; When using this feature, the first segment of your URI must specify the folder.  For example, let's say you have a controller
 located here:</p>
 
 <pre><code>application/controllers/<kbd>products</kbd>/shoes.lc</code></pre>
 
-<p>To call the above controller your URI will look something like this:</p>
+<p>To call the above controller, your URI will look something like this:</p>
 
 <pre><code>example.com/index.lc/products/shoes/show/123</code></pre>
 
-<p>Each of your sub-folders may contain a default controller which will be
+<p>Each of your sub-folders may contain a default controller, which will be
 called if the URL contains only the sub-folder.  Simply name your default controller as specified in your
-<dfn>application/config/routes.lc</dfn> file</p>
+<dfn>application/config/routes.lc</dfn> file.</p>
 
 
 <p>revIgniter also permits you to remap your URIs using its <a href="routing.html">URI Routing</a> feature.</p>
@@ -328,7 +328,7 @@ called if the URL contains only the sub-folder.  Simply name your default contro
 <a id="reserved"></a>
 <h2>Reserved Handler Names</h2>
 
-<p>Since your controller script will extend the main application controller you
+<p>Since your controller script will extend the main application controller, you
 must be careful not to name your handlers identically to the ones used by that library. 
 See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 
@@ -337,7 +337,7 @@ See <a href="reserved_names.html">Reserved Names</a> for a full list.</p>
 <h2>Good Practice</h2>
 
 <p>It is good practice, though not mandatory, to load all needed libraries, databases, stacks, helpers, extensions, custom config files, 
-language files and models in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, models, a database etc.
+language files, and models in a handler named after the controller itself. This handler, if present, is called first and automatically by the front controller. So, this is a good place to load required libraries, helpers, models, a database, etc.
 Let's say your controller is called "blog.lc", then your code would look like this:</p>
 
 <div class="codeSample">
@@ -385,7 +385,7 @@ Previous Topic:&nbsp;&nbsp;<a href="urls.html">revIgniter URLs</a>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

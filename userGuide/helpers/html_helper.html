@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -135,7 +135,7 @@ second the size of the heading.  Example:</p>
 <pre><code>put rigHtmlImg("images/picture.jpg") into gData["myPic"]
 -- gives &lt;img src=&quot;http://site.com/images/picture.jpg&quot; /&gt;</code></pre>
 
-<p>There is an optional second parameter that is a TRUE/FALSE value that specifics if the src should have the page specified by gConfig["indexPage"] added to the address it creates. Presumably, this would be if you were using a media controller.</p>
+<p>There is an optional second parameter that is a TRUE/FALSE value that specifies if the src should have the page specified by gConfig["indexPage"] added to the address it creates. Presumably, this would be if you were using a media controller.</p>
 
 <pre><code>put rigHtmlImg("images/picture.jpg", TRUE) into gData["myPic"]
 -- gives &lt;img src=&quot;http://site.com/index.lc/images/picture.jpg&quot; /&gt;</code></pre>
@@ -156,7 +156,7 @@ put rigHtmlImg(tImgProperties) into gData["myPic"]
 
 <h3><a id="link_tag"></a>rigHtmlLinkTag()</h3>
 
-<p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media, indexPage and cors. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates; cors is a boolean which adds the "crossorigin" attribute if set to TRUE.</p>
+<p>Lets you create HTML &lt;link /> tags.  This is useful for stylesheet links, as well as other links. The parameters are href, with optional rel, type, title, media, indexPage, and cors. indexPage is a TRUE/FALSE value that specifies if the href should have the page specified by gConfig["indexPage"] added to the address it creates; cors is a boolean which adds the "crossorigin" attribute if set to TRUE.</p>
 
 <pre><code class="lang-livecodeserver">put rigHtmlLinkTag("css/mystyles.css") into gData["myStyleLink"]
 -- gives &lt;link href=&quot;http://site.com/css/mystyles.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot; /&gt;</code></pre>
@@ -218,7 +218,7 @@ put "mylist" into tAttributes["id"]
 put rigHtmlUL(tList, tAttributes) into gData["myUL"]
 </code></pre>
 
-<p>Note: You can use a comma separated list for the tList parameter. There is no need to use an array as in the example.</p>
+<p>Note: You can use a comma-separated list for the tList parameter. There is no need to use an array as in the example.</p>
 <p>The above code will produce this:</p>
 
 <pre><code>&lt;ul&nbsp;class="boldlist"&nbsp;id="mylist">
@@ -351,7 +351,7 @@ put rigHtmlMeta(tMeta) into gData["myMeta"]
 
 <h3><a id="doctype"></a>rigHtmlDocType()</h3>
 
-<p>Helps you generate document type declarations, or DTD's. XHTML 1.0 Strict is used by default, but many doctypes are available.</p>
+<p>Helps you generate document type declarations, or DTDs. XHTML 1.0 Strict is used by default, but many doctypes are available.</p>
 
 <pre><code class="lang-livecodeserver">put rigHtmlDocType() into gData["docType"]
 -- &lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"&gt;
@@ -428,7 +428,7 @@ Previous Topic:&nbsp;&nbsp;<a href="galleria_helper.html">Form-Mail Helper</a>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="jwt_helper.html">JWT Helper</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

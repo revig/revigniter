@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -97,7 +97,7 @@
 an Extension is to load it.  Once loaded, it becomes globally available in your <a href="../general/controllers.html">controller</a>.</p>
 
 <p>Extensions are typically stored in your <dfn>system/extensions</dfn>, or <dfn>application/extensions </dfn>directory.	revIgniter will look first in your <dfn>application/extensions</dfn>
-directory.  If the directory does not exist or the specified extension is not located there revIgniter will instead look in your global
+directory.  If the directory does not exist or the specified extension is not located there, revIgniter will instead look in your global
 <dfn>system/extensions</dfn> folder.</p>
 
 
@@ -108,13 +108,13 @@ directory.  If the directory does not exist or the specified extension is not lo
 
 <pre><code class="lang-livecodeserver">rigLoadExtension "<var>folderName</var>"</code></pre>
 
-<p>Where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in <dfn>application/extensions</dfn> or in <dfn>system/extensions</dfn>. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name all delimited by a period.</p>
+<p>Where <var>folderName</var> is the name of a folder (containing a "module.lcm" file) located in <dfn>application/extensions</dfn> or in <dfn>system/extensions</dfn>. Please follow the naming convention used by LiveCode Ltd. This means such a folder name should be composed of a reverse domain, followed by "library" and a library name, all delimited by a period.</p>
 
 <p>For example, to load the LiveCode <dfn>JSON</dfn> extension, which can be extracted from the main LiveCode distribution and should be located in <dfn>application/extensions/</dfn>, you will do this:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadExtension "<var>com.livecode.library.json</var>"</code></pre>
 
-<p>If you need to specify a resource path for the extesnion you can do so by appending a path to the extension folder name relative to the folder like:</p>
+<p>If you need to specify a resource path for the extension, you can do so by appending a path to the extension folder name relative to the folder, like:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadExtension "<var>com.foo.library.name/resource/path</var>"</code></pre>
 
@@ -126,7 +126,7 @@ as long as you load it before you use it.</p>
 
 <h2>Loading Multiple Extensions</h2>
 
-<p>If you need to load more than one extension you can specify them in a comma separated list, like this:</p>
+<p>If you need to load more than one extension, you can specify them in a comma-separated list, like this:</p>
 
 <pre><code>put "<var>com.livecode.library.json,com.myDomain.library.myExtension1/support,com.myDomain.library.myExtension2</var>" into <samp>tExtensions</samp>
 rigLoadExtension tExtensions
@@ -163,7 +163,7 @@ Previous Topic:&nbsp;&nbsp;<a href="modules.html">Modules</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="errors.html">Error Handling</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

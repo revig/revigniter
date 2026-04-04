@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,12 +91,12 @@
 
 <h1>Output Library</h1>
 
-<p>The Output Library is a small library with one main function:  To send the finalized web page to the requesting browser.  It is
+<p>The Output Library is a small library with one main function: to send the finalized web page to the requesting browser.  It is
 also responsible for <a href="../general/caching.html">caching</a> your web pages, if you use that feature.</p>
 
-<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system, so there is no need to do it manually.</p>
 
-<p>Under normal circumstances you won't even notice the Output library since it works transparently without your intervention.
+<p>Under normal circumstances, you won't even notice the Output library since it works transparently without your intervention.
 For example, when you use the <a href="../libraries/loader.html">Loader</a> library to load a view file, it's automatically
 passed to the Output library, which will be called automatically by revIgniter at the end of system execution.
 It is possible, however, for you to manually intervene with the output if you need to, using either of the two following handlers:</p>
@@ -122,7 +122,7 @@ revIgniter handlers like <var>rigLoadView()</var>.</p>
 
 <h3>rigSetHeader</h3>
 
-<p>Permits you to manually set server headers, which the output library will send for you when outputting the final rendered display. If you don't want to overwrite the most recent header of the same type set the second (optional) parameter to FALSE. Example:</p>
+<p>Permits you to manually set server headers, which the output library will send for you when outputting the final rendered display. If you don't want to overwrite the most recent header of the same type, set the second (optional) parameter to FALSE. Example:</p>
 
 <pre><code class="lang-livecodeserver">rigSetHeader "HTTP/1.0 200 OK"
 rigSetHeader "HTTP/1.1 200 OK"
@@ -145,12 +145,12 @@ rigSetHeader "Pragma: no-cache"</code></pre>
 <p>Permits you to enable/disable the <a href="../general/profiling.html">Profiler</a>, which will display benchmark and other data
 at the bottom of your pages for debugging and optimization purposes.</p>
 
-<p>To enable the profiler place the following handler anywhere within your <a href="../general/controllers.html">Controller</a> handlers:</p>
+<p>To enable the profiler, place the following handler anywhere within your <a href="../general/controllers.html">Controller</a> handlers:</p>
 <pre><code>rigEnableProfiler TRUE</code></pre>
 
-<p>When enabled a report will be generated and inserted at the bottom of your pages.</p>
+<p>When enabled, a report will be generated and inserted at the bottom of your pages.</p>
 
-<p>To disable the profiler you will use:</p>
+<p>To disable the profiler, you will use:</p>
 <pre><code>rigEnableProfiler FALSE</code></pre>
 
 
@@ -172,7 +172,7 @@ Previous Topic:&nbsp;&nbsp;<a href="loader.html">Loader Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

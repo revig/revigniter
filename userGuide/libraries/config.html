@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,20 +94,20 @@
 <p>The Config library provides a means to retrieve configuration preferences.  These preferences can
 come from the default config file (<samp>application/config/config.lc</samp>) or from your own custom config files.</p>
 
-<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system, so there is no need to do it manually.</p>
 
 
 <h2>Anatomy of a Config File</h2>
 
 <p>By default, revIgniter has one primary config file, located at <samp>application/config/config.lc</samp>.  If you open the file using
-your text editor you'll see that config items are stored in a global array variable called <var>gConfig</var>.</p>
+your text editor, you'll see that config items are stored in a global array variable called <var>gConfig</var>.</p>
 
 <p>You can add your own config items to
 this file, or if you prefer to keep your configuration items separate (assuming you even need config items),
-simply create your own file and save it in <dfn>config</dfn> folder.</p>
+simply create your own file and save it in the <dfn>config</dfn> folder.</p>
 
-<p><strong>Note:</strong> If you do create your own config files use the same format as the primary one, storing your items in
-an array called  <var>gConfig</var>. revIgniter will intelligently manage these files so there will be no conflict even though
+<p><strong>Note:</strong> If you do create your own config files, use the same format as the primary one, storing your items in
+an array called  <var>gConfig</var>. revIgniter will intelligently manage these files, so there will be no conflict even though
 the array has the same name (assuming an array index is not named the same as another).</p>
 
 <h2>Loading a Config File</h2>
@@ -119,14 +119,14 @@ so you will only need to load a config file if you have created your own.</p>
 
 <ol><li><strong>Manual Loading</strong>
 
-<p>To load one of your custom config files you will use the following function within the <a href="../general/controllers.html">controller</a> that needs it:</p>
+<p>To load one of your custom config files, you will use the following function within the <a href="../general/controllers.html">controller</a> that needs it:</p>
 
 <pre><code>get rigLoadConfigFile("<var>filename</var>")</code></pre>
 
 <p>Where <var>filename</var> is the name of your config file, without the .lc file extension.</p>
 
-<p>If you need to load multiple config files normally they will be merged into one master config array.  Name collisions can occur, however, if
-you have identically named array indexes in different config files.  To avoid collisions you can set the second parameter to <kbd>TRUE</kbd>
+<p>If you need to load multiple config files, normally they will be merged into one master config array.  Name collisions can occur, however, if
+you have identically named array indexes in different config files.  To avoid collisions, you can set the second parameter to <kbd>TRUE</kbd>,
 and the key value pairs of each config file will be stored in an array index corresponding to the name of the config file. Example:</p>
 
 <pre><code class="lang-livecodeserver"># Stored in an array with this prototype: put "config" into gConfig["blogSettings"]["myIndex"]<br />
@@ -175,7 +175,7 @@ put tBlogConfig["siteName"] into tSiteName</code></pre>
 
 <h2>Setting a Config Item</h2>
 
-<p>If you would like to dynamically set a config item or change an existing one, you can so using:</p>
+<p>If you would like to dynamically set a config item or change an existing one, you can do so using:</p>
 
 <pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>"</code></pre>
 
@@ -189,7 +189,7 @@ put tBlogConfig["siteName"] into tSiteName</code></pre>
 <p>Use the optional fourth parameter to include the name of your module in case your module provides a configuration file, like:</p>
 
 <pre><code class="lang-livecodeserver">rigSetConfigItem "<var>itemName</var>", "<var>itemValue</var>", , "<var>moduleName</var>"</code></pre>
-<p>Where <var>moduleName</var> is the name of your module, mind the empty third paramater.</p>
+<p>Where <var>moduleName</var> is the name of your module, mind the empty third parameter.</p>
 
 
 <h2>Helper Functions</h2>
@@ -218,7 +218,7 @@ Previous Topic:&nbsp;&nbsp;<a href="captcha.html">Captcha Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="csp.html">Content Security Policy Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -93,7 +93,7 @@
 
 <p>revIgniter's Pagination library is very easy to use. It is 100% customizable, either dynamically or via stored preferences, and it even works with AJAX and furthermore with <a href="#ASYNergy">ASYNergy</a>.</p>
 
-<p>If you are not familiar with the term "pagination", it refers to links that allows you to navigate from page to page, like this:</p>
+<p>If you are not familiar with the term "pagination", it refers to links that allow you to navigate from page to page, like this:</p>
 
 <pre><code><a href="#">&laquo; First</a>&nbsp;&nbsp;<a href="#">&lt;</a>&nbsp;<a href="#">1</a>&nbsp;<a href="#">2</a>&nbsp;<b>3</b>&nbsp;<a href="#">4</a>&nbsp;<a href="#">5</a>&nbsp;<a href="#">&gt;</a>&nbsp;&nbsp;<a href="#">Last &raquo;</a></code></pre>
 
@@ -150,7 +150,7 @@ minimum you need the three shown.  Here is a description of what those items rep
 
 <h2>Another Example</h2>
 
-<p>As explained above, to build the pagination HTML links the library needs to be provided either with the name of your pagination handler, or with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now the important part: The third segment is a number, the page number calculated by the library which should be evaluated by your pagination handler as shown below:</p>
+<p>As explained above, to build the pagination HTML links, the library needs to be provided either with the name of your pagination handler or with the URL of your page including the segments consisting of the name of your controller and the name of the corresponding handler unless you don't include the code in question in the default handler (index). Now, the important part: The third segment is a number, the page number calculated by the library, which should be evaluated by your pagination handler as shown below:</p>
 
 
 <div class="codeSample">
@@ -216,7 +216,7 @@ end page
 </code></pre>
 </div>
 
-<p>Now all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"]]] and the edited data retrieved from your database like [[gData["paginationData"]]].</p>
+<p>Now, all you have to do is to provide your view file with the pagination like [[gData["paginationLinks"]]] and the edited data retrieved from your database like [[gData["paginationData"]]].</p>
 
 
 <h2>AJAX Example</h2>
@@ -236,8 +236,8 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 <h3>Notes:</h3>
 
 <ul>
-  <li>Add the AJAX pagination script like <dfn>[[gData["ajaxCode"]]]</dfn> to your view file preferably at the bottom just before the closing body tag.</li>
-  <li>The AJAX pagination code includes a X-Requested-With header (the value is "XMLHttpRequest"). This allows us to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard HTTP request.</li>
+  <li>Add the AJAX pagination script like <dfn>[[gData["ajaxCode"]]]</dfn> to your view file, preferably at the bottom just before the closing body tag.</li>
+  <li>The AJAX pagination code includes an X-Requested-With header (the value is "XMLHttpRequest"). This allows us to check if the controller was called by the AJAX pagination script or, in case the user disabled JavaScript, by a standard HTTP request.</li>
   <li>The example implies that the HTML element containing the pagination data has an ID named "paginationData" and that the HTML element containing the pagination links has an ID named "pagination" like:</li>
 </ul>
 
@@ -250,7 +250,7 @@ put rigAjaxPaginationCode() into gData["ajaxCode"]
 </code></pre>
 
 <ul>
-	<li>If you like to use different IDs you need to extend your settings like:</li>
+	<li>If you like to use different IDs, you need to extend your settings like:</li>
 </ul>
 
 <div class="codeSample">
@@ -373,7 +373,7 @@ end page
 <h3>Notes:</h3>
 
 <ul>
-  <li>Add the ASYNergy script like <dfn>[[gData["asynergyScript"] ]]</dfn> to your view file preferably at the bottom just before the closing body tag.</li>
+  <li>Add the ASYNergy script like <dfn>[[gData["asynergyScript"] ]]</dfn> to your view file, preferably at the bottom just before the closing body tag.</li>
   <li>The example implies that the HTML element containing the pagination data has an <dfn>asyn:mutable</dfn> attribute whose value is "paginationData" and that the HTML element containing the pagination links has an <dfn>asyn:mutable</dfn> attribute whose value is "pagination" like:</li>
 </ul>
 
@@ -393,7 +393,7 @@ end page
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <kbd>pagination.lc</kbd>,  add an
 array in that file, call the <dfn>rigRunInitialPaginationConfig</dfn> handler at the bottom of your file with the 
-array as parameter. Then save the file in: <kbd>application/config/</kbd> and it will be used automatically.</p>
+array as a parameter. Then save the file in: <kbd>application/config/</kbd> and it will be used automatically.</p>
 
 <p>Example:</p>
 
@@ -457,7 +457,7 @@ rigRunInitialPaginationConfig sConfig
 
 <h2>Adding Enclosing Markup</h2>
 
-<p>If you would like to surround the entire pagination with some markup you can do it with these two prefs:</p>
+<p>If you would like to surround the entire pagination with some markup, you can do it with these two prefs:</p>
 
 <div class="table">
 <table>
@@ -631,7 +631,7 @@ rigRunInitialPaginationConfig sConfig
 
 <p>Generates and returns the pagination links.</p>
 <ul>
-	<li><strong>pRecordsOffset:</strong> is an integer and defines the current page. This parameter is optional, but it is mandatory if ASYNergy is used</li>
+	<li><strong>pRecordsOffset:</strong> is an integer and defines the current page. This parameter is optional, but it is mandatory if ASYNergy is used.</li>
 </ul>
 
 
@@ -670,7 +670,7 @@ Previous Topic:&nbsp;&nbsp;<a href="output.html">Output Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -108,14 +108,14 @@
 using the <dfn>rigLoaderLoadLibrary</dfn> handler:</p>
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Image"</code></pre>
 
-<p>Once the library is loaded it will be ready for use.</p>
+<p>Once the library is loaded, it will be ready for use.</p>
 
 
 <h2>Processing an Image</h2>
 
 <p>Regardless of the type of processing you would like to perform (resizing, cropping, rotation, or watermarking), the general process is
 identical. You will set some preferences corresponding to the action you intend to perform, then
-call one of four available processing functions.  For example, to create an image thumbnail you'll do this:</p>
+call one of four available processing functions.  For example, to create an image thumbnail, you'll do this:</p>
 
 <div class="codeSample">
 <pre><code>put "path/to/image/mypic.jpg" into tConfig["sourceImage"]
@@ -143,9 +143,9 @@ folder containing the image files must have write permissions.</p>
 
 <h2>Dynamic Output of Processed Image</h2>
 
-<p>If you set the <dfn>dynamicOutput</dfn> option to TRUE, the resulting image data will not be written to disk. Instead a .lc file
+<p>If you set the <dfn>dynamicOutput</dfn> option to TRUE, the resulting image data will not be written to disk. Instead, a .lc file
 is saved, which is used as the source for an image tag in your view file.
-For example, to watermark an image without storing the image you'll do this:</p>
+For example, to watermark an image without storing the image, you'll do this:</p>
 
 <div class="codeSample">
 <pre><code>put "overlay" into tConfig["WMtype"]
@@ -164,14 +164,14 @@ put rigImageWatermark() into gData["imageOutput"]</code></pre>
 </div>
 
 <p>The above code tells the <dfn>imageWatermark</dfn> function to use an image overlay as watermark, to look for an image called <em>mypic.jpg</em>
-located in the <dfn>sourceImage</dfn> folder and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then place the watermark 
-at the top of the source image with a vertical offset of 20 pixels and an opacity of 70% and save the source for your image tag in the "temp" folder located in your controllers folder.
+located in the <dfn>sourceImage</dfn> folder, and to look for an overlay image in the <dfn>watermarkImage</dfn> folder. Then, place the watermark 
+at the top of the source image with a vertical offset of 20 pixels and an opacity of 70%, and save the source for your image tag in the "temp" folder located in your controllers folder.
 Assuming segment-based URLs are used, the returned value looks like this: &lt;img src="http://yourdomain.com/temp/dynOverlay" width="480" height="312" />.</p>
 
 
 
-<p class="important"><strong>Note:</strong> The file defined in the <dfn>dynamicOutputURI</dfn> option, used as source in the image tag has to be in the scope 
-of the controllers directory. In the example above the file dynOverlay is located in a subdirectory (called temp) of the controllers directory.</p>
+<p class="important"><strong>Note:</strong> The file defined in the <dfn>dynamicOutputURI</dfn> option, used as a source in the image tag, has to be in the scope 
+of the controllers directory. In the example above, the file dynOverlay is located in a subdirectory (called temp) of the controllers directory.</p>
 
 
 <p>Use the returned value in your view file like in the following example:</p>
@@ -199,7 +199,7 @@ of the controllers directory. In the example above the file dynOverlay is locate
 <li>rigImageWatermark()</li>
 </ul>
 
-<p>These functions return TRUE or img tags upon success and FALSE for failure.  If they fail you can retrieve the
+<p>These functions return TRUE or img tags upon success and FALSE for failure.  If they fail, you can retrieve the
 error message using this function:</p>
 
 <pre><code>put rigDisplayImgErrors() into gData["errorsToDisplay"]</code></pre>
@@ -215,7 +215,7 @@ else
 end if</code></pre>
 </div>
 
-<p>Note:  You can optionally specify the HTML formatting to be applied to the errors, by submitting the opening/closing
+<p>Note:  You can optionally specify the HTML formatting to be applied to the errors by submitting the opening/closing
 tags in the function, like this:</p>
 
 <pre><code>get rigDisplayImgErrors("<var>&lt;p></var>", "<var>&lt;/p></var>")</code></pre>
@@ -403,7 +403,7 @@ You can use percentages, then the cropAlignment preference applies.</td>
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <dfn>image.lc</dfn>,  add the <var>tConfig</var>
 array in that file. Then save the file in: <kbd>config/image.lc</kbd> and it will be used automatically. 
-Add <dfn>rigRunInitialImageConfig</dfn> <var>tConfig</var> as last line in the file.</p>
+Add <dfn>rigRunInitialImageConfig</dfn> <var>tConfig</var> as the last line in the file.</p>
 
 
 <h3>rigImageResize()</h3>
@@ -412,7 +412,7 @@ Add <dfn>rigRunInitialImageConfig</dfn> <var>tConfig</var> as last line in the f
 or create a thumbnail image.</p>
 
 <p> The difference between creating a copy and creating a thumbnail is that thumbnail creation is optimized for shrinking very large images to small thumbnails
-and that a thumb will have the thumbnail marker as part of the name (ie, mypic_thumb.jpg).</p>
+and that a thumb will have the thumbnail marker as part of the name (i.e., mypic_thumb.jpg).</p>
 
 <p>All preferences listed in the table above are available for this function except these four:  rotationAngle, cropAlignment, Xaxis, and Yaxis.</p>
 
@@ -433,9 +433,9 @@ a path and/or a new filename using this preference:</p>
 
 <p>Notes regarding this preference:</p>
 <ul>
-<li>If only the new image name is specified it will be placed in the same folder as the original</li>
+<li>If only the new image name is specified, it will be placed in the same folder as the original</li>
 <li>If only the path is specified, the new image will be placed in the destination with the same name as the original.</li>
-<li>If both the path and image name are specified it will be placed in its own destination and given the new name.</li>
+<li>If both the path and image name are specified, it will be placed in its own destination and given the new name.</li>
 </ul>
 
 
@@ -475,7 +475,7 @@ end if</code></pre>
 </div>
 
 
-<p>Note: Without a visual interface it is difficult to crop images, so this function is not very useful
+<p>Note: Without a visual interface, it is difficult to crop images, so this function is not very useful
 unless you intend to build such an interface.</p>
 
 <h3>rigImageRotate()</h3>
@@ -529,7 +529,7 @@ end if</code></pre>
 
 
 <h3>rigKnownFonts()</h3>
-<p>Use this function to check which fonts are available for text watermarking. This function is maintained for compatibility reasons. Of course you can use <dfn>the fontNames</dfn> too.</p>
+<p>Use this function to check which fonts are available for text watermarking. This function is maintained for compatibility reasons. Of course, you can use <dfn>the fontNames</dfn> too.</p>
 
 <pre><code>put rigKnownFonts() into tAllFonts</code></pre>
 
@@ -547,7 +547,7 @@ end if</code></pre>
 <p>There are two types of watermarking that you can use:</p>
 
 <ul>
-<li><strong>Text</strong>: The watermark message will be generating using text with a font that you specify.</li>
+<li><strong>Text</strong>: The watermark message will be generated using text with a font that you specify.</li>
 
 <li><strong>Overlay</strong>: The watermark message will be generated by overlaying an image (usually a transparent PNG)
 containing your watermark over the source image.</li>
@@ -557,7 +557,7 @@ containing your watermark over the source image.</li>
 
 <h2>Watermarking an Image</h2>
 
-<p>Just as with the other functions (resizing, cropping, and rotating) the general process for watermarking
+<p>Just as with the other functions (resizing, cropping, and rotating), the general process for watermarking
 involves setting the preferences corresponding to the action you intend to perform, then
 calling the watermark function.  Here is an example:</p>
 
@@ -579,7 +579,7 @@ put rigImageWatermark() into tImageOutput</code></pre>
 </div>
 
 
-<p>The above example will use a 18 pixel font to create the text "Copyright 2014 - John Doe".  The watermark
+<p>The above example will use a 18-pixel font to create the text "Copyright 2014 - John Doe".  The watermark
 will be positioned at the top/center of the image, 20 pixels from the top of the image.</p>
 
 <p class="important"><strong>Note:</strong> In order for the image library to be allowed to do any processing, the image file must have &quot;write&quot; file permissions.</p>
@@ -783,7 +783,7 @@ Previous Topic:&nbsp;<a href="table.html">&nbsp;HTML Table Library</a><span clas
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="input.html">Input Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

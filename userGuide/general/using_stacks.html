@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,7 +90,7 @@
 
 <h1>Using Stacks</h1>
 
-<p>In order to maintain separation between your local resources and the global framework resources there are two storage locations for stack files.</p>
+<p>In order to maintain separation between your local resources and the global framework resources, there are two storage locations for stack files.</p>
 
 <p>This concept permits your stacks to <kbd>extend</kbd> native stacks in system/stacks if you simply need to add some functionality to an existing stack. Or you can even replace native stacks just by placing identically named versions in your <dfn>application/stacks</dfn> folder.</p>
 
@@ -121,10 +121,10 @@
 
 <h2>The Stack File</h2>
 
-<p>If your stack expects configuration data on load, your stack should have this basic prototype, that is the following code is optional:</p>
+<p>If your stack expects configuration data on load, your stack should have this basic prototype. That is, the following code is optional:</p>
 
 
-<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to modify your existing stacks that you may have inherited from other platforms in any way, as long as the stacks in question do not need to be configured on load like other revIgniter libraries. If you don't add the following code the part used for debugging is automatically added by revIgniter using a behavior.</p>
+<p class="important"><strong>Note:</strong>&nbsp; It is not mandatory to modify your existing stacks that you may have inherited from other platforms in any way, as long as the stacks in question do not need to be configured on load like other revIgniter libraries. If you don't add the following code, the part used for debugging is automatically added by revIgniter using a behavior.</p>
 
 <p>Stack script:</p>
 
@@ -167,13 +167,13 @@ end openStack
 
 <h2>Using Your Stack</h2>
 
-<p>From within any of your <a href="controllers.html">Controller</a> handlers you can initialize your stack using the standard:</p>
+<p>From within any of your <a href="controllers.html">Controller</a> handlers, you can initialize your stack using the standard:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadStack "Somestack"</code></pre>
 
 <p>Where <em>Somestack</em> is the file name, without the ".rev" / ".livecode" file extension.</p>
 
-<p>Once loaded you can access the handlers of your stack.</p>
+<p>Once loaded, you can access the handlers of your stack.</p>
 
 
 
@@ -181,7 +181,7 @@ end openStack
 
 <p class="important"><strong>Note:</strong>&nbsp; The following applies only to stacks which include the configuration handler as outlined above.</p>
 
-<p>In the stack loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your stack:</p>
+<p>In the stack loading handler, you can dynamically pass data as an array via the second parameter, and it will be passed to your stack:</p>
 
 
 <pre><code>put "large" into tParamsA["type"]
@@ -191,17 +191,17 @@ rigLoadStack "Somestack", <kbd>tParamsA</kbd>
 </code></pre>
 
 
-<p class="important"><strong>Note:</strong>&nbsp; You can also pass parameters stored in a config file. Simply create a config file named identically to the stack <kbd>file name</kbd>, add the file extension revIgniter uses (like Somestack.lc) and store it in your <dfn>application/config/</dfn> folder.  Note that if you dynamically pass parameters as described above, the config file option will not be available.</p>
+<p class="important"><strong>Note:</strong>&nbsp; You can also pass parameters stored in a config file. Simply create a config file named identically to the stack <kbd>file name</kbd>, add the file extension revIgniter uses (like Somestack.lc), and store it in your <dfn>application/config/</dfn> folder.  Note that if you dynamically pass parameters as described above, the config file option will not be available.</p>
 
 
 
 <h2>Replacing Native Stacks with Your Versions</h2>
 
 <p>Simply by naming your stack files identically to a native stack will cause revIgniter to use it instead of the native one. To use this
-feature you must name the file exactly the same as the native stack.</p>
+feature, you must name the file exactly the same as the native stack.</p>
 
 
-<p>To load your stack you'll see the standard loading handler:</p>
+<p>To load your stack, you'll see the standard loading handler:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
 
@@ -209,20 +209,20 @@ feature you must name the file exactly the same as the native stack.</p>
 <h2>Extending Native Stacks</h2>
 
 <p>If all you need to do is add some functionality to an existing stack - perhaps add a function or two - then
-it's overkill to replace the entire stack with your version.  In this case it's better to simply extend the stack.
+it's overkill to replace the entire stack with your version.  In this case, it's better to simply extend the stack.
 Extending a stack is nearly identical to replacing a stack with one exception:</p>
 
 <ul>
-<li>Your new stack name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
+<li>Your new stack name must be prefixed with <kbd>MY_</kbd> (this item is configurable; see below).</li>
 </ul>
 
-<p>For example, to extend the native <kbd>Nativestack</kbd> stack you'll create a file named <dfn>application/stacks/</dfn><kbd>MY_Nativestack.livecode</kbd>.</p>
+<p>For example, to extend the native <kbd>Nativestack</kbd> stack, you'll create a file named <dfn>application/stacks/</dfn><kbd>MY_Nativestack.livecode</kbd>.</p>
 
 
 
 <h3>Loading Your Sub-stack</h3>
 
-<p>To load your sub-stack you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
+<p>To load your sub-stack, you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
 to load the example above, which extends the Nativestack stack, you will use:</p>
 
 <pre><code class="lang-livecodeserver">rigLoadStack "<kbd>Nativestack</kbd>"</code></pre>
@@ -240,11 +240,11 @@ to load the example above, which extends the Nativestack stack, you will use:</p
 
 <h2>Your Stack and the Home Stack</h2>
 
-<p>To tell the engine where your stack script should sit in relation to the home stack you can use the optional third parameter. There are two options "front" and "behind". If you omit this parameter it is set to "behind".</p>
+<p>To tell the engine where your stack script should sit in relation to the home stack, you can use the optional third parameter. There are two options, "front" and "behind". If you omit this parameter, it is set to "behind".</p>
 
-<p class="important"><strong>Note:</strong>&nbsp; If you set the third parameter to "front" you need to make sure that the stack's name property is identical to the file name of the stack.</p>
+<p class="important"><strong>Note:</strong>&nbsp; If you set the third parameter to "front", you need to make sure that the stack's name property is identical to the file name of the stack.</p>
 
-<p class="important"><strong>Note:</strong>&nbsp; It seems that "go stack" is currently not working properly in the server environment. As a workaround "start using" followed by "set the defaultStack" is used if you set this parameter to "front". Unfortunately this means that in this case the stack does not receive any open and preOpen messages.</p>
+<p class="important"><strong>Note:</strong>&nbsp; It seems that "go stack" is currently not working properly in the server environment. As a workaround, "start using" followed by "set the defaultStack" is used if you set this parameter to "front". Unfortunately, this means that in this case, the stack does not receive any open and preOpen messages.</p>
 
 
 <h2>revIgniter Stack Example Using the Quartam PDF Library</h2>
@@ -305,11 +305,11 @@ end openStack
 
 <p>Step 3: Place the qrtpdflib.livecode stack into application/stacks, the dedicated location for your own stacks.</p>
 <p>Step 4: Load the stack in your controller like: rigLoadStack "qrtpdflib"</p>
-<p>Step 5: Testing and error reporting. For testing purposes you can use the scripts from <a href="http://quartam.on-rev.com/qrtpdfdemos.irev">qrtpdf demos.</a> Do not load any view file.</p>
+<p>Step 5: Testing and error reporting. For testing purposes, you can use the scripts from <a href="http://quartam.on-rev.com/qrtpdfdemos.irev">qrtpdf demos.</a> Do not load any view file.</p>
 
 <p class="important"><strong>Note:</strong> Be careful, comment out the qrtPDF_InitLibrary line in the demo scripts of Quartam.</p>
 
-<p>For error reporting please see the <a href="creating_libraries.html">Creating Libraries</a> section of the User Guide. </p>
+<p>For error reporting, please see the <a href="creating_libraries.html">Creating Libraries</a> section of the User Guide. </p>
 
 
 </div>
@@ -327,7 +327,7 @@ Previous Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Li
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="hooks.html">Hooks - Extending the Core</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

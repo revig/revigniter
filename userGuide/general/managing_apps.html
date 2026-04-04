@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,13 +90,13 @@
 
 <h1>Managing your Applications</h1>
 
-<p>By default it is assumed that you only intend to use revIgniter to manage one application, which you will build in your
+<p>By default, it is assumed that you only intend to use revIgniter to manage one application, which you will build in your
 <dfn>application/</dfn> directory.  It is possible, however, to have multiple sets of applications that share a single
 revIgniter installation, or even to rename or relocate your <dfn>application</dfn> folder and / or your <dfn>system</dfn> folder.</p>
 
 <h2>Renaming the Application Folder</h2>
 
-<p>If you would like to rename your <dfn>application</dfn> folder you may do so as long as you open your main <kbd>index.lc</kbd>
+<p>If you would like to rename your <dfn>application</dfn> folder, you may do so as long as you open your main <kbd>index.lc</kbd>
 file and set its name using the <var>gRigA["applicationFolder"]</var> variable:</p>
 
 <pre><code>put "application" into gRigA["applicationFolder"]</code></pre>
@@ -104,17 +104,17 @@ file and set its name using the <var>gRigA["applicationFolder"]</var> variable:<
 <h2>Relocating your Application Folder</h2>
 
 <p>It is possible to move your <dfn>application</dfn> folder to a different location on your server than your <kbd>root</kbd> folder. 
-To do so open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <var>gRigA["applicationFolder"]</var> variable.
+To do so, open your main <kbd>index.lc</kbd> and set a <em>full server path</em> in the <var>gRigA["applicationFolder"]</var> variable.
 You may use a relative path as long as your application folder is in the <kbd>root</kbd> folder or below.</p>
 
 
 <pre><code>put "/Path/to/your/application" into gRigA["applicationFolder"]</code></pre>
 
-<p>If you just like to move the application folder to the <kbd>system</kbd> folder you do not need to modify index.lc at all.</p>
+<p>If you just like to move the application folder to the <kbd>system</kbd> folder, you do not need to modify index.lc at all.</p>
 
 <h2>Renaming the System Folder</h2>
 
-<p>Similar to the way to rename the application folder described above you may rename your system folder as long as you open your main <kbd>index.lc</kbd>
+<p>Similar to the way to rename the application folder described above, you may rename your system folder as long as you open your main <kbd>index.lc</kbd>
 file and set its name using the <samp>gRigA["systemFolder"]</samp> variable:</p>
 
 <pre><code>put "system" into gRigA["systemFolder"]</code></pre>
@@ -122,7 +122,7 @@ file and set its name using the <samp>gRigA["systemFolder"]</samp> variable:</p>
 
 <h2>Relocating your System Folder</h2>
 
-<p>To move your <dfn>system</dfn> folder to a different location on your server than your <kbd>root</kbd> folder open your main <kbd>index.lc</kbd> and set 
+<p>To move your <dfn>system</dfn> folder to a different location on your server than your <kbd>root</kbd> folder, open your main <kbd>index.lc</kbd> and set 
 	a <em>full server path</em> in the <samp>gRigA["systemFolder"]</samp> variable.
 You may use a relative path as long as your application folder is in the <kbd>root</kbd> folder or below.</p>
 
@@ -130,13 +130,13 @@ You may use a relative path as long as your application folder is in the <kbd>ro
 <pre><code>put "/Path/to/your/system" into gRigA["systemFolder"]</code></pre>
 
 
-<p class="important"><strong>Note:</strong>&nbsp; The path to your application folder or system folder must use Unix style directory separators. Do not add
+<p class="important"><strong>Note:</strong>&nbsp; The path to your application folder or system folder must use Unix-style directory separators. Do not add
 	a trailing slash.</p>
 
 
 <h2>Running Multiple Applications with one revIgniter Installation</h2>
 
-<p>If you would like to share a common revIgniter installation to manage several different applications simply 
+<p>If you would like to share a common revIgniter installation to manage several different applications, simply 
 put all of the directories located inside your <kbd>application</kbd> folder into their
 own sub-folder.</p>
 
@@ -180,18 +180,18 @@ application/<samp>bar</samp>/views/</code></pre>
 
 
 <p>To select a particular application for use requires that you open your main front controller, the <kbd>index.lc</kbd> file, and set the <var>gRigA["applicationFolder"]</var>
-variable. For example, to select the "foo" application for use you would do this:</p>
+variable. For example, to select the "foo" application for use, you would do this:</p>
 
 <pre><code>put "application/foo" into gRigA["applicationFolder"]</code></pre>
 
-<p>To set the <var>gRigA["applicationFolder"]</var> variable for the "bar" application you need another front controller located at document <kbd>root</kbd>. Let's name it <kbd>bar.lc</kbd>. The corresponding setting should read like this:</p>
+<p>To set the <var>gRigA["applicationFolder"]</var> variable for the "bar" application, you need another front controller located at the document <kbd>root</kbd>. Let's name it <kbd>bar.lc</kbd>. The corresponding setting should read like this:</p>
 
 <pre><code>put "application/bar" into gRigA["applicationFolder"]</code></pre>
 
-<p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file which 
+<p class="important"><strong>Note:</strong>&nbsp; Each of your applications will need its own <dfn>index.lc</dfn> file, which 
 calls the desired application.  The index.lc file can be named anything you want.</p>
 
-<p>To exclude <kbd>index.lc</kbd> and <kbd>bar.lc</kbd> from your URLs you need to modify the mod_rewrite rules explained in <a href="urls.html">revIgniter URLs</a> like this:</p>
+<p>To exclude <kbd>index.lc</kbd> and <kbd>bar.lc</kbd> from your URLs, you need to modify the mod_rewrite rules explained in <a href="urls.html">revIgniter URLs</a> like this:</p>
 
 
 <div class="codeSample">
@@ -241,7 +241,7 @@ Previous Topic:&nbsp;&nbsp;<a href="profiling.html">Profiling Your Application</
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="security.html">Security</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

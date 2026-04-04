@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -98,7 +98,7 @@
 <li>It provides some helper handlers for fetching input data and pre-processing it.</li>
 </ol>
 
-<p class="important"><strong>Note:</strong> This library is initialized automatically by the system so there is no need to do it manually.</p>
+<p class="important"><strong>Note:</strong> This library is initialized automatically by the system, so there is no need to do it manually.</p>
 
 
 <h2>Security Filtering</h2>
@@ -109,7 +109,7 @@
 <li>Destroys the global GET array.  Since revIgniter does not utilize GET strings (unless you have the 
 query string option enabled in your config file), there is no reason to allow it.</li>
 <li>Filters the POST/COOKIE array keys, permitting only alpha-numeric (and a few other) characters.</li>
-<li>Provides XSS (Cross-site Scripting Hacks) filtering.  This can be enabled globally, or upon request.</li>
+<li>Provides XSS (Cross-site Scripting Hacks) filtering.  This can be enabled globally or upon request.</li>
 <li>Standardizes newline characters to LF</li>
 </ul>
 
@@ -117,25 +117,25 @@ query string option enabled in your config file), there is no reason to allow it
 <h2>XSS Filtering</h2>
 
 <p>revIgniter comes with a Cross Site Scripting Hack prevention filter which can either run automatically to filter
-all POST and COOKIE data that is encountered, or you can run it on a per item basis.  By default it does <strong>not</strong>
-run globally since it requires a bit of processing overhead, and since you may not need it in all cases.</p>
+all POST and COOKIE data that is encountered, or you can run it on a per-item basis.  By default, it does <strong>not</strong>
+run globally since it requires a bit of processing overhead and since you may not need it in all cases.</p>
 
-<p>The XSS filter looks for commonly used techniques to trigger Javascript or other types of code that attempt to hijack cookies
-or do other malicious things.  If anything disallowed is encountered it is rendered safe by converting the data to character entities.</p>
+<p>The XSS filter looks for commonly used techniques to trigger JavaScript or other types of code that attempt to hijack cookies
+or do other malicious things.  If anything disallowed is encountered, it is rendered safe by converting the data to character entities.</p>
 
 <p>
 Note: This function should only be used to deal with data upon submission. It's not something that should be used for general runtime processing since it requires a fair amount of processing overhead.</p>
 
 
-<p>To filter data through the XSS filter use this function:</p>
+<p>To filter data through the XSS filter, use this function:</p>
 
 <h3>rigXssClean()</h3>
 
-<p>Here is an usage example:</p>
+<p>Here is a usage example:</p>
 
 <pre><code>put rigXssClean(tData) into tData</code></pre>
 
-<p>If you want the filter to run automatically every time it encounters POST or COOKIE data you can enable it by opening your
+<p>If you want the filter to run automatically every time it encounters POST or COOKIE data, you can enable it by opening your
 <kbd>application/config/config.lc</kbd> file and setting this:</p>
 
 <pre><code>put TRUE into gConfig["globalXssFiltering"]</code></pre>
@@ -152,19 +152,19 @@ end if
 
 <h3>rigSanitizeFilename(<var>tFileName</var>, <var>tRelativePath</var>)</h3>
 
-<p>Use this function to sanitize filenames from user input to prevent directory traversal and other security related issues. Here is an example:</p>
+<p>Use this function to sanitize filenames from user input to prevent directory traversal and other security-related issues. Here is an example:</p>
 
 <pre><code>put rigSanitizeFilename(rigVarPost("filename")) into tFilename</code></pre>
 
 <p>If it is acceptable for the user input to include relative paths, e.g. <kbd>file/in/some/approved/folder.txt</kbd>, you can set the second optional parameter,
-  <samp>tRelativePath</samp> to TRUE.</p>
+  <samp>tRelativePath</samp>, to TRUE.</p>
 
 <pre><code>put rigSanitizeFilename(rigVarPost("filename"), TRUE) into tFilename</code></pre>
 
 
 <h2>Cross-site request forgery (CSRF) Protection</h2>
 
-<p>You can enable CSRF protection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["csrf_protection"] to TRUE. When set to TRUE, token will be checked on a submitted form using the rigFormOpen() function (included in <kbd>formHelper.lc</kbd>) and matched with a CSRF cookie. If you are accepting user data, it is strongly recommended CSRF protection be enabled.</p>
+<p>You can enable CSRF protection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["csrf_protection"] to TRUE. When set to TRUE, a token will be checked on a submitted form using the rigFormOpen() function (included in <kbd>formHelper.lc</kbd>) and matched with a CSRF cookie. If you are accepting user data, it is strongly recommended that CSRF protection be enabled.</p>
 
 <pre><code>put TRUE into gConfig["csrf_protection"]</code></pre>
 
@@ -172,7 +172,7 @@ end if
 
 
 <h3>CSRF Preferences</h3>
-<p>You'll find the following CSRF related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
+<p>You'll find the following CSRF-related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
 
 <div class="table">
 <table>
@@ -214,12 +214,12 @@ end if
 
 <h2>Bot Detection</h2>
 
-<p>If you are accepting user data you may consider to enable bot detection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["honeypot"] to TRUE. When set to TRUE, form fields that are hidden but accessible to a Bot, are attached to any form, provided that the rigFormOpen() function (included in formHelper.lc) is used. Requests containing data entered into these honeypot fields are assumed to come from a bot. In this case an error page is shown.</p>
+<p>If you are accepting user data, you may consider enabling bot detection by opening your <kbd>application/config/config.lc</kbd> file and setting gConfig["honeypot"] to TRUE. When set to TRUE, form fields that are hidden but accessible to a bot are attached to any form, provided that the rigFormOpen() function (included in formHelper.lc) is used. Requests containing data entered into these honeypot fields are assumed to come from a bot. In this case, an error page is shown.</p>
 
-<p class="important"><strong>Note:</strong> You need to use the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function in order to automatically insert a hidden Bot detection honeypot field in your forms.</p>
+<p class="important"><strong>Note:</strong> You need to use the <a href="../helpers/form_helper.html">form helper</a> and the <var>rigFormOpen()</var> function in order to automatically insert a hidden bot detection honeypot field in your forms.</p>
 
 <h3>Bot Detection Preferences</h3>
-<p>You'll find the following Bot detection related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
+<p>You'll find the following bot detection-related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
 
 <div class="table">
 <table>
@@ -265,10 +265,10 @@ end if
 
 <h2>Using POST, COOKIE, or SERVER Data</h2>
 
-<p>revIgniter comes with five helper functions that let you fetch POST, COOKIE or SERVER items.  The main advantage of using the provided
+<p>revIgniter comes with five helper functions that let you fetch POST, COOKIE. or SERVER items.  The main advantage of using the provided
 functions rather than fetching an item directly ($_POST["something"]) is that the functions will check to see if the item exists and
 return false (boolean) if not.  This lets you conveniently use data without having to test whether an item exists first.
-In other words, normally you might do something like this:</p>
+In other words, normally, you might do something like this:</p>
 
 <pre><code>if "something" is not among the keys of $_POST then
   put FALSE into tSomething
@@ -276,7 +276,7 @@ else
   put $_POST["something"] into tSomething
 }</code></pre>
 
-<p>With revIgniter's built in functions you can simply do this:</p>
+<p>With revIgniter's built-in functions, you can simply do this:</p>
 
 <pre><code>put rigVarPost("something") into tSomething</code></pre>
 
@@ -304,13 +304,13 @@ else
 
 <h3>rigVarGet()</h3>
 
-<p>This function is identical to the post function, only it fetches get data:</p>
+<p>This function is identical to the post function, only it fetches GET data:</p>
 
 <pre><code>get rigVarGet("someData", TRUE)</code></pre>
 
 <h3>rigVarGetPost()</h3>
 
-<p>This function will search through both the post and get streams for data, looking first in post, and then in get:</p>
+<p>This function will search through both the POST and GET streams for data, looking first in POST, and then in GET:</p>
 
 <pre><code>get rigVarGetPost("someData", TRUE)</code></pre>
 
@@ -331,7 +331,7 @@ else
 
 <h2>Dealing with LiveCode Arrays in Post Data</h2>
 
-<p>You can send LiveCode arrays to revIgniter using POST. For this to work the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd> respectively in case you like to send your array in compressed form.<br />Use</p>
+<p>You can send LiveCode arrays to revIgniter using POST. For this to work, the following headers must be sent along with the POST data: <kbd>"Content-Type: application/lc.array"</kbd> or <kbd>"Content-Type: application/lc.array.compressed"</kbd>, respectively, in case you like to send your array in compressed form.<br />Use</p>
   <pre><code>put base64Encode(arrayEncode(myArray)) into tMyPreparedArray</code></pre> 
   <p>or</p> 
   <pre><code>put base64Encode(compress(arrayEncode(myArray))) into tMyPreparedArray</code></pre> 
@@ -357,15 +357,15 @@ post tDataToSend to URL "http://mysite.com/mycontroller/"
 
 <pre><code>put rigVarPost("myArray") into tMyArray</code></pre>
 
-<p>Otherwise use as function parameter (the key name of the $_POST array) "rigLCArray" to retrieve the data like:</p>
+<p>Otherwise, use as a function parameter (the key name of the $_POST array) "rigLCArray" to retrieve the data like:</p>
 
 <pre><code>put rigVarPost("rigLCArray") into tMyArray</code></pre>
 
 
 <h2>Dealing with JSON in Post Data</h2>
 
-<p>To post JSON send <kbd>"Content-Type: application/json"</kbd> along with the POST data. There is no need to send JSON as form data.<br />On the server side JSON data can be retrieved from <dfn>$_POST</dfn> and from <dfn>$_POST_RAW</dfn> as well as from <dfn>rigVarPost()</dfn> or from <dfn>rigVarPost(, TRUE)</dfn> respectively.</p>
-<p>If you like you can post JSON  as form data too. Assuming that the name of the first form part is "myJSONdata", the JSON data can then be retreived from <dfn>rigVarPost("myJSONdata")</dfn> or from <dfn>rigVarPost("myJSONdata", TRUE)</dfn> respectively.</p>
+<p>To post JSON, send <kbd>"Content-Type: application/json"</kbd> along with the POST data. There is no need to send JSON as form data.<br />On the server side, JSON data can be retrieved from <dfn>$_POST</dfn> and from <dfn>$_POST_RAW</dfn> as well as from <dfn>rigVarPost()</dfn> or from <dfn>rigVarPost(, TRUE)</dfn> respectively.</p>
+<p>If you like, you can post JSON  as form data too. Assuming that the name of the first form part is "myJSONdata", the JSON data can then be retrieved from <dfn>rigVarPost("myJSONdata")</dfn> or from <dfn>rigVarPost("myJSONdata", TRUE)</dfn> respectively.</p>
 
 
 
@@ -413,7 +413,7 @@ Previous Topic:&nbsp;&nbsp;<a href="image_lib.html">Image Manipulation Library</
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="language.html">Language Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

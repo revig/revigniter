@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -100,16 +100,16 @@ The end result is a message string that is randomized with each call to the rigE
 <h2>Setting your Key</h2>
 
 <p>A <em>key</em> is a piece of information that controls the cryptographic process and permits an encrypted string to be decoded.
-In fact, the key you chose will provide the <strong>only</strong> means to decode data that was encrypted with that key,
+In fact, the key you choose will provide the <strong>only</strong> means to decode data that was encrypted with that key,
 so not only must you choose the key carefully, you must never change it if you intend to use it for persistent data.</p>
 
 <p>It goes without saying that you should guard your key carefully.
-Should someone gain access to your key, the data will be easily decoded.  If your server is not totally under your control
-it's impossible to ensure key security so you may want to think carefully before using it for anything
+Should someone gain access to your key, the data will be easily decoded.  If your server is not totally under your control,
+it's impossible to ensure key security, so you may want to think carefully before using it for anything
 that requires high security, like storing credit card numbers.</p>
 
 <p>The key should be as random a string as you can concoct, with numbers and uppercase and lowercase letters.
-Your key should <strong>not</strong> be a simple text string. In order to be cryptographically secure it
+Your key should <strong>not</strong> be a simple text string. In order to be cryptographically secure, it
 needs to be as random as possible.</p>
 
 <p>Your key can be either stored in your <dfn>application/config/config.lc</dfn>, or you can design your own
@@ -179,7 +179,7 @@ put rigDecode(tEncryptedString, tKey) into tPlaintextString</code></pre>
 
 <h3>rigSetHash <var>pType</var></h3>
 
-<p>Set the hash type to be used by the encryption library <strong>(LC server 9.0.0 dp 7 or higher required!)</strong>. Possible parameter values are SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384 and SHA3-512. For backwards compatibility the default value is SHA-1. If you use server version 9.0.0 dp 7 or higher please chose a more secure flavor.</p>
+<p>Set the hash type to be used by the encryption library <strong>(LC server 9.0.0 dp 7 or higher required!)</strong>. Possible parameter values are SHA-1, SHA-224, SHA-256, SHA-384, SHA-512, SHA3-224, SHA3-256, SHA3-384 and SHA3-512. For backwards compatibility the default value is SHA-1. If you use server version 9.0.0 dp 7 or higher please choose a more secure flavor.</p>
 
 <p class="important"><strong>Note:</strong> This handler requires LC server 9.0.0 dp 7 or higher.</p>
 
@@ -199,7 +199,7 @@ Previous Topic:&nbsp;&nbsp;<a href="email.html">Email Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

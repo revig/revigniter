@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,7 +94,7 @@
 <p>This library enables you to implement a Content Security Policy on your site. A CSP is one of the best protective measures that can reduce the risk of content injection attacks, such as Cross Site Scripting (XSS). The CSP library generates two headers:</p>
 
 <ol>
-	<li>a Content-Security-Policy HTTP header, which contains directives that whitelist domains from which the browser is allowed to load resources, including images, stylesheets, javascript files, etc. The browser will block loading resources from somewhere that isn't on this whitelist.</li>
+	<li>a Content-Security-Policy HTTP header, which contains directives that whitelist domains from which the browser is allowed to load resources, including images, stylesheets, JavaScript files, etc. The browser will block loading resources from somewhere that isn't on this whitelist.</li>
 	<li>a Content-Security-Policy-Report-Only HTTP header that works just like the CSP header, but it only reports on violations of the policy without blocking restricted resources.</li>
 </ol>
 
@@ -119,9 +119,9 @@
 
 <h3>Setting Directives Manually</h3>
 
-<p class="important"><strong>Note:</strong> Many directives have default values/keywords that will be used if you do not set them. See the Directives table below. If no changes are needed the default Content-Security-Policy header is sent and you're all done just by loading the library.</p>
+<p class="important"><strong>Note:</strong> Many directives have default values/keywords that will be used if you do not set them. See the Directives table below. If no changes are needed, the default Content-Security-Policy header is sent, and you're all done just by loading the library.</p>
 
-<p>Directives are set during runtime by passing a single value/keyword, multiple values/keywords or an array that sets multiple directives at once to the library, like in the following examples (please note the single quotes used for keywords):</p>
+<p>Directives are set during runtime by passing a single value/keyword, multiple values/keywords, or an array that sets multiple directives at once to the library, like in the following examples (please note the single quotes used for keywords):</p>
 
 <div class="codeSample">
 <pre><code># SET A DIRECTIVE USING A SINGLE VALUE/KEYWORD
@@ -173,7 +173,7 @@ rigCspAdd tCspA</code></pre>
 rigCspSet "report-uri", "report.example.com/myparser"</code></pre>
 </div>
 
-<p>To ask the browser to monitor a policy, reporting violations but not enforcing the restrictions, you can set the third parameter to "report". Valid values are "allow" and "report", the default value is "allow". If the third parameter is set to "report" directives are set in the whitelist of the Content-Security-Policy-Report-Only HTTP header. Example:</p>
+<p>To ask the browser to monitor a policy, reporting violations but not enforcing the restrictions, you can set the third parameter to "report". Valid values are "allow" and "report"; the default value is "allow". If the third parameter is set to "report", directives are set in the whitelist of the Content-Security-Policy-Report-Only HTTP header. Example:</p>
 
 <div class="codeSample">
 <pre><code># IF DIRECTIVE IS VIOLATED SEND A REPORT WITHOUT BLOCKING
@@ -186,8 +186,8 @@ rigCspSet "style-src", "'self' css.example.com", "report"</code></pre>
 
 <p>If you prefer not to set directives using the above method, you can instead store them in a config file.
 Simply create a new file called <var>contentSecurityPolicy.lc</var> and  add the <var>Config</var> array in that file.
-At the end of the file write: <dfn>rigRunInitialContentsecuritypolicyConfig yourArrayVariableName</dfn>. Then save the file
-at <var>config/contentSecurityPolicy.lc</var> and it will be used automatically. Example:</p>
+At the end of the file, write: <dfn>rigRunInitialContentsecuritypolicyConfig yourArrayVariableName</dfn>. Then save the file
+at <var>config/contentSecurityPolicy.lc</var>, and it will be used automatically. Example:</p>
 
 <div class="codeSample">
 <pre><code>local sDirectivesA
@@ -199,7 +199,7 @@ put "'unsafe-inline' css.example.com" into sDirectivesA["style-src"]
 rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 </div>
 
-<p>To report violations without enforcing restrictions you can set the "report-only" directive to true like in the following example:</p>
+<p>To report violations without enforcing restrictions, you can set the "report-only" directive to true, like in the following example:</p>
 
 <div class="codeSample">
 <pre><code>local sDirectivesA
@@ -215,7 +215,7 @@ rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 
 <h2>Directives</h2>
 
-<p>The following directives/settings are available. The default value, if available any, indicates what will be used if you do not specify that directive.</p>
+<p>The following directives/settings are available. The default value, if available, indicates what will be used if you do not specify that directive.</p>
 
 <div class="table">
 <table>
@@ -353,7 +353,7 @@ rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 <h2>Using a Nonce to Protect Inline Styles and Scripts</h2>
 
 <p>A nonce (a number used once) is just a random string generated by the CSP library. When included in the CSP header, an inline script or inline CSS can be executed if the script or style tag contains a nonce attribute that matches the nonce specified in the CSP header. Nonces are automatically generated if you add<br>
-"{{g_ScriptNonce_}}" or "{{g_StyleNonce_}}" respectively to the script tag or style tag in question. These placeholders will be replaced during runtime with the generated nonce. Examples:</p>
+"{{g_ScriptNonce_}}" or "{{g_StyleNonce_}}", respectively, to the script tag or style tag in question. These placeholders will be replaced during runtime with the generated nonce. Examples:</p>
 
 <div>
 <pre><code>&lt;style {{g_StyleNonce_}}&gt;
@@ -371,7 +371,7 @@ rigRunInitialContentsecuritypolicyConfig sDirectivesA</code></pre>
 &lt;/script&gt;</code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> There are inline scripts (JavaScript) and inline CSS generated dynamically by various revIgniter libraries. Using the CSP library nonces are automatically attached to these script or style tags.</p>
+<p class="important"><strong>Note:</strong> There are inline scripts (JavaScript) and inline CSS generated dynamically by various revIgniter libraries. Using the CSP library, nonces are automatically attached to these script or style tags.</p>
 
 
 <h2>Handler Reference</h2>
@@ -426,7 +426,7 @@ rigCspAdd tCspA</code></pre>
 <p><em>Parameters</em></p>
 <ul>
 <li><strong>pDirective:</strong> A valid CSP directive.</li>
-<li><strong>pMode:</strong> This optional parameter specifies the whitelist (standard or report only) the options should fetched from. Valid values are "allow" or "report", default is "allow".</li>
+<li><strong>pMode:</strong> This optional parameter specifies the whitelist (standard or report only) the options should be fetched from. Valid values are "allow" or "report", default is "allow".</li>
 </ul>
 
 <p>Example:</p>
@@ -448,7 +448,7 @@ Previous Topic:&nbsp;&nbsp; <a href="config.html">Config Library</a><span class=
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="../database/index.html">Database Library</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span>Ralf Bitter</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span>Ralf Bitter</p>
 	</div>
 </div>
 

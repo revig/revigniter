@@ -36,7 +36,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+                    <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
                 </div>
 
                 <div class="collapse navbar-collapse">
@@ -98,7 +98,7 @@
 
                 <h1>Asset Helper</h1>
 
-                <p>The Asset Helper file contains handlers that assist in working with assets, namely images, css files, javascript files and favicons.</p>
+                <p>The Asset Helper file contains handlers that assist in working with assets, namely images, CSS files, JavaScript files, and favicons.</p>
 
 
                 <h2>Loading this Helper</h2>
@@ -108,9 +108,9 @@
 
                 <h2>Assets Location</h2>
 
-                <p>To use this helper you should store your assets in a folder called "assets" at your root. You can change this
-                    path in your <dfn>application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css" and
-                    that your Javascript folder is called "js". If you don't like that, you can change the corresponding variables at the top of the helper script. The same folder structure applies if you store your files in an arbitrary named folder
+                <p>To use this helper, you should store your assets in a folder called "assets" at your root. You can change this
+                    path in your <dfn>application/config/config.lc</dfn> file. This helper assumes that your image folder is called "img", that your CSS folder is called "css", and
+                    that your JavaScript folder is called "js". If you don't like that, you can change the corresponding variables at the top of the helper script. The same folder structure applies if you store your files in an arbitrary-named folder
                     in assets/modules/ like:<br />
                     /assets<br />
                     &nbsp;&nbsp;&nbsp;/img<br />
@@ -125,8 +125,8 @@
 
                 <h2><a id="bustingCaches">&nbsp;</a>Busting Caches</h2>
 
-                <p>If you are using far future expire headers for static files, which are likely to be modified anytime, you should set
-                    use_cacheBusters in <dfn>application/config/config.lc</dfn> to TRUE to enable a mechanism for automatically updating user's cache. Then whenever you modify static files like images, CSS files, JavaScript files or favicons,
+                <p>If you are using far-future expire headers for static files, which are likely to be modified anytime, you should set
+                    use_cacheBusters in <dfn>application/config/config.lc</dfn> to TRUE to enable a mechanism for automatically updating the user's cache. Then, whenever you modify static files like images, CSS files, JavaScript files, or favicons,
                     browser cached data is refreshed without the need to change file names.<br />
                     If use_cacheBusters is set to TRUE, asset file names are translated by the asset helper to &lt;name&gt;-cb&lt;lastModified&gt;.suffix,
                     so you need to include the following mod_rewrite RewriteRule either in a .htaccess file or in httpd.conf:<br /></p>
@@ -135,10 +135,10 @@
 
                 <p>This rule causes assets with names like &lt;name&gt;-cb&lt;lastModified&gt;.suffix to be redirected to the original ones.</p>
 
-                <p class="important"><strong>Note:</strong>&nbsp; If you use mod_rewrite rules as described in <a href="../general/urls.html">revIgniter URLs</a>, you need to insert this rule on a seperate line before the "RewriteBase /"
+                <p class="important"><strong>Note:</strong>&nbsp; If you use mod_rewrite rules as described in <a href="../general/urls.html">revIgniter URLs</a>, you need to insert this rule on a separate line before the "RewriteBase /"
                     statement.</p>
 
-                <p>The asset helper functions use an optional parameter which allows to exclude assets from being affected by the global setting use_cacheBusters (if set to TRUE). That way the cache busting mechanism can be applied individually.
+                <p>The asset helper functions use an optional parameter which allows you to exclude assets from being affected by the global setting use_cacheBusters (if set to TRUE). That way, the cache busting mechanism can be applied individually.
                 </p>
 
                 <p> All code regarding cache busting is based on ideas found at: http://cjohansen.no/en/apache/using_a_far_future_expires_header</p>
@@ -149,13 +149,13 @@
 
                 <h3>rigCssAsset(<var>tAsset</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
-                <p>Generates a css asset location html code.</p>
+                <p>Generates a CSS asset location HTML code.</p>
 								
 								<p><em>Parameters</em></p>
                 <ul>
 									<li><strong>tAsset:</strong> is the name of your CSS file like myCSS.css, assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myCSS.css, these folders would be located in assets/css</li>
 									<li><strong>tAttributes:</strong> (optional) is an array of attributes</li>
-									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder</li>
 									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
@@ -165,15 +165,15 @@
 
                 <h3>rigDynamicCssAsset(<var>tRawCSS</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
-                <p>Simple CSS preprocessor which dynamically generates a CSS file and the corresponding CSS asset location html code. This function is primarily intended to be used to apply cache busting to images referenced in CSS files.</p>
+                <p>Simple CSS preprocessor which dynamically generates a CSS file and the corresponding CSS asset location HTML code. This function is primarily intended to be used to apply cache busting to images referenced in CSS files.</p>
 								
 								<p><em>Parameters</em></p>
                 <ul>
 									<li><strong>tRawCSS:</strong> is the name of your CSS file containing variables enclosed in double square brackets that correspond to array keys in the global array variable gData</li>
-									<li>The meaning of the second (<var>tAttributes</var>), third (<var>tModule</var>) and fourth (<var>tCacheBuster</var>) parameter is identical to those of the <kbd>rigCssAsset()</kbd> function above.</li>
+									<li>The meaning of the second (<var>tAttributes</var>), third (<var>tModule</var>), and fourth (<var>tCacheBuster</var>) parameters is identical to those of the <kbd>rigCssAsset()</kbd> function above.</li>
 							</ul>
 
-                <p>Here is an example on how to apply this function:</p>
+                <p>Here is an example of how to apply this function:</p>
 
                 <p>Let's say this is an abstract of your CSS file.</p>
 
@@ -186,7 +186,7 @@
 </code></pre>
                 </div>
 
-                <p class="important"><strong>Note:</strong>&nbsp; File name prototype for your raw CSS file to be processed is filename.css.lc (mind the suffixes).</p>
+                <p class="important"><strong>Note:</strong>&nbsp; The file name prototype for your raw CSS file to be processed is filename.css.lc (mind the suffixes).</p>
 
                 <p>This is an abstract of your controller.</p>
 
@@ -202,9 +202,9 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 </code></pre>
                 </div>
 
-                <p>Assumed the raw CSS file is called myCSS.css.lc, then the name of the generated CSS file sent to the browser is myCSS.css</p>
+                <p>Assuming the raw CSS file is called myCSS.css.lc, then the name of the generated CSS file sent to the browser is myCSS.css.</p>
 
-                <p>This is an abstract of the generated CSS file, assumed use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE:</p>
+                <p>This is an abstract of the generated CSS file, assuming use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE:</p>
 
                 <pre><code>#mastHead {
   height:480px;
@@ -246,13 +246,13 @@ put rigDynamicCssAsset("myCSS.css.lc", tAttrib) into gData["myCSS"]
 
                 <h3>rigImageAsset(<var>tAsset</var>, <var>tAttributes</var>, <var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
-                <p>Generates image asset location html code.</p>
+                <p>Generates image asset location HTML code.</p>
 
 								<p><em>Parameters</em></p>
                 <ul>
 									<li><strong>tAsset:</strong> is the name of your image file like myPic.jpg, assets can be nested in folders, then the value of this parameter looks like: myFirstFolder/mySecondFolder/myPic.jpg, these folders would be located in assets/img</li>
 									<li><strong>tAttributes:</strong> (optional) is an array of attributes</li>
-									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder</li>
 									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
@@ -268,11 +268,11 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <h3>rigJsAsset(<var>tAsset</var>, <var>tModule</var>, <var>tCacheBuster</var>, <var>tAttribute</var>, <var>pNonce</var>)</h3>
 
-                <p>Generates JavaScript asset location html code.</p>
+                <p>Generates JavaScript asset location HTML code.</p>
 
 								<p><em>Parameters</em></p>
                 <ul>
-									<li><strong>tAsset:</strong> is the name of your Javascript file like myScript.js, assets can be nested in folders, then the value of this 											parameter looks like: myFirstFolder/mySecondFolder/myScript.js, these folders would be located in assets/js</li>
+									<li><strong>tAsset:</strong> is the name of your JavaScript file like myScript.js, assets can be nested in folders, then the value of this 											parameter looks like: myFirstFolder/mySecondFolder/myScript.js, these folders would be located in assets/js</li>
                    	<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
 									<li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 									<li><strong>tAttribute:</strong> (optional) is an async and / or defer script attribute</li>
@@ -292,8 +292,8 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
 								<p><em>Parameters</em></p>
                 <ul>
-									<li><strong>tGoogleApisAsset:</strong> if you want to use the Google Apis CDN to serve an open-source JavaScript library you can do so by setting this parameter to a value like: jsGoogleapis-&lt;name&gt;-&lt;version&gt;</li>
-									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+									<li><strong>tGoogleApisAsset:</strong> if you want to use the Google Apis CDN to serve an open-source JavaScript library, you can do so by setting this parameter to a value like: jsGoogleapis-&lt;name&gt;-&lt;version&gt;</li>
+									<li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page. If you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder</li>
 									<li><strong>tLocalFallbackAsset:</strong> (optional) is the name of a JavaScript file on your server which serves as a fallback in case a connection to the Google content distribution network is not possible</li>
 									<li><strong>tAttribute:</strong> (optional) is an async and / or defer script attribute</li>
 									<li><strong>pNonce:</strong> (optional) is a Content Security Policy nonce</li>
@@ -307,16 +307,16 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 
                 <pre><code>&lt;? return rigJsAsset("jsGoogleapis-dojo-1.6.1") ?&gt;</code></pre>
 
-                <p>For a list of available libraries see: <a href="http://code.google.com/apis/libraries/devguide.html" target="_blank">Google Libraries API - Developer's Guide.</a></p>
+                <p>For a list of available libraries, see: <a href="http://code.google.com/apis/libraries/devguide.html" target="_blank">Google Libraries API - Developer's Guide.</a></p>
 
 
                 <h3>rigAddFavicon(<var>tModule</var>, <var>tCacheBuster</var>)</h3>
 
-                <p>Generates a link tag using the base url that points to favicon. Use this function, if your favicon is not located at your root. Put it in <dfn>assets/img</dfn>.</p>
+                <p>Generates a link tag using the base URL that points to the favicon. Use this function if your favicon is not located at your root. Put it in <dfn>assets/img</dfn>.</p>
 
 								<p><em>Parameters</em></p>
 							<ul>
-                    <li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page if you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
+                    <li><strong>tModule:</strong> (optional) is a folder name where you store assets for the current page. If you like to organize assets for different pages in separate folders, this folder should be located in a "modules" folder, which is located in the "assets" folder"</li>
                     <li><strong>tCacheBuster:</strong> (optional) is a boolean, which determines if asset file names should include the timestamp of last modification - defaults to TRUE (read about <a href="#bustingCaches">cache busting</a> above)</li>
 							</ul>
 
@@ -334,8 +334,8 @@ put rigImageAsset("myPic.jpg", tArray, "aboutMe", FALSE) into gData["myPic"]
 									<li><strong>tResourcesDir:</strong> is a root relative path to resources you want to be cached</li>
 									<li><strong>tManifestName:</strong> is the name of the manifest file to be generated</li>
 									<li><strong>tUseAbsoluteURI:</strong> (optional) is a boolean which determines whether to write absolute URIs. Defaults to FALSE</li>
-									<li><strong>tResourcesOnlineOnly:</strong> (optional) is either an array or a comma delimited list of file names of assets which should not be cached, these names represent the NETWORK section of the manifest to be built, use pure file names here without paths</li>
-									<li><strong>tFallbackResources:</strong> (optional) is an array of pairs of root relative paths used to build the FALLBACK section of the manifest, the array key describes the preferred URL for a resource to be cached, whereas the array value is a fallback URL to use if the file is inaccessible using the first URL</li>
+									<li><strong>tResourcesOnlineOnly:</strong> (optional) is either an array or a comma delimited list of file names of assets which should not be cached. These names represent the NETWORK section of the manifest to be built. Use pure file names here without paths</li>
+									<li><strong>tFallbackResources:</strong> (optional) is an array of pairs of root relative paths used to build the FALLBACK section of the manifest. The array key describes the preferred URL for a resource to be cached, whereas the array value is a fallback URL to use if the file is inaccessible using the first URL</li>
 									<li><strong>tDirToIgnore:</strong> (optional) is used to define a directory containing assets which you don't want to be cached</li>
 							</ul>
 
@@ -405,7 +405,7 @@ end index
                     <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
                     Next Topic:&nbsp;&nbsp;<a href="cookie_helper.html">Cookie Helper</a>
                 </p>
-                <p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+                <p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
             </div>
         </div>
 

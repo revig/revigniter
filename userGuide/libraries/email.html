@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -152,8 +152,8 @@ rigInitializeMail tConfig</code></pre>
 ><h3>Setting Email Preferences in a Config File</h3>
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
-Simply create a new file called <kbd>email.lc</kbd>,  add the <var>Config</var>
-array in that file. At the end of the file write: <dfn>rigRunInitialEmailConfig</dfn> <var>yourArrayVariableName</var>. Then save the file at <kbd>config/email.lc</kbd> and it will be used automatically. You
+Simply create a new file called <kbd>email.lc</kbd> and add the <var>Config</var>
+array in that file. At the end of the file, write: <dfn>rigRunInitialEmailConfig</dfn> <var>yourArrayVariableName</var>. Then save the file at <kbd>config/email.lc</kbd>, and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializeMail</dfn> handler if you save your preferences in a config file. Example:</p>
 
 <div class="codeSample">
@@ -231,16 +231,16 @@ rigRunInitialEmailConfig sEmailConf</code></pre>
 <p>Sets the email address and name of the person sending the email:</p>
 <pre><code class="lang-livecodeserver">rigMailFrom "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
 
-<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of double dash in shell commands used to send emails has changed it is preferred to not set the sender address if you set the protocol to mail. Using this setting the sender field appears as "&lt;username@domain.com>" in default configurations. 
+<p class="important"><strong>Note:</strong>&nbsp; Since the behavior of double dash in shell commands used to send emails has changed, it is preferred to not set the sender address if you set the protocol to mail. Using this setting, the sender field appears as "&lt;username@domain.com>" in default configurations. 
   It's the account name and host name of the sending user.</p>
 
 <h3>rigReplyTo</h3>
-<p>Sets the reply-to address.  If the information is not provided the information in the "mailFrom" handler is used. Example:</p>
+<p>Sets the reply-to address.  If the information is not provided, the information in the "mailFrom" handler is used. Example:</p>
 <pre><code class="lang-livecodeserver">rigReplyTo "<var>you@example.com</var>", "<var>Your Name</var>"</code></pre>
 
 
 <h3>rigMailTo</h3>
-<p>Sets the email address(s) of the recipient(s).  Can be a single email, a comma-delimited list or an array:</p>
+<p>Sets the email address(s) of the recipient(s).  Can be a single email, a comma-delimited list, or an array:</p>
 
 <pre><code class="lang-livecodeserver">rigMailTo "<var>someone@example.com</var>"</code></pre>
 <pre><code class="lang-livecodeserver">rigMailTo "<var>one@example.com</var>,<var>two@example.com</var>,<var>three@example.com</var>"</code></pre>
@@ -252,10 +252,10 @@ put "<var>three@example.com</var>" into tList[3]
 rigMailTo tList</code></pre>
 
 <h3>rigMailCC</h3>
-<p>Sets the CC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list or an array.</p>
+<p>Sets the CC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list, or an array.</p>
 
 <h3>rigMailBcc</h3>
-<p>Sets the BCC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list or an array.</p>
+<p>Sets the BCC email address(s). Just like the "mailTo", can be a single email, a comma-delimited list, or an array.</p>
 
 
 <h3>rigMailSubject</h3>
@@ -270,9 +270,9 @@ rigMailTo tList</code></pre>
 <p>Sets the alternative email message body:</p>
 <pre><code class="lang-livecodeserver">rigSet_altMessage "<var>This is the alternative message</var>"</code></pre>
 
-<p>This is an optional message string which can be used if you send HTML formatted email.  It lets you specify an alternative
+<p>This is an optional message string which can be used if you send HTML-formatted email.  It lets you specify an alternative
 message with no HTML formatting which is added to the header string for people who do not accept HTML email.
-If you do not set your own message revIgniter will extract the message from your HTML email and strip the tags.</p>
+If you do not set your own message, revIgniter will extract the message from your HTML email and strip the tags.</p>
 
 
 
@@ -292,13 +292,13 @@ in a loop, permitting the data to be reset between cycles.</p>
 end repeat
 </code></pre>
 
-<p>If you set the parameter to TRUE any attachments will be cleared as well:</p>
+<p>If you set the parameter to TRUE, any attachments will be cleared as well:</p>
 
 <pre><code>rigClearMail TRUE</code></pre>
 
 
 <h3>rigMailSend()</h3>
-<p>The Email sending function. Returns boolean TRUE or FALSE based on success or failure, enabling it to be used
+<p>The email sending function. Returns boolean TRUE or FALSE based on success or failure, enabling it to be used
 conditionally:</p>
 
 <pre><code>if rigMailSend() is not TRUE then
@@ -308,7 +308,7 @@ end if</code></pre>
 
 <h3>rigMailAttach</h3>
 <p>Enables you to send an attachment. Put the file path/name in the first parameter. Note: Use a file path, not a URL.
-For multiple attachments use the function multiple times. For example:</p>
+For multiple attachments, use the function multiple times. For example:</p>
 
 <pre><code>rigMailAttach "/path/to/photo1.jpg"
 rigMailAttach "/path/to/photo2.jpg"
@@ -318,12 +318,12 @@ put rigMailSend() into tMailResult</code></pre>
 
 
 <h3>rigPrintMailDebugger()</h3>
-<p>Returns a string containing any server messages, the email headers, and the email messsage.  Useful for debugging.</p>
+<p>Returns a string containing any server messages, the email headers, and the email message.  Useful for debugging.</p>
 
 
 <h2>Overriding Word Wrapping</h2>
 
-<p>If you have word wrapping enabled (recommended to comply with RFC 822) and you have a very long link in your email it can
+<p>If you have word wrapping enabled (recommended to comply with RFC 822) and you have a very long link in your email, it can
 get wrapped too, causing it to become un-clickable by the person receiving it.  revIgniter lets you manually override
 word wrapping within part of your message like this:</p>
 
@@ -354,7 +354,7 @@ Previous Topic:&nbsp;&nbsp;<a href="../database/index.html">Database Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="encryption.html">Encryption Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

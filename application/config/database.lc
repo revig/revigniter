@@ -25,8 +25,8 @@ end if
 #	["username"] The username used to connect to the database
 #	["password"] The password used to connect to the database
 #	["database"] The name of the database you want to connect to
-#	["dbdriver"] The database type. ie: mysql.  Currently supported:
-#				 			 mysql, postgre, sqlite. To do: odbc, oci8
+#	["dbdriver"] The database type. ie: mysql. Currently supported:
+#				 			 mysql, mariadb, postgre, sqlite. To do: odbc, oci8
 #	["dbprefix"] You can add an optional prefix, which will be added
 #				 			 to the table name when using the  Active Record Library
 #	["pconnect"] TRUE/FALSE - Whether to use a persistent connection
@@ -99,22 +99,22 @@ put TRUE into sDB["default"]["cacheautodel"]
 # SQLite DRIVER ONLY
 put "" into sDB["default"]["options"]
 
-# MYSQL AND THE POSTGRES DRIVER
-# DEFAULT MYSQL: 3306, DEFAULT POSTGRES: 5432
+# MYSQL/MARIADB AND THE POSTGRES DRIVER
+# DEFAULT MYSQL/MARIADB: 3306, DEFAULT POSTGRES: 5432
 -- put 3306 into sDB["default"]["port"]
 
-# MYSQL DRIVER ONLY
+# MYSQL/MARIADB DRIVER ONLY
 put FALSE into sDB["default"]["useSSL"]
 
 # THE FOLLOWING THREE VARIABLES ARE PART OF ENGINE CHANGES 4.6.4
 # BE AWARE THAT THESE ARE NOT TESTED
-# MYSQL DRIVER ONLY
+# MYSQL/MARIADB DRIVER ONLY
 put "" into sDB["default"]["dbSocket"]
 
-# MYSQL DRIVER ONLY
+# MYSQL/MARIADB DRIVER ONLY
 put 20 into sDB["default"]["dbTimeout"]
 
-# MYSQL DRIVER ONLY
+# MYSQL/MARIADB DRIVER ONLY
 put FALSE into sDB["default"]["dbAutoReconnect"]
 
 

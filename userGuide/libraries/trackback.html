@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,7 +91,7 @@
 
 <h1>Trackback Library</h1>
 
-<p>The Trackback Library provides handlers that enable you to send and receive Trackback data. If you are not familiar with Trackbacks you'll find more information <a href="http://en.wikipedia.org/wiki/Trackback" target="_blank">here</a>.</p>
+<p>The Trackback Library provides handlers that enable you to send and receive Trackback data. If you are not familiar with Trackbacks, you'll find more information <a href="http://en.wikipedia.org/wiki/Trackback" target="_blank">here</a>.</p>
 
 
 <h2>Initializing the Library</h2>
@@ -150,14 +150,14 @@ end if
 
 <pre><code>get rigTrackbackDisplayErrors()</code></pre>
 
-<p>Optionally you can include opening and closing tags (default is "&lt;p>" and "&lt;/p>" respectively) like:</p>
+<p>Optionally, you can include opening and closing tags (default is "&lt;p>" and "&lt;/p>" respectively) like:</p>
 
 <pre><code>get rigTrackbackDisplayErrors("&lt;li>", "&lt;/li>")</code></pre>
 
 
 <h2>Receiving Trackbacks</h2>
 
-<p>Before you can receive Trackbacks you must create a weblog.  If you don't have a blog yet there's no point in continuing.</p>
+<p>Before you can receive Trackbacks, you must create a weblog.  If you don't have a blog yet, there's no point in continuing.</p>
 
 <p>Receiving Trackbacks is a little more complex than sending them, only because you will need a database table in which to store them,
 and you will need to validate the incoming trackback data.  You are encouraged to implement a thorough validation process to
@@ -167,11 +167,11 @@ the validation is what takes most of the effort.</p>
 
 <h2>Your Ping URL</h2>
 
-<p>In order to accept Trackbacks you must display a Trackback URL next to each one of your weblog entries.  This will be the URL
+<p>In order to accept Trackbacks, you must display a Trackback URL next to each one of your weblog entries.  This will be the URL
 that people will use to send you Trackbacks (we will refer to this as your "Ping URL").</p>
 
 <p>Your Ping URL must point to a controller function where your Trackback receiving code is located, and the URL
-must contain the ID number for each particular entry, so that when the Trackback is received you'll be
+must contain the ID number for each particular entry, so that when the Trackback is received, you'll be
 able to associate it with a particular entry.</p>
 
 <p>For example, if your controller is called <dfn>trackback</dfn>, and the receiving handler is called <dfn>receive</dfn>, your
@@ -183,7 +183,7 @@ Ping URLs will look something like this:</p>
 
 <h2>Creating a Trackback Table</h2>
 
-<p>Before you can receive Trackbacks you must create a table in which to store them.  Here is a basic prototype for such a table:</p>
+<p>Before you can receive Trackbacks, you must create a table in which to store them.  Here is a basic prototype for such a table:</p>
 
 <div class="codeSample">
 <pre><code># Table structure for trackback
@@ -206,7 +206,7 @@ CREATE TABLE `trackbacks` (
 
 
 <p>The Trackback specification only requires four pieces of information to be sent in a Trackback (url, title, excerpt, blog_name),
-but to make the data more useful we've added a few more fields in the above table schema (date, IP address, etc.).</p>
+but to make the data more useful, we've added a few more fields in the above table schema (date, IP address, etc.).</p>
 
 <h2>Processing a Trackback</h2>
 
@@ -250,7 +250,7 @@ rigTrackbackSendSuccess
 
 <pre><code>get rigFetchSegment(3)</code></pre>
 
-<p>Without a valid entry ID, there's no reason to continue. In our Trackback receiving code above, if the third segment is missing, we will issue an error using</p>
+<p>Without a valid entry ID, there's no reason to continue. In our Trackback receiving code above, if the third segment is missing, we will issue an error using:</p>
 
 <h3>rigTrackbackSendError "Your error string."</h3>
 
@@ -260,13 +260,13 @@ rigTrackbackSendSuccess
 <h3>rigTrackbackReceive()</h3>
 
 <p>This function simply looks at the incoming data and makes sure it contains the four pieces of data that are required (url, title, excerpt, blog_name).
-It returns TRUE on success and FALSE on failure.  If it fails you will issue an error message.</p>
+It returns TRUE on success and FALSE on failure.  If it fails, you will issue an error message.</p>
 
 <p>The incoming Trackback data can be retrieved using this function:</p>
 
 <h3>rigTrackbackData("<var>item</var>")</h3>
 
-<p>Where <var>item</var> represents one of these four pieces of info: url, title, excerpt, or blog_name</p>
+<p>Where <var>item</var> represents one of these four pieces of info: url, title, excerpt, or blog_name.</p>
 
 <p>If the Trackback data is successfully received, you will issue a success message using:</p>
 
@@ -277,7 +277,7 @@ It returns TRUE on success and FALSE on failure.  If it fails you will issue an 
 
 <h2>How to Reduce Spam</h2>
 
-<p>To make the life of spammers who like to increase their number of inbound links using Trackback without publishing any link to your blog entry a little bit harder you can check if the trackback page has a link to your weblog entry. This is done using:</p>
+<p>To make the life of spammers who like to increase their number of inbound links using Trackback without publishing any link to your blog entry a little bit harder, you can check if the trackback page has a link to your weblog entry. This is done using:</p>
 
 <h3>rigTrackbackHasLink(<var>trackbackURL</var>, <var>entryURL</var>)</h3>
 
@@ -337,7 +337,7 @@ Previous Topic:&nbsp;&nbsp;<a href="sessions.html">Session Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="uri.html">URI Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

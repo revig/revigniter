@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,21 +91,21 @@
 
 <h1 id="toc_0">FTP Library</h1>
 
-<p>revIgniter&#39;s FTP Library permits to:</p>
+<p>revIgniter&#39;s FTP Library permits you to:</p>
 
 <ul>
 <li>get directory listings</li>
 <li>transfer files to a remote server</li>
 <li>download files from a remote server</li>
-<li>move, rename and delete remote files / folders</li>
+<li>move, rename, and delete remote files / folders</li>
 <li>create a directory on a remote server</li>
 <li>set file / folder permissions remotely</li>
 <li>recreate an entire local directory remotely using a &quot;mirroring&quot; handler</li>
 </ul>
 
-<p class="important"><strong>Note:</strong> This library requires the <kbd>tsNet</kbd> LiveCode external. Asynchronous SFTP and SFTP using public key authentication need LC Business Edition.</p>
+<p class="important"><strong>Note:</strong> This library requires the <kbd>tsNet</kbd> LiveCode external. For asynchronous SFTP and SFTP with public key authentication, you need the LC Business Edition if you are using an LC version lower than version 10.</p>
 
-<p class="important"><strong>Note:</strong> Asynchronous requests are currently (up to LC server version 9.5.1) not working, presumably this is due to a bug in tsNet, <a href="http://quality.livecode.com/show_bug.cgi?id=18961">see bug 18961.</a></p>
+<p class="important"><strong>Note:</strong> Asynchronous requests are currently (up to LC server version 9.6.2) not working, presumably this is due to a bug in tsNet, <a href="http://quality.livecode.com/show_bug.cgi?id=18961">see bug 18961.</a></p>
 
 <h2 id="toc_1">Initializing the Library</h2>
 
@@ -135,8 +135,8 @@ rigInitializeFTP tFtpConfA</code></pre>
 
 <p>If you prefer not to set preferences using the above method, you can instead store them in a config file.
 Simply create a new file called <var>ftp.lc</var> and  add the <var>Config</var> array in that file.
-At the end of the file write: <dfn>rigRunInitialFtpConfig yourArrayVariableName</dfn>. Then save the file
-at <var>config/ftp.lc</var> and it will be used automatically. You will NOT need to use the <dfn>rigInitializeFTP</dfn>
+At the end of the file, write: <dfn>rigRunInitialFtpConfig yourArrayVariableName</dfn>. Then save the file
+at <var>config/ftp.lc</var>, and it will be used automatically. You will NOT need to use the <dfn>rigInitializeFTP</dfn>
 handler if you save your preferences in a config file. Example:</p>
 
 <div class="codeSample">
@@ -239,19 +239,19 @@ rigRunInitialFtpConfig sFtpConfA</code></pre>
 <td class="td"><strong>ssh_passphrase</strong></td>
 <td class="td">No Default</td>
 <td class="td">None</td>
-<td class="td">(LC Business Edition only) Passphrase for any included private key</td>
+<td class="td">(LC Business Edition only if you are using an LC version lower than version 10) Passphrase for any included private key</td>
 </tr>
 <tr>
 <td class="td"><strong>ssh_host_public_key</strong></td>
 <td class="td">No Default</td>
 <td class="td">None</td>
-<td class="td">(LC Business Edition only) The 128 bit MD5 checksum of the remote host&#39;s public key</td>
+<td class="td">(LC Business Edition only if you are using an LC version lower than version 10) The 128 bit MD5 checksum of the remote host&#39;s public key</td>
 </tr>
 <tr>
 <td class="td"><strong>ssh_private_key</strong></td>
 <td class="td">No Default</td>
 <td class="td">None</td>
-<td class="td">(LC Business Edition only) The private key file (including full system path) to be used in SFTP transfers</td>
+<td class="td">(LC Business Edition only if you are using an LC version lower than version 10) The private key file (including full system path) to be used in SFTP transfers</td>
 </tr>
 </table>
 </div>
@@ -320,7 +320,7 @@ put the result into gData["responseData"]</code></pre>
 
 <p><em>Parameters</em></p>
 <ul>
-<li><strong>pWhichMsg:</strong> You can optionally choose between &quot;status&quot; and &quot;debug&quot;, if you leave this parameter blank you get both types of messages</li>
+<li><strong>pWhichMsg:</strong> You can optionally choose between &quot;status&quot; and &quot;debug&quot;. If you leave this parameter blank, you get both types of messages.</li>
 </ul>
 
 <p>Example:</p>
@@ -335,18 +335,18 @@ put the result into gData["responseData"]</code></pre>
 
 <h3 id="toc_9">rigFtpUpload <var>pLocalPath</var>, <var>pRemotePath</var>, <var>pData</var>, <var>pCreateMissingDirs</var>, <var>pPermissions</var></h3>
 
-<p>Uploads a file to a FTP server. You must at least supply the local path and the remote path.</p>
+<p>Uploads a file to an FTP server. You must at least supply the local path and the remote path.</p>
 
 <p><em>Parameters</em></p>
 <ul>
 <li><strong>pLocalPath:</strong> The path to your local file</li>
 <li><strong>pRemotePath:</strong> The path to the file on your server</li>
-<li><strong>pData:</strong> A boolean to specify that you intend to upload data like for example a string instead of a file. This parameter is optional, the default value is FALSE</li>
-<li><strong>pCreateMissingDirs:</strong> An optional boolean to tell the handler that the remote path includes directories which are missing and thus need to be created prior to uploading, the default value is FALSE</li>
-<li><strong>pPermissions:</strong> This optional parameter should be an octal number and is used to set permissions, the default value is 0700</li>
+<li><strong>pData:</strong> A boolean to specify that you intend to upload data, like for example a string instead of a file. This parameter is optional; the default value is FALSE</li>
+<li><strong>pCreateMissingDirs:</strong> An optional boolean to tell the handler that the remote path includes directories which are missing and thus need to be created prior to uploading; the default value is FALSE</li>
+<li><strong>pPermissions:</strong> This optional parameter should be an octal number and is used to set permissions; the default value is 0700</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+<p>This handler returns as a result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
 <p>Example:</p>
 
@@ -368,7 +368,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pLocalPath:</strong> Local file path</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+<p>This handler returns as a result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
 <p>Example:</p>
 
@@ -379,7 +379,7 @@ rigFtpDownload tRemPath, tLocPath
 
 put the result into gData["responseData"]</code></pre>
 
-<p class="important"><strong>Note:</strong> <dfn>rigFtpDownload</dfn> using SFTP needs LC Business Edition.</p>
+<p class="important"><strong>Note:</strong> <dfn>rigFtpDownload</dfn> using SFTP needs the LC Business Edition if you are using an LC version lower than version 10.</p>
 
 <h3 id="toc_11">rigFtpRenameMove <var>pOldFile</var>, <var>pNewFile</var>, <var>pMissingDirs</var></h3>
 
@@ -389,10 +389,10 @@ put the result into gData["responseData"]</code></pre>
 <ul>
 <li><strong>pOldFile:</strong> Old file name/path</li>
 <li><strong>pNewFile:</strong> New file name/path</li>
-<li><strong>pMissingDirs:</strong> An optional boolean to tell the handler that the new path includes directories which are missing and thus need to be created, the default value is FALSE</li>
+<li><strong>pMissingDirs:</strong> An optional boolean to tell the handler that the new path includes directories which are missing and thus need to be created; the default value is FALSE</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
+<p>This handler returns as a result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
 
 <p>Example:</p>
 
@@ -405,14 +405,14 @@ put the result into gData["responseData"]</code></pre>
 
 <h3 id="toc_12">rigFtpDeleteFile <var>pPath</var></h3>
 
-<p>Lets you delete a file. Supply the source path with the file name.</p>
+<p>Let's you delete a file. Supply the source path with the file name.</p>
 
 <p><em>Parameters</em></p>
 <ul>
 <li><strong>pPath:</strong> The file path</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
+<p>This handler returns as a result either FALSE in case of failure or on success something like &quot;Status: 250 Result: 220 ...&quot;</p>
 
 <p>Example:</p>
 
@@ -424,16 +424,16 @@ put the result into gData["responseData"]</code></pre>
 
 <h3 id="toc_13">rigFtpDeleteFolder <var>pPath</var>, <var>pRecursive</var>, <var>pPurgeOnly</var></h3>
 
-<p>Lets you delete a folder and / or sub-folders and everything a folder contains. Supply at least the source path to the directory.</p>
+<p>Let's you delete a folder and / or sub-folders and everything a folder contains. Supply at least the source path to the directory.</p>
 
 <p><em>Parameters</em></p>
 <ul>
 <li><strong>pPath:</strong> The folder path</li>
 <li><strong>pRecursive:</strong> This optional boolean specifies if the folder should be deleted recursively (including all sub-folders), the default value is FALSE</li>
-<li><strong>pPurgeOnly:</strong> Use this optional boolean to specifiy that folders should be purged only and not deleted, the default value is FALSE</li>
+<li><strong>pPurgeOnly:</strong> Use this optional boolean to specify that folders should be purged only and not deleted, the default value is FALSE</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+<p>This handler returns as a result either FALSE in case of failure or TRUE on success.</p>
 
 <p>Example:</p>
 
@@ -443,7 +443,7 @@ rigFtpDeleteFolder tFolder, ,TRUE
 
 put the result into gData["responseData"]</code></pre>
 
-<p class="important"><strong>Note:</strong> SFTP using public key authentication needs LC Business Edition.</p>
+<p class="important"><strong>Note:</strong> SFTP using public key authentication needs LC Business Edition if you are using an LC version lower than version 10.</p>
 
 <p class="important"><strong>Note:</strong> Be very careful with this handler, make absolutely sure your folder path is correct. Try to verify that your path is correct using the <dfn>rigFtpListFiles</dfn> handler.</p>
 
@@ -457,7 +457,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pSimpleList:</strong> This optional boolean lets you enable &quot;simple&quot; directory listings over FTP and SFTP, the default value is FALSE</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure, otherwise on success the files list.</p>
+<p>This handler returns as a result either FALSE in case of failure, otherwise on success the files list.</p>
 
 <p>Example:</p>
 
@@ -477,7 +477,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pRemotePath:</strong> The remote path</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
+<p>This handler returns as a result either FALSE in case of failure or on success &quot;Transfer complete. Transfered xxxxxx bytes.&quot;</p>
 
 <p>Example:</p>
 
@@ -488,11 +488,11 @@ rigFtpMirror tLocalFolder, tRemoteFolder
 
 put the result into gData["responseData"]</code></pre>
 
-<p class="important"><strong>Note:</strong> <dfn>rigFtpMirror</dfn> using SFTP needs LC Business Edition.</p>
+<p class="important"><strong>Note:</strong> <dfn>rigFtpMirror</dfn> using SFTP needs LC Business Edition if you are using an LC version lower than version 10.</p>
 
 <h3 id="toc_16">rigFtpCreateFolder <var>pPath</var>, <var>pPermissions</var></h3>
 
-<p>Lets you create a directory on a remote server. Supply the path ending in the folder name you wish to create. Optionally permissions can be set by passing an octal number in the second parameter.</p>
+<p>Let's you create a directory on a remote server. Supply the path ending in the folder name you wish to create. Optionally, permissions can be set by passing an octal number in the second parameter.</p>
 
 <p><em>Parameters</em></p>
 <ul>
@@ -500,7 +500,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pPermissions:</strong> The folder permissions (octal), this parameter is optional</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+<p>This handler returns as a result either FALSE in case of failure or TRUE on success.</p>
 
 <p>Example:</p>
 
@@ -521,7 +521,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pPermissions:</strong> The file / folder permissions (octal)</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+<p>This handler returns as a result either FALSE in case of failure or TRUE on success.</p>
 
 <p>Example:</p>
 
@@ -541,7 +541,7 @@ put the result into gData["responseData"]</code></pre>
 <li><strong>pPath:</strong> The directory path</li>
 </ul>
 
-<p>This handler returns as result either FALSE in case of failure or TRUE on success.</p>
+<p>This handler returns as a result either FALSE in case of failure or TRUE on success.</p>
 
 <p>Example:</p>
 
@@ -553,7 +553,7 @@ put the result into gData["responseData"]</code></pre>
 
 <h3 id="toc_19">rigFtpClose</h3>
 
-<p>Lets you remove the current connection from memory. The handler returns as result either FALSE in case of failure or TRUE on success.</p>
+<p>Let's you remove the current connection from memory. The handler returns as a result either FALSE in case of failure or TRUE on success.</p>
 
 <p>Example:</p>
 
@@ -575,7 +575,7 @@ Previous Topic:&nbsp;&nbsp; <a href="form_validation.html">Form Validation Libra
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="table.html">HTML Table Library</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span>Ralf Bitter</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span>Ralf Bitter</p>
 	</div>
 </div>
 

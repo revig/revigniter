@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,17 +91,17 @@
 
 <h1>Galleria Helper</h1>
 
-<p>The Galleria Helper file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery you can download at <a href="https://galleriajs.github.io/" target="_blank">https://galleriajs.github.io/</a>. The helper comes in two flavors. In it's first form the helper generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In it's second form the helper generates the JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.6.1.</em></p>
+<p>The Galleria Helper file contains functions which assist in generating JavaScript code for Galleria, a JavaScript image gallery you can download at <a href="https://galleriajs.github.io/" target="_blank">https://galleriajs.github.io/</a>. The helper comes in two flavors. In its first form, the helper generates the required JSON array (based on a static meta data text file) and Galleria initialization code, writes the data to disk, and returns either a reference to the JavaScript file or the data itself to be inserted in a view file. In its second form, the helper generates the JSON array based on dynamically created meta data, adds initialization code, and returns the JavaScript code enclosed in "script" tags.<br /><br /><em>The Galleria version currently supported is 1.6.1.</em></p>
 
 
 <h2>Requirements</h2>
 
 <ul>
 	<li>JQuery JavaScript file or a reference to a CDN (recommended).</li>
-	<li>The Galleria Javascript file or a reference to the Galleria CDN at <a href="https://cdnjs.com/libraries/galleria"  target="_blank">cdnjs https://cdnjs.com/libraries/galleria</a> (recommended).</li>
+	<li>The Galleria JavaScript file or a reference to the Galleria CDN at <a href="https://cdnjs.com/libraries/galleria"  target="_blank">cdnjs https://cdnjs.com/libraries/galleria</a> (recommended).</li>
 	<li>Galleria theme files (JavaScript and CSS).</li>
-	<li>A folder containing at least your gallery images. Optionally include (in case you use static image meta data) a text file (the meta data file) containing an image file name or a video URL  or an iFrame URL, optional captions (title and description), an optional image link, optional layer data and an optional reference to the original IMG element for each image you provide. Furthermore you may append a file name (a file name prepended with a root relative path for dynamically generated data respectively) for each video or iFrame your gallery supplies.   <strong>Note:</strong> This folder must be writable. See <a href="https://galleriajs.github.io/docs/references/data.html" target="_blank">Using Image Data https://galleriajs.github.io/docs/references/data.html</a> for further information regarding image data properties.</li>
-	<li>Optionally you can include in your images folder a folder for thumbnails called "thumb" and a folder for fullscreen mode images called "big". <strong>Note:</strong> If you need to show your own thumbnails for videos or iFrames the thumbnails folder is mandatory.</li>
+	<li>A folder containing at least your gallery images. Optionally include (in case you use static image meta data) a text file (the meta data file) containing an image file name or a video URL  or an iFrame URL, optional captions (title and description), an optional image link, optional layer data, and an optional reference to the original IMG element for each image you provide. Furthermore, you may append a file name (a file name prepended with a root relative path for dynamically generated data, respectively) for each video or iFrame your gallery supplies.   <strong>Note:</strong> This folder must be writable. See <a href="https://galleriajs.github.io/docs/references/data.html" target="_blank">Using Image Data https://galleriajs.github.io/docs/references/data.html</a> for further information regarding image data properties.</li>
+	<li>Optionally, you can include in your images folder a folder for thumbnails called "thumb" and a folder for fullscreen mode images called "big". <strong>Note:</strong> If you need to show your own thumbnails for videos or iFrames, the thumbnails folder is mandatory.</li>
 </ul>
 
 <h2>Images Folder Structure</h2>
@@ -121,23 +121,23 @@
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myImage3.png<br />
 </p>
 
-<p>The file name for your image data properties ("myGalleriaCaptions.tsv" in this case) is arbitrary but the "tsv" (tab-separated-values) suffix is mandatory. This file is only needed if you don't provide the data programmatically. If you want to provide separate images for thumbnails and fullscreen mode (recommended) include them in a folder called "thumb" and "big" respectively.</p> 
+<p>The file name for your image data properties ("myGalleriaCaptions.tsv" in this case) is arbitrary, but the "tsv" (tab-separated-values) suffix is mandatory. This file is only needed if you don't provide the data programmatically. If you want to provide separate images for thumbnails and fullscreen mode (recommended), include them in a folder called "thumb" and "big" respectively.</p> 
 
-<p class="important"><strong>Note:</strong> This folder must be writable. Use identical file names for standard, thumbnail and fullscreen versions of your images.</p>
+<p class="important"><strong>Note:</strong> This folder must be writable. Use identical file names for standard, thumbnail, and fullscreen versions of your images.</p>
 
 
 <h2>Galleria Framework Modification</h2>
 
 <p>There are minor modifications necessary in order for the helper to work properly.</p>
 <ul>
-	<li>Remove the suffix of the css property in the JavaScript file of your theme, for example replace css:"galleria.classic.css" with css:"galleria.classic".</li>
-	<li>The following applies to Galleria themes of Galleria versions prior to 1.6: Adjust all URLs in the CSS file of the Galleria theme according to where you store theme related images. Remember: Paths in a CSS file are always relative to the CSS file itself. Alternatively you may use full URLs.</li>
+	<li>Remove the suffix of the CSS property in the JavaScript file of your theme, for example, replace css:"galleria.classic.css" with css:"galleria.classic".</li>
+	<li>The following applies to Galleria themes of Galleria versions prior to 1.6: Adjust all URLs in the CSS file of the Galleria theme according to where you store theme-related images. Remember: Paths in a CSS file are always relative to the CSS file itself. Alternatively, you may use full URLs.</li>
 </ul>
 
 
 <h2>The Image Data File</h2>
 
-<p>The image data file you have to provide if you use the helper in it's first form is a simple text file with a "tsv" (tab-separated-values) suffix containing a list of tab delimited Galleria image properties and has the following form for each line:</p>
+<p>The image data file you have to provide if you use the helper in its first form is a simple text file with a "tsv" (tab-separated-values) suffix containing a list of tab-delimited Galleria image properties and has the following form for each line:</p>
 <p><strong>image file name or video URL or iFrame URL</strong>&lt;tab><strong>title</strong>&lt;tab><strong>description</strong>&lt;tab><strong>image link URL</strong>&lt;tab><strong>image HTML layer</strong>&lt;tab><strong>IMG element reference</strong>[(for videos and iFrames only)&lt;tab><strong>thumbnail file name</strong>] (for dynamically generated data prepend the thumbnail file name with a root relative path)</p>
 
 
@@ -155,14 +155,14 @@ img5.jpg	Image img5 Title	Image img5 Description
 </code></pre>
 
 
-<p>Keep in mind that, if you provide a data file, the only mandatory property is the image file name, video URL or iFrame Url respectively. See <a href="https://galleriajs.github.io/docs/references/data.html" target="_blank">Using Image Data https://galleriajs.github.io/docs/references/data.html</a> for further information regarding image data properties.</p>
+<p>Keep in mind that if you provide a data file, the only mandatory property is the image file name, video URL, or iFrame URL respectively. See <a href="https://galleriajs.github.io/docs/references/data.html" target="_blank">Using Image Data https://galleriajs.github.io/docs/references/data.html</a> for further information regarding image data properties.</p>
 
 <p class="important"><strong>Note:</strong> Using static meta data gallery images are sorted alphabetically. Videos and iFrames are sorted according to the order determined in your meta data file.</p>
 
 
 <h2>Dynamically Generated Image Data</h2>
 
-<p>In case you don't want to use static image meta data saved on disk you may create the meta data programmatically for example from data stored in a database. Dynamically generated meta data has the same form as the static image data described above with two exception:
+<p>In case you don't want to use static image meta data saved on disk, you may create the meta data programmatically, for example, from data stored in a database. Dynamically generated meta data has the same form as the static image data described above with two exceptions:
 	<ul>
 		<li>The first item in each line of the list is the image file name prepended with a root relative path.</li>
 		<li>The name of the thumbnail for videos and iFrames (item number seven) must be prepended with a root relative path.</li>
@@ -185,29 +185,29 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <h3>rigGalleriaData(<var>pGalleryPath</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pReplaceDataFile</var>, <var>pReturnReference</var>, <var>pNonce</var>)</h3>
 
-<p>This function generates the required JSON array based on a meta data tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk and returns either a file reference or the data itself.</p>
+<p>This function generates the required JSON array based on a metadata tsv (tab-separated-values) file, adds Galleria initialization code, writes the data to disk, and returns either a file reference or the data itself.</p>
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>TpGalleryPath:</strong> is a root relative path to the folder containing the gallery images and the meta data file. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile and returnReference.</li>
-	<li><strong>pOptions:</strong> (optional) is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleriajs.github.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleriajs.github.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
+	<li><strong>TpGalleryPath:</strong> is a root relative path to the folder containing the gallery images and the metadata file. Alternatively, you can submit an associative array in the first parameter containing all the values. The array keys are: galleriaPath, options (an associative array), containerID, dataVariableName, cacheBuster, replaceDataFile, and returnReference.</li>
+	<li><strong>pOptions:</strong> (optional) is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleriajs.github.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleriajs.github.io/docs/options/index.html#list-of-options</a>. The default key-value pair is "height" and 420.</li>
 	<li><strong>pContainerID:</strong> (optional) is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
 	<li><strong>pDataVariableName:</strong> (optional) is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
 	<li><strong>pCacheBuster:</strong> (optional) is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
 	<li><strong>pReplaceDataFile:</strong> (optional) is a boolean which determines whether the generated JavaScript file should be replaced every time the function is called. Defaults to FALSE.</li>
-	<li><strong>pReturnReference:</strong> (optional) is a boolean which determines whether the helper should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy for example if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
+	<li><strong>pReturnReference:</strong> (optional) is a boolean which determines whether the helper should return a file reference or the Galleria data itself. Defaults to TRUE for returning a file reference. Setting this parameter to FALSE comes in handy, for example, if you are dealing with Ajax requests to dynamically change gallery content by sending just the Galleria data to the browser.</li>
 	<li><strong>pNonce:</strong> (optional) is a Content Security Policy nonce.</li>
 	</ul>
 	
 
 <h3>rigDynamicGalleriaData(<var>pMetaData</var>, <var>pOptions</var>, <var>pContainerID</var>, <var>pDataVariableName</var>, <var>pCacheBuster</var>, <var>pNonce</var>)</h3>
 
-<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code and returns the JavaScript code enclosed in "script" tags.</p>
+<p>This function generates the required JSON array based on dynamically created meta data, adds initialization code, and returns the JavaScript code enclosed in "script" tags.</p>
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pMetaData:</strong> is the dynamically generated meta data. Alternatively you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName and cacheBuster.</li>
-	<li><strong>pOptions:</strong> (optional) is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleriajs.github.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleriajs.github.io/docs/options/index.html#list-of-options</a>. The default key value pair is "height" and 420.</li>
+	<li><strong>pMetaData:</strong> is the dynamically generated meta data. Alternatively, you can submit an associative array in the first parameter containing all the values. The array keys are: metaData, options (an associative array), containerID, dataVariableName, and cacheBuster.</li>
+	<li><strong>pOptions:</strong> (optional) is an array of pairs of Galleria option names and Galleria option values. See <a href= "https://galleriajs.github.io/docs/options/index.html#list-of-options" target="_blank">List of Options https://galleriajs.github.io/docs/options/index.html#list-of-options</a>. The default key-value pair is "height" and 420.</li>
 	<li><strong>pContainerID:</strong> (optional) is the ID of the &lt;div> tag containing the gallery. The default ID is "galleria".</li>
 	<li><strong>pDataVariableName:</strong> (optional) is the name of the JSON array data variable needed by Galleria. The default name is "galleriaData".</li>
 	<li><strong>pCacheBuster:</strong> (optional) is a boolean which determines whether your gallery should be excluded from cache busting in case use_cacheBusters in <dfn>application/config/config.lc</dfn> is set to TRUE. Defaults to TRUE.</li>
@@ -216,7 +216,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 	
 
 
-<p class="important"><strong>Note:</strong> If you place more than one gallery on a page you need to include the third and fourth parameter as you need different IDs and variable names for each gallery. This applies to both functions.</p>
+<p class="important"><strong>Note:</strong> If you place more than one gallery on a page, you need to include the third and fourth parameter as you need different IDs and variable names for each gallery. This applies to both functions.</p>
 
 
 <p class="important"><strong>Note:</strong> Enclose literal Galleria option values with single quotes and double quotes like: put "'galleriaIn'" into tOptions["easing"]. This applies to both functions.</p>
@@ -224,7 +224,7 @@ img5.jpg	Image img5 Title	Image img5 Description
 
 <h2>Gallery Example (Using Static Meta Data)</h2>
 
-<p>For this example put your gallery images and your image properties file in <kbd>assets/img/galleriaPics</kbd>, this path is arbitrary for your own projects though. Download the Galleria framework. Put the file galleria-1.4.7.min.js in <kbd>assets/js</kbd>. Assuming you use the Galleria classic theme put a modified version (see above) of galleria.classic.min.js in <kbd>assets/js</kbd>. Put a modified version (see above) of galleria.classic.css in <kbd>assets/css</kbd>. Create the following view file and let's call it <dfn>galleriaView.lc</dfn>:</p>
+<p>For this example, put your gallery images and your image properties file in <kbd>assets/img/galleriaPics</kbd>; this path is arbitrary for your own projects though. Download the Galleria framework. Put the file galleria-1.4.7.min.js in <kbd>assets/js</kbd>. Assuming you use the Galleria classic theme, put a modified version (see above) of galleria.classic.min.js in <kbd>assets/js</kbd>. Put a modified version (see above) of galleria.classic.css in <kbd>assets/css</kbd>. Create the following view file and let's call it <dfn>galleriaView.lc</dfn>:</p>
 
 <div class="codeSample">
 <pre><code>&lt;!DOCTYPE html>
@@ -309,7 +309,7 @@ Previous Topic:&nbsp;&nbsp;<a href="formmail_helper.html">Form-Mail Helper</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="markdown_helper.html">Markdown Helper</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

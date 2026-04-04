@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,7 +90,7 @@
 
 <h1>URI Routing</h1>
 
-<p>Typically there is a one-to-one relationship between a URL string and its corresponding controller/handler.
+<p>Typically, there is a one-to-one relationship between a URL string and its corresponding controller/handler.
 The segments in a URI normally follow this pattern:</p>
 
 <pre><code>example.com/<dfn>controller</dfn>/<samp>handler</samp>/<var>id</var>/</code></pre>
@@ -98,7 +98,7 @@ The segments in a URI normally follow this pattern:</p>
 <p>In some instances, however, you may want to remap this relationship so that a different controller/handler can be called
 instead of the one corresponding to the URL.</p>
 
-<p>For example, lets say you want your URLs to have this prototype:</p>
+<p>For example, let's say you want your URLs to have this prototype:</p>
 
 <p>
 example.com/product/1/<br />
@@ -107,14 +107,14 @@ example.com/product/3/<br />
 example.com/product/4/
 </p>
 
-<p>Normally the second segment of the URL is reserved for the handler name, but in the example above it instead has a product ID.
+<p>Normally, the second segment of the URL is reserved for the handler name, but in the example above, it instead has a product ID.
 To overcome this, revIgniter allows you to remap the URI handler.</p>
 
 
 <h2>Setting your own routing rules</h2>
 
-<p>Routing rules are defined in your <dfn>application/config/routes.lc</dfn> file.  In it you'll see an array called <var>gRoute</var> that
-permits you to specify your own routing criteria. Routes can either be specified using <samp>wildcards</samp> or <samp>Regular Expressions</samp></p>
+<p>Routing rules are defined in your <dfn>application/config/routes.lc</dfn> file.  In it, you'll see an array called <var>gRoute</var> that
+permits you to specify your own routing criteria. Routes can either be specified using <samp>wildcards</samp> or <samp>Regular Expressions</samp>.</p>
 
 
 <h2>Wildcards</h2>
@@ -138,7 +138,7 @@ the "catalog" controller and the "productLookup" handler are instead used.</p>
 <strong>:any</strong> will match a segment containing any character.
 </p>
 
-<p class="important"><strong>Note:</strong> The gRoute array must be numbered and the key number for 
+<p class="important"><strong>Note:</strong> The gRoute array must be numbered, and the key number for 
 reserved routes must be 1. So, the keys of your custom routes must start with 2 as in the example above. Routes will run in the order of the keys of the gRoutes array.
 Routes with lower key numbers will always take precedence over those with higher ones.</p>
 
@@ -162,9 +162,9 @@ Routes with lower key numbers will always take precedence over those with higher
 
 <h2>Regular Expressions</h2>
 
-<p>If you prefer you can use regular expressions to define your routing rules.  Any valid regular expression is allowed, as are back-references up to 10 ($1 - $10).</p>
+<p>If you prefer, you can use regular expressions to define your routing rules.  Any valid regular expression is allowed, as are back-references up to 10 ($1 - $10).</p>
 
-<p class="important"><strong>Note:</strong>&nbsp; If you use back-references you must use the dollar syntax.</p>
+<p class="important"><strong>Note:</strong>&nbsp; If you use back-references, you must use the dollar syntax.</p>
 
 <p>A typical RegEx route might look something like this:</p>
 
@@ -183,23 +183,23 @@ Routes with lower key numbers will always take precedence over those with higher
 
 <p>This route indicates which controller should be loaded if the URI contains no data, which will be the case
 when people load your root URL. In the above example, the "welcome" controller would be loaded.  You
-are encouraged to always have a default route otherwise a 404 page will appear by default.</p>
+are encouraged to always have a default route; otherwise, a 404 page will appear by default.</p>
 
 <pre><code>put "errors/pageMissing" into gRoute[1]["404Override"]</code></pre>
 
 <p>This route indicates which controller should be loaded if the requested controller is not found. It will override
-the default 404 error page. It won't affect to the rigShow404 handler, which will continue loading the default <dfn>error404.lc</dfn>
-file at <dfn>application/errors/error404.lc</dfn>. This way you can write your own 404 error controller. But there are two things you should keep in mind:</p>
+the default 404 error page. It won't affect the rigShow404 handler, which will continue loading the default <dfn>error404.lc</dfn>
+file at <dfn>application/errors/error404.lc</dfn>. This way, you can write your own 404 error controller. But there are two things you should keep in mind:</p>
 
-<p class="important"><strong>Important:</strong>&nbsp; Do <strong>not</strong> name any handler in your error controller "index". Place your error controller in application/controllers, do <strong>not</strong> place it in any subfolder of application/controllers.</p>
+<p class="important"><strong>Important:</strong>&nbsp; Do <strong>not</strong> name any handler in your error controller "index". Place your error controller in application/controllers; do <strong>not</strong> place it in any subfolder of application/controllers.</p>
 
 <pre><code>put "scaffolding" into gRoute[1]["scaffoldingTrigger"]</code></pre>
 
-<p>This route lets you set a secret word, which when present in the URL, triggers the Scaffolding feature.
+<p>This route lets you set a secret word, which, when present in the URL, triggers the Scaffolding feature.
 Please read the <a href="scaffolding.html">Scaffolding</a> page for details.</p>
 
-<p class="important"><strong>Important:</strong>&nbsp; The gRoute array must be numbered and the key number for 
-reserved routes must be 1 as shown above.</p>
+<p class="important"><strong>Important:</strong>&nbsp; The gRoute array must be numbered, and the key number for 
+reserved routes must be 1, as shown above.</p>
 
 </div>
 <!-- END CONTENT -->
@@ -216,7 +216,7 @@ Previous Topic:&nbsp;&nbsp;<a href="scaffolding.html">Scaffolding</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="modules.html">Modules</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

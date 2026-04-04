@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,7 +91,7 @@
 
 <h1>File Uploading Library</h1>
 
-<p>revIgniter's File Uploading Library permits to upload either a single file or multiple files.  You can set various
+<p>revIgniter's File Uploading Library permits you to upload either a single file or multiple files.  You can set various
 preferences, restricting the type and size of the files.</p>
 
 
@@ -107,7 +107,7 @@ preferences, restricting the type and size of the files.</p>
 <li>Once uploaded, the user will be shown a success message.</li>
 </ul>
 
-<p>To demonstrate this process here is brief tutorial. Afterward you'll find reference information.</p>
+<p>To demonstrate this process, here is a brief tutorial. Afterward, you'll find reference information.</p>
 
 <h2>Creating the Upload Form</h2>
 
@@ -145,7 +145,7 @@ folder:</p>
 </code></pre>
 </div>
 
-<p>You'll notice we have a <var>gData["formOpen"]</var> variable which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
+<p>You'll notice we have a <var>gData["formOpen"]</var> variable, which is declared in the controller using a form helper to create the opening form tag.  File uploads require a multipart form, so the helper
 creates the proper syntax for you.  You'll also notice we have a <var>gData["uploadError"]</var> variable.  This is so we can show error messages in the event
 the user does something wrong.</p>
 
@@ -269,7 +269,7 @@ end doUpload
 <pre><code>example.com/index.lc/<var>upload</var>/</code></pre>
 
 <p>You should see an upload form. Try uploading an image file (either a jpg, gif, or png). If the path in your
-controller is correct it should work.</p>
+controller is correct, it should work.</p>
 
 
 <h2>Uploading Multiple Files</h2>
@@ -278,12 +278,12 @@ controller is correct it should work.</p>
 
 <ul>
 <li>The upload form needs to be modified, allowing a user to select multiple files (a directory).</li>
-<li>You should check for upload errors using <dfn>rigDisplayUploadErrors()</dfn> even if the result of rigDoUpload is TRUE. On uploading multiple files the result of <dfn>rigDoUpload</dfn> is FALSE only if all files failed to upload.</li>
-<li>Regarding the example above this means the success page needs a section to display errors in case some of the files failed to upload.</li>
-<li>The array returned by <dfn>rigUploadData()</dfn> is different. It includes data information of each file in a numbered array. The prototype of the array returned by <dfn>rigUploadData()</dfn> is: <var>dataArray[filesInfos][fileNumber][infoKey]</var>. According to this the repeat loop in the success page of the sample above needs to be adjusted.</li>
+<li>You should check for upload errors using <dfn>rigDisplayUploadErrors()</dfn> even if the result of rigDoUpload is TRUE. On uploading multiple files, the result of <dfn>rigDoUpload</dfn> is FALSE only if all files failed to upload.</li>
+<li>Regarding the example above, this means the success page needs a section to display errors in case some of the files failed to upload.</li>
+<li>The array returned by <dfn>rigUploadData()</dfn> is different. It includes data information of each file in a numbered array. The prototype of the array returned by <dfn>rigUploadData()</dfn> is: <var>dataArray[filesInfos][fileNumber][infoKey]</var>. According to this, the repeat loop in the success page of the sample above needs to be adjusted.</li>
 </ul>
 
-<p>Following modifications of the sample code above needed to upload multiple files:<br>The controller needs a new <dfn>buildForm</dfn> handler and an additional line of code to check for upload errors in the <dfn>doUpload</dfn> handler. If you like you can set a limit for the maximum number of files allowed to be uploaded as shown below.</p>
+<p>Following modifications of the sample code above needed to upload multiple files:<br>The controller needs a new <dfn>buildForm</dfn> handler and an additional line of code to check for upload errors in the <dfn>doUpload</dfn> handler. If you like, you can set a limit for the maximum number of files allowed to be uploaded as shown below.</p>
 
 <div class="codeSample">
 <pre><code>command buildForm
@@ -333,7 +333,7 @@ end doUpload
 </code></pre>
 </div>
 
-<p>Note: The name of the input field needs brackets as suffix.</p>
+<p>Note: The name of the input field needs brackets as a suffix.</p>
 
 
 <p>The repeat loop of the success page needs to be adjusted like:</p>
@@ -379,7 +379,7 @@ end doUpload
 <h2>Setting Preferences</h2>
 
 <p>Similar to other libraries, you'll control what is allowed to be uploaded based on your preferences. In the controller you
-built above you set the following preferences:</p>
+built above, you set the following preferences:</p>
 
 <div class="codeSample">
 <pre><code>put "./uploads/" into tConfig["UploadPath"]
@@ -505,7 +505,7 @@ rigInitializeUpload tConfig
 
 <p>If you prefer not to set preferences using the above method, you can instead put them into a config file.
 Simply create a new file called <var>upload.lc</var>,  add the <var>Config</var>
-array in that file. At the end of the file write: <dfn>rigRunInitialUploadConfig yourArrayVariableName</dfn>. Then save the file at <var>config/upload.lc</var> and it will be used automatically. You
+array in that file. At the end of the file, write: <dfn>rigRunInitialUploadConfig yourArrayVariableName</dfn>. Then save the file at <var>config/upload.lc</var>, and it will be used automatically. You
 will NOT need to use the <dfn>rigInitializeUpload</dfn> command if you save your preferences in a config file. Example:</p>
 
 <div class="codeSample">
@@ -524,17 +524,17 @@ rigRunInitialUploadConfig sUploadConf</code></pre>
 
 <h2>Handler Reference</h2>
 
-<p>The following handlers are available</p>
+<p>The following handlers are available:</p>
 
 
 <h3>rigDoUpload</h3>
 
-<p>Performs the upload based on the preferences you've set.  Note: By default the upload routine expects the file to come from a form field
-called <dfn>userfile</dfn>, and the form must be a "multipart type:</p>
+<p>Performs the upload based on the preferences you've set.  Note: By default, the upload routine expects the file to come from a form field
+called <dfn>userfile</dfn>, and the form must be a "multipart type":</p>
 
 <pre><code>&lt;form method="post" action="some_action" enctype="multipart/form-data" /></code></pre>
 
-<p>If you would like to set your own field name simply pass its value to the <dfn>rigDoUpload</dfn> command:</p>
+<p>If you would like to set your own field name, simply pass its value to the <dfn>rigDoUpload</dfn> command:</p>
 
 <pre><code>put "someFieldName" into tFieldname
 rigDoUpload tFieldname</code></pre>
@@ -542,11 +542,11 @@ rigDoUpload tFieldname</code></pre>
 
 <h3>rigDisplayUploadErrors()</h3>
 
-<p>Retrieves any error messages if the <dfn>rigDoUpload</dfn> command returned false.  The function does not write to the page automatically, it
+<p>Retrieves any error messages if the <dfn>rigDoUpload</dfn> command returned false.  The function does not write to the page automatically; it
 returns the data so you can assign it however you need.</p>
 
 <h2>Formatting Errors</h2>
-<p>By default the above function wraps any errors within &lt;p> tags.  You can set your own delimiters like this:</p>
+<p>By default, the above function wraps any errors within &lt;p> tags.  You can set your own delimiters like this:</p>
 
 <pre><code class="lang-livecodeserver">rigDisplayUploadErrors("<var>&lt;p></var>", "<var>&lt;/p></var>")</code></pre>
 
@@ -571,7 +571,7 @@ tData["ImageType"] # => jpeg
 tData["ImageSizeStr"] # => height="600" width="800"
 </code></pre>
 
-<p>In case multiple files were uploaded this data is returned in a numbered array like:</p>
+<p>In case multiple files were uploaded, this data is returned in a numbered array like:</p>
 
 <pre><code>tData[tFileNumber]["FileName"] # => mypic.jpg
 tData[tFileNumber]["FileType"] # => image/jpeg
@@ -658,7 +658,7 @@ Previous Topic:&nbsp;&nbsp;<a href="encryption.html">Encryption Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="form_validation.html">Form Validation Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

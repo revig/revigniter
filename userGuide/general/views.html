@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,8 +94,8 @@
 In fact, views can flexibly be embedded within other views (within other views, etc., etc.) if you need this type
 of hierarchy.</p>
 
-<p>Views are never called directly, they must be loaded by a <a href="controllers.html">controller</a>.  Remember that in an MVC framework, the Controller acts as the
-traffic cop, so it is responsible for fetching a particular view. If you have not read the <a href="controllers.html">Controllers</a> page
+<p>Views are never called directly; they must be loaded by a <a href="controllers.html">controller</a>.  Remember that in an MVC framework, the Controller acts as the
+traffic cop, so it is responsible for fetching a particular view. If you have not read the <a href="controllers.html">Controllers</a> page,
 you should do so before continuing.</p>
 
 <p>Using the example controller you created in the <a href="controllers.html">controller</a> page, let's add a view to it.</p>
@@ -120,7 +120,7 @@ you should do so before continuing.</p>
 
 <h2>Loading a View</h2>
 
-<p>To load a particular view file you will use the following function:</p>
+<p>To load a particular view file, you will use the following function:</p>
 
 <pre><code>get rigLoadView("<var>name</var>")</code></pre>
 
@@ -143,12 +143,12 @@ end index
 </div>
 
 
-<p>If you visit the your site using the URL you did earlier you should see your new view.  The URL was similar to this:</p>
+<p>If you visit your site using the URL you did earlier, you should see your new view.  The URL was similar to this:</p>
 
 <pre><code>example.com/index.lc/<var>blog</var>/</code></pre>
 
 <h2>Loading multiple views</h2>
-<p>revIgniter will intelligently handle  multiple calls to rigLoadView() from within a controller.  If more than one call happens they will be appended together. For example, you may wish to have a header view, a menu view, a content view, and a footer view. That might look something like this:</p>
+<p>revIgniter will intelligently handle  multiple calls to rigLoadView() from within a controller.  If more than one call happens, they will be appended together. For example, you may wish to have a header view, a menu view, a content view, and a footer view. That might look something like this:</p>
 
 
 <div class="codeSample">
@@ -170,8 +170,8 @@ end index
 	
 <p>In the example above, we are using &quot;dynamically added data&quot;, which you will see below.</p>
 <h2>Storing Views within Sub-folders</h2>
-<p>Your view files can also be stored within sub-folders if you prefer that type of organization.  When doing so you will need
-to include the folder name loading the view.  Example:</p>
+<p>Your view files can also be stored within sub-folders if you prefer that type of organization. When doing so, you will need
+to include the folder in name loading the view.  Example:</p>
 
 <pre><code>get rigLoadView("<kbd>folderName</kbd>/<var>fileName</var>")</code></pre>
 
@@ -224,8 +224,8 @@ end index
 <h2>Creating Loops / Using LiveCode in View Files</h2>
 
 <p>The data array in gData is not limited to simple variables.  You can
-use multiple items or multi dimensional arrays, which can be looped to generate multiple rows.  For example, if you
-pull data from your database it will typically be in the form of a multi-dimensional array, which you can combine to a list if you like.</p>
+use multiple items or multidimensional arrays, which can be looped to generate multiple rows.  For example, if you
+pull data from your database, it will typically be in the form of a multidimensional array, which you can combine to a list if you like.</p>
 
 <p>Here's a simple example. Add this to your controller:</p>
 
@@ -270,10 +270,10 @@ end index
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> You'll notice that in the example above we are using a return statement enclosed in "&lt;?" and "?>".  
-Keep in mind, that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?lc" in view files because all views and nested views are merged (into the final output data).</p>
+<p class="important"><strong>Note:</strong> You'll notice that in the example above, we are using a return statement enclosed in "&lt;?" and "?>".  
+Keep in mind that this is the only way to include LiveCode in your view files. The last statement needs to be a return statement. All this means you can't use tags like "&lt;?lc" or "&lt;?livecode" or "&lt;?lc" in view files because all views and nested views are merged (into the final output data).</p>
 
-<p>As an example to include LiveCode in view files you typically would use return statements to display text from language files if you have various translations:</p>
+<p>As an example to include LiveCode in view files, you typically would use return statements to display text from language files if you have various translations:</p>
 
 <div class="codeSample">
 <pre><code>&lt;html>
@@ -294,7 +294,7 @@ Keep in mind, that this is the only way to include LiveCode in your view files. 
 
 <p>There is a second <strong>optional</strong> parameter which lets you change the behavior of the function so that it returns data as a string
 rather than sending it to your browser.  This can be useful if you want to process the data in some way.  If you
-set the parameter to <kbd>true</kbd> (boolean) it will return data.  The default behavior is <kbd>false</kbd>, which sends it
+set the parameter to <kbd>true</kbd> (boolean), it will return data.  The default behavior is <kbd>false</kbd>, which sends it
 to your browser.  Remember to assign it to a variable if you want the data returned:</p>
 
 <pre><code>get rigLoadView("<var>myfile</var>", <kbd>TRUE</kbd>)</code></pre>
@@ -303,7 +303,7 @@ to your browser.  Remember to assign it to a variable if you want the data retur
 
 <p>Multiple views can be loaded sequentially by the controller or, as stated above, nested like in the following sample:</p>
 
-<p>To keep it really simple, just to demonstrate how to embed views within other views, let's use the revIgniter welcome view and split it into three parts. We name them nestedviewsHeader.lc, nestedviewsContent.lc and nestedviewsFooter.lc.</p>
+<p>To keep it really simple, just to demonstrate how to embed views within other views, let's use the revIgniter welcome view and split it into three parts. We name them nestedviewsHeader.lc, nestedviewsContent.lc, and nestedviewsFooter.lc.</p>
 
 <p>nestedviewsHeader.lc, the header view:</p>
 
@@ -386,7 +386,7 @@ end index
 </code></pre>
 </div>
 
-<p>Of course, this way, nested views can be embedded within other views within other views etc., if you like.</p>
+<p>Of course, this way, nested views can be embedded within other views within other views, etc., if you like.</p>
 
 </div>
 <!-- END CONTENT -->
@@ -403,7 +403,7 @@ Previous Topic:&nbsp;&nbsp;<a href="reserved_names.html">Reserved Names</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="models.html">Models</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>	
 

@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -166,10 +166,10 @@ Form validation, while simple to create, is generally very messy and tedious to 
 <a id="tutorial"></a>
 <h1>Form Validation Tutorial</h1>
 
-<p>What follows is a "hands on" tutorial for implementing RevIgniters Form Validation.</p>
+<p>What follows is a "hands-on" tutorial for implementing RevIgniters Form Validation.</p>
 
 
-<p>In order to implement form validation you'll need three things:</p>
+<p>In order to implement form validation, you'll need three things:</p>
 
 <ol>
 <li>A <a href="../general/views.html">View</a> file containing a form.</li>
@@ -285,7 +285,7 @@ end index
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> If CSRF (<var>gConfig["csrf_protection"]</var>) is set to true in <dfn>application/config/config.lc</dfn>, please make sure that the value set for the cookie domain (<var>gConfig["cookie_domain"]</var>) is correct. For the purpose of this tutorial you can leave <var>gConfig["cookie_domain"]</var> empty.</p>
+<p class="important"><strong>Note:</strong> If CSRF (<var>gConfig["csrf_protection"]</var>) is set to true in <dfn>application/config/config.lc</dfn>, please make sure that the value set for the cookie domain (<var>gConfig["cookie_domain"]</var>) is correct. For the purpose of this tutorial, you can leave <var>gConfig["cookie_domain"]</var> empty.</p>
 
 <h2>Try it!</h2>
 
@@ -293,7 +293,7 @@ end index
 
 <pre><code>example.com/index.lc/<var>form</var>/</code></pre>
 
-<p><dfn>If you submit the form you should simply see the form reload.  That's because you haven't set up any validation
+<p><dfn>If you submit the form, you should simply see the form reload.  That's because you haven't set up any validation
 rules yet.</dfn></p>
 
 <p><strong>Since you haven't told the Form Validation library to validate anything yet, it returns <kbd>FALSE</kbd> (boolean false) by default.  The <samp>rigFormValidRun()</samp>
@@ -304,7 +304,7 @@ function only returns <kbd>TRUE</kbd> if it has successfully applied your rules 
 
 <p>You'll notice several things about the above pages:</p>
 
-<p>The <dfn>form</dfn> (myForm.lc) is a standard web form with a couple exceptions:</p>
+<p>The <dfn>form</dfn> (myForm.lc) is a standard web form with a couple of exceptions:</p>
 
 <ol>
 <li>It uses a <dfn>form helper</dfn> to create the form opening.
@@ -317,17 +317,17 @@ is that it generates the action URL for you, based on the URL in your config fil
 
 </li>
 
-<li>At the top of the form you'll notice the following expression:
+<li>At the top of the form, you'll notice the following expression:
 <pre><code>[[gData["formErrors"]]]</code></pre>
 
-<p>This expression will be merged with any error messages sent back by the validator. If there are no messages it is merged to an empty string.</p>
+<p>This expression will be merged with any error messages sent back by the validator. If there are no messages, it is merged to an empty string.</p>
 </li>
 </ol>
 
 <p>The <dfn>controller</dfn> (form.lc) has one handler: <dfn>index</dfn>. This handler initializes the validation library and
 loads the <var>form helper</var> and <var>URL helper</var> used by your view files. It also <samp>runs</samp>
 the validation routine. Based on
-whether the validation was successful it either presents the form or the success page.</p>
+whether the validation was successful, it either presents the form or the success page.</p>
 
 
 
@@ -337,7 +337,7 @@ whether the validation was successful it either presents the form or the success
 <h2>Setting Validation Rules</h2>
 
 <p>revIgniter lets you set as many validation rules as you need for a given field, cascading them in order, and it even lets you prep and pre-process the field data
-at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn> handler:</p>
+at the same time. To set validation rules, you will use the <dfn>rigSetRules</dfn> handler:</p>
 
 <pre><code class="lang-livecodeserver">rigSetRules</code></pre>
 
@@ -345,7 +345,7 @@ at the same time. To set validation rules you will use the <dfn>rigSetRules</dfn
 
 <ol>
   <li>The field name - the exact name you've given the form field.</li>
-  <li>A "human" name for this field, which will be inserted into the error message. For example, if your field is named "user" you might give it a human name of "Username". <strong>Note:</strong> If you would like the field name to be stored in a language file, please see <a href="#translatingfn">Translating Field Names</a>.</li>
+  <li>A "human" name for this field, which will be inserted into the error message. For example, if your field is named "user", you might give it a human name of "Username". <strong>Note:</strong> If you would like the field name to be stored in a language file, please see <a href="#translatingfn">Translating Field Names</a>.</li>
   <li>The validation rules for this form field.</li>
 </ol>
 
@@ -399,10 +399,10 @@ end index
 </code></pre>
 </div>
 
-<p>Note: The last character ("R") in rules indicate, that it is a rule and helps to avoid name conflicts.</p>
+<p>Note: The last character ("R") in rules indicates, that it is a rule and helps to avoid name conflicts.</p>
 
-<p><dfn>Now submit the form with the fields blank and you should see the error messages.
-If you submit the form with all the fields populated you'll see your success page.</dfn></p>
+<p><dfn>Now submit the form with the fields blank, and you should see the error messages.
+If you submit the form with all the fields populated, you'll see your success page.</dfn></p>
 
 <p class="important"><strong>Note:</strong> The form fields are not yet being re-populated with the data when
 there is an error.  We'll get to that shortly.</p>
@@ -414,7 +414,7 @@ there is an error.  We'll get to that shortly.</p>
 <h2>Setting Rules Using an Array</h2>
 
 <p>Before moving on, it should be noted that the rule setting function can be passed an array if you prefer to set all your rules in one action.
-If you use this approach you must name your array keys as indicated:</p>
+If you use this approach, you must name your array keys as indicated:</p>
 
 <div class="codeSample">
 <pre><code>put "username" into tConfig[1]["field"]
@@ -444,7 +444,7 @@ rigSetRules tConfig
 <a id="cascadingrules"></a>
 <h2>Cascading Rules</h2>
 
-<p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of rule setting function, like this:</p>
+<p>revIgniter lets you pipe multiple rules together.  Let's try it. Change your rules in the third parameter of the rule setting function, like this:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">rigSetRules "username", "Username", "requiredR|minLengthR[5]|maxLengthR[12]"
@@ -462,7 +462,7 @@ rigSetRules "email", "Email", "requiredR|validEmailR"
 <li>The email field must contain a valid email address.</li>
 </ol>
 
-<p>Give it a try! Submit your form without the proper data and you'll see new error messages that correspond to your new rules.
+<p>Give it a try! Submit your form without the proper data, and you'll see new error messages that correspond to your new rules.
 There are numerous rules available which you can read about in the validation reference.</p>
 
 
@@ -482,11 +482,11 @@ rigSetRules "email", "Email", "<kbd>trim</kbd>|requiredR|validEmailR"
 </div>
 
 
-<p>In the above example, we are "trimming" the fields, converting the password to md5, and running the username through
+<p>In the above example, we are "trimming" the fields, converting the password to MD5, and running the username through
 the "xssClean" handler, which removes malicious data. See <a href="#preppingreference">Prepping Reference</a> below.</p>
 
 <p><strong>Note:</strong> You will generally want to use the prepping functions <strong>after</strong>
-the validation rules so if there is an error, the original data will be shown in the form.</p>
+the validation rules so that if there is an error, the original data will be shown in the form.</p>
 
 
 
@@ -494,7 +494,7 @@ the validation rules so if there is an error, the original data will be shown in
 <a id="repopulatingform"></a>
 <h2>Re-populating the form</h2>
 
-<p>Thus far we have only been dealing with errors.  It's time to repopulate the form field with the submitted data. revIgniter offers several helper functions
+<p>Thus far, we have only been dealing with errors.  It's time to repopulate the form field with the submitted data. revIgniter offers several helper functions
 that permit you to do this. The one you will use most commonly is:</p>
 
 <pre><code class="lang-livecodeserver">rigSetValue("fieldname")</code></pre>
@@ -580,7 +580,7 @@ end index
 </div>
 
 
-<p><dfn>Now reload your page and submit the form so that it triggers an error.  Your form fields should now be re-populated</dfn></p>
+<p><dfn>Now reload your page and submit the form so that it triggers an error.  Your form fields should now be re-populated.</dfn></p>
 
 <p class="important"><strong>Note:</strong> The <a href="#handlerreference">Handler Reference</a> section below contains handlers that
 permit you to re-populate &lt;select> menus, radio buttons, and checkboxes.</p>
@@ -590,7 +590,7 @@ permit you to re-populate &lt;select> menus, radio buttons, and checkboxes.</p>
 
 <pre><code>&lt;input type="checkbox" name="<kbd>myCheckbox[]</kbd>" value="A" [[gData["myCheckA"]]] /></code></pre>
 
-<p>For more info please see the <a href="#arraysasfields">Using Arrays as Field Names</a> section below.</p>
+<p>For more info, please see the <a href="#arraysasfields">Using Arrays as Field Names</a> section below.</p>
 
 
 
@@ -672,9 +672,9 @@ at the top of the controller file.</p>
 <p><dfn>Reload your form and submit it with the word "test" as the username.  You can see that the form field data was passed to your
 callback function for you to process.</dfn></p>
 
-<p><strong>To invoke a callback just put the handler name in a rule, with "callback_" as the rule prefix.</strong></p>
+<p><strong>To invoke a callback, just put the handler name in a rule, with "callback_" as the rule prefix.</strong></p>
 
-<p>You can also process the form data that is passed to your callback and return it.  If your callback returns anything other than a boolean TRUE/FALSE
+<p>You can also process the form data that is passed to your callback and return it.  If your callback returns anything other than a boolean TRUE/FALSE,
 it is assumed that the data is your newly processed form data.</p>
 
 
@@ -686,7 +686,7 @@ it is assumed that the data is your newly processed form data.</p>
 
 <p>All of the native error messages are located in the following language file:  <dfn>language/english/formvalidationLang.lc</dfn></p>
 
-<p>To set your own custom message you can either edit that file, or use the following function:</p>
+<p>To set your own custom message, you can either edit that file or use the following function:</p>
 
 <pre><code class="lang-livecodeserver">rigSetMessage "<var>rule</var>", "<var>Error Message</var>"</code></pre>
 
@@ -698,7 +698,7 @@ it is assumed that the data is your newly processed form data.</p>
 
 <pre><code class="lang-livecodeserver">rigSetMessage "userNameCheck"</code></pre>
 
-<p>You can also override any error message found in the language file.  For example, to change the message for the "requiredR" rule you will do this:</p>
+<p>You can also override any error message found in the language file.  For example, to change the message for the "requiredR" rule, you will do this:</p>
 
 <pre><code class="lang-livecodeserver">rigSetMessage "requiredR", "Your custom message here"</code></pre>
 
@@ -707,7 +707,7 @@ it is assumed that the data is your newly processed form data.</p>
 <a id="translatingfn"></a>
 <h2>Translating Field Names</h2>
 
-<p>If you would like to store the "human" name you passed to the <dfn>rigSetRules</dfn> handler in a language file, and therefore make the name able to be translated, here's how:</p>
+<p>If you would like to store the "human" name you passed to the <dfn>rigSetRules</dfn> handler in a language file and therefore make the name able to be translated, here's how:</p>
 
 <p>First, prefix your "human" name with <dfn>lang:</dfn>, as in this example:</p>
 
@@ -745,7 +745,7 @@ individually.</p>
 
 <li><strong>Changing delimiters Individually</strong>
 
-<p>Each of the two error generating functions shown in this tutorial can be supplied their own delimiters as follows:</p>
+<p>Each of the two error-generating functions shown in this tutorial can be supplied with their own delimiters as follows:</p>
 
 <pre><code class="lang-livecodeserver">put rigFormError("fieldname", "<kbd>&lt;div class=" & quote & "error" & quote & "></kbd>", "<kbd>&lt;/div></kbd>") into gData["fieldNameError"]</code></pre>
 
@@ -804,7 +804,7 @@ put rigFormError("email") into gData["emailError"]
 <pre><code>put rigFormError("<kbd>myCheckbox[]</kbd>") into gData["checkboxError"]
 </code></pre>
 
-<p>For more info please see the <a href="#arraysasfields">Using Arrays as Field Names</a> section below.</p>
+<p>For more info, please see the <a href="#arraysasfields">Using Arrays as Field Names</a> section below.</p>
 
 
 
@@ -821,7 +821,7 @@ you can manually call each set as needed.</p>
 <h2>How to save your rules</h2>
 
 <p>To store your validation rules, simply create a file named <kbd>validation.lc</kbd> in your <dfn>application/config/</dfn> folder.
-In that file you will place an array with your rules. As shown earlier, the validation array will have this prototype:</p>
+In that file, you will place an array with your rules. As shown earlier, the validation array will have this prototype:</p>
 
 <div class="codeSample">
 <pre><code>&lt;?lc
@@ -860,7 +860,7 @@ end rigFetchValidationConf
 <p class="important">Please note that you MUST add the <dfn>rigFetchValidationConf()</dfn> function to your configuration file as shown above.</p>
 
 
-<p><br />There is an alternative to generate the rules array in a config file. It significantly reduces the required amount of code. Using this approach the example above would read like:</p>
+<p><br />There is an alternative to generate the rules array in a config file. It significantly reduces the required amount of code. Using this approach, the example above would read like:</p>
 
 
 <div class="codeSample">
@@ -888,7 +888,7 @@ end rigFetchValidationConf
 
 <h2>Creating Sets of Rules</h2>
 
-<p>In order to organize your rules into "sets" requires that you place them into "sub arrays".  Consider the following example, showing two sets of rules.
+<p>To organize your rules in “sets”, you must place them in “sub-arrays”.  Consider the following example, showing two sets of rules.
 We've arbitrarily called these two rules "signup" and "email".  You can name your rules anything you want:</p>
 
 
@@ -941,7 +941,7 @@ end rigFetchValidationConf
 </div>
 
 
-<p><br />Similar to the simple array example above there is an alternative to generate rules organized into "sets" too. Here is an example using the rules above:</p>
+<p><br />Similar to the simple array example above, there is an alternative to generate rules organized into "sets" too. Here is an example using the rules above:</p>
 
 
 <div class="codeSample">
@@ -975,7 +975,7 @@ end rigFetchValidationConf
 
 <h2>Calling a Specific Rule Group</h2>
 
-<p>In order to call a specific group you will pass its name to the <kbd>rigFormValidRun()</kbd> function.  For example, to call the <kbd>signup</kbd> rule you will do this:</p>
+<p>In order to call a specific group, you will pass its name to the <kbd>rigFormValidRun()</kbd> function.  For example, to call the <kbd>signup</kbd> rule, you will do this:</p>
 
 <div class="codeSample">
 <pre><code>if rigFormValidRun("<kbd>signup</kbd>") is FALSE then
@@ -1058,9 +1058,9 @@ end rigFetchValidationConf
 </code></pre>
 </div>
 
-<p><dfn>When a rule group is named identically to a controller/handler it will be used automatically when the rigFormValidRun() function is invoked from that controller/handler.</dfn></p>
+<p><dfn>When a rule group is named identically to a controller/handler, it will be used automatically when the rigFormValidRun() function is invoked from that controller/handler.</dfn></p>
 
-<p><br />Similar to examples above you can reduce the amount of required code using the following approach:</p>
+<p><br />Similar to the examples above, you can reduce the amount of required code using the following approach:</p>
 
 
 <div class="codeSample">
@@ -1099,15 +1099,15 @@ end rigFetchValidationConf
 <p>If you do use an array as a field name, you must use the EXACT array name in the <a href="#helperreference">Helper Handlers</a> that require the field name,
 and as your Validation Rule field name.</p>
 
-<p>For example, to set a rule for the above field you would use:</p>
+<p>For example, to set a rule for the above field, you would use:</p>
 
 <pre><code class="lang-livecodeserver">rigSetRules "<kbd>options[]</kbd>", "Options", "requiredR"</code></pre>
 
-<p>Or, to show an error for the above field you would use:</p>
+<p>Or, to show an error for the above field, you would use:</p>
 
 <pre><code>put rigFormError("<kbd>options[]</kbd>") into gData["optionsError"]</code></pre>
 
-<p>Or to re-populate the field you would use:</p>
+<p>Or to re-populate the field, you would use:</p>
 
 <pre><code>put rigSetValue("<kbd>options[]</kbd>") into gData["options"]</code></pre>
 
@@ -1138,7 +1138,7 @@ POST array:</p>
 &lt;input type="checkbox" name="<kbd>options[color][]</kbd>" value="green" />
 </code></pre>
 
-<p>When you use a helper function you'll include the bracket as well:</p>
+<p>When you use a helper function, you'll include the bracket as well:</p>
 
 <pre><code class="hljs livecodeserver">put rigFormError("<kbd>options[color][]</kbd>") into gData["colorError"]</code></pre>
 
@@ -1419,11 +1419,11 @@ put the result into tStringValidResult
 
 <h3>rigAddValidationGrp <var>pGroup</var></h3>
 
-<p>Defines a group name for a set of validation rules used in a validation configuration file, see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File</a></p>
+<p>Defines a group name for a set of validation rules used in a validation configuration file; see the examples in the tutorial section <a href="#savingtoconfig">Saving Groups of Validation Rules to a Config File.</a></p>
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>pGroup:</strong> (optional) is the group name, if you neither want to specify a group nor an associated controller handler you can omit it</li>
+	<li><strong>pGroup:</strong> (optional) is the group name; if you neither want to specify a group nor an associated controller handler, you can omit it</li>
 </ul>
 
 
@@ -1434,7 +1434,7 @@ put the result into tStringValidResult
 <p><em>Parameters</em></p>
 <ul>
 	<li><strong>pField:</strong> is the name of the form field</li>
-	<li><strong>pLabel:</strong> specifies a form field label used for example in error messages to identify a field</li>
+	<li><strong>pLabel:</strong> specifies a form field label used, for example, in error messages to identify a field</li>
 	<li><strong>pRules:</strong> includes all required rules</li>
 	<li><strong>pConfArray:</strong> is the name of your validation array variable used in your validation config file</li>
 </ul>
@@ -1448,7 +1448,7 @@ put the result into tStringValidResult
 
 <p><em>Parameters</em></p>
 <ul>
-	<li><strong>The first (optional) parameter is name of the validation group.</strong></li>
+	<li><strong>The first (optional) parameter is the name of the validation group.</strong></li>
 	<li><strong>The second (optional) parameter is an array of the ASYNergy values of the respective asyn:model attribute of the input elements to be validated.</strong></li>
 </ul>
 
@@ -1461,7 +1461,7 @@ put the result into tStringValidResult
 <h3>rigSetPrefilledValues <var>pPrefilledValues</var></h3>
 
 <p>This command is needed if you use any prefilled form fields in combination with the rigRequiredR validation rule so that
-  the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma delimited list or in an array.</p>
+  the validator yields an error whenever the user leaves a required prefilled form field untouched. You may store the values of your prefilled fields either in a comma-delimited list or in an array.</p>
 	
 <p><em>Parameters</em></p>
 <ul>
@@ -1469,7 +1469,7 @@ put the result into tStringValidResult
 </ul>
 
   
-<p>Let's say the default values of your form fields are "First Name", "Last Name" and "name@any.com". Then you would store these
+<p>Let's say the default values of your form fields are "First Name", "Last Name", and "name@any.com". Then you would store these
   values in a validator variable like in the following example:</p>
 
 <pre><code>rigSetPrefilledValues "First Name,Last Name,name@any.com"
@@ -1500,7 +1500,7 @@ rigSetPrefilledValues tPrefilledArray
 
 
 <h3>rigValidationErrors()</h3>
-<p>Shows all error messages as a string:  Example:</p>
+<p>Shows all error messages as a string.  Example:</p>
 
 <pre><code>put rigValidationErrors() into gData["formErrors"]</code></pre>
 
@@ -1600,7 +1600,7 @@ Previous Topic:&nbsp;&nbsp;<a href="file_uploading.html">File Uploading Library<
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="ftp.html">FTP Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

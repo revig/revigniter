@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -90,7 +90,7 @@
 
 <h1>Creating Libraries</h1>
 
-<p>When we use the term "Libraries" we are normally referring to the libraries that are located in the <kbd>libraries</kbd>
+<p>When we use the term "Libraries", we are normally referring to the libraries that are located in the <kbd>libraries</kbd>
 directory and described in the Library Reference of this user guide.  In this case, however, we will instead describe how you can create
 your own libraries within your <dfn>application/libraries</dfn> directory in order to maintain separation between your local resources
 and the global framework resources.</p>
@@ -108,7 +108,7 @@ to an existing library. Or you can even replace native libraries just by placing
 
 <p>The page below explains these concepts in detail.</p>
 
-<p class="important"><strong>Note:</strong> The Database libraries can not be extended with your own libraries. 
+<p class="important"><strong>Note:</strong> The Database libraries cannot be extended with your own libraries. 
 All other libraries are able to be extended.</p>
 
 
@@ -121,7 +121,7 @@ they are initialized.</p>
 <h2>Naming Conventions</h2>
 
 <ul>
-<li>The library name can be titelcase, lowercase, camelcase or pascalcase.</li>
+<li>The library name can be titlecase, lowercase, camelcase or pascalcase.</li>
 <li>The library name can include underscores.</li>
 <li>The library name should <strong>not</strong> include hyphens.</li>
 </ul>
@@ -129,7 +129,7 @@ they are initialized.</p>
 
 <h2>The Library File</h2>
 
-<p>Libraries are script only stacks and should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
+<p>Libraries are script-only stacks and should have this basic prototype (Note:  We are using the name <kbd>someHandler</kbd> purely as an example):</p>
 
 
 <div class="codeSample">
@@ -187,24 +187,24 @@ end someHandler
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build models, libraries, helpers etc.</p>
+<p class="important"><strong>Note:</strong> All revIgniter script-only stack files use "livecodescript" as the file extension. This convention you should keep in mind when you build models, libraries, helpers, etc.</p>
 
 
 <h2>Using Your Library</h2>
 
-<p>From within any of your <a href="controllers.html">Controller</a> handlers you can initialize your library using the standard:</p>
+<p>From within any of your <a href="controllers.html">Controller</a> handlers, you can initialize your library using the standard:</p>
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "Somelibrary"</code></pre>
 
 <p>Where <em>Somelibrary</em> is the file name, without the ".livecodescript" file extension.</p>
 
-<p>Once loaded you can access the handlers of your library.</p>
+<p>Once loaded, you can access the handlers of your library.</p>
 
 
 
 <h2>Passing Parameters When Initializing Your Library</h2>
 
-<p>In the library loading handler you can dynamically pass data as an array via the second parameter and it will be passed to your library:</p>
+<p>In the library loading handler, you can dynamically pass data as an array via the second parameter, and it will be passed to your library:</p>
 
 
 <pre><code>put "large" into tParamsA["type"]
@@ -214,7 +214,7 @@ rigLoaderLoadLibrary "Somelibrary", <kbd>tParamsA</kbd>
 </code></pre>
 
 
-<p>If you use this feature you must set up your initialization handler to expect data:</p>
+<p>If you use this feature, you must set up your initialization handler to expect data:</p>
 
 <div class="codeSample">
 <pre><code># PROTOTYPE OF THE FOLLOWING HANDLER NAME: rigRunInitial[name of your library]Config
@@ -242,34 +242,34 @@ the config file option will not be available.</p>
 <h2>Replacing Native Libraries with Your Versions</h2>
 
 <p>Simply by naming your library files identically to a native library will cause revIgniter to use it instead of the native one. To use this
-feature you must name the file exactly the same as the native library.  For example, to replace the native <kbd>Email</kbd> library
+feature, you must name the file exactly the same as the native library.  For example, to replace the native <kbd>Email</kbd> library,
 you'll create a file named <dfn>application/libraries/Email.livecodescript</dfn>.</p>
 
 
-<p>To load your library you'll see the standard loading handler:</p>
+<p>To load your library, you'll see the standard loading handler:</p>
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "<kbd>Email</kbd>"</code></pre>
 
-<p class="important"><strong>Note:</strong> At this time the Database libraries can not be replaced with your own versions.</p>
+<p class="important"><strong>Note:</strong> At this time, the Database libraries cannot be replaced with your own versions.</p>
 
 
 <h2>Extending Native Libraries</h2>
 
 <p>If all you need to do is add some functionality to an existing library - perhaps add a handler or two - then
-it's overkill to replace the entire library with your version.  In this case it's better to simply extend the library.
+it's overkill to replace the entire library with your version.  In this case, it's better to simply extend the library.
 Extending a library is nearly identical to replacing a library with one exception:</p>
 
 <ul>
 <li>Your new library name must be prefixed with <kbd>MY_</kbd> (this item is configurable.  See below.).</li>
 </ul>
 
-<p>For example, to extend the native <kbd>Email</kbd> library you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Email.livecodescript</kbd>.</p>
+<p>For example, to extend the native <kbd>Email</kbd> library, you'll create a file named <dfn>application/libraries/</dfn><kbd>MY_Email.livecodescript</kbd>.</p>
 
 
 
 <h3>Loading Your Sub-library</h3>
 
-<p>To load your sub-library you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
+<p>To load your sub-library, you'll use the standard syntax normally used.  DO NOT include your prefix.  For example,
 to load the example above, which extends the Email library, you will use:</p>
 
 <pre><code class="lang-livecodeserver">rigLoaderLoadLibrary "<kbd>Email</kbd>"</code></pre>
@@ -287,9 +287,9 @@ to load the example above, which extends the Email library, you will use:</p>
 
 <h3>Library Getter and Setter</h3>
 
-<p>To be able to access native library script variables in your sub-library most libraries provide a getter 
+<p>To be able to access native library script variables in your sub-library, most libraries provide a getter 
 	function and a setter command. <br>The prototype for the getter function is: <kbd>rig&lt;Libraryname>Get</kbd>(<dfn>pWhat</dfn>). The prototype for the setter command is: <kbd>rig&lt;Libraryname>Set</kbd> <dfn>pKey pVal</dfn>.<br>
-So, for example to access the Formvalidation library variables you can use the handlers <kbd>rigFormvalidationGet</kbd> <dfn>pWhat</dfn> and <kbd>rigFormvalidationSet</kbd> <dfn>pKey pVal</dfn>.
+So, for example, to access the Formvalidation library variables, you can use the handlers <kbd>rigFormvalidationGet</kbd> <dfn>pWhat</dfn> and <kbd>rigFormvalidationSet</kbd> <dfn>pKey pVal</dfn>.
 </p>
 
 <p class="important"><strong>Note:</strong> All values you can set or get are combined in one array variable.</p>
@@ -297,10 +297,10 @@ So, for example to access the Formvalidation library variables you can use the h
 
 <h2>Extending Native Libraries Example</h2>
 
-<p>Let's say you would like to add validation rules to the Formvalidation library. To achieve this the process is as follows:</p>
+<p>Let's say you would like to add validation rules to the Formvalidation library. To achieve this, the process is as follows:</p>
 
-<p>Step1: Check the getter or setter handler in the Formvalidation library which reveals the required array variable name. 
-	In this case this is <dfn>sFormValidA</dfn>. <br>
+<p>Step 1: Check the getter or setter handler in the Formvalidation library, which reveals the required array variable name. 
+	In this case, this is <dfn>sFormValidA</dfn>. <br>
 	Note: These handlers are always at the bottom of the script. 
 	The <kbd>_rigSetDefaultValues</kbd> handler tells you that the validation rules are stored in <dfn>sFormValidA["ruleNames"]</dfn>. 
 	This is the information you need to extend the list of available validation rules.</p>
@@ -453,7 +453,7 @@ Comment out the qrtPDF_InitLibrary handler. These two handlers are not needed as
 For testing purposes you can use the scripts from <a href="http://quartam.on-rev.com/qrtpdfdemos.irev" target="_blank">http://quartam.on-rev.com/qrtpdfdemos.irev</a></p>
 <p class="important"><strong>Note:</strong> Be careful, comment out the qrtPDF_InitLibrary line in the demo scripts of Quartam.</p>
 
-<p>For error reporting you should use revIgniter's built in mechanism. To write qrtPDFlib  errors to the error log use:</p>
+<p>For error reporting you should use revIgniter's built-in mechanism. To write qrtPDFlib  errors to the error log use:</p>
 
 <div class="codeSample">
 <pre><code class="lang-livecodeserver">rigLogMessage "error", tError
@@ -467,11 +467,11 @@ For testing purposes you can use the scripts from <a href="http://quartam.on-rev
 </code></pre>
 </div>
 
-<p>Note: tError is the variable of the try catch statements of the Quartam examples.</p>
+<p>Note: tError is the variable of the try-catch statements of the Quartam examples.</p>
 
-<p>Note: To display the result of the demo scripts don't load any view.</p>
+<p>Note: To display the result of the demo scripts, don't load any view.</p>
 
-<p>To store the result on disk there is a handler called qrtPDF_SaveDocument. After saving the PDF to disk you could attach it to eMails with the help of revIgniter's Email library or whatever you want.</p>
+<p>To store the result on disk, there is a handler called qrtPDF_SaveDocument. After saving the PDF to disk, you could attach it to eMails with the help of revIgniter's Email library or whatever you want.</p>
 
 <p><strong>Step 6</strong>: Have fun!</p>
 
@@ -491,7 +491,7 @@ Previous Topic:&nbsp;&nbsp;<a href="libraries.html">Using revIgniter Libraries</
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="core_libraries.html">Creating Core System Libraries</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

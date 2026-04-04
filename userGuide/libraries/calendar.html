@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -112,7 +112,7 @@ put rigCalGenerate() into gData["calendar"]</code></pre>
 </div>
 
 <p>The above code will generate a calendar for the current month/year based on your server time.
-To show a calendar for a specific month and year you will pass this information to the calendar generating function:</p>
+To show a calendar for a specific month and year, you will pass this information to the calendar generating function:</p>
 
 <div class="codeSample">
 <pre><code>rigLoaderLoadLibrary "Calendar" 
@@ -120,12 +120,12 @@ To show a calendar for a specific month and year you will pass this information 
 put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>) into gData["calendar"]</code></pre>
 </div>
 
-<p>The above code will generate a calendar showing the month of June in 2006.  The first parameter specifies the year, the second parameter specifies the month.</p>
+<p>The above code will generate a calendar showing the month of June in 2006.  The first parameter specifies the year, and the second parameter specifies the month.</p>
 
 <h2>Passing Data to your Calendar Cells</h2>
 
 <p>To add data to your calendar cells involves creating an associative array in which the keys correspond to the days
-you wish to populate and the array value contains the data.  The array is passed to the third parameter of the calendar
+you wish to populate, and the array value contains the data.  The array is passed to the third parameter of the calendar
 generating function.  Consider this example:</p>
 
 <div class="codeSample">
@@ -141,8 +141,8 @@ put rigCalGenerate(<kbd>2006</kbd>, <kbd>6</kbd>, <var>tCalData</var>) into gDat
 
 <p>Using the above example, day numbers 3, 7, 13, and 26 will become links pointing to the URLs you've provided.</p>
 
-<p class="important"><strong>Note:</strong> By default it is assumed that your array will contain links.
-In the section that explains the calendar template below you'll see how you can customize
+<p class="important"><strong>Note:</strong> By default, it is assumed that your array will contain links.
+In the section that explains the calendar template below, you'll see how you can customize
 how data passed to your cells is handled so you can pass different types of information.</p>
 
 
@@ -164,7 +164,7 @@ put rigCalGenerate() into gData["calendar"]
 </code></pre>
 </div>
 
-<p>The above code would start the calendar on monday, use the "long" month heading, and the "short" day names.  More information
+<p>The above code would start the calendar on Monday, use the "long" month heading, and the "short" day names.  More information
 regarding preferences below.</p>
 
 
@@ -224,7 +224,7 @@ put rigCalGenerate(<var>rigFetchSegment(3)</var>, <var>rigFetchSegment(4)</var>)
 
 <h2>Creating a Calendar Template</h2>
 
-<p>By creating a calendar template you have 100% control over the design of your calendar. Each component of your
+<p>By creating a calendar template, you have 100% control over the design of your calendar. Each component of your
 calendar will be placed within a pair of pseudo-variables as shown here:</p>
 
 
@@ -283,7 +283,7 @@ Previous Topic:&nbsp;&nbsp;<a href="benchmark.html">Benchmarking Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="captcha.html">Captcha Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

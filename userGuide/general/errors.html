@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -98,7 +98,7 @@ wish to change this behavior once your development is complete.  You'll find the
 setting in the application/config/config.lc file. Disabling error reporting will NOT prevent log files
 from being written if there are errors.</p>
 
-<p>Error handlers are available globally throughout the application. These do not require loading any libraries or helpers</p>
+<p>Error handlers are available globally throughout the application. These do not require loading any libraries or helpers.</p>
 
 <p>The following handlers let you generate errors:</p>
 
@@ -121,7 +121,7 @@ Note that revIgniter automatically shows 404 messages if controllers are not fou
 
 <p>This handler lets you write messages to your log files.  You must supply one of three "levels"
 in the first parameter, indicating what type of message it is (debug, error, info), with the message
-itself in the second parameter and a boolean in the optional third paramater, which indicates if the error should be displayed in an error page.  Example:</p>
+itself in the second parameter and a boolean in the optional third parameter, which indicates if the error should be displayed in an error page.  Example:</p>
 
 <pre><code>if tSomeVar = "" then
   rigLogMessage "error", "Some variable did not contain a value."
@@ -137,15 +137,15 @@ rigLogMessage "info", "The purpose of some variable is to provide some value."
 <ol>
 <li>Error Messages.  These are actual errors, such as user errors.</li>
 <li>Debug Messages.  These are messages that assist in debugging. For example, if a library has been loaded, you could log this as debugging info.</li>
-<li>Informational Messages.  These are the lowest priority messages, simply giving information regarding some process.  revIgniter doesn't natively generate any info messages but you may want to in your application.</li>
+<li>Informational Messages.  These are the lowest priority messages, simply giving information regarding some process.  revIgniter doesn't natively generate any info messages, but you may want to in your application.</li>
 </ol>
 
 
 <p class="important"><strong>Note:</strong> In order for the log file to actually be written, the
  "logs" folder must be writable.  In addition, you must set the "threshold" in application/config/config.lc for logging.
 You might, for example, only want error messages to be logged, and not the other two types. Then set gConfig["logThreshold"] in config.lc to 1.
-Set the "threshold" to 2 to log debug messages, set it to 3 to log informational messages and set it 4 to log all.
-If you set it to zero logging will be disabled.</p>
+Set the "threshold" to 2 to log debug messages, set it to 3 to log informational messages, and set it to 4 to log all.
+If you set it to zero, logging will be disabled.</p>
 
 
 <h3>rigDoException <var>Contexts</var>, <var>CurrentFile</var>, <var>CurrentHandler</var></h3>
@@ -163,7 +163,7 @@ end try
 
 <p>Where "errortest.lc" is the name of the controller file and "index" is the executing handler.</p>
 
-<p class="important"><strong>Note:</strong> To send the error output to the browser the error logging threshold in application/config/config.lc must be set to 1 or higher. The rigDoException handler overrides the LiveCode errormode error handling.</p>
+<p class="important"><strong>Note:</strong> To send the error output to the browser, the error logging threshold in application/config/config.lc must be set to 1 or higher. The rigDoException handler overrides the LiveCode errormode error handling.</p>
 
 
 </div>
@@ -181,7 +181,7 @@ Previous Topic:&nbsp;&nbsp;<a href="extensions.html">Extensions</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="caching.html">Page Caching</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

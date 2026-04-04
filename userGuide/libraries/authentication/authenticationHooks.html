@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,7 +91,7 @@
 
 <h1>Authentication Hooks</h1>
 
-<p>Authentication hooks work similar like those extending the framework core. So, if you want to run your own scripts at a particular stage of the library's execution process, the hooks feature is your friend.</p>
+<p>Authentication hooks work similarly to those extending the framework core. So, if you want to run your own scripts at a particular stage of the library's execution process, the hooks feature is your friend.</p>
 
 
 <h2>Enabling Authentication Hooks</h2>
@@ -119,13 +119,13 @@ put "snacks" into sAuthenticationHooks["authPreUpdateUser"]["params"][3]
 </div>
 
 <p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
-use.  In the above example the hook point is <kbd>authPreUpdateUser</kbd>. A list of hook points is found below.
+use.  In the above example, the hook point is <kbd>authPreUpdateUser</kbd>. A list of hook points is found below.
 The following items should be defined in your associative hook array:</p>
 
 <ul>
 <li><strong>handler</strong>&nbsp; The handler name you wish to call. If you call a function, append a pair of brackets to the name like: "myHandler()".</li>
 <li><strong>filename</strong>&nbsp; The script only stack file name containing your handler.</li>
-<li><strong>filepath</strong>&nbsp; The name of the directory containing your script only stack.  Note: Your stack must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your stack is located in <dfn>application/hooks/authenticationHooks</dfn>, you will simply use <samp>hooks/authenticationHooks</samp> as your filepath.  If your stack is located in <dfn>application/hooks/authenticationUtilities</dfn> you will use <samp>hooks/authenticationUtilities</samp> as your filepath. No trailing slash.</li>
+<li><strong>filepath</strong>&nbsp; The name of the directory containing your script only stack.  Note: Your stack must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your stack is located in <dfn>application/hooks/authenticationHooks</dfn>, you will simply use <samp>hooks/authenticationHooks</samp> as your filepath.  If your stack is located in <dfn>application/hooks/authenticationUtilities</dfn>, you will use <samp>hooks/authenticationUtilities</samp> as your filepath. No trailing slash.</li>
 <li><strong>params</strong>&nbsp; Any parameters you wish to pass to your script. This item is optional.</li>
 </ul>
 
@@ -135,7 +135,7 @@ The following items should be defined in your associative hook array:</p>
 
 <h2>Multiple Calls to the Same Hook</h2>
 
-<p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
+<p>If you want to use the same hook point with more than one script, simply make your array declaration multidimensional, like this:</p>
 
 
 <div class="codeSample">
@@ -188,7 +188,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
   <li><strong>authUsers</strong><br />
     Called before getting all users.</li>
   <li><strong>authUser</strong><br />
-    Called before getting a particular users.</li>
+    Called before getting a particular user.</li>
   <li><strong>authUserGroups</strong><br />
     Called before getting the groups a particular user is a member of.</li>
   <li><strong>authPostLogin</strong><br />
@@ -234,7 +234,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
   <li><strong>authLoginRememberedUserUnsuccessful</strong><br />
     Called after auto login failed.</li>
   <li><strong>authPostLoginRememberedUserSuccessful</strong><br />
-    Called after a successfull auto login of remembered users.</li>
+    Called after a successfull auto-login of remembered users.</li>
   <li><strong>authIdentityCheck</strong><br />
     Called before the identity check for remembered users.</li>
   <li><strong>authEmailCheck</strong><br />
@@ -292,7 +292,7 @@ put "blue" into sAuthenticationHooks["authPreUpdateUser"][2]["params"][3]
 
 <h2>Hook Example Using authPostLoginSuccessful and authLogout as Hook Point</h2>
 
-<p>The following is hardly a real world example but at least it illustrates the concept. Let's say you want to log whenever an admin logs in and out. This can easily be accomplished with the help of authentication hooks.</p>
+<p>The following is hardly a real-world example, but at least it illustrates the concept. Let's say you want to log whenever an admin logs in and out. This can easily be accomplished with the help of authentication hooks.</p>
 
 
 <p>Create a hooks script only stack file called authLog.livecodescript. In it, place the code below and save it to your application/hooks/authenticationHooks/ folder.</p>
@@ -359,7 +359,7 @@ put "hooks/authenticationHooks" into sAuthenticationHooks["authLogout"]["filepat
 
 
 
-<p>Now enable authentication hooks in <dfn>application/config/authentication.lc</dfn> and your are done.</p>
+<p>Now enable authentication hooks in <dfn>application/config/authentication.lc</dfn>, and you are done.</p>
 
 
 
@@ -380,7 +380,7 @@ Previous Topic:&nbsp;&nbsp;<a href="authenticationRef.html"> Authentication Hand
 <a href="../../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="authenticationTables.html">Authentication Tables</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

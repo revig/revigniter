@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+    			<a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,11 +91,11 @@
 
 <h1>OTP Helper</h1>
 
-<p>The OTP Helper provides handlers to generate and verify time-based one-time passwords conforming to <a href="https://tools.ietf.org/html/rfc6238">RFC6238</a> TOTP standards. Additionally it includes a handler to draw QR codes based on the otpauth:// URI scheme. You can use this helper on its own but as the <a href="../libraries/authentication/index.html">Authentication Library</a> incorporates the OTP helper it makes more sense and it is easier to deal with the <a href="../libraries/authentication/authenticationOTP.html">Authentication Library, it's OTP related handlers</a> and the associated settings in <dfn>application/config/authentication.lc</dfn>.</p>
+<p>The OTP Helper provides handlers to generate and verify time-based one-time passwords conforming to <a href="https://tools.ietf.org/html/rfc6238">RFC6238</a> TOTP standards. Additionally, it includes a handler to draw QR codes based on the otpauth:// URI scheme. You can use this helper on its own, but as the <a href="../libraries/authentication/index.html">Authentication Library</a> incorporates the OTP helper, it makes more sense and it is easier to deal with the <a href="../libraries/authentication/authenticationOTP.html">Authentication Library, it's OTP-related handlers</a>, and the associated settings in <dfn>application/config/authentication.lc</dfn>.</p>
 
-<p class="important"><strong>Note:</strong> This helper requires LiveCode's QR Code Generator Library which needs to be stored in <dfn>application/libraries</dfn>. Rename the library to "QR.livecodescript". So, the path to the library is <dfn>application/libraries/QR.livecodescript</dfn>. Please read about how to create libraries in chapter <a href="../general/creating_libraries.html">"Creating Libraries"</a>.</p>
+<p class="important"><strong>Note:</strong> This helper requires LiveCode's QR Code Generator Library, which needs to be stored in <dfn>application/libraries</dfn>. Rename the library to "QR.livecodescript". So, the path to the library is <dfn>application/libraries/QR.livecodescript</dfn>. Please read about how to create libraries in chapter <a href="../general/creating_libraries.html">"Creating Libraries"</a>.</p>
 
-<p class="important"><strong>Note:</strong> You don't need to load the QR library, this is done by the helper.</p>
+<p class="important"><strong>Note:</strong> You don't need to load the QR library; this is done by the helper.</p>
 
 <h2>Preparation of the QR Code Generator Library</h2>
 
@@ -172,12 +172,12 @@ end rigRunInitialQRConfig
 	<li><strong>pSecret:</strong> is the decoded shared secret.</li>
 	<li><strong>pTokenLength:</strong> (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
 	<li><strong>pCryptoType:</strong> (optional) is "SHA" or "SHA3", though keep in mind that "SHA3" does not conform to the RFC6238 TOTP standards. So, the default value of this parameter is "SHA".</li>
-	<li><strong>pCryptoNumBits:</strong> (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512 or 1, the default value.</li>
+	<li><strong>pCryptoNumBits:</strong> (optional) is the output size of the hash algorithm in bits (exception is 1 for "SHA1" with an output size of 160 bits). Possible values are 224, 256, 384, 512, or 1, the default value.</li>
 	<li><strong>pTimeStep:</strong> (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
 	<li><strong>pType:</strong> is the OTP type, this is "HOTP" or "TOTP". Currently the helper supports TOTP only. So, this parameter can be ignored.</li>
 </ul>
 
-<p>Alternatively provide all parameters as an array. Array key names are: <var>secret</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>type</var>.</p>
+<p>Alternatively, provide all parameters as an array. Array key names are: <var>secret</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var>, and <var>type</var>.</p>
 
 <p>This handler returns FALSE in the result in case an error occurred, otherwise the result contains the one-time password.</p>
 
@@ -197,14 +197,14 @@ end rigRunInitialQRConfig
 	<li><strong>pTimeWindow:</strong> (optional) is a delay window to compare OTPs not only in the current period but also with the next and previous time steps. The default value is 2.</li>
 </ul>
 
-<p>Alternatively provide all parameters as an array. Array key names are: <var>challenge</var>, <var>key</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var> and <var>timeWindow</var>.</p>
+<p>Alternatively, provide all parameters as an array. Array key names are: <var>challenge</var>, <var>key</var>, <var>tokenLength</var>, <var>cryptoType</var>, <var>cryptoNumBits</var>, <var>timeStep</var>, and <var>timeWindow</var>.</p>
 
 <p>This handler returns TRUE in the result if the two passwords match.</p>
 
 <h3>rigOTPgenerateUserKey <var>pSecret</var></h3>
 
-<p>Generate a base32 encoded user key that conforms to the RFC6238 TOTP standards. Provide the secret as parameter.<br>
-	Returns the base32 encoded shared secret in the result which can be displayed for the purpose of manually entering the secret in authenticator apps. The secret should always be transferred over a secure channel.</p>
+<p>Generate a base32 encoded user key that conforms to the RFC6238 TOTP standards. Provide the secret as a parameter.<br>
+	Returns the base32 encoded shared secret in the result, which can be displayed for the purpose of manually entering the secret in authenticator apps. The secret should always be transferred over a secure channel.</p>
 
 
 <h3>rigOTPqrCode(<var>pKey</var>, <var>pAccount</var>, <var>pIssuer</var>, <var>pAlgo</var>, <var>pDigits</var>, <var>pPeriod</var>, <var>pECC</var>, <var>pSize</var>, <var>pMask</var>)</h3>
@@ -216,17 +216,17 @@ end rigRunInitialQRConfig
 	<li><strong>pKey:</strong> is the base32 encoded shared secret.</li>
 	<li><strong>pAccount:</strong> is a user's email address or name.</li>
 	<li><strong>pIssuer:</strong> is the name of the entity issuing user accounts.</li>
-	<li><strong>pAlgo:</strong> (optional) defines the algorithm used. Can be "SHA1", "SHA256" or "SHA512". If not provided this parameter defaults to "SHA1".</li>
-	<li><strong>pDigits:</strong> (optional) is the length of the one-time password, usually this is 6 or 8, if not provided 6 is used.</li>
+	<li><strong>pAlgo:</strong> (optional) defines the algorithm used. Can be "SHA1", "SHA256", or "SHA512". If not provided, this parameter defaults to "SHA1".</li>
+	<li><strong>pDigits:</strong> (optional) is the length of the one-time password, usually this is 6 or 8. If not provided, 6 is used.</li>
 	<li><strong>pPeriod:</strong> (optional) defines a period in seconds that a TOTP code will be valid for. The default value is 30.</li>
-	<li><strong>pECC:</strong> (optional) is the error correction level. Possible values are "L", "M", "Q" and "H". If the parameter is left empty "M" is used.</li>
+	<li><strong>pECC:</strong> (optional) is the error correction level. Possible values are "L", "M", "Q", and "H". If the parameter is left empty, "M" is used.</li>
 	<li><strong>pSize:</strong> (optional) defines the size of the displayed QR code image. Valid values are in the range of 1 to 10. The default value is 4.</li>
 	<li><strong>pMask:</strong> (optional) is an integer between 0 and 7 which defines a pattern that changes the outputted matrix. The default value is "Auto".</li>
 </ul>
 
-<p>Alternatively provide all parameters as an array. Array key names are: <var>key</var>, <var>account</var>, <var>issuer</var>, <var>algo</var>, <var>digits</var>, <var>period</var>, <var>ECC</var>, <var>size</var> and <var>mask</var>.</p>
+<p>Alternatively, provide all parameters as an array. Array key names are: <var>key</var>, <var>account</var>, <var>issuer</var>, <var>algo</var>, <var>digits</var>, <var>period</var>, <var>ECC</var>, <var>size</var>, and <var>mask</var>.</p>
 
-<p>This function returns FALSE in the result in case an error occurred, otherwise the result contains the base64 encoded image data of the QR code. Here is an example:</p>
+<p>This function returns FALSE in the result in case an error occurred. Otherwise the result contains the base64 encoded image data of the QR code. Here is an example:</p>
 
 
 <div class="codeSample">
@@ -262,7 +262,7 @@ Previous Topic:&nbsp;&nbsp;<a href="number_helper.html">Number Helper</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="querytojson_helper.html">QueryToJson Helper</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 

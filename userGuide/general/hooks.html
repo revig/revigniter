@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -91,7 +91,7 @@
 <h1>Hooks - Extending the Framework Core</h1>
 
 <p>revIgniter's hooks feature provides a means to tap into and modify the inner workings of the framework without hacking the core files.
-When revIgniter runs it follows a specific execution process, diagramed in the <a href="../overview/appflow.html">Application Flow</a> page.
+When revIgniter runs, it follows a specific execution process, diagrammed in the <a href="../overview/appflow.html">Application Flow</a> page.
 There may be instances, however, where you'd like to cause some action to take place at a particular stage in the execution process.
 For example, you might want to run a script right before your controllers get loaded, or right after, or you might want to trigger one of
 your own scripts in some other location.
@@ -110,7 +110,7 @@ your own scripts in some other location.
 
 <div class="codeSample">
 <pre><code>  put "MyHandler" into gHooksA["preController"]["handler"]
-  put "MyScript.lc" into gHooksA["preController"]["filename"]
+  put "MyScript.livecodescript" into gHooksA["preController"]["filename"]
   put "hooks" into gHooksA["preController"]["filepath"]
   put "beer" into gHooksA["preController"]["params"][1]
   put "wine" into gHooksA["preController"]["params"][2]
@@ -119,20 +119,20 @@ your own scripts in some other location.
 </div>
 
 <p><strong>Notes:</strong><br />The array index correlates to the name of the particular hook point you want to
-use.  In the above example the hook point is <kbd>preController</kbd>. A list of hook points is found below.
+use.  In the above example, the hook point is <kbd>preController</kbd>. A list of hook points is found below.
 The following items should be defined in your associative hook array:</p>
 
 <ul>
 <li><strong>handler</strong>&nbsp; The handler name you wish to call. If you call a function, append a pair of brackets to the name like: "MyHandler()".</li>
 <li><strong>filename</strong>&nbsp; The file name containing your handler.</li>
-<li><strong>filepath</strong>&nbsp; The name of the directory containing your script.  Note: Your script must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your script is located in <dfn>application/hooks</dfn>, you will simply use <samp>hooks</samp> as your filepath.  If your script is located in <dfn>application/hooks/utilities</dfn> you will use <samp>hooks/utilities</samp> as your filepath. No trailing slash.</li>
+<li><strong>filepath</strong>&nbsp; The name of the directory containing your script.  Note: Your script must be located in a directory INSIDE your <kbd>application</kbd> folder, so the file path is relative to that folder.  For example, if your script is located in <dfn>application/hooks</dfn>, you will simply use <samp>hooks</samp> as your filepath.  If your script is located in <dfn>application/hooks/utilities</dfn>, you will use <samp>hooks/utilities</samp> as your filepath. No trailing slash.</li>
 <li><strong>params</strong>&nbsp; Any parameters you wish to pass to your script. This item is optional.</li>
 </ul>
 
 
 <h2>Multiple Calls to the Same Hook</h2>
 
-<p>If you want to use the same hook point with more then one script, simply make your array declaration multidimensional, like this:</p>
+<p>If you want to use the same hook point with more than one script, simply make your array declaration multidimensional, like this:</p>
 
 <div class="codeSample">
 <pre><code>  put "MyHandler" into gHooksA["preController"][1]["handler"]
@@ -169,7 +169,7 @@ The following items should be defined in your associative hook array:</p>
       Called immediately after your controller is fully executed.</li>
     <li><strong>displayOverride</strong><br />
       Overrides the <dfn>_rigDisplay</dfn> command, used to send the finalized page to the web browser at the end of system execution.  This permits you to
-      use your own display methodology.  The finalized data will be available by calling <dfn>rigGetOutput()</dfn></li>
+      use your own display methodology.  The finalized data will be available by calling <dfn>rigGetOutput()</dfn>.</li>
     <li><strong>cacheOverride</strong><br />
       Enables you to call your own handler instead of the <dfn>_rigOutDisplayCache()</dfn> function in the output library.  This permits you to use your own cache display mechanism.</li>
     <li><strong>scaffoldingOverride</strong><br />
@@ -183,7 +183,7 @@ The following items should be defined in your associative hook array:</p>
   
   <p>Let's say you want revIgniter to automatically minify the HTML output just before it is displayed. This can easily be accomplished with the help of revIgniter's hooks feature.</p>
   
-  <p>First you need a script only stack which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>application/hooks/overrideOutput.livecodescript</dfn> for your convenience:</p>
+  <p>First, you need a script-only stack which removes all comments and whitespace from the output. Here is the script which is included since version 1.3.21b and is located in <dfn>application/hooks/overrideOutput.livecodescript</dfn> for your convenience:</p>
 
 <div class="codeSample">
 <pre><code>script "overrideOutput"
@@ -278,7 +278,7 @@ end rigMinifyOutput
 </code></pre>
 </div>
 
-<p class="important"><strong>Note:</strong> All revIgniter script only stack files use "livecodescript" as file extension. This convention you should keep in mind when you build hooks, models, libraries, helpers etc.</p>
+<p class="important"><strong>Note:</strong> All revIgniter script-only stack files use "livecodescript" as the file extension. This convention you should keep in mind when you build hooks, models, libraries, helpers, etc.</p>
 
 <p>The next step is to add the following lines to your hooks.lc file in <dfn>application/config</dfn>:</p>
 
@@ -286,13 +286,13 @@ end rigMinifyOutput
 <div class="codeSample">
 <pre><code># MINIFY OUTPUT
 put "rigMinifyOutput" into gHooksA["displayOverride"]["handler"]
-put "overrideOutput.lc" into gHooksA["displayOverride"]["filename"]
+put "overrideOutput.livecodescript" into gHooksA["displayOverride"]["filename"]
 put "hooks" into gHooksA["displayOverride"]["filepath"]
 </code></pre>
 </div>
   
 
-<p>Now enable hooks in <dfn>application/config/config.lc</dfn> and your are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
+<p>Now enable hooks in <dfn>application/config/config.lc</dfn> and you are done. You don't need to care anymore about how much overhead there is due to comments and whitespace in your view files as revIgniter, by using this hook, sends solely relevant data to the client. This works with cached output too.</p>
 
   
 </div>
@@ -310,7 +310,7 @@ Previous Topic:&nbsp;&nbsp;<a href="using_stacks.html">Using Stacks</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="autoloader.html">Auto-loading Resources</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 

@@ -34,7 +34,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.5</a>
+          <a class="navbar-brand" href="#">revIgniter User Guide Version 2.4.6</a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -94,8 +94,8 @@
 <p>The Session Library permits you to maintain a user's "state" and track their activity while they browse your site.
 The Session Library stores session information for each user as serialized (and optionally encrypted) data in a cookie.
 It can also store the session data in a database table or in a plain text file for added security, as this permits the session ID in the
-user's cookie to be matched against the stored session ID. By default only the cookie is saved.  If you choose to
-use the database option you'll need to create the session table as indicated below.
+user's cookie to be matched against the stored session ID. By default, only the cookie is saved.  If you choose to
+use the database option, you'll need to create the session table as indicated below.
 </p>
 
 
@@ -105,7 +105,7 @@ use the database option you'll need to create the session table as indicated bel
 <a href="../general/libraries.html">initialized</a> in your
 <a href="../general/controllers.html">controller</a>, or it can be
 <a href="../general/autoloader.html">auto-loaded</a> by the system.
-For the most part the Session Library will run unattended in the background, so simply initializing the library
+For the most part, the Session Library will run unattended in the background, so simply initializing the library
 will cause it to read, create, and update sessions.</p>
 
 
@@ -116,14 +116,14 @@ will cause it to read, create, and update sessions.</p>
 
 <p class="important"><strong>Note:</strong> Keep in mind, if gConfig["sess_driver"] is set to "database" in your config file, that initializing 
 the Session Library connects to your database using the default connection group specified in your database config file. If you need 
-to choose another connection group connect to your database before initializing the Session Library.</p>
+to choose another connection group, connect to your database before initializing the Session Library.</p>
 
 
 <h2>How do Sessions work?</h2>
 
 <p>When a page is loaded, the Session Library will check to see if valid session data exists in the user's session cookie.
-If sessions data does <strong>not</strong> exist (or if it has expired) a new session will be created and saved in the cookie.
-If a session does exist, its information will be updated and the cookie will be updated. With each update, the session_id will be regenerated.</p>
+If session data does <strong>not</strong> exist (or if it has expired), a new session will be created and saved in the cookie.
+If a session does exist, its information will be updated, and the cookie will be updated. With each update, the session_id will be regenerated.</p>
 
 <p>It's important for you to understand that once initialized, the Session Library runs automatically.  There is nothing
 you need to do to cause the above behavior to happen.  You can, as you'll see below, work with session data or
@@ -135,7 +135,7 @@ even add your own data to a user's session, but the process of reading, writing,
 <p>A <em>session</em>, as far as revIgniter is concerned, is simply an array containing the following information:</p>
 
 <ul>
-<li>The user's unique Session ID (this is a statistically random string with very strong entropy, hashed with md5 for portability, and regenerated (by default) every five minutes)</li>
+<li>The user's unique Session ID (this is a statistically random string with very strong entropy, hashed with MD5 for portability, and regenerated (by default) every five minutes)</li>
 <li>The user's IP Address</li>
 <li>The user's User Agent data (the first 50 characters of the browser data string)</li>
 <li>The "last activity"  time stamp.</li>
@@ -154,7 +154,7 @@ making the data highly secure and impervious to being read or altered by someone
 can be <a href="encryption.html">found here</a>, although the Session Library will take care of initializing
 and encrypting the data automatically.</p>
 
-<p>Note: Session cookies are only updated every five minutes by default to reduce processor load.  If you repeatedly reload a page
+<p>Note: Session cookies are only updated every five minutes by default to reduce processor load.  If you repeatedly reload a page,
 you'll notice that the "last activity" time only updates if five minutes or more has passed since the last time
 the cookie was written. This time is configurable by changing the gConfig["sess_time_to_update"] line in your system/config/config.lc file.</p>
 
@@ -164,28 +164,28 @@ the cookie was written. This time is configurable by changing the gConfig["sess_
 
 <pre><code>get rigSessUserdata("<samp>item</samp>")</code></pre>
 
-<p>Where <samp>item</samp> is the array index corresponding to the item you wish to fetch.  For example, to fetch the session ID you
+<p>Where <samp>item</samp> is the array index corresponding to the item you wish to fetch.  For example, to fetch the session ID, you
 will do this:</p>
 
 <pre><code>put rigSessUserdata("<samp>session_id</samp>") into tSessionID</code></pre>
 
 <p><strong>Note:</strong> The function returns FALSE (boolean) if the item you are trying to access does not exist.</p>
 
-<p>To get all session data as an array simply omit the key parameter.</p>
+<p>To get all session data as an array, simply omit the key parameter.</p>
 
 <pre><code>get rigSessUserdata()</code></pre>
 
 
 <h2>Adding Custom Session Data</h2>
 
-<p>A useful aspect of the session array is that you can add your own data to it and it will be stored in the user's cookie.
+<p>A useful aspect of the session array is that you can add your own data to it, and it will be stored in the user's cookie.
 Why would you want to do this?  Here's one example:</p>
 
 <p>Let's say a particular user logs into your site. Once authenticated,
 you could add their username and email address to the session cookie, making that data globally available to you without
 having to run a database query when you need it.</p>
 
-<p>To add your data to the session array involves passing an array containing your new data to this function:</p>
+<p>To add your data to the session array, you must pass an array containing your new data to this function:</p>
 
 <pre><code class="lang-livecodeserver">rigSetSessUserdata <samp>tArray</samp></code></pre>
 
@@ -198,12 +198,12 @@ put TRUE into tNewData["logged_in"]
 
 rigSetSessUserdata <samp>tNewData</samp></code></pre>
 
-<p>If you want to add userdata one value at a time, rigSetSessUserdata also supports this syntax. </p>
+<p>If you want to add user data one value at a time, rigSetSessUserdata also supports this syntax. </p>
 
 <pre><code class="lang-livecodeserver">rigSetSessUserdata "someName", "someValue"</code></pre>
 
 <p class="important"><strong>Note:</strong> Cookies can only hold 4KB of data, so be careful not to exceed the capacity.  The
-encryption process in particular produces a longer data string than the original so keep careful track of how much data you are storing.</p>
+encryption process in particular produces a longer data string than the original, so keep careful track of how much data you are storing.</p>
 
 <h2>Removing Session Data</h2>
 
@@ -220,8 +220,8 @@ rigUnsetSessUserdata <samp>tArrayItem</samp></code></pre>
 
 <h2>Flashdata</h2>
 
-<p>revIgniter supports &quot;flashdata&quot;, or session data that will only be available for the next server request, and are then automatically cleared. These can be very useful, and are typically used for informational or status messages (for example: &quot;record 2 deleted&quot;).</p>
-<p>Note: Flash variables are prefaced with &quot;flash&quot; so avoid this prefix in your own session names.</p>
+<p>revIgniter supports &quot;flashdata&quot;, or session data that will only be available for the next server request and are then automatically cleared. These can be very useful and are typically used for informational or status messages (for example: &quot;record 2 deleted&quot;).</p>
+<p>Note: Flash variables are prefaced with &quot;flash&quot;, so avoid this prefix in your own session names.</p>
 
 <p>To add flashdata:</p>
 
@@ -289,22 +289,22 @@ put "" into tExistingItemsArray["logged_in"]
 rigSessMarkAsTemp tExistingItemsArray, 240
 </code></pre>
 
-<p class="important"><strong>Note:</strong> If the expiration parameter is omitted the default time-to-live value of 300 seconds will be used.</p>
+<p class="important"><strong>Note:</strong> If the expiration parameter is omitted, the default time-to-live value of 300 seconds will be used.</p>
 
 
 
 <h2><a id="savingSessionData"></a>Saving Session Data to a Database</h2>
 
 <p>While the session data array stored in the user's cookie contains a Session ID,
-unless you store session data in a database or in a file on your server there is no way to validate it.  For some applications that require little or no
+unless you store session data in a database or in a file on your server, there is no way to validate it.  For some applications that require little or no
 security, session ID validation may not be needed, but if your application requires security, validation is mandatory.</p>
 
 <p>When session data is available in a database, every time a valid session is found in the user's cookie, a database
 query is performed to match it.  If the session ID does not match, the session is destroyed.  Session IDs can never
-be updated, they can only be generated when a new session is created.</p>
+be updated; they can only be generated when a new session is created.</p>
 
 <p>In order to store sessions in a database, you must first create a database table for this purpose.  Here is the basic
-prototype required by the Session Library.<br />MySQL version:</p>
+prototype required by the Session Library.<br />MySQL / MariaDB version:</p>
 
 <div class="codeSample">
 <pre><code>CREATE TABLE IF NOT EXISTS `ri_sessions` (
@@ -347,38 +347,38 @@ prototype required by the Session Library.<br />MySQL version:</p>
 </code></pre>
 </div>
 
-<p><strong>Note:</strong> By default the table is called <dfn>ri_sessions</dfn>, but you can name it anything you want
+<p><strong>Note:</strong> By default, the table is called <dfn>ri_sessions</dfn>, but you can name it anything you want
 as long as you update the <kbd>application/config/config.lc</kbd> file so that it contains the name you have chosen.
-Once you have created your database table you can enable the database option in your config.lc file as follows:</p>
+Once you have created your database table, you can enable the database option in your config.lc file as follows:</p>
 
 <pre><code>put "database" into gConfig["sess_driver"]</code></pre>
 
 <p>Once enabled, the Session Library will store session data in the DB.</p>
 
-<p>If you don't use the default table name "ri_sessions" make sure you've specified the name in your config file as well:</p>
+<p>If you don't use the default table name "ri_sessions", make sure you've specified the name in your config file as well:</p>
 
 <pre><code>put "mySessions" into gConfig["sess_save_location"]</code></pre>
 
-<p class="important"><strong>Note:</strong> The Session Library has built-in garbage collection which clears out expired sessions so you
+<p class="important"><strong>Note:</strong> The Session Library has built-in garbage collection, which clears out expired sessions, so you
 do not need to write your own routine to do it.</p>
 
 
 
 <h2>Saving Session Data to a File</h2>
 
-<p>Another option to establish session ID validation is to save session data to a file. To use your file system for storing session data set the session driver to "files" in your config file as follows:</p>
+<p>Another option to establish session ID validation is to save session data to a file. To use your file system for storing session data, set the session driver to "files" in your config file as follows:</p>
 
 <pre><code>put "files" into gConfig["sess_driver"]</code></pre>
   
-<p>You can specify a location to save sessions to by setting gConfig["sess_save_location"] to an <strong>absolute</strong> path to a <strong>writable</strong> directory like:</p>
+<p>You can specify a location to save sessions to by setting gConfig["sess_save_location"] to an <strong>absolute</strong> path to a <strong>writable</strong> directory, like:</p>
 
 <pre><code>put "/my/absolute/path/to/sessionLocation" into gConfig["sess_save_location"]</code></pre>
 
-<p>If set to empty the standard temporary folder is used.</p>
+<p>If set to empty, the standard temporary folder is used.</p>
 
-<p>Similar to the database option when session data is stored in a file, every time a valid session is found in the user's cookie, your storage location is searched for a matching file name.  If the session ID does not match, the session is destroyed.  Session IDs can never be updated, they can only be generated when a new session is created.</p>
+<p>Similar to the database option, when session data is stored in a file, every time a valid session is found in the user's cookie, your storage location is searched for a matching file name.  If the session ID does not match, the session is destroyed.  Session IDs can never be updated; they can only be generated when a new session is created.</p>
 
-<p>Session directory permissions are automatically set to 0700 so only the directory’s owner is allowed to perform read and write operations on it.</p>
+<p>Session directory permissions are automatically set to 0700, so only the directory’s owner is allowed to perform read and write operations on it.</p>
 
 
 
@@ -399,7 +399,7 @@ do not need to write your own routine to do it.</p>
 
 
 <h2>Session Preferences</h2>
-<p>You'll find the following Session related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
+<p>You'll find the following Session-related preferences in your <kbd>application/config/config.lc</kbd> file:</p>
 
 <div class="table">
 <table>
@@ -476,7 +476,7 @@ do not need to write your own routine to do it.</p>
 <p class="important"><strong>Note:</strong> Keep in mind that the current time used to calculate the session expiration date is referenced either to your server's local time or GMT, based on the "time reference" setting in your config file.</p>
 
 
-<p class="important"><strong>Note:</strong> Cookie related settings as defined in <kbd>application/config/config.lc</kbd> apply to session cookies too.</p>
+<p class="important"><strong>Note:</strong> Cookie-related settings as defined in <kbd>application/config/config.lc</kbd> apply to session cookies too.</p>
 
 </div>
 <!-- END CONTENT -->
@@ -493,7 +493,7 @@ Previous Topic:&nbsp;&nbsp;<a href="pagination.html">Pagination Library</a>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
 Next Topic:&nbsp;&nbsp;<a href="trackback.html">Trackback Library</a>
 </p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2023<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
   </div>
 </div>
 
