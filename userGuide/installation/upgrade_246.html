@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title>Writing Documentation : revIgniter User Guide</title>
+		<title>Upgrading from 2.4.5 to 2.4.6 : revIgniter User Guide</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="robots" content="all">
 		<meta name="author" content="Ralf Bitter" >
@@ -19,7 +19,7 @@
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
-		    <script src="../js/html5shiv.js"></script>
+		    <script src="../js/html5shiv.js"></script><a href="models.html" id="" title="models">models</a>
 		    <script src="../js/respond.min.js"></script>
 		<![endif]-->
 
@@ -61,7 +61,7 @@
 			 		<ol class="breadcrumb">
 			 			<li><a href="https://revigniter.com/">revIgniter Home</a></li>
 			 		 	<li><a href="../index.html">User Guide Home</a></li>
-			 		 	<li class="active">Writing Documentation</li>
+			 		 	<li class="active">Upgrading from 2.4.5 to 2.4.6</li>
 						<li id="tocListItem" class="pull-right"><a href="../toc.html">Table of Contents Page</a></li>
 			 		 </ol>
 				</div>
@@ -88,17 +88,40 @@
 	
 <div id="content">
 
-<h1>Writing Documentation</h1>
+<h1>Upgrading from 2.4.5 to 2.4.6</h1>
 
-<p>Any contribution extending the User Guide should comply with the guidelines outlined in the page template included with the User Guide to help facilitate a uniform, easy-to-read documentation style. The template includes primary blocks of markup used with brief samples. As an alternative, you can use <a href="https://daringfireball.net/projects/markdown">Markdown</a> and the included Markdown template.</p>
 
-<h2>Files</h2>
+<p>Before performing an update you should take your site offline by replacing the index.lc file with a static one.</p>
+
+
+
+<h2>Step 1: Update your revIgniter files</h2>
+
+
+<p>Replace this file in your "system/database" folder with the new versions:</p>
 
 <ul>
-	<li><a href="../css/style-ck.css">Stylesheet</a></li>
-	<li><a href="./template.html">Page Template</a></li>
-	<li><a href="./template.md">Markdown Page Template</a></li>
+	<li><dfn>DBdriver.livecodescript</dfn></li>
 </ul>
+
+
+<p>Add this folder to your "system/database/drivers" folder:</p>
+
+<ul>
+	<li><dfn>mariadb</dfn></li>
+</ul>
+
+
+<p>Replace this file in your "system/revigniter" folder with the new version:</p>
+
+<ul>
+	<li><dfn>RevIgniter.lc</dfn></li>
+</ul>
+
+
+<h2>Step 2: Update your user guide</h2>
+<p>Please replace your local copy of the user guide with the new version.</p>
+
 
 
 </div>
@@ -110,21 +133,17 @@
 <div id="footer">
 	<div class="container">
 <p>
-Previous Topic:&nbsp;&nbsp; <a href="#">-</a><span class="separator"> :: </span>
+Previous Topic:&nbsp;&nbsp;<a href="upgrading.html">Upgrading from a Previous Version</a>
+<span class="separator"> :: </span>
 <a href="#top">Top of Page</a><span class="separator"> :: </span>
 <a href="../index.html">User Guide Home</a><span class="separator"> :: </span>
-Next Topic:&nbsp;&nbsp;<a href="template.html">Template</a></p>
-<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span>Ralf Bitter</p>
+Next Topic:&nbsp;&nbsp;<a href="troubleshooting.html">Troubleshooting</a>
+</p>
+<p><a href="https://revigniter.com/">revIgniter</a><span class="separator"> :: </span>Copyright &#169; 2009 - 2026<span class="separator"> :: </span><a href="https://revigniter.com/">Ralf Bitter</a></p>
 	</div>
 </div>
 
 
-
-<script src="../js/highlight.pack.js"></script>
- <script>
-  	hljs.tabReplace = '    ';
-  	hljs.initHighlightingOnLoad();
- </script>
 
 <script src="../js/script-ck.js"></script>
 <script>
@@ -133,6 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	MobileSearchBar.init();
 });
 </script>
+
 
 </body>
 </html>
